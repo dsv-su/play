@@ -1,0 +1,15 @@
+[global]
+app_env=local                           ; Make sure this is set to local NOTE! For production enviroment the settings should be set to: app_env=production and app_debug=false.
+app_debug=true                          ; Make sure this is set to true
+app_url=http://localhost                ; Set this to localhost or your domain
+authorization_parameter=entitlement     ; The authorization parameter NOTE! Not used for dev enviroments
+authorization=                          ; Authorization entitlements NOTE! Not used for dev enviroments
+login_route=/login                      ; The SSO login route for your application (The production server should be set ut with this route)
+
+[database]
+db=mysql                                ; Here you can specify which database you use: mysql, sqlite, pgsql, sqlsrv or redis
+db_host=127.0.0.1                       ; DB host address
+db_port=3306                            ; DB port
+db_database=                            ; Database used
+db_username=                            ; DB user
+db_password=                            ; secret

@@ -1,0 +1,62 @@
+:root{
+    --sublue: #0000ff;
+    --dark: #17191D;
+    --light: #f4f4f4;
+    --overlay: rgba(23,25,29,0.8);
+    --ease: all 0.3s ease 0s;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.box1 {
+    background: lightcoral;
+}
+.box2 {
+    background: lightblue;
+}
+.box3 {
+    background: lightslategrey;
+}
+.box4 {
+    background: lime;
+}
+.box5 {
+    background: lightgoldenrodyellow;
+}
+
+main {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-template-areas:
+    "box1 box2"
+    "box1 box3"
+    "box1 box4"
+    "box5 box5";
+}
+
+.box1 {
+    grid-area: box1;
+}
+.box2 {
+    grid-area: box2;
+}
+.box3 {
+    grid-area: box3;
+}
+.box4 {
+    grid-area: box4;
+}
+.box5 {
+    grid-area: box5;
+}
+
+.box1 video {
+    width: auto;
+    height: auto;
+}
