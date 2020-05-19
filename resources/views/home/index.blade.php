@@ -106,7 +106,7 @@
                     <div class="videos">
                         <div class="video" style="background-image: url(//vjs.zencdn.net/v/oceans.png)">
                             <div class="title">Oceans testvideo</div>
-                            <a href="player.html"><i class="fas fa-play-circle"></i></a>
+                            <a href="{{ route('player', $video_id=1) }}"><i class="fas fa-play-circle"></i></a>
                             <p> 00:47 </p>
                             <div class="footer">
                                 Kategori: Test
