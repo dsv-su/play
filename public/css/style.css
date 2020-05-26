@@ -1,1 +1,328 @@
-@import url(https://fonts.googleapis.com/css?family=Nunito:400,700);div.wrapper{background-image:url(/images/container-repeater.gif?bc2a98a2069a9e10f96f9454ccb94d8b);background-repeat:repeat-x}div.welcome{font-family:Roboto,Segoe UI,serif;padding:10px;margin:0 auto}div.searchrequest{border-radius:25px;border:2px solid #002e5f}div.searchrequest,form{font-family:Nunito,sans-serif;padding:20px;margin:0 auto}form{border-radius:25px}form>div.a{display:inline-block;width:230px;margin:20px 0;background:#fff;border-bottom:1px solid #ccc}form>div.a>label{opacity:.3;font-weight:700;position:absolute;top:12px;left:10px}form>div.a>input[type=email],form>div.a>input[type=password],form>div.a>input[type=text]{width:100%;border:0;padding:10px 10px 10px 40px;background:#eee}form>div.a>input[type=email]:focus,form>div.a>input[type=password]:focus,form>div.a>input[type=text]:focus{outline:0;background:#fff}form>div.a>input[type=email]:focus+label,form>div.a>input[type=password]:focus+label,form>div.a>input[type=text]:focus+label{opacity:0}form>div.a>input[type=email]:valid,form>div.a>input[type=password]:valid,form>div.a>input[type=text]:valid{background:url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/check.svg);background-size:20px;background-repeat:no-repeat;background-position:10px 10px}form>div.a>input[type=email]:valid+label,form>div.a>input[type=password]:valid+label,form>div.a>input[type=text]:valid+label{opacity:0}form>div.a>input[type=email]:invalid:not(:focus):not(:placeholder-shown),form>div.a>input[type=password]:invalid:not(:focus):not(:placeholder-shown),form>div.a>input[type=text]:invalid:not(:focus):not(:placeholder-shown){background:pink}form>div.a>input[type=email]:invalid:not(:focus):not(:placeholder-shown)+label,form>div.a>input[type=password]:invalid:not(:focus):not(:placeholder-shown)+label,form>div.a>input[type=text]:invalid:not(:focus):not(:placeholder-shown)+label{opacity:0}form>div.a>input[type=email]:invalid:focus:not(:placeholder-shown)~.requirements,form>div.a>input[type=password]:invalid:focus:not(:placeholder-shown)~.requirements,form>div.a>input[type=text]:invalid:focus:not(:placeholder-shown)~.requirements{max-height:200px;padding:0 20px 10px 50px}form>div.a .requirements{padding:0 20px 0 50px;color:#999;max-height:0;transition:.28s;overflow:hidden;color:red;font-style:italic}form>div.b{display:inline-block}form>div.b .req{padding:0 20px 0 50px;color:#999;max-height:0;transition:.28s;overflow:hidden;color:red;font-style:italic}form>div.c{display:inline-block;width:200px;margin:10px 0}form button[type=submit]{display:inline-block;margin:0 40px;background-image:url(/images/button-background-repeater.gif?64e6c6dcb7ae80e6034d3110a3dbb160);background-repeat:repeat-x;border-top-left-radius:10px;border-top-right-radius:10px;border-bottom-left-radius:10px;border-bottom-right-radius:10px;color:#fff;border:0;padding:10px;font-size:1rem}form>div.d{display:inline-block;border:2px solid #002e5f}body{background:#fff;padding:10px}body,table{font-family:Nunito,sans-serif}table{border-collapse:separate}table b{background:url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/check.svg);font-size:1rem;background-size:18px;background-repeat:no-repeat;opacity:1%}table list{font-size:1rem;box-shadow:2px 2px 2px 2px #e5dfcc}table tr td,table tr th{box-shadow:2px 2px 1px #e5dfcc}table tr:first-child th:first-child{border-top-left-radius:10px}table tr:first-child th:last-child{border-top-right-radius:10px}table tr:last-child td:first-child{border-bottom-left-radius:6px}table tr:last-child td:last-child{border-bottom-right-radius:6px}body{margin:30px;background:#f8f8ff;font-family:Muli,serif}td,th{padding:8px 20px}th{background:#002e5f;color:#fff;border:0}td{background:#f8f8ff}
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+Pro:ital,wght@0,400;0,600;1,400;1,600&display=swap');
+
+html,
+body {
+    margin: 0;
+    height: 100%;
+}
+
+video {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+
+}
+
+/*--------------------------------------------------------------
+Wrapper settings
+--------------------------------------------------------------*/
+.wrapper {
+    height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/*--------------------------------------------------------------
+Header settings
+--------------------------------------------------------------*/
+
+.head {
+    position: absolute;
+    font-size: 20px;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    text-align: center;
+    background: hsl(0, 0%, 0%);
+    color: #ffffff;
+    order: 1;
+}
+/*--------------------------------------------------------------
+Container (Videos) settings
+--------------------------------------------------------------*/
+.container {
+    position: relative;
+    height: 100%;
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    border: 1px solid #ff4136;
+    padding: 20px;
+    order: 2;
+}
+
+.grid {
+    margin: 5px;
+    display: grid;
+    border: 1px solid black;
+    grid-template-columns: 8fr minmax(0, 4fr);
+    grid-template-areas:
+            "master slave1"
+            "master slave2"
+            "master slave3";
+    grid-gap: 10px;
+}
+
+.master {
+    grid-area: master;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.slave1 {
+    grid-area: slave1;
+    position: relative;
+}
+.slave2 {
+    grid-area: slave2;
+    position: relative;
+
+}
+.slave3 {
+    grid-area: slave3;
+    position: relative;
+}
+
+/*--------------------------------------------------------------
+Border settings fot dev-mode
+--------------------------------------------------------------*/
+.master {
+    font-size: 14px;
+    border: 1px dotted #ff4136;
+    background-color: hsl(0, 0%, 0%);
+}
+
+.slave1, .slave2, .slave3 {
+    font-size: 14px;
+    border: 1px dotted #0074d9;
+    background-color: rgba(#0074d9, .1);
+}
+
+/*--------------------------------------------------------------
+Pseudos settings
+--------------------------------------------------------------*/
+.wrapper:after,
+.grid:after,
+.slave1:after,
+.slave2:after,
+.slave3:after
+ {
+    position: absolute;
+    text-transform: uppercase;
+    left: 0;
+    top: 0;
+    color: white;
+    padding: 5px;
+    font-size: 12px;
+}
+
+.master:after {
+    position: absolute;
+    text-transform: uppercase;
+    left: 2.1em;
+    top: 2.2em;
+    color: white;
+    padding: 5px;
+    font-size: 12px;
+}
+
+.grid:after {
+    content: 'grid';
+    background-color: #222;
+}
+
+.slave1:after {
+    content: 'Slave1';
+    background-color: #0074d9;
+}
+.slave2:after {
+    content: 'Slave2';
+    background-color: #0074d9;
+}
+.slave3:after {
+    content: 'Slave3';
+    background-color: #0074d9;
+}
+
+.master:after {
+    content: 'Master';
+    background-color: #0074d9;
+}
+
+.wrapper:after {
+    content: 'wrapper';
+    background-color: #ff4136;
+}
+
+/*--------------------------------------------------------------
+Trigger switch  settings
+--------------------------------------------------------------*/
+
+.master .switch {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    background-color: #555;
+    color: white;
+    font-size: 14px;
+    padding: 10px 18px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.master .switch:hover {
+    background-color: black;
+}
+
+/*--------------------------------------------------------------
+Controls bar settings
+--------------------------------------------------------------*/
+.footer {
+    display: grid;
+    position: relative;
+    margin: auto;
+    bottom: 0;
+    width: 100%;
+    color: white;
+    padding: 2em;
+    /*background: hsl(0, 0%, 0%);*/
+    overflow: hidden;
+    order: 3;
+}
+
+.footer:hover .controls {
+    transform: translateY(0);
+}
+
+/*--------------------------------------------------------------
+Controls
+--------------------------------------------------------------*/
+
+.buttons {
+    padding: 15px 20px;
+}
+
+.buttons button {
+    background: none;
+    border: none;
+    outline: 0;
+    cursor: pointer;
+
+}
+
+.buttons #play-pause:before {
+    content: '\f144';
+    font-family: 'Font Awesome 5 Free';
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+    font-size: 23px;
+    color: white;
+    -webkit-font-smoothing: antialiased;
+}
+
+.buttons #fast-forward:before {
+    content: '\f050';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+    font-size: 23px;
+    color: white;
+    -webkit-font-smoothing: antialiased;
+}
+
+.buttons #fullscreen:before {
+    content: '\f31e';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+    font-size: 23px;
+    color: white;
+    -webkit-font-smoothing: antialiased;
+}
+
+.controls {
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    flex-wrap: wrap;
+    background-color: rgba(0,0,0,0.7);
+    background: hsl(0, 0%, 0%);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    transform: translateY(100%) translateY(-5px);
+    transition: all .2s;
+}
+
+.buttons #play-pause.play:before {
+    content: '\f144';
+    font-family: 'Font Awesome 5 Free';
+}
+
+.buttons #play-pause.pause:before {
+    content: '\f28b';
+    font-family: 'Font Awesome 5 Free';
+}
+.buttons #fast-forward.set:before {
+    content: '\f050';
+    font-family: 'Font Awesome 5 Free';
+}
+.buttons #fast-forward.back:before {
+    content: '\f01e';
+    font-family: 'Font Awesome 5 Free';
+}
+.buttons #fullscreen.open:before {
+    content: '\f31e';
+    font-family: 'Font Awesome 5 Free';
+}
+
+.buttons #fullscreen.close:before {
+    content: '\f78c';
+    padding: 5px;
+    font-family: 'Font Awesome 5 Free';
+}
+.time {
+    padding: 10px;
+    color: white;
+}
+.progressbar_container {
+    height: 10px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0,0,0,0.80);
+}
+
+.progress {
+    height: 10px;
+    background-color: white;
+}
+
+.hidden {
+    display: none;
+}
+
+/*--------------------------------------------------------------
+Media querys
+--------------------------------------------------------------*/

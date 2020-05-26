@@ -1,10 +1,12 @@
 // Layout and toggle Playlist
-const SITE = document.querySelector('.site');
+/*
+//const SITE = document.querySelector('.site');
+const SITE = document.querySelector('.container');
 const TRIGGER = document.querySelector('.trigger');
 const SHOW = document.querySelector('.playlist');
 const MENUITEMS = SHOW.querySelectorAll('nav a');
 const MENUARRAY = Array.apply(null, MENUITEMS);
-
+*/
 // Videostreams
 var video = document.getElementById('video1'); //Main video stream
 var progress = document.querySelector('.progress');
@@ -12,12 +14,21 @@ var playpausebtn = document.getElementById('play-pause');
 var fullscreenbtn = document.getElementById('fullscreen');
 var ffbtn = document.getElementById('fast-forward');
 var elem = document.documentElement;
-//var openleft = document.getElementById('openbtn');
+//Streams
+var vstreams = 1;
 const timeElapsed = document.getElementById('time-elapsed');
 const duration = document.getElementById('duration');
 
 
+// Switch video master
+const switchbtn = document.querySelector('.switch');
+var grid = document.querySelector('.grid');
+
+
+
+/*
 // Toggle show class on body element, set aria-expanded
+
 function showMenu() {
     SITE.classList.toggle('show');
 	SHOW.classList.add('open');
@@ -57,7 +68,7 @@ SITE.addEventListener('click', function(e) { clickTarget(e); }, true);
 
 SITE.addEventListener('transitionend', removeMenu, false);
 
-
+*/
 // Videostreams
 
 /**************************
@@ -103,9 +114,9 @@ video.setAttribute('src', newsource_video1);
 //Check if stream 2 exist
 if( newsource_video2){
 	var video2 = document.getElementById('video2');
-	/*openleft.removeAttribute('hidden');*/
 	video2.removeAttribute('hidden');
 	video2.setAttribute('src', newsource_video2);
+	vstreams++;
 }
 else {
 	document.getElementById("video2").remove();
@@ -115,6 +126,7 @@ if( newsource_video3){
 	var video3 = document.getElementById('video3');
 	video3.removeAttribute('hidden');
 	video3.setAttribute('src', newsource_video3);
+	vstreams++;
 }
 else {
 	document.getElementById("video3").remove();
@@ -124,12 +136,64 @@ if( newsource_video4){
 	var video4 = document.getElementById('video4');
 	video4.removeAttribute('hidden');
 	video4.setAttribute('src', newsource_video4);
+	vstreams++;
 }
 else {
 	document.getElementById("video4").remove();
 }
 //Get all streams
 var medias = Array.prototype.slice.apply(document.querySelectorAll('audio,video'));
+
+/******************************************
+/*
+/* Check available streams and adjust viewport
+/******************************************/
+
+// Single stream
+if (vstreams == 1)
+{
+	grid.style.gridTemplateColumns = '100%';
+	grid.style.gridTemplateAreas = '"master master" "master master" "master master"';
+	document.getElementsByClassName("slave1").remove();
+	document.getElementsByClassName("slave2").remove();
+	document.getElementsByClassName("slave3").remove();
+}
+// 2 streams
+if (vstreams == 2)
+{
+	grid.style.gridTemplateColumns = '50% 50%';
+	grid.style.gridTemplateAreas = '"master slave1" "master slave1" "master slave1"';
+	document.getElementsByClassName("slave2").remove();
+	document.getElementsByClassName("slave3").remove();
+}
+// 3 streams
+if (vstreams == 3)
+{
+	grid.style.gridTemplateColumns = '50% 50%';
+	grid.style.gridTemplateAreas = '"master slave1" "master slave1" "master slave2"';
+	document.getElementsByClassName("slave3").remove();
+}
+
+
+//Switch master
+var grid_pointer = 0;
+grid_pointer++;
+
+//If 2 streams are present
+if (vstreams == 2) {
+	var grid_setup2 = ['"master slave1" "master slave1" "master slave1"', '"slave1 master" "slave1 master" "slave1 master"'];
+}
+//If 3 streams are present
+if (vstreams == 3) {
+	var grid_setup3 = ['"master slave1" "master slave1" "master slave2"', '"slave1 slave2" "slave1 slave2" "slave1 master"', '"slave2 master" "slave2 master" "slave2 slave1"'];
+}
+//If all streams are present
+if (vstreams == 4) {
+	var grid_setup = ['"master slave1" "master slave2" "master slave3"', '"slave1 slave2" "slave1 slave3" "slave1 master"', '"slave2 slave3" "slave2 master" "slave2 slave1"','"slave3 master" "slave3 slave1" "slave3 slave2"'];
+}
+
+
+
 
 //Videoplayer functions
 
@@ -151,6 +215,26 @@ function FastForward() {
 		ffbtn.className = 'back';
 		video.playbackRate = 2;
 	}
+
+}
+
+function SwitchMaster() {
+	if (vstreams == 2) {
+		grid.style.gridTemplateAreas = grid_setup2[grid_pointer];
+		grid_pointer++;
+		if(grid_pointer == 2) grid_pointer = 0;
+	}
+	if (vstreams == 3) {
+		grid.style.gridTemplateAreas = grid_setup3[grid_pointer];
+		grid_pointer++;
+		if(grid_pointer == 3) grid_pointer = 0;
+	}
+	if (vstreams == 4) {
+		grid.style.gridTemplateAreas = grid_setup[grid_pointer];
+		grid_pointer++;
+		if(grid_pointer == 4) grid_pointer = 0;
+	}
+
 
 }
 
@@ -232,6 +316,10 @@ playpausebtn.onclick = function (params) {
 };
 ffbtn.onclick = function (M) {
 	FastForward();
+}
+
+switchbtn.onclick = function () {
+	SwitchMaster();
 }
 
 

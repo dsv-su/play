@@ -17,6 +17,7 @@ class PlayController extends Controller
 
     public function player()
     {
+
         return view('player.index');
     }
 
