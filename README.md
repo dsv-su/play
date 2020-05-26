@@ -69,18 +69,20 @@ Currently used version is 7.10.3
 * Create the database with `php artisan migrate` (this should create database tables needed)
 
 ## 4. Player
-Play up to four interconnected streams simultaneously. A stream should always be in "focus";
-which stream is up to the viewer.
+The Player can play up to four interconnected streams simultaneously. A stream should always be in "focus" is here tagged as master. The streams that are not in focus appear as smaller display on one side of the player and are tagged slave1, slave2 and slave3. The master stream can be switched with the switch-button.
+
+
+![Player](./public/images/player.png)
 
 The player should have standard features:
 
-* play / pause
+* play / pause 
 * speed 2x-6x
 * time with the opportunity to jump in the movie
 * full screen
 * volume control
 
-There should be a common controlbar/or panel for all streams. The streams that are not in focus should appear as smaller display on one side of the player. It should be possible to hide
-the unfocused displays. If the smaller dsiplays are hidden, the main display should be scaled up to take it
+There is a common controlbar for all streams. It should be possible to hide
+the unfocused displays. If the smaller displays are hidden by the user, the main display should be scaled up to take it
 as much space as possible in the player window.
 
