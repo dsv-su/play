@@ -1,23 +1,70 @@
 @import url('https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+Pro:ital,wght@0,400;0,600;1,400;1,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Exo:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Exo:wght@400;600&family=Teko:wght@300;400;600&display=swap');
 
 html,
 body {
     margin: 0;
     height: 100%;
+    background: hsl(0, 0%, 0%);
 }
 
 video {
+    /*
+    height: 100%;
+    width: 177.77777778%;
+    min-width: 100%;
+    min-height: 56.25%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    */
+
+
+    height: 100%;
+    width: 100%;
+    max-height: 100%;
+
+
+}
+
+.mastervideo {
+
     width: 100%;
     height: 100%;
-    object-fit: fill;
+    clear: both;
+    overflow: hidden;
+    max-width: 100%;
+    object-fit: cover;
+
+
+
+}
+
+.slavevideo {
+
+    width: 100%;
+    height: 100%;
+    clear: both;
+    overflow: hidden;
+    max-width: 100%;
+    object-fit: cover;
+
+
 
 }
 
 /*--------------------------------------------------------------
 Wrapper settings
 --------------------------------------------------------------*/
+
 .wrapper {
-    height: 100%;
+    margin-right: auto;
+    margin-left:  auto;
+    /*max-width: 1180px;*/
+    max-height: 100vh;
+    padding-right: 10px;
+    padding-left:  10px;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -28,6 +75,7 @@ Wrapper settings
     -ms-flex-align: center;
     align-items: center;
     flex-direction: column;
+
 }
 
 /*--------------------------------------------------------------
@@ -35,59 +83,82 @@ Header settings
 --------------------------------------------------------------*/
 
 .head {
-    position: absolute;
+    display: flex;
+    width: 100%;
+    position: relative;
     font-size: 20px;
     top: 0;
     left: 0;
     right: 0;
     margin: auto;
-    text-align: center;
+    justify-content: center;
+    align-items: baseline;
     background: hsl(0, 0%, 0%);
     color: #ffffff;
     order: 1;
 }
+.dev {
+    font-family: 'Teko', sans-serif;
+    font-size: 18px;
+}
 /*--------------------------------------------------------------
 Container (Videos) settings
 --------------------------------------------------------------*/
+
 .container {
     position: relative;
-    height: 100%;
-    margin-top: 40px;
+    overflow: auto;
+    padding: 10px;
+    margin: 10px;
+    overflow-y: hidden;
+    overflow-x: hidden;
     display: flex;
-    justify-content: center;
+    flex: 1;
     border: 1px solid #ff4136;
-    padding: 20px;
     order: 2;
+
 }
 
 .grid {
-    margin: 5px;
     display: grid;
-    border: 1px solid black;
-    grid-template-columns: 8fr minmax(0, 4fr);
+    overflow: auto;
+    border: 1px solid yellow;
+    /*grid-template-columns: 2fr minmax(0, 1fr);*/
+    grid-template-columns: 75% 25%;
+    grid-template-rows: minmax(1fr, 1fr) minmax(1fr, 1fr) minmax(1fr, 1fr);
+    /*
     grid-template-areas:
             "master slave1"
             "master slave2"
+            "master slave3";
+    */
+    grid-template-areas:
+            "master slave1"
+            "master slave1"
+            "master slave2"
+            "master slave2"
+            "master slave3"
             "master slave3";
     grid-gap: 10px;
 }
 
 .master {
     grid-area: master;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    /*max-height: 100%;*/
+    position: relative;
 }
+
 
 .slave1 {
     grid-area: slave1;
     position: relative;
 }
+
 .slave2 {
     grid-area: slave2;
     position: relative;
-
 }
+
 .slave3 {
     grid-area: slave3;
     position: relative;
@@ -96,23 +167,31 @@ Container (Videos) settings
 /*--------------------------------------------------------------
 Border settings fot dev-mode
 --------------------------------------------------------------*/
+.head {
+    font-size: 14px;
+    border: 1px dotted #ff4136;
+}
+.footer {
+    font-size: 14px;
+    border: 1px dotted #ff4136;
+}
 .master {
     font-size: 14px;
     border: 1px dotted #ff4136;
-    background-color: hsl(0, 0%, 0%);
+    /*background-color: hsl(0, 0%, 0%);*/
 }
 
 .slave1, .slave2, .slave3 {
     font-size: 14px;
     border: 1px dotted #0074d9;
-    background-color: rgba(#0074d9, .1);
+
 }
 
 /*--------------------------------------------------------------
 Pseudos settings
 --------------------------------------------------------------*/
-.wrapper:after,
 .grid:after,
+.master:after,
 .slave1:after,
 .slave2:after,
 .slave3:after
@@ -121,16 +200,6 @@ Pseudos settings
     text-transform: uppercase;
     left: 0;
     top: 0;
-    color: white;
-    padding: 5px;
-    font-size: 12px;
-}
-
-.master:after {
-    position: absolute;
-    text-transform: uppercase;
-    left: 2.1em;
-    top: 2.2em;
     color: white;
     padding: 5px;
     font-size: 12px;
@@ -159,18 +228,13 @@ Pseudos settings
     background-color: #0074d9;
 }
 
-.wrapper:after {
-    content: 'wrapper';
-    background-color: #ff4136;
-}
-
 /*--------------------------------------------------------------
-Trigger switch  settings
+Master toggle switch
 --------------------------------------------------------------*/
 
-.master .switch {
+.head .switch {
     position: absolute;
-    top: 0;
+    top: 2em;
     right: 0;
     transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
@@ -184,23 +248,59 @@ Trigger switch  settings
     text-align: center;
 }
 
-.master .switch:hover {
+.head .switch:hover {
     background-color: black;
+}
+/*--------------------------------------------------------------
+Slave disable switch
+--------------------------------------------------------------*/
+.slave1 .disable_slave1,
+.slave2 .disable_slave2,
+.slave3 .disable_slave3 {
+    position: absolute;
+    top: 2em;
+    right: -0.3em;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    background: hsl(0, 0%, 30%);
+    color: white;
+    font-size: 10px;
+    padding: 8px 8px;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+    text-align: center;
+    z-index: 1;
+}
+
+.slave1 .disable_slave1:hover {
+    background-color: blue;
+}
+
+.slave2 .disable_slave2:hover {
+    background-color: blue;
+}
+
+.slave3 .disable_slave3:hover {
+    background-color: blue;
 }
 
 /*--------------------------------------------------------------
 Controls bar settings
 --------------------------------------------------------------*/
+
 .footer {
-    display: grid;
-    position: relative;
+    display: flex;
+    position: fixed;
     margin: auto;
     bottom: 0;
-    width: 100%;
+    left: 0;
+    right: 0;
+    width: 97%;
     color: white;
-    padding: 2em;
+    padding: 2.5em;
     /*background: hsl(0, 0%, 0%);*/
-    overflow: hidden;
+    overflow: auto;
     order: 3;
 }
 
@@ -221,7 +321,6 @@ Controls
     border: none;
     outline: 0;
     cursor: pointer;
-
 }
 
 .buttons #play-pause:before {
@@ -261,16 +360,12 @@ Controls
 
 .controls {
     display: flex;
-    position: absolute;
+    position: fixed;
     bottom: 0;
-    width: 100%;
-    flex-wrap: wrap;
+    width: 97%;
+    align-items: baseline;
     background-color: rgba(0,0,0,0.7);
-    background: hsl(0, 0%, 0%);
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
+    border-radius: 5px;
     transform: translateY(100%) translateY(-5px);
     transition: all .2s;
 }
@@ -293,7 +388,7 @@ Controls
     font-family: 'Font Awesome 5 Free';
 }
 .buttons #fullscreen.open:before {
-    content: '\f31e';
+    content: '\f009';
     font-family: 'Font Awesome 5 Free';
 }
 
@@ -307,16 +402,95 @@ Controls
     color: white;
 }
 .progressbar_container {
-    height: 10px;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: rgba(0,0,0,0.80);
+    height: 8.4px;
+    /*background-color: rgba(0,0,0,0.7);*/
+    margin-bottom: 10px;
 }
 
-.progress {
-    height: 10px;
-    background-color: white;
+progress {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 2px;
+    width: 100%;
+    height: 8.4px;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+}
+progress::-webkit-progress-bar {
+    background-color: rgba(0,0,0,0.7);
+    /*background: hsl(0, 0%, 0%);*/
+    border-radius: 2px;
+}
+
+progress::-webkit-progress-value {
+    /*background: #0074d9;*/
+    background: hsl(0, 0%, 0%);
+    border-radius: 2px;
+}
+
+progress::-moz-progress-bar {
+    border: 1px solid #0074d9;
+    background: #0074d9;
+}
+
+.seek {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    cursor: pointer;
+    margin: 0;
+}
+
+.seek:hover+.seek-tooltip {
+    display: block;
+}
+
+.seek-tooltip {
+    display: none;
+    position: absolute;
+    top: -10px;
+    margin-left: -50px;
+    font-size: 14px;
+    padding: 3px;
+    content: attr(data-title);
+    font-weight: bold;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.volumebuttons {
+    padding: 15px 15px;
+
+}
+
+.volumebuttons button {
+    background: none;
+    border: none;
+    outline: 0;
+    cursor: pointer;
+
+}
+
+.volumebuttons input {
+    width: 100px;
+    opacity: 1;
+    transition: all 0.4s ease;
+}
+
+.volumebuttons:hover input, .volumebuttons input:focus {
+    width: 100px;
+    opacity: 1;
+}
+
+svg {
+    width: 25px;
+    height: 25px;
+    fill: #fff;
+    stroke: #fff;
+    cursor: pointer;
+    -webkit-font-smoothing: antialiased;
 }
 
 .hidden {
@@ -326,3 +500,25 @@ Controls
 /*--------------------------------------------------------------
 Media querys
 --------------------------------------------------------------*/
+@media (max-width: 640px){
+
+
+}
+
+@media (min-width: 768px){
+
+
+
+}
+
+@media (min-width: 1024px){
+
+
+
+}
+
+@media (min-width: 1200px){
+
+
+
+}

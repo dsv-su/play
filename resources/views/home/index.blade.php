@@ -104,87 +104,21 @@
                     <h4 class="playlist_title">Senast uppladdade</h4>
                     <br>
                     <div class="videos">
+                        @foreach ($latest as $video)
                         <div class="video" style="background-image: url(//vjs.zencdn.net/v/oceans.png)">
-                            <div class="title">Oceans testvideo</div>
-                            <a href="{{ route('player', $video_id=1) }}"><i class="fas fa-play-circle"></i></a>
-                            <p> 00:47 </p>
+                            <div class="title">{{ $video->title }}</div>
+                            <a href="{{ route('player', ['id' => $video->id]) }}"><i class="fas fa-play-circle"></i></a>
+                            <p> {{$video->length}} </p>
                             <div class="footer">
-                                Kategori: Test
+                                Kurs: {{$video->name}} {{$video->semester}} {{$video->year}}
                                 <br>
-                                Title: Testvideo
+                                Kategori: {{$video->name}}
                             </div>
                         </div>
-                        <div class="video" style="background-image: url(//vjs.zencdn.net/v/oceans.png)">
-                            <div class="title">Oceans testvideo</div>
-                            <i class="fas fa-play-circle"></i>
-                            <p> 00:47 </p>
-                            <div class="footer">
-                                Kategori: Test
-                                <br>
-                                Title: Testvideo
-                            </div>
-                        </div>
-                        <div class="video" style="background-image: url(//vjs.zencdn.net/v/oceans.png)">
-                            <div class="title">Oceans testvideo</div>
-                            <i class="fas fa-play-circle"></i>
-                            <p> 00:47 </p>
-                            <div class="footer">
-                                Kategori: Test
-                                <br>
-                                Title: Testvideo
-                            </div>
-                        </div>
-                        <div class="video" style="background-image: url(//vjs.zencdn.net/v/oceans.png)">
-                            <div class="title">Oceans testvideo</div>
-                            <i class="fas fa-play-circle"></i>
-                            <p> 00:47 </p>
-                            <div class="footer">
-                                Kategori: Test
-                                <br>
-                                Title: Testvideo
-                            </div>
-                        </div>
-                        <div class="video" style="background-image: url(//vjs.zencdn.net/v/oceans.png)">
-                            <div class="title">Oceans testvideo</div>
-                            <i class="fas fa-play-circle"></i>
-                            <p> 00:47 </p>
-                            <div class="footer">
-                                Kategori: Test
-                                <br>
-                                Title: Testvideo
-                            </div>
-                        </div>
-                        <div class="video" style="background-image: url(//vjs.zencdn.net/v/oceans.png)">
-                            <div class="title">Oceans testvideo</div>
-                            <i class="fas fa-play-circle"></i>
-                            <p> 00:47 </p>
-                            <div class="footer">
-                                Kategori: Test
-                                <br>
-                                Title: Testvideo
-                            </div>
-                        </div>
-                        <div class="video" style="background-image: url(//vjs.zencdn.net/v/oceans.png)">
-                            <div class="title">Oceans testvideo</div>
-                            <i class="fas fa-play-circle"></i>
-                            <p> 00:47 </p>
-                            <div class="footer">
-                                Kategori: Test
-                                <br>
-                                Title: Testvideo
-                            </div>
-                        </div>
-                        <div class="video" style="background-image: url(//vjs.zencdn.net/v/oceans.png)">
-                            <div class="title">Oceans testvideo</div>
-                            <i class="fas fa-play-circle"></i>
-                            <p> 00:47 </p>
-                            <div class="footer">
-                                Kategori: Test
-                                <br>
-                                Title: Testvideo
-                            </div>
-                        </div>
+
+                        @endforeach
                     </div>
+
                 </div>
             @endif
         </section> <!-- End content -->

@@ -125,19 +125,13 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
  * Change stream source
  * @type {string}
  */
-/* open player version
+
 var newsource_video1 = getUrlParameter('source1');
 var newsource_video2 = getUrlParameter('source2');
 var newsource_video3 = getUrlParameter('source3');
 var newsource_video4 = getUrlParameter('source4');
-*/
-// Integrated laravel version
-var newsource_video1 = document.getElementById('video1').src;
-var newsource_video2 = document.getElementById('video2').src;
-var newsource_video3 = document.getElementById('video3').src;
-var newsource_video4 = document.getElementById('video4').src;
 
-//video.setAttribute('src', newsource_video1);
+video.setAttribute('src', newsource_video1);
 
 /*****************************
  * Check if streams exist
@@ -147,7 +141,7 @@ var newsource_video4 = document.getElementById('video4').src;
 if( newsource_video2){
 	var video2 = document.getElementById('video2');
 	video2.removeAttribute('hidden');
-	//video2.setAttribute('src', newsource_video2);
+	video2.setAttribute('src', newsource_video2);
 	vstreams++;
 }
 else {
@@ -157,7 +151,7 @@ else {
 if( newsource_video3){
 	var video3 = document.getElementById('video3');
 	video3.removeAttribute('hidden');
-	//video3.setAttribute('src', newsource_video3);
+	video3.setAttribute('src', newsource_video3);
 	vstreams++;
 }
 else {
@@ -167,7 +161,7 @@ else {
 if( newsource_video4){
 	var video4 = document.getElementById('video4');
 	video4.removeAttribute('hidden');
-	//video4.setAttribute('src', newsource_video4);
+	video4.setAttribute('src', newsource_video4);
 	vstreams++;
 }
 else {

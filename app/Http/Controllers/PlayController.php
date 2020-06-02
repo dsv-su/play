@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\UploadHandler;
+use App\Video;
 use Illuminate\Http\Request;
 use Illuminate\Http\File;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class PlayController extends Controller
@@ -12,14 +14,22 @@ class PlayController extends Controller
     public function index()
     {
        $data['search'] = 0;
+       $data['latest'] = DB::table('videos')
+                            ->join('courses', 'videos.course_id', '=','courses.id')
+                            ->join('categories', 'videos.category_id', '=', 'categories.id')
+                            ->select('videos.*','courses.name','courses.semester', 'courses.year', 'categories.name')
+                            ->get();
+
        return view('home.index', $data);
     }
 
-    public function player()
+    public function player($id)
     {
+        $video = Video::find($id);
+        return view('player.index', ['video' => $video]);
 
-        return view('player.index');
     }
+
 
     public function upload()
     {
