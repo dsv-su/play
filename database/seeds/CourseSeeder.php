@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class CourseSeeder extends Seeder
@@ -12,9 +13,11 @@ class CourseSeeder extends Seeder
     public function run()
     {
         DB::table('courses')->insert([
-            'name' => 'Databasmetodik',
+            'course_name' => 'Databasmetodik',
             'semester' => 'HT',
             'year' => '2016',
+            'created_at' =>  Carbon::now(),
+            'updated_at' => Carbon::now(),
         ]);
 
     }

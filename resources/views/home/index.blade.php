@@ -3,14 +3,15 @@
     <div class="wrapper">
         <!--Header-->
         <section class="top_section">
+            <!-- Navigation bar -->
             <nav class="navbar">
                         <span class="navbar-toggle" id="js-navbar-toggle">
                                 <i class="fas fa-bars"></i>
                             </span>
-                <a href="#" class="logo">Play</a>
+                <a href="{{route('home')}}" class="logo">Play</a>
                 <ul class="main-nav" id="js-menu">
                     <li>
-                        <a href="#" class="nav-links">Ladda upp</a>
+                        <a href="{{route('list')}}" class="nav-links">[Lista alla]</a>
                     </li>
                     <li>
                         <a href="#" class="nav-links">Hantera uppspelning</a>
@@ -19,11 +20,11 @@
                         <a href="#" class="nav-links">Manual</a>
                     </li>
                     <li>
-                        <div class="nav-links">UserFirstname UserLastname</div>
+                        <div class="nav-links">{{$play_user}}</div>
                     </li>
                 </ul>
             </nav>
-
+            <!-- Search -->
             <div class="search_header">
                 <h2>Startsida</h2>
                 <!-- -->
@@ -70,7 +71,7 @@
             </div>
 
         </section> <!--end Top section -->
-        <!-- Content -->
+        <!-- Search result -->
         <section class="content_section">
             @if ($search == 1)
                 <div class="playlist_one">
@@ -100,6 +101,7 @@
                 </div>
 
             @else
+             <!-- Show latest -->
                 <div class="playlist_one">
                     <h4 class="playlist_title">Senast uppladdade</h4>
                     <br>
@@ -110,9 +112,9 @@
                             <a href="{{ route('player', ['id' => $video->id]) }}"><i class="fas fa-play-circle"></i></a>
                             <p> {{$video->length}} </p>
                             <div class="footer">
-                                Kurs: {{$video->name}} {{$video->semester}} {{$video->year}}
+                                Kurs: {{$video->course->course_name}} {{$video->course->semester}} {{$video->course->year}}
                                 <br>
-                                Kategori: {{$video->name}}
+                                Kategori: {{$video->category->category_name}}
                             </div>
                         </div>
 

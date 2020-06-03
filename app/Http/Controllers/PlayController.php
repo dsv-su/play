@@ -6,19 +6,24 @@ use App\UploadHandler;
 use App\Video;
 use Illuminate\Http\Request;
 use Illuminate\Http\File;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class PlayController extends Controller
 {
     public function index()
     {
+        // If the environment is local
+        if(app()->environment('local'))
+        {
+            $data['play_user'] = 'Förnamn Efternamn';
+        }
+        else {
+
+            $data['play_user'] = $_SERVER['displayName'];
+        }
+
        $data['search'] = 0;
-       $data['latest'] = DB::table('videos')
-                            ->join('courses', 'videos.course_id', '=','courses.id')
-                            ->join('categories', 'videos.category_id', '=', 'categories.id')
-                            ->select('videos.*','courses.name','courses.semester', 'courses.year', 'categories.name')
-                            ->get();
+       $data['latest']= Video::with('category', 'course')->latest()->take(7)->get();
 
        return view('home.index', $data);
     }

@@ -26,21 +26,19 @@
                             <tr>
                                 <th>Video</th>
                                 <th>Category</th>
+                                <th>Course</th>
                                 <th>Added on</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @forelse($videos as $video)
+                            @foreach($videos as $video)
                                 <tr>
-                                    <td>{{ $video->name }}</td>
-                                    <td>{{ $video->category->name }}</td>
+                                    <td>{{ $video->title }}</td>
+                                    <td>{{ $video->category->category_name }}</td>
+                                    <td>{{ $video->course->course_name }}</td>
                                     <td>{{ $video->created_at }}</td>
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="3">No videos found.</td>
-                                </tr>
-                            @endforelse
+                            @endforeach
                             </tbody>
                         </table>
 

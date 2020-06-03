@@ -5,18 +5,18 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="shortcut icon" href="{{ asset('./images/favicon.ico') }}">
     <link rel="stylesheet" href="{{ asset('./css/style.css') }}">
     <script src="https://kit.fontawesome.com/7dcdfcd515.js" crossorigin="anonymous" SameSite="none"></script>
     <!-- Development version: -->
 
-    <title>Document</title>
+    <title>DSVPlayer</title>
 </head>
 <body>
 <div class="wrapper">
 
     <div class="head">
-        <p>Player</p>&nbsp;&nbsp;&nbsp;<p class="dev">[width: <span id="width"></span></p>&nbsp;<p class="dev">height: <span id="height"></span>]</p>&nbsp;&nbsp; <p class="dev">[Streams: <span id="streams"></span>]</p>
+        <p class="dev">[Nu spelas: {{ $video->title }}]</p>&nbsp;&nbsp;&nbsp;<p> Player</p>&nbsp;&nbsp;&nbsp;<p class="dev">[width: <span id="width"></span></p>&nbsp;<p class="dev">height: <span id="height"></span>]</p>&nbsp;&nbsp; <p class="dev">[Streams: <span id="streams"></span>]</p>
         <button id="masterswitch" class="switch">Switch Master <i class="fas fa-sync"></i></button>
     </div>
 

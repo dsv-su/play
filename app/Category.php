@@ -8,7 +8,7 @@ use Spatie\Searchable\SearchResult;
 
 class Category extends Model implements Searchable
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['category_name'];
 
     public function getSearchResult(): SearchResult
     {
@@ -16,7 +16,7 @@ class Category extends Model implements Searchable
 
         return new SearchResult(
             $this,
-            $this->name,
+            $this->category_name,
             $url
         );
     }

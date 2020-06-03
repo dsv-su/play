@@ -8,20 +8,25 @@ use Spatie\Searchable\SearchResult;
 
 class Video extends Model implements Searchable
 {
-    protected $fillable = ['name', 'category_id'];
+    protected $fillable = ['title', 'course_id','category_id'];
 
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
 
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
+
     public function getSearchResult(): SearchResult
     {
-        $url = route('videos.show', $this->id);
+        $url = route('player', $this->id);
 
         return new SearchResult(
             $this,
-            $this->name,
+            $this->title,
             $url
         );
     }
