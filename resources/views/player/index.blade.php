@@ -67,7 +67,16 @@
 
             <div class="buttons">
                 <button id="play-pause"></button>
-                <button id="fast-forward"></button>
+                <div class="dropdown">
+                    <button id="fast-forward"></button>
+                    <div class="dropdown-content">
+                        <button id="ff3">3X</button>
+                        <button id="ff4">4X</button>
+                        <button id="ff5">5X</button>
+                        <button id="ff6">6X</button>
+                    </div>
+                </div>
+
                 <button id="fullscreen"></button>
 
             </div>

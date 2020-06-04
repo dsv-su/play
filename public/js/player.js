@@ -16,8 +16,14 @@ const streamsOutput = document.querySelector('#streams');
 var video = document.getElementById('video1'); //Main video stream
 var playpausebtn = document.getElementById('play-pause');
 var fullscreenbtn = document.getElementById('fullscreen');
+// Fastforward
+var plbackrate = 1;
 var ffbtn = document.getElementById('fast-forward');
-var elem = document.documentElement;
+var ff3btn = document.getElementById('ff3');
+var ff4btn = document.getElementById('ff4');
+var ff5btn = document.getElementById('ff5');
+var ff6btn = document.getElementById('ff6');
+//var elem = document.documentElement;
 //Streams
 var vstreams = 1;
 const timeElapsed = document.getElementById('time-elapsed');
@@ -326,12 +332,12 @@ function PlayPause() {
 	}
 }
 function FastForward() {
-	if(video.playbackRate == 2){
+	if(video.playbackRate == 2 || video.playbackRate == 3 || video.playbackRate == 4 || video.playbackRate == 5 || video.playbackRate == 6){
 		ffbtn.className = 'set';
 		video.playbackRate = 1;
 	} else {
 		ffbtn.className = 'back';
-		video.playbackRate = 2;
+		video.playbackRate = plbackrate;
 	}
 
 }
@@ -543,8 +549,26 @@ fullscreenbtn.addEventListener('click', function() {
 playpausebtn.onclick = function (params) {
 	PlayPause();
 };
+
 ffbtn.onclick = function (M) {
+    plbackrate = 2;
 	FastForward();
+}
+ff3btn.onclick = function (M) {
+    plbackrate = 3;
+    FastForward();
+}
+ff4btn.onclick = function (M) {
+    plbackrate = 4;
+    FastForward();
+}
+ff5btn.onclick = function (M) {
+    plbackrate = 5;
+    FastForward();
+}
+ff6btn.onclick = function (M) {
+    plbackrate = 6;
+    FastForward();
 }
 
 switchbtn.onclick = function () {
