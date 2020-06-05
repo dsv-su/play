@@ -23,15 +23,17 @@ class PlayController extends Controller
         }
 
        $data['search'] = 0;
-       $data['latest']= Video::with('category', 'course')->latest()->take(7)->get();
+       $data['latest']= Video::with('category', 'course')->latest()->take(4)->get();
 
        return view('home.index', $data);
     }
 
-    public function player($id)
+    public function player(Video $video)
     {
-        $video = Video::find($id);
-        return view('player.index', ['video' => $video]);
+
+        $playlist = Video::where('course_id', $video->course->id)->get();
+        //dd($playlist);
+        return view('player.index', ['video' => $video, 'playlist' => $playlist]);
 
     }
 

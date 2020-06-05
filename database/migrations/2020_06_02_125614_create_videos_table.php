@@ -21,7 +21,7 @@ class CreateVideosTable extends Migration
             $table->string('source2')->nullable();
             $table->string('source3')->nullable();
             $table->string('source4')->nullable();
-            $table->foreignId('course_id')->references('id')->on('courses');
+            $table->foreignId('course_id')->constrained();
             $table->foreignId('category_id')->references('id')->on('categories');
             $table->timestamps();
         });

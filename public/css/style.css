@@ -94,6 +94,57 @@ Header settings
     font-size: 18px;
 }
 /*--------------------------------------------------------------
+Playlist settings
+--------------------------------------------------------------*/
+.playlist {
+    padding: 1em;
+    font-family: 'PT', sans-serif;
+    font-size: 14px;
+    color: white;
+    background-color: hsl(0, 0%, 20%);
+}
+
+.trigger {
+    display: none;
+    padding: .1em .5em;
+    color: white;
+    background: hsla(225, 82%, 53%, 1);
+    border: none;
+    transform: rotate(90deg);
+}
+
+.trigger:focus,
+.trigger:hover {
+    outline: 2px dotted hsl(0, 0%, 40%);
+}
+
+.trigger:focus {
+    outline-color: white;
+}
+
+.playlist ul {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+
+}
+
+.playlist a {
+    display: block;
+    padding: .5em 2em;
+    color: white;
+    text-decoration: none;
+}
+
+.playlist a:focus,
+.playlist a:hover {
+    text-decoration: underline;
+}
+
+/*--------------------------------------------------------------
 Container (Videos) settings
 --------------------------------------------------------------*/
 
@@ -111,45 +162,6 @@ Container (Videos) settings
 
 }
 
-.grid {
-    display: grid;
-    overflow: auto;
-    border: 1px solid yellow;
-    /*grid-template-columns: 2fr minmax(0, 1fr);*/
-    grid-template-columns: 75% 25%;
-    grid-template-rows: minmax(1fr, 1fr) minmax(1fr, 1fr) minmax(1fr, 1fr);
-    grid-template-areas:
-            "master slave1"
-            "master slave1"
-            "master slave2"
-            "master slave2"
-            "master slave3"
-            "master slave3";
-    grid-gap: 10px;
-}
-
-.master {
-    grid-area: master;
-    /*max-height: 100%;*/
-    position: relative;
-}
-
-
-.slave1 {
-    grid-area: slave1;
-    position: relative;
-}
-
-.slave2 {
-    grid-area: slave2;
-    position: relative;
-}
-
-.slave3 {
-    grid-area: slave3;
-    position: relative;
-}
-
 /*--------------------------------------------------------------
 Border settings fot dev-mode
 --------------------------------------------------------------*/
@@ -157,6 +169,7 @@ Border settings fot dev-mode
     font-size: 14px;
     border: 1px dotted #ff4136;
 }
+
 .footer {
     font-size: 14px;
     border: 1px dotted #ff4136;
@@ -170,7 +183,6 @@ Border settings fot dev-mode
 .slave1, .slave2, .slave3 {
     font-size: 14px;
     border: 1px dotted #0074d9;
-
 }
 
 /*--------------------------------------------------------------
@@ -236,6 +248,27 @@ Master toggle switch
 
 .head .switch:hover {
     background-color: black;
+}
+
+.player_close {
+    position: absolute;
+    left: 2em;
+    top: 2.3em;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    background: hsl(0, 0%, 30%);
+    color: white;
+    font-size: 10px;
+    padding: 8px 8px;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+    text-align: center;
+    z-index: 1;
+}
+
+.player_close:hover {
+    background-color: blue;
 }
 /*--------------------------------------------------------------
 Slave disable switch
@@ -522,28 +555,96 @@ svg {
 }
 
 /*--------------------------------------------------------------
-Media querys
+CSS Grid layout for wider screens, when browser supports grid:
 --------------------------------------------------------------*/
+@supports (grid-area: auto) {
 
-@media (max-width: 640px){
+    @media screen and (min-width: 20em) {
+        .grid {
+            position: relative;
+            display: grid;
+            left: -15em;
+            border: 1px solid yellow;
+            /*grid-template-columns: 75% 25%;*/
+            grid-template-columns: 15em 75% 25%;
+            grid-template-rows: minmax(1fr, 1fr) minmax(1fr, 1fr) minmax(1fr, 1fr);
+            grid-template-areas:
+                "nav master slave1"
+                "nav master slave1"
+                "nav master slave2"
+                "nav master slave2"
+                "nav master slave3"
+                "nav master slave3";
+            transition: left .6s;
+            grid-gap: 10px;
+        }
+        .master {
+            grid-area: master;
+            /*max-height: 100%;*/
+            position: relative;
+        }
 
 
-}
+        .slave1 {
+            grid-area: slave1;
+            position: relative;
+        }
 
-@media (min-width: 768px){
+        .slave2 {
+            grid-area: slave2;
+            position: relative;
+        }
+
+        .slave3 {
+            grid-area: slave3;
+            position: relative;
+        }
+
+        .show {
+            left: 0;
+        }
+        .playlist {
+            grid-area: nav;
+        }
+        .playlist ul {
+            /*position: fixed;*/
+            display: none;
+            flex-direction: column;
+        }
+
+        .open ul {
+            display: flex;
+        }
+
+        .trigger {
+            position: fixed;
+            display: block;
+            top: 10em;
+            left: -2em;
+            transition: left .6s;
+        }
+
+        .show .trigger {
+            left: 15.2em;
+        }
+
+    }
+
+
+    @media (min-width: 768px) {
 
 
 
-}
+    }
 
-@media (min-width: 1024px){
-
-
-
-}
-
-@media (min-width: 1200px){
+    @media (min-width: 1024px) {
 
 
+    }
+
+    @media (min-width: 1200px) {
+
+
+    }
 
 }

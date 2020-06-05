@@ -16,12 +16,28 @@
 <div class="wrapper">
 
     <div class="head">
-        <p class="dev">[Nu spelas: {{ $video->title }}]</p>&nbsp;&nbsp;&nbsp;<p> Player</p>&nbsp;&nbsp;&nbsp;<p class="dev">[width: <span id="width"></span></p>&nbsp;<p class="dev">height: <span id="height"></span>]</p>&nbsp;&nbsp; <p class="dev">[Streams: <span id="streams"></span>]</p>
+        <button id="player_close" class="player_close"><i class="far fa-times-circle fa-2x"></i></button>
+        <p class="dev">[Nu spelas: <span style="color: red;"> {{ $video->title }}</span>]</p>&nbsp;&nbsp;&nbsp;<p> Player</p>&nbsp;&nbsp;&nbsp;<p class="dev">[width: <span id="width"></span></p>&nbsp;<p class="dev">height: <span id="height"></span>]</p>&nbsp;&nbsp; <p class="dev">[Streams: <span id="streams"></span>]</p>
         <button id="masterswitch" class="switch">Switch Master <i class="fas fa-sync"></i></button>
     </div>
 
     <div class="container">
         <div class="grid">
+
+            <section class="playlist">
+                <button class="trigger" aria-expanded="false">Spellista KLICKA!</button>
+                <!-- This will be rendered serverside -->
+                <nav>
+                    <ul>
+                        @foreach($playlist as $play)
+                        <li>
+                            <a href="{{route('player', $play )}}">{{ $play->title }}</a>
+                        </li>
+                        @endforeach
+                    </ul>
+                </nav>
+                <!-- end -->
+            </section>
 
             <div class="master">
                 <div class="mastervideo">

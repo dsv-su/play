@@ -1,21 +1,18 @@
+//Dev mode
+const streamsOutput = document.querySelector('#streams');
 // Layout and toggle Playlist
-/*
-//const SITE = document.querySelector('.site');
-const SITE = document.querySelector('.container');
+const SITE = document.querySelector('.grid');
 const TRIGGER = document.querySelector('.trigger');
 const SHOW = document.querySelector('.playlist');
 const MENUITEMS = SHOW.querySelectorAll('nav a');
 const MENUARRAY = Array.apply(null, MENUITEMS);
-*/
-//Dev mode
-
-const streamsOutput = document.querySelector('#streams');
-
+const closebtn = document.getElementById('player_close');
 
 // Videostreams
 var video = document.getElementById('video1'); //Main video stream
 var playpausebtn = document.getElementById('play-pause');
 var fullscreenbtn = document.getElementById('fullscreen');
+
 // Fastforward
 var plbackrate = 1;
 var ffbtn = document.getElementById('fast-forward');
@@ -23,18 +20,18 @@ var ff3btn = document.getElementById('ff3');
 var ff4btn = document.getElementById('ff4');
 var ff5btn = document.getElementById('ff5');
 var ff6btn = document.getElementById('ff6');
-//var elem = document.documentElement;
-//Streams
+
+// Streams
 var vstreams = 1;
 const timeElapsed = document.getElementById('time-elapsed');
 const duration = document.getElementById('duration');
 
-//Progressbar
+// Progressbar
 const progressBar = document.getElementById('progress-bar');
 const seek = document.getElementById('seek');
 const seekTooltip = document.getElementById('seek-tooltip');
 
-//Volume
+// Volume
 const volumeButton = document.getElementById('volume-button');
 const volumeIcons = document.querySelectorAll('.volume-button use');
 const volumeMute = document.querySelector('use[href="#volume-mute"]');
@@ -54,9 +51,8 @@ const slave2_switchbtn = document.getElementById('disable_slave2');
 const slave3 = document.getElementById('slave3');
 const slave3_switchbtn = document.getElementById('disable_slave3');
 var close1 = 0, close2 = 0, close3 = 0;
-/*
-// Toggle show class on body element, set aria-expanded
 
+// Toggle show class on body element, set aria-expanded
 function showMenu() {
     SITE.classList.toggle('show');
 	SHOW.classList.add('open');
@@ -96,23 +92,8 @@ SITE.addEventListener('click', function(e) { clickTarget(e); }, true);
 
 SITE.addEventListener('transitionend', removeMenu, false);
 
-*/
-// Videostreams
-
-/**************************
- *
- * @type {URLSearchParams}
- */
-
-function getUrlParameter(name) {
-	name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-	var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-	var results = regex.exec(location.search);
-	return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-}
-
 /***************************
- * Function to remove elements
+ * Function remove elements
  */
 
 Element.prototype.remove = function() {
@@ -127,23 +108,11 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
 	}
 };
 
-/*****************************
- * Change stream source
- * @type {string}
- */
-/* open player version
-var newsource_video1 = getUrlParameter('source1');
-var newsource_video2 = getUrlParameter('source2');
-var newsource_video3 = getUrlParameter('source3');
-var newsource_video4 = getUrlParameter('source4');
-*/
 // Integrated laravel version
 var newsource_video1 = document.getElementById('video1').src;
 var newsource_video2 = document.getElementById('video2').src;
 var newsource_video3 = document.getElementById('video3').src;
 var newsource_video4 = document.getElementById('video4').src;
-
-//video.setAttribute('src', newsource_video1);
 
 /*****************************
  * Check if streams exist
@@ -153,7 +122,6 @@ var newsource_video4 = document.getElementById('video4').src;
 if( newsource_video2){
 	var video2 = document.getElementById('video2');
 	video2.removeAttribute('hidden');
-	//video2.setAttribute('src', newsource_video2);
 	vstreams++;
 }
 else {
@@ -163,7 +131,6 @@ else {
 if( newsource_video3){
 	var video3 = document.getElementById('video3');
 	video3.removeAttribute('hidden');
-	//video3.setAttribute('src', newsource_video3);
 	vstreams++;
 }
 else {
@@ -173,7 +140,6 @@ else {
 if( newsource_video4){
 	var video4 = document.getElementById('video4');
 	video4.removeAttribute('hidden');
-	//video4.setAttribute('src', newsource_video4);
 	vstreams++;
 }
 else {
@@ -192,11 +158,9 @@ var medias = Array.prototype.slice.apply(document.querySelectorAll('audio,video'
 var grid_pointer = 0;
 grid_pointer++;
 
-
-
 /******************************************
 /*
-/* Check available streams and adjust viewport
+/* Check available streams and adjust viewport/grid
 /******************************************/
 
 // Single stream
@@ -204,28 +168,28 @@ if (vstreams == 1) MasterGrid();
 
 //If 2 streams are present
 if (vstreams == 2) {
-	var grid_setup2 = ['"master slave1" "master slave1" "master slave1" "master slave1" "master slave1" "master slave1"', '"slave1 master" "slave1 master" "slave1 master" "slave1 master" "slave1 master" "slave1 master"'];
+	var grid_setup2 = ['"nav master slave1" "nav master slave1" "nav master slave1" "nav master slave1" "nav master slave1" "nav master slave1"', '"nav slave1 master" "nav slave1 master" "nav slave1 master" "nav slave1 master" "nav slave1 master" "nav slave1 master"'];
 	close2 = 1;
 	close3 = 1;
 	MasterSlaveGrid();
 }
 //If 3 streams are present
 if (vstreams == 3) {
-	var grid_setup3 = ['"master slave1" "master slave1" "master slave1" "master slave2" "master slave2" "master slave2"', '"slave1 slave2" "slave1 slave2" "slave1 slave2" "slave1 master" "slave1 master" "slave1 master"', '"slave2 master" "slave2 master" "slave2 master" "slave2 slave1" "slave2 slave1" "slave2 slave1"'];
+	var grid_setup3 = ['"nav master slave1" "nav master slave1" "nav master slave1" "nav master slave2" "nav master slave2" "nav master slave2"', '"nav slave1 slave2" "nav slave1 slave2" "nav slave1 slave2" "nav slave1 master" "nav slave1 master" "nav slave1 master"', '"nav slave2 master" "nav slave2 master" "nav slave2 master" "nav slave2 slave1" "nav slave2 slave1" "nav slave2 slave1"'];
 	close3 = 1;
 	MasterSlave12Grid();
 }
 //If all streams are present
 if (vstreams == 4) {
-	var grid_setup = ['"master slave1" "master slave1"  "master slave2" "master slave2" "master slave3" "master slave3"', '"slave1 slave2" "slave1 slave2" "slave1 slave3" "slave1 slave3" "slave1 master" "slave1 master"', '"slave2 slave3" "slave2 slave3" "slave2 master" "slave2 master" "slave2 slave1" "slave2 slave1"','"slave3 master" "slave3 master" "slave3 slave1" "slave3 slave1" "slave3 slave2" "slave3 slave2"'];
+	var grid_setup = ['"nav master slave1" "nav master slave1"  "nav master slave2" "nav master slave2" "nav master slave3" "nav master slave3"', '"nav slave1 slave2" "nav slave1 slave2" "nav slave1 slave3" "nav slave1 slave3" "nav slave1 master" "nav slave1 master"', '"nav slave2 slave3" "nav slave2 slave3" "nav slave2 master" "nav slave2 master" "nav slave2 slave1" "nav slave2 slave1"','"nav slave3 master" "nav slave3 master" "nav slave3 slave1" "nav slave3 slave1" "nav slave3 slave2" "nav slave3 slave2"'];
 //Dev mode
 	streamsOutput.textContent = vstreams;
 }
 
 function MasterGrid()
 {
-	grid.style.gridTemplateColumns = '100%';
-	grid.style.gridTemplateAreas = '"master master" "master master" "master master" "master master" "master master" "master master"';
+	grid.style.gridTemplateColumns = '15em 100%';
+	grid.style.gridTemplateAreas = '"nav master master" "nav master master" "nav master master" "nav master master" "nav master master" "nav master master"';
 	slave1.style.display = 'none';
 	slave2.style.display = 'none';
 	slave3.style.display = 'none';
@@ -237,12 +201,12 @@ function MasterGrid()
 
 function MasterSlaveGrid()
 {
-	grid.style.gridTemplateColumns = '50% 50%';
-	grid.style.gridTemplateAreas = '"master slave1" "master slave1" "master slave1" "master slave1" "master slave1" "master slave1"';
+	grid.style.gridTemplateColumns = '15em 50% 50%';
+	grid.style.gridTemplateAreas = '"nav master slave1" "nav master slave1" "nav master slave1" "nav master slave1" "nav master slave1" "nav master slave1"';
 	slave2.style.display = 'none';
 	slave3.style.display = 'none';
 	vstreams = 2;
-	grid_setup2 = ['"master slave1" "master slave1" "master slave1" "master slave1" "master slave1" "master slave1"', '"slave1 master" "slave1 master" "slave1 master" "slave1 master" "slave1 master" "slave1 master"'];
+	grid_setup2 = ['"nav master slave1" "nav master slave1" "nav master slave1" "nav master slave1" "nav master slave1" "nav master slave1"', '"nav slave1 master" "nav slave1 master" "nav slave1 master" "nav slave1 master" "nav slave1 master" "nav slave1 master"'];
 
 	//Dev mode
 
@@ -250,12 +214,12 @@ function MasterSlaveGrid()
 }
 function MasterSlave1Grid()
 {
-	grid.style.gridTemplateColumns = '50% 50%';
-	grid.style.gridTemplateAreas = '"master slave1" "master slave1" "master slave1" "master slave1" "master slave1" "master slave1"';
+	grid.style.gridTemplateColumns = '15em 50% 50%';
+	grid.style.gridTemplateAreas = '"nav master slave1" "nav master slave1" "nav master slave1" "nav master slave1" "nav master slave1" "nav master slave1"';
 	if (close2 == 1) slave2.style.display = 'none';
 	if (close3 == 1) slave3.style.display = 'none';
 	vstreams = 2;
-	grid_setup2 = ['"master slave1" "master slave1" "master slave1" "master slave1" "master slave1" "master slave1"', '"slave1 master" "slave1 master" "slave1 master" "slave1 master" "slave1 master" "slave1 master"'];
+	grid_setup2 = ['"nav master slave1" "nav master slave1" "nav master slave1" "nav master slave1" "nav master slave1" "nav master slave1"', '"nav slave1 master" "nav slave1 master" "nav slave1 master" "nav slave1 master" "nav slave1 master" "nav slave1 master"'];
 
 	//Dev mode
 	streamsOutput.textContent = vstreams;
@@ -263,57 +227,57 @@ function MasterSlave1Grid()
 
 function MasterSlave12Grid()
 {
-	grid.style.gridTemplateColumns = '67% 33%';
-	grid.style.gridTemplateAreas = '"master slave1" "master slave1" "master slave1" "master slave2" "master slave2" "master slave2"';
+	grid.style.gridTemplateColumns = '15em 67% 33%';
+	grid.style.gridTemplateAreas = '"nav master slave1" "nav master slave1" "nav master slave1" "nav master slave2" "nav master slave2" "nav master slave2"';
 	slave3.style.display = 'none';
 	vstreams = 3;
-	grid_setup3 = ['"master slave1" "master slave1" "master slave1" "master slave2" "master slave2" "master slave2"', '"slave1 slave2" "slave1 slave2" "slave1 slave2" "slave1 master" "slave1 master" "slave1 master"', '"slave2 master" "slave2 master" "slave2 master" "slave2 slave1" "slave2 slave1" "slave2 slave1"']
+	grid_setup3 = ['"nav master slave1" "nav master slave1" "nav master slave1" "nav master slave2" "nav master slave2" "nav master slave2"', '"nav slave1 slave2" "nav slave1 slave2" "nav slave1 slave2" "nav slave1 master" "nav slave1 master" "nav slave1 master"', '"nav slave2 master" "nav slave2 master" "nav slave2 master" "nav slave2 slave1" "nav slave2 slave1" "nav slave2 slave1"']
 
 	//Dev mode
 	streamsOutput.textContent = vstreams;
 }
 function MasterSlave2Grid()
 {
-	grid.style.gridTemplateColumns = '50% 50%';
-	grid.style.gridTemplateAreas = '"master slave2" "master slave2" "master slave2" "master slave2" "master slave2" "master slave2"';
+	grid.style.gridTemplateColumns = '15em 50% 50%';
+	grid.style.gridTemplateAreas = '"nav master slave2" "nav master slave2" "nav master slave2" "nav master slave2" "nav master slave2" "nav master slave2"';
 	if( close3 == 1) slave3.style.display = 'none';
 	if (close1 == 1) slave1.style.display = 'none';
 	vstreams = 2;
-	grid_setup2 = ['"master slave2" "master slave2" "master slave2" "master slave2" "master slave2" "master slave2"', '"slave2 master" "slave2 master" "slave2 master" "slave2 master" "slave2 master" "slave2 master"'];
+	grid_setup2 = ['"nav master slave2" "nav master slave2" "nav master slave2" "nav master slave2" "nav master slave2" "nav master slave2"', '"nav slave2 master" "nav slave2 master" "nav slave2 master" "nav slave2 master" "nav slave2 master" "nav slave2 master"'];
 
 	//Dev mode
 	streamsOutput.textContent = vstreams;
 }
 function MasterSlave3Grid()
 {
-	grid.style.gridTemplateColumns = '50% 50%';
-	grid.style.gridTemplateAreas = '"master slave3" "master slave3" "master slave3" "master slave3" "master slave3" "master slave3"';
+	grid.style.gridTemplateColumns = '15em 50% 50%';
+	grid.style.gridTemplateAreas = '"nav master slave3" "nav master slave3" "nav master slave3" "nav master slave3" "nav master slave3" "nav master slave3"';
 	if( close2 == 1) slave2.style.display = 'none';
 	if (close1 == 1) slave1.style.display = 'none';
 	vstreams = 2;
-	grid_setup2 = ['"master slave3" "master slave3" "master slave3" "master slave3" "master slave3" "master slave3"', '"slave3 master" "slave3 master" "slave3 master" "slave3 master" "slave3 master" "slave3 master"'];
+	grid_setup2 = ['"nav master slave3" "nav master slave3" "nav master slave3" "nav master slave3" "nav master slave3" "nav master slave3"', '"nav slave3 master" "nav slave3 master" "nav slave3 master" "nav slave3 master" "nav slave3 master" "nav slave3 master"'];
 
 	//Dev mode
 	streamsOutput.textContent = vstreams;
 }
 function MasterSlave13Grid()
 {
-	grid.style.gridTemplateColumns = '67% 33%';
-	grid.style.gridTemplateAreas = '"master slave1" "master slave1" "master slave1" "master slave3" "master slave3" "master slave3"';
+	grid.style.gridTemplateColumns = '15em 67% 33%';
+	grid.style.gridTemplateAreas = '"nav master slave1" "nav master slave1" "nav master slave1" "nav master slave3" "nav master slave3" "nav master slave3"';
 	slave2.style.display = 'none';
 	vstreams = 3;
-	grid_setup3 = ['"master slave1" "master slave1" "master slave1" "master slave3" "master slave3" "master slave3"', '"slave1 slave3" "slave1 slave3" "slave1 slave3" "slave1 master" "slave1 master" "slave1 master"', '"slave3 master" "slave3 master" "slave3 master" "slave3 slave1" "slave3 slave1" "slave3 slave1"']
+	grid_setup3 = ['"nav master slave1" "nav master slave1" "nav master slave1" "nav master slave3" "nav master slave3" "nav master slave3"', '"nav slave1 slave3" "nav slave1 slave3" "nav slave1 slave3" "nav slave1 master" "nav slave1 master" "nav slave1 master"', '"nav slave3 master" "nav slave3 master" "nav slave3 master" "nav slave3 slave1" "nav slave3 slave1" "nav slave3 slave1"']
 
 	//Dev mode
 	streamsOutput.textContent = vstreams;
 }
 function MasterSlave23Grid()
 {
-	grid.style.gridTemplateColumns = '67% 33%';
-	grid.style.gridTemplateAreas = '"master slave2" "master slave2" "master slave2" "master slave3" "master slave3" "master slave3"';
+	grid.style.gridTemplateColumns = '15em 67% 33%';
+	grid.style.gridTemplateAreas = '"nav master slave2" "nav master slave2" "nav master slave2" "nav master slave3" "nav master slave3" "nav master slave3"';
 	slave1.style.display = 'none';
 	vstreams = 3;
-	grid_setup3 = ['"master slave2" "master slave2" "master slave2" "master slave3" "master slave3" "master slave3"', '"slave2 slave3" "slave2 slave3" "slave2 slave3" "slave2 master" "slave2 master" "slave2 master"', '"slave3 master" "slave3 master" "slave3 master" "slave3 slave2" "slave3 slave2" "slave3 slave2"']
+	grid_setup3 = ['"nav master slave2" "nav master slave2" "nav master slave2" "nav master slave3" "nav master slave3" "nav master slave3"', '"nav slave2 slave3" "nav slave2 slave3" "nav slave2 slave3" "nav slave2 master" "nav slave2 master" "nav slave2 master"', '"nav slave3 master" "nav slave3 master" "nav slave3 master" "nav slave3 slave2" "nav slave3 slave2" "nav slave3 slave2"']
 
 	//Dev mode
 	streamsOutput.textContent = vstreams;
@@ -358,7 +322,6 @@ function SwitchMaster() {
 		grid_pointer++;
 		if(grid_pointer == 4) grid_pointer = 0;
 	}
-
 
 }
 
@@ -464,17 +427,11 @@ seek.addEventListener('mousemove', updateSeekTooltip);
 
 function skipAhead(event) {
 	const skipTo = event.target.dataset.seek ? event.target.dataset.seek : event.target.value;
-	video.currentTime = skipTo;
-	if(vstreams == 2) video2.currentTime = skipTo;
-	if(vstreams == 3) {
-		video2.currentTime = skipTo;
-		video3.currentTime = skipTo;
-	}
-	if(vstreams == 4) {
-		video2.currentTime = skipTo;
-		video3.currentTime = skipTo;
-		video4.currentTime = skipTo;
-	}
+    //Get all streams
+    video.currentTime = skipTo;
+    if( newsource_video2) video2.currentTime = skipTo;
+    if( newsource_video3) video3.currentTime = skipTo;
+    if( newsource_video4) video4.currentTime = skipTo;
 	progressBar.value = skipTo;
 	seek.value = skipTo;
 }
@@ -574,7 +531,9 @@ ff6btn.onclick = function (M) {
 switchbtn.onclick = function () {
 	SwitchMaster();
 }
-
+closebtn.onclick = function () {
+    location.replace("/")
+}
 slave1_switchbtn.onclick = function () {
 	close1++;
 	disableSlave1();
@@ -608,8 +567,6 @@ medias.forEach(function(media) {
 
 
 video.addEventListener('timeupdate', function() {
-//	var progressPos = video.currentTime / video.duration;
-//	progress.style.width = progressPos * 100 + "%";
 	if(video.ended) {
 		playpausebtn.className = "play";
 		video.currentTime = 0;

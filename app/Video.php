@@ -8,7 +8,7 @@ use Spatie\Searchable\SearchResult;
 
 class Video extends Model implements Searchable
 {
-    protected $fillable = ['title', 'course_id','category_id'];
+    protected $fillable = ['title', 'length', 'source1', 'source2', 'source3', 'source4','course_id','category_id'];
 
     public function category()
     {
