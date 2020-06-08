@@ -84,6 +84,30 @@ class VideosSeeder extends Seeder
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
+        DB::table('videos')->insert([
+            'title' => 'GB HT2018 Lecture 1',
+            'length' => '00:58',
+            'source1' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/76da3f7f-55ce-4a9e-9f15-d589c729a6ab.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'source2' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/788141a9-f0c3-498c-ab9e-1d63b2696544.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'source3' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/e0bcd99e-4591-41b3-81ef-8ac9effce210.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'source4' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/e0bcd99e-4591-41b3-81ef-8ac9effce210.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'course_id' => 2,
+            'category_id' => 2,
+            'created_at' =>  Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+        DB::table('videos')->insert([
+            'title' => 'GB HT2018 Lecture 2',
+            'length' => '01:38',
+            'source1' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/b5b4ba2e-7e2e-4765-8f6f-fe70fb148786.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'source2' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/1448fb46-42d0-4c50-8b4e-e70090610012.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'source3' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/e7766c33-5afb-4ca1-a9ac-320af0001fb4.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'source4' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/e7766c33-5afb-4ca1-a9ac-320af0001fb4.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'course_id' => 2,
+            'category_id' => 2,
+            'created_at' =>  Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
         /*
         DB::table('videos')->insert([
             'title' => '',
