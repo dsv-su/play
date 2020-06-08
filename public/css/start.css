@@ -112,7 +112,7 @@ p, h4 {
     grid-template-areas:
     ". navbar ."
     ". search_header .";
-    background: linear-gradient(var(--overlay), var(--overlay)), url(//vjs.zencdn.net/v/oceans.png);
+    background: linear-gradient(var(--overlay), var(--overlay)), url(../images/videocovers/kurs5.jpg);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

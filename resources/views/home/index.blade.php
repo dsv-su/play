@@ -107,7 +107,7 @@
                     <br>
                     <div class="videos">
                         @foreach ($latest as $video)
-                        <div class="video" style="background-image: url(//vjs.zencdn.net/v/oceans.png)">
+                        <div class="video" style="background-image: url({{ $video->image }})">
                             <div class="title">{{ $video->title }}</div>
                             <a href="{{ route('player', ['video' => $video]) }}"><i class="fas fa-play-circle"></i></a>
                             <p> {{$video->length}} </p>
