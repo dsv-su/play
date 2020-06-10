@@ -41,7 +41,7 @@
 
             <div class="master">
                 <div class="mastervideo">
-                    <video id="video1" src="{{$video->source1}}"></video>
+                    <video id="video1" src="{{asset($video->source1)}}"></video>
                 </div>
 
             </div>
@@ -49,7 +49,7 @@
             <div id="slave1" class="slave1">
                 <button id="disable_slave1" class="disable_slave1"><i class="far fa-times-circle fa-2x"></i></button>
                 <div class="slavevideo">
-                    <video hidden muted  id="video2" src="{{$video->source2}}"></video>
+                    <video hidden muted  id="video2" src="{{asset($video->source2)}}"></video>
                 </div>
 
             </div>
@@ -57,7 +57,7 @@
             <div id="slave2" class="slave2">
                 <button id="disable_slave2" class="disable_slave2"><i class="far fa-times-circle fa-2x"></i></button>
                 <div class="slavevideo">
-                    <video hidden muted  id="video3" src="{{$video->source3}}"></video>
+                    <video hidden muted  id="video3" src="{{asset($video->source3)}}"></video>
                 </div>
 
             </div>
@@ -65,7 +65,7 @@
             <div id="slave3" class="slave3">
                 <button id="disable_slave3" class="disable_slave3"><i class="far fa-times-circle fa-2x"></i></button>
                 <div class="slavevideo">
-                    <video hidden muted  id="video4" src="{{$video->source4}}"></video>
+                    <video hidden muted  id="video4" src="{{asset($video->source4)}}"></video>
                 </div>
 
             </div>

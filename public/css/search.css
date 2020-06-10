@@ -158,3 +158,8 @@
   border-top-color: #e24040;
 }
 
+@media only screen and (max-width: 800px) {
+    .search-input {
+        width: 195px;
+    }
+}

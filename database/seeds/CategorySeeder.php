@@ -23,5 +23,10 @@ class CategorySeeder extends Seeder
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
+        DB::table('categories')->insert([
+            'category_name' => 'Testing',
+            'created_at' =>  Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
     }
 }
