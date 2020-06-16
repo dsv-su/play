@@ -5,13 +5,14 @@
         <section class="top_section">
             <!-- Navigation bar -->
             <nav class="navbar">
-                        <span class="navbar-toggle" id="js-navbar-toggle">
-                                <i class="fas fa-bars"></i>
-                            </span>
+
                 <a href="{{route('home')}}" class="logo">Play</a>
                 <ul class="main-nav" id="js-menu">
                     <li>
                         <a href="{{route('list')}}" class="nav-links">[Lista alla]</a>
+                    </li>
+                    <li>
+                         <i class="navbar-toggle fas fa-bars" id="js-navbar-toggle"></i>
                     </li>
                     <li>
                         <a href="#" class="nav-links">Hantera uppspelning</a>
@@ -80,16 +81,14 @@
                     <div class="videos">
 
                         @foreach($searchResults->groupByType() as $type => $modelSearchResults)
-                            <h4 class="playlist_title">{{ ucfirst($type) }}</h4>
+                            <!--//<h4 class="playlist_title">{{ ucfirst($type) }}</h4>-->
 
                             @foreach($modelSearchResults as $searchResult)
-                                <div class="video" style="background-image: url(//vjs.zencdn.net/v/oceans.png)">
+                                <div class="video" style="background-image: url({{$searchResult->searchable->image}})">
                                     <div class="title">{{ $searchResult->title }}</div>
                                     <a href="{{ $searchResult->url }}"><i class="fas fa-play-circle"></i></a>
-                                    <p> 00:47 </p>
+                                    <p> {{$searchResult->searchable->length}} </p>
                                     <div class="footer">
-                                        Kategori: {{$type}}
-                                        <br>
                                         Title: {{$searchResult->title}}
                                     </div>
                                 </div>

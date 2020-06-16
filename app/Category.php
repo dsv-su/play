@@ -12,12 +12,13 @@ class Category extends Model implements Searchable
 
     public function getSearchResult(): SearchResult
     {
-        $url = route('categories.show', $this->id);
+        //$url = route('categories.show', $this->id);
 
         return new SearchResult(
             $this,
             $this->category_name,
-            $url
+            //$url
+            $this->id
         );
     }
 }

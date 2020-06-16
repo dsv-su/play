@@ -17,6 +17,7 @@ class CreateVideosTable extends Migration
             $table->id();
             $table->string('title');
             $table->string('length');
+            $table->string('tags')->nullable();
             $table->string('image')->nullable();
             $table->string('source1');
             $table->string('source2')->nullable();

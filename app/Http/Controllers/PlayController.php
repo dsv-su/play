@@ -23,7 +23,7 @@ class PlayController extends Controller
         }
 
        $data['search'] = 0;
-       $data['latest']= Video::with('category', 'course')->latest()->take(4)->get();
+       $data['latest']= Video::with('category', 'course')->latest('id')->take(8)->get();
 
        return view('home.index', $data);
     }

@@ -34,24 +34,44 @@ class TestController extends Controller
             $play_user = $_SERVER['displayName'];
         }
         $search = 1;
-        /*
-        $searchResults = (new Search())
-            ->registerModel(Video::class, 'name')
-            ->registerModel(Category::class, 'name')
-            ->perform($request->input('query'));
-        */
-        $searchResults = (new Search())
-            ->registerModel(Video::class, function(ModelSearchAspect $modelSearchAspect) {
-                $modelSearchAspect
-                    ->addSearchableAttribute('title') // return results for partial matches on titles
-                    ->addExactSearchableAttribute('title', 'name');
+        if($request->input('type') == null)
+        {
+            $searchResults = (new Search())
+                ->registerModel(Video::class, function(ModelSearchAspect $modelSearchAspect) {
+                    $modelSearchAspect
+                        ->addSearchableAttribute('title') // return results for partial matches on titles
+                        ->addSearchableAttribute('tags'); // return results for partial matches on tags
                 })
-            //->registerModel(Category::class, 'category_name')
-            ->registerModel(Course::class, 'course_name')
-             ->perform($request->input('query'));
-            //->perform($request->input('query'));
-        dd($searchResults);
+                ->perform($request->input('query'));
 
-        return view('home.index', compact('searchResults', 'search', 'play_user'));
+            return view('home.index', compact('searchResults', 'search', 'play_user'));
+        }
+        elseif ($request->input('type') == 'type-lectures')
+        {
+            dd('Sorry, LECTURES search has not been implemented');
+        }
+        elseif ($request->input('type') == 'type-category')
+        {
+            dd('Sorry, CATEGORY search has not been implemented');
+            $search = (new Search())
+                ->registerModel(Category::class, function(ModelSearchAspect $modelSearchAspect) {
+                    $modelSearchAspect
+                        ->addSearchableAttribute('category_name'); // return results for partial matches on name
+                })
+                ->perform($request->input('query'));
+            dd($modelSearchAspect);
+
+            //dd($searchResults);
+            return view('home.index', compact('searchResults', 'search', 'play_user'));
+        }
+        elseif ($request->input('type') == 'type-course')
+        {
+            dd('Sorry, COURSE search has not been implemented');
+        }
+        elseif ($request->input('type') == 'type-latest')
+        {
+            dd('Sorry, LATEST search has not been implemented');
+        }
+
     }
 }
