@@ -68,7 +68,7 @@ Currently used version is 7.10.3
 
 * Create the database with `php artisan migrate` (this should create database tables needed)
 
-* For developing purposes there are a couple of seeders to run. This will populate the database with testdata and videolinks. Run `php artisan db:seed`
+* For developing purposes there are a couple of seeders to run. This will populate the database with testdata and videolinks. Reset (rollback) the migration and run `php artisan migrate:fresh --seed`
 
 ## 4. Player
 The Player can play up to four interconnected streams simultaneously. A stream should always be in "focus" is here tagged as master. The streams that are not in focus appear as smaller display on one side of the player and are tagged slave1, slave2 and slave3. The master stream can be switched with the switch-button.

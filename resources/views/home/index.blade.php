@@ -76,12 +76,11 @@
         <section class="content_section">
             @if ($search == 1)
                 <div class="playlist_one">
-                    <h4 class="playlist_title">{{ $searchResults->count() }} resultat för "{{ request('query') }}"</h4>
+                    <p class="playlist_title">{{ $searchResults->count() }} resultat för "{{ request('query') }}"</p>
+                    @foreach($searchResults->groupByType() as $type => $modelSearchResults)
+                        <p>under <strong>{{ ucfirst($type) }}</strong></p>
                     <br>
                     <div class="videos">
-
-                        @foreach($searchResults->groupByType() as $type => $modelSearchResults)
-                            <!--//<h4 class="playlist_title">{{ ucfirst($type) }}</h4>-->
 
                             @foreach($modelSearchResults as $searchResult)
                                 <div class="video" style="background-image: url({{$searchResult->searchable->image}})">
@@ -98,6 +97,79 @@
 
                     </div>
                 </div>
+            @elseif ($search == 2)
+                @if($searchResults->count() != 0)
+                <div class="playlist_one">
+                    <p class="playlist_title">{{ $searchResults->count() }} resultat för "{{ request('query') }}"</p>
+                    @foreach($searchResults->groupByType() as $type => $modelSearchResults)
+                        <p>under <strong>{{ ucfirst($type) }}</strong></p>
+                        <br>
+                        <div class="videos">
+
+                            @foreach($modelSearchResults as $searchResult)
+                                <div class="video" style="background-image: url({{$searchResult->searchable->image}})">
+                                    <div class="title">{{ $searchResult->title }}</div>
+                                    <a href="{{ $searchResult->url }}"><i class="fas fa-play-circle"></i></a>
+                                    <p> {{$searchResult->searchable->length}} </p>
+                                    <div class="footer">
+                                        Title: {{$searchResult->title}}
+                                    </div>
+                                </div>
+
+                            @endforeach
+                    @endforeach
+
+                        </div>
+                </div>
+                @endif
+                @if($searchResults->count() != 0)
+                <div class="space"></div>
+                <div class="playlist_two">
+                @else
+                <div class="playlist_one">
+                @endif
+                    <p class="playlist_title">{{ $data->count() }} resultat för "{{ request('query') }}"</p>
+                    @foreach($searchRelations->groupByType() as $type => $modelSearchResults)
+                        <p>under <strong>{{ ucfirst($type) }}</strong></p>
+                        <br>
+                        <div class="videos">
+
+                            @foreach($data as $searchResult)
+                                <div class="video" style="background-image: url({{$searchResult->image}})">
+                                    <div class="title">{{ $searchResult->title }}</div>
+                                    <a href="{{ route('player', $searchResult->id) }}"><i class="fas fa-play-circle"></i></a>
+                                    <p> {{$searchResult->length}} </p>
+                                    <div class="footer">
+                                        Title: {{$searchResult->title}}
+                                    </div>
+                                </div>
+
+                            @endforeach
+                            @endforeach
+
+                        </div>
+                </div>
+
+
+
+
+            @elseif ($search == 3)
+                <div class="playlist_one">
+                    <p class="playlist_title">{{ $searchResults->count() }} resultat för "{{ request('query') }}"</p>
+                    <br>
+                    <div class="videos">
+
+                        @foreach($searchResults as $searchResult)
+                                <div class="video" style="background-image: url({{$searchResult->image}})">
+                                    <div class="title">{{ $searchResult->title }}</div>
+                                    <a href="{{ route('player', $searchResult->id) }}"><i class="fas fa-play-circle"></i></a>
+                                    <p> {{$searchResult->length}} </p>
+                                    <div class="footer">
+                                        Title: {{$searchResult->title}}
+                                    </div>
+                                </div>
+
+                        @endforeach
 
             @else
              <!-- Show latest -->

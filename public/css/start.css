@@ -3,6 +3,7 @@
 
 :root{
     --sublue: #0000ff;
+    --sured: ##ff0000;
     --dark: #17191D;
     --light: #f4f4f4;
     --overlay: rgba(23,25,29,0.8);
@@ -42,7 +43,6 @@ h1 {
 p, h4 {
     font-size: 18px;
 }
-
 
 /* Nav bar */
 
@@ -237,6 +237,7 @@ header button {
     grid-template-columns: 10% 1fr 10%;
     grid-template-areas:
     ". playlist_one ."
+    ". titlespace ."
     ". playlist_two .";
     margin-bottom: 60px;
 }
@@ -247,6 +248,11 @@ header button {
 
 .playlist_two {
     grid-area: playlist_two;
+}
+
+.space {
+    grid-area: titlespace;
+    padding-top: 5em;
 }
 
 .videos {
