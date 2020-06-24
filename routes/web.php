@@ -31,4 +31,8 @@ Route::get('/course/{course}', 'TestController@show')->name('course.show');
 Route::get('/upload', 'PlayController@upload');
 Route::post('/store', 'PlayController@store')->name('store');
 
+//Testing routes
+Route::get('/php', 'TestController@php')->name('php');
+Route::get('/server', 'TestController@server')->name('server');
+
 //});

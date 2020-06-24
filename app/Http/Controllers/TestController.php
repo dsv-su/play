@@ -64,7 +64,7 @@ class TestController extends Controller
                         ->addSearchableAttribute('tags'); // return results for partial matches on tags
                 })
                 ->perform($searchString);
-            
+
             /*****************************
              * Search Video in relation to Category
              */
@@ -175,5 +175,19 @@ class TestController extends Controller
             dd('Sorry, LATEST search has not been implemented');
         }
 
+    }
+
+    /*************************************************************************************
+     * Methods for testing purposes
+    /*************************************************************************************
+    */
+
+    public function php()
+    {
+        return phpinfo();
+    }
+    public function server()
+    {
+        dd($_SERVER);
     }
 }
