@@ -29,8 +29,15 @@
             <div class="search_header">
                 <h2>Startsida</h2>
                 <!-- -->
+
+                <div class="con-tooltip top">
                 <form class="search-form" action="{{ route('search') }}" method="POST" >
                     @csrf
+                    <div class="tooltip">
+                        <p>Filtrera din sökning</p>
+
+                    </div>
+
                     <input type="search" name="query" placeholder="Sök" class="search-input">
                     <button type="submit" class="search-button">
                         <i class="fas fa-search"></i>
@@ -42,6 +49,7 @@
                                 <i class="far fa-user"></i>
                                 <span>Föreläsare</span>
                             </label>
+
                         </div>
 
                         <div>
@@ -66,8 +74,9 @@
                             </label>
                         </div>
                     </div>
-                </form>
 
+                </form>
+                </div>
                 <!-- -->
             </div>
 
@@ -121,20 +130,20 @@
 
                         </div>
                 </div>
-                @endif
-                @if($searchResults->count() != 0)
+
                 <div class="space"></div>
                 <div class="playlist_two">
                 @else
                 <div class="playlist_one">
                 @endif
-                    <p class="playlist_title">{{ $data->count() }} resultat för "{{ request('query') }}"</p>
-                    @foreach($searchRelations->groupByType() as $type => $modelSearchResults)
+                    @if($searchCategoryRelations->count() !=0)
+                    <p class="playlist_title">{{ $category_videos->count() }} resultat för "{{ request('query') }}"</p>
+                    @foreach($searchCategoryRelations->groupByType() as $type => $modelSearchResults)
                         <p>under <strong>{{ ucfirst($type) }}</strong></p>
                         <br>
                         <div class="videos">
 
-                            @foreach($data as $searchResult)
+                            @foreach($category_videos as $searchResult)
                                 <div class="video" style="background-image: url({{$searchResult->image}})">
                                     <div class="title">{{ $searchResult->title }}</div>
                                     <a href="{{ route('player', $searchResult->id) }}"><i class="fas fa-play-circle"></i></a>
@@ -145,11 +154,42 @@
                                 </div>
 
                             @endforeach
-                            @endforeach
+                    @endforeach
 
                         </div>
+                    @endif
                 </div>
 
+                @if($searchResults->count() != 0 && $searchCategoryRelations->count() !=0)
+                    <div class="spacelist"></div>
+                    <div class="playlist_three">
+                @elseif($searchResults->count() != 0 || $searchCategoryRelations->count() !=0)
+                    <div class="space"></div>
+                    <div class="playlist_two">
+                @else
+                    <div class="playlist_one">
+                @endif
+                        <p class="playlist_title">{{ $course_videos->count() }} resultat för "{{ request('query') }}"</p>
+                        @foreach($searchCourseRelations->groupByType() as $type => $modelSearchResults)
+                            <p>under <strong>{{ ucfirst($type) }}</strong></p>
+                            <br>
+                            <div class="videos">
+
+                                @foreach($course_videos as $searchResult)
+                                    <div class="video" style="background-image: url({{$searchResult->image}})">
+                                        <div class="title">{{ $searchResult->title }}</div>
+                                        <a href="{{ route('player', $searchResult->id) }}"><i class="fas fa-play-circle"></i></a>
+                                        <p> {{$searchResult->length}} </p>
+                                        <div class="footer">
+                                            Title: {{$searchResult->title}}
+                                        </div>
+                                    </div>
+
+                                @endforeach
+                        @endforeach
+
+                            </div>
+                    </div>
 
 
 

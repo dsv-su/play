@@ -17,12 +17,13 @@ class Course extends Model implements Searchable
 
     public function getSearchResult(): SearchResult
     {
-        $url = route('player', $this->id);
+        //$url = route('player', $this->id);
 
         return new SearchResult(
             $this,
             $this->course_name,
-            $url
+            //$url
+            $this->id
         );
     }
 }

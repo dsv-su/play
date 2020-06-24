@@ -13,6 +13,32 @@ class VideosSeeder extends Seeder
     public function run()
     {
         DB::table('videos')->insert([
+            'title' => 'DB HT2016 Lecture 1',
+            'length' => '00:09',
+            'image' =>  './images/videocovers/kurs1.jpg',
+            'source1' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/fabefa3e-6758-468b-aae1-b7b512d084fa.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'source2' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/9e5f2d1c-4c1d-48e8-8502-f00b9f0f0d79.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'source3' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/2af810b8-1e59-4215-9f71-be097c1f88fb.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'source4' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/2af810b8-1e59-4215-9f71-be097c1f88fb.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'course_id' => 1,
+            'category_id' => 1,
+            'created_at' =>  Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+        DB::table('videos')->insert([
+            'title' => 'DB HT2016 Lecture 3',
+            'length' => '1:40',
+            'image' =>  './images/videocovers/kurs2.jpg',
+            'source1' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/f99c14e8-e13b-46e9-a10d-00ff67379acb.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'source2' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/3d6766fe-9d77-429c-9120-2ed564b891bc.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'source3' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/e420023f-b272-4c98-a155-2cefabcf546f.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'source4' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/e420023f-b272-4c98-a155-2cefabcf546f.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'course_id' => 1,
+            'category_id' => 1,
+            'created_at' =>  Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+        DB::table('videos')->insert([
             'title' => 'DB HT16 Lecture 4',
             'length' => '01:44',
             'tags' => 'Databas',
@@ -63,6 +89,19 @@ class VideosSeeder extends Seeder
             'source2' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/cc06f79c-c21b-4a67-b62d-c3ed23084dc8.mp4?playbackTicket=&site=play2.dsv.su.se',
             'source3' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/d6dccaee-e99f-4b48-821a-8f975a217e69.mp4?playbackTicket=&site=play2.dsv.su.se',
             'source4' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/d6dccaee-e99f-4b48-821a-8f975a217e69.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'course_id' => 1,
+            'category_id' => 1,
+            'created_at' =>  Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+        DB::table('videos')->insert([
+            'title' => 'DB HT2016 Lecture 8',
+            'length' => '1:35',
+            'image' =>  './images/videocovers/kurs1.jpg',
+            'source1' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/49830ed0-24b4-4b1e-8657-a51f9ddf6ac2.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'source2' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/80f7dbc9-05fb-4d99-840d-02339729ebc6.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'source3' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/9c50981b-e249-4ada-83d4-2a4eae25e687.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'source4' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/9c50981b-e249-4ada-83d4-2a4eae25e687.mp4?playbackTicket=&site=play2.dsv.su.se',
             'course_id' => 1,
             'category_id' => 1,
             'created_at' =>  Carbon::now(),
@@ -121,6 +160,32 @@ class VideosSeeder extends Seeder
             'source4' => './testvideos/Boras/media/Boras_dev-cattura-video-eco0000-05-00-0--0.mp4',
             'course_id' => 3,
             'category_id' => 3,
+            'created_at' =>  Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+        DB::table('videos')->insert([
+            'title' => 'DISK VT2015 Lecture 1',
+            'length' => '0:43',
+            'image' =>  './images/videocovers/kurs1.jpg',
+            'source1' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/7df4a284-69c6-4f6a-931f-a57ec120cd65.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'source2' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/49061d1a-63f8-44c1-b26a-1d9b25abf092.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'source3' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/278aecb9-91a8-414a-ba51-74de7fbd6f6b.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'source4' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/278aecb9-91a8-414a-ba51-74de7fbd6f6b.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'course_id' => 4,
+            'category_id' => 4,
+            'created_at' =>  Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+        DB::table('videos')->insert([
+            'title' => 'DISK VT2015 Lecture 2',
+            'length' => '01:23',
+            'image' =>  './images/videocovers/kurs1.jpg',
+            'source1' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/db7f0647-aca2-4161-9877-33588bb4f4f5.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'source2' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/c4621e96-998d-49a3-9cc7-2f28ab000f5f.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'source3' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/ad749c93-5c75-4ecf-8bde-4b76516064f0.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'source4' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/ad749c93-5c75-4ecf-8bde-4b76516064f0.mp4?playbackTicket=&site=play2.dsv.su.se',
+            'course_id' => 4,
+            'category_id' => 4,
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);

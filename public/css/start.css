@@ -20,7 +20,7 @@ body {
     background-color: var(--dark);
 }
 
-p, h2, h4 {
+p, h2, h3, h4 {
     color: var(--light);
 }
 
@@ -62,9 +62,12 @@ p, h4 {
 }
 
 .nav-links,
+
 .logo {
     text-decoration: none;
     color: var(--light);
+    font-family: 'Merriweather Sans', sans-serif;
+    font-size: 18px;
 }
 
 .main-nav li {
@@ -73,10 +76,10 @@ p, h4 {
 }
 
 .logo {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Merriweather Sans', sans-serif;
     font-weight: 400;
     display: inline-block;
-    font-size: 22px;
+    font-size: 35px;
     margin-top: 10px;
     margin-left: 20px;
 }
@@ -229,7 +232,6 @@ header button {
     background-color: var(--light);
 }
 
-
 /* Content section */
 .content_section {
     grid-area: content_section;
@@ -238,7 +240,9 @@ header button {
     grid-template-areas:
     ". playlist_one ."
     ". titlespace ."
-    ". playlist_two .";
+    ". playlist_two ."
+    ". listspace ."
+    ". playlist_three .";
     margin-bottom: 60px;
 }
 
@@ -250,8 +254,17 @@ header button {
     grid-area: playlist_two;
 }
 
+.playlist_three {
+    grid-area: playlist_three;
+}
+
 .space {
     grid-area: titlespace;
+    padding-top: 5em;
+}
+
+.spacelist {
+    grid-area: listspace;
     padding-top: 5em;
 }
 
@@ -334,6 +347,101 @@ header button {
 video i:hover {
     opacity: 1;
 }
+
+/*tooltip Box*/
+.con-tooltip {
+
+    position: relative;
+    border-radius: 9px;
+    margin: 10px;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+    cursor: default;
+
+}
+
+/*tooltip */
+.tooltip {
+    visibility: hidden;
+    z-index: 1;
+    opacity: .40;
+    width: 50%;
+    padding: 5px 5px;
+    background: var(--light);
+    color: #333fff;
+
+    position: absolute;
+    top: -160%;
+    left: 60%;
+
+    border-radius: 9px;
+    font: 16px;
+
+    transform: translateY(9px);
+    transition: all 0.3s ease-in-out;
+
+    box-shadow: 0 0 3px rgba(56, 54, 54, 0.86);
+}
+.tooltip p {
+    color: #000000;
+}
+/* tooltip  after*/
+.tooltip::after {
+    content: " ";
+    width: 0;
+    height: 0;
+
+    border-style: solid;
+    border-width: 12px 12.5px 0 12.5px;
+    border-color: #ffffff transparent transparent transparent;
+
+    position: absolute;
+    left: 40%;
+}
+
+.con-tooltip:hover .tooltip{
+    visibility: visible;
+    transform: translateY(-10px);
+    opacity: 1;
+    transition: .3s linear;
+    animation: bounce 1s ease-in-out infinite  alternate;
+
+}
+
+@keyframes bounce {
+    0%{
+        transform: translateY(6px);
+    }
+
+    100%{
+        transform: translateY(1px);
+    }
+
+}
+/*hover ToolTip*/
+/*.top:hover {transform: translateY(-6px);  }*/
+
+/*right*/
+
+.right .tooltip { top:-20%; left:115%; }
+
+.right .tooltip::after{
+    top:40%;
+    left:-12%;
+    transform: rotate(90deg);
+}
+
+h3 {
+    background: #32aaee;
+    color: #000000;
+    padding: 10px 20px;
+    border-radius: 56px;
+    width: 8em;
+    margin: 20% auto 1% auto;
+
+}
+
+
 
 @media screen and (min-width: 768px) {
     .navbar {

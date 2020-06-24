@@ -33,6 +33,21 @@ class CourseSeeder extends Seeder
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
-
+        DB::table('courses')->insert([
+            'course_name' => 'Diskret matematik',
+            'semester' => 'VT',
+            'year' => '2015',
+            'created_at' =>  Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+        /*
+        DB::table('courses')->insert([
+            'course_name' => '',
+            'semester' => '',
+            'year' => '',
+            'created_at' =>  Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+        */
     }
 }

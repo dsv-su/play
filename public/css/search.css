@@ -160,7 +160,7 @@
 
 @media only screen and (max-width: 500px) {
     .search-form {
-        width: 270px;
+        width: 300px;
+        margin: auto;
     }
-
 }
