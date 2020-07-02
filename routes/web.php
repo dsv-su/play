@@ -20,6 +20,8 @@ Route::get($login, 'SystemController@login')->name('login');
 //Route::middleware('entitlements')->group(function () {
 
 Route::get('/', 'PlayController@index')->name('home');
+Route::get('find', 'TestController@find')->name('find');
+
 Route::get('/player/{video}', 'PlayController@player')->name('player');
 Route::get('/list', 'TestController@index')->name('list');
 Route::post('/search', 'TestController@search')->name('search');

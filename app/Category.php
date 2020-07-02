@@ -21,4 +21,9 @@ class Category extends Model implements Searchable
             $this->id
         );
     }
+
+    public function video()
+    {
+        return $this->hasMany(Video::class);
+    }
 }

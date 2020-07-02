@@ -31,14 +31,16 @@
                 <!-- -->
 
                 <div class="con-tooltip top">
-                <form class="search-form" action="{{ route('search') }}" method="POST" >
-                    @csrf
+
+                        <form class="search-form" action="{{ route('search') }}" method="POST" >
+                        @csrf
                     <div class="tooltip">
                         <p>Filtrera din sökning</p>
-
                     </div>
 
-                    <input type="search" name="query" placeholder="Sök" class="search-input">
+                        <input type="text" name="query" placeholder="Sök" class="search-input" autocomplete="off">
+
+
                     <button type="submit" class="search-button">
                         <i class="fas fa-search"></i>
                     </button>
@@ -76,6 +78,7 @@
                     </div>
 
                 </form>
+
                 </div>
                 <!-- -->
             </div>

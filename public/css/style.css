@@ -209,20 +209,20 @@ Pseudos settings
 }
 
 .slave1:after {
-    content: 'Slave1';
+    content: 'Secondary1';
     background-color: #0074d9;
 }
 .slave2:after {
-    content: 'Slave2';
+    content: 'Secondary2';
     background-color: #0074d9;
 }
 .slave3:after {
-    content: 'Slave3';
+    content: 'Secondary3';
     background-color: #0074d9;
 }
 
 .master:after {
-    content: 'Master';
+    content: 'Primary';
     background-color: #0074d9;
 }
 

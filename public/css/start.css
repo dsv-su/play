@@ -6,6 +6,7 @@
     --sured: ##ff0000;
     --dark: #17191D;
     --light: #f4f4f4;
+    --search: #f5f5f5;
     --overlay: rgba(23,25,29,0.8);
     --ease: all 0.3s ease 0s;
 }
@@ -141,7 +142,6 @@ header button {
 }
 
 .search_header {
-
     grid-area: search_header;
     display: inline-block;
     flex-direction: column;
@@ -206,7 +206,6 @@ header button {
 }
 
 .search {
-
     font-family: 'Merriweather Sans', sans-serif;
     font-weight: 400;
     font-size: 18px;
@@ -216,9 +215,8 @@ header button {
     width: 100%;
     padding: 2px 23px 2px 30px;
     outline: 0;
-    background-color: #f5f5f5;
-
-
+    /*background-color: #f5f5f5;*/
+    background-color: var(--search);
 }
 
  .input_addon {
@@ -244,6 +242,7 @@ header button {
     ". listspace ."
     ". playlist_three .";
     margin-bottom: 60px;
+
 }
 
 .playlist_one {
@@ -273,10 +272,11 @@ header button {
     grid-template-columns: repeat(12, 1fr);
     grid-column-gap: 20px;
     grid-row-gap: 80px;
+
 }
 
 .video {
-    height: 120px;
+    height: 110px;
     grid-column-start: span 3;
     position: relative;
     transition: var(--ease);
@@ -302,9 +302,11 @@ header button {
 }
 
 .video .footer {
-    font-family: 'Merriweather Sans', sans-serif;
+    /*font-family: 'Merriweather Sans', sans-serif;*/
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
     font-weight: 400;
-    height: 55px;
+    height: 50px;
     grid-column-start: span 3;
     position: relative;
     top: 182%;
@@ -486,6 +488,7 @@ h3 {
     .video {
         grid-column-start: span 6;
         height: 240px;
+
     }
     .video .footer {
         grid-column-start: span 6;
