@@ -35,15 +35,17 @@
              dataset: 'autoc'
             },
             hint: true,
+            autoselect: true,
             highlight: true,
             minLength: 1
         }, {
             source: engine.ttAdapter(),
+
             limit: 4,
             // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
             name: 'autocomplete-items',
-
-            // the key from the array we want to display (name,id,email,etc...)
+            displayKey: 'tags',
+            // the key from the array we want to display
             templates: {
                 empty: [
                     '<div>Inget hittat.</div>'

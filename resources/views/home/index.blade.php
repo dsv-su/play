@@ -5,8 +5,10 @@
         <section class="top_section">
             <!-- Navigation bar -->
             <nav class="navbar">
+                <div class="logo-container">
+                    <a href="{{route('home')}}" class="tracking-in-contract-bck logo">Play</a>
+                </div>
 
-                <a href="{{route('home')}}" class="logo">Play</a>
                 <ul class="main-nav" id="js-menu">
                     <li>
                         <a href="{{route('list')}}" class="nav-links">[Lista alla]</a>
@@ -27,18 +29,17 @@
             </nav>
             <!-- Search -->
             <div class="search_header">
-                <h2>Startsida</h2>
-                <!-- -->
 
                 <div class="con-tooltip top">
 
-                        <form class="search-form" action="{{ route('search') }}" method="POST" >
+                        <form class="search-form"  action="{{ route('search') }}" method="POST" >
                         @csrf
                     <div class="tooltip">
                         <p>Filtrera din sökning</p>
                     </div>
-
+                    <div class="searchtext">
                         <input type="text" name="query" placeholder="Sök" class="search-input" autocomplete="off">
+                    </div>
 
 
                     <button type="submit" class="search-button">
