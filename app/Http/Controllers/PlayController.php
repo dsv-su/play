@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
 use App\UploadHandler;
 use App\Video;
 use Illuminate\Http\Request;
@@ -23,7 +24,8 @@ class PlayController extends Controller
         }
 
        $data['search'] = 0;
-       $data['latest']= Video::with('category', 'course')->latest('id')->take(8)->get();
+       $data['latest'] = Video::with('category', 'course')->latest('id')->take(8)->get();
+       $data['categories'] = Category::all();
 
        return view('home.index', $data);
     }

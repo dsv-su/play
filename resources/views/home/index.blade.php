@@ -1,12 +1,15 @@
 @extends('layouts.dsvplay')
 @section('content')
+
     <div class="wrapper">
+
         <!--Header-->
         <section class="top_section">
+
             <!-- Navigation bar -->
             <nav class="navbar">
                 <div class="logo-container">
-                    <a href="{{route('home')}}" class="tracking-in-contract-bck logo">Play</a>
+                    <a href="{{route('home')}}" class="logo">Play</a>
                 </div>
 
                 <ul class="main-nav" id="js-menu">
@@ -29,22 +32,526 @@
             </nav>
             <!-- Search -->
             <div class="search_header">
+                <div class="navbutton">
+                    <input id="navmenu_toggle" type="checkbox" name="navmenu-open" class="hidden">
+                    <label class="navmenu toggle" for="navmenu_toggle" accesskey="1">
+                        <header><span class="heavy">&#x2630;</span> Navigera</header>
+                    </label>
+                    <div class="hide-at-start-wrapper">
+                        <nav class="navmenu panel animated">
+                            <a href="#"><span class="triangle-origin">Avdelning 1</span></a>
+                            <a href="#"><span class="triangle-origin">Avdelning 2</span></a>
+                            <a href="#"><span class="triangle-origin">Avdelning 3</span></a>
+                            <a href="#"><span class="triangle-origin">Avdelning 4</span></a>
+                            <a href="#"><span class="triangle-origin">Avdelning 5</span></a>
+                            <a href="#"><span class="triangle-origin">Avdelning 6</span></a>
+                            <a href="#"><span class="triangle-origin">Avdelning 7</span></a>
+                            <hr>
+                            <a href="#"><span class=triangle-origin>Forskning</span></a>
+                            <a href="#"><span class=triangle-origin>Samverkan</span></a>
+                            <hr>
+                            <a class=no-panel href="#">Kategori</a>
 
+                            <article class=panel>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>HT 2020</header>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>VT 2020</header>
+                                        <a href="#">kurs vt2020</a>
+                                        <a href="#">kurs vt2020</a>
+                                        <a href="#">kurs vt2020</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>HT 2019</header>
+                                        <a href="#">kurs ht2019</a>
+                                        <a href="#">kurs ht2019</a>
+                                        <a href="#">kurs ht2019</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>VT 2019</header>
+                                        <a href="#">kurs vt2019</a>
+                                        <a href="#">kurs vt2019</a>
+                                        <a href="#">kurs vt2019</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>HT 2018</header>
+                                        <a href="#">kurs ht2018</a>
+                                        <a href="#">kurs ht2018</a>
+                                        <a href="#">kurs ht2018</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>VT 2018</header>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+
+                            </article>
+
+                            <article class=panel>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>HT 2020</header>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>VT 2020</header>
+                                        <a href="#">kurs vt2020</a>
+                                        <a href="#">kurs vt2020</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>HT 2019</header>
+                                        <a href="#">kurs ht2019</a>
+                                        <a href="#">kurs ht2019</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>VT 2019</header>
+                                        <a href="#">kurs vt2019</a>
+                                        <a href="#">kurs vt2019</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>HT 2018</header>
+                                        <a href="#">kurs ht2018</a>
+                                        <a href="#">kurs ht2018</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>VT 2018</header>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                            </article>
+                            <article class=panel>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>HT 2020</header>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>VT 2020</header>
+                                        <a href="#">kurs vt2020</a>
+                                        <a href="#">kurs vt2020</a>
+                                        <a href="#">kurs vt2020</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>HT 2019</header>
+                                        <a href="#">kurs ht2019</a>
+                                        <a href="#">kurs ht2019</a>
+                                        <a href="#">kurs ht2019</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>VT 2019</header>
+                                        <a href="#">kurs vt2019</a>
+                                        <a href="#">kurs vt2019</a>
+                                        <a href="#">kurs vt2019</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>HT 2018</header>
+                                        <a href="#">kurs ht2018</a>
+                                        <a href="#">kurs ht2018</a>
+                                        <a href="#">kurs ht2018</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>VT 2018</header>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                            </article>
+                            <article class=panel>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>HT 2020</header>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>VT 2020</header>
+                                        <a href="#">kurs vt2020</a>
+                                        <a href="#">kurs vt2020</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>HT 2019</header>
+                                        <a href="#">kurs ht2019</a>
+                                        <a href="#">kurs ht2019</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>VT 2019</header>
+                                        <a href="#">kurs vt2019</a>
+                                        <a href="#">kurs vt2019</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>HT 2018</header>
+                                        <a href="#">kurs ht2018</a>
+                                        <a href="#">kurs ht2018</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>VT 2018</header>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                            </article>
+                            <article class=panel>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>HT 2020</header>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>VT 2020</header>
+                                        <a href="#">kurs vt2020</a>
+                                        <a href="#">kurs vt2020</a>
+                                        <a href="#">kurs vt2020</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>HT 2019</header>
+                                        <a href="#">kurs ht2019</a>
+                                        <a href="#">kurs ht2019</a>
+                                        <a href="#">kurs ht2019</a>
+                                        <a href="#">kurs ht2019</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>VT 2019</header>
+                                        <a href="#">kurs vt2019</a>
+                                        <a href="#">kurs vt2019</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>HT 2018</header>
+                                        <a href="#">kurs ht2018</a>
+                                        <a href="#">kurs ht2018</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>VT 2018</header>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                            </article>
+                            <article class=panel>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>HT 2020</header>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>VT 2020</header>
+                                        <a href="#">kurs vt2020</a>
+                                        <a href="#">kurs vt2020</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>HT 2019</header>
+                                        <a href="#">kurs ht2019</a>
+                                        <a href="#">kurs ht2019</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>VT 2019</header>
+                                        <a href="#">kurs vt2019</a>
+                                        <a href="#">kurs vt2019</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>HT 2018</header>
+                                        <a href="#">kurs ht2018</a>
+                                        <a href="#">kurs ht2018</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>VT 2018</header>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                            </article>
+                            <article class=panel>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>HT 2020</header>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>VT 2020</header>
+                                        <a href="#">kurs vt2020</a>
+                                        <a href="#">kurs vt2020</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>HT 2019</header>
+                                        <a href="#">kurs ht2019</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>VT 2019</header>
+                                        <a href="#">kurs vt2019</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>HT 2018</header>
+                                        <a href="#">kurs ht2018</a>
+                                        <a href="#">kurs ht2018</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>VT 2018</header>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                            </article>
+                            <article class=panel>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>Forskning 1</header>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>Forskning 2</header>
+                                        <a href="#">kurs vt2020</a>
+                                        <a href="#">kurs vt2020</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>Forskning 3</header>
+                                        <a href="#">kurs ht2019</a>
+                                        <a href="#">kurs ht2019</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>Forskning 4</header>
+                                        <a href="#">kurs vt2019</a>
+                                        <a href="#">kurs vt2019</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>Forskning 5</header>
+                                        <a href="#">kurs ht2018</a>
+                                        <a href="#">kurs ht2018</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>Forskning 6</header>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                            </article>
+                            <article class=panel>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>Samverkan 1</header>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>Samverkan 2</header>
+                                        <a href="#">kurs vt2020</a>
+                                        <a href="#">kurs vt2020</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>Samverkan 3</header>
+                                        <a href="#">kurs ht2019</a>
+                                        <a href="#">kurs ht2019</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>Samverkan 4</header>
+                                        <a href="#">kurs vt2019</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                                <div class=column>
+                                    <section class=titled-group>
+                                        <header>Samverkan 5</header>
+                                        <a href="#">kurs ht2018</a>
+                                        <a href="#">kurs ht2018</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    <section class=titled-group>
+                                        <header>Samverkan 6</header>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">kurs vt2018</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                </div>
+                            </article>
+
+                            <article class=panel>
+
+                                <div class=column>
+                                    @foreach( $categories as $cat)
+                                    <section class=titled-group>
+                                        <header>{{$cat->category_name}}</header>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">[Alla]</a>
+                                    </section>
+                                    @endforeach
+                                </div>
+                            </article>
+
+                        </nav>
+                    </div>
+                </div>
                 <div class="con-tooltip top">
 
                         <form class="search-form"  action="{{ route('search') }}" method="POST" >
                         @csrf
-                    <div class="tooltip">
-                        <p>Filtrera din sökning</p>
-                    </div>
-                    <div class="searchtext">
-                        <input type="text" name="query" placeholder="Sök" class="search-input" autocomplete="off">
-                    </div>
+                            <div class="tooltip">
+                                <p>Filtrera din sökning</p>
+                            </div>
+
+                            <div class="searchtext">
+                                <input type="text" name="query" placeholder="Sök" class="search-input" autocomplete="off">
+                            </div>
+
+                            <button type="submit" class="search-button">
+                                <i class="fas fa-search"></i>
+                            </button>
 
 
-                    <button type="submit" class="search-button">
-                        <i class="fas fa-search"></i>
-                    </button>
+
                     <div class="search-option">
                         <div>
                             <input name="type" type="radio" value="type-lectures" id="type-lectures">
