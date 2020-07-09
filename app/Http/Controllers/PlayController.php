@@ -18,9 +18,8 @@ class PlayController extends Controller
     {
         // If the environment is local
         if (app()->environment('local')) {
-            $data['play_user'] = 'Förnamn Efternamn';
+            $data['play_user'] = 'Profil';
         } else {
-
             $data['play_user'] = $_SERVER['displayName'];
         }
 
@@ -33,7 +32,6 @@ class PlayController extends Controller
 
     public function player(Video $video)
     {
-
         $playlist = Video::where('course_id', $video->course->id)->get();
         //dd($playlist);
         return view('player.index', ['video' => $video, 'playlist' => $playlist]);
