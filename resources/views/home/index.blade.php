@@ -26,6 +26,9 @@
                         <a href="#" class="nav-links">Manual</a>
                     </li>
                     <li>
+                        <a href="{{route('mediasite')}}" class="nav-links">Retrieve from Mediasite</a>
+                    </li>
+                    <li>
                         <div class="nav-links">{{$play_user}}</div>
                     </li>
                 </ul>
