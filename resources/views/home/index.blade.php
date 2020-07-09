@@ -26,6 +26,9 @@
                         <a href="#" class="nav-links"><i class="far fa-file-alt"></i> Manual</a>
                     </li>
                     <li>
+                        <a href="{{route('mediasite')}}" class="nav-links">Retrieve from Mediasite</a>
+                    </li>
+                    <li>
                         <div class="nav-links"><i class="far fa-user"></i> {{$play_user}}</div>
                     </li>
                 </ul>
