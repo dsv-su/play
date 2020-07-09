@@ -516,19 +516,22 @@
                                     </section>
                                 </div>
                             </article>
-
+                            <!--Categories-->
                             <article class=panel>
-
+                                @foreach( $categories->chunk(3) as $chunk)
                                 <div class=column>
-                                    @foreach( $categories as $cat)
                                     <section class=titled-group>
+                                        @foreach( $chunk as $cat)
                                         <header>{{$cat->category_name}}</header>
-                                        <a href="#">kurs ht2020</a>
-                                        <a href="#">kurs ht2020</a>
+                                        <a href="#">Kurser ht2020</a>
+                                        <a href="#">Kurser vt2020</a>
+                                        <a href="#">Kurser ht2019</a>
+                                        <a href="#">Kurser vt2019</a>
                                         <a href="#">[Alla]</a>
+                                        @endforeach
                                     </section>
-                                    @endforeach
                                 </div>
+                                @endforeach
                             </article>
 
                         </nav>

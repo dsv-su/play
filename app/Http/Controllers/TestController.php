@@ -22,12 +22,6 @@ class TestController extends Controller
 
     public function find(Request $request)
     {
-        /*
-       return (new Search())
-            ->registerModel(Video::class, 'title', 'tags')
-            ->search($request->input('query'));
-        */
-
         return Video::search($request->get('query'))->with('category')->get();
     }
 

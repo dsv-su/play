@@ -21,7 +21,7 @@ class VideosSeeder extends Seeder
             'source3' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/2af810b8-1e59-4215-9f71-be097c1f88fb.mp4?playbackTicket=&site=play2.dsv.su.se',
             'source4' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/2af810b8-1e59-4215-9f71-be097c1f88fb.mp4?playbackTicket=&site=play2.dsv.su.se',
             'course_id' => 1,
-            'category_id' => 1,
+            'category_id' => 2,
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
@@ -34,7 +34,7 @@ class VideosSeeder extends Seeder
             'source3' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/e420023f-b272-4c98-a155-2cefabcf546f.mp4?playbackTicket=&site=play2.dsv.su.se',
             'source4' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/e420023f-b272-4c98-a155-2cefabcf546f.mp4?playbackTicket=&site=play2.dsv.su.se',
             'course_id' => 1,
-            'category_id' => 1,
+            'category_id' => 2,
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
@@ -48,7 +48,7 @@ class VideosSeeder extends Seeder
             'source3' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/4cbea3cf-9b84-40af-9d49-ed50f72552f2.mp4?playbackTicket=&site=play2.dsv.su.se',
             'source4' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/4cbea3cf-9b84-40af-9d49-ed50f72552f2.mp4?playbackTicket=&site=play2.dsv.su.se',
             'course_id' => 1,
-            'category_id' => 1,
+            'category_id' => 2,
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
@@ -62,7 +62,7 @@ class VideosSeeder extends Seeder
             'source3' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/850430ee-f9d2-41b6-93a3-9667a542f4af.mp4?playbackTicket=&site=play2.dsv.su.se',
             'source4' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/850430ee-f9d2-41b6-93a3-9667a542f4af.mp4?playbackTicket=&site=play2.dsv.su.se',
             'course_id' => 1,
-            'category_id' => 1,
+            'category_id' => 2,
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
@@ -76,7 +76,7 @@ class VideosSeeder extends Seeder
             'source3' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/7dd07486-f5c6-4439-ad00-4ab7aaf24f3c.mp4?playbackTicket=&site=play2.dsv.su.se',
             'source4' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/7dd07486-f5c6-4439-ad00-4ab7aaf24f3c.mp4?playbackTicket=&site=play2.dsv.su.se',
             'course_id' => 1,
-            'category_id' => 1,
+            'category_id' => 2,
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
@@ -90,7 +90,7 @@ class VideosSeeder extends Seeder
             'source3' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/d6dccaee-e99f-4b48-821a-8f975a217e69.mp4?playbackTicket=&site=play2.dsv.su.se',
             'source4' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/d6dccaee-e99f-4b48-821a-8f975a217e69.mp4?playbackTicket=&site=play2.dsv.su.se',
             'course_id' => 1,
-            'category_id' => 1,
+            'category_id' => 2,
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
@@ -103,7 +103,7 @@ class VideosSeeder extends Seeder
             'source3' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/9c50981b-e249-4ada-83d4-2a4eae25e687.mp4?playbackTicket=&site=play2.dsv.su.se',
             'source4' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/9c50981b-e249-4ada-83d4-2a4eae25e687.mp4?playbackTicket=&site=play2.dsv.su.se',
             'course_id' => 1,
-            'category_id' => 1,
+            'category_id' => 2,
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
@@ -117,7 +117,7 @@ class VideosSeeder extends Seeder
             'source3' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/e0bcd99e-4591-41b3-81ef-8ac9effce210.mp4?playbackTicket=&site=play2.dsv.su.se',
             'source4' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/e0bcd99e-4591-41b3-81ef-8ac9effce210.mp4?playbackTicket=&site=play2.dsv.su.se',
             'course_id' => 2,
-            'category_id' => 2,
+            'category_id' => 4,
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
@@ -131,7 +131,7 @@ class VideosSeeder extends Seeder
             'source3' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/e7766c33-5afb-4ca1-a9ac-320af0001fb4.mp4?playbackTicket=&site=play2.dsv.su.se',
             'source4' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/e7766c33-5afb-4ca1-a9ac-320af0001fb4.mp4?playbackTicket=&site=play2.dsv.su.se',
             'course_id' => 2,
-            'category_id' => 2,
+            'category_id' => 4,
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
@@ -145,7 +145,7 @@ class VideosSeeder extends Seeder
             'source3' => './testvideos/bastad/media/bastad_dev-cattura-video-eco0000-05-00-0--0.mp4',
             'source4' => './testvideos/bastad/media/bastad_dev-cattura-video-eco0000-05-00-0--1.mp4',
             'course_id' => 3,
-            'category_id' => 3,
+            'category_id' => 5,
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
@@ -159,7 +159,7 @@ class VideosSeeder extends Seeder
             'source3' => './testvideos/Boras/media/Boras_dev-cattura-video-eco0000-05-00-0--0.mp4',
             'source4' => './testvideos/Boras/media/Boras_dev-cattura-video-eco0000-05-00-0--0.mp4',
             'course_id' => 3,
-            'category_id' => 3,
+            'category_id' => 5,
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
@@ -172,7 +172,7 @@ class VideosSeeder extends Seeder
             'source3' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/278aecb9-91a8-414a-ba51-74de7fbd6f6b.mp4?playbackTicket=&site=play2.dsv.su.se',
             'source4' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/278aecb9-91a8-414a-ba51-74de7fbd6f6b.mp4?playbackTicket=&site=play2.dsv.su.se',
             'course_id' => 4,
-            'category_id' => 4,
+            'category_id' => 6,
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
@@ -185,7 +185,7 @@ class VideosSeeder extends Seeder
             'source3' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/ad749c93-5c75-4ecf-8bde-4b76516064f0.mp4?playbackTicket=&site=play2.dsv.su.se',
             'source4' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/ad749c93-5c75-4ecf-8bde-4b76516064f0.mp4?playbackTicket=&site=play2.dsv.su.se',
             'course_id' => 4,
-            'category_id' => 4,
+            'category_id' => 6,
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);

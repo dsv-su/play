@@ -14,7 +14,17 @@ class CategorySeeder extends Seeder
     {
         //factory('App\Category', 10)->create();
         DB::table('categories')->insert([
+            'category_name' => 'Artificiell Intelligens',
+            'created_at' =>  Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+        DB::table('categories')->insert([
             'category_name' => 'Databas',
+            'created_at' =>  Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+        DB::table('categories')->insert([
+            'category_name' => 'Operativsystem',
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
@@ -30,6 +40,11 @@ class CategorySeeder extends Seeder
         ]);
         DB::table('categories')->insert([
             'category_name' => 'Matematik',
+            'created_at' =>  Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+        DB::table('categories')->insert([
+            'category_name' => 'IT Säkerhet',
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
