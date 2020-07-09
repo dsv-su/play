@@ -20,13 +20,13 @@
                          <i class="navbar-toggle fas fa-bars" id="js-navbar-toggle"></i>
                     </li>
                     <li>
-                        <a href="#" class="nav-links">Hantera uppspelning</a>
+                        <a href="#" class="nav-links"><i class="far fa-file-video"></i> Hantera uppspelning</a>
                     </li>
                     <li>
-                        <a href="#" class="nav-links">Manual</a>
+                        <a href="#" class="nav-links"><i class="far fa-file-alt"></i> Manual</a>
                     </li>
                     <li>
-                        <div class="nav-links">{{$play_user}}</div>
+                        <div class="nav-links"><i class="far fa-user"></i> {{$play_user}}</div>
                     </li>
                 </ul>
             </nav>
@@ -35,7 +35,7 @@
                 <div class="navbutton">
                     <input id="navmenu_toggle" type="checkbox" name="navmenu-open" class="hidden">
                     <label class="navmenu toggle" for="navmenu_toggle" accesskey="1">
-                        <header><span class="heavy">&#x2630;</span> Navigera</header>
+                        <header><span class="heavy">&#x2630;</span> Navigera <i class="fas fa-sort-down"></i></header>
                     </label>
                     <div class="hide-at-start-wrapper">
                         <nav class="navmenu panel animated">

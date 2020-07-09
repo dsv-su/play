@@ -84,7 +84,7 @@
 
 .navbutton {
   position: relative;
-  left: 10%;
+  /*left: 10%;*/
   z-index: 6; }
 
 .search-button {

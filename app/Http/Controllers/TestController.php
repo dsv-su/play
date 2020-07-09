@@ -59,6 +59,12 @@ class TestController extends Controller
         else $searchString = 'Inget angivet';
 
         /*********************************
+         * Get all categories for nav-menu
+         */
+
+        $categories = Category::all();
+
+        /*********************************
          * Fulltext search
          */
 
@@ -111,21 +117,21 @@ class TestController extends Controller
                 $search = 2;
                 if($cat == 1)
                 {
-                    return view('home.index', compact('searchResults','searchCategoryRelations', 'searchCourseRelations','course_videos','search', 'play_user'));
+                    return view('home.index', compact('searchResults','categories', 'searchCategoryRelations', 'searchCourseRelations','course_videos','search', 'play_user'));
                 }
                 else
                 {
-                    return view('home.index', compact('searchResults','searchCategoryRelations', 'searchCourseRelations', 'category_videos','course_videos','search', 'play_user'));
+                    return view('home.index', compact('searchResults','categories', 'searchCategoryRelations', 'searchCourseRelations', 'category_videos','course_videos','search', 'play_user'));
                 }
 
             }
             elseif ($cat == 0)
             {
-                return view('home.index', compact('searchResults','searchCategoryRelations','category_videos', 'search', 'play_user'));
+                return view('home.index', compact('searchResults','categories','searchCategoryRelations','category_videos', 'search', 'play_user'));
             }
 
 
-            return view('home.index', compact('searchResults', 'search', 'play_user'));
+            return view('home.index', compact('searchResults','categories', 'search', 'play_user'));
         }
 
         elseif ($request->input('type') == 'type-lectures')
@@ -147,16 +153,16 @@ class TestController extends Controller
                     $searchResults = Video::where('category_id', $item->id)->get();
                     // Searchtype 2
                     $search = 3;
-                    return view('home.index', compact('searchResults', 'search', 'play_user'));
+                    return view('home.index', compact('searchResults','categories', 'search', 'play_user'));
                 }
             }
             $searchResults = $search;
             // Searchtype 1
             $search = 1;
-            return view('home.index', compact('searchResults', 'search', 'play_user'));
+            return view('home.index', compact('searchResults','categories', 'search', 'play_user'));
 
             //dd($searchResults);
-            return view('home.index', compact('searchResults', 'search', 'play_user'));
+            return view('home.index', compact('searchResults','categories', 'search', 'play_user'));
         }
         elseif ($request->input('type') == 'type-course')
         {
@@ -173,13 +179,13 @@ class TestController extends Controller
                     $searchResults = Video::where('course_id', $item->id)->get();
                     // Searchtype 2
                     $search = 3;
-                    return view('home.index', compact('searchResults', 'search', 'play_user'));
+                    return view('home.index', compact('searchResults','categories', 'search', 'play_user'));
                 }
             }
             $searchResults = $search;
             // Searchtype 1
             $search = 1;
-            return view('home.index', compact('searchResults', 'search', 'play_user'));
+            return view('home.index', compact('searchResults','categories', 'search', 'play_user'));
         }
         elseif ($request->input('type') == 'type-latest')
         {

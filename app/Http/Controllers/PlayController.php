@@ -16,7 +16,7 @@ class PlayController extends Controller
         // If the environment is local
         if(app()->environment('local'))
         {
-            $data['play_user'] = 'Förnamn Efternamn';
+            $data['play_user'] = 'Profil';
         }
         else {
 
