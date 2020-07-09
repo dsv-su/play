@@ -58,15 +58,18 @@ class PlayController extends Controller
         ]);
         $url = $system->mediasite->url;
 
-        $parentfolder = '';
+        $parentfolder = $parentfolderid = '';
         if ($presentationid) {
             $presentation = json_decode($mediasite->get($url . "/Presentations('$presentationid')?\$select=full")->getBody(), true);
             $presentations = array($presentation);
             $parentfolder = $presentation['ParentFolderName'];
+            $parentfolderid = $presentation['ParentFolderId'];
         } else {
             if ($folderid) {
                 $presentations = json_decode($mediasite->get($url . "/Folders('$folderid')/Presentations?\$top=100000&\$select=full")->getBody(), true)['value'];
-                $parentfolder = json_decode($mediasite->get($url . "/Folders('$folderid')")->getBody(), true)['Name'];
+                $parent = json_decode($mediasite->get($url . "/Folders('$folderid')")->getBody(), true);
+                $parentfolder = $parent['Name'];
+                $parentfolderid = $parent['ParentFolderId'];
             }
         }
 
@@ -76,6 +79,10 @@ class PlayController extends Controller
         if (!is_dir(public_path() . '/mediasite/' . $parentfolder)) {
             mkdir(public_path() . '/mediasite/' . $parentfolder);
         }
+
+        // Check one level up
+        $onefolderupid = json_decode($mediasite->get($url . "/Folders('$parentfolderid')")->getBody(), true)['ParentFolderId'];
+        $topfoldername = json_decode($mediasite->get($url . "/Folders('$onefolderupid')")->getBody(), true);
 
         foreach ($presentations as $presentation) {
             $presentationid = $presentation['Id'];
@@ -87,7 +94,7 @@ class PlayController extends Controller
             // Now let's create a json with all relevant metadata
             $metadata = array(
                 'mediasiteid' => $presentation['Id'],
-                'title' => $presentation['Title'],
+                'title' => $title,
                 'description' => $presentation['Description'],
                 'recorded' => $presentation['RecordDate'],
                 'length' => $presentation['Duration'],
@@ -109,13 +116,14 @@ class PlayController extends Controller
                 // Skip zero length
                 if ($stream['Length'] > 0) {
                     $streamurl = "https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/$filename";
-                    if (filesize(public_path() . '/mediasite/' . $parentfolder . '/' . $title . '/' . $filename) != $stream['FileLength']) {
+                    if (!file_exists(public_path() . '/mediasite/' . $parentfolder . '/' . $title . '/' . $filename)) {
                         // download only if it hasn't been done before
                         file_put_contents(public_path() . '/mediasite/' . $parentfolder . '/' . $title . '/' . $filename, file_get_contents($streamurl));
                     }
                     if (filesize(public_path() . '/mediasite/' . $parentfolder . '/' . $title . '/' . $filename) != $stream['FileLength']) {
-                        // filesize doesn't match!
+                        // filesize doesn't match! retrying.
                         echo 'Filesize does not match. Error!';
+                        file_put_contents(public_path() . '/mediasite/' . $parentfolder . '/' . $title . '/' . $filename, file_get_contents($streamurl));
                     }
                     $metadata['sources'][$stream['StreamType']] = $filename;
                 }
@@ -134,10 +142,16 @@ class PlayController extends Controller
             $video->source4 = array_key_exists('Video4', $metadata['sources']) ? 'mediasite/' . $parentfolder . '/' . $title . '/' . $metadata['sources']['Video4'] : null;
 
             // We also need to create a course and a category.
-            if (in_array('Course', $metadata['tags'])) {
-                $course_name = explode(' ', $metadata['title'])[0];
-                $semester = substr(explode(' ', $metadata['title'])[1], 0, 2);
-                $year = substr(explode(' ', $metadata['title'])[1], 2, 4);
+            if ($topfoldername['Name'] == 'Courses') {
+                $course_name = $parentfolder;
+                $term = array();
+                $re = '/([V|H|S]T)(19|20)\d{2}/';
+                preg_match($re, $title, $term, 0, 0);
+                $semester = $year = 'Unknown';
+                if ($term && $term[0]) {
+                    $semester = substr($term[0], 0, 2);
+                    $year = substr($term[0], 2, 4);
+                }
                 $course = Course::firstOrCreate(array('course_name' => $course_name, 'semester' => $semester, 'year' => $year));
                 $course_id = $course->id;
             }
