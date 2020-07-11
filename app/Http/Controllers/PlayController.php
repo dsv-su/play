@@ -184,6 +184,9 @@ class PlayController extends Controller
                 }
                 $course = Course::firstOrCreate(array('course_name' => $course_name, 'semester' => $semester, 'year' => $year));
                 $course_id = $course->id;
+            } else {
+                $course = Course::firstOrCreate(array('course_name' => 'Recording'));
+                $course_id = $course->id;
             }
             $video->course_id = $course_id;
             // Dummy for now.
