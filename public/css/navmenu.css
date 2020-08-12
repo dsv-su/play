@@ -1,20 +1,21 @@
 :root {
+    --text: #585858;
     text-size-adjust:100%;
     text-rendering:optimizeLegibility;
     -webkit-font-smoothing:antialiased
 }
+
 .navmenu {
-    background:#000;
-    color:#fff;
-    font-family:Helvetica,Arial,sans-serif;
-    font-size:16px
+    background:#f9f9f9;
+    color:#585858;
+    font-size:14px
 }
 
 nav.navmenu {
     position:relative;
     display:block;
     overflow:hidden;
-    padding:1.25rem 0 1.25rem 1.25rem;
+    padding:1rem 0 1rem 1rem;
     /*max-width:-moz-fit-content;*/
     max-width:fit-content;
     box-sizing:border-box
@@ -42,7 +43,7 @@ nav.navmenu>hr {
 }
 nav.navmenu article.panel::before {
     display:block;
-    z-index:2000;
+    z-index:5000;
     height:calc(100% - 2*(0.5*1rem));
     content:"";
     width:0;
@@ -240,7 +241,7 @@ nav.navmenu>a:not(.no-panel):hover::before,
 nav.navmenu>a:not(.no-panel):focus::before {
     content:"";
     position:absolute;
-    z-index:1000;
+    z-index:5000;
     display:block;
     left:-1.25rem;
     top:0;
@@ -251,7 +252,7 @@ nav.navmenu>a:not(.no-panel):focus::before {
 nav.navmenu>a:not(.no-panel)::after {
     content:"";
     position:absolute;
-    z-index:1000;
+    z-index:5000;
     display:block;
     height:.5em;
     width:.5em;
@@ -280,8 +281,8 @@ label {
     /*border-radius: 20px;*/
 }
 label.navmenu.toggle {
-    font-size:18px
-
+    font-size:18px;
+    color: var(--text);
 }
 .heavy {
     display:inline-block;
@@ -349,11 +350,11 @@ nav.navmenu.panel>a {
 nav.navmenu.panel>a>span.triangle-origin {
     display:inline-block;
     width:100%;
-    height:100%
+    height:100%;
 }
 nav.navmenu.panel>a>span.triangle-origin:hover::after {
     background:0 0;
-    z-index:1001;
+    z-index:5000;
     display:block;
     position:absolute;
     width:200px;
@@ -442,3 +443,4 @@ nav.navmenu article.panel:nth-of-type(10) {
         animation:0;
     }
 }
+

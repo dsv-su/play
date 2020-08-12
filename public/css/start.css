@@ -1,10 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kadwa:wght@400;700&display=swap');
 
 :root{
     --sublue: #0000ff;
     --sured: ##ff0000;
     --dark: #17191D;
+    --text: #696969;
+    --initial: #fff;
     --light: #f4f4f4;
     --search: #f5f5f5;
     --overlay: rgba(23,25,29,0.8);
@@ -18,14 +21,17 @@
 }
 
 body {
-    background-color: var(--dark);
+    /*background-color: var(--dark);*/
+    background-color: var(--initial);
+
+    /*color: var(--text);*/
 }
 
 p, h2, h3, h4 {
     color: var(--light);
 }
 
-p, h1 {
+p {
     font-family: 'Open Sans', sans-serif;
     font-weight: 400;
 }
@@ -36,9 +42,8 @@ h4, button {
 }
 
 h1 {
-    font-size: 48px;
-    padding-bottom: 50px;
-    margin-bottom: 20px;
+    /*font-size: 48px;*/
+    padding-left: 30px;
 }
 
 p, h4 {
@@ -53,11 +58,24 @@ p, h4 {
     flex-direction: row;
     justify-content: center;
     font-size: 18px;
-    background-color: var(--accent);
+    background-color: var(--initial);
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 80px;
+    z-index: 5;
+
     /*padding-bottom: 10px;*/
+}
+.logo-container {
+    margin: 0 auto;
+    font-family: 'Kadwa', serif;
 }
 
 .main-nav {
+    font-family: 'Merriweather Sans', sans-serif;
     list-style-type: none;
     display: none;
 }
@@ -66,8 +84,7 @@ p, h4 {
 
 .logo {
     text-decoration: none;
-    color: var(--light);
-    font-family: 'Merriweather Sans', sans-serif;
+    color: var(--text);
     font-size: 18px;
 }
 
@@ -85,6 +102,10 @@ p, h4 {
     margin-left: 20px;
 
 
+}
+.inner {
+    position:relative;
+    padding:20px 0 40px;
 }
 
 .navbar-toggle {
@@ -118,7 +139,7 @@ p, h4 {
     grid-template-areas:
     ". navbar ."
     ". search_header .";
-    background: linear-gradient(var(--overlay), var(--overlay)), url(../images/videocovers/kurs5.jpg);
+    background: linear-gradient(var(--overlay), var(--overlay)), url(../images/videocovers/kurs9.jpg);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -259,6 +280,10 @@ header button {
     grid-area: playlist_three;
 }
 
+.playlist_title {
+    color: var(--text);
+    padding-top: 5px;
+}
 .space {
     grid-area: titlespace;
     padding-top: 5em;

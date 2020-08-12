@@ -7,6 +7,7 @@ use Spatie\Searchable\Searchable;
 use Spatie\Searchable\SearchResult;
 use Nicolaslopezj\Searchable\SearchableTrait;
 
+
 class Video extends Model implements Searchable
 {
     use SearchableTrait;

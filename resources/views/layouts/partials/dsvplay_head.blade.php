@@ -5,7 +5,8 @@
 <link rel="shortcut icon" href="{{ asset('./images/favicon.ico') }}">
 <link rel="stylesheet" href="{{asset('./css/fontawesome/css/all.css')}}" >
 <script src="{{asset('./js/jquery-3.5.1.min.js')}}"></script>
-<link rel="stylesheet" href="{{asset('/css/search.css')}}">
 <link rel="stylesheet" href="{{asset('/css/start.css')}}">
+<link rel="stylesheet" href="{{asset('/css/navhead.css')}}">
 <link rel="stylesheet" href="{{asset('/css/navmenu.css')}}">
+<link rel="stylesheet" href="{{asset('/css/search.css')}}">
 <title>Play</title>

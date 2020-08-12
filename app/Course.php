@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Searchable\Searchable;
 use Spatie\Searchable\SearchResult;
 
+
 class Course extends Model implements Searchable
 {
     protected $fillable = ['course_name', 'semester', 'year'];

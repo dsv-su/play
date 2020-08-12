@@ -6,6 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
+/**
+ * App\Services\AuthHandler
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Services\AuthHandler newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Services\AuthHandler newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Services\AuthHandler query()
+ * @mixin \Eloquent
+ */
 class AuthHandler extends Model
 {
     private $process, $files, $file;

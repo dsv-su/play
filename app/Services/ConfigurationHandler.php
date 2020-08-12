@@ -9,6 +9,14 @@ use Illuminate\Support\Facades\DB;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
+/**
+ * App\Services\ConfigurationHandler
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Services\ConfigurationHandler newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Services\ConfigurationHandler newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Services\ConfigurationHandler query()
+ * @mixin \Eloquent
+ */
 class ConfigurationHandler extends Model
 {
     private function getFiles($dir)

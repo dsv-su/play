@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Searchable\Searchable;
 use Spatie\Searchable\SearchResult;
 
+
 class Category extends Model implements Searchable
 {
     protected $fillable = ['category_name'];

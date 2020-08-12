@@ -1,12 +1,10 @@
+<!-- Navbar -->
+<script src="{{ asset('./js/jquery-resizer.js') }}"></script>
 <script>
-    /* Nav bar */
-    let mainNav = document.getElementById("js-menu");
-    let navBarToggle = document.getElementById("js-navbar-toggle");
+    Play.initialize();
+</script>
 
-    navBarToggle.addEventListener("click", function() {
-        mainNav.classList.toggle("active");
-    });
-
+<script>
     /* New Search */
     $('.search-input').focus(function(){
         $(this).parent().addClass('focus');
@@ -64,4 +62,5 @@
         });
     });
 </script>
+
 
