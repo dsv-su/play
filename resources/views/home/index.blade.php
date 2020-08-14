@@ -94,14 +94,14 @@
                                         <a href="#">kurs ht2020</a>
                                         <a href="#">kurs ht2020</a>
                                         <a href="#">kurs ht2020</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                     <section class="titled-group">
                                         <header>VT 2020</header>
                                         <a href="#">kurs vt2020</a>
                                         <a href="#">kurs vt2020</a>
                                         <a href="#">kurs vt2020</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                 </div>
                                 <div class="column">
@@ -110,14 +110,14 @@
                                         <a href="#">kurs ht2019</a>
                                         <a href="#">kurs ht2019</a>
                                         <a href="#">kurs ht2019</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                     <section class="titled-group">
                                         <header>VT 2019</header>
                                         <a href="#">kurs vt2019</a>
                                         <a href="#">kurs vt2019</a>
                                         <a href="#">kurs vt2019</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                 </div>
                                 <div class=column>
@@ -126,14 +126,14 @@
                                         <a href="#">kurs ht2018</a>
                                         <a href="#">kurs ht2018</a>
                                         <a href="#">kurs ht2018</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                     <section class=titled-group>
                                         <header>VT 2018</header>
                                         <a href="#">kurs vt2018</a>
                                         <a href="#">kurs vt2018</a>
                                         <a href="#">kurs vt2018</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                 </div>
 
@@ -150,13 +150,13 @@
                                         <a href="#">kurs ht2020</a>
                                         <a href="#">kurs ht2020</a>
 
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                     <section class=titled-group>
                                         <header>VT 2020</header>
                                         <a href="#">kurs vt2020</a>
                                         <a href="#">kurs vt2020</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                 </div>
                                 <div class=column>
@@ -164,13 +164,13 @@
                                         <header>HT 2019</header>
                                         <a href="#">kurs ht2019</a>
                                         <a href="#">kurs ht2019</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                     <section class=titled-group>
                                         <header>VT 2019</header>
                                         <a href="#">kurs vt2019</a>
                                         <a href="#">kurs vt2019</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                 </div>
                                 <div class=column>
@@ -178,7 +178,7 @@
                                         <header>HT 2018</header>
                                         <a href="#">kurs ht2018</a>
                                         <a href="#">kurs ht2018</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                     <section class=titled-group>
                                         <header>VT 2018</header>
@@ -187,7 +187,7 @@
                                         <a href="#">kurs vt2018</a>
                                         <a href="#">kurs vt2018</a>
                                         <a href="#">kurs vt2018</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                 </div>
                             </article>
@@ -205,14 +205,14 @@
                                         <a href="#">kurs ht2020</a>
                                         <a href="#">kurs ht2020</a>
                                         <a href="#">kurs ht2020</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                     <section class=titled-group>
                                         <header>VT 2020</header>
                                         <a href="#">kurs vt2020</a>
                                         <a href="#">kurs vt2020</a>
                                         <a href="#">kurs vt2020</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                 </div>
                                 <div class=column>
@@ -221,14 +221,14 @@
                                         <a href="#">kurs ht2019</a>
                                         <a href="#">kurs ht2019</a>
                                         <a href="#">kurs ht2019</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                     <section class=titled-group>
                                         <header>VT 2019</header>
                                         <a href="#">kurs vt2019</a>
                                         <a href="#">kurs vt2019</a>
                                         <a href="#">kurs vt2019</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                 </div>
                                 <div class=column>
@@ -237,14 +237,14 @@
                                         <a href="#">kurs ht2018</a>
                                         <a href="#">kurs ht2018</a>
                                         <a href="#">kurs ht2018</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                     <section class=titled-group>
                                         <header>VT 2018</header>
                                         <a href="#">kurs vt2018</a>
                                         <a href="#">kurs vt2018</a>
                                         <a href="#">kurs vt2018</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                 </div>
                             </article>
@@ -260,13 +260,13 @@
                                         <a href="#">kurs ht2020</a>
                                         <a href="#">kurs ht2020</a>
 
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                     <section class=titled-group>
                                         <header>VT 2020</header>
                                         <a href="#">kurs vt2020</a>
                                         <a href="#">kurs vt2020</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                 </div>
                                 <div class=column>
@@ -274,13 +274,13 @@
                                         <header>HT 2019</header>
                                         <a href="#">kurs ht2019</a>
                                         <a href="#">kurs ht2019</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                     <section class=titled-group>
                                         <header>VT 2019</header>
                                         <a href="#">kurs vt2019</a>
                                         <a href="#">kurs vt2019</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                 </div>
                                 <div class=column>
@@ -288,7 +288,7 @@
                                         <header>HT 2018</header>
                                         <a href="#">kurs ht2018</a>
                                         <a href="#">kurs ht2018</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                     <section class=titled-group>
                                         <header>VT 2018</header>
@@ -297,7 +297,7 @@
                                         <a href="#">kurs vt2018</a>
                                         <a href="#">kurs vt2018</a>
                                         <a href="#">kurs vt2018</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                 </div>
                             </article>
@@ -312,14 +312,14 @@
                                         <a href="#">kurs ht2020</a>
                                         <a href="#">kurs ht2020</a>
 
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                     <section class=titled-group>
                                         <header>VT 2020</header>
                                         <a href="#">kurs vt2020</a>
                                         <a href="#">kurs vt2020</a>
                                         <a href="#">kurs vt2020</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                 </div>
                                 <div class=column>
@@ -329,13 +329,13 @@
                                         <a href="#">kurs ht2019</a>
                                         <a href="#">kurs ht2019</a>
                                         <a href="#">kurs ht2019</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                     <section class=titled-group>
                                         <header>VT 2019</header>
                                         <a href="#">kurs vt2019</a>
                                         <a href="#">kurs vt2019</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                 </div>
                                 <div class=column>
@@ -343,14 +343,14 @@
                                         <header>HT 2018</header>
                                         <a href="#">kurs ht2018</a>
                                         <a href="#">kurs ht2018</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                     <section class=titled-group>
                                         <header>VT 2018</header>
                                         <a href="#">kurs vt2018</a>
                                         <a href="#">kurs vt2018</a>
                                         <a href="#">kurs vt2018</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                 </div>
                             </article>
@@ -366,13 +366,13 @@
                                         <a href="#">kurs ht2020</a>
                                         <a href="#">kurs ht2020</a>
 
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                     <section class=titled-group>
                                         <header>VT 2020</header>
                                         <a href="#">kurs vt2020</a>
                                         <a href="#">kurs vt2020</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                 </div>
                                 <div class=column>
@@ -380,13 +380,13 @@
                                         <header>HT 2019</header>
                                         <a href="#">kurs ht2019</a>
                                         <a href="#">kurs ht2019</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                     <section class=titled-group>
                                         <header>VT 2019</header>
                                         <a href="#">kurs vt2019</a>
                                         <a href="#">kurs vt2019</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                 </div>
                                 <div class=column>
@@ -394,7 +394,7 @@
                                         <header>HT 2018</header>
                                         <a href="#">kurs ht2018</a>
                                         <a href="#">kurs ht2018</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                     <section class=titled-group>
                                         <header>VT 2018</header>
@@ -403,7 +403,7 @@
                                         <a href="#">kurs vt2018</a>
                                         <a href="#">kurs vt2018</a>
                                         <a href="#">kurs vt2018</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                 </div>
                             </article>
@@ -420,13 +420,13 @@
                                         <a href="#">kurs ht2020</a>
                                         <a href="#">kurs ht2020</a>
 
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                     <section class=titled-group>
                                         <header>Forskning 2</header>
                                         <a href="#">kurs vt2020</a>
                                         <a href="#">kurs vt2020</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                 </div>
                                 <div class=column>
@@ -434,13 +434,13 @@
                                         <header>Forskning 3</header>
                                         <a href="#">kurs ht2019</a>
                                         <a href="#">kurs ht2019</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                     <section class=titled-group>
                                         <header>Forskning 4</header>
                                         <a href="#">kurs vt2019</a>
                                         <a href="#">kurs vt2019</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                 </div>
                                 <div class=column>
@@ -448,7 +448,7 @@
                                         <header>Forskning 5</header>
                                         <a href="#">kurs ht2018</a>
                                         <a href="#">kurs ht2018</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                     <section class=titled-group>
                                         <header>Forskning 6</header>
@@ -457,7 +457,7 @@
                                         <a href="#">kurs vt2018</a>
                                         <a href="#">kurs vt2018</a>
                                         <a href="#">kurs vt2018</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                 </div>
                             </article>
@@ -468,13 +468,13 @@
                                         <header>Samverkan 1</header>
                                         <a href="#">kurs ht2020</a>
                                         <a href="#">kurs ht2020</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                     <section class=titled-group>
                                         <header>Samverkan 2</header>
                                         <a href="#">kurs vt2020</a>
                                         <a href="#">kurs vt2020</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                 </div>
                                 <div class=column>
@@ -482,12 +482,12 @@
                                         <header>Samverkan 3</header>
                                         <a href="#">kurs ht2019</a>
                                         <a href="#">kurs ht2019</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                     <section class=titled-group>
                                         <header>Samverkan 4</header>
                                         <a href="#">kurs vt2019</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                 </div>
                                 <div class=column>
@@ -495,7 +495,7 @@
                                         <header>Samverkan 5</header>
                                         <a href="#">kurs ht2018</a>
                                         <a href="#">kurs ht2018</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                     <section class=titled-group>
                                         <header>Samverkan 6</header>
@@ -504,7 +504,7 @@
                                         <a href="#">kurs vt2018</a>
                                         <a href="#">kurs vt2018</a>
                                         <a href="#">kurs vt2018</a>
-                                        <a href="#">[Alla]</a>
+                                        <a href="{{ route('list') }}">[Alla]</a>
                                     </section>
                                 </div>
                             </article>
@@ -519,7 +519,7 @@
                                                 <a href="#">Kurser vt2020</a>
                                                 <a href="#">Kurser ht2019</a>
                                                 <a href="#">Kurser vt2019</a>
-                                                <a href="#">[Alla]</a>
+                                                <a href="{{ route('list') }}">[Alla]</a>
                                             @endforeach
                                         </section>
                                     </div>

@@ -16,8 +16,8 @@ class TestController extends Controller
     public function index()
     {
         $videos = Video::with('category', 'course')->get();
-
-        return view('home.list', compact('videos'));
+        $data['categories'] = Category::all();
+        return view('home.list', compact('videos'), $data);
     }
 
     public function find(Request $request)

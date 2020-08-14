@@ -1139,6 +1139,7 @@ function validateEmail(a) {
  * Dual licensed under the MIT and GPL licenses.
  * http://benalman.com/about/license/
  */
+
     function(a, b) {
         "$:nomunge";
         var c, d = a.jQuery || a.Cowboy || (a.Cowboy = {});
@@ -1245,6 +1246,7 @@ function validateEmail(a) {
  * Copyright 2006, 2014 Klaus Hartl
  * Released under the MIT license
  */
+
     function(a) {
         "function" == typeof define && define.amd ? define(["jquery"], a) : a("object" == typeof exports ? require("jquery") : jQuery)
     }(function(a) {
@@ -1554,6 +1556,7 @@ FastClick.prototype.needsClick = function(a) {
 * http://scottjehl.github.io/picturefill
 * Copyright (c) 2014 https://github.com/scottjehl/picturefill/blob/master/Authors.txt; Licensed MIT */
     /*! matchMedia() polyfill - Test a CSS media type/query in JS. Authors & copyright (c) 2012: Scott Jehl, Paul Irish, Nicholas Zakas, David Knight. Dual MIT/BSD license */
+
 window.matchMedia || (window.matchMedia = function() {
     "use strict";
     var a = window.styleMedia || window.media;
@@ -1585,6 +1588,7 @@ window.matchMedia || (window.matchMedia = function() {
 *  License: MIT/GPLv2
 *  Spec: http://picture.responsiveimages.org/
 */
+
     function(a, b) {
         "use strict";
         function c(a) {
@@ -1861,6 +1865,7 @@ window.matchMedia || (window.matchMedia = function() {
  * mustache.js - Logic-less {{mustache}} templates with JavaScript
  * http://github.com/janl/mustache.js
  */
+
     function(a, b) {
         "object" == typeof exports && exports ? b(exports) : "function" == typeof define && define.amd ? define(["exports"], b) : b(a.Mustache = {})
     }(this, function(a) {
@@ -2197,6 +2202,7 @@ window.matchMedia || (window.matchMedia = function() {
                 return d
             }
     });
+
 /*!
  * VERSION: 1.14.2
  * DATE: 2014-10-28
@@ -2208,6 +2214,7 @@ window.matchMedia || (window.matchMedia = function() {
  *
  * @author: Jack Doyle, jack@greensock.com
  */
+
 var _gsScope = "undefined" != typeof module && module.exports && "undefined" != typeof global ? global : this || window;
 (_gsScope._gsQueue || (_gsScope._gsQueue = [])).push(function() {
     "use strict";
@@ -3563,6 +3570,7 @@ _gsScope._gsDefine && _gsScope._gsQueue.pop()(),
         "function" == typeof define && define.amd ? define(["TweenLite"], b) : "undefined" != typeof module && module.exports && (require("../TweenLite.js"),
             module.exports = b())
     }("CSSPlugin");
+
 /*!
  * VERSION: 1.7.4
  * DATE: 2014-07-17
@@ -3574,6 +3582,7 @@ _gsScope._gsDefine && _gsScope._gsQueue.pop()(),
  *
  * @author: Jack Doyle, jack@greensock.com
  **/
+
 var _gsScope = "undefined" != typeof module && module.exports && "undefined" != typeof global ? global : this || window;
 (_gsScope._gsQueue || (_gsScope._gsQueue = [])).push(function() {
     "use strict";
@@ -3651,6 +3660,7 @@ _gsScope._gsDefine && _gsScope._gsQueue.pop()();
  *
  * @author: Jack Doyle, jack@greensock.com
  **/
+
 var _gsScope = "undefined" != typeof module && module.exports && "undefined" != typeof global ? global : this || window;
 (_gsScope._gsQueue || (_gsScope._gsQueue = [])).push(function() {
     "use strict";
@@ -3853,6 +3863,7 @@ _gsScope._gsDefine && _gsScope._gsQueue.pop()(),
  *
  * @author: Jack Doyle, jack@greensock.com
  */
+
     function(a, b) {
         "use strict";
         var c = a.GreenSockGlobals = a.GreenSockGlobals || a;
@@ -4944,6 +4955,7 @@ _gsScope._gsDefine && _gsScope._gsQueue.pop()(),
             h = !1
         }
     }("undefined" != typeof module && module.exports && "undefined" != typeof global ? global : this || window, "TweenLite");
+
 var Breakpointer = function() {
     this.$measurer = null,
         this.currentBreakpoint = -1,
@@ -5351,97 +5363,7 @@ CollectionsMenu.prototype.initialize = function() {
         })
     }
 ;
-var ProductModule = function(a) {
-    this.$product = a,
-        this.$productImageArea = null,
-        this.$loader = null,
-        this.$addForm = null,
-        this.$addLoader = null,
-        this.$dimensionsImage = null,
-        this.$dimensionsLink = null,
-        this.dimensionsVisible = !1,
-        this.initialize()
-};
-ProductModule.prototype.initialize = function() {
-    var a = this;
-    this.$product.find(".quantity-input").length > 0 && this.$product.find(".quantity-input").each(function() {
-        new QuantitySelector($(this))
-    }),
-        this.$productImageArea = this.$product.find(".image-area"),
-        this.$loader = this.$product.find(".image-area .loader"),
-        this.$addForm = this.$product.find(".add-to-cart-form"),
-        this.$addLoader = this.$product.find(".add-to-cart-loader"),
-        this.$dimensionsImage = this.$product.find(".specs-image"),
-        this.$dimensionsLink = this.$product.find(".dimensions-link"),
-        this.$product.on("click", ".dimensions-link", function(b) {
-            b.preventDefault(),
-                a.toggleDimensions()
-        }),
-        this.$productImageArea.waitForImages(function() {
-            TweenLite.to(a.$productImageArea.find(".inner-image"), 1, {
-                opacity: 1,
-                delay: .5
-            }),
-                TweenLite.to(a.$loader, .2, {
-                    opacity: 0,
-                    delay: .2
-                })
-        }),
-        this.$product.on("click", ".add-to-cart-btn", function(b) {
-            b.preventDefault(),
-                PubSub.publish(Play.Event.AddToCart, {
-                    btn: $(this)
-                }),
-                a.showAddLoader()
-        }),
-        PubSub.subscribe(Play.Event.AddedToCart, Play.delegate(a, a.addedToCart))
-}
-    ,
-    ProductModule.prototype.toggleDimensions = function() {
-        this.dimensionsVisible ? (this.$dimensionsLink.find(".show-text").show(),
-            this.$dimensionsLink.find(".hide-text").hide()) : (this.$dimensionsLink.find(".show-text").hide(),
-            this.$dimensionsLink.find(".hide-text").show()),
-            TweenLite.to(this.$dimensionsImage, .3, {
-                opacity: this.dimensionsVisible ? 0 : 1,
-                ease: Sine.easeOut
-            }),
-            this.dimensionsVisible = !this.dimensionsVisible
-    }
-    ,
-    ProductModule.prototype.addedToCart = function() {
-        this.hideAddLoader()
-    }
-    ,
-    ProductModule.prototype.showAddLoader = function() {
-        TweenLite.to(this.$addForm, .2, {
-            opacity: 0
-        }),
-            this.$addLoader.show().css({
-                opacity: 0
-            }),
-            this.$addLoader.find("p").text("Adding to your cart..."),
-            TweenLite.to(this.$addLoader, .2, {
-                delay: .1,
-                opacity: 1
-            })
-    }
-    ,
-    ProductModule.prototype.hideAddLoader = function() {
-        var a = this;
-        this.$addLoader.find("p").text("Added to your cart"),
-            TweenLite.to(this.$addLoader, .2, {
-                delay: 1.5,
-                opacity: 0,
-                onComplete: function() {
-                    a.$addLoader.hide(),
-                        TweenLite.to(a.$addForm, .2, {
-                            delay: .2,
-                            opacity: 1
-                        })
-                }
-            })
-    }
-;
+
 var QuantitySelector = function(a) {
     this.$selector = a,
         this.$input = null,
@@ -5479,397 +5401,12 @@ QuantitySelector.prototype.initialize = function() {
         parseInt(this.$input.val()) <= this.minValue && this.$decreaseButton.addClass("deactivated")
     }
 ;
-var CartHandler = function() {
-    this.$body = $("body"),
-        this.$cartWrapper = null,
-        this.$cartForm = null,
-        this.$rowWrapper = null,
-        this.$emptyCartMessage = null,
-        this.$sumLines = null,
-        this.$notifyCircle = null,
-        this.$updateables = null,
-        this.$loaders = null,
-        this.templatecartRow = null,
-        this.quantityTimeout = -1,
-        this.initialize()
-};
-CartHandler.prototype.initialize = function() {
-    var a = this;
-    this.$cartWrapper = $(".cart.menu-panel"),
-        this.$cartForm = this.$cartWrapper.find(".cart-form"),
-        this.$rowWrapper = this.$cartWrapper.find(".cart-row-wrapper"),
-        this.$emptyCartMessage = this.$cartWrapper.find(".empty-cart"),
-        this.$sumLines = this.$cartWrapper.find(".sum-lines"),
-        this.$notifyCircle = this.$body.find(".page-header .cart .notify-circle"),
-        this.$updateables = this.$sumLines.find(".updateable"),
-        this.$loaders = this.$sumLines.find(".loader"),
-        this.templatecartRow = $("#cart-row-template").html(),
-        Mustache.Formatters = {
-            formatprice: function(a) {
-                return Math.round(a / 100)
-            },
-            thumbize: function(a) {
-                return Shopify.resizeImage(a, "small")
-            }
-        },
-        Mustache.parse(this.templatecartRow),
-        this.$body.on("change", ".cart-quantity-input", function() {
-            var b = $(this);
-            clearTimeout(a.quantityTimeout),
-                a.quantityTimeout = setTimeout(function() {
-                    a.updateQuantity(b)
-                }, 400)
-        }),
-        this.$body.on("click", ".remove-link", function(b) {
-            b.preventDefault(),
-                a.removeFromCart($(this))
-        }),
-    "undefined" != typeof Shopify && (Shopify.onError = function(a) {
-        var b = JSON.parse(a.responseText);
-        console.log(b.description, b.message + " (" + b.status + ")")
-    }
-        ,
-        Shopify.onItemAdded = function() {
-            PubSub.publish(Play.Event.AddedToCart, {}),
-                Shopify.getCart()
-        }
-        ,
-        Shopify.onCartUpdate = function(b) {
-            a.updateCart(b)
-        }
-        ,
-        Shopify.onProduct = function() {}
-        ,
-        PubSub.subscribe(Play.Event.AddToCart, Play.delegate(a, a.addToCart)),
-        Shopify.getCart())
-}
-    ,
-    CartHandler.prototype.resize = function() {}
-    ,
-    CartHandler.prototype.addToCart = function(a, b) {
-        var c = b.btn
-            , d = c.closest(".product");
-        d.length > 0 && Shopify.addItem(d.find('[name="id"]').val(), d.find('[name="quantity"]').val())
-    }
-    ,
-    CartHandler.prototype.removeFromCart = function(a) {
-        var b = a.closest(".cart-row");
-        Shopify.removeItem(b.data("id")),
-            this.showCartLoader()
-    }
-    ,
-    CartHandler.prototype.updateQuantity = function(a) {
-        Shopify.changeItem(a.data("product-id"), a.val()),
-            this.showCartLoader()
-    }
-    ,
-    CartHandler.prototype.updateCart = function(a) {
-        if (this.$rowWrapper.empty(),
-        a.items.length > 0) {
-            this.$cartForm.show(),
-                this.$emptyCartMessage.hide(),
-                this.$sumLines.find(".total .value .num").text(Math.round(a.total_price / 100)),
-                this.$sumLines.find(".total .currency-obj").data("value", Math.round(a.total_price));
-            for (var b = 0; b < a.items.length; b++) {
-                var c = Mustache.render(this.templatecartRow, a.items[b]);
-                this.$rowWrapper.append(c)
-            }
-            this.$rowWrapper.find(".quantity-input").each(function() {
-                new QuantitySelector($(this))
-            }),
-                this.$notifyCircle.show().addClass("cart-blink-me")
-        } else
-            this.$cartForm.hide(),
-                this.$emptyCartMessage.show(),
-                this.$notifyCircle.hide().removeClass("cart-blink-me");
-        PubSub.publish(Play.Event.ContentUpdated, {}),
-            this.hideCartLoader()
-    }
-    ,
-    CartHandler.prototype.showCartLoader = function() {
-        TweenLite.to(this.$updateables, .2, {
-            opacity: 0
-        }),
-            this.$loaders.show().css({
-                opacity: 0
-            }),
-            TweenLite.to(this.$loaders, .2, {
-                opacity: 1
-            })
-    }
-    ,
-    CartHandler.prototype.hideCartLoader = function() {
-        var a = this;
-        TweenLite.to(this.$updateables, .2, {
-            delay: .3,
-            opacity: 1
-        }),
-            TweenLite.to(this.$loaders, .2, {
-                delay: .3,
-                opacity: 0,
-                onComplete: function() {
-                    a.$loaders.hide()
-                }
-            })
-    }
-;
-var NewsletterHandler = function(a) {
-    this.$wrapper = a,
-        this.$inner = null,
-        this.$closeButton = null,
-        this.$form = null,
-        this.$subscribeWrapper = null,
-        this.$response = null,
-        this.initialize()
-};
-NewsletterHandler.prototype.initialize = function() {
-    var a = this;
-    this.$inner = this.$wrapper.find(".inner"),
-        this.$closeButton = this.$wrapper.find(".close-button"),
-        this.$form = this.$wrapper.find(".newsletter-form"),
-        this.$subscribeWrapper = this.$wrapper.find(".subscribe"),
-        this.$response = this.$wrapper.find(".response-message"),
-        this.$inner.css({
-            marginTop: -50,
-            opacity: 0
-        }),
-        this.$closeButton.css({
-            marginTop: -50,
-            opacity: 0
-        }),
-        this.$wrapper.on("click", ".close-button", function(b) {
-            b.preventDefault(),
-                a.hide()
-        }),
-        $("body").on("click", 'a[href="#newsletter"]', function(b) {
-            b.preventDefault(),
-                a.show()
-        }),
-        this.$form.on("submit", function(b) {
-            b.preventDefault(),
-            a.validateSignupForm() && a.postSignupForm()
-        })
-}
-    ,
-    NewsletterHandler.prototype.validateSignupForm = function() {
-        var a = this.$form.find("input.email")
-            , b = a.parent().find(".error-message")
-            , c = a.val();
-        return a.removeClass("error"),
-            b.hide(),
-            validateEmail(c) ? !0 : (a.addClass("error"),
-                b.show(),
-                setTimeout(function() {
-                    a.removeClass("error"),
-                        b.hide()
-                }, 3e3),
-                !1)
-    }
-    ,
-    NewsletterHandler.prototype.postSignupForm = function() {
-        var a = this;
-        $.ajax({
-            type: this.$form.attr("method"),
-            url: this.$form.attr("action"),
-            data: this.$form.serialize(),
-            cache: !1,
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
-            error: function() {
-                a.showResponse("Could not connect to the registration server. Please try again later.")
-            },
-            success: function(b) {
-                a.showResponse("success" !== b.result ? 'An error occured.<br><span class="message">' + b.msg + "</span>" : "Welcome to<br>the Play newsletter")
-            }
-        })
-    }
-    ,
-    NewsletterHandler.prototype.showResponse = function(a) {
-        var b = this;
-        this.$response.html("<p>" + a + "</p>"),
-            TweenLite.to(this.$inner, .4, {
-                opacity: 0,
-                ease: Sine.easeOut,
-                onComplete: function() {
-                    b.$subscribeWrapper.hide(),
-                        b.$response.show(),
-                        TweenLite.to(b.$inner, .4, {
-                            delay: .1,
-                            opacity: 1,
-                            ease: Sine.easeOut
-                        })
-                }
-            })
-    }
-    ,
-    NewsletterHandler.prototype.show = function() {
-        this.$wrapper.show().css({
-            opacity: 0
-        }),
-            TweenLite.to(this.$wrapper, .2, {
-                opacity: 1,
-                ease: Sine.easeOut
-            }),
-            TweenLite.to(this.$inner, .4, {
-                delay: .1,
-                opacity: 1,
-                ease: Sine.easeOut
-            }),
-            TweenLite.to(this.$closeButton, .4, {
-                delay: .5,
-                opacity: 1,
-                ease: Sine.easeOut
-            }),
-            TweenLite.to(this.$inner, .7, {
-                delay: .1,
-                marginTop: 0,
-                ease: Quint.easeOut
-            }),
-            TweenLite.to(this.$closeButton, .7, {
-                delay: .5,
-                marginTop: 0,
-                ease: Quint.easeOut
-            })
-    }
-    ,
-    NewsletterHandler.prototype.hide = function() {
-        var a = this;
-        TweenLite.to(this.$wrapper, .2, {
-            opacity: 0,
-            ease: Sine.easeOut,
-            onComplete: function() {
-                a.$inner.css({
-                    marginTop: -50,
-                    opacity: 0
-                }),
-                    a.$closeButton.css({
-                        marginTop: -50,
-                        opacity: 0
-                    }),
-                    a.$wrapper.hide()
-            }
-        })
-    }
-;
-var CurrencyHandler = function() {
-    this.$body = $("body"),
-        this.$currencyMenu = null,
-        this.$currencyButton = null,
-        this.defaultCurrency = "DKK",
-        this.currentCurrency = "DKK",
-        this.initialize()
-};
-CurrencyHandler.prototype.initialize = function() {
-    var a = this;
-    this.$currencyMenu = this.$body.find(".currency-menu"),
-        this.$currencyButton = this.$body.find(".menu-button.currency"),
-        this.$currencyMenu.on("click", "a.menu-item", function(b) {
-            b.preventDefault(),
-                PubSub.publish(Play.Event.CloseMenu),
-                a.selectCurrency($(this).data("currency"))
-        }),
-    void 0 !== $.cookie("selectedCurrency") && this.selectCurrency($.cookie("selectedCurrency")),
-        this.$body.attr("data-currency", this.currentCurrency.toLowerCase()),
-        PubSub.subscribe(Play.Event.ContentUpdated, Play.delegate(a, a.contentUpdated))
-}
-    ,
-    CurrencyHandler.prototype.selectCurrency = function(a) {
-        this.currentCurrency = a,
-            $.cookie("selectedCurrency", a, {
-                expires: 14,
-                path: "/"
-            }),
-            this.$body.attr("data-currency", this.currentCurrency.toLowerCase()),
-            this.updateCurrencyObjects(),
-            this.updateMenuButton()
-    }
-    ,
-    CurrencyHandler.prototype.updateCurrencyObjects = function() {
-        var a = this;
-        $(".currency-obj").each(function() {
-            var b = $(this)
-                , c = parseInt(b.data("value"))
-                , d = Math.ceil(Currency.convert(c, a.defaultCurrency, a.currentCurrency));
-            a.insertPrice(b, d, a.currentCurrency)
-        })
-    }
-    ,
-    CurrencyHandler.prototype.updateMenuButton = function() {
-        this.$currencyButton.find(".current-currency").text(this.currentCurrency)
-    }
-    ,
-    CurrencyHandler.prototype.contentUpdated = function() {
-        this.updateCurrencyObjects()
-    }
-    ,
-    CurrencyHandler.prototype.insertPrice = function(a, b, c) {
-        a.find(".num").text(this.formatPrice(b, c)),
-            a.find(".currency").text(c)
-    }
-    ,
-    CurrencyHandler.prototype.formatPrice = function(a, b) {
-        var c;
-        return c = "DKK" === b ? Math.round(a / 100).toFixed(2) + "" : (a / 100).toFixed(2) + "",
-        "DKK" === b && (c = c.replace(".", ",")),
-            c
-    }
-;
-var ProductOverviewModule = function(a) {
-    this.$overview = a,
-        this.$productList = null,
-        this.$pageHeader = null,
-        this.$pageFooter = null,
-        this.$collectionsNav = null,
-        this.initialize()
-};
-ProductOverviewModule.prototype.initialize = function() {
-    var a = this;
-    this.$productList = this.$overview.find(".products-list"),
-        this.$pageHeader = $(".main"),
-        this.$pageFooter = $(".page-footer"),
-        this.$collectionsNav = $(".collections-nav"),
-    this.$productList.length > 0 && (this.setWrapperHeight(),
-        PubSub.subscribe(Play.Event.WindowResize, Play.delegate(a, a.resize)))
-}
-    ,
-    ProductOverviewModule.prototype.resize = function() {
-        this.setWrapperHeight()
-    }
-    ,
-    ProductOverviewModule.prototype.setWrapperHeight = function() {
-        this.$productList.css({
-            minHeight: $(window).height() - (this.$pageHeader.outerHeight() + this.$pageFooter.outerHeight() + this.$collectionsNav.outerHeight())
-        })
-    }
-;
-var MenuBreadcrumb = function(a) {
-    this.type = a,
-        this.$dataElement = null,
-        this.$productsItem = null,
-        this.$newsItem = null,
-        this.initialize()
-};
-MenuBreadcrumb.prototype.initialize = function() {
-    this.$dataElement = $(".menu-breadcrumb-data"),
-        this.$productsItem = $(".nav-menu li.products"),
-        this.$newsItem = $(".nav-menu li.news");
-    var a = null;
-    if ("product" === this.type ? a = this.$productsItem : "news" === this.type && (a = this.$newsItem),
-    null !== a) {
-        a.append(this.$dataElement.children());
-        var b = $('<span class="crumb-wrapper">');
-        b.append(a.children()),
-            a.append(b)
-    }
-}
-;
+
 var PlayApp = function() {
     this.$document = $("body"),
         this.$window = $(window),
         this.breakpointer = null,
-        this.pageHeader = null,
-        this.cartHandler = null,
-        this.currencyHandler = null
+        this.pageHeader = null
 };
 if (PlayApp.prototype.initialize = function() {
     var a = this
@@ -5879,44 +5416,23 @@ if (PlayApp.prototype.initialize = function() {
         a.initFocusHack(),
         this.breakpointer = new Breakpointer,
         this.pageHeader = new PageHeader,
-        this.cartHandler = new CartHandler,
-        this.currencyHandler = new CurrencyHandler,
     $(".collections-nav").length > 0 && $(".collections-nav").each(function() {
         new CollectionsMenu($(this))
-    }),
-    $(".collection-list").length > 0 && $(".collection-list").each(function() {
-        new ProductOverviewModule($(this))
-    }),
-    $(".product").length > 0 && $(".product").each(function() {
-        new ProductModule($(this))
-    }),
-    $(".newsletter-wrapper").length > 0 && $(".newsletter-wrapper").each(function() {
-        new NewsletterHandler($(this))
     });
+
     var c;
-    ($("body").hasClass("is-product") || $("body").hasClass("is-collection")) && (c = new MenuBreadcrumb("product")),
-    $("body").hasClass("is-article") && (c = new MenuBreadcrumb("news")),
-        $("body").on("click", "a.share-link", function(b) {
-            b.preventDefault(),
-                a.openShareWindow($(this).attr("href"))
-        }),
-        b.on("click", ".action-to-top", function(b) {
-            b.preventDefault(),
-                a.scrollToTop()
-        }),
-    (b.hasClass("is-article") || b.hasClass("is-page")) && a.checkInlineTopImage(),
-        this.$document.on("ready", function() {
-            PubSub.publish(Play.Event.DomReady, {})
-        }),
+
         this.$window.on("load", function() {
             PubSub.publish(Play.Event.WindowLoaded, {})
         }),
+
         this.$window.on("resize orientationchange", $.throttle(20, function() {
             PubSub.publish(Play.Event.WindowResize, {
                 width: $(window).width(),
                 height: $(window).height()
             })
         })),
+
         this.$window.on("scroll", $.throttle(20, function() {
             PubSub.publish(Play.Event.WindowScroll, {
                 scrollTop: $(window).scrollTop()
@@ -5924,6 +5440,7 @@ if (PlayApp.prototype.initialize = function() {
         }))
 }
     ,
+
     PlayApp.prototype.delegate = function(a, b) {
         return function() {
             return b.apply(a, arguments)
@@ -6010,8 +5527,6 @@ Play.Event = {},
     Play.Event.WindowScroll = "windowScroll",
     Play.Event.ContentUpdated = "contentUpdated",
     Play.Event.CloseMenu = "closeMenu",
-    Play.Event.AddToCart = "addToCart",
-    Play.Event.AddedToCart = "addedToCart",
     Play.Config = {},
     Play.Config.BreakpointFullMenu = "47",
     Play.Config.BreakpointFixedCollectionsMenu = "47";

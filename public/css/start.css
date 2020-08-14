@@ -4,10 +4,10 @@
 
 :root{
     --sublue: #0000ff;
-    --sured: ##ff0000;
+    --sured: #ff0000;
     --dark: #17191D;
     --text: #696969;
-    --initial: #fff;
+    --initial: #e9e9e9;
     --light: #f4f4f4;
     --search: #f5f5f5;
     --overlay: rgba(23,25,29,0.8);
@@ -23,7 +23,6 @@
 body {
     /*background-color: var(--dark);*/
     background-color: var(--initial);
-
     /*color: var(--text);*/
 }
 
@@ -201,7 +200,7 @@ header button {
 .button_round:hover {
     color: var(--light);
     font-size: 1em;
-     background-color:#FFFFFF;
+    background-color:#FFFFFF;
 }
 
 /* Search block */
