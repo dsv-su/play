@@ -620,17 +620,17 @@
 <form action="{{ route('search') }}" method="POST">
     @csrf
     <input type="text" name="query" />
-    <input type="submit" class="btn btn-sm btn-primary" value="Search" />
+    <input type="submit" value="Search" />
 </form>
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">Dashboard</div>
+        <div>
+            <div>
+                <div>
+                    <div>Dashboard</div>
 
-                    <div class="card-body">
+                    <div>
 
-                        <table class="table">
+                        <table>
                             <thead>
                             <tr>
                                 <th>Video</th>

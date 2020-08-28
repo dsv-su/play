@@ -616,26 +616,25 @@
         <!-- Search result -->
         <section class="content_section">
             @if ($search == 1)
-                <div class="playlicartst_one">
+                <div class="playlist_one">
                     <p class="playlist_title">{{ $searchResults->count() }} resultat för "{{ request('query') }}"</p>
                     @foreach($searchResults->groupByType() as $type => $modelSearchResults)
                         <p>under <strong>{{ ucfirst($type) }}</strong></p>
                     <br>
                     <div class="videos">
-
                             @foreach($modelSearchResults as $searchResult)
                                 <div class="video" style="background-image: url({{$searchResult->searchable->image}})">
+                                    <a href="{{ $searchResult->url }}">
                                     <div class="title">{{ $searchResult->title }}</div>
-                                    <a href="{{ $searchResult->url }}"><i class="fas fa-play-circle"></i></a>
+                                    <i class="fas fa-play-circle"></i>
                                     <p> {{$searchResult->searchable->length}} </p>
                                     <div class="footer">
                                         Title: {{$searchResult->title}}
                                     </div>
+                                    </a>
                                 </div>
-
                             @endforeach
                         @endforeach
-
                     </div>
                 </div>
             @elseif ($search == 2)
@@ -646,23 +645,21 @@
                         <p class="playlist_title">under <strong>{{ ucfirst($type) }}</strong></p>
                         <br>
                         <div class="videos">
-
                             @foreach($modelSearchResults as $searchResult)
                                 <div class="video" style="background-image: url({{$searchResult->searchable->image}})">
+                                    <a href="{{ $searchResult->url }}">
                                     <div class="title">{{ $searchResult->title }}</div>
-                                    <a href="{{ $searchResult->url }}"><i class="fas fa-play-circle"></i></a>
+                                    <i class="fas fa-play-circle"></i>
                                     <p> {{$searchResult->searchable->length}} </p>
                                     <div class="footer">
                                         Title: {{$searchResult->title}}
                                     </div>
+                                    </a>
                                 </div>
-
                             @endforeach
                     @endforeach
-
                         </div>
                 </div>
-
                 <div class="space"></div>
                 <div class="playlist_two">
                 @else
@@ -674,20 +671,19 @@
                         <p class="playlist_title">under <strong>{{ ucfirst($type) }}</strong></p>
                         <br>
                         <div class="videos">
-
                             @foreach($category_videos as $searchResult)
                                 <div class="video" style="background-image: url({{$searchResult->image}})">
+                                    <a href="{{ route('player', $searchResult->id) }}">
                                     <div class="title">{{ $searchResult->title }}</div>
-                                    <a href="{{ route('player', $searchResult->id) }}"><i class="fas fa-play-circle"></i></a>
+                                    <i class="fas fa-play-circle"></i>
                                     <p> {{$searchResult->length}} </p>
                                     <div class="footer">
                                         Title: {{$searchResult->title}}
                                     </div>
+                                    </a>
                                 </div>
-
                             @endforeach
                     @endforeach
-
                         </div>
                     @endif
                 </div>
@@ -709,12 +705,14 @@
 
                                 @foreach($course_videos as $searchResult)
                                     <div class="video" style="background-image: url({{$searchResult->image}})">
+                                        <a href="{{ route('player', $searchResult->id) }}">
                                         <div class="title">{{ $searchResult->title }}</div>
-                                        <a href="{{ route('player', $searchResult->id) }}"><i class="fas fa-play-circle"></i></a>
+                                        <i class="fas fa-play-circle"></i>
                                         <p> {{$searchResult->length}} </p>
                                         <div class="footer">
                                             Title: {{$searchResult->title}}
                                         </div>
+                                        </a>
                                     </div>
 
                                 @endforeach
@@ -722,8 +720,6 @@
 
                             </div>
                     </div>
-
-
 
             @elseif ($search == 3)
                 <div class="playlist_one">
@@ -733,16 +729,16 @@
 
                         @foreach($searchResults as $searchResult)
                                 <div class="video" style="background-image: url({{$searchResult->image}})">
+                                    <a href="{{ route('player', $searchResult->id) }}">
                                     <div class="title">{{ $searchResult->title }}</div>
-                                    <a href="{{ route('player', $searchResult->id) }}"><i class="fas fa-play-circle"></i></a>
+                                    <i class="fas fa-play-circle"></i>
                                     <p> {{$searchResult->length}} </p>
                                     <div class="footer">
                                         Title: {{$searchResult->title}}
                                     </div>
+                                    </a>
                                 </div>
-
                         @endforeach
-
             @else
              <!-- Show latest -->
                 <div class="playlist_one">
@@ -751,16 +747,17 @@
                     <div class="videos">
                         @foreach ($latest as $video)
                         <div class="video" style="background-image: url({{ $video->image }})">
+                            <a href="{{ route('player', ['video' => $video]) }}">
                             <div class="title">{{ $video->title }}</div>
-                            <a href="{{ route('player', ['video' => $video]) }}"><i class="fas fa-play-circle"></i></a>
+                            <i class="fas fa-play-circle"></i>
                             <p> {{$video->length}} </p>
                             <div class="footer">
                                 Kurs: {{$video->course->course_name}} {{$video->course->semester}} {{$video->course->year}}
                                 <br>
                                 Kategori: {{$video->category->category_name}}
                             </div>
+                            </a>
                         </div>
-
                         @endforeach
                     </div>
 

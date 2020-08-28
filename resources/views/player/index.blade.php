@@ -86,6 +86,8 @@
                 <div class="dropdown">
                     <button id="fast-forward"></button>
                     <div class="dropdown-content">
+                        <button id="ff">1X</button>
+                        <button id="ff15">1.5X</button>
                         <button id="ff3">3X</button>
                         <button id="ff4">4X</button>
                         <button id="ff5">5X</button>

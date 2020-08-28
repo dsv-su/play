@@ -3,7 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Kadwa:wght@400;700&display=swap');
 
 :root{
-    --sublue: #0000ff;
+    --sublue: #002f5f;
     --sured: #ff0000;
     --dark: #17191D;
     --text: #696969;
@@ -302,7 +302,8 @@ header button {
     z-index: 1;
 }
 
-.video {
+.video  {
+
     height: 110px;
     grid-column-start: span 3;
     position: relative;
@@ -315,6 +316,11 @@ header button {
 
 .video:hover {
     transform: scale(1.02);
+}
+.video a {
+    text-decoration: none;
+    display: block;
+    height: 110px;
 }
 
 .video i {

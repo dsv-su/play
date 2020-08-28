@@ -16,6 +16,7 @@ var fullscreenbtn = document.getElementById('fullscreen');
 // Fastforward
 var plbackrate = 1;
 var ffbtn = document.getElementById('fast-forward');
+var ff15btn = document.getElementById('ff15');
 var ff3btn = document.getElementById('ff3');
 var ff4btn = document.getElementById('ff4');
 var ff5btn = document.getElementById('ff5');
@@ -108,11 +109,12 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
 	}
 };
 
-// Integrated laravel version
+// Integrated platform version
 var newsource_video1 = document.getElementById('video1').src;
 var newsource_video2 = document.getElementById('video2').src;
 var newsource_video3 = document.getElementById('video3').src;
 var newsource_video4 = document.getElementById('video4').src;
+
 
 /*****************************
  * Check if streams exist
@@ -296,7 +298,7 @@ function PlayPause() {
 	}
 }
 function FastForward() {
-	if(video.playbackRate == 2 || video.playbackRate == 3 || video.playbackRate == 4 || video.playbackRate == 5 || video.playbackRate == 6){
+	if(video.playbackRate == 1.5 || video.playbackRate == 2 || video.playbackRate == 3 || video.playbackRate == 4 || video.playbackRate == 5 || video.playbackRate == 6){
 		ffbtn.className = 'set';
 		video.playbackRate = 1;
 	} else {
@@ -507,6 +509,10 @@ playpausebtn.onclick = function (params) {
 	PlayPause();
 };
 
+ff15btn.onclick = function (M) {
+    plbackrate = 1.5;
+    FastForward();
+}
 ffbtn.onclick = function (M) {
     plbackrate = 2;
 	FastForward();
