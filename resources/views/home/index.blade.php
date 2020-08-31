@@ -5,43 +5,18 @@
         <section class="top_section">
             <!-- Navigation bar -->
             <header class="page-header">
+
                 <h1>
-                        <a href="{{route('home')}}" class="logo">dsvPlay</a>
+                        <a href="{{route('home')}}" class="logo"><img src="{{asset('./images/su_logo_play.png')}}" alt="Stockholms universitet">
+                            <!-- Button logo -->
+                            <!--<div class="logotext"><button class="dsvplay dsvplaylogo">Play</button>&nbsp;<i class="fas fa-play"></i></div>-->
+                            <div class="logotext">Play&nbsp;<i class="fas fa-play"></i></div>
+                        </a>
+
                 </h1>
                 <div class="buttons clear">
                     <ul>
-                        <li>
-                            <a href="#nav-menu" class="menu-button main">
-                                <span class="hidden-at-start">Meny</span>
-                                <span class="inner">
-                                    <span class="closed-state" style="top: 0; opacity: 1;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="17" viewBox="0 0 22 17"><g fill="#0000ff"><path d="M0 0h22v3H0zM0 7h22v3H0zM0 14h22v3H0z"></path></g></svg>
-                                    </span>
-					            </span>
-                                <span class="inner open">
-						            <span class="open-state" style="top: -20px; opacity: 0;">
-							            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17"><path fill="#0000ff" d="M17 2.1L14.9 0 8.5 6.4 2.1 0 0 2.1l6.4 6.4L0 14.9 2.1 17l6.4-6.4 6.4 6.4 2.1-2.1-6.4-6.4z"></path></svg>
-						            </span>
-					            </span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#manage" class="menu-button">
-                                <span class="hidden-at-start">Hantera uppspelning</span>
-                                <span class="inner">
-						            <span class="closed-state" style="top: 0; opacity: 1;">
-							            <i class="far fa-file-video"></i>
-                                        <span>Redigera</span>
-							            <svg xmlns="http://www.w3.org/2000/svg" width="8" height="4" viewBox="0 0 8 4"><path fill="#5A595A" d="M0 0l4 4 4-4z"></path><path fill="#585858" d="M0 0l4 4 4-4z"></path></svg>
-						            </span>
-					            </span>
-                                <span class="inner open">
-						            <span class="open-state" style="top: -20px; opacity: 0;">
-							            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17"><path fill="#585858" d="M17 2.1L14.9 0 8.5 6.4 2.1 0 0 2.1l6.4 6.4L0 14.9 2.1 17l6.4-6.4 6.4 6.4 2.1-2.1-6.4-6.4z"></path></svg>
-						            </span>
-					            </span>
-                            </a>
-                        </li>
+
                         <li>
                             <a href="#profile" class="menu-button">
                                 <span class="hidden-at-start">Profil</span>
@@ -53,6 +28,38 @@
                                 <span class="inner open">
 						            <span class="open-state" style="top: -20px; opacity: 0;">
 							            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17"><path fill="#585858" d="M17 2.1L14.9 0 8.5 6.4 2.1 0 0 2.1l6.4 6.4L0 14.9 2.1 17l6.4-6.4 6.4 6.4 2.1-2.1-6.4-6.4z"></path></svg>
+						            </span>
+					            </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#manage" class="menu-button">
+                                <span class="hidden-at-start">Hantera uppspelning</span>
+                                <span class="inner">
+						            <span class="closed-state" style="top: 0; opacity: 1;">
+							            <i class="far fa-file-video"></i>
+                                        <span>Redigera</span>
+							            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 8 4"><path fill="#5A595A" d="M0 0l4 4 4-4z"></path><path fill="#585858" d="M0 0l4 4 4-4z"></path></svg>
+						            </span>
+					            </span>
+                                <span class="inner open">
+						            <span class="open-state" style="top: -20px; opacity: 0;">
+							            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17"><path fill="#585858" d="M17 2.1L14.9 0 8.5 6.4 2.1 0 0 2.1l6.4 6.4L0 14.9 2.1 17l6.4-6.4 6.4 6.4 2.1-2.1-6.4-6.4z"></path></svg>
+						            </span>
+					            </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#nav-menu" class="menu-button main">
+                                <span class="hidden-at-start">Meny</span>
+                                <span class="inner">
+                                    <span class="closed-state" style="top: 0; opacity: 1;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="17" viewBox="0 0 22 17"><g fill="#0000ff"><path d="M0 0h22v3H0zM0 7h22v3H0zM0 14h22v3H0z"></path></g></svg>
+                                    </span>
+					            </span>
+                                <span class="inner open">
+						            <span class="open-state" style="top: -20px; opacity: 0;">
+							            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17"><path fill="#0000ff" d="M17 2.1L14.9 0 8.5 6.4 2.1 0 0 2.1l6.4 6.4L0 14.9 2.1 17l6.4-6.4 6.4 6.4 2.1-2.1-6.4-6.4z"></path></svg>
 						            </span>
 					            </span>
                             </a>

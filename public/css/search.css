@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap");
 :root {
-  --sublue: #0000ff;
+  --sublue: #002f5f;
   --sured: #ff0000;
   --dark: #17191D;
   --light: #f4f4f4;
@@ -19,7 +19,6 @@
   height: 40px;
   border-radius: 40px;
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-  /*transform: translate(-50%, -50%);*/
   background: #fff;
   transition: all 0.3s ease; }
 

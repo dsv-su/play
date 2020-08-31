@@ -1,7 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Signika:wght@400;600&display=swap');
 
 :root {
-    --sublue: #0000ff;
+    --sublue: #002f5f;
+    --bone: #66829f;
+    --btwo: #99acbf;
+    --bthree: #ccd5df;
 }
 
 .hidden-at-start{
@@ -45,12 +48,12 @@ body,html{
 }
 body{
     margin:0;
-    font-family:nimbus-sans,sans-serif;
+    font-family: nimbus-sans,sans-serif;
     /*font-family: 'Signika', sans-serif;*/
     font-size:16px;
     line-height:1.25;
     color:#585858;
-    background:#fff;
+    background: #ffffff;
     overflow-x:hidden;
 }
 body *{
@@ -83,18 +86,51 @@ a.block-link{
 }
 
 .page-header h1{
-    background:#fff;
+    /*background:#fff;*/
+    background-color: var(--sublue);
 }
 .page-header .logo{
     display:block;
     position:relative;
-    color: var(--sublue);
+    background-color: var(--sublue);
+    color: var(--light);
     width:100%;
     height:60px;
     padding-top:10px;
 
-
 }
+
+.page-header .logotext {
+    display: inline-block;
+    position: absolute;
+    padding-top: 5px;
+    padding-left: 100px;
+}
+
+.dsvplay {
+    position: absolute;
+    background-color: var(--light);
+    border: none;
+    color: var(--sublue);
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.dsvplaylogo {
+    border-top-left-radius: 28px;
+    border-bottom-left-radius: 28px;
+}
+/* Styling for logobutton
+.page-header i {
+    padding-left: 125px;
+    padding-bottom: 5px;
+}
+*/
 .page-header .logo:hover{
     opacity:1;
 }
@@ -110,12 +146,12 @@ a.block-link{
     width:100%;
     height:100%;
     text-align:center;
-    color:#585858;
+    color: var(--light);
     transition:all .2s ease;
     font-weight:700;
 }
 .page-header .buttons path{
-    fill:#585858;
+    fill: var(--light);
     transition:fill .2s ease;
 }
 .page-header .buttons .inner{
@@ -135,6 +171,7 @@ a.block-link{
     display:inline-block;
     height:20px;
 }
+
 .page-header .buttons .open-state{
     opacity:0;
     top:-25px;
@@ -145,14 +182,16 @@ a.block-link{
     top:2px;
 }
 .page-header .buttons li:nth-child(3n+1) .menu-button{
-    background:#f9f9f9;
+    /*background:#f9f9f9;*/
+    background: var(--bone);
 }
 .page-header .buttons li:nth-child(3n+1) .menu-button .closed-state  i svg{
     height:17px;
 }
 
 .page-header .buttons li:nth-child(3n+2) .menu-button{
-    background:#f4f4f4;
+    /*background:#f4f4f4;*/
+    background: var(--btwo);
 }
 .page-header .buttons li:nth-child(3n+2) .menu-button .closed-state i svg{
     height:4px;
@@ -160,7 +199,8 @@ a.block-link{
     top:-3px;
 }
 .page-header .buttons li:nth-child(3n+3) .menu-button{
-    background:#ededed;
+    /*background:#ededed;*/
+    background: var(--bthree);
 }
 .page-header .buttons li:nth-child(3n+3) .menu-button .closed-state i svg{
     height:19px;
@@ -276,11 +316,19 @@ a.block-link{
     .page-header h1{
         width:50%;
     }
+
     .page-header .logo{
-        height:80px;
-        width:260px;
+        height: 80px;
+        width: 400px;
         padding-left: 100px;
     }
+
+    .page-header img {
+        position: absolute;
+        top: -3px;
+    }
+
+
     .page-header .board{
         position:fixed;
         left:50%;
@@ -298,6 +346,7 @@ a.block-link{
         height:100%;
 
     }
+
     .page-header .menu-bg{
         left:50%;
         top:80px;

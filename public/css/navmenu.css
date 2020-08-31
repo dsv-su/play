@@ -1,6 +1,6 @@
 :root {
     --text: #585858;
-    text-size-adjust:100%;
+    /*text-size-adjust:100%;*/
     text-rendering:optimizeLegibility;
     -webkit-font-smoothing:antialiased
 }
@@ -47,8 +47,8 @@ nav.navmenu article.panel::before {
     height:calc(100% - 2*(0.5*1rem));
     content:"";
     width:0;
-    border-left:1px solid #fff;
-    border-color:inherit;
+    border-left: 1px solid #fff;
+    border-color: inherit;
     position:absolute;
     top:calc(0.5*1rem);
     box-sizing:border-box
