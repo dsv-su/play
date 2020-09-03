@@ -22,7 +22,7 @@
                                 <span class="hidden-at-start">Profil</span>
                                 <span class="inner">
 						            <span class="closed-state" style="top: 0; opacity: 1;">
-							            <i class="far fa-user"></i>
+							            <i class="far fa-user fa-lg"></i>
 						            </span>
 					            </span>
                                 <span class="inner open">
@@ -37,9 +37,9 @@
                                 <span class="hidden-at-start">Hantera uppspelning</span>
                                 <span class="inner">
 						            <span class="closed-state" style="top: 0; opacity: 1;">
-							            <i class="far fa-file-video"></i>
+							            <i class="far fa-file-video fa-lg"></i>
                                         <span>Redigera</span>
-							            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 8 4"><path fill="#5A595A" d="M0 0l4 4 4-4z"></path><path fill="#585858" d="M0 0l4 4 4-4z"></path></svg>
+							            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 8 4"><path fill="#5A595A" d="M0 0l4 4 4-4z"></path><path fill="#585858" d="M0 0l4 4 4-4z"></path></svg>
 						            </span>
 					            </span>
                                 <span class="inner open">
@@ -54,7 +54,7 @@
                                 <span class="hidden-at-start">Meny</span>
                                 <span class="inner">
                                     <span class="closed-state" style="top: 0; opacity: 1;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="17" viewBox="0 0 22 17"><g fill="#0000ff"><path d="M0 0h22v3H0zM0 7h22v3H0zM0 14h22v3H0z"></path></g></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="19" viewBox="0 0 22 17"><g fill="#0000ff"><path d="M0 0h22v3H0zM0 7h22v3H0zM0 14h22v3H0z"></path></g></svg>
                                     </span>
 					            </span>
                                 <span class="inner open">
