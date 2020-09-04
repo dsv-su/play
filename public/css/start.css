@@ -61,7 +61,7 @@ p, h4 {
 
 .top_section {
     grid-area: top_section;
-    min-height: 200px;
+    min-height: 150px;
     display: grid;
     grid-template-columns: 10% 1fr 10%;
     grid-template-areas:
@@ -228,8 +228,7 @@ video i:hover {
 
 /*tooltip Box*/
 .con-tooltip {
-    position: absolute;
-    left: 30%;
+    padding-top: 30%;
     border-radius: 9px;
     text-align: center;
     transition: all 0.3s ease-in-out;
@@ -271,9 +270,9 @@ video i:hover {
     border-style: solid;
     border-width: 12px 12.5px 0 12.5px;
     border-color: #ffffff transparent transparent transparent;
-
     position: absolute;
     left: 40%;
+
 }
 
 .con-tooltip:hover .tooltip{
@@ -282,7 +281,7 @@ video i:hover {
     opacity: 1;
     transition: .3s linear;
     animation: bounce 1s ease-in-out infinite  alternate;
-
+    z-index: 4;
 }
 
 @keyframes bounce {
@@ -369,8 +368,33 @@ h3 {
     .nav-links:hover {
         color: rgba(255, 255, 255, 1);
     }
-}
 
+    .con-tooltip {
+        margin: 0 auto;
+        padding-top: 8%;
+    }
+
+    .tooltip {
+        z-index: 1;
+        width: 50%;
+        padding: 5px 5px;
+
+        position: absolute;
+        top: -160%;
+        left: 60%;
+
+        border-radius: 9px;
+        font: 16px;
+
+        transform: translateY(9px);
+        transition: all 0.3s ease-in-out;
+
+        box-shadow: 0 0 3px rgba(56, 54, 54, 0.86);
+    }
+
+
+
+}
 
 @media only screen and (max-width: 1200px) {
     .video {

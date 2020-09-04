@@ -16,7 +16,9 @@
 
 .search-form {
     position: relative;
-    width: 550px;
+    width: 250px;
+    margin: 0 auto;
+
     height: 40px;
     border-radius: 40px;
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
@@ -34,11 +36,11 @@
 
 .autoc {
     position: absolute;
-    width: 500px;
-    /*top: 20px;*/
+    width: 250px;
     top: 18px;
-    left: -20px;
-    z-index: 100;
+    left: -35px;
+    z-index: 2;
+
 }
 
 .automenu {
@@ -47,12 +49,25 @@
 
 .autoc-autocomplete-items div {
     font-family: 'Open Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    text-align: left;
+    padding: 7px;
+    cursor: pointer;
+    background-color: #ffffff;
+
+
+
+/*
+    font-family: 'Open Sans', sans-serif;
     font-weight: 400;
     text-align: left;
     padding: 10px;
     cursor: pointer;
     background-color: #ffffff;
     z-index: 100;
+
+ */
 }
 
 .autoc-autocomplete-items div a {
@@ -213,21 +228,26 @@
     border-top-color: #e24040;
 }
 
-@media only screen and (max-width: 600px) {
-
+/*@media only screen and (max-width: 600px) { */
+@media only screen and (min-width:47em){
     .search-form {
-        width: 250px;
+        width: 550px;
+
     }
 
     .autoc {
-        position: absolute;
-        width: 250px;
-        top: 18px;
-        left: -35px;
-        z-index: 2;
+        width: 500px;
+        left: -20px;
+        z-index: 100;
+
+
     }
 
     .autoc-autocomplete-items div {
+        z-index: 100;
+        padding: 10px;
+        font-size: 18px;
+        /*
         font-family: 'Open Sans', sans-serif;
         font-size: 10px;
         font-weight: 400;
@@ -235,6 +255,8 @@
         padding: 7px;
         cursor: pointer;
         background-color: #ffffff;
+
+         */
     }
 
 }

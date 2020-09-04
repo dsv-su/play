@@ -8,8 +8,6 @@
 
                 <h1>
                         <a href="{{route('home')}}" class="logo"><img src="{{asset('./images/su_logo_play.png')}}" alt="Stockholms universitet">
-                            <!-- Button logo -->
-                            <!--<div class="logotext"><button class="dsvplay dsvplaylogo">Play</button>&nbsp;<i class="fas fa-play"></i></div>-->
                             <div class="logotext">Play&nbsp;<i class="fas fa-play"></i></div>
                         </a>
 
@@ -562,7 +560,7 @@
             <!-- Search -->
             <div class="search_header">
 
-                <div class="con-tooltip top">
+                <div class="con-tooltip">
 
                         <form class="search-form"  action="{{ route('search') }}" method="POST" >
                         @csrf

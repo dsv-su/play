@@ -26,13 +26,13 @@
     width:auto;
 }
 
-.clear:after,.clear:before{
+.clear:after, .clear:before{
     content:"";
     display:table;
 }
 
 .clear:after{
-    clear:both;
+    clear: both;
 }
 
 *{
@@ -84,17 +84,18 @@ a:active,a:hover{
 a.block-link{
     display:block;
 }
-.no-flicker{
+.no-flicker {
     -webkit-backface-visibility:hidden;
     -webkit-transform:translate3d(0,0,0);
 }
 
-.page-header{
-    position: absolute;
+.page-header {
+    position: fixed;
+    background-color: var(--sublue);
     top: 0;
     left: 0;
     width: 100%;
-    min-height: 40px;
+    min-height: 90px;
     z-index: 105;
 }
 
@@ -103,7 +104,6 @@ a.block-link{
 }
 
 .page-header img {
-    /*display: none;*/
     position: absolute;
     top: 0;
 }
@@ -117,7 +117,7 @@ a.block-link{
     font-family: 'Merriweather Sans', sans-serif;
     font-size: 22px;
     width: 50%;
-    height: 40px;
+    height: 90px;
     padding-top: 3px;
     padding-left: 15px;
 }
@@ -125,7 +125,7 @@ a.block-link{
 .page-header .logotext {
     display: inline-block;
     position: absolute;
-    padding-top: 5px;
+    padding-top: 8px;
     left: 0;
     padding-left: 65px;
 }
@@ -148,23 +148,24 @@ a.block-link{
     border-top-left-radius: 28px;
     border-bottom-left-radius: 28px;
 }
-/* Styling for logobutton
-.page-header i {
-    padding-left: 125px;
-    padding-bottom: 5px;
-}
-*/
 
 .page-header .logo:hover{
     opacity:1;
 }
 
+.page-header .buttons{
+    width: 50%;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    z-index: 3;
+}
+
 .page-header .buttons li{
     position: relative;
     width: 33.333333333%;
-    height: 40px;
+    height: 90px;
     float: left;
-    margin-top: 10px;
 }
 
 .page-header .buttons .menu-button{
@@ -318,6 +319,7 @@ a.block-link{
 }
 
 @media only screen and (min-width:47em){
+
     body {
         font-size: 16px;
     }
@@ -327,19 +329,20 @@ a.block-link{
         top:0;
         left:0;
         width:100%;
-        min-height: 140px;
+        min-height: 100px;
         z-index: 105;
     }
 
     .page-header .logo {
         width: 100%;
     }
+
     .page-header .buttons{
         width: 50%;
         position: absolute;
         left: 50%;
         top:0;
-        z-index:3;
+        z-index: 3;
     }
 
     .page-header .buttons li{
