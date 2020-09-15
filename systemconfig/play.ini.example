@@ -13,3 +13,14 @@ db_port=3306                            ; DB port
 db_database=                            ; Database used
 db_username=                            ; DB user
 db_password=                            ; secret
+
+[mediasite]                             ; Mediasite API
+url =
+username =
+password =
+sfapikey =
+
+[Daisy]                                 ; Daisy API
+url =
+username =
+password =

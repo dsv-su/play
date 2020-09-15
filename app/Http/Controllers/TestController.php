@@ -5,14 +5,21 @@ namespace App\Http\Controllers;
 use App\CategorySearchAspect;
 use App\Course;
 use App\CourseSearchAspect;
+use App\Services\DaisyIntegration;
+use App\System;
 use App\Video;
 use App\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 use Spatie\Searchable\ModelSearchAspect;
 use Spatie\Searchable\Search;
 
 class TestController extends Controller
 {
+
+
     public function index()
     {
         $videos = Video::with('category', 'course')->get();
@@ -23,6 +30,42 @@ class TestController extends Controller
     public function find(Request $request)
     {
         return Video::search($request->get('query'))->with('category')->get();
+        //return Video::search($request->get('query'))->with('course')->get();
+    }
+
+    public function daisy()
+    {
+        //Loads courses from Daisy API -> db
+        $endp = 'courseSegment?semester=20201'; //Get courses from vt 2020
+
+        $system = System::find(1);
+        $daisy = new DaisyIntegration($system);
+        $res = $daisy->getResource($endp);
+
+        //Convert xml to an array
+        $xml = simplexml_load_string($res->getBody()->getContents());
+        $json = json_encode($xml);
+        $array = json_decode($json,TRUE);
+
+        // Delete Table courses
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('courses')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        //Store id db table
+        foreach ($array['courseSegmentInstance'] as $item)
+        {
+            $course = new Course();
+            $course->course_name = $item['name'];
+            $course->semester = $item['semester'];
+            $course->save();
+        }
+        $course->save();
+
+
+        dd($array);
+        //dd($daisys);
+
     }
 
     public function search(Request $request)
@@ -192,6 +235,25 @@ class TestController extends Controller
      * Methods for testing purposes
     /*************************************************************************************
     */
+    public function thumb()
+    {
+
+        //Video
+        $video = './mediasite/KM - Kunskapsnätverk/KM HT2015 Lecture 1/cf6ebf54-4887-4207-935a-f20422390f63.mp4';
+        //$video = './mediasite/KM - Kunskapsnätverk/KM HT2015 Seminar 1/f3cfa8f5-3ef5-4781-b350-7d88140212c9.mp4';
+        //$video ='https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/fabefa3e-6758-468b-aae1-b7b512d084fa.mp4?playbackTicket=&site=play2.dsv.su.se';
+
+        FFMpeg::fromDisk('public')
+            ->open($video)
+            ->getFrameFromSeconds(3)
+            ->export()
+            ->toDisk('public')
+            ->save('frame1.png');
+        $updatevideo = Video::find(14);
+        $updatevideo->image = Storage::url('frame1.png');
+        $updatevideo->save();
+        return 'Done';
+    }
 
     public function php()
     {

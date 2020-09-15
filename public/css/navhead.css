@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Signika:wght@400;600&display=swap');
-
+/*@import url('https://fonts.googleapis.com/css2?family=Signika:wght@400;600&display=swap');
+*/
 :root {
     --sublue: #002f5f;
     --bone: #66829f;
@@ -27,11 +27,11 @@
 }
 
 .clear:after, .clear:before{
-    content:"";
-    display:table;
+    content: "";
+    display: table;
 }
 
-.clear:after{
+.clear:after {
     clear: both;
 }
 
@@ -70,6 +70,7 @@ h1,h2,h3,h4,h5,h6,li,p,small{
     margin: 0;
     font-weight:400;
 }
+
 ol,ul{
     list-style:none;
     margin:0;
@@ -86,7 +87,7 @@ a.block-link{
 }
 .no-flicker {
     -webkit-backface-visibility:hidden;
-    -webkit-transform:translate3d(0,0,0);
+    -webkit-transform: translate3d(0,0,0);
 }
 
 .page-header {
@@ -174,12 +175,13 @@ a.block-link{
     height:100%;
     text-align:center;
     color: var(--light);
-    transition:all .2s ease;
+    transition:all .2s ease-in-out;
     font-weight:700;
 }
+
 .page-header .buttons path{
     fill: var(--light);
-    transition:fill .2s ease;
+    transition:fill .2s ease-in-out;
 }
 .page-header .buttons .inner{
     display:block;
@@ -189,6 +191,7 @@ a.block-link{
     -ms-transform:translateY(-50%);
     transform:translateY(-50%);
 }
+
 .page-header .buttons .inner.open{
     position:absolute;
     width:100%;
@@ -208,9 +211,11 @@ a.block-link{
     position:relative;
     top:2px;
 }
+
 .page-header .buttons li:nth-child(3n+1) .menu-button{
     background: var(--bone);
 }
+
 .page-header .buttons li:nth-child(3n+1) .menu-button .closed-state  i svg{
     height:17px;
 }
@@ -318,6 +323,8 @@ a.block-link{
     z-index:1;
 }
 
+
+
 @media only screen and (min-width:47em){
 
     body {
@@ -325,7 +332,7 @@ a.block-link{
     }
 
     .page-header{
-        position:fixed;
+        /*position: fixed;*/
         top:0;
         left:0;
         width:100%;
@@ -338,7 +345,7 @@ a.block-link{
     }
 
     .page-header .buttons{
-        width: 50%;
+        width: 50l%;
         position: absolute;
         left: 50%;
         top:0;
@@ -373,8 +380,15 @@ a.block-link{
     .page-header .logotext {
         display: inline-block;
         position: absolute;
-        padding-top: 10px;
+        padding-top: 15px;
         padding-left: 240px;
+    }
+
+    .page-header .svglogo {
+        display: inline-block;
+        position: relative;
+        padding-top: 10px;
+        padding-left: 220px;
     }
 
     .page-header .board{
@@ -408,6 +422,28 @@ a.block-link{
         z-index: 47;
     }
 }
+@media only screen and (min-width:60em){
+    #breakpointer{
+        z-index: 60;
+    }
+}
+@media only screen and (min-width:68em){
 
+    #breakpointer{
+        z-index:68;
+    }
+}
 
+@media only screen and (min-width:75em){
+
+    #breakpointer{
+        z-index:75;
+    }
+}
+@media only screen and (min-width:94em) {
+
+    #breakpointer{
+        z-index: 90;
+    }
+}
 

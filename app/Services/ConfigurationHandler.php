@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Plugin;
 use App\System;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;

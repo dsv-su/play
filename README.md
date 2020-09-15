@@ -55,6 +55,16 @@ Currently used version is 7.10.3
         db_username=                            ; DB user
         db_password=                            ; secret
         
+        [mediasite]                             ; Mediasite API
+        url =
+        username =
+        password =
+        sfapikey =
+        
+        [Daisy]                                 ; Daisy API
+        url =
+        username =
+        password =
         
 * Once the global settings are entered you can install the dependencies. `composer install`
 

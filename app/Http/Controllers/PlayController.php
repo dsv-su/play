@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use App\Course;
+use App\Services\ConfigurationHandler;
 use App\UploadHandler;
 use App\Video;
 use Illuminate\Http\Request;
@@ -16,12 +17,17 @@ class PlayController extends Controller
 {
     public function index()
     {
+
         // If the environment is local
         if (app()->environment('local')) {
             $data['play_user'] = 'Profil';
         } else {
             $data['play_user'] = $_SERVER['displayName'];
         }
+
+        //Initiate system
+        $init = new ConfigurationHandler();
+        $init->check_system();
 
         $data['search'] = 0;
         $data['latest'] = Video::with('category', 'course')->latest('id')->take(8)->get();
@@ -33,8 +39,9 @@ class PlayController extends Controller
     public function player(Video $video)
     {
         $playlist = Video::where('course_id', $video->course->id)->get();
-        //dd($playlist);
+
         return view('player.index', ['video' => $video, 'playlist' => $playlist]);
+        //return view('player.index2', ['video' => $video, 'playlist' => $playlist]);
     }
 
     public function mediasite()

@@ -173,7 +173,8 @@ return [
         /*
          * Package Service Providers...
          */
-
+        ProtoneMedia\LaravelFFMpeg\Support\ServiceProvider::class,
+        StudentAffairsUwm\Shibboleth\ShibalikeServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -235,7 +236,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
+        'FFMpeg' => ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::class,
     ],
 
 ];
