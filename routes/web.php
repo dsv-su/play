@@ -23,7 +23,9 @@ Route::get($login, 'SystemController@login')->name('login');
 Route::get('/', 'PlayController@index')->name('home');
 Route::get('/mediasite', 'PlayController@mediasite')->name('mediasite');
 Route::post('/mediasiteCourseDownload', 'PlayController@mediasiteCourseDownload')->name('mediasiteCourseDownload');
+Route::post('/mediasiteRecordingDownload', 'PlayController@mediasiteRecordingDownload')->name('mediasiteRecordingDownload');
 Route::post('/mediasiteUserDownload', 'PlayController@mediasiteUserDownload')->name('mediasiteUserDownload');
+Route::post('/mediasiteOtherDownload', 'PlayController@mediasiteOtherDownload')->name('mediasiteOtherDownload');
 Route::get('find', 'TestController@find')->name('find');
 
 Route::get('/player/{video}', 'PlayController@player')->name('player');

@@ -8,7 +8,7 @@
                 <option value="{{$folderid}}">{{$coursename}}</option>
             @endforeach
         </select><br/><br/>
-        <input type="submit" class="btn btn-sm btn-primary" value="Download"/>
+        <input type="submit" class="btn btn-sm btn-primary" value="Download"/><br/><br/>
     </form>
 
     <form action="{{ route('mediasiteUserDownload') }}" method="POST">
@@ -19,7 +19,29 @@
                 <option value="{{$folderid}}">{{$username}}</option>
             @endforeach
         </select><br/><br/>
-        <input type="submit" class="btn btn-sm btn-primary" value="Download"/>
+        <input type="submit" class="btn btn-sm btn-primary" value="Download"/><br/><br/>
+    </form>
+
+    <form action="{{ route('mediasiteRecordingDownload') }}" method="POST">
+        @csrf
+        Choose a separate folder to download:<br/><br/>
+        Folder: <select id="recording">
+            @foreach($recordings as $folderid => $foldername)
+                <option value="{{$folderid}}">{{$foldername}}</option>
+            @endforeach
+        </select><br/><br/>
+        <input type="submit" class="btn btn-sm btn-primary" value="Download"/><br/><br/>
+    </form>
+
+    <form action="{{ route('mediasiteOtherDownload') }}" method="POST">
+        @csrf
+        Choose other folders to download:<br/><br/>
+        Folder: <select id="other">
+            @foreach($other as $folderid => $foldername)
+                <option value="{{$folderid}}">{{$foldername}}</option>
+            @endforeach
+        </select><br/><br/>
+        <input type="submit" class="btn btn-sm btn-primary" value="Download"/><br/><br/>
     </form>
 
     <script>
@@ -28,7 +50,6 @@
                 e.preventDefault();
                 id = $(this).children(":selected").val();
                 name = $(this).children(":selected").text();
-                console.log(name);
                 html = '<input type="hidden" name="folderid" value=' + id + '>';
                 html += '<input type="hidden" name="coursename" value="' + name + '">';
                 $('#course').append(html);
@@ -37,10 +58,25 @@
                 e.preventDefault();
                 id = $(this).children(":selected").val();
                 name = $(this).children(":selected").text();
-                console.log(name);
                 html = '<input type="hidden" name="folderid" value=' + id + '>';
                 html += '<input type="hidden" name="username" value="' + name + '">';
                 $('#user').append(html);
+            });
+            $(document).on('change', '#recording', function (e) {
+                e.preventDefault();
+                id = $(this).children(":selected").val();
+                name = $(this).children(":selected").text();
+                html = '<input type="hidden" name="folderid" value=' + id + '>';
+                html += '<input type="hidden" name="foldername" value="' + name + '">';
+                $('#recording').append(html);
+            });
+            $(document).on('change', '#other', function (e) {
+                e.preventDefault();
+                id = $(this).children(":selected").val();
+                name = $(this).children(":selected").text();
+                html = '<input type="hidden" name="folderid" value=' + id + '>';
+                html += '<input type="hidden" name="foldername" value="' + name + '">';
+                $('#other').append(html);
             });
         });
     </script>

@@ -62,7 +62,7 @@ class PlayController extends Controller
         $untitledfolderid = '59a0ee17d4154c6884e5dc98f5a00c8914';
         $recordingsfolderid = '73213fc87f634675b9f34456f35115c314';
 
-        $courses = $recordings = array();
+        $courses = $users = $recordings = array();
 
         $folders = json_decode($mediasite->get($url . "/Folders?\$top=1000000")->getBody(), true)['value'];
         foreach ($folders as $folder) {
@@ -72,12 +72,29 @@ class PlayController extends Controller
             if ($folder['ParentFolderId'] == $usersfolderid) {
                 $users[$folder['Id']] = $folder['Name'];
             }
+            if ($folder['ParentFolderId'] == $recordingsfolderid) {
+                $recordings[$folder['Id']] = $folder['Name'];
+            }
+        }
+
+        $other = array(
+            '59a0ee17d4154c6884e5dc98f5a00c8914' => 'Untitled',
+            '73213fc87f634675b9f34456f35115c314' => 'Various',
+        );
+
+
+        foreach ($users as $id => $name) {
+            $presentations = json_decode($mediasite->get($url . "/Folders('$id')/Presentations?\$top=100000")->getBody(), true)['value'];
+            if (empty($presentations)) {
+                unset($users[$id]);
+            }
         }
 
         asort($courses);
         asort($users);
+        asort($recordings);
 
-        return view('home.mediasite', ['courses' => $courses, 'users' => $users]);
+        return view('home.mediasite', ['courses' => $courses, 'users' => $users, 'recordings' => $recordings, 'other' => $other]);
     }
 
     public function mediasiteUserDownload()
@@ -96,6 +113,26 @@ class PlayController extends Controller
         $coursename = request()->coursename ?? null;
 
         $this->processDownload('course', $coursename, $folderid);
+
+        return redirect()->route('home');
+    }
+
+    public function mediasiteRecordingDownload()
+    {
+        $folderid = request()->folderid ?? null;
+        $foldername = request()->foldername ?? null;
+
+        $this->processDownload('various', $foldername, $folderid);
+
+        return redirect()->route('home');
+    }
+
+    public function mediasiteOtherDownload()
+    {
+        $folderid = request()->folderid ?? null;
+        $foldername = request()->foldername ?? null;
+
+        $this->processDownload('other', $foldername, $folderid);
 
         return redirect()->route('home');
     }
