@@ -59,10 +59,9 @@ class PlayController extends Controller
 
         $coursesfolderid = '1348b01a935b48c59abc6dd3e46cf7c714';
         $usersfolderid = '94832c6219754477a178e401f1637caf14';
-        $untitledfolderid = '59a0ee17d4154c6884e5dc98f5a00c8914';
         $recordingsfolderid = '73213fc87f634675b9f34456f35115c314';
 
-        $courses = $users = $recordings = array();
+        $courses = $users = $recordings = $other = array();
 
         $folders = json_decode($mediasite->get($url . "/Folders?\$top=1000000")->getBody(), true)['value'];
         foreach ($folders as $folder) {
@@ -79,7 +78,7 @@ class PlayController extends Controller
 
         $other = array(
             '59a0ee17d4154c6884e5dc98f5a00c8914' => 'Untitled',
-            '73213fc87f634675b9f34456f35115c314' => 'Various',
+            '73213fc87f634675b9f34456f35115c314' => 'Recordings',
         );
 
 
@@ -210,7 +209,7 @@ class PlayController extends Controller
                 // Let's import the data to videos table.
 
                 // Maybe use mediasiteID to ensure that we don't download same thing twice?
-                $video = Video::create(array('title' => $metadata['title']));
+                $video = new Video;
                 $video->title = $metadata['title'];
                 $video->length = $metadata['length'];
                 $video->tags = implode(', ', $metadata['tags']);
@@ -249,7 +248,8 @@ class PlayController extends Controller
                 $course = Course::firstOrCreate(array('course_name' => $foldername, 'semester' => $semester, 'year' => $year));
                 $course_id = $course->id;
                 $video->course_id = $course_id;
-                // Dummy for now.
+
+                // Dummy for now. We don't have categories
                 $video->category_id = 1;
                 $video->save();
             }
