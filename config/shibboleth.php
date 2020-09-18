@@ -39,7 +39,7 @@ return [
     |
      */
 
-    'emulate_idp' => env('EMULATE_IDP', true),
+    'emulate_idp' => env('EMULATE_IDP', false),
     'emulate_idp_users' => [
         'admin' => [
             'Shib-cn' => 'Administrator',
@@ -74,7 +74,7 @@ return [
      */
 
     'entitlement' => $system_config['global']['authorization_parameter'],
-/*
+
     'user' => [
         'name' => 'displayName',
         'first_name' => 'givenName',
@@ -82,7 +82,7 @@ return [
         'email' => 'mail',
         'emplid' => 'eppn',
     ],
-*/
+/*
     //Development only
     'user' => [
         // fillable user model attribute => server variable
@@ -92,7 +92,7 @@ return [
         'email' => 'Shib-mail',
         'emplid' => 'Shib-emplId',
     ],
-
+*/
     //The user model field (from the user array above) that should be used for authentication
     'user_authentication_field' => 'email',
 

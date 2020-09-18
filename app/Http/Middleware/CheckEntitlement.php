@@ -26,8 +26,12 @@ class CheckEntitlement
         $match = 0;
         if(!$request->server('REMOTE_USER'))
         {
+            if($system->global->app_debug == true) {
+                return $next($request);
+            } else {
+                return redirect('login');
+            }
 
-            return redirect('login');
         }
         else
         {
