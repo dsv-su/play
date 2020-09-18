@@ -39,24 +39,24 @@ return [
     |
      */
 
-    'emulate_idp' => env('EMULATE_IDP', false),
+    'emulate_idp' => env('EMULATE_IDP', true),
     'emulate_idp_users' => [
         'admin' => [
-            'Shib-cn' => 'Admin User',
+            'Shib-cn' => 'Administrator',
             'Shib-mail' => 'admin@dsv.su.se',
             'Shib-givenName' => 'Admin',
             'Shib-sn' => 'User',
             'Shib-emplId' => 'admin',
         ],
         'staff' => [
-            'Shib-cn' => 'Staff User',
+            'Shib-cn' => 'Ryan Dias',
             'Shib-mail' => 'staff@dsv.su.se',
             'Shib-givenName' => 'Staff',
             'Shib-sn' => 'User',
             'Shib-emplId' => 'staff',
         ],
         'user' => [
-            'Shib-cn' => 'User User',
+            'Shib-cn' => 'Student Studentsson',
             'Shib-mail' => 'user@dsv.su.se',
             'Shib-givenName' => 'User',
             'Shib-sn' => 'User',
@@ -74,13 +74,23 @@ return [
      */
 
     'entitlement' => $system_config['global']['authorization_parameter'],
-
+/*
     'user' => [
         'name' => 'displayName',
         'first_name' => 'givenName',
         'last_name' => 'sn',
         'email' => 'mail',
         'emplid' => 'eppn',
+    ],
+*/
+    //Development only
+    'user' => [
+        // fillable user model attribute => server variable
+        'name' => 'Shib-cn',
+        'first_name' => 'Shib-givenName',
+        'last_name' => 'Shib-sn',
+        'email' => 'Shib-mail',
+        'emplid' => 'Shib-emplId',
     ],
 
     //The user model field (from the user array above) that should be used for authentication

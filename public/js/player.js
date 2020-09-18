@@ -1,21 +1,25 @@
-//Dev mode
-const streamsOutput = document.querySelector('#streams');
+/*---------------------------------------------------------------
+Player for DSV Play v. 1.0
+
+--------------------------------------------------------------- */
+
 // Layout and toggle Playlist
-const SITE = document.querySelector('.grid');
-const TRIGGER = document.querySelector('.trigger');
-const SHOW = document.querySelector('.playlist');
-const MENUITEMS = SHOW.querySelectorAll('nav a');
-const MENUARRAY = Array.apply(null, MENUITEMS);
+const playlist = document.getElementsByClassName('playlist')[0];
 const closebtn = document.getElementById('player_close');
 
 // Videostreams
 var video = document.getElementById('video1'); //Main video stream
+// Play buttons
 var playpausebtn = document.getElementById('play-pause');
-var fullscreenbtn = document.getElementById('fullscreen');
+const playbackIcons = document.querySelectorAll('.playback-icons use');
+const videoContainer = document.getElementById('videocontainer');
+var fullscreenbtn = document.getElementById('fullscreen-button');
+const fullscreenIcons = fullscreenbtn.querySelectorAll('use');
 
 // Fastforward
 var plbackrate = 1;
 var ffbtn = document.getElementById('fast-forward');
+const fastforwardIcons = document.querySelectorAll('.fastforward-icons use');
 var ff15btn = document.getElementById('ff15');
 var ff3btn = document.getElementById('ff3');
 var ff4btn = document.getElementById('ff4');
@@ -53,45 +57,17 @@ const slave3 = document.getElementById('slave3');
 const slave3_switchbtn = document.getElementById('disable_slave3');
 var close1 = 0, close2 = 0, close3 = 0;
 
-// Toggle show class on body element, set aria-expanded
-function showMenu() {
-    SITE.classList.toggle('show');
-	SHOW.classList.add('open');
-    TRIGGER.getAttribute('aria-expanded') == 'false' ? TRIGGER.setAttribute('aria-expanded', true) : TRIGGER.setAttribute('aria-expanded', false);
+
+// Playlist
+document.getElementsByClassName('playlist_btn')[0].onclick =
+    function (params) {
+        if(!playlist.classList.contains('translate')) {
+            playlist.classList.add('translate');
+        } else {
+            playlist.classList.remove('translate');
+        }
+
 }
-
-// Hide nav area when focus shifts away
-function catchFocus() {
-	if ( TRIGGER.getAttribute('aria-expanded') == 'true' && !( MENUARRAY.includes(document.activeElement) || document.activeElement === TRIGGER ) ) {
-		showMenu();
-	} else {
-		return;
-	}
-}
-
-function removeMenu() {
-	if ( TRIGGER.getAttribute('aria-expanded') == 'false') {
-		SHOW.classList.remove('open');
-	}
-}
-
-// Hide nav area when touch or click happens elsewhere:
-function clickTarget(e) {
-	if ( TRIGGER.getAttribute('aria-expanded') == 'true' && !SHOW.contains(e.target) ) {
-		showMenu();
-	}
-}
-
-// Listen for clicks on TRIGGER button
-TRIGGER.addEventListener('click', showMenu, false);
-
-// Listen for focus changes
-SITE.addEventListener('focusin', catchFocus, true);
-
-// Listen for clicks
-SITE.addEventListener('click', function(e) { clickTarget(e); }, true);
-
-SITE.addEventListener('transitionend', removeMenu, false);
 
 /***************************
  * Function remove elements
@@ -184,8 +160,6 @@ if (vstreams == 3) {
 //If all streams are present
 if (vstreams == 4) {
 	var grid_setup = ['"nav master slave1" "nav master slave1"  "nav master slave2" "nav master slave2" "nav master slave3" "nav master slave3"', '"nav slave1 slave2" "nav slave1 slave2" "nav slave1 slave3" "nav slave1 slave3" "nav slave1 master" "nav slave1 master"', '"nav slave2 slave3" "nav slave2 slave3" "nav slave2 master" "nav slave2 master" "nav slave2 slave1" "nav slave2 slave1"','"nav slave3 master" "nav slave3 master" "nav slave3 slave1" "nav slave3 slave1" "nav slave3 slave2" "nav slave3 slave2"'];
-//Dev mode
-	streamsOutput.textContent = vstreams;
 }
 
 function MasterGrid()
@@ -197,8 +171,7 @@ function MasterGrid()
 	slave3.style.display = 'none';
 	switchbtn.remove();
 	vstreams = 1;
-	//Dev mode
-	streamsOutput.textContent = vstreams;
+
 }
 
 function MasterSlaveGrid()
@@ -210,9 +183,6 @@ function MasterSlaveGrid()
 	vstreams = 2;
 	grid_setup2 = ['"nav master slave1" "nav master slave1" "nav master slave1" "nav master slave1" "nav master slave1" "nav master slave1"', '"nav slave1 master" "nav slave1 master" "nav slave1 master" "nav slave1 master" "nav slave1 master" "nav slave1 master"'];
 
-	//Dev mode
-
-	streamsOutput.textContent = vstreams;
 }
 function MasterSlave1Grid()
 {
@@ -223,8 +193,6 @@ function MasterSlave1Grid()
 	vstreams = 2;
 	grid_setup2 = ['"nav master slave1" "nav master slave1" "nav master slave1" "nav master slave1" "nav master slave1" "nav master slave1"', '"nav slave1 master" "nav slave1 master" "nav slave1 master" "nav slave1 master" "nav slave1 master" "nav slave1 master"'];
 
-	//Dev mode
-	streamsOutput.textContent = vstreams;
 }
 
 function MasterSlave12Grid()
@@ -235,8 +203,6 @@ function MasterSlave12Grid()
 	vstreams = 3;
 	grid_setup3 = ['"nav master slave1" "nav master slave1" "nav master slave1" "nav master slave2" "nav master slave2" "nav master slave2"', '"nav slave1 slave2" "nav slave1 slave2" "nav slave1 slave2" "nav slave1 master" "nav slave1 master" "nav slave1 master"', '"nav slave2 master" "nav slave2 master" "nav slave2 master" "nav slave2 slave1" "nav slave2 slave1" "nav slave2 slave1"']
 
-	//Dev mode
-	streamsOutput.textContent = vstreams;
 }
 function MasterSlave2Grid()
 {
@@ -247,8 +213,6 @@ function MasterSlave2Grid()
 	vstreams = 2;
 	grid_setup2 = ['"nav master slave2" "nav master slave2" "nav master slave2" "nav master slave2" "nav master slave2" "nav master slave2"', '"nav slave2 master" "nav slave2 master" "nav slave2 master" "nav slave2 master" "nav slave2 master" "nav slave2 master"'];
 
-	//Dev mode
-	streamsOutput.textContent = vstreams;
 }
 function MasterSlave3Grid()
 {
@@ -259,8 +223,6 @@ function MasterSlave3Grid()
 	vstreams = 2;
 	grid_setup2 = ['"nav master slave3" "nav master slave3" "nav master slave3" "nav master slave3" "nav master slave3" "nav master slave3"', '"nav slave3 master" "nav slave3 master" "nav slave3 master" "nav slave3 master" "nav slave3 master" "nav slave3 master"'];
 
-	//Dev mode
-	streamsOutput.textContent = vstreams;
 }
 function MasterSlave13Grid()
 {
@@ -270,8 +232,6 @@ function MasterSlave13Grid()
 	vstreams = 3;
 	grid_setup3 = ['"nav master slave1" "nav master slave1" "nav master slave1" "nav master slave3" "nav master slave3" "nav master slave3"', '"nav slave1 slave3" "nav slave1 slave3" "nav slave1 slave3" "nav slave1 master" "nav slave1 master" "nav slave1 master"', '"nav slave3 master" "nav slave3 master" "nav slave3 master" "nav slave3 slave1" "nav slave3 slave1" "nav slave3 slave1"']
 
-	//Dev mode
-	streamsOutput.textContent = vstreams;
 }
 function MasterSlave23Grid()
 {
@@ -281,8 +241,6 @@ function MasterSlave23Grid()
 	vstreams = 3;
 	grid_setup3 = ['"nav master slave2" "nav master slave2" "nav master slave2" "nav master slave3" "nav master slave3" "nav master slave3"', '"nav slave2 slave3" "nav slave2 slave3" "nav slave2 slave3" "nav slave2 master" "nav slave2 master" "nav slave2 master"', '"nav slave3 master" "nav slave3 master" "nav slave3 master" "nav slave3 slave2" "nav slave3 slave2" "nav slave3 slave2"']
 
-	//Dev mode
-	streamsOutput.textContent = vstreams;
 }
 
 //Videoplayer functions
@@ -297,7 +255,19 @@ function PlayPause() {
 		video.pause();
 	}
 }
+// updatePlayButton updates the playback icon and tooltip
+// depending on the playback state
+function updatePlayButton() {
+    playbackIcons.forEach(icon => icon.classList.toggle('hidden'));
+
+    if (video.paused) {
+        playpausebtn.setAttribute('data-title', 'Spela (s)')
+    } else {
+        playpausebtn.setAttribute('data-title', 'Pausa (s)')
+    }
+}
 function FastForward() {
+    fastforwardIcons.forEach(icon => icon.classList.toggle('hidden'));
 	if(video.playbackRate == 1.5 || video.playbackRate == 2 || video.playbackRate == 3 || video.playbackRate == 4 || video.playbackRate == 5 || video.playbackRate == 6){
 		ffbtn.className = 'set';
 		video.playbackRate = 1;
@@ -350,33 +320,42 @@ function disableSlave3() {
 }
 
 function toggleFullscreen(elem) {
+    fullscreenIcons.forEach(icon => icon.classList.toggle('hidden'));
 	elem = elem || document.documentElement;
 	if (!document.fullscreenElement && !document.mozFullScreenElement &&
 		!document.webkitFullscreenElement && !document.msFullscreenElement) {
 		if (elem.requestFullscreen) {
+            fullscreenbtn.setAttribute('data-title', 'Avsluta helskärm (h)');
 			fullscreenbtn.className = 'close';
 			elem.requestFullscreen();
 		} else if (elem.msRequestFullscreen) {
+            fullscreenbtn.setAttribute('data-title', 'Avsluta helskärm (h)');
 			fullscreenbtn.className = 'close';
 			elem.msRequestFullscreen();
 		} else if (elem.mozRequestFullScreen) {
+            fullscreenbtn.setAttribute('data-title', 'Avsluta helskärm (h)');
 			fullscreenbtn.className = 'close';
 			elem.mozRequestFullScreen();
 		} else if (elem.webkitRequestFullscreen) {
+            fullscreenbtn.setAttribute('data-title', 'Avsluta helskärm (h)');
 			fullscreenbtn.className = 'close';
 			elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
 		}
 	} else {
 		if (document.exitFullscreen) {
+            fullscreenbtn.setAttribute('data-title', 'Helskärm (h)');
 			fullscreenbtn.className = 'open';
 			document.exitFullscreen();
 		} else if (document.msExitFullscreen) {
+            fullscreenbtn.setAttribute('data-title', 'Helskärm (h)');
 			fullscreenbtn.className = 'open';
 			document.msExitFullscreen();
 		} else if (document.mozCancelFullScreen) {
+            fullscreenbtn.setAttribute('data-title', 'Helskärm (h)');
 			fullscreenbtn.className = 'open';
 			document.mozCancelFullScreen();
 		} else if (document.webkitExitFullscreen) {
+            fullscreenbtn.setAttribute('data-title', 'Helskärm (h)');
 			fullscreenbtn.className = 'open';
 			document.webkitExitFullscreen();
 		}
@@ -471,11 +450,11 @@ function updateVolumeIcon() {
 		icon.classList.add('hidden');
 	});
 
-	volumeButton.setAttribute('data-title', 'Mute (m)')
+	volumeButton.setAttribute('data-title', 'Stäng av ljud (l)')
 
 	if (video.muted || video.volume === 0) {
 		volumeMute.classList.remove('hidden');
-		volumeButton.setAttribute('data-title', 'Unmute (m)')
+		volumeButton.setAttribute('data-title', 'Ljud (l)')
 	} else if (video.volume > 0 && video.volume <= 0.5) {
 		volumeLow.classList.remove('hidden');
 	} else {
@@ -553,6 +532,7 @@ slave3_switchbtn.onclick = function () {
 	disableSlave3();
 }
 
+// AddEventlistners
 medias.forEach(function(media) {
 	media.addEventListener('play', function(event) {
 		medias.forEach(function(media) {
@@ -582,3 +562,34 @@ video.addEventListener('timeupdate', function() {
 	}
 
 });
+// keyboardShortcuts executes the relevant functions for
+// each supported shortcut key
+function keyboardShortcuts(event) {
+    const { key } = event;
+    switch(key) {
+        case 's':
+            PlayPause();
+            /*
+            if (video.paused) {
+                showControls();
+            } else {
+                setTimeout(() => {
+                    hideControls();
+                }, 2000);
+            }
+
+             */
+            break;
+        case 'l':
+            toggleMute();
+            break;
+        case 'h':
+            toggleFullscreen();
+            break;
+    }
+}
+
+video.addEventListener('play', updatePlayButton);
+video.addEventListener('pause', updatePlayButton);
+video.addEventListener('click', PlayPause);
+document.addEventListener('keyup', keyboardShortcuts);

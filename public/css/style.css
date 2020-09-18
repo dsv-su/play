@@ -1,6 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+Pro:ital,wght@0,400;0,600;1,400;1,600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Exo:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Exo:wght@400;600&family=Teko:wght@300;400;600&display=swap');
+:root {
+    --sublue: hsla(225, 82%, 53%, 1);
+}
 
 html,
 body {
@@ -49,14 +52,8 @@ Wrapper settings
 .wrapper {
     margin-right: auto;
     margin-left:  auto;
-    /*max-width: 1180px;*/
-
-    /*max-height: 100vh;*/
     height:     auto;
     min-height: 100%;
-
-    padding-right: 10px;
-    padding-left:  10px;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -70,66 +67,46 @@ Wrapper settings
 }
 
 /*--------------------------------------------------------------
-Header settings
---------------------------------------------------------------*/
-
-.head {
-    display: flex;
-    width: 100%;
-    position: relative;
-    font-size: 20px;
-    top: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-    justify-content: center;
-    align-items: baseline;
-    background: hsl(0, 0%, 0%);
-    color: #ffffff;
-    order: 1;
-}
-.dev {
-    font-family: 'Teko', sans-serif;
-    font-size: 18px;
-}
-
-/*--------------------------------------------------------------
 Playlist settings
 --------------------------------------------------------------*/
+
 .playlist {
-    padding: 1em;
-    font-family: 'PT', sans-serif;
+    /* */
+    /*display: inline-block;*
+     */
+    display: flex;
+    font-family: 'Roboto', sans-serif;
+    color: #FFF;
+    border: 1px solid #FFF;
+    text-decoration: none;
     font-size: 14px;
-    color: white;
-    background-color: hsl(0, 0%, 20%);
-}
-
-.trigger {
-    display: none;
-    padding: .1em .5em;
-    color: white;
-    background: hsla(225, 82%, 53%, 1);
-    border: none;
-    transform: rotate(90deg);
-}
-
-.trigger:focus,
-.trigger:hover {
-    outline: 2px dotted hsl(0, 0%, 40%);
-}
-
-.trigger:focus {
-    outline-color: white;
+    line-height: 120%;
+    background-color: rgba(255, 255, 255, 0.2);
+    -webkit-border-radius: 1px;
+    -moz-border-radius: 1px;
+    border-radius: 1px;
+    -webkit-transition: background-color 300ms ease;
+    -moz-transition: background-color 300ms ease;
+    cursor: pointer;
+    /*width: 250px;*/
+    height: 500px;
+    position: fixed;
+    left: 60px;
+    top: 160px;
+    transition: all 0.4s ease-in-out;
+    transform: translateX(-300%);
+    padding: 30px 30px;
+    z-index: 2;
 }
 
 .playlist ul {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: left;
     flex-wrap: wrap;
     margin: 0;
     padding: 0;
     list-style-type: none;
-
 }
 
 .playlist a {
@@ -149,7 +126,7 @@ Container (Videos) settings
 --------------------------------------------------------------*/
 
 .container {
-    position: relative;
+   position: relative;
     overflow: auto;
     padding: 10px;
     margin: 10px;
@@ -157,7 +134,10 @@ Container (Videos) settings
     overflow-x: hidden;
     display: flex;
     flex: 1;
-    order: 2;
+}
+
+.container:hover .controls {
+    transform: translateY(0);
 }
 
 /*--------------------------------------------------------------
@@ -174,10 +154,6 @@ Border settings fot dev-mode -> remove for production
     border: 1px dotted #ff4136;
 }
 
-.footer {
-    font-size: 14px;
-    border: 1px dotted #ff4136;
-}
 .master {
     font-size: 14px;
     border: 1px dotted #ff4136;
@@ -188,10 +164,11 @@ Border settings fot dev-mode -> remove for production
     font-size: 14px;
     border: 1px dotted #0074d9;
 }
+/*
 .grid:after {
     content: 'grid';
     background-color: #0074d9;
-}
+}*/
 
 .slave1:after {
     content: 'Secondary1';
@@ -234,12 +211,10 @@ Dev Pseudos settings -> To remove in production
 Master toggle switch
 --------------------------------------------------------------*/
 
-.head .switch {
+.switch {
     position: absolute;
-    top: 2em;
-    right: 0;
-    transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
+    top: 0;
+    right: 200px;
     background-color: #555;
     color: white;
     font-size: 14px;
@@ -248,31 +223,117 @@ Master toggle switch
     cursor: pointer;
     border-radius: 5px;
     text-align: center;
+    z-index: 2;
 }
 
-.head .switch:hover {
+.switch:hover {
     background-color: black;
+}
+/*--------------------------------------------------------------
+Textbox styling
+---------------------------------------------------------------*/
+
+.transparent_txt {
+    display: inline-block;
+    padding: 10px 14px;
+    font-family: 'Merriweather Sans', sans-serif;
+    color: #FFF;
+    border: 1px solid #FFF;
+    text-decoration: none;
+    font-size: 14px;
+    line-height: 120%;
+    background-color: rgba(255,255,255, 0);
+    -webkit-border-radius: 1px;
+    -moz-border-radius: 1px;
+    border-radius: 1px;
+    -webkit-transition: background-color 300ms ease;
+    -moz-transition: background-color 300ms ease;
+    transition: background-color 300ms ease;
+    cursor: pointer;
+}
+
+/*--------------------------------------------------------------
+Buttons styling
+---------------------------------------------------------------*/
+
+.transparent_btn {
+    display: inline-block;
+    padding: 10px 14px;
+    color: #FFF;
+    border: 1px solid #FFF;
+    text-decoration: none;
+    font-size: 14px;
+    line-height: 120%;
+    background-color: rgba(255,255,255, 0);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-transition: background-color 300ms ease;
+    -moz-transition: background-color 300ms ease;
+    transition: background-color 300ms ease;
+    cursor: pointer;
 }
 
 .player_close {
-    position: absolute;
-    left: 2em;
-    top: 2.3em;
-    transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-    background: hsl(0, 0%, 30%);
-    color: white;
-    font-size: 10px;
-    padding: 8px 8px;
-    border: none;
+    position: fixed;
+    left: 3px;
+    top: 20px;
+    transform: translateX(-100%);
+    font-size: 12px;
+    padding: 12px 10px;
     cursor: pointer;
     border-radius: 3px;
     text-align: center;
+    z-index: 2;
+}
+
+.playlist_btn {
+    position: fixed;
+    left: 60px;
+    top: 20px;
+    transform: translateX(-300%);
+    padding: 10px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    text-align: center;
+    z-index: 2;
+}
+
+.videotitle {
+    position: fixed;
+    left: 200px;
+    top: 20px;
+    padding: 12px 50px;
+    transition: all 0.2s ease;
+    transform: translateX(-400%);
+    font-size: 20px;
     z-index: 1;
 }
 
-.player_close:hover {
-    background-color: blue;
+/* Translate hovers */
+
+/*.container:hover .playlist {*/
+.playlist.translate {
+    background-color: rgba(0,0,0, 0.5);
+    color: #FFF;
+    transform: translateX(0);
+}
+
+.container:hover .player_close {
+    background-color: rgba(0,0,0, 0.5);
+    color: #FFF;
+    transform: translateX(0);
+}
+.container:hover .playlist_btn {
+    background-color: rgba(0,0,0, 0.5);
+    color: #FFF;
+    transform: translateX(0);
+}
+.container:hover .videotitle {
+    /*background-color: rgba(255,255,255, 0.3);*/
+    background-color: rgba(0,0,0, 0.5);
+    color: #FFF;
+    transform: translateX(0);
 }
 /*--------------------------------------------------------------
 Slave disable switch
@@ -312,163 +373,24 @@ Slave disable switch
 Controls bar settings
 --------------------------------------------------------------*/
 
-.footer {
-    display: flex;
-    position: fixed;
-    margin: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 97%;
-    color: white;
-    padding: 2.5em;
-    /*background: hsl(0, 0%, 0%);*/
-    overflow: auto;
-    /*order: 3;*/
-}
-
-.footer:hover .controls {
-    transform: translateY(0);
-}
-
 /*--------------------------------------------------------------
 Controls
 --------------------------------------------------------------*/
 
-.buttons {
-    padding: 25px 40px;
-}
-
-.buttons button {
-    background: none;
-    border: none;
-    outline: 0;
-    cursor: pointer;
-}
-
-.buttons #play-pause:before {
-    content: '\f04b';
-    font-family: 'Font Awesome 5 Free';
-    font-weight: 900;
-    width: 25px;
-    height: 25px;
-    display: inline-block;
-    font-size: 23px;
-    color: white;
-    -webkit-font-smoothing: antialiased;
-}
-
-/* Fastforward button */
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background: hsl(0, 0%, 0%);
-    min-width: 65px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    bottom: 25px;
-    z-index: 1;
-}
-
-.dropdown-content a {
-    color: white;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
-.dropdown-content button {
-    background: hsl(0, 0%, 0%);
-    color: white;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #ccc;}
-.dropdown-content button:hover {background-color: #58E55A;}
-
-
-/* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {display: block;}
-
-.buttons #fast-forward:before {
-    content: '\f04e';
-    font-family: 'Font Awesome 5 Free';
-    font-weight: 900;
-    width: 25px;
-    height: 25px;
-    display: inline-block;
-    font-size: 25px;
-    color: white;
-    -webkit-font-smoothing: antialiased;
-}
-
-.buttons #fullscreen:before {
-    content: '\f009';
-    font-family: 'Font Awesome 5 Free';
-    font-weight: 900;
-    width: 25px;
-    height: 25px;
-    display: inline-block;
-    font-size: 23px;
-    color: white;
-    -webkit-font-smoothing: antialiased;
-}
-
 .controls {
-    display: flex;
+    right: 0;
+    left: 0;
+    padding: 10px;
     position: fixed;
     bottom: 0;
-    width: 97%;
-    align-items: baseline;
-    background-color: rgba(0,0,0,0.7);
-    border-radius: 5px;
+    transition: all 0.2s ease;
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5));
     transform: translateY(100%) translateY(-5px);
-    transition: all .2s;
 }
 
-.buttons #play-pause.play:before {
-    content: '\f04b';
-    font-family: 'Font Awesome 5 Free';
-}
-
-.buttons #play-pause.pause:before {
-    content: '\f04c';
-    font-family: 'Font Awesome 5 Free';
-}
-.buttons #fast-forward.set:before {
-    content: '\f050';
-    font-family: 'Font Awesome 5 Free';
-}
-.buttons #fast-forward.back:before {
-    content: '\f01e';
-    font-family: 'Font Awesome 5 Free';
-}
-.buttons #fullscreen.open:before {
-    content: '\f009';
-    font-family: 'Font Awesome 5 Free';
-}
-
-.buttons #fullscreen.close:before {
-    content: '\f78c';
-    padding: 5px;
-    font-family: 'Font Awesome 5 Free';
-}
-
-.time {
-    font-family: 'Teko', sans-serif;
-    font-size: 20px;
-    padding: 10px;
-    color: white;
-}
-
-.progressbar_container {
+.video-progress {
+    position: relative;
     height: 8.4px;
-    /*background-color: rgba(0,0,0,0.7);*/
     margin-bottom: 10px;
 }
 
@@ -485,20 +407,19 @@ progress {
 }
 
 progress::-webkit-progress-bar {
-    background-color: rgba(0,0,0,0.7);
-    /*background: hsl(0, 0%, 0%);*/
+    background-color: #474545;
     border-radius: 2px;
 }
 
 progress::-webkit-progress-value {
-    /*background: #0074d9;*/
-    background: hsl(0, 0%, 0%);
+    background: var(--sublue);
     border-radius: 2px;
 }
 
+
 progress::-moz-progress-bar {
-    border: 1px solid #0074d9;
-    background: #0074d9;
+    border: 1px solid var(--sublue);
+    background: var(--sublue);
 }
 
 .seek {
@@ -516,9 +437,9 @@ progress::-moz-progress-bar {
 .seek-tooltip {
     display: none;
     position: absolute;
-    top: -10px;
-    margin-left: -50px;
-    font-size: 14px;
+    top: -30px;
+    margin-left: -18px;
+    font-size: 16px;
     padding: 3px;
     content: attr(data-title);
     font-weight: bold;
@@ -526,55 +447,216 @@ progress::-moz-progress-bar {
     background-color: rgba(0, 0, 0, 0.6);
 }
 
-.volumebuttons {
-    padding: 25px 100px;
+.bottom-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.volumebuttons button {
-    background: none;
-    border: none;
-    outline: 0;
-    cursor: pointer;
+.left-controls {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    padding-left: 30px;
+}
+.right-controls {
+    display: flex;
+    align-items: center;
+    font-family: 'Merriweather Sans', sans-serif;
+    color: #fff;
+}
+.time {
+    font-family: 'Teko', sans-serif;
+    font-size: 24px;
 }
 
-.volumebuttons input {
+.volume-controls {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.volume-controls input {
     width: 100px;
     opacity: 1;
     transition: all 0.4s ease;
 }
 
-.volumebuttons:hover input, .volumebuttons input:focus {
+.volume-controls:hover input, .volume-controls input:focus {
     width: 100px;
     opacity: 1;
 }
 
-svg {
-    width: 30px;
-    height: 30px;
-    fill: #fff;
-    stroke: #fff;
+button {
     cursor: pointer;
-    -webkit-font-smoothing: antialiased;
+    position: relative;
+    margin-right: 7px;
+    font-size: 12px;
+    padding: 3px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+}
+
+button * {
+    pointer-events: none;
+}
+
+button::before {
+    content: attr(data-title);
+    position: absolute;
+    display: none;
+    right: 0;
+    top: -50px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    font-weight: bold;
+    word-break: keep-all;
+    white-space: pre;
+}
+
+button:hover::before {
+    display: inline-block;
+}
+
+.fullscreen-button {
+    margin-right: 0;
+}
+
+
+input[type=range] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    height: 8.4px;
+    background: transparent;
+    cursor: pointer;
+}
+
+input[type=range]:focus {
+    outline: none;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    cursor: pointer;
+    border-radius: 1.3px;
+    -webkit-appearance: none;
+    transition: all 0.4s ease;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    height: 16px;
+    width: 16px;
+    border-radius: 16px;
+    background: var(--sublue);
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-left: -1px;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: transparent;
+}
+
+input[type=range].volume {
+    height: 5px;
+    background-color: #fff;
+}
+
+input[type=range].volume::-webkit-slider-runnable-track {
+    background-color: transparent;
+}
+
+input[type=range].volume::-webkit-slider-thumb {
+    margin-left: 0;
+    height: 14px;
+    width: 14px;
+    background: #fff;
+}
+
+input[type=range]::-moz-range-track {
+    width: 100%;
+    height: 8.4px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    background: transparent;
+    border-radius: 1.3px;
+}
+
+input[type=range]::-moz-range-thumb {
+    height: 14px;
+    width: 14px;
+    border-radius: 50px;
+    border: 1px solid var(--sublue);
+    background: var(--sublue);
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+input[type=range]:focus::-moz-range-track {
+    outline: none;
+}
+
+input[type=range].volume::-moz-range-thumb {
+    border: 1px solid #fff;
+    background: #fff;
 }
 
 .hidden {
     display: none;
 }
 
+svg {
+    width: 36px;
+    height: 36px;
+    fill: #fff;
+    stroke: #fff;
+    cursor: pointer;
+}
+
+.dropdown {
+    display: flex;
+    align-items: center;
+    /*margin-right: 10px;*/
+}
+
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background: hsl(0, 0%, 0%);
+    min-width: 65px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    bottom: 50px;
+    z-index: 1;
+}
+
+.dropdown-content button {
+    background: hsl(0, 0%, 0%);
+    color: white;
+    padding: 12px 20px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content button:hover {background-color: #58E55A;}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block;}
+
 /*--------------------------------------------------------------
 CSS Grid layout for wider screens, when browser supports grid:
 --------------------------------------------------------------*/
 @supports (grid-area: auto) {
-    @media only screen and (min-width:47em){
-    /*@media screen and (min-width: 20em) {*/
-        .grid {
+    /*@media only screen and (min-width:47em){*/
+    @media screen and (min-width: 20em) {
+        /*.grid {
             position: relative;
             display: grid;
             left: -15em;
             border: 1px solid yellow;
-            /*grid-template-columns: 75% 25%;*/
             grid-template-columns: 15em 75% 25%;
-            grid-template-rows: minmax(1fr, 1fr) minmax(1fr, 1fr) minmax(1fr, 1fr);
             grid-template-areas:
                 "nav master slave1"
                 "nav master slave1"
@@ -588,7 +670,7 @@ CSS Grid layout for wider screens, when browser supports grid:
         .master {
             grid-area: master;
             /*max-height: 100%;*/
-            position: relative;
+ /*           position: relative;
         }
 
 
@@ -615,43 +697,62 @@ CSS Grid layout for wider screens, when browser supports grid:
         }
         .playlist ul {
             /*position: fixed;*/
-            display: none;
+/*            display: none;
             flex-direction: column;
         }
 
         .open ul {
             display: flex;
+        }*/
+
+        .grid {
+            position: relative;
+            display: grid;
+            grid-template-columns: 75% 25%;
+            grid-template-areas:
+                "master slave1"
+                "master slave2"
+                "master slave3";
+            grid-gap: 10px;
         }
 
-        .trigger {
-            position: fixed;
-            display: block;
-            top: 10em;
-            left: -2em;
-            transition: left .6s;
+        .master {
+            grid-area: master;
+            /*min-height: 100%;*/
+            /*position: relative;*/
         }
 
-        .show .trigger {
-            left: 15.2em;
+        .slave1 {
+            grid-area: slave1;
+            position: relative;
         }
 
+        .slave2 {
+            grid-area: slave2;
+            position: relative;
+        }
+
+        .slave3 {
+            grid-area: slave3;
+            position: relative;
+        }
+
+
+        /*
+        .playlist ul {
+            /*position: fixed;*/
+/*            display: none;
+            flex-direction: column;
+        }
+
+        .open ul {
+            display: flex;
+        }*/
+
+
+
+
     }
 
-
-    @media (min-width: 768px) {
-
-
-
-    }
-
-    @media (min-width: 1024px) {
-
-
-    }
-
-    @media (min-width: 1200px) {
-
-
-    }
 
 }

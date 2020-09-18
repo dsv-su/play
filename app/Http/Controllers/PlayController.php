@@ -9,6 +9,7 @@ use App\UploadHandler;
 use App\Video;
 use Illuminate\Http\Request;
 use Illuminate\Http\File;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use GuzzleHttp\Client;
 use App\Services\AuthHandler;
@@ -32,16 +33,16 @@ class PlayController extends Controller
         $data['search'] = 0;
         $data['latest'] = Video::with('category', 'course')->latest('id')->take(8)->get();
         $data['categories'] = Category::all();
-
+        $data['loggedin'] = Auth::check();
         return view('home.index', $data);
     }
 
     public function player(Video $video)
     {
         $playlist = Video::where('course_id', $video->course->id)->get();
-
-        return view('player.index', ['video' => $video, 'playlist' => $playlist]);
-        //return view('player.index2', ['video' => $video, 'playlist' => $playlist]);
+        $course = Course::find($video->course->id);
+        return view('player.index', ['video' => $video, 'playlist' => $playlist, 'course' => $course]);
+        //return view('player.index2', ['video' => $video, 'playlist' => $playlist, 'course' => $course]);
     }
 
     public function mediasite()

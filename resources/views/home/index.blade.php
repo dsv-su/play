@@ -32,7 +32,11 @@
                                 <span class="hidden-at-start">Profil</span>
                                 <span class="inner">
 						            <span class="closed-state" style="top: 0; opacity: 1;">
-							            <i class="far fa-user fa-lg"></i>
+                                        @if($loggedin)
+                                            <i class="far fa-user fa-lg"></i>
+                                        @else
+                                            <i class="fas fa-user-slash fa-lg"></i>
+                                        @endif
 						            </span>
 					            </span>
                                 <span class="inner open">
@@ -77,6 +81,24 @@
                     </ul>
                 </div>
 
+                <section class="profile board no-flicker" id="profile" style="opacity: 0; margin-top: 0; height: 0;">
+                    <div class="inner">
+                        <h2 class="hidden-at-start">Profil</h2>
+
+                        <div class="empty-profile">{{Auth::user()->name ?? 'Not logged in'}}</div>
+                    </div>
+                </section>
+                <!-- -->
+                <nav class="manage-menu board no-flicker" id="manage" style="opacity: 0; margin-top: 0; height: 0;">
+                    <div class="inner">
+                        <h2>Actions</h2>
+                        <ul>
+                            <li><a class="menu-item" href="#" >Hantera uppspelning</a></li>
+                            <li><a class="menu-item" href="{{ route('mediasite') }}" >Retrive from Mediasite</a></li>
+                        </ul>
+                    </div>
+                </nav>
+                <!-- -->
                 <nav class="nav-menu board no-flicker" id="nav-menu" style="opacity: 0; margin-top: 0; height: 0;">
                     <div class="inner">
                         <h2 class="hidden-at-start">Main menu</h2>
@@ -546,25 +568,7 @@
                     </div>
 
                 </nav>
-
-                <nav class="manage-menu board no-flicker" id="manage" style="opacity: 0; margin-top: 0; height: 0;">
-                    <div class="inner">
-                        <h2>Actions</h2>
-                        <ul>
-                            <li><a class="menu-item" href="#" >Hantera uppspelning</a></li>
-                            <li><a class="menu-item" href="{{ route('mediasite') }}" >Retrive from Mediasite</a></li>
-                        </ul>
-                    </div>
-                </nav>
-
-                <section class="profile board no-flicker" id="profile" style="opacity: 0; margin-top: 0; height: 0;">
-                    <div class="inner">
-                        <h2 class="hidden-at-start">Profil</h2>
-
-                        <div class="empty-profile">Logga in via SU</div>
-                    </div>
-                </section>
-
+                <!-- -->
                 <div class="menu-bg" style="height: 0;"><div class="bg-inner" style="background: none 0 0 / auto repeat scroll padding-box border-box rgb(249, 249, 249);"></div></div>
 
             </header>
@@ -781,6 +785,6 @@
                 </div>
             @endif
         </section> <!-- End content -->
-    </div> <!-- end Wrapper -->
+</div> <!-- end Wrapper -->
 
 @endsection

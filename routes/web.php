@@ -17,7 +17,7 @@ if (class_exists(AuthHandler::class))
 //Endpoint
 Route::get($login, 'SystemController@login')->name('login');
 
-Route::middleware('entitlements')->group(function () {
+//Route::middleware('entitlements')->group(function () {
 
 Route::get('/', 'PlayController@index')->name('home');
 Route::get('/mediasite', 'PlayController@mediasite')->name('mediasite');
@@ -39,5 +39,6 @@ Route::post('/store', 'PlayController@store')->name('store');
 Route::get('/php', 'TestController@php')->name('php');
 Route::get('/server', 'TestController@server')->name('server');
 Route::get('/thumb', 'TestController@thumb')->name('thumb');
-Route::get('/daisy', 'TestController@daisy');
-});
+Route::get('/daisy', 'TestController@daisy')->name('daisy');
+Route::get('/daisyload', 'TestController@daisyLoadCourses');
+//});
