@@ -9,6 +9,7 @@ use App\UploadHandler;
 use App\Video;
 use Illuminate\Http\Request;
 use Illuminate\Http\File;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use GuzzleHttp\Client;
 use App\Services\AuthHandler;
@@ -81,22 +82,26 @@ class PlayController extends Controller
             '73213fc87f634675b9f34456f35115c314' => 'Recordings',
         );
 
-
-        foreach ($users as $id => $name) {
-            $presentations = json_decode($mediasite->get($url . "/Folders('$id')/Presentations?\$top=100000")->getBody(), true)['value'];
-            if (empty($presentations)) {
-                unset($users[$id]);
+        $users = Session::get('mediasiteusers');
+        if (empty($users)) {
+            foreach ($users as $id => $name) {
+                $presentations = json_decode($mediasite->get($url . "/Folders('$id')/Presentations?\$top=100000")->getBody(), true)['value'];
+                if (empty($presentations)) {
+                    unset($users[$id]);
+                }
             }
+            asort($users);
+            Session::put('mediasiteusers', $users);
         }
 
         asort($courses);
-        asort($users);
         asort($recordings);
 
         return view('home.mediasite', ['courses' => $courses, 'users' => $users, 'recordings' => $recordings, 'other' => $other]);
     }
 
-    public function mediasiteUserDownload()
+    public
+    function mediasiteUserDownload()
     {
         $folderid = request()->folderid ?? null;
         $username = request()->username ?? null;
@@ -106,7 +111,8 @@ class PlayController extends Controller
         return redirect()->route('home');
     }
 
-    public function mediasiteCourseDownload()
+    public
+    function mediasiteCourseDownload()
     {
         $folderid = request()->folderid ?? null;
         $coursename = request()->coursename ?? null;
@@ -116,7 +122,8 @@ class PlayController extends Controller
         return redirect()->route('home');
     }
 
-    public function mediasiteRecordingDownload()
+    public
+    function mediasiteRecordingDownload()
     {
         $folderid = request()->folderid ?? null;
         $foldername = request()->foldername ?? null;
@@ -126,7 +133,8 @@ class PlayController extends Controller
         return redirect()->route('home');
     }
 
-    public function mediasiteOtherDownload()
+    public
+    function mediasiteOtherDownload()
     {
         $folderid = request()->folderid ?? null;
         $foldername = request()->foldername ?? null;
@@ -136,7 +144,8 @@ class PlayController extends Controller
         return redirect()->route('home');
     }
 
-    public function processDownload($type, $foldername, $folderid)
+    public
+    function processDownload($type, $foldername, $folderid)
     {
         $system = new AuthHandler();
         $system = $system->authorize();
@@ -164,9 +173,6 @@ class PlayController extends Controller
                 $presentationid = $presentation['Id'];
                 $title = trim($presentation['Title']);
 
-                if (!is_dir($path . $title)) {
-                    mkdir($path . $title);
-                }
                 // Now let's create a json with all relevant metadata
                 $metadata = array(
                     'mediasiteid' => $presentation['Id'],
@@ -187,13 +193,19 @@ class PlayController extends Controller
 
                 $response = $mediasite->get($url . "/Presentations('$presentationid')/OnDemandContent");
                 $streams = json_decode($response->getBody(), true)['value'];
+
+                $emptystreams = true;
                 foreach ($streams as $stream) {
                     $filename = $stream['FileNameWithExtension'];
                     // Skip zero length
                     if ($stream['Length'] > 0) {
+                        $emptystreams = false;
                         $streamurl = "https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/$filename";
                         if (!file_exists($path . $title . '/' . $filename)) {
                             // download only if it hasn't been done before
+                            if (!is_dir($path . $title)) {
+                                mkdir($path . $title);
+                            }
                             file_put_contents($path . '/' . $title . '/' . $filename, file_get_contents($streamurl));
                         }
                         if (filesize($path . '/' . $title . '/' . $filename) != $stream['FileLength']) {
@@ -205,9 +217,14 @@ class PlayController extends Controller
                     }
                 }
 
-                file_put_contents($path . '/' . $title . '/data.json', json_encode($metadata, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
-                // Let's import the data to videos table.
+                if ($emptystreams) {
+                    return false;
+                }
 
+                // Save metadata json
+                file_put_contents($path . '/' . $title . '/data.json', json_encode($metadata, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+
+                // Let's import the data to videos table.
                 // Maybe use mediasiteID to ensure that we don't download same thing twice?
                 $video = new Video;
                 $video->title = $metadata['title'];
@@ -259,13 +276,15 @@ class PlayController extends Controller
         return false;
     }
 
-    public function upload()
+    public
+    function upload()
     {
         $data['upload'] = 0;
         return view('video.test', $data);
     }
 
-    public function store(Request $request)
+    public
+    function store(Request $request)
     {
         if ($request->hasFile('file')) {
             $path = Storage::putFileAs('public', $request->file('file'), 'upload.txt');
