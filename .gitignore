@@ -14,6 +14,7 @@ yarn-error.log
 .idea
 /users
 /systemconfig/*.ini
+/config/ide-helper.php
 .editorconfig
 .gitattributes
 .styleci.yml

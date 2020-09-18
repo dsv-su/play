@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 | Under development
 |
 */
+
 use App\Services\AuthHandler;
 
 if (class_exists(AuthHandler::class))
@@ -21,7 +22,10 @@ Route::get($login, 'SystemController@login')->name('login');
 
 Route::get('/', 'PlayController@index')->name('home');
 Route::get('/mediasite', 'PlayController@mediasite')->name('mediasite');
-Route::post('/mediasiteDownload', 'PlayController@mediasiteDownload')->name('mediasiteDownload');
+Route::post('/mediasiteCourseDownload', 'PlayController@mediasiteCourseDownload')->name('mediasiteCourseDownload');
+Route::post('/mediasiteRecordingDownload', 'PlayController@mediasiteRecordingDownload')->name('mediasiteRecordingDownload');
+Route::post('/mediasiteUserDownload', 'PlayController@mediasiteUserDownload')->name('mediasiteUserDownload');
+Route::post('/mediasiteOtherDownload', 'PlayController@mediasiteOtherDownload')->name('mediasiteOtherDownload');
 Route::get('find', 'TestController@find')->name('find');
 
 Route::get('/player/{video}', 'PlayController@player')->name('player');
@@ -41,4 +45,5 @@ Route::get('/server', 'TestController@server')->name('server');
 Route::get('/thumb', 'TestController@thumb')->name('thumb');
 Route::get('/daisy', 'TestController@daisy')->name('daisy');
 Route::get('/daisyload', 'TestController@daisyLoadCourses');
+Route::get('/daisy', 'TestController@daisy');
 //});
