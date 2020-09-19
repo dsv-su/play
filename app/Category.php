@@ -7,6 +7,9 @@ use Spatie\Searchable\Searchable;
 use Spatie\Searchable\SearchResult;
 
 
+/**
+ * @mixin IdeHelperCategory
+ */
 class Category extends Model implements Searchable
 {
     protected $fillable = ['category_name'];

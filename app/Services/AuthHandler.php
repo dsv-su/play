@@ -13,6 +13,7 @@ use RecursiveIteratorIterator;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Services\AuthHandler newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Services\AuthHandler query()
  * @mixin \Eloquent
+ * @mixin IdeHelperAuthHandler
  */
 class AuthHandler extends Model
 {

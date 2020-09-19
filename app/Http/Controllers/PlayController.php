@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use App\Course;
+use App\MediasiteFolder;
+use App\MediasitePresentation;
 use App\Services\ConfigurationHandler;
 use App\UploadHandler;
 use App\Video;
+use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +18,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use GuzzleHttp\Client;
 use App\Services\AuthHandler;
+use mysql_xdevapi\Exception;
 
 class PlayController extends Controller
 {
@@ -58,46 +63,155 @@ class PlayController extends Controller
         ]);
         $url = $system->mediasite->url;
 
-        $coursesfolderid = '1348b01a935b48c59abc6dd3e46cf7c714';
-        $usersfolderid = '94832c6219754477a178e401f1637caf14';
-        $recordingsfolderid = '73213fc87f634675b9f34456f35115c314';
+        //These lines should be called once, so comment it for performance sake
+        //$this->getMediasiteFolders($mediasite, $url);
+        //$this->getMediasitePresentations($mediasite, $url);
+        //$this->deleteEmptyFolders();
 
-        $courses = $users = $recordings = $other = array();
+        $courses = $users = $recordings = $other = $folders = array();
+        $folders = MediasiteFolder::all()->sortBy('name');
 
-        $folders = json_decode($mediasite->get($url . "/Folders?\$top=1000000")->getBody(), true)['value'];
         foreach ($folders as $folder) {
-            if ($folder['ParentFolderId'] == $coursesfolderid) {
-                $courses[$folder['Id']] = $folder['Name'];
+            $topparent = $this->getTopParent($folder);
+            if ($topparent == $folder) {
+                continue;
             }
-            if ($folder['ParentFolderId'] == $usersfolderid) {
-                $users[$folder['Id']] = $folder['Name'];
+            if ($topparent->name == 'Courses') {
+                $courses[] = array('id' => $folder->mediasite_id, 'name' => $folder->name);
             }
-            if ($folder['ParentFolderId'] == $recordingsfolderid) {
-                $recordings[$folder['Id']] = $folder['Name'];
+            if ($topparent->name == 'Mediasite Users' && strpos($folder->name, '@su.se') !== false) {
+                $users[] = array('id' => $folder->mediasite_id, 'name' => $folder->name);
+            }
+            if ($topparent->name == 'Recordings') {
+                $recordings[] = array('id' => $folder->mediasite_id, 'name' => $folder->name);
             }
         }
-
         $other = array(
-            '59a0ee17d4154c6884e5dc98f5a00c8914' => 'Untitled',
-            '73213fc87f634675b9f34456f35115c314' => 'Recordings',
+            array('id' => '59a0ee17d4154c6884e5dc98f5a00c8914', 'name' => 'Untitled'),
+            array('id' => '73213fc87f634675b9f34456f35115c314', 'name' => 'Recordings')
         );
 
-        $users = Session::get('mediasiteusers');
-        if (empty($users)) {
-            foreach ($users as $id => $name) {
-                $presentations = json_decode($mediasite->get($url . "/Folders('$id')/Presentations?\$top=100000")->getBody(), true)['value'];
-                if (empty($presentations)) {
-                    unset($users[$id]);
-                }
+        return view('home.mediasite', [
+            'courses' => $courses,
+            'users' => $users,
+            'recordings' => $recordings,
+            'other' => $other
+        ]);
+    }
+
+    public function deleteEmptyFolders()
+    {
+        $folders = MediasiteFolder::all();
+        foreach ($folders as $folder) {
+            if (!$this->findPresentationLeafs($folder)) {
+                $folder->delete();
             }
-            asort($users);
-            Session::put('mediasiteusers', $users);
+        }
+    }
+
+    public function findPresentationLeafs(MediasiteFolder $folder)
+    {
+        if ($folder->presentations()->count()) {
+            return true;
+        } else {
+            $child = MediasiteFolder::where('parent', $folder->id)->first();
+            if ($child) {
+                return $this->findPresentationLeafs($child);
+            } else {
+                return false;
+            }
+        }
+    }
+
+    public function getTopParent(MediasiteFolder $folder)
+    {
+        if (!$folder->parent) {
+            return $folder;
+        } else {
+            return $this->getTopParent(MediasiteFolder::find($folder->parent));
+        }
+    }
+
+    public function getMediasiteFolders($mediasite, $url)
+    {
+        $folders = array();
+
+        try {
+            $folders = json_decode($mediasite->get($url . "/Folders?\$top=1000000")->getBody(), true)['value'];
+        } catch (GuzzleException $e) {
+            abort(503);
         }
 
-        asort($courses);
-        asort($recordings);
+        foreach ($folders as $folder) {
+            MediasiteFolder::firstOrCreate(['name' => $folder['Name'], 'mediasite_id' => $folder['Id']]);
+        }
 
-        return view('home.mediasite', ['courses' => $courses, 'users' => $users, 'recordings' => $recordings, 'other' => $other]);
+        foreach ($folders as $folder) {
+            $parentfolder = $folder['ParentFolderId'] ?? null;
+            if ($parentfolder) {
+                $parent = MediasiteFolder::where('mediasite_id', $parentfolder)->first();
+                if ($parent) {
+                    $localfolder = MediasiteFolder::where('mediasite_id', $folder['Id'])->firstOrFail();
+                    $localfolder->parent = $parent->id;
+                    $localfolder->save();
+                }
+            }
+        }
+
+        return $folders;
+    }
+
+    public function getMediasitePresentations($mediasite, $url)
+    {
+        $folders = MediasiteFolder::all();
+        foreach ($folders as $folder) {
+            try {
+                $folderid = $folder->mediasite_id;
+                $presentations = json_decode($mediasite->get($url . "/Folders('$folderid')/Presentations?\$top=100000")->getBody(), true)['value'];
+                foreach ($presentations as $presentation) {
+                    MediasitePresentation::firstOrCreate([
+                        'name' => $presentation['Title'],
+                        'mediasite_id' => $presentation['Id'],
+                        'mediasite_folder_id' => $folder->id
+                    ]);
+                }
+            } catch (GuzzleException $e) {
+                abort(503);
+            }
+        }
+    }
+
+    // Needs to be reworked.
+    public function calculateFolderSize(MediasiteFolder $folder, $mediasite, $url)
+    {
+        $folderid = $folder->id;
+        try {
+            $presentations = json_decode($mediasite->get($url . "/Folders('$folderid')/Presentations?\$top=100000")->getBody(), true)['value'];
+            $foldersize = 0;
+            foreach ($presentations as $presentation) {
+                $presentationid = $presentation['Id'];
+                $streams = json_decode($mediasite->get($url . "/Presentations('$presentationid')/OnDemandContent")->getBody(), true)['value'];
+                $presentationlength = 0;
+                foreach ($streams as $stream) {
+                    $presentationlength += $stream['FileLength'];
+                }
+                $foldersize += $presentationlength;
+            }
+            // In Bytes
+            return self::bytesToHuman($foldersize);
+        } catch (GuzzleException $e) {
+            abort(503);
+        }
+        return null;
+    }
+
+    public static function bytesToHuman($bytes)
+    {
+        $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+        for ($i = 0; $bytes > 1000; $i++) {
+            $bytes /= 1000;
+        }
+        return round($bytes, 2) . ' ' . $units[$i];
     }
 
     public function mediasiteUserDownload()
@@ -110,36 +224,7 @@ class PlayController extends Controller
         return redirect()->route('home');
     }
 
-    public function mediasiteCourseDownload()
-    {
-        $folderid = request()->folderid ?? null;
-        $coursename = request()->coursename ?? null;
-
-        $this->processDownload('course', $coursename, $folderid);
-
-        return redirect()->route('home');
-    }
-
-    public function mediasiteRecordingDownload()
-    {
-        $folderid = request()->folderid ?? null;
-        $foldername = request()->foldername ?? null;
-
-        $this->processDownload('various', $foldername, $folderid);
-
-        return redirect()->route('home');
-    }
-
-    public function mediasiteOtherDownload()
-    {
-        $folderid = request()->folderid ?? null;
-        $foldername = request()->foldername ?? null;
-
-        $this->processDownload('other', $foldername, $folderid);
-
-        return redirect()->route('home');
-    }
-
+    // This needs to respect inner folders within courses and user folders.
     public function processDownload($type, $foldername, $folderid)
     {
         $system = new AuthHandler();
@@ -162,7 +247,12 @@ class PlayController extends Controller
         }
 
         if ($folderid) {
-            $presentations = json_decode($mediasite->get($url . "/Folders('$folderid')/Presentations?\$top=100000&\$select=full")->getBody(), true)['value'];
+            $presentations = array();
+            try {
+                $presentations = json_decode($mediasite->get($url . "/Folders('$folderid')/Presentations?\$top=100000&\$select=full")->getBody(), true)['value'];
+            } catch (GuzzleException $e) {
+                abort(503);
+            }
 
             foreach ($presentations as $presentation) {
                 $presentationid = $presentation['Id'];
@@ -180,14 +270,22 @@ class PlayController extends Controller
                 );
 
                 // Presenters
-                $response = $mediasite->get($url . "/Presentations('$presentationid')/Presenters");
-                $presenters = json_decode($response->getBody(), true)['value'];
+                $presenters = array();
+                try {
+                    $presenters = json_decode($mediasite->get($url . "/Presentations('$presentationid')/Presenters")->getBody(), true)['value'];
+                } catch (GuzzleException $e) {
+                    abort(503);
+                }
                 foreach ($presenters as $presenter) {
                     $metadata['presenters'][] = array('fullname' => $presenter['DisplayName'], 'email' => $presenter['Email']);
                 }
 
-                $response = $mediasite->get($url . "/Presentations('$presentationid')/OnDemandContent");
-                $streams = json_decode($response->getBody(), true)['value'];
+                $streams = array();
+                try {
+                    $streams = json_decode($mediasite->get($url . "/Presentations('$presentationid')/OnDemandContent")->getBody(), true)['value'];
+                } catch (GuzzleException $e) {
+                    abort(503);
+                }
 
                 $emptystreams = true;
                 foreach ($streams as $stream) {
@@ -271,6 +369,36 @@ class PlayController extends Controller
         return false;
     }
 
+    public function mediasiteCourseDownload()
+    {
+        $folderid = request()->folderid ?? null;
+        $coursename = request()->coursename ?? null;
+
+        $this->processDownload('course', $coursename, $folderid);
+
+        return redirect()->route('home');
+    }
+
+    public function mediasiteRecordingDownload()
+    {
+        $folderid = request()->folderid ?? null;
+        $foldername = request()->foldername ?? null;
+
+        $this->processDownload('various', $foldername, $folderid);
+
+        return redirect()->route('home');
+    }
+
+    public function mediasiteOtherDownload()
+    {
+        $folderid = request()->folderid ?? null;
+        $foldername = request()->foldername ?? null;
+
+        $this->processDownload('other', $foldername, $folderid);
+
+        return redirect()->route('home');
+    }
+
     public function upload()
     {
         $data['upload'] = 0;
@@ -286,6 +414,7 @@ class PlayController extends Controller
                 $streams = new UploadHandler();
                 $streams = $streams->getUpload($path);
                 $x = 1;
+                $list = array();
                 foreach ($streams as $stream) {
                     //Storage::putFileAs('public', new File($stream), 'myvideo'.$x.'.mp4');
                     //
@@ -309,5 +438,6 @@ class PlayController extends Controller
                 return view('video.test', $data);
             }
         }
+        return false;
     }
 }

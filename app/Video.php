@@ -8,6 +8,9 @@ use Spatie\Searchable\SearchResult;
 use Nicolaslopezj\Searchable\SearchableTrait;
 
 
+/**
+ * @mixin IdeHelperVideo
+ */
 class Video extends Model implements Searchable
 {
     use SearchableTrait;
@@ -27,6 +30,11 @@ class Video extends Model implements Searchable
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function mediasite_presentation()
+    {
+        return $this->hasOne(MediasitePresentation::class);
     }
 
     public function course()
