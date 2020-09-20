@@ -4,21 +4,30 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use App\Course;
+use App\Jobs\DownloadPresentation;
 use App\MediasiteFolder;
 use App\MediasitePresentation;
 use App\Services\ConfigurationHandler;
 use App\UploadHandler;
 use App\Video;
+use Exception;
 use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use GuzzleHttp\Client;
 use App\Services\AuthHandler;
+use Illuminate\View\View;
 
 class PlayController extends Controller
 {
+    /**
+     * @return Application|Factory|View
+     */
     public function index()
     {
 
@@ -40,6 +49,10 @@ class PlayController extends Controller
         return view('home.index', $data);
     }
 
+    /**
+     * @param Video $video
+     * @return Application|Factory|View
+     */
     public function player(Video $video)
     {
         $playlist = Video::where('course_id', $video->course->id)->get();
@@ -47,6 +60,10 @@ class PlayController extends Controller
         return view('player.index', ['video' => $video, 'playlist' => $playlist, 'course' => $course]);
     }
 
+    /**
+     * @return Application|Factory|View
+     * @throws Exception
+     */
     public function mediasite()
     {
         $system = new AuthHandler();
@@ -60,10 +77,13 @@ class PlayController extends Controller
         ]);
         $url = $system->mediasite->url;
 
-        //These lines should be called once, so comment it for performance sake
+        //These lines should be called rarely, so comment it for performance sake
         //$this->getMediasiteFolders($mediasite, $url);
         //$this->getMediasitePresentations($mediasite, $url);
         //$this->deleteEmptyFolders();
+
+        // This requires a correctly symlinked storage folder
+        $this->removeDeletedVideos();
 
         $courses = $users = $recordings = $other = $folders = array();
         $folders = MediasiteFolder::all()->sortBy('name');
@@ -96,6 +116,10 @@ class PlayController extends Controller
         ]);
     }
 
+    /**
+     * @param MediasiteFolder $folder
+     * @return MediasiteFolder
+     */
     public function getTopParent(MediasiteFolder $folder)
     {
         if (!$folder->parent) {
@@ -105,6 +129,9 @@ class PlayController extends Controller
         }
     }
 
+    /**
+     *
+     */
     public function deleteEmptyFolders()
     {
         $folders = MediasiteFolder::all();
@@ -112,13 +139,35 @@ class PlayController extends Controller
             if (!$this->findPresentationLeafs($folder)) {
                 try {
                     $folder->delete();
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     abort(500);
                 }
             }
         }
     }
 
+    /**
+     * @throws Exception
+     */
+    public function removeDeletedVideos()
+    {
+        foreach (Video::all() as $video) {
+            if (!file_exists($video->source1) && strpos($video->source1, 'http') === false) {
+                $mediasite_presentation = $video->mediasite_presentation()->first();
+                if ($mediasite_presentation) {
+                    $mediasite_presentation->video_id = null;
+                    $mediasite_presentation->status = null;
+                    $mediasite_presentation->save();
+                }
+                $video->delete();
+            }
+        }
+    }
+
+    /**
+     * @param MediasiteFolder $folder
+     * @return bool
+     */
     public function findPresentationLeafs(MediasiteFolder $folder)
     {
         if ($folder->presentations()->count()) {
@@ -133,6 +182,26 @@ class PlayController extends Controller
         }
     }
 
+    /**
+     * @param MediasiteFolder $folder
+     * @param $folders
+     * @param $subfolders
+     */
+    public function getSubFolders(MediasiteFolder $folder, $folders, &$subfolders)
+    {
+        foreach ($folders as $f) {
+            if ($f->parent == $folder->id) {
+                $subfolders[] = $f;
+                $this->getSubFolders($f, $folders, $subfolders);
+            }
+        }
+    }
+
+    /**
+     * @param $mediasite
+     * @param $url
+     * @return array|mixed
+     */
     public function getMediasiteFolders($mediasite, $url)
     {
         $folders = array();
@@ -162,6 +231,10 @@ class PlayController extends Controller
         return $folders;
     }
 
+    /**
+     * @param $mediasite
+     * @param $url
+     */
     public function getMediasitePresentations($mediasite, $url)
     {
         $folders = MediasiteFolder::all();
@@ -182,6 +255,14 @@ class PlayController extends Controller
         }
     }
 
+    // Not used now. The plan is to call it via ajax when downloading. The call is very eager.
+
+    /**
+     * @param MediasiteFolder $folder
+     * @param $mediasite
+     * @param $url
+     * @return string|null
+     */
     public function calculateFolderSize(MediasiteFolder $folder, $mediasite, $url)
     {
         $folderid = $folder->id;
@@ -205,8 +286,10 @@ class PlayController extends Controller
         return null;
     }
 
-    // Needs to be reworked.
-
+    /**
+     * @param $bytes
+     * @return string
+     */
     public static function bytesToHuman($bytes)
     {
         $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
@@ -216,6 +299,10 @@ class PlayController extends Controller
         return round($bytes, 2) . ' ' . $units[$i];
     }
 
+    /**
+     * @return RedirectResponse
+     * @throws Exception
+     */
     public function mediasiteUserDownload()
     {
         $folderid = request()->folderid ?? null;
@@ -226,16 +313,61 @@ class PlayController extends Controller
         $subfolders = array();
         $this->getSubFolders(MediasiteFolder::where('mediasite_id', $folderid)->firstOrFail(), MediasiteFolder::all(), $subfolders);
         foreach ($subfolders as $subfolder) {
-            $this->processDownload('user', $username.'/'.$subfolder->name, $subfolder->mediasite_id);
+            $this->processDownload('user', $username . '/' . $subfolder->name, $subfolder->mediasite_id);
         }
 
         return redirect()->route('home');
     }
 
-    public function cleanUpPresentations() {
-        $videos = Video::all();
+    /**
+     * @return RedirectResponse
+     * @throws Exception
+     */
+    public function mediasiteCourseDownload()
+    {
+        $folderid = request()->folderid ?? null;
+        $coursename = request()->coursename ?? null;
+
+        $this->processDownload('course', $coursename, $folderid);
+
+        return redirect()->route('home');
     }
 
+    /**
+     * @return RedirectResponse
+     * @throws Exception
+     */
+    public function mediasiteRecordingDownload()
+    {
+        $folderid = request()->folderid ?? null;
+        $foldername = request()->foldername ?? null;
+
+        $this->processDownload('various', $foldername, $folderid);
+
+        return redirect()->route('home');
+    }
+
+    /**
+     * @return RedirectResponse
+     * @throws Exception
+     */
+    public function mediasiteOtherDownload()
+    {
+        $folderid = request()->folderid ?? null;
+        $foldername = request()->foldername ?? null;
+
+        $this->processDownload('other', $foldername, $folderid);
+
+        return redirect()->route('home');
+    }
+
+    /**
+     * @param $type
+     * @param $foldername
+     * @param $folderid
+     * @return bool
+     * @throws Exception
+     */
     public function processDownload($type, $foldername, $folderid)
     {
         $system = new AuthHandler();
@@ -266,6 +398,8 @@ class PlayController extends Controller
             }
 
             foreach ($presentations as $presentation) {
+                DownloadPresentation::dispatch(MediasitePresentation::where('mediasite_id', $presentation['Id'])->firstOrFail(), 'user', $path, $foldername);
+                /*
                 try {
                     $presentationid = $presentation['Id'];
 
@@ -315,17 +449,18 @@ class PlayController extends Controller
                         if ($stream['Length'] > 0) {
                             $emptystreams = false;
                             $streamurl = "https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/$filename";
+                            $client = new Client();
                             if (!file_exists($path . $title . '/' . $filename)) {
                                 // download only if it hasn't been done before
                                 if (!is_dir($path . $title)) {
                                     mkdir($path . $title);
                                 }
-                                file_put_contents($path . '/' . $title . '/' . $filename, file_get_contents($streamurl));
+                                $client->request('GET', $streamurl, ['sink' => $path . '/' . $title . '/' . $filename]);
                             }
                             if (filesize($path . '/' . $title . '/' . $filename) != $stream['FileLength']) {
                                 // filesize doesn't match! retrying.
                                 echo 'Filesize does not match. Error!';
-                                file_put_contents($path . '/' . $title . '/' . $filename, file_get_contents($streamurl));
+                                $client->request('GET', $streamurl, ['sink' => $path . '/' . $title . '/' . $filename]);
                             }
                             $metadata['sources'][$stream['StreamType']] = $filename;
                         }
@@ -399,8 +534,10 @@ class PlayController extends Controller
                             }
                         }
                     }
-                } catch (\Exception $e) {
+                } catch (GuzzleException $e) {
+                    dd($e);
                 }
+                */
             }
 
             return true;
@@ -408,54 +545,19 @@ class PlayController extends Controller
         return false;
     }
 
-    // This needs to respect inner folders within courses and user folders.
-
-    public function getSubFolders(MediasiteFolder $folder, $folders, &$subfolders)
-    {
-        foreach ($folders as $f) {
-            if ($f->parent == $folder->id) {
-                $subfolders[] = $f;
-                $this->getSubFolders($f, $folders, $subfolders);
-            }
-        }
-    }
-
-    public function mediasiteCourseDownload()
-    {
-        $folderid = request()->folderid ?? null;
-        $coursename = request()->coursename ?? null;
-
-        $this->processDownload('course', $coursename, $folderid);
-
-        return redirect()->route('home');
-    }
-
-    public function mediasiteRecordingDownload()
-    {
-        $folderid = request()->folderid ?? null;
-        $foldername = request()->foldername ?? null;
-
-        $this->processDownload('various', $foldername, $folderid);
-
-        return redirect()->route('home');
-    }
-
-    public function mediasiteOtherDownload()
-    {
-        $folderid = request()->folderid ?? null;
-        $foldername = request()->foldername ?? null;
-
-        $this->processDownload('other', $foldername, $folderid);
-
-        return redirect()->route('home');
-    }
-
+    /**
+     * @return Application|Factory|View
+     */
     public function upload()
     {
         $data['upload'] = 0;
         return view('video.test', $data);
     }
 
+    /**
+     * @param Request $request
+     * @return false|Application|Factory|View
+     */
     public function store(Request $request)
     {
         if ($request->hasFile('file')) {
