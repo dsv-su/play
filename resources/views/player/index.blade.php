@@ -136,7 +136,7 @@
                     </div>
 
                     <div class="right-controls">
-                        <div>DSVPlay</div>
+                        <div class="dsvplay">DSVPlay</div>
                         <button data-title="[Bitrate: Normal]" class="bitrate" id="bitrate">
                             <svg class="icon icon-sort-amount-asc">
                                 <use href="#icon-sort-amount-asc"></use>

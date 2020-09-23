@@ -10,8 +10,8 @@
 
 html,
 body {
-    margin: 0;
-    height: 100%;
+    margin: 2px;
+    min-height: 100vh;
     background: hsl(0, 0%, 0%);
 }
 
@@ -132,7 +132,6 @@ Container (Videos) settings
     overflow-y: hidden;
     overflow-x: hidden;
     display: flex;
-    flex: 1;
 }
 
 .wrapper:hover .controls {
@@ -252,34 +251,35 @@ Buttons styling
     left: 3px;
     top: 20px;
     transform: translateX(-110%);
-    font-size: 12px;
-    padding: 12px 10px;
+    font-size: 8px;
+    padding: 5px 5px;
     cursor: pointer;
-    border-radius: 3px;
+    border-radius: 1px;
     text-align: center;
     z-index: 2;
 }
 
 .playlist_btn {
     position: fixed;
-    left: 60px;
+    left: 40px;
     top: 20px;
     transform: translateX(-330%);
-    padding: 10px 10px;
+    font-size: 8px;
+    padding: 5px 5px;
     cursor: pointer;
-    border-radius: 3px;
+    border-radius: 1px;
     text-align: center;
     z-index: 2;
 }
 
 .videotitle {
     position: fixed;
-    left: 200px;
+    left: 80px;
     top: 20px;
-    padding: 12px 50px;
+    padding: 5px 10px;
     transition: all 0.2s ease;
     transform: translateX(-420%);
-    font-size: 20px;
+    font-size: 12px;
     z-index: 1;
 }
 
@@ -288,7 +288,7 @@ Buttons styling
     position: absolute;
     left: 50%;
     top: 50%;
-    font-size: 100px;
+    font-size: 30px;
     display: none;
     transform: translate(-50%, -50%);
     color: var(--light);
@@ -300,7 +300,7 @@ Buttons styling
     position: absolute;
     left: 50%;
     top: 50%;
-    font-size: 100px;
+    font-size: 30px;
     display: none;
     transform: translate(-50%, -50%);
     color: var(--light);
@@ -312,7 +312,7 @@ Buttons styling
     position: absolute;
     left: 50%;
     top: 50%;
-    font-size: 100px;
+    font-size: 30px;
     display: none;
     transform: translate(-50%, -50%);
     color: var(--light);
@@ -348,17 +348,17 @@ Buttons styling
 
 .slave1:hover i{
     opacity: 1;
-    display: block;
+
 }
 
 .slave2:hover i{
     opacity: 1;
-    display: block;
+
 }
 
 .slave3:hover i{
     opacity: 1;
-    display: block;
+    
 }
 
 /*--------------------------------------------------------------
@@ -470,9 +470,10 @@ progress::-moz-progress-bar {
     font-family: 'Merriweather Sans', sans-serif;
     color: #fff;
 }
+
 .time {
     font-family: 'Teko', sans-serif;
-    font-size: 24px;
+    font-size: 14px;
 }
 
 .volume-controls {
@@ -614,10 +615,21 @@ input[type=range].volume::-moz-range-thumb {
     display: none;
 }
 
+.dsvplay {
+    display: none;
+}
+
+.bitrate {
+    display: none;
+}
+.subtitles {
+    display: none;
+}
+
 svg {
-    width: 28px;
-    height: 28px;
-    padding-left: 20px;
+    width: 18px;
+    height: 18px;
+    padding-left: 1px;
     fill: #fff;
     stroke: #fff;
     cursor: pointer;
@@ -636,8 +648,8 @@ svg {
     background: hsl(0, 0%, 0%);
     min-width: 65px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    bottom: 40px;
-    z-index: 1;
+    bottom: 25px;
+    z-index: 4;
 }
 
 .dropdown-content button {
@@ -659,8 +671,13 @@ svg {
 CSS Grid layout for wider screens, when browser supports grid:
 --------------------------------------------------------------*/
 @supports (grid-area: auto) {
-    /*@media only screen and (min-width:47em){*/
-    @media screen and (min-width: 20em) {
+    @media only screen and (min-width:47em){
+        html,
+        body {
+            margin: 0;
+            height: 100%;
+        }
+
         .grid {
             position: relative;
             display: grid;
@@ -696,6 +713,77 @@ CSS Grid layout for wider screens, when browser supports grid:
             min-height: 100%;
         }
 
+        .player_close {
+            font-size: 12px;
+            padding: 12px 10px;
+            border-radius: 3px;
+        }
+
+        .playlist_btn {
+            left: 60px;
+            font-size: 14px;
+            padding: 10px 10px;
+            border-radius: 3px;
+        }
+        .videotitle {
+            left: 200px;
+            padding: 12px 50px;
+            transition: all 0.2s ease;
+            transform: translateX(-420%);
+            font-size: 20px;
+        }
+
+        .slave1 i {
+            font-size: 100px;
+        }
+
+        .slave2 i {
+            font-size: 100px;
+        }
+
+        .slave3 i {
+            font-size: 100px;
+        }
+
+        .slave1:hover i{
+            opacity: 1;
+            display: block;
+        }
+
+        .slave2:hover i{
+            opacity: 1;
+            display: block;
+        }
+
+        .slave3:hover i{
+            opacity: 1;
+            display: block;
+        }
+        .dropdown-content {
+            bottom: 40px;
+        }
+
+        .time {
+            font-size: 24px;
+        }
+
+        .dsvplay {
+            display: block;
+        }
+
+        .bitrate {
+            display: block;
+        }
+
+        .subtitles {
+            display: block;
+        }
+
+        svg {
+            width: 28px;
+            height: 28px;
+            padding-left: 20px;
+        }
     }
 
 
