@@ -55,7 +55,7 @@ Wrapper settings
 .wrapper {
     margin-right: auto;
     margin-left:  auto;
-    height:     auto;
+    max-height: 100vh;
     min-height: 100%;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -358,7 +358,7 @@ Buttons styling
 
 .slave3:hover i{
     opacity: 1;
-    
+
 }
 
 /*--------------------------------------------------------------
@@ -682,6 +682,7 @@ CSS Grid layout for wider screens, when browser supports grid:
             position: relative;
             display: grid;
             grid-template-columns: 75% 25%;
+            grid-template-rows: minmax(1fr, 1fr) minmax(1fr, 1fr) minmax(1fr, 1fr);
             grid-template-areas:
                 "master slave1"
                 "master slave2"
