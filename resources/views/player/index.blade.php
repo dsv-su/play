@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" href="{{ asset('./images/favicon.ico') }}">
     <link rel="stylesheet" href="{{ asset('./css/style.css') }}">
-    <script src="https://kit.fontawesome.com/7dcdfcd515.js" crossorigin="anonymous" SameSite="none"></script>
+    <link rel="stylesheet" href="{{asset('./css/fontawesome/css/all.css')}}" >
     <!-- Development version: -->
 
     <title>{{ $video->title }}</title>
@@ -23,60 +23,65 @@
         <button id="playlist_btn" class="transparent_btn playlist_btn"><i class="fas fa-list-ul fa-2x"></i></button>
         <!-- Ease in video-title -->
         <div class="transparent_txt videotitle">{{ $video->title }} från kursen <i>{{ $course->course_name }}</i></div>
+
+           <section class="playlist">
+               <!-- This will be rendered serverside -->
+               <nav>
+                   <ul>
+                       <li><strong>Spellista</strong></li>
+                       @foreach($playlist as $play)
+                           <li>
+                               <a href="{{route('player', $play )}}">{{ $play->title }} [{{$play->length}}]</a>
+                           </li>
+                       @endforeach
+                   </ul>
+               </nav>
+
+           </section>
         <!--Grid -->
         <div class="grid" id="videocontainer">
-
-            <button id="masterswitch" class="switch">Switch Master <i class="fas fa-sync"></i></button>
-
-            <section class="playlist">
-                <!-- This will be rendered serverside -->
-               <nav>
-                    <ul>
-                        <li><strong>Spellista</strong></li>
-                        @foreach($playlist as $play)
-                        <li>
-                            <a href="{{route('player', $play )}}">{{ $play->title }}</a>
-                        </li>
-                        @endforeach
-                    </ul>
-                </nav>
-
-            </section>
-
             <div class="master">
                 <div class="mastervideo">
                     <video id="video1" src="{{asset($video->source1)}}"></video>
                 </div>
 
             </div>
-
+            @if(!$video->source2 == '')
             <div id="slave1" class="slave1">
-                <button id="disable_slave1" class="disable_slave1"><i class="far fa-times-circle fa-2x"></i></button>
+                <i class="fas fa-sync fa-3x"></i>
                 <div class="slavevideo">
                     <video hidden muted  id="video2" src="{{asset($video->source2)}}"></video>
                 </div>
 
             </div>
-
+            @endif
+            @if(!$video->source3 == '')
             <div id="slave2" class="slave2">
-                <button id="disable_slave2" class="disable_slave2"><i class="far fa-times-circle fa-2x"></i></button>
+                <i class="fas fa-sync fa-2x"></i>
                 <div class="slavevideo">
                     <video hidden muted  id="video3" src="{{asset($video->source3)}}"></video>
                 </div>
 
             </div>
-
+            @endif
+            @if(!$video->source4 == '')
             <div id="slave3" class="slave3">
-                <button id="disable_slave3" class="disable_slave3"><i class="far fa-times-circle fa-2x"></i></button>
+                <i class="fas fa-sync fa-2x"></i>
                 <div class="slavevideo">
                     <video hidden muted  id="video4" src="{{asset($video->source4)}}"></video>
                 </div>
 
             </div>
+            @endif
         <!-- end Grid -->
         </div>
-            <div class="controls">
+            <div id="controls" class="controls">
                 <!-- Controlls -->
+
+                <div  class="video-buffer">
+                    <span id="progress-buffer"></span>
+                </div>
+
                 <div class="video-progress">
                     <progress id="progress-bar" value="0" min="0"></progress>
                     <input class="seek" id="seek" value="0" min="0" type="range" step="1">
@@ -132,15 +137,17 @@
 
                     <div class="right-controls">
                         <div>DSVPlay</div>
-                        <button data-title="[Bitrate]" class="bitrate" id="bitrate">
-                            <svg class="icon icon-cogs">
-                                <use href="#icon-cogs"></use>
+                        <button data-title="[Bitrate: Normal]" class="bitrate" id="bitrate">
+                            <svg class="icon icon-sort-amount-asc">
+                                <use href="#icon-sort-amount-asc"></use>
                             </svg>
+
                         </button>
-                        <button data-title="[Undertexter]" class="subtitles" id="subtitles">
-                            <svg class="icon icon-file-text">
-                                <use href="#icon-file-text"></use>
+                        <button data-title="[Undertexter: Av]" class="subtitles" id="subtitles">
+                            <svg class="icon icon-profile">
+                                <use href="#icon-profile"></use>
                             </svg>
+
                         </button>
                         <button data-title="Helskärm (h)" class="fullscreen-button" id="fullscreen-button">
                             <svg>
@@ -199,12 +206,20 @@
             <path d="M16 2c-4.418 0-8.418 1.791-11.313 4.687l-4.686-4.687v12h12l-4.485-4.485c2.172-2.172 5.172-3.515 8.485-3.515 6.627 0 12 5.373 12 12 0 3.584-1.572 6.801-4.063 9l2.646 3c3.322-2.932 5.417-7.221 5.417-12 0-8.837-7.163-16-16-16z"></path>
         </symbol>
 
-        <symbol id="icon-cogs" viewBox="0 0 32 32">
-            <path d="M11.366 22.564l1.291-1.807-1.414-1.414-1.807 1.291c-0.335-0.187-0.694-0.337-1.071-0.444l-0.365-2.19h-2l-0.365 2.19c-0.377 0.107-0.736 0.256-1.071 0.444l-1.807-1.291-1.414 1.414 1.291 1.807c-0.187 0.335-0.337 0.694-0.443 1.071l-2.19 0.365v2l2.19 0.365c0.107 0.377 0.256 0.736 0.444 1.071l-1.291 1.807 1.414 1.414 1.807-1.291c0.335 0.187 0.694 0.337 1.071 0.444l0.365 2.19h2l0.365-2.19c0.377-0.107 0.736-0.256 1.071-0.444l1.807 1.291 1.414-1.414-1.291-1.807c0.187-0.335 0.337-0.694 0.444-1.071l2.19-0.365v-2l-2.19-0.365c-0.107-0.377-0.256-0.736-0.444-1.071zM7 27c-1.105 0-2-0.895-2-2s0.895-2 2-2 2 0.895 2 2-0.895 2-2 2zM32 12v-2l-2.106-0.383c-0.039-0.251-0.088-0.499-0.148-0.743l1.799-1.159-0.765-1.848-2.092 0.452c-0.132-0.216-0.273-0.426-0.422-0.629l1.219-1.761-1.414-1.414-1.761 1.219c-0.203-0.149-0.413-0.29-0.629-0.422l0.452-2.092-1.848-0.765-1.159 1.799c-0.244-0.059-0.492-0.109-0.743-0.148l-0.383-2.106h-2l-0.383 2.106c-0.251 0.039-0.499 0.088-0.743 0.148l-1.159-1.799-1.848 0.765 0.452 2.092c-0.216 0.132-0.426 0.273-0.629 0.422l-1.761-1.219-1.414 1.414 1.219 1.761c-0.149 0.203-0.29 0.413-0.422 0.629l-2.092-0.452-0.765 1.848 1.799 1.159c-0.059 0.244-0.109 0.492-0.148 0.743l-2.106 0.383v2l2.106 0.383c0.039 0.251 0.088 0.499 0.148 0.743l-1.799 1.159 0.765 1.848 2.092-0.452c0.132 0.216 0.273 0.426 0.422 0.629l-1.219 1.761 1.414 1.414 1.761-1.219c0.203 0.149 0.413 0.29 0.629 0.422l-0.452 2.092 1.848 0.765 1.159-1.799c0.244 0.059 0.492 0.109 0.743 0.148l0.383 2.106h2l0.383-2.106c0.251-0.039 0.499-0.088 0.743-0.148l1.159 1.799 1.848-0.765-0.452-2.092c0.216-0.132 0.426-0.273 0.629-0.422l1.761 1.219 1.414-1.414-1.219-1.761c0.149-0.203 0.29-0.413 0.422-0.629l2.092 0.452 0.765-1.848-1.799-1.159c0.059-0.244 0.109-0.492 0.148-0.743l2.106-0.383zM21 15.35c-2.402 0-4.35-1.948-4.35-4.35s1.948-4.35 4.35-4.35 4.35 1.948 4.35 4.35c0 2.402-1.948 4.35-4.35 4.35z"></path>
+        <symbol id="icon-sort-amount-asc" viewBox="0 0 32 32">
+            <path d="M10 24v-24h-4v24h-5l7 7 7-7h-5z"></path>
+            <path d="M14 18h18v4h-18v-4z"></path>
+            <path d="M14 12h14v4h-14v-4z"></path>
+            <path d="M14 6h10v4h-10v-4z"></path>
+            <path d="M14 0h6v4h-6v-4z"></path>
         </symbol>
 
         <symbol id="icon-file-text" viewBox="0 0 32 32">
             <path d="M27 0h-24c-1.65 0-3 1.35-3 3v26c0 1.65 1.35 3 3 3h24c1.65 0 3-1.35 3-3v-26c0-1.65-1.35-3-3-3zM26 28h-22v-24h22v24zM8 14h14v2h-14zM8 18h14v2h-14zM8 22h14v2h-14zM8 10h14v2h-14z"></path>
+        </symbol>
+
+        <symbol id="icon-profile" viewBox="0 0 32 32">
+            <path d="M27 0h-24c-1.65 0-3 1.35-3 3v26c0 1.65 1.35 3 3 3h24c1.65 0 3-1.35 3-3v-26c0-1.65-1.35-3-3-3zM26 28h-22v-24h22v24zM8 18h14v2h-14zM8 22h14v2h-14zM10 9c0-1.657 1.343-3 3-3s3 1.343 3 3c0 1.657-1.343 3-3 3s-3-1.343-3-3zM15 12h-4c-1.65 0-3 0.9-3 2v2h10v-2c0-1.1-1.35-2-3-2z"></path>
         </symbol>
     </defs>
 </svg>
