@@ -7,6 +7,9 @@ use Spatie\Searchable\Searchable;
 use Spatie\Searchable\SearchResult;
 
 
+/**
+ * @mixin IdeHelperCourse
+ */
 class Course extends Model implements Searchable
 {
     protected $fillable = ['course_name', 'semester', 'year'];

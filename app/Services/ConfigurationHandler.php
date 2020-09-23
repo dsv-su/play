@@ -15,6 +15,7 @@ use RecursiveIteratorIterator;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Services\ConfigurationHandler newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Services\ConfigurationHandler query()
  * @mixin \Eloquent
+ * @mixin IdeHelperConfigurationHandler
  */
 class ConfigurationHandler extends Model
 {
