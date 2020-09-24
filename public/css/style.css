@@ -25,6 +25,7 @@ video {
     top: 50%;
     transform: translate(-50%, -50%);
     */
+
     height: 100%;
     width: 100%;
     max-height: 100%;
@@ -135,8 +136,20 @@ Container (Videos) settings
 }
 
 .wrapper:hover .controls {
+    animation-name: controls;
+    animation-duration: 5s;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes controls {
+    from {transform: translateY(0);}
+    to {transform: translateY(0);}
+}
+
+.showcontrols {
     transform: translateY(0);
 }
+
 /*--------------------------------------------------------------
 Border settings fot dev-mode -> remove for production
 --------------------------------------------------------------*/
@@ -200,7 +213,6 @@ Dev Pseudos settings -> To remove in production
     font-size: 12px;
 }
 */
-
 /*--------------------------------------------------------------
 Textbox styling
 ---------------------------------------------------------------*/
@@ -246,19 +258,6 @@ Buttons styling
     cursor: pointer;
 }
 
-.player_close {
-    position: fixed;
-    left: 3px;
-    top: 20px;
-    transform: translateX(-110%);
-    font-size: 8px;
-    padding: 5px 5px;
-    cursor: pointer;
-    border-radius: 1px;
-    text-align: center;
-    z-index: 2;
-}
-
 .playlist_btn {
     position: fixed;
     left: 40px;
@@ -281,6 +280,19 @@ Buttons styling
     transform: translateX(-420%);
     font-size: 12px;
     z-index: 1;
+}
+
+.master i {
+    cursor: pointer;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    font-size: 30px;
+    display: none;
+    transform: translate(-50%, -50%);
+    color: var(--light);
+    opacity: 0.85;
+    z-index: 3;
 }
 
 .slave1 i {
@@ -327,38 +339,56 @@ Buttons styling
     transform: translateX(0);
 }
 
-.wrapper:hover .player_close {
-    background-color: rgba(0,0,0, 0.5);
-    color: #FFF;
-    transform: translateX(0);
+.wrapper:hover .playlist_btn {
+    animation-name: playlist;
+    animation-duration: 6s;
+    animation-timing-function: ease-in-out;
 }
 
-.wrapper:hover .playlist_btn {
-    background-color: rgba(0,0,0, 0.5);
-    color: #FFF;
-    transform: translateX(0);
+@keyframes playlist {
+    from {
+        background-color: rgba(0,0,0, 0.5);
+        color: #FFF;
+        transform: translateX(0);
+    }
+    to {
+        background-color: rgba(0,0,0, 0.5);
+        color: #FFF;
+        transform: translateX(0);
+    }
 }
 
 .wrapper:hover .videotitle {
-    /*background-color: rgba(255,255,255, 0.3);*/
-    background-color: rgba(0,0,0, 0.5);
-    color: #FFF;
-    transform: translateX(0);
+    animation-name: videotitle;
+    animation-duration: 7s;
+    animation-timing-function: ease-in-out;
+}
+@keyframes  videotitle {
+    from {
+        background-color: rgba(0,0,0, 0.5);
+        color: #FFF;
+        transform: translateX(0);
+    }
+    to {
+        background-color: rgba(0,0,0, 0.5);
+        color: #FFF;
+        transform: translateX(0);
+    }
+}
+.master:hover i {
+    opacity: 1;
 }
 
 .slave1:hover i{
     opacity: 1;
-
 }
 
 .slave2:hover i{
     opacity: 1;
-
 }
 
 .slave3:hover i{
     opacity: 1;
-
 }
 
 /*--------------------------------------------------------------
@@ -693,7 +723,7 @@ CSS Grid layout for wider screens, when browser supports grid:
         .master {
             grid-area: master;
             min-height: 100%;
-            /*position: relative;*/
+            position: relative;
         }
 
         .slave1 {
@@ -714,12 +744,6 @@ CSS Grid layout for wider screens, when browser supports grid:
             min-height: 100%;
         }
 
-        .player_close {
-            font-size: 12px;
-            padding: 12px 10px;
-            border-radius: 3px;
-        }
-
         .playlist_btn {
             left: 60px;
             font-size: 14px;
@@ -734,16 +758,40 @@ CSS Grid layout for wider screens, when browser supports grid:
             font-size: 20px;
         }
 
+        .master_switcher {
+            display: none;
+        }
+
+        .master i {
+            font-size: 100px;
+        }
+
+        .slave1_switcher {
+            display:none;
+        }
+
         .slave1 i {
             font-size: 100px;
+        }
+
+        .slave2_switcher {
+            display:none;
         }
 
         .slave2 i {
             font-size: 100px;
         }
 
+        .slave3_switcher {
+            display:none;
+        }
         .slave3 i {
             font-size: 100px;
+        }
+
+        .master:hover i {
+            opacity: 1;
+            display: block;
         }
 
         .slave1:hover i{

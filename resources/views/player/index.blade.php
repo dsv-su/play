@@ -8,7 +8,6 @@
     <link rel="shortcut icon" href="{{ asset('./images/favicon.ico') }}">
     <link rel="stylesheet" href="{{ asset('./css/style.css') }}">
     <link rel="stylesheet" href="{{asset('./css/fontawesome/css/all.css')}}" >
-    <!-- Development version: -->
 
     <title>{{ $video->title }}</title>
 </head>
@@ -17,8 +16,6 @@
 
    <div class="container">
     <!-- Container -->
-        <!-- Player return button -->
-        <button id="player_close" class="transparent_btn player_close"><i class="far fa-times-circle fa-2x"></i></button>
         <!-- Playlist toggle -->
         <button id="playlist_btn" class="transparent_btn playlist_btn"><i class="fas fa-list-ul fa-2x"></i></button>
         <!-- Ease in video-title -->
@@ -40,15 +37,15 @@
            </section>
         <!--Grid -->
         <div class="grid" id="videocontainer">
-            <div class="master">
+            <div id="master" class="master">
+                <div id="master_switcher" class="master_switcher"><i class="fas fa-sync fa-3x"></i></div>
                 <div class="mastervideo">
                     <video id="video1" src="{{asset($video->source1)}}"></video>
                 </div>
-
             </div>
             @if(!$video->source2 == '')
             <div id="slave1" class="slave1">
-                <i class="fas fa-sync fa-3x"></i>
+                <div id="slave1_switcher" class="slave1_switcher"><i class="fas fa-sync fa-3x"></i></div>
                 <div class="slavevideo">
                     <video hidden muted  id="video2" src="{{asset($video->source2)}}"></video>
                 </div>
@@ -57,7 +54,7 @@
             @endif
             @if(!$video->source3 == '')
             <div id="slave2" class="slave2">
-                <i class="fas fa-sync fa-2x"></i>
+                <div id="slave2_switcher" class="slave2_switcher"><i class="fas fa-sync fa-2x"></i></div>
                 <div class="slavevideo">
                     <video hidden muted  id="video3" src="{{asset($video->source3)}}"></video>
                 </div>
@@ -66,7 +63,7 @@
             @endif
             @if(!$video->source4 == '')
             <div id="slave3" class="slave3">
-                <i class="fas fa-sync fa-2x"></i>
+                <div id="slave3_switcher" class="slave3_switcher"><i class="fas fa-sync fa-2x"></i></div>
                 <div class="slavevideo">
                     <video hidden muted  id="video4" src="{{asset($video->source4)}}"></video>
                 </div>
@@ -223,7 +220,6 @@
         </symbol>
     </defs>
 </svg>
-
 
 <script src="{{asset('./js/player.js')}}"></script>
 </body>

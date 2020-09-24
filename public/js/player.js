@@ -5,10 +5,13 @@ Player for DSV Play v. 1.0
 
 // Layout and toggle Playlist
 const playlist = document.getElementsByClassName('playlist')[0];
-const closebtn = document.getElementById('player_close');
+
+// Controls
+const controls = document.getElementById('controls');
 
 // Videostreams
 var video = document.getElementById('video1'); //Main video stream
+
 // Play buttons
 var playpausebtn = document.getElementById('play-pause');
 const playbackIcons = document.querySelectorAll('.playback-icons use');
@@ -27,7 +30,6 @@ var ff5btn = document.getElementById('ff5');
 var ff6btn = document.getElementById('ff6');
 
 // Streams
-
 const timeElapsed = document.getElementById('time-elapsed');
 const duration = document.getElementById('duration');
 
@@ -47,7 +49,6 @@ const volume = document.getElementById('volume');
 
 // Grid layout
 var grid = document.querySelector('.grid');
-
 
 // Playlist
 document.getElementsByClassName('playlist_btn')[0].onclick =
@@ -85,6 +86,13 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
 var vstreams = 1;
 var gridslave1 = gridslave2 = gridslave3 = 0;
 
+// Master
+var gridmaster = 1;
+var master = document.getElementById('master');
+// Switcher buttons
+const master_switcher = document.getElementById('master_switcher');
+var master_switchbtn = document.getElementById('master');
+
 // Integrated platform version
 /*var newsource_video1 = document.getElementById('video1');*/
 var newsource_video2 = document.getElementById('video2');
@@ -107,6 +115,9 @@ if(newsource_video2)
         gridslave1 = 1;
         var slave1 = document.getElementById('slave1');
         var slave1_switchbtn = document.getElementById('slave1');
+        // Activate Switcher icon
+        var slave1_switcher = document.getElementById('slave1_switcher');
+        slave1_switcher.classList.toggle('slave1_switcher');
     }
     else {
         document.getElementById("video2").remove();
@@ -123,6 +134,9 @@ if(newsource_video3)
         gridslave2 = 1;
         var slave2 = document.getElementById('slave2');
         var slave2_switchbtn = document.getElementById('slave2');
+        // Activate Switcher icon
+        var slave2_switcher = document.getElementById('slave2_switcher');
+        slave2_switcher.classList.toggle('slave2_switcher');
     }
     else {
         document.getElementById("video3").remove();
@@ -138,7 +152,9 @@ if(newsource_video4){
         gridslave3 = 1;
         var slave3 = document.getElementById('slave3');
         var slave3_switchbtn = document.getElementById('slave3');
-
+        // Activate Switcher icon
+        var slave3_switcher = document.getElementById('slave3_switcher');
+        slave3_switcher.classList.toggle('slave3_switcher');
     }
     else {
         document.getElementById("video4").remove();
@@ -155,6 +171,7 @@ var medias = Array.prototype.slice.apply(document.querySelectorAll('audio,video'
 
 //Switch master
 var grid_pointer = 0;
+var master_click = 0;
 var slave1_click = 0;
 var slave2_click = 0;
 var slave3_click = 0;
@@ -269,83 +286,199 @@ function SwitchMaster() {
     if (vstreams === 2 && slave1_click === 1) {
         if(grid_pointer === 2) grid_pointer = 0;
         grid.style.gridTemplateAreas = grid_setup2[grid_pointer];
-
+        if(master_click) slave1_click = 0;
     }
     // 3 streams
     if (vstreams === 3 && slave1_click === 1) {
         if(grid_pointer === 2) grid_pointer = 0;
         grid.style.gridTemplateAreas = grid_setup3[grid_pointer];
+        if(master_click) slave1_click = 0;
     }
     if (vstreams === 3 && slave2_click === 1) {
         if(grid_pointer === 4) grid_pointer = 0;
         grid.style.gridTemplateAreas = grid_setup3[grid_pointer];
+        if(master_click) slave2_click = 0;
     }
     if (vstreams === 3 && slave3_click === 1) {
         if(grid_pointer === 4) grid_pointer = 0;
         grid.style.gridTemplateAreas = grid_setup3[grid_pointer];
+        if(master_click) slave1_click = 0;
     }
     // 4 streams
     if (vstreams === 4 && slave1_click === 1) {
         if(grid_pointer === 2) grid_pointer = 0;
         grid.style.gridTemplateAreas = grid_setup4[grid_pointer];
+        if(master_click) slave1_click = 0;
     }
     if (vstreams === 4 && slave2_click === 1) {
         if(grid_pointer === 4) grid_pointer = 0;
         grid.style.gridTemplateAreas = grid_setup4[grid_pointer];
+        if(master_click) slave2_click = 0;
     }
     if (vstreams === 4 && slave3_click === 1) {
         if(grid_pointer === 6) grid_pointer = 0;
         grid.style.gridTemplateAreas = grid_setup4[grid_pointer];
+        if(master_click) slave3_click = 0;
+    }
+
+}
+//OnClick primary grid
+master_switchbtn.onclick = function () {
+    if(slave1_click === 0 && slave2_click === 0 && slave3_click === 0) {
+
+    } else {
+        if(slave1_click === 1 ) {
+                if(slave2_click === 1) {
+                    slave2_switcher.classList.toggle('slave2_switcher');
+                    slave2_click = 0;
+                    grid_pointer = 0;
+                }
+                if(slave3_click === 1) {
+                    slave3_switcher.classList.toggle('slave3_switcher');
+                    slave3_click = 0;
+                    grid_pointer = 0;
+                }
+                grid_pointer++;
+                slave1_click = 1;
+                slave1_switcher.classList.toggle('slave1_switcher');
+                master_switcher.classList.toggle('master_switcher');
+        }
+        if(slave2_click === 1 ) {
+                if(slave1_click === 1) {
+                    slave1_switcher.classList.toggle('slave1_switcher');
+                    slave1_click = 0;
+                    grid_pointer = 0;
+                }
+                if(slave3_click === 1) {
+                    slave3_switcher.classList.toggle('slave3_switcher');
+                    slave3_click = 0;
+                    grid_pointer = 0;
+                }
+                grid_pointer = grid_pointer + 2;
+                slave2_click = 1;
+                slave2_switcher.classList.toggle('slave2_switcher');
+                master_switcher.classList.toggle('master_switcher');
+        }
+        if(slave3_click === 1) {
+                if(slave1_click === 1) {
+                    slave1_switcher.classList.toggle('slave1_switcher');
+                    slave1_click = 0;
+                    grid_pointer = 0;
+                }
+                if(slave2_click === 1) {
+                    slave2_switcher.classList.toggle('slave2_switcher');
+                    slave2_click = 0;
+                    grid_pointer = 0;
+                }
+                grid_pointer = grid_pointer + 3;
+                slave3_click = 1;
+                slave3_switcher.classList.toggle('slave3_switcher');
+                master_switcher.classList.toggle('master_switcher');
+        }
+        master_click = 1;
+        SwitchMaster();
     }
 
 }
 
-// Onclick secondary grids
+// OnClick secondary grids
 if(gridslave1 === 1)
 {
     slave1_switchbtn.onclick = function () {
-        if(slave2_click === 1 || slave3_click === 1) {
-            slave2_click = slave3_click = 0;
-            grid_pointer = 0;
+        if(slave1_click === 1) {
+
+        } else
+        {
+            if(slave2_click === 1) {
+                slave2_switcher.classList.toggle('slave2_switcher');
+                master_switcher.classList.toggle('master_switcher');
+                slave2_click = 0;
+                grid_pointer = 0;
+            }
+            if(slave3_click === 1) {
+                slave3_switcher.classList.toggle('slave3_switcher');
+                master_switcher.classList.toggle('master_switcher');
+                slave3_click = 0;
+                grid_pointer = 0;
+            }
+
+            grid_pointer++;
+            slave1_click = 1;
+            master_click = 0;
+            slave1_switcher.classList.toggle('slave1_switcher');
+            master_switcher.classList.toggle('master_switcher');
+            SwitchMaster();
         }
-        grid_pointer++;
-        slave1_click = 1;
-        SwitchMaster();
+
     }
 }
 if(gridslave2 === 1)
 {
     slave2_switchbtn.onclick = function () {
-        if(slave1_click === 1 || slave3_click === 1) {
-            slave1_click = slave3_click = 0;
-            grid_pointer = 0;
+        if(slave2_click === 1 ) {
+
+        } else {
+            if(slave1_click === 1) {
+                slave1_switcher.classList.toggle('slave1_switcher');
+                master_switcher.classList.toggle('master_switcher');
+                slave1_click = 0;
+                grid_pointer = 0;
+            }
+            if(slave3_click === 1) {
+                slave3_switcher.classList.toggle('slave3_switcher');
+                master_switcher.classList.toggle('master_switcher');
+                slave3_click = 0;
+                grid_pointer = 0;
+            }
+
+            grid_pointer = grid_pointer + 2;
+            slave2_click = 1;
+            master_click = 0;
+            slave2_switcher.classList.toggle('slave2_switcher');
+            master_switcher.classList.toggle('master_switcher');
+            SwitchMaster();
         }
-        grid_pointer = grid_pointer + 2;
-        slave2_click = 1;
-        SwitchMaster();
+
     }
 }
 
 if(gridslave3 === 1)
 {
     slave3_switchbtn.onclick = function () {
-        if (vstreams === 3) {
-            if (slave1_click === 1) {
-                slave1_click = 0;
-                grid_pointer = 0;
-            }
-            grid_pointer = grid_pointer + 2;
-            slave3_click = 1;
-            SwitchMaster();
+        if(slave3_click === 1) {
+
         } else {
-            if(slave1_click === 1 || slave2_click === 1) {
-                slave1_click = slave2_click = 0;
-                grid_pointer = 0;
+            if (vstreams === 3) {
+                if (slave1_click === 1) {
+                    slave1_click = 0;
+                    grid_pointer = 0;
+                }
+                grid_pointer = grid_pointer + 2;
+                slave3_click = 1;
+                SwitchMaster();
+            } else {
+                if(slave1_click === 1) {
+                    slave1_switcher.classList.toggle('slave1_switcher');
+                    master_switcher.classList.toggle('master_switcher');
+                    slave1_click = 0;
+                    grid_pointer = 0;
+                }
+                if(slave2_click === 1) {
+                    slave2_switcher.classList.toggle('slave2_switcher');
+                    master_switcher.classList.toggle('master_switcher');
+                    slave2_click = 0;
+                    grid_pointer = 0;
+                }
+                grid_pointer = grid_pointer + 3;
+                slave3_click = 1;
+                master_click = 0;
+                // Toggle switcher icon
+                master_switcher.classList.toggle('master_switcher');
+                slave3_switcher.classList.toggle('slave3_switcher');
+                SwitchMaster();
             }
-            grid_pointer = grid_pointer + 3;
-            slave3_click = 1;
-            SwitchMaster();
         }
+
     }
 }
 //Videoplayer functions
@@ -612,10 +745,6 @@ ff6btn.onclick = function (M) {
     FastForward();
 }
 
-closebtn.onclick = function () {
-    location.replace("/")
-}
-
 // AddEventlistners
 medias.forEach(function(media) {
 	media.addEventListener('play', function(event) {
@@ -672,9 +801,10 @@ function keyboardShortcuts(event) {
     }
 }
 
+
 video.addEventListener('play', updatePlayButton);
 video.addEventListener('pause', updatePlayButton);
-video.addEventListener('click', PlayPause);
+/*video.addEventListener('click', PlayPause);*/
 document.addEventListener('keyup', keyboardShortcuts);
 
 
