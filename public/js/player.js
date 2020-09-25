@@ -266,20 +266,20 @@ function MasterGrid()
 function MasterSlaveGrid(x)
 {
     //Two streams grid
-	grid.style.gridTemplateColumns = 'repeat(auto-fill, 70% 30%)';
+	//grid.style.gridTemplateColumns = 'repeat(auto-fill, 70% 30%)';
 	grid.style.gridTemplateAreas = grid_setup2[x];
 }
 
 function MasterSlave12Grid(x)
 {
     //Three streams grid
-	grid.style.gridTemplateColumns = 'repeat(auto-fill, 70% 30%)';
+	//grid.style.gridTemplateColumns = 'repeat(auto-fill, 70% 30%)';
 	grid.style.gridTemplateAreas = grid_setup3[x];
 }
 function MasterSlave3Grid(x)
 {
     //Four streams grid
-    grid.style.gridTemplateColumns = 'repeat(auto-fill, 70% 30%)';
+    //grid.style.gridTemplateColumns = 'repeat(auto-fill, 70% 30%)';
     grid.style.gridTemplateAreas = grid_setup4[x];
 }
 
