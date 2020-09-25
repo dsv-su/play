@@ -11,7 +11,7 @@ const controls = document.getElementById('controls');
 
 // Videostreams
 var video = document.getElementById('video1'); //Main video stream
-
+video.load();
 // Play buttons
 var playpausebtn = document.getElementById('play-pause');
 const playbackIcons = document.querySelectorAll('.playback-icons use');
@@ -110,6 +110,7 @@ if(newsource_video2)
     if(!newsource_video2.getAttribute('src') == "")
     {
         var video2 = document.getElementById('video2');
+        video2.load();
         video2.removeAttribute('hidden');
         vstreams++;
         gridslave1 = 1;
@@ -129,6 +130,7 @@ if(newsource_video3)
 {
     if( !newsource_video3.getAttribute('src') == ""){
         var video3 = document.getElementById('video3');
+        video3.load();
         video3.removeAttribute('hidden');
         vstreams++;
         gridslave2 = 1;
@@ -147,6 +149,7 @@ if(newsource_video3)
 if(newsource_video4){
     if(  !newsource_video4.getAttribute('src') == ""){
         var video4 = document.getElementById('video4');
+        video4.load();
         video4.removeAttribute('hidden');
         vstreams++;
         gridslave3 = 1;
@@ -263,20 +266,20 @@ function MasterGrid()
 function MasterSlaveGrid(x)
 {
     //Two streams grid
-	grid.style.gridTemplateColumns = '70% 30%';
+	grid.style.gridTemplateColumns = 'repeat(auto-fill, 70% 30%)';
 	grid.style.gridTemplateAreas = grid_setup2[x];
 }
 
 function MasterSlave12Grid(x)
 {
     //Three streams grid
-	grid.style.gridTemplateColumns = '70% 30%';
+	grid.style.gridTemplateColumns = 'repeat(auto-fill, 70% 30%)';
 	grid.style.gridTemplateAreas = grid_setup3[x];
 }
 function MasterSlave3Grid(x)
 {
     //Four streams grid
-    grid.style.gridTemplateColumns = '70% 30%';
+    grid.style.gridTemplateColumns = 'repeat(auto-fill, 70% 30%)';
     grid.style.gridTemplateAreas = grid_setup4[x];
 }
 
@@ -781,16 +784,6 @@ function keyboardShortcuts(event) {
     switch(key) {
         case 's':
             PlayPause();
-            /*
-            if (video.paused) {
-                showControls();
-            } else {
-                setTimeout(() => {
-                    hideControls();
-                }, 2000);
-            }
-
-             */
             break;
         case 'l':
             toggleMute();
@@ -800,8 +793,23 @@ function keyboardShortcuts(event) {
             break;
     }
 }
+var timeout;
 
+function mouseMovement() {
+    showControls();
+    timeout = setTimeout(hideControls, 5000);
 
+}
+
+function showControls() {
+   controls.style.transform = 'translateY(0)';
+}
+
+function hideControls() {
+    controls.style.transform = 'translateY(100%) translateY(-5px)';
+}
+
+videoContainer.addEventListener('mousemove', mouseMovement);
 video.addEventListener('play', updatePlayButton);
 video.addEventListener('pause', updatePlayButton);
 /*video.addEventListener('click', PlayPause);*/

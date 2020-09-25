@@ -10,7 +10,7 @@
 
 html,
 body {
-    margin: 2px;
+    margin: 0;
     min-height: 100vh;
     background: hsl(0, 0%, 0%);
 }
@@ -25,7 +25,6 @@ video {
     top: 50%;
     transform: translate(-50%, -50%);
     */
-
     height: 100%;
     width: 100%;
     max-height: 100%;
@@ -135,21 +134,17 @@ Container (Videos) settings
     display: flex;
 }
 
-.wrapper:hover .controls {
-    animation-name: controls;
-    animation-duration: 5s;
-    animation-timing-function: ease-in-out;
+.grid {
+    position: relative;
+    display: grid;
+    grid-template-columns:  4fr 1fr;
+    grid-template-rows: minmax(1fr, 1fr) minmax(1fr, 1fr) minmax(1fr, 1fr);
+    grid-template-areas:
+                "master slave1"
+                "master slave2"
+                "master slave3";
+    grid-gap: 20px;
 }
-
-@keyframes controls {
-    from {transform: translateY(0);}
-    to {transform: translateY(0);}
-}
-
-.showcontrols {
-    transform: translateY(0);
-}
-
 /*--------------------------------------------------------------
 Border settings fot dev-mode -> remove for production
 --------------------------------------------------------------*/
@@ -341,7 +336,7 @@ Buttons styling
 
 .wrapper:hover .playlist_btn {
     animation-name: playlist;
-    animation-duration: 6s;
+    animation-duration: 12s;
     animation-timing-function: ease-in-out;
 }
 
@@ -360,7 +355,7 @@ Buttons styling
 
 .wrapper:hover .videotitle {
     animation-name: videotitle;
-    animation-duration: 7s;
+    animation-duration: 12s;
     animation-timing-function: ease-in-out;
 }
 @keyframes  videotitle {
@@ -711,13 +706,13 @@ CSS Grid layout for wider screens, when browser supports grid:
         .grid {
             position: relative;
             display: grid;
-            grid-template-columns: 75% 25%;
+            grid-template-columns: repeat(auto-fill, 75% 25%);
             grid-template-rows: minmax(1fr, 1fr) minmax(1fr, 1fr) minmax(1fr, 1fr);
             grid-template-areas:
                 "master slave1"
                 "master slave2"
                 "master slave3";
-            grid-gap: 10px;
+            grid-gap: 20px;
         }
 
         .master {
