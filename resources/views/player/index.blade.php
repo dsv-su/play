@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" href="{{ asset('./images/favicon.ico') }}">
     <link rel="stylesheet" href="{{ asset('./css/reset.css') }}">
-    <link rel="stylesheet" href="{{ asset('./css/style2.css') }}">
+    <link rel="stylesheet" href="{{ asset('./css/style.css') }}">
     <link rel="stylesheet" href="{{asset('./css/fontawesome/css/all.css')}}" >
 
     <title>{{ $video->title }}</title>
@@ -221,6 +221,6 @@
     </defs>
 </svg>
 
-<script src="{{asset('./js/player2.js')}}" defer></script>
+<script src="{{asset('./js/player.js')}}" defer></script>
 </body>
 </html>
