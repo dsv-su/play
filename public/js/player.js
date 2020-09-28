@@ -15,7 +15,7 @@ video.load();
 // Play buttons
 var playpausebtn = document.getElementById('play-pause');
 const playbackIcons = document.querySelectorAll('.playback-icons use');
-const videoContainer = document.getElementById('videocontainer');
+const videoContainer = document.getElementById('wrapper');
 var fullscreenbtn = document.getElementById('fullscreen-button');
 const fullscreenIcons = fullscreenbtn.querySelectorAll('use');
 
