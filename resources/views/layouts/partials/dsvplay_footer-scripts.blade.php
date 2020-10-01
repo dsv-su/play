@@ -1,3 +1,10 @@
+<script>
+    function changeOutput(){
+        filter = document.getElementById('filtrera');
+        filter.classList.toggle('filtrera');
+    }
+
+</script>
 <!-- Navbar -->
 <script src="{{ asset('./js/jquery-resizer.js') }}"></script>
 <script>
@@ -17,6 +24,25 @@
 <script src="{{ asset('./js/typeahead/typeahead.bundle.js') }}"></script>
 <script>
     jQuery(document).ready(function($) {
+        //Radio button toggle
+        $(".filter").click(function(event) {
+            var radio_selector = 'input[type="radio"]',
+                $radio;
+
+            if (!$(event.target).is(radio_selector)) {
+                $radio = $(this).find(radio_selector);
+
+                event.stopImmediatePropagation();
+
+                event.preventDefault();
+                $radio.prop('checked', !$radio.is(':checked'));
+            }
+        });
+        $(".filter-radio").on('change click', function(event) {
+
+            this.checked = !this.checked;
+        })
+
         // Set the Options for "Bloodhound" suggestion engine
         var engine = new Bloodhound({
             remote: {

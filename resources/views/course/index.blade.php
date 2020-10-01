@@ -1,7 +1,7 @@
 @extends('layouts.dsvplay')
 @section('content')
 
-<div class="wrapper">
+    <div class="wrapper">
         <!-- Top section -->
         <section class="top_section">
             <!-- Navigation bar -->
@@ -553,220 +553,95 @@
 
                 <div class="con-tooltip">
 
-                        <form class="search-form"  action="{{ route('search') }}" method="POST" >
+                    <form class="search-form"  action="{{ route('search') }}" method="POST" >
                         @csrf
-                            <!--
-                            <div class="tooltip">
-                                <p>Filtrera din sökning</p>
+                        <div class="tooltip">
+                            <p>Filtrera din sökning</p>
+                        </div>
+
+                        <div class="searchtext">
+                            <input type="text" name="query" placeholder="Sök" class="search-input" autocomplete="off">
+                        </div>
+
+                        <button type="submit" class="search-button">
+                            <i class="fas fa-search"></i>
+                        </button>
+
+
+
+                        <div class="search-option">
+                            <div>
+                                <input name="type" type="radio" value="type-lectures" id="type-lectures">
+                                <label for="type-lectures">
+                                    <i class="far fa-user"></i>
+                                    <span>Föreläsare</span>
+                                </label>
+
                             </div>
-                            -->
-                            <div class="searchtext">
-                                <input type="text" id="query" name="query" placeholder="Sök" onfocus="changeOutput()" class="search-input" autocomplete="off">
+
+                            <div>
+                                <input name="type" type="radio" value="type-category" id="type-category">
+                                <label for="type-category">
+                                    <i class="fas fa-broadcast-tower"></i>
+                                    <span>Kategori</span>
+                                </label>
                             </div>
-
-                            <button type="submit" class="search-button">
-                                <i class="fas fa-search"></i>
-                            </button>
-
-
-
-                    <div class="search-option">
-                        <div id="filtrera" class="filtrera" style="color: blue">Filtrera din sökning </div>
-                        <div class="filter">
-                            <input name="type" type="radio" value="type-lectures" id="type-lectures" class="filter-radio">
-                            <label for="type-lectures">
-                                <i class="far fa-user"></i>
-                                <span>Föreläsare</span>
-                            </label>
-
+                            <div>
+                                <input name="type" type="radio" value="type-course" id="type-course">
+                                <label for="type-cource">
+                                    <i class="fas fa-book-open"></i>
+                                    <span>Kurser</span>
+                                </label>
+                            </div>
+                            <div>
+                                <input name="type" type="radio" value="type-latest" id="type-latest">
+                                <label for="type-latest">
+                                    <i class="far fa-clock"></i>
+                                    <span>Senaste</span>
+                                </label>
+                            </div>
                         </div>
 
-                        <div class="filter">
-                            <input name="type" type="radio" value="type-category" id="type-category" class="filter-radio">
-                            <label for="type-category">
-                                <i class="fas fa-broadcast-tower"></i>
-                                <span>Kategori</span>
-                            </label>
-                        </div>
-                        <div class="filter">
-                            <input name="type" type="radio" value="type-course" id="type-course" class="filter-radio">
-                            <label for="type-cource">
-                                <i class="fas fa-book-open"></i>
-                                <span>Kurser</span>
-                            </label>
-                        </div>
-                        <div class="filter">
-                            <input name="type" type="radio" value="type-latest" id="type-latest" class="filter-radio">
-                            <label for="type-latest">
-                                <i class="far fa-clock"></i>
-                                <span>Senaste</span>
-                            </label>
-                        </div>
-                    </div>
-
-                </form>
+                    </form>
 
                 </div>
                 <!-- -->
             </div>
 
         </section> <!--end Top section -->
-        <!-- Search result -->
+
         <section class="content_section">
-            @if ($search == 1)
-                <div class="playlist_one">
-                    <p class="playlist_title">{{ $searchResults->count() }} resultat för "{{ request('query') }}"</p>
-                    @foreach($searchResults->groupByType() as $type => $modelSearchResults)
-                        <p>under <strong>{{ ucfirst($type) }}</strong></p>
-                    <br>
-                    <div class="videos">
-                            @foreach($modelSearchResults as $searchResult)
-                                <div class="video" style="background-image: url({{ asset($searchResult->searchable->image)}})">
-                                    <a href="{{ $searchResult->url }}">
-                                    <div class="title">{{ $searchResult->title }}</div>
-                                    <i class="fas fa-play-circle"></i>
-                                    <p> {{$searchResult->searchable->length}} </p>
-                                    <div class="footer">
-                                        Title: {{$searchResult->title}}
-                                    </div>
-                                    </a>
-                                </div>
-                            @endforeach
-                        @endforeach
-                    </div>
-                </div>
-            @elseif ($search == 2)
-                @if($searchResults->count() != 0)
-                <div class="playlist_one">
-                    <p class="playlist_title">{{ $searchResults->count() }} resultat för "{{ request('query') }}"</p>
-                    @foreach($searchResults->groupByType() as $type => $modelSearchResults)
-                        <p class="playlist_title">under <strong>{{ ucfirst($type) }}</strong></p>
-                        <br>
-                        <div class="videos">
-                            @foreach($modelSearchResults as $searchResult)
-                                <div class="video" style="background-image: url({{ asset($searchResult->searchable->image)}})">
-                                    <a href="{{ $searchResult->url }}">
-                                    <div class="title">{{ $searchResult->title }}</div>
-                                    <i class="fas fa-play-circle"></i>
-                                    <p> {{$searchResult->searchable->length}} </p>
-                                    <div class="footer">
-                                        Title: {{$searchResult->title}}
-                                    </div>
-                                    </a>
-                                </div>
-                            @endforeach
-                    @endforeach
-                        </div>
-                </div>
-                <div class="space"></div>
-                <div class="playlist_two">
-                @else
-                <div class="playlist_one">
-                @endif
-                    @if($searchCategoryRelations->count() !=0)
-                    <p class="playlist_title">{{ $category_videos->count() }} resultat för "{{ request('query') }}"</p>
-                    @foreach($searchCategoryRelations->groupByType() as $type => $modelSearchResults)
-                        <p class="playlist_title">under <strong>{{ ucfirst($type) }}</strong></p>
-                        <br>
-                        <div class="videos">
-                            @foreach($category_videos as $searchResult)
-                                <div class="video" style="background-image: url({{ asset($searchResult->image)}})">
-                                    <a href="{{ route('player', $searchResult->id) }}">
-                                    <div class="title">{{ $searchResult->title }}</div>
-                                    <i class="fas fa-play-circle"></i>
-                                    <p> {{$searchResult->length}} </p>
-                                    <div class="footer">
-                                        Title: {{$searchResult->title}}
-                                    </div>
-                                    </a>
-                                </div>
-                            @endforeach
-                    @endforeach
-                        </div>
-                    @endif
-                </div>
 
-                @if($searchResults->count() != 0 && $searchCategoryRelations->count() !=0)
-                    <div class="spacelist"></div>
-                    <div class="playlist_three">
-                @elseif($searchResults->count() != 0 || $searchCategoryRelations->count() !=0)
-                    <div class="space"></div>
-                    <div class="playlist_two">
-                @else
-                    <div class="playlist_one">
-                @endif
-                        <p class="playlist_title">{{ $course_videos->count() }} resultat för "{{ request('query') }}"</p>
-                        @foreach($searchCourseRelations->groupByType() as $type => $modelSearchResults)
-                            <p class="playlist_title">under <strong>{{ ucfirst($type) }}</strong></p>
-                            <br>
-                            <div class="videos">
 
-                                @foreach($course_videos as $searchResult)
-                                    <div class="video" style="background-image: url({{ asset($searchResult->image)}})">
-                                        <a href="{{ route('player', $searchResult->id) }}">
-                                        <div class="title">{{ $searchResult->title }}</div>
-                                        <i class="fas fa-play-circle"></i>
-                                        <p> {{$searchResult->length}} </p>
-                                        <div class="footer">
-                                            Title: {{$searchResult->title}}
-                                        </div>
-                                        </a>
-                                    </div>
-
-                                @endforeach
-                        @endforeach
-
-                            </div>
-                    </div>
-
-            @elseif ($search == 3)
-                <div class="playlist_one">
-                    <p class="playlist_title">{{ $searchResults->count() }} resultat för "{{ request('query') }}"</p>
-                    <br>
-                    <div class="videos">
-
-                        @foreach($searchResults as $searchResult)
-                                <div class="video" style="background-image: url({{ asset($searchResult->image)}})">
-                                    <a href="{{ route('player', $searchResult->id) }}">
-                                    <div class="title">{{ $searchResult->title }}</div>
-                                    <i class="fas fa-play-circle"></i>
-                                    <p> {{$searchResult->length}} </p>
-                                    <div class="footer">
-                                        Title: {{$searchResult->title}}
-                                    </div>
-                                    </a>
-                                </div>
-                        @endforeach
-            @else
-             <!-- Show latest -->
-                <div class="playlist_one">
-                    <h4 class="playlist_title">Senast uppladdade</h4>
-                    <br>
-                    <div class="videos">
-                        @foreach ($latest as $video)
+        <!-- Show latest -->
+            <div class="playlist_one">
+                <h4 class="playlist_title"><span class="count">{{$Results->count()}}</span> videos från <strong>{{$course->course_name}} {{$course->semester}} {{$course->year}}</strong></h4>
+                <br>
+                <div class="videos">
+                    @foreach ($Results as $video)
                         <div class="video" style="background-image: url({{ asset($video->image) }})">
                             <a href="{{ route('player', ['video' => $video]) }}">
-                            <div class="title">{{ $video->title }}</div>
-                            <i class="fas fa-play-circle"></i>
-                            <p> {{$video->length}} </p>
+                                <div class="title">{{ $video->title }}</div>
+                                <i class="fas fa-play-circle"></i>
+                                <p> {{$video->length}} </p>
                             </a>
 
                             <div class="footer">
                                 <a href="/course/{{$video->course->id}}">
-                                Kurs: {{$video->course->course_name}} {{$video->course->semester}} {{$video->course->year}}
-                                <br>
-                                Kategori: {{$video->category->category_name}}
+                                    Kurs: {{$video->course->course_name}} {{$video->course->semester}} {{$video->course->year}}
+                                    <br>
+                                    Kategori: {{$video->category->category_name}}
                                 </a>
                             </div>
 
                         </div>
 
-                        @endforeach
-                    </div>
-
+                    @endforeach
                 </div>
-            @endif
+
+            </div>
+
         </section> <!-- End content -->
-</div> <!-- end Wrapper -->
+    </div> <!-- end Wrapper -->
 
 @endsection

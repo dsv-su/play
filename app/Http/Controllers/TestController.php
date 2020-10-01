@@ -34,6 +34,30 @@ class TestController extends Controller
         //return Video::search($request->get('query'))->with('course')->get();
     }
 
+    public function show(Course $course)
+    {
+        /*********************************
+         * Check if enviroment is local or remote
+         */
+        if(app()->environment('local'))
+        {
+            $play_user = 'Förnamn Efternamn';
+        }
+        else {
+
+            $play_user = $_SERVER['displayName'];
+        }
+        /*********************************
+         * Get all categories for nav-menu
+         */
+        $categories = Category::all();
+        $course = $course;
+        $Results = Video::where('course_id', $course->id)->get();
+        // Searchtype
+
+        return view('course.index', compact('Results','categories', 'course', 'play_user'));
+    }
+
     public function daisy()
     {
         $data['courses'] = Course::all();
@@ -43,7 +67,11 @@ class TestController extends Controller
 
     public function daisyLoadCourses()
     {
+        /***********************************
         //Loads courses from Daisy API -> db
+         * from 2010 - 2020
+         * ********************************/
+
         $endpoints = array(
             'courseSegment?semester=20201',
             'courseSegment?semester=20202',
@@ -226,7 +254,7 @@ class TestController extends Controller
                 foreach ($subject as $item)
                 {
                     $searchResults = Video::where('category_id', $item->id)->get();
-                    // Searchtype 2
+                    // Searchtype
                     $search = 3;
                     return view('home.index', compact('searchResults','categories', 'search', 'play_user'));
                 }
@@ -244,7 +272,7 @@ class TestController extends Controller
             $search = (new Search())
                 ->registerModel(Course::class, function(ModelSearchAspect $modelSearchAspect) {
                     $modelSearchAspect
-                        ->addSearchableAttribute('course_name'); // return results for partial matches on categories
+                        ->addSearchableAttribute('course_name'); // return results for partial matches on courses
                 })
                 ->perform($searchString);
             foreach ($search as $subject)
@@ -252,7 +280,7 @@ class TestController extends Controller
                 foreach ($subject as $item)
                 {
                     $searchResults = Video::where('course_id', $item->id)->get();
-                    // Searchtype 2
+                    // Searchtype
                     $search = 3;
                     return view('home.index', compact('searchResults','categories', 'search', 'play_user'));
                 }
@@ -283,7 +311,7 @@ class TestController extends Controller
 
         FFMpeg::fromDisk('public')
             ->open($video)
-            ->getFrameFromSeconds(3)
+            ->getFrameFromSeconds(8)
             ->export()
             ->toDisk('public')
             ->save('frame1.png');

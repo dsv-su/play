@@ -797,6 +797,7 @@ var timeout;
 
 function mouseMovement() {
     showControls();
+    clearTimeout(timeout);
     timeout = setTimeout(hideControls, 5000);
 
 }

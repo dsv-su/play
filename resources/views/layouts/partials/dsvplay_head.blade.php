@@ -9,4 +9,4 @@
 <link rel="stylesheet" href="{{asset('/css/navhead.css')}}">
 <link rel="stylesheet" href="{{asset('/css/navmenu.css')}}">
 <link rel="stylesheet" href="{{asset('/css/search.css')}}">
-<title>Play</title>
+<title>DSVPlay</title>

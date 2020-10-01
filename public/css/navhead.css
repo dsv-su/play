@@ -44,13 +44,14 @@ html {
     -webkit-text-size-adjust:100%;
     -ms-text-size-adjust:100%;
 }
+
 body,html {
     height:100%;
 }
 
 body {
     margin:0;
-    font-family: nimbus-sans,sans-serif;
+    font-family: nimbus-sans, sans-serif;
     /*font-family: 'Signika', sans-serif;*/
     font-size: 12px;
     line-height:1.25;
@@ -60,8 +61,8 @@ body {
 }
 
 body *{
-    -webkit-font-smoothing:antialiased!important;
-    text-rendering:optimizelegibility;
+    -webkit-font-smoothing: antialiased!important;
+    text-rendering: optimizelegibility;
 }
 
 h1,h2,h3,h4,h5,h6,li,p,small{
@@ -86,8 +87,12 @@ a.block-link{
     display:block;
 }
 .no-flicker {
-    -webkit-backface-visibility:hidden;
+    -webkit-backface-visibility: hidden;
     -webkit-transform: translate3d(0,0,0);
+    -moz-transform: translate3d(0,0,0);
+    -ms-transform: translate3d(0,0,0);
+    -o-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0);
 }
 
 .page-header {
@@ -126,9 +131,23 @@ a.block-link{
 .page-header .logotext {
     display: inline-block;
     position: absolute;
-    padding-top: 8px;
+    padding-top: 10px;
     left: 0;
-    padding-left: 65px;
+    padding-left: 90px;
+}
+
+.page-header .svglogo svg {
+    width: 30px;
+    height: 30px;
+    fill: #fff;
+    stroke: #fff;
+}
+
+.page-header .svglogo {
+    display: inline-block;
+    position: relative;
+    padding-top: 10px;
+    padding-left: 170px;
 }
 
 .dsvplay {
@@ -150,22 +169,33 @@ a.block-link{
     border-bottom-left-radius: 28px;
 }
 
+.page-header .username {
+    text-decoration: none;
+    color: var(--light);
+    position: absolute;
+    right: 5px;
+    top: 74px;
+}
+
 .page-header .logo:hover{
     opacity:1;
 }
 
 .page-header .buttons{
-    width: 50%;
+    width: 40%;
     position: absolute;
-    left: 50%;
+    left: 74%;
     top: 0;
     z-index: 3;
 }
 
 .page-header .buttons li{
     position: relative;
-    width: 33.333333333%;
+    /*width: 33.333333333%;
     height: 90px;
+    */
+    width: 33.333333333%;
+    height: 70px;
     float: left;
 }
 
@@ -175,8 +205,11 @@ a.block-link{
     height:100%;
     text-align:center;
     color: var(--light);
-    transition:all .2s ease-in-out;
-    font-weight:700;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+    font-weight: 700;
 }
 
 .page-header .buttons path{
@@ -186,30 +219,32 @@ a.block-link{
 .page-header .buttons .inner{
     display:block;
     position:relative;
-    top:50%;
-    -webkit-transform:translateY(-50%);
-    -ms-transform:translateY(-50%);
-    transform:translateY(-50%);
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
 }
 
 .page-header .buttons .inner.open{
-    position:absolute;
-    width:100%;
+    position: absolute;
+    width: 100%;
 }
 .page-header .buttons .closed-state,.page-header .buttons .open-state{
-    position:relative;
-    display:inline-block;
-    height:20px;
+    position: relative;
+    display: inline-block;
+    height: 20px;
 }
 
 .page-header .buttons .open-state{
-    opacity:0;
-    top:-25px;
+    opacity: 0;
+    top: -25px;
 }
 .page-header .buttons .open-state i svg{
-    height:17px;
-    position:relative;
-    top:2px;
+    height: 17px;
+    position: relative;
+    top: 2px;
 }
 
 .page-header .buttons li:nth-child(3n+1) .menu-button{
@@ -217,110 +252,119 @@ a.block-link{
 }
 
 .page-header .buttons li:nth-child(3n+1) .menu-button .closed-state  i svg{
-    height:17px;
+    height: 17px;
 }
 
 .page-header .buttons li:nth-child(3n+2) .menu-button{
     background: var(--btwo);
 }
+
 .page-header .buttons li:nth-child(3n+2) .menu-button .closed-state i svg{
-    height:4px;
-    position:relative;
-    top:-3px;
+    height: 4px;
+    position: relative;
+    top: -3px;
 }
+
 .page-header .buttons li:nth-child(3n+3) .menu-button{
     background: var(--bthree);
 }
+
 .page-header .buttons li:nth-child(3n+3) .menu-button .closed-state i svg{
-    height:19px;
+    height: 19px;
 }
+
 .page-header .buttons .menu-button:hover{
-    color:#888;
+    color: var(--suvatten);
     opacity:1;
 }
+
 .page-header .buttons .menu-button:hover path{
-    fill:#888;
+    fill: var(--suvatten)
 }
 
 .page-header .menu-bg{
-    position:absolute;
-    width:100%;
-    z-index:1;
+    position: absolute;
+    width: 100%;
+    z-index: 1;
 }
 .page-header .menu-bg .bg-inner{
-    position:absolute;
-    width:100%;
-    height:100%;
-    background:#f9f9f9;
-    z-index:1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #f9f9f9;
+    z-index: 1;
 }
 
 .page-header .board{
-    position:absolute;
-    width:100%;
-    height:0;
-    overflow:auto;
-    background:#f9f9f9;
-    z-index:2;
+    position: absolute;
+    width: 100%;
+    height: 0;
+    overflow: auto;
+    background: #f9f9f9;
+    z-index: 2;
 }
+
 .page-header .board .inner{
-    position:relative;
-    padding:20px 0 40px;
+    position: relative;
+    padding: 20px 0 40px;
 }
 .page-header .board .menu-item{
-    display:inline-block;
-    color:#585858;
-    font-size:25px;
-    line-height:1;
-    padding:7px 40px;
-    transition:color .2s ease-out;
+    display: inline-block;
+    color: #585858;
+    font-size: 25px;
+    line-height: 1;
+    padding: 7px 40px;
+    -webkit-transition: color .2s ease-out;
+    -moz-transition: color .2s ease-out;
+    -o-transition: color .2s ease-out;
+    transition: color .2s ease-out;
 }
 .page-header .board .menu-item.current,.page-header .board .menu-item:hover{
-    color:#b6b6b6;
-    opacity:1;
+    color: #b6b6b6;
+    opacity: 1;
 }
 
 .page-header .manage-menu{
-    background:#f4f4f4;
+    background: #f4f4f4;
 }
 .page-header .manage-menu h2{
-    display:block;
-    font-size:25px;
-    line-height:1;
-    padding:10px 40px;
+    display: block;
+    font-size: 25px;
+    line-height: 1;
+    padding: 10px 40px;
 }
 .page-header .manage-menu h2:after{
-    content:':';
+    content: ':';
 }
 .page-header .manage-menu ul{
-    margin-bottom:30px;
+    margin-bottom: 30px;
 }
 
 .page-header .profile{
-    background:#ededed;
+    background: #ededed;
 }
 .page-header .profile h2{
-    display:block;
-    font-size:25px;
-    line-height:1;
-    padding:10px 40px;
+    display: block;
+    font-size: 25px;
+    line-height: 1;
+    padding: 10px 40px;
 }
 .page-header .board:target{
-    height:auto;
+    height: auto;
 }
 .page-header .contact-information{
-    padding:40px 40px 0;
+    padding: 40px 40px 0;
 }
 .profile .links-area a{
-    line-height:25px;
-    display:block;
+    line-height: 25px;
+    display: block;
 }
 .profile .empty-profile{
-    padding:40px 20px;
-    text-align:center;
+    padding: 40px 20px;
+    text-align: center;
 }
 #breakpointer{
-    z-index:1;
+    z-index: 1;
 }
 
 
@@ -345,16 +389,20 @@ a.block-link{
     }
 
     .page-header .buttons{
-        width: 50l%;
+        /*width: 50%;*/
+        width: 30%;
         position: absolute;
-        left: 50%;
+        /*left: 50%;*/
+        left: 80%;
         top:0;
         z-index: 3;
     }
 
     .page-header .buttons li{
-        width:33.3333333333%;
-        height: 100px;
+        /*width:33.3333333333%;
+        height: 100px;*/
+        width: 33.33333333333%;
+        height: 70px;
         margin-top: 0;
     }
 
@@ -385,10 +433,23 @@ a.block-link{
     }
 
     .page-header .svglogo {
-        display: inline-block;
-        position: relative;
         padding-top: 10px;
-        padding-left: 220px;
+        padding-left: 290px;
+        width: 18px;
+        height: 18px;
+    }
+
+    .page-header .svglogo svg {
+        width: 60px;
+        height: 60px;
+    }
+
+    .page-header .username {
+        text-decoration: none;
+        color: var(--light);
+        position: absolute;
+        right: 10px;
+        top: 76px;
     }
 
     .page-header .board{
@@ -422,6 +483,8 @@ a.block-link{
         z-index: 47;
     }
 }
+
+/*
 @media only screen and (min-width:60em){
     #breakpointer{
         z-index: 60;
@@ -446,4 +509,4 @@ a.block-link{
         z-index: 90;
     }
 }
-
+*/

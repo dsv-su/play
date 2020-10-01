@@ -12,19 +12,7 @@ class VideosSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('videos')->insert([
-            'title' => 'DB HT2016 Lecture 1',
-            'length' => '00:09',
-            'image' =>  './images/videocovers/kurs1.jpg',
-            'source1' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/fabefa3e-6758-468b-aae1-b7b512d084fa.mp4?playbackTicket=&site=play2.dsv.su.se',
-            'source2' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/9e5f2d1c-4c1d-48e8-8502-f00b9f0f0d79.mp4?playbackTicket=&site=play2.dsv.su.se',
-            'source3' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/2af810b8-1e59-4215-9f71-be097c1f88fb.mp4?playbackTicket=&site=play2.dsv.su.se',
-            'source4' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/2af810b8-1e59-4215-9f71-be097c1f88fb.mp4?playbackTicket=&site=play2.dsv.su.se',
-            'course_id' => 1,
-            'category_id' => 2,
-            'created_at' =>  Carbon::now(),
-            'updated_at' => Carbon::now(),
-        ]);
+
         DB::table('videos')->insert([
             'title' => 'DB HT2016 Lecture 3',
             'length' => '1:40',
@@ -164,6 +152,19 @@ class VideosSeeder extends Seeder
             'updated_at' => Carbon::now(),
         ]);
         DB::table('videos')->insert([
+            'title' => 'Conclusions',
+            'length' => '12:31',
+            'image' =>  './images/videocovers/kurs1.jpg',
+            'source1' => './mediasite/various/FMVEK/6357_conclusionsOWNER=maso2832/b88b46bf-db47-435b-83dc-3545f4676f62.mp4',
+            'source2' => './mediasite/various/FMVEK/6357_conclusionsOWNER=maso2832/b88b46bf-db47-435b-83dc-3545f4676f62.mp4',
+            'source3' => './mediasite/various/FMVEK/6357_conclusionsOWNER=maso2832/b88b46bf-db47-435b-83dc-3545f4676f62.mp4',
+            'source4' => './mediasite/various/FMVEK/6357_conclusionsOWNER=maso2832/b88b46bf-db47-435b-83dc-3545f4676f62.mp4',
+            'course_id' => 5,
+            'category_id' => 2,
+            'created_at' =>  Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+        DB::table('videos')->insert([
             'title' => 'DISK VT2015 Lecture 1',
             'length' => '0:43',
             'image' =>  './images/videocovers/kurs1.jpg',
@@ -186,6 +187,32 @@ class VideosSeeder extends Seeder
             'source4' => 'https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/ad749c93-5c75-4ecf-8bde-4b76516064f0.mp4?playbackTicket=&site=play2.dsv.su.se',
             'course_id' => 4,
             'category_id' => 6,
+            'created_at' =>  Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+        DB::table('videos')->insert([
+            'title' => 'KM HT2015 Lecture 1',
+            'length' => '00:11',
+            'image' =>  './images/videocovers/kurs3.jpg',
+            'source1' => './mediasite/KM - Kunskapsnätverk/KM HT2015 Lecture 1/cf6ebf54-4887-4207-935a-f20422390f63.mp4',
+            'source2' => './mediasite/KM - Kunskapsnätverk/KM HT2015 Lecture 1/9a5af2ce-bc2a-47f3-bbed-a15337e508df.mp4',
+            'source3' => './mediasite/KM - Kunskapsnätverk/KM HT2015 Lecture 1/da2a4609-d44e-4f40-849b-4d4c18507c94.mp4',
+            'source4' => '',
+            'course_id' => 6,
+            'category_id' => 1,
+            'created_at' =>  Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+        DB::table('videos')->insert([
+            'title' => 'KM HT2015 Seminar 1',
+            'length' => '00:14',
+            'image' =>  './images/videocovers/kurs3.jpg',
+            'source1' => './mediasite/KM - Kunskapsnätverk/KM HT2015 Seminar 1/f3cfa8f5-3ef5-4781-b350-7d88140212c9.mp4',
+            'source2' => './mediasite/KM - Kunskapsnätverk/KM HT2015 Seminar 1/8d218ee6-fae9-455c-90c3-2f81b6b113d9.mp4',
+            'source3' => './mediasite/KM - Kunskapsnätverk/KM HT2015 Seminar 1/e7053bd4-0e2e-4e71-a96e-8e5827d8e62d.mp4',
+            'source4' => '',
+            'course_id' => 6,
+            'category_id' => 1,
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);

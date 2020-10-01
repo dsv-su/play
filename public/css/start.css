@@ -61,7 +61,7 @@ p, h4 {
 
 .top_section {
     grid-area: top_section;
-    min-height: 150px;
+    min-height: 180px;
     display: grid;
     grid-template-columns: 10% 1fr 10%;
     grid-template-areas:
@@ -124,6 +124,7 @@ p, h4 {
     color: var(--black);
     padding-top: 5px;
 }
+
 .space {
     grid-area: titlespace;
     padding-top: 5em;
@@ -160,6 +161,7 @@ p, h4 {
 }
 .video a {
     text-decoration: none;
+    float:left;
     display: block;
     height: 110px;
 }
@@ -181,12 +183,12 @@ p, h4 {
     font-family: 'Open Sans', sans-serif;
     font-size: 12px;
     font-weight: 400;
-    height: 50px;
+    height: 40px;
     grid-column-start: span 3;
     position: relative;
-    top: 182%;
-    padding: 10px 10px 10px 10px;
-    transform: translate(0, -182%);
+    top: 50%;
+    padding: 5px;
+    transform: translate(0, -100%);
     transition: var(--ease);
     background-color: var(--light);
     color: var(--videoblue);
@@ -208,6 +210,7 @@ p, h4 {
     /*opacity: 0.85;*/
     transition: var(--ease);
 }
+
 .video p {
     position: absolute;
     left: 0;
@@ -221,6 +224,11 @@ p, h4 {
     opacity: 0.85;
     transition: var(--ease);
 }
+.count {
+    font-family: 'Merriweather Sans', sans-serif;
+    font-weight: 700;
+    color: var(--videoblue);
+}
 
 video i:hover {
     opacity: 1;
@@ -228,7 +236,7 @@ video i:hover {
 
 /*tooltip Box*/
 .con-tooltip {
-    padding-top: 30%;
+    padding-top: 25%;
     border-radius: 9px;
     text-align: center;
     transition: all 0.3s ease-in-out;
@@ -251,13 +259,14 @@ video i:hover {
     left: 60%;
 
     border-radius: 9px;
-    font: 16px;
+    font: 14px;
 
     transform: translateY(9px);
     transition: all 0.3s ease-in-out;
 
     box-shadow: 0 0 3px rgba(56, 54, 54, 0.86);
 }
+
 .tooltip p {
     color: #000000;
 }
@@ -317,108 +326,109 @@ h3 {
 
 }
 
-/*
-@media only screen and (max-width: 600px) {
-    .logo-container {
-        margin: 0 auto;
+/*--------------------------------------------------------------
+CSS Grid layout for wider screens, when browser supports grid:
+--------------------------------------------------------------*/
+@supports (grid-area: auto) {
+    @media only screen and (min-width: 47em) {
+
+        .top_section {
+            min-height: 300px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 0;
+            height: 100px;
+            align-items: center;
+        }
+
+        .main-nav {
+            display: flex;
+            margin-right: 30px;
+            flex-direction: row;
+            justify-content: flex-end;
+        }
+
+        .main-nav li {
+            margin: 0;
+        }
+
+        .nav-links {
+            margin-left: 40px;
+        }
+
+        .logo {
+            margin-top: 0;
+        }
+
+        .navbar-toggle {
+            display: none;
+        }
+
+        .logo:hover,
+        .nav-links:hover {
+            color: rgba(255, 255, 255, 1);
+        }
+
+        .con-tooltip {
+            margin: 0 auto;
+            padding-top: 8%;
+        }
+
+        .tooltip {
+            z-index: 1;
+            width: 50%;
+            padding: 5px 5px;
+
+            position: absolute;
+            top: -160%;
+            left: 60%;
+
+            border-radius: 9px;
+            font: 16px;
+
+            transform: translateY(9px);
+            transition: all 0.3s ease-in-out;
+
+            box-shadow: 0 0 3px rgba(56, 54, 54, 0.86);
+        }
+
+        .video .footer {
+            height: 40px;
+            top: 160%;
+            padding: 10px;
+            transform: translate(0, -160%);;
+        }
+
+    }
+
+
+    @media only screen and (max-width: 1200px) {
+        .video {
+            grid-column-start: span 6;
+
+        }
+        .video .footer {
+            grid-column-start: span 6;
+            top: 160%;
+            transform: translate(0, -160%);
+        }
+
+    }
+
+    @media only screen and (max-width: 800px) {
+        .video {
+            grid-column-start: span 12;
+
+        }
+        .video .footer {
+            grid-column-start: span 12;
+        }
+
+
     }
 
 
 }
-*/
-@media only screen and (min-width:47em) {
-    /*@media screen and (min-width: 768px) {*/
-    .top_section {
-        min-height: 300px;
-    }
-
-    .navbar {
-        display: flex;
-        justify-content: space-between;
-        padding-bottom: 0;
-        height: 100px;
-        align-items: center;
-    }
-
-    .main-nav {
-        display: flex;
-        margin-right: 30px;
-        flex-direction: row;
-        justify-content: flex-end;
-    }
-
-    .main-nav li {
-        margin: 0;
-    }
-
-    .nav-links {
-        margin-left: 40px;
-    }
-
-    .logo {
-        margin-top: 0;
-    }
-
-    .navbar-toggle {
-        display: none;
-    }
-
-    .logo:hover,
-    .nav-links:hover {
-        color: rgba(255, 255, 255, 1);
-    }
-
-    .con-tooltip {
-        margin: 0 auto;
-        padding-top: 8%;
-    }
-
-    .tooltip {
-        z-index: 1;
-        width: 50%;
-        padding: 5px 5px;
-
-        position: absolute;
-        top: -160%;
-        left: 60%;
-
-        border-radius: 9px;
-        font: 16px;
-
-        transform: translateY(9px);
-        transition: all 0.3s ease-in-out;
-
-        box-shadow: 0 0 3px rgba(56, 54, 54, 0.86);
-    }
-
-
-
-}
-
-@media only screen and (max-width: 1200px) {
-    .video {
-        grid-column-start: span 6;
-        height: 240px;
-
-    }
-    .video .footer {
-        grid-column-start: span 6;
-        height: 60px;
-        top: 133%;
-        transform: translate(0, -133%);
-    }
-
-}
-
-@media only screen and (max-width: 800px) {
-    .video {
-        grid-column-start: span 12;
-
-    }
-    .video .footer {
-        grid-column-start: span 12;
-    }
-
-
-}
-
