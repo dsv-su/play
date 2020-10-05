@@ -390,15 +390,9 @@ class PlayController extends Controller
         }
 
         if ($folderid) {
-            $presentations = array();
-            try {
-                $presentations = json_decode($mediasite->get($url . "/Folders('$folderid')/Presentations?\$top=100000&\$select=full")->getBody(), true)['value'];
-            } catch (GuzzleException $e) {
-                abort(503);
-            }
-
+            $presentations = MediasitePresentation::where('mediasite_folder_id', MediasiteFolder::where('mediasite_id', $folderid)->firstOrFail()->id)->get();
             foreach ($presentations as $presentation) {
-                DownloadPresentation::dispatch(MediasitePresentation::where('mediasite_id', $presentation['Id'])->firstOrFail(), 'user', $path, $foldername);
+                DownloadPresentation::dispatch($presentation, 'user', $path, $foldername);
                 /*
                 try {
                     $presentationid = $presentation['Id'];
