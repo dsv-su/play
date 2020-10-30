@@ -2,8 +2,7 @@
 Development setup for DSVPlay.
 
 ## 2. Requirements
-Requirements are best determined using Server Requirements page of corresponding Laravel 7 version
-Currently used version is 7.10.3
+Requirements are best determined using Server Requirements page of corresponding Laravel 8 version
 
 - PHP version 7.3.*
 
