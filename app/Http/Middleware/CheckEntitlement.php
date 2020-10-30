@@ -29,9 +29,8 @@ class CheckEntitlement
             if($system->global->app_debug == true) {
                 return $next($request);
             } else {
-                return redirect('login');
+                return redirect($system->global->login_route);
             }
-
         }
         else
         {
@@ -53,7 +52,6 @@ class CheckEntitlement
             abort(401);
 
         }
-
 
         return $next($request);
     }

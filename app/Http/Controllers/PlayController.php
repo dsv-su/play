@@ -33,7 +33,7 @@ class PlayController extends Controller
 
         // If the environment is local
         if (app()->environment('local')) {
-            $data['play_user'] = 'Profil';
+            $data['play_user'] = 'För Efternamn';
         } else {
             $data['play_user'] = $_SERVER['displayName'];
         }
@@ -45,7 +45,7 @@ class PlayController extends Controller
         $data['search'] = 0;
         $data['latest'] = Video::with('category', 'course')->latest('id')->take(8)->get();
         $data['categories'] = Category::all();
-        $data['loggedin'] = Auth::check();
+
         return view('home.index', $data);
     }
 

@@ -62,7 +62,7 @@
                     </ul>
 
                 </div>
-                <span class="username">{{Auth::user()->name ?? 'Student Studentsson'}}</span>
+                <span class="username">{{$play_user ?? 'Not logged in'}}</span>
                 <!-- -->
                 <nav class="manage-menu board no-flicker" id="manage" style="opacity: 0; margin-top: 0; height: 0;">
                     <div class="inner">

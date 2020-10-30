@@ -174,7 +174,6 @@ return [
          * Package Service Providers...
          */
         ProtoneMedia\LaravelFFMpeg\Support\ServiceProvider::class,
-        StudentAffairsUwm\Shibboleth\ShibalikeServiceProvider::class,
         /*
          * Application Service Providers...
          */
