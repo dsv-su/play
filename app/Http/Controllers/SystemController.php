@@ -9,7 +9,7 @@ class SystemController extends Controller
 {
     public function login()
     {
-        return redirect('/shibboleth-authenticate');
+        return redirect('/');
     }
 
     public function start()
