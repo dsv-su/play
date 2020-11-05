@@ -22,6 +22,7 @@ Route::middleware('entitlements')->group(function () {
 
 Route::get('/', 'PlayController@index')->name('home');
 Route::get('/mediasite', 'PlayController@mediasite')->name('mediasite');
+Route::get('/mediasiteFetch', 'PlayController@mediasiteFetch')->name('mediasiteFetch');
 Route::post('/mediasiteCourseDownload', 'PlayController@mediasiteCourseDownload')->name('mediasiteCourseDownload');
 Route::post('/mediasiteRecordingDownload', 'PlayController@mediasiteRecordingDownload')->name('mediasiteRecordingDownload');
 Route::post('/mediasiteUserDownload', 'PlayController@mediasiteUserDownload')->name('mediasiteUserDownload');

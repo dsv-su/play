@@ -60,12 +60,7 @@ class PlayController extends Controller
         return view('player.index', ['video' => $video, 'playlist' => $playlist, 'course' => $course]);
     }
 
-    /**
-     * @return Application|Factory|View
-     * @throws Exception
-     */
-    public function mediasite()
-    {
+    public function mediasiteFetch() {
         $system = new AuthHandler();
         $system = $system->authorize();
         $mediasite = new Client([
@@ -76,12 +71,18 @@ class PlayController extends Controller
             'auth' => [$system->mediasite->username, $system->mediasite->password]
         ]);
         $url = $system->mediasite->url;
+        $this->getMediasiteFolders($mediasite, $url);
+        $this->getMediasitePresentations($mediasite, $url);
+        $this->deleteEmptyFolders();
+        return redirect()->route('home');
+    }
 
-        //These lines should be called rarely, so comment it for performance sake
-        //$this->getMediasiteFolders($mediasite, $url);
-        //$this->getMediasitePresentations($mediasite, $url);
-        //$this->deleteEmptyFolders();
-
+    /**
+     * @return Application|Factory|View
+     * @throws Exception
+     */
+    public function mediasite()
+    {
         // This requires a correctly symlinked storage folder
         $this->removeDeletedVideos();
 
