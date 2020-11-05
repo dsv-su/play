@@ -393,7 +393,7 @@ class PlayController extends Controller
         if ($folderid) {
             $presentations = MediasitePresentation::where('mediasite_folder_id', MediasiteFolder::where('mediasite_id', $folderid)->firstOrFail()->id)->get();
             foreach ($presentations as $presentation) {
-                DownloadPresentation::dispatch($presentation, 'user', $path, $foldername);
+                DownloadPresentation::dispatch($presentation, $type, $path, $foldername);
                 /*
                 try {
                     $presentationid = $presentation['Id'];
