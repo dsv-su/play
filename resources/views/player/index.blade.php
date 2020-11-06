@@ -19,7 +19,7 @@
         <!-- Playlist toggle -->
         <button id="playlist_btn" class="transparent_btn playlist_btn"><i class="fas fa-list-ul fa-2x"></i></button>
         <!-- Ease in video-title -->
-        <div class="transparent_txt videotitle">{{ $video->title }} från kursen <i>{{ $course->course_name }}</i></div>
+        <div id="videotitle" class="transparent_txt videotitle">{{ $video->title }} från kursen <i>{{ $course->course_name }}</i></div>
 
            <section class="playlist">
                <!-- This will be rendered serverside -->
@@ -35,39 +35,43 @@
                </nav>
 
            </section>
-        <!--Grid -->
+       <!-- Play/Pause icon -->
+       <div class="playicon" id="playicon">
+           <svg class="animate-icons">
+               <use class="hidden" href="#play-icon"></use>
+               <use href="#pause"></use>
+           </svg>
+       </div>
+       <!--Grid -->
         <div class="grid" id="videocontainer">
             <div id="master" class="master">
                 <div id="master_switcher" class="master_switcher"><i class="fas fa-sync fa-3x"></i></div>
-                <div class="mastervideo">
+                <div class="primaryvideo">
                     <video id="video1" src="{{asset($video->source1)}}"></video>
                 </div>
             </div>
             @if(!$video->source2 == '')
             <div id="slave1" class="slave1">
                 <div id="slave1_switcher" class="slave1_switcher"><i class="fas fa-sync fa-3x"></i></div>
-                <div class="slavevideo">
+                <div class="secondaryvideo">
                     <video hidden muted  id="video2" src="{{asset($video->source2)}}"></video>
                 </div>
-
             </div>
             @endif
             @if(!$video->source3 == '')
             <div id="slave2" class="slave2">
                 <div id="slave2_switcher" class="slave2_switcher"><i class="fas fa-sync fa-2x"></i></div>
-                <div class="slavevideo">
+                <div class="secondaryvideo">
                     <video hidden muted  id="video3" src="{{asset($video->source3)}}"></video>
                 </div>
-
             </div>
             @endif
             @if(!$video->source4 == '')
             <div id="slave3" class="slave3">
                 <div id="slave3_switcher" class="slave3_switcher"><i class="fas fa-sync fa-2x"></i></div>
-                <div class="slavevideo">
+                <div class="secondaryvideo">
                     <video hidden muted  id="video4" src="{{asset($video->source4)}}"></video>
                 </div>
-
             </div>
             @endif
         <!-- end Grid -->

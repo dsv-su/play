@@ -34,23 +34,20 @@ video {
     object-fit: cover;
 }
 
-.mastervideo {
+.primaryvideo {
     width: 100%;
     height: 100%;
     clear: both;
     overflow: hidden;
     max-width: 100%;
-    object-fit: cover;
 }
 
-.slavevideo {
+.secondaryvideo {
     width: 100%;
     height: 100%;
     clear: both;
     overflow: hidden;
     max-width: 100%;
-    object-fit: cover;
-
 }
 
 /*--------------------------------------------------------------
@@ -143,8 +140,8 @@ Container (Videos) settings
     /*position: relative;*/
     display: grid;
     overflow: auto;
-    grid-template-columns: 70% 30%;
-    grid-template-rows: minmax(1fr, 1fr) minmax(1fr, 1fr) minmax(1fr, 1fr);
+    grid-template-columns: 4fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
     grid-template-areas:
             "master slave1"
             "master slave1"
@@ -158,7 +155,6 @@ Container (Videos) settings
 
 .master {
     grid-area: master;
-    /*max-height: 100%;*/
     position: relative;
 }
 
@@ -178,70 +174,6 @@ Container (Videos) settings
     position: relative;
 }
 
-/*--------------------------------------------------------------
-Border settings fot dev-mode -> remove for production
---------------------------------------------------------------*/
-/*
-.wrapper {
-    border: 4px solid #00FF00;
-}
-.container {
-    border: 4px solid #ff4136;
-}
-
-.master {
-    font-size: 14px;
-    border: 1px dotted #ff4136;
-}
-
-.slave1, .slave2, .slave3 {
-    font-size: 14px;
-    border: 1px dotted #ff4136;
-    place-self: center;
-}
-
-.grid:after {
-    content: 'grid';
-    background-color: #0074d9;
-}
-
-.slave1:after {
-    content: 'Secondary1';
-    background-color: #0074d9;
-}
-.slave2:after {
-    content: 'Secondary2';
-    background-color: #0074d9;
-}
-.slave3:after {
-    content: 'Secondary3';
-    background-color: #0074d9;
-}
-
-.master:after {
-    content: 'Primary Ply2';
-    background-color: #0074d9;
-}
-*/
-/*--------------------------------------------------------------
-Dev Pseudos settings -> To remove in production
---------------------------------------------------------------*/
-/*
-.grid:after,
-.master:after,
-.slave1:after,
-.slave2:after,
-.slave3:after
- {
-    position: absolute;
-    text-transform: uppercase;
-    left: 0;
-    top: 0;
-    color: white;
-    padding: 5px;
-    font-size: 12px;
-}
-*/
 /*--------------------------------------------------------------
 Textbox styling
 ---------------------------------------------------------------*/
@@ -291,12 +223,13 @@ Buttons styling
     position: fixed;
     left: 40px;
     top: 20px;
-    transform: translateX(-330%);
     font-size: 8px;
     padding: 5px 5px;
     cursor: pointer;
     border-radius: 1px;
     text-align: center;
+    background-color: rgba(0,0,0, 0.5);
+    color: #FFF;
     z-index: 2;
 }
 
@@ -306,7 +239,6 @@ Buttons styling
     top: 20px;
     padding: 5px 10px;
     transition: all 0.2s ease;
-    transform: translateX(-420%);
     font-size: 12px;
     z-index: 1;
 }
@@ -400,42 +332,6 @@ Buttons styling
     transform: translateX(0);
 }
 
-.wrapper:hover .playlist_btn {
-    animation-name: playlist;
-    animation-duration: 12s;
-    animation-timing-function: ease-in-out;
-}
-
-@keyframes playlist {
-    from {
-        background-color: rgba(0,0,0, 0.5);
-        color: #FFF;
-        transform: translateX(0);
-    }
-    to {
-        background-color: rgba(0,0,0, 0.5);
-        color: #FFF;
-        transform: translateX(0);
-    }
-}
-
-.wrapper:hover .videotitle {
-    animation-name: videotitle;
-    animation-duration: 12s;
-    animation-timing-function: ease-in-out;
-}
-@keyframes  videotitle {
-    from {
-        background-color: rgba(0,0,0, 0.5);
-        color: #FFF;
-        transform: translateX(0);
-    }
-    to {
-        background-color: rgba(0,0,0, 0.5);
-        color: #FFF;
-        transform: translateX(0);
-    }
-}
 .master:hover i {
     opacity: 1;
 }
@@ -453,6 +349,35 @@ Buttons styling
 .slave3:hover i{
     opacity: 1;
     display: block;
+}
+
+/*-------------------------------------------------------------
+Play-Pause Primary video
+------------------------------------------------------------ */
+.playicon {
+    pointer-events: none;
+    position: absolute;
+    top: 40%;
+    left: 35%;
+    margin-left: -10px;
+    margin-top: -40px;
+    width: 150px;
+    height: 150px;
+    border-radius: 80px;
+    background-color: var(--sublue);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    z-index: 5;
+}
+
+.playicon .animate-icons {
+    width: 48px;
+    height: 48px;
+    fill: #fff;
+    stroke: #fff;
+    cursor: pointer;
 }
 
 /*--------------------------------------------------------------
@@ -741,7 +666,7 @@ svg {
     position: absolute;
     background: hsl(0, 0%, 0%);
     min-width: 65px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     bottom: 25px;
     z-index: 4;
 }
@@ -780,12 +705,8 @@ CSS Grid layout for wider screens, when browser supports grid:
         .grid {
             position: relative;
             display: grid;
-            grid-template-columns: repeat(auto-fill, 80% 20%);
-            grid-template-rows: minmax(1fr, 1fr) minmax(1fr, 1fr) minmax(1fr, 1fr);
-            grid-template-areas:
-                "master slave1"
-                "master slave2"
-                "master slave3";
+            grid-template-columns:  4fr 1fr;
+            grid-template-rows: 2fr 2fr 2fr;
             grid-gap: 20px;
         }
 

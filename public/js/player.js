@@ -5,19 +5,22 @@ Player for DSV Play v. 1.0
 
 // Layout and toggle Playlist
 const playlist = document.getElementsByClassName('playlist')[0];
-
+const playlist_btn = document.getElementById('playlist_btn');
+const title = document.getElementById('videotitle');
 // Controls
 const controls = document.getElementById('controls');
 
 // Videostreams
 var video = document.getElementById('video1'); //Main video stream
 video.load();
+
 // Play buttons
 var playpausebtn = document.getElementById('play-pause');
 const playbackIcons = document.querySelectorAll('.playback-icons use');
 const videoContainer = document.getElementById('wrapper');
 var fullscreenbtn = document.getElementById('fullscreen-button');
 const fullscreenIcons = fullscreenbtn.querySelectorAll('use');
+const playbackAnimation = document.getElementById('playicon');
 
 // Fastforward
 var plbackrate = 1;
@@ -266,20 +269,17 @@ function MasterGrid()
 function MasterSlaveGrid(x)
 {
     //Two streams grid
-	//grid.style.gridTemplateColumns = 'repeat(auto-fill, 70% 30%)';
 	grid.style.gridTemplateAreas = grid_setup2[x];
 }
 
 function MasterSlave12Grid(x)
 {
     //Three streams grid
-	//grid.style.gridTemplateColumns = 'repeat(auto-fill, 70% 30%)';
 	grid.style.gridTemplateAreas = grid_setup3[x];
 }
 function MasterSlave3Grid(x)
 {
     //Four streams grid
-    //grid.style.gridTemplateColumns = 'repeat(auto-fill, 70% 30%)';
     grid.style.gridTemplateAreas = grid_setup4[x];
 }
 
@@ -508,6 +508,23 @@ function updatePlayButton() {
     }
 }
 
+// animatePlayback displays an animation when
+// the video is played or paused
+function animatePlayback() {
+    playbackAnimation.animate([
+        {
+            opacity: 1,
+            transform: "scale(1)",
+        },
+        {
+            opacity: 0,
+            transform: "scale(1.5)",
+        }
+    ], {
+        duration: 500,
+    });
+}
+
 function FastForward() {
     fastforwardIcons.forEach(icon => icon.classList.toggle('hidden'));
 	if(video.playbackRate == 1.5 || video.playbackRate == 2 || video.playbackRate == 3 || video.playbackRate == 4 || video.playbackRate == 5 || video.playbackRate == 6){
@@ -721,6 +738,7 @@ fullscreenbtn.addEventListener('click', function() {
 
 playpausebtn.onclick = function (params) {
 	PlayPause();
+    animatePlayback();
 };
 
 ff15btn.onclick = function (M) {
@@ -784,6 +802,7 @@ function keyboardShortcuts(event) {
     switch(key) {
         case 's':
             PlayPause();
+            animatePlayback();
             break;
         case 'l':
             toggleMute();
@@ -803,17 +822,30 @@ function mouseMovement() {
 }
 
 function showControls() {
+   //Show video controls
    controls.style.transform = 'translateY(0)';
+   //Show playlist button
+   playlist_btn.style.transform = 'translateX(0)';
+   //Show video title
+   title.style.transform =' translateX(0)';
 }
 
 function hideControls() {
+    //Hide video controls
     controls.style.transform = 'translateY(100%) translateY(-5px)';
-}
+    //Hide playlist button
+    playlist_btn.style.transform = 'translateX(-330%)';
+    //Hide video title
+    title.style.transform = 'translateX(-420%)';
 
+}
+//Trigger show/hide functions
 videoContainer.addEventListener('mousemove', mouseMovement);
+
 video.addEventListener('play', updatePlayButton);
 video.addEventListener('pause', updatePlayButton);
-/*video.addEventListener('click', PlayPause);*/
+video.addEventListener('click', PlayPause);
+video.addEventListener('click', animatePlayback);
 document.addEventListener('keyup', keyboardShortcuts);
 
 
