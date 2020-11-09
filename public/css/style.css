@@ -120,8 +120,8 @@ Play/Pause toggle onscreen button area
     cursor: pointer;
     position: absolute;
     top: 10%;
-    left: 0;
-    width:75%;
+    left: 200px;
+    width:60%;
     height: 80%;
     z-index: 5;
 }
