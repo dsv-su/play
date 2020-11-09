@@ -7,6 +7,7 @@ Player for DSV Play v. 1.0
 const playlist = document.getElementsByClassName('playlist')[0];
 const playlist_btn = document.getElementById('playlist_btn');
 const title = document.getElementById('videotitle');
+const ppArea = document.getElementById('listen_area');
 // Controls
 const controls = document.getElementById('controls');
 
@@ -459,7 +460,8 @@ if(gridslave3 === 1)
                 grid_pointer = grid_pointer + 2;
                 slave3_click = 1;
                 SwitchMaster();
-            } else {
+            }
+            else {
                 if(slave1_click === 1) {
                     slave1_switcher.classList.toggle('slave1_switcher');
                     master_switcher.classList.toggle('master_switcher');
@@ -844,8 +846,8 @@ videoContainer.addEventListener('mousemove', mouseMovement);
 
 video.addEventListener('play', updatePlayButton);
 video.addEventListener('pause', updatePlayButton);
-video.addEventListener('click', PlayPause);
-video.addEventListener('click', animatePlayback);
+ppArea.addEventListener('click', PlayPause);
+ppArea.addEventListener('click', animatePlayback);
 document.addEventListener('keyup', keyboardShortcuts);
 
 

@@ -35,6 +35,7 @@
                </nav>
 
            </section>
+       <div id="listen_area" class="listen_area"></div>
        <!-- Play/Pause icon -->
        <div class="playicon" id="playicon">
            <svg class="animate-icons">
