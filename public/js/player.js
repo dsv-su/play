@@ -7,7 +7,6 @@ Player for DSV Play v. 1.0
 const playlist = document.getElementsByClassName('playlist')[0];
 const playlist_btn = document.getElementById('playlist_btn');
 const title = document.getElementById('videotitle');
-const ppArea = document.getElementById('listen_area');
 // Controls
 const controls = document.getElementById('controls');
 
@@ -64,7 +63,6 @@ document.getElementsByClassName('playlist_btn')[0].onclick =
         }
 
 }
-
 
 /***************************
  * Function remove elements
@@ -329,7 +327,9 @@ function SwitchMaster() {
 //OnClick primary grid
 master_switchbtn.onclick = function () {
     if(slave1_click === 0 && slave2_click === 0 && slave3_click === 0) {
-
+        //PlayPause onscreen
+        PlayPause();
+        animatePlayback();
     } else {
         if(slave1_click === 1 ) {
                 if(slave2_click === 1) {
@@ -390,7 +390,9 @@ if(gridslave1 === 1)
 {
     slave1_switchbtn.onclick = function () {
         if(slave1_click === 1) {
-
+            //PlayPause onscreen
+            PlayPause();
+            animatePlayback();
         } else
         {
             if(slave2_click === 1) {
@@ -420,7 +422,9 @@ if(gridslave2 === 1)
 {
     slave2_switchbtn.onclick = function () {
         if(slave2_click === 1 ) {
-
+            //PlayPause onscreen
+            PlayPause();
+            animatePlayback();
         } else {
             if(slave1_click === 1) {
                 slave1_switcher.classList.toggle('slave1_switcher');
@@ -450,7 +454,9 @@ if(gridslave3 === 1)
 {
     slave3_switchbtn.onclick = function () {
         if(slave3_click === 1) {
-
+            //PlayPause onscreen
+            PlayPause();
+            animatePlayback();
         } else {
             if (vstreams === 3) {
                 if (slave1_click === 1) {
@@ -670,7 +676,8 @@ function skipAhead(event) {
 	seek.value = skipTo;
 }
 
-video.addEventListener('loadedmetadata', initializeVideo);
+video.addEventListener('loadedmetadata', initializeVideo)
+
 seek.addEventListener('input', skipAhead);
 // updateTimeElapsed indicates how far through the video the current playback is
 
@@ -768,7 +775,7 @@ ff6btn.onclick = function (M) {
     FastForward();
 }
 
-// AddEventlistners
+// Listners for control functions
 medias.forEach(function(media) {
 	media.addEventListener('play', function(event) {
 		medias.forEach(function(media) {
@@ -797,8 +804,7 @@ video.addEventListener('timeupdate', function() {
 	}
 
 });
-// keyboardShortcuts executes the relevant functions for
-// each supported shortcut key
+// keyboardShortcuts Swedish
 function keyboardShortcuts(event) {
     const { key } = event;
     switch(key) {
@@ -843,11 +849,7 @@ function hideControls() {
 }
 //Trigger show/hide functions
 videoContainer.addEventListener('mousemove', mouseMovement);
-
+//Videocontroll listners
 video.addEventListener('play', updatePlayButton);
 video.addEventListener('pause', updatePlayButton);
-ppArea.addEventListener('click', PlayPause);
-ppArea.addEventListener('click', animatePlayback);
 document.addEventListener('keyup', keyboardShortcuts);
-
-
