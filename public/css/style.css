@@ -126,20 +126,11 @@ Container (Videos) settings
 }
 
 .grid {
-    /*position: relative;*/
     display: grid;
     overflow: auto;
     grid-template-columns: 4fr 1fr;
-    grid-template-rows: 16.5% 16.5% 16.5% 16.5% 16.5% 16.5%;
-    grid-template-areas:
-            "master slave1"
-            "master slave1"
-            "master slave2"
-            "master slave2"
-            "master slave3"
-            "master slave3";
+    grid-template-rows: 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr;
     grid-gap: 5px;
-
 }
 
 .master {
@@ -695,7 +686,7 @@ CSS Grid layout for wider screens, when browser supports grid:
             position: relative;
             display: grid;
             grid-template-columns:  4fr 1fr;
-            grid-template-rows: 16.5% 16.5% 16.5% 16.5% 16.5% 16.5%;
+            grid-template-rows: 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr;
             grid-gap: 10px;
         }
 
