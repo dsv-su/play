@@ -112,47 +112,6 @@ Playlist settings
 .playlist a:hover {
     text-decoration: underline;
 }
-/*-------------------------------------------------------------
-Wait spinner
---------------------------------------------------------------*/
-@keyframes spinner-line-fade-more {
-    0%, 100% {
-        opacity: 0; /* minimum opacity */
-    }
-    1% {
-        opacity: 1;
-    }
-}
-
-@keyframes spinner-line-fade-quick {
-    0%, 39%, 100% {
-        opacity: 0.25; /* minimum opacity */
-    }
-    40% {
-        opacity: 1;
-    }
-}
-
-@keyframes spinner-line-fade-default {
-    0%, 100% {
-        opacity: 0.22; /* minimum opacity */
-    }
-    1% {
-        opacity: 1;
-    }
-}
-
-@keyframes spinner-line-shrink {
-    0%, 25%, 100% {
-        /* minimum scale and opacity */
-        transform: scale(0.5);
-        opacity: 0.25;
-    }
-    26% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
 
 /*--------------------------------------------------------------
 Container (Videos) settings
@@ -171,7 +130,7 @@ Container (Videos) settings
     display: grid;
     overflow: auto;
     grid-template-columns: 4fr 1fr;
-    grid-template-rows: 33%;
+    grid-template-rows: 16.5% 16.5% 16.5% 16.5% 16.5% 16.5%;
     grid-template-areas:
             "master slave1"
             "master slave1"
@@ -387,12 +346,12 @@ Play-Pause Primary video
 .playicon {
     pointer-events: none;
     position: absolute;
-    top: 40%;
-    left: 35%;
-    margin-left: -10px;
+    top: 50%;
+    left: 30%;
+    margin-left: 0;
     margin-top: -40px;
-    width: 150px;
-    height: 150px;
+    width: 75px;
+    height: 75px;
     border-radius: 80px;
     background-color: var(--sublue);
     display: flex;
@@ -403,8 +362,8 @@ Play-Pause Primary video
 }
 
 .playicon .animate-icons {
-    width: 48px;
-    height: 48px;
+    width: 30px;
+    height: 30px;
     fill: #fff;
     stroke: #fff;
     cursor: pointer;
@@ -736,7 +695,7 @@ CSS Grid layout for wider screens, when browser supports grid:
             position: relative;
             display: grid;
             grid-template-columns:  4fr 1fr;
-            grid-template-rows: 33%;
+            grid-template-rows: 16.5% 16.5% 16.5% 16.5% 16.5% 16.5%;
             grid-gap: 10px;
         }
 
@@ -823,6 +782,16 @@ CSS Grid layout for wider screens, when browser supports grid:
             width: 28px;
             height: 28px;
             padding-left: 20px;
+        }
+        .playicon {
+            top: 45%;
+            left: 40%;
+            width: 150px;
+            height: 150px;
+        }
+        .playicon .animate-icons {
+            width: 50px;
+            height: 50px;
         }
     }
 
