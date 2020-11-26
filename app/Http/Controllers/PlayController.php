@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\Course;
 use App\Jobs\DownloadPresentation;
 use App\MediasiteFolder;
 use App\MediasitePresentation;
@@ -605,7 +606,7 @@ class PlayController extends Controller
 
     public function manage()
     {
-        return view('home.manage', ['videos' => Video::all()]);
+        return view('home.manage', ['videos' => Video::all(), 'courses' => Course::all(), 'categories' => Category::all()]);
     }
 
     public function deleteVideoAjax(Request $request)
@@ -628,11 +629,31 @@ class PlayController extends Controller
 
             $video->mediasite_presentation->delete();
             $video->delete();
-            return Response()->json(['message' => 'File(s) uploaded']);
+            return Response()->json(['message' => 'Video removed.']);
         } catch (Exception $e) {
             report($e);
             return Response()->json([
                 'message' => 'Error',
+            ]);
+        }
+    }
+
+    public function editVideoAjax(Request $request)
+    {
+        try {
+            $video = Video::find($request->video_id);
+            $video->course_id = $request->course_id;
+            $video->category_id = $request->category_id;
+            $video->save();
+            return Response()->json([
+                'message' => 'Video saved.',
+                'category' => 'Category: ' . $video->category->category_name,
+                'course' => 'Course: ' . $video->course->course_name,
+            ]);
+        } catch (Exception $e) {
+            report($e);
+            return Response()->json([
+                'message' => 'Error.',
             ]);
         }
     }

@@ -35,6 +35,7 @@ Route::middleware('entitlements')->group(function () {
 
     Route::get('/videos/{video}', 'TestController@show')->name('videos.show');
     Route::post('/manage/deleteAjax', 'PlayController@deleteVideoAjax')->name('manage.deleteVideo');
+    Route::post('/manage/editAjax', 'PlayController@editVideoAjax')->name('manage.editVideo');
     Route::get('/categories/{category}', 'TestController@show')->name('categories.show');
     Route::get('/course/{course}', 'TestController@show')->name('course.show');
 
