@@ -335,10 +335,11 @@ class TestController extends Controller
     public function storeJson()
     {
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+/*        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         Schema::dropIfExists('videos');
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         dd('Done');
+*/
         /*
         //Get duration from json
         $contents = Storage::disk('public')->get('videos/Test-3/mediapackage.json');
