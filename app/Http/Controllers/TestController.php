@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\CategorySearchAspect;
+use App\Cattura;
 use App\Course;
 use App\CourseSearchAspect;
+use App\PlayerJson;
 use App\Services\DaisyAPI;
 use App\Services\DaisyIntegration;
 use App\System;
@@ -12,6 +14,7 @@ use App\Video;
 use App\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 use Spatie\Searchable\ModelSearchAspect;
@@ -328,5 +331,79 @@ class TestController extends Controller
     public function server()
     {
         dd($_SERVER);
+    }
+    public function storeJson()
+    {
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        Schema::dropIfExists('videos');
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        dd('Done');
+        /*
+        //Get duration from json
+        $contents = Storage::disk('public')->get('videos/Test-3/mediapackage.json');
+        $data = json_decode($contents,true);
+        $milliseconds = $data['outputs']['media/Test-3.mp4']['element']['duration']['timestamp'];
+        $time = ceil($milliseconds / 1000);
+        dd($time);
+        */
+        /*
+        $directory = '/videos';
+        $directories = Storage::disk('public')->directories($directory);
+        //dd($directories);
+        $x=0;
+        foreach ($directories as $directory)
+        {
+            $mediapackage = Storage::disk('public')->get($directory.'/mediapackage.json');
+            $data = json_decode($mediapackage, true);
+            $array['title'] = $data['title'];
+            //dd($data['outputs']);
+
+            foreach($data['outputs'] as $key => $source)
+            {
+                $array['sources'][]['video'] = $key;
+                //$array['sources'][]['poster'] = 'poster';
+            }
+
+            /*$json = PlayerJson::create([
+                'title' => $array['title'],
+                'sources' => $array['outputs'],
+                'subtitles' => 'subs.vtt',
+                'bitrates' => 'bitrate1, bitrate2'
+            ]);
+
+        }
+        */
+        //dd($data);
+        //dd(json_encode($array));
+
+        // Store json in db
+        $directory = '/videos';
+        $directories = Storage::disk('public')->directories($directory);
+
+        foreach ($directories as $recording)
+        {
+            $presentation_json = Storage::disk('public')->get($recording.'/presentation.json');
+            $data = json_decode($presentation_json, true);
+            //dd($data['id']);
+            if(!Video::where('presentation_id', $data['id'])->first())
+            {
+                $x = mt_rand(1,9);
+                $video = new Video();
+                $video->presentation_id = $data['id'];
+                $video->path = './storage/'.$recording.'/presentation.json';
+                $video->title = $data['title'];
+                $video->length = 60;
+                $video->image = './images/videocovers/kurs'.$x.'.jpg';
+                $video->presentation = $presentation_json;
+                $video->course_id = 1;
+                $video->category_id = 1;
+                $video->save();
+                echo 'Stored a new recording<br>';
+            }
+            else echo 'No new recordings<br>';
+
+        }
+
     }
 }

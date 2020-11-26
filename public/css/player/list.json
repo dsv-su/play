@@ -1,0 +1,29 @@
+{
+    "title": "My Playlist",
+    "items": [
+        {
+            "id": "3de80191-5959-4894-95cf-9cbd5e1eb817",
+            "title": "Lecture 1 - this one is short",
+            "link": "//example.com/222222",
+            "thumb": "thumb1.jpg"
+        },
+        {
+            "id": "7fea62ad-5832-4c5a-a5be-86871fe1139e",
+            "title": "Lecture 2",
+            "link": "//example.com/333333",
+            "thumb": "thumb2.jpg"
+        },
+        {
+            "id": "14214033-e524-46c4-b0d4-f64782416414",
+            "title": "Lecture 3 - the one we're watching!",
+            "link": "//example.com/444444",
+            "thumb": "thumb3.jpg"
+        },
+        {
+            "id": "f66de7b8-f10f-4e54-8149-aef233560682",
+            "title": "Lecture 4 - Let's see how long a title can be without causing any major formatting issues",
+            "link": "//example.com/666666",
+            "thumb": "thumb4.jpg"
+        }
+    ]
+}
