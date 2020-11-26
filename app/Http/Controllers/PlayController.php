@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Category;
-use App\Course;
 use App\Jobs\DownloadPresentation;
 use App\MediasiteFolder;
 use App\MediasitePresentation;
@@ -12,14 +11,14 @@ use App\Services\ConfigurationHandler;
 use App\UploadHandler;
 use App\Video;
 use Exception;
+use File;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
-use File;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -607,5 +606,34 @@ class PlayController extends Controller
     public function manage()
     {
         return view('home.manage', ['videos' => Video::all()]);
+    }
+
+    public function deleteVideoAjax(Request $request)
+    {
+        try {
+            $video = Video::find($request->video_id);
+            $folder = dirname($video->source1);
+            if (is_dir($folder)) {
+                $files = glob($folder . '/*');
+                // Loop through the file list
+                foreach ($files as $file) {
+                    // Check for file
+                    if (is_file($file)) {
+                        // Use unlink function to delete the file.
+                        unlink($file);
+                    }
+                }
+                rmdir($folder);
+            }
+
+            $video->mediasite_presentation->delete();
+            $video->delete();
+            return Response()->json(['message' => 'File(s) uploaded']);
+        } catch (Exception $e) {
+            report($e);
+            return Response()->json([
+                'message' => 'Error',
+            ]);
+        }
     }
 }
