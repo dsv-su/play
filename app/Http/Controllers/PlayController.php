@@ -16,8 +16,9 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\File;
+use File;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use GuzzleHttp\Client;
 use App\Services\AuthHandler;
@@ -55,9 +56,23 @@ class PlayController extends Controller
      */
     public function player(Video $video)
     {
-        $playlist = Video::where('course_id', $video->course->id)->get();
-        $course = Course::find($video->course->id);
-        return view('player.index', ['video' => $video, 'playlist' => $playlist, 'course' => $course]);
+        //$playlist = Video::where('course_id', $video->course->id)->get();
+        //$course = Course::find($video->course->id);
+        //return view('player.index', ['video' => $video, 'playlist' => $playlist, 'course' => $course]);
+
+        //$presentation = "/storage/videos/ryan.json";
+        $presentation = $video->path;
+        $playlist = "/storage/videos/list.json";
+
+        $url = url('/multiplayer') . '?' . http_build_query(['presentation' => $presentation, 'playlist' => $playlist]);
+        return Redirect::away($url);
+
+        //return redirect()->route('multiplayer', ['presentation' => $presentation, 'playlist' => $playlist]);
+    }
+
+    public function multiplayer()
+    {
+        return view('player.index');
     }
 
     public function mediasiteFetch() {

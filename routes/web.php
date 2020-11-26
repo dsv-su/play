@@ -28,6 +28,7 @@ Route::middleware('entitlements')->group(function () {
     Route::get('find', 'TestController@find')->name('find');
 
     Route::get('/player/{video}', 'PlayController@player')->name('player');
+    Route::get('/multiplayer', 'PlayController@multiplayer')->name('multiplayer');
     Route::get('/list', 'TestController@index')->name('list');
     Route::post('/search', 'TestController@search')->name('search');
 
@@ -45,4 +46,5 @@ Route::middleware('entitlements')->group(function () {
     Route::get('/daisy', 'TestController@daisy')->name('daisy');
     Route::get('/daisyload', 'TestController@daisyLoadCourses');
     Route::get('/daisy', 'TestController@daisy');
+    Route::get('/json', 'TestController@storeJson');
 });
