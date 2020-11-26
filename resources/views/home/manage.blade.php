@@ -53,7 +53,7 @@
                     }
                 });
                 let formData = new FormData();
-                let video_id = $(this).closest('div').id;
+                let video_id = $(this).closest('div').attr('id');
                 formData.append("video_id", video_id);
                 $.ajax({
                     type: 'POST',
