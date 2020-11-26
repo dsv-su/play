@@ -19,6 +19,7 @@ Route::get($login, 'SystemController@login')->name('login');
 
 Route::middleware('entitlements')->group(function () {
     Route::get('/', 'PlayController@index')->name('home');
+    Route::get('/manage', 'PlayController@manage')->name('manage');
     Route::get('/mediasite', 'PlayController@mediasite')->name('mediasite');
     Route::get('/mediasiteFetch', 'PlayController@mediasiteFetch')->name('mediasiteFetch');
     Route::post('/mediasiteCourseDownload', 'PlayController@mediasiteCourseDownload')->name('mediasiteCourseDownload');

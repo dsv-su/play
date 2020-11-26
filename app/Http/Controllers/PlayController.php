@@ -7,20 +7,20 @@ use App\Course;
 use App\Jobs\DownloadPresentation;
 use App\MediasiteFolder;
 use App\MediasitePresentation;
+use App\Services\AuthHandler;
 use App\Services\ConfigurationHandler;
 use App\UploadHandler;
 use App\Video;
 use Exception;
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
+use File;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
-use Illuminate\Http\File;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use GuzzleHttp\Client;
-use App\Services\AuthHandler;
 use Illuminate\View\View;
 
 class PlayController extends Controller
@@ -60,7 +60,8 @@ class PlayController extends Controller
         return view('player.index', ['video' => $video, 'playlist' => $playlist, 'course' => $course]);
     }
 
-    public function mediasiteFetch() {
+    public function mediasiteFetch()
+    {
         $system = new AuthHandler();
         $system = $system->authorize();
         $mediasite = new Client([
@@ -587,5 +588,10 @@ class PlayController extends Controller
             }
         }
         return false;
+    }
+
+    public function manage()
+    {
+        return view('home.manage', ['videos' => Video::all()]);
     }
 }

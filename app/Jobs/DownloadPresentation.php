@@ -120,7 +120,7 @@ class DownloadPresentation implements ShouldQueue
                         echo "Filesize does not match. Error!\n";
                         $client->request('GET', $streamurl, ['sink' => $this->path . '/' . $title . '/' . $filename]);
                     }
-                    $metadata['sources'][$stream['StreamType']] = $filename;
+                    $metadata['sources'][] = $filename;
                 }
             }
 
@@ -137,10 +137,10 @@ class DownloadPresentation implements ShouldQueue
             $video->title = $metadata['title'];
             $video->length = $metadata['length'];
             $video->tags = implode(', ', $metadata['tags']);
-            $video->source1 = array_key_exists('Video1', $metadata['sources']) ? "./storage/mediasite/$this->type/" . $this->foldername . '/' . $title . '/' . $metadata['sources']['Video1'] : null;
-            $video->source2 = array_key_exists('Video2', $metadata['sources']) ? "./storage/mediasite/$this->type/" . $this->foldername . '/' . $title . '/' . $metadata['sources']['Video2'] : null;
-            $video->source3 = array_key_exists('Video3', $metadata['sources']) ? "./storage/mediasite/$this->type/" . $this->foldername . '/' . $title . '/' . $metadata['sources']['Video3'] : null;
-            $video->source4 = array_key_exists('Video4', $metadata['sources']) ? "./storage/mediasite/$this->type/" . $this->foldername . '/' . $title . '/' . $metadata['sources']['Video4'] : null;
+            $video->source1 = array_key_exists(0, $metadata['sources']) ? "./storage/mediasite/$this->type/" . $this->foldername . '/' . $title . '/' . $metadata['sources'][0] : null;
+            $video->source2 = array_key_exists(1, $metadata['sources']) ? "./storage/mediasite/$this->type/" . $this->foldername . '/' . $title . '/' . $metadata['sources'][1] : null;
+            $video->source3 = array_key_exists(2, $metadata['sources']) ? "./storage/mediasite/$this->type/" . $this->foldername . '/' . $title . '/' . $metadata['sources'][2] : null;
+            $video->source4 = array_key_exists(3, $metadata['sources']) ? "./storage/mediasite/$this->type/" . $this->foldername . '/' . $title . '/' . $metadata['sources'][3] : null;
 
             if (!$video->source1) {
                 if (!$video->source2) {
