@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Category;
-use App\Course;
 use App\Jobs\DownloadPresentation;
 use App\MediasiteFolder;
 use App\MediasitePresentation;
@@ -12,14 +11,13 @@ use App\Services\ConfigurationHandler;
 use App\UploadHandler;
 use App\Video;
 use Exception;
+use File;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
-use File;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -51,22 +49,40 @@ class PlayController extends Controller
 
     /**
      * @param Video $video
-     * @return Application|Factory|View
+     * @return RedirectResponse
      */
     public function player(Video $video)
     {
-        //$playlist = Video::where('course_id', $video->course->id)->get();
-        //$course = Course::find($video->course->id);
-        //return view('player.index', ['video' => $video, 'playlist' => $playlist, 'course' => $course]);
+        $url = url('/multiplayer') . '?' . http_build_query(['presentation' => 'presentation/'.$video->id, 'playlist' => 'playlist/'.$video->course->id]);
 
-        //$presentation = "./storage/videos/ryan.json";
-        $presentation = $video->path;
-        $playlist = "/storage/videos/list.json";
+        return redirect()->away($url);
+    }
 
-        $url = url('/multiplayer') . '?' . http_build_query(['presentation' => $presentation, 'playlist' => $playlist]);
-        return Redirect::away($url);
+    public function presentation($id)
+    {
+        $video = Video::find($id);
+        return $video->presentation;
+    }
 
-        //return redirect()->route('multiplayer', ['presentation' => $presentation, 'playlist' => $playlist]);
+    public function playlist($id)
+    {
+        $playlist = Video::where('course_id', $id)->get();
+        //Build json playlist
+        $json = Collection::make([
+            'title' => 'My Playlist'
+        ]);
+        $playlist
+            ->makeHidden('presentation_id')
+            ->makeHidden('presentation')
+            ->makeHidden('duration')
+            ->makeHidden('tags')
+            ->makeHidden('course_id')
+            ->makeHidden('category_id')
+            ->makeHidden('created_at')
+            ->makeHidden('updated_at');
+        $json['items'] = $playlist->toArray();
+        return $json->toJson(JSON_PRETTY_PRINT);
+
     }
 
     public function multiplayer()
@@ -606,6 +622,55 @@ class PlayController extends Controller
 
     public function manage()
     {
-        return view('home.manage', ['videos' => Video::all()]);
+        return view('home.manage', ['videos' => Video::all(), 'courses' => Course::all(), 'categories' => Category::all()]);
+    }
+
+    public function deleteVideoAjax(Request $request)
+    {
+        try {
+            $video = Video::find($request->video_id);
+            $folder = dirname($video->source1);
+            if (is_dir($folder)) {
+                $files = glob($folder . '/*');
+                // Loop through the file list
+                foreach ($files as $file) {
+                    // Check for file
+                    if (is_file($file)) {
+                        // Use unlink function to delete the file.
+                        unlink($file);
+                    }
+                }
+                rmdir($folder);
+            }
+
+            $video->mediasite_presentation->delete();
+            $video->delete();
+            return Response()->json(['message' => 'Video removed.']);
+        } catch (Exception $e) {
+            report($e);
+            return Response()->json([
+                'message' => 'Error',
+            ]);
+        }
+    }
+
+    public function editVideoAjax(Request $request)
+    {
+        try {
+            $video = Video::find($request->video_id);
+            $video->course_id = $request->course_id;
+            $video->category_id = $request->category_id;
+            $video->save();
+            return Response()->json([
+                'message' => 'Video saved.',
+                'category' => 'Category: ' . $video->category->category_name,
+                'course' => 'Course: ' . $video->course->course_name,
+            ]);
+        } catch (Exception $e) {
+            report($e);
+            return Response()->json([
+                'message' => 'Error.',
+            ]);
+        }
     }
 }

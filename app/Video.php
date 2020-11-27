@@ -15,7 +15,7 @@ class Video extends Model implements Searchable
 {
     use SearchableTrait;
 
-    protected $fillable = ['presentation_id','title', 'tags', 'length', 'source1', 'source2', 'source3', 'source4','course_id','category_id'];
+    protected $fillable = ['presentation_id','title', 'tags', 'duration', 'thumb', 'course_id','category_id'];
     protected $searchable = [
         'columns' => [
             'videos.title' => 10,
@@ -26,6 +26,12 @@ class Video extends Model implements Searchable
             'categories' => ['videos.category_id', 'categories.id'],
         ],
     ];
+    protected $appends = ['link'];
+
+    public function getLinkAttribute()
+    {
+        return $this->attributes['link'] = 'player/'.$this->id;
+    }
 
     public function category()
     {

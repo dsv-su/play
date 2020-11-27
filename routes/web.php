@@ -30,10 +30,15 @@ Route::middleware('entitlements')->group(function () {
 
     Route::get('/player/{video}', 'PlayController@player')->name('player');
     Route::get('/multiplayer', 'PlayController@multiplayer')->name('multiplayer');
+    Route::get('/presentation/{id}', 'PlayController@presentation');
+    Route::get('/playlist/{id}', 'PlayController@playlist');
+
     Route::get('/list', 'TestController@index')->name('list');
     Route::post('/search', 'TestController@search')->name('search');
 
     Route::get('/videos/{video}', 'TestController@show')->name('videos.show');
+    Route::post('/manage/deleteAjax', 'PlayController@deleteVideoAjax')->name('manage.deleteVideo');
+    Route::post('/manage/editAjax', 'PlayController@editVideoAjax')->name('manage.editVideo');
     Route::get('/categories/{category}', 'TestController@show')->name('categories.show');
     Route::get('/course/{course}', 'TestController@show')->name('course.show');
 

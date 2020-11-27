@@ -78,6 +78,7 @@
                         <h2>Actions</h2>
                         <ul>
                             <li><a class="menu-item" href="#">Hantera uppspelning</a></li>
+                            <li><a class="menu-item" href="{{ route('manage') }}">Manage videos</a></li>
                             <li><a class="menu-item" href="{{ route('mediasiteFetch') }}">Sync items from Mediasite</a>
                             </li>
                             <li><a class="menu-item" href="{{ route('mediasite') }}">Retrive from Mediasite</a></li>
@@ -640,11 +641,11 @@
                         <div class="videos">
                             @foreach($modelSearchResults as $searchResult)
                                 <div class="video"
-                                     style="background-image: url({{ asset($searchResult->searchable->image)}})">
+                                     style="background-image: url({{ asset($searchResult->searchable->thumb)}})">
                                     <a href="{{ $searchResult->url }}">
                                         <div class="title">{{ $searchResult->title }}</div>
                                         <i class="fas fa-play-circle"></i>
-                                        <p> {{$searchResult->searchable->length}} </p>
+                                        <p> {{$searchResult->searchable->duration}} </p>
                                         <div class="footer">
                                             Title: {{$searchResult->title}}
                                         </div>
@@ -665,11 +666,11 @@
                             <div class="videos">
                                 @foreach($modelSearchResults as $searchResult)
                                     <div class="video"
-                                         style="background-image: url({{ asset($searchResult->searchable->image)}})">
+                                         style="background-image: url({{ asset($searchResult->searchable->thumb)}})">
                                         <a href="{{ $searchResult->url }}">
                                             <div class="title">{{ $searchResult->title }}</div>
                                             <i class="fas fa-play-circle"></i>
-                                            <p> {{$searchResult->searchable->length}} </p>
+                                            <p> {{$searchResult->searchable->duration}} </p>
                                             <div class="footer">
                                                 Title: {{$searchResult->title}}
                                             </div>
@@ -693,11 +694,11 @@
                                         <div class="videos">
                                             @foreach($category_videos as $searchResult)
                                                 <div class="video"
-                                                     style="background-image: url({{ asset($searchResult->image)}})">
+                                                     style="background-image: url({{ asset($searchResult->thumb)}})">
                                                     <a href="{{ route('player', $searchResult->id) }}">
                                                         <div class="title">{{ $searchResult->title }}</div>
                                                         <i class="fas fa-play-circle"></i>
-                                                        <p> {{$searchResult->length}} </p>
+                                                        <p> {{$searchResult->duration}} </p>
                                                         <div class="footer">
                                                             Title: {{$searchResult->title}}
                                                         </div>
@@ -728,11 +729,11 @@
 
                                                             @foreach($course_videos as $searchResult)
                                                                 <div class="video"
-                                                                     style="background-image: url({{ asset($searchResult->image)}})">
+                                                                     style="background-image: url({{ asset($searchResult->thumb)}})">
                                                                     <a href="{{ route('player', $searchResult->id) }}">
                                                                         <div class="title">{{ $searchResult->title }}</div>
                                                                         <i class="fas fa-play-circle"></i>
-                                                                        <p> {{$searchResult->length}} </p>
+                                                                        <p> {{$searchResult->duration}} </p>
                                                                         <div class="footer">
                                                                             Title: {{$searchResult->title}}
                                                                         </div>
@@ -754,11 +755,11 @@
 
                                                             @foreach($searchResults as $searchResult)
                                                                 <div class="video"
-                                                                     style="background-image: url({{ asset($searchResult->image)}})">
+                                                                     style="background-image: url({{ asset($searchResult->thumb)}})">
                                                                     <a href="{{ route('player', $searchResult->id) }}">
                                                                         <div class="title">{{ $searchResult->title }}</div>
                                                                         <i class="fas fa-play-circle"></i>
-                                                                        <p> {{$searchResult->length}} </p>
+                                                                        <p> {{$searchResult->duration}} </p>
                                                                         <div class="footer">
                                                                             Title: {{$searchResult->title}}
                                                                         </div>
@@ -773,11 +774,11 @@
                                                                     <div class="videos">
                                                                         @foreach ($latest as $video)
                                                                             <div class="video"
-                                                                                 style="background-image: url({{ asset($video->image) }})">
+                                                                                 style="background-image: url({{ asset($video->thumb) }})">
                                                                                 <a href="{{ route('player', ['video' => $video]) }}">
                                                                                     <div class="title">{{ $video->title }}</div>
                                                                                     <i class="fas fa-play-circle"></i>
-                                                                                    <p> {{$video->length}} </p>
+                                                                                    <p> {{$video->duration}} </p>
                                                                                 </a>
 
                                                                                 <div class="footer">

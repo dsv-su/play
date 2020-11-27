@@ -335,49 +335,6 @@ class TestController extends Controller
     public function storeJson()
     {
 
-/*        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        Schema::dropIfExists('videos');
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-        dd('Done');
-*/
-        /*
-        //Get duration from json
-        $contents = Storage::disk('public')->get('videos/Test-3/mediapackage.json');
-        $data = json_decode($contents,true);
-        $milliseconds = $data['outputs']['media/Test-3.mp4']['element']['duration']['timestamp'];
-        $time = ceil($milliseconds / 1000);
-        dd($time);
-        */
-        /*
-        $directory = '/videos';
-        $directories = Storage::disk('public')->directories($directory);
-        //dd($directories);
-        $x=0;
-        foreach ($directories as $directory)
-        {
-            $mediapackage = Storage::disk('public')->get($directory.'/mediapackage.json');
-            $data = json_decode($mediapackage, true);
-            $array['title'] = $data['title'];
-            //dd($data['outputs']);
-
-            foreach($data['outputs'] as $key => $source)
-            {
-                $array['sources'][]['video'] = $key;
-                //$array['sources'][]['poster'] = 'poster';
-            }
-
-            /*$json = PlayerJson::create([
-                'title' => $array['title'],
-                'sources' => $array['outputs'],
-                'subtitles' => 'subs.vtt',
-                'bitrates' => 'bitrate1, bitrate2'
-            ]);
-
-        }
-        */
-        //dd($data);
-        //dd(json_encode($array));
-
         // Store json in db
         $directory = '/videos';
         $directories = Storage::disk('public')->directories($directory);
@@ -392,10 +349,9 @@ class TestController extends Controller
                 $x = mt_rand(1,9);
                 $video = new Video();
                 $video->presentation_id = $data['id'];
-                $video->path = './storage/'.$recording.'/presentation.json';
                 $video->title = $data['title'];
-                $video->length = 60;
-                $video->image = './images/videocovers/kurs'.$x.'.jpg';
+                $video->duration = 60;
+                $video->thumb = 'images/videocovers/kurs'.$x.'.jpg';
                 $video->presentation = $presentation_json;
                 $video->course_id = 1;
                 $video->category_id = 1;
