@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\URL;
 use Spatie\Searchable\Searchable;
 use Spatie\Searchable\SearchResult;
 use Nicolaslopezj\Searchable\SearchableTrait;
@@ -30,7 +31,7 @@ class Video extends Model implements Searchable
 
     public function getLinkAttribute()
     {
-        return $this->attributes['link'] = 'player/'.$this->id;
+        return $this->attributes['link'] = URL::to('/').'/player/'.$this->id;
     }
 
     public function category()

@@ -19,6 +19,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
 
 class PlayController extends Controller
@@ -53,7 +54,7 @@ class PlayController extends Controller
      */
     public function player(Video $video)
     {
-        $url = url('/multiplayer') . '?' . http_build_query(['presentation' => 'presentation/'.$video->id, 'playlist' => 'playlist/'.$video->course->id]);
+        $url = url('/multiplayer') . '?' . http_build_query(['presentation' => URL::to('/').'/presentation/'.$video->id, 'playlist' => URL::to('/').'playlist/'.$video->course->id]);
 
         return redirect()->away($url);
     }
