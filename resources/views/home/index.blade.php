@@ -78,6 +78,7 @@
                         <h2>Actions</h2>
                         <ul>
                             <li><a class="menu-item" href="#">Hantera uppspelning</a></li>
+                            <li><a class="menu-item" href="{{ route('manage') }}">Manage videos</a></li>
                             <li><a class="menu-item" href="{{ route('mediasiteFetch') }}">Sync items from Mediasite</a>
                             </li>
                             <li><a class="menu-item" href="{{ route('mediasite') }}">Retrive from Mediasite</a></li>

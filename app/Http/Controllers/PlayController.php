@@ -6,19 +6,19 @@ use App\Category;
 use App\Jobs\DownloadPresentation;
 use App\MediasiteFolder;
 use App\MediasitePresentation;
+use App\Services\AuthHandler;
 use App\Services\ConfigurationHandler;
 use App\UploadHandler;
 use App\Video;
 use Exception;
+use File;
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use File;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
-use GuzzleHttp\Client;
-use App\Services\AuthHandler;
 use Illuminate\View\View;
 
 class PlayController extends Controller
@@ -90,7 +90,8 @@ class PlayController extends Controller
         return view('player.index');
     }
 
-    public function mediasiteFetch() {
+    public function mediasiteFetch()
+    {
         $system = new AuthHandler();
         $system = $system->authorize();
         $mediasite = new Client([
@@ -617,5 +618,59 @@ class PlayController extends Controller
             }
         }
         return false;
+    }
+
+    public function manage()
+    {
+        return view('home.manage', ['videos' => Video::all(), 'courses' => Course::all(), 'categories' => Category::all()]);
+    }
+
+    public function deleteVideoAjax(Request $request)
+    {
+        try {
+            $video = Video::find($request->video_id);
+            $folder = dirname($video->source1);
+            if (is_dir($folder)) {
+                $files = glob($folder . '/*');
+                // Loop through the file list
+                foreach ($files as $file) {
+                    // Check for file
+                    if (is_file($file)) {
+                        // Use unlink function to delete the file.
+                        unlink($file);
+                    }
+                }
+                rmdir($folder);
+            }
+
+            $video->mediasite_presentation->delete();
+            $video->delete();
+            return Response()->json(['message' => 'Video removed.']);
+        } catch (Exception $e) {
+            report($e);
+            return Response()->json([
+                'message' => 'Error',
+            ]);
+        }
+    }
+
+    public function editVideoAjax(Request $request)
+    {
+        try {
+            $video = Video::find($request->video_id);
+            $video->course_id = $request->course_id;
+            $video->category_id = $request->category_id;
+            $video->save();
+            return Response()->json([
+                'message' => 'Video saved.',
+                'category' => 'Category: ' . $video->category->category_name,
+                'course' => 'Course: ' . $video->course->course_name,
+            ]);
+        } catch (Exception $e) {
+            report($e);
+            return Response()->json([
+                'message' => 'Error.',
+            ]);
+        }
     }
 }
