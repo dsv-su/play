@@ -43,7 +43,7 @@ function init() {
             setupProgress(body, mainstream)
         })
     })
-    read.open('GET', presentation)
+    read.open('GET', decodeURIComponent(presentation))
     read.send()
 }
 
@@ -269,7 +269,7 @@ function setupPlaylist(body, playlistfile) {
     var read = new XMLHttpRequest()
     read.addEventListener('load', function() {
         doSetup(JSON.parse(read.responseText))})
-    read.open('GET', playlistfile)
+    read.open('GET', decodeURIComponent(playlistfile))
     read.send()
 
     function doSetup(playlist) {

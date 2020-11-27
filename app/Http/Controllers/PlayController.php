@@ -59,7 +59,7 @@ class PlayController extends Controller
         //$course = Course::find($video->course->id);
         //return view('player.index', ['video' => $video, 'playlist' => $playlist, 'course' => $course]);
 
-        //$presentation = "/storage/videos/ryan.json";
+        //$presentation = "./storage/videos/ryan.json";
         $presentation = $video->path;
         $playlist = "/storage/videos/list.json";
 
