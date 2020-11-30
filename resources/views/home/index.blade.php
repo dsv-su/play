@@ -86,6 +86,8 @@
                     </div>
                 </nav>
                 <!-- -->
+
+                <!-- -->
                 <nav class="nav-menu board no-flicker" id="nav-menu" style="opacity: 0; margin-top: 0; height: 0;">
                     <div class="inner">
                         <h2 class="hidden-at-start">Main menu</h2>
@@ -632,6 +634,14 @@
         </section> <!--end Top section -->
         <!-- Search result -->
         <section class="content_section">
+            <!-- -->
+            @if (session('status'))
+                <div>
+                    {{ session('status') }}
+                </div>
+            @endif
+            <!-- -->
+
             @if ($search == 1)
                 <div class="playlist_one">
                     <p class="playlist_title">{{ $searchResults->count() }} resultat för "{{ request('query') }}"</p>

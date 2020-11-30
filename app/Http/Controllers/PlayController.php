@@ -54,8 +54,10 @@ class PlayController extends Controller
      */
     public function player(Video $video)
     {
+        // Production
         $url = url('/multiplayer') . '?' . http_build_query(['presentation' => URL::to('/').'/presentation/'.$video->id, 'playlist' => URL::to('/').'/playlist/'.$video->course->id]);
-
+        // Dev
+        //$url = url('/multiplayer') . '?' . http_build_query(['presentation' => 'presentation/'.$video->id, 'playlist' => 'playlist/'.$video->course->id]);
         return redirect()->away($url);
     }
 
