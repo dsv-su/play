@@ -12,6 +12,7 @@ use App\Services\DaisyIntegration;
 use App\System;
 use App\Video;
 use App\Category;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -352,9 +353,8 @@ class TestController extends Controller
                 $video->title = $data['title'];
                 $video->thumb = $data['thumb'] ?? 'images/videocovers/kurs'.$x.'.jpg';
                 $video->presenter = $data['presenter'] ?? null;
-                //$video->course = $data['course'] ?? null;
-                $video->start = $data['start'] ?? null;
-                $video->end = $data['end'] ?? null;
+                //Convert unix timestamps
+                $video->duration = (new Carbon($data['end'] ?? null))->diff(new Carbon($data['start'] ?? null))->format('%h:%I');
                 $video->subtitles = $data['subtitles'] ?? null;
                 $video->tags = $data['tags'] ?? null;
                 $video->presentation = $presentation_json;
