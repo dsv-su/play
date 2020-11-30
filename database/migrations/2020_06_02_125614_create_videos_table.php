@@ -17,9 +17,12 @@ class CreateVideosTable extends Migration
             $table->id();
             $table->string('presentation_id')->nullable();
             $table->string('title');
-            $table->string('duration');
-            $table->string('tags')->nullable();
             $table->string('thumb')->nullable();
+            $table->string('presenter')->nullable();
+            $table->integer('start')->nullable();
+            $table->integer('end')->nullable();
+            $table->string('subtitles')->nullable();
+            $table->text('tags')->nullable();
             $table->json('presentation')->nullable();
             $table->foreignId('course_id')->constrained();
             $table->foreignId('category_id')->references('id')->on('categories');
