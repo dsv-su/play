@@ -29,6 +29,10 @@ class Video extends Model implements Searchable
     ];
     protected $appends = ['link'];
 
+    protected $casts = [
+        'tags' => 'array',
+    ];
+
     public function getLinkAttribute()
     {
         return $this->attributes['link'] = URL::to('/').'/player/'.$this->id;

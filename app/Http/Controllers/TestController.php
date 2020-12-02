@@ -12,6 +12,7 @@ use App\Services\DaisyIntegration;
 use App\System;
 use App\Video;
 use App\Category;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -338,7 +339,7 @@ class TestController extends Controller
         // Store json in db
         $directory = '/videos';
         $directories = Storage::disk('public')->directories($directory);
-
+        $new_recording = 0;
         foreach ($directories as $recording)
         {
             $presentation_json = Storage::disk('public')->get($recording.'/presentation.json');
@@ -350,17 +351,20 @@ class TestController extends Controller
                 $video = new Video();
                 $video->presentation_id = $data['id'];
                 $video->title = $data['title'];
-                $video->duration = 60;
-                $video->thumb = 'images/videocovers/kurs'.$x.'.jpg';
+                $video->thumb = $data['thumb'] ?? 'images/videocovers/kurs'.$x.'.jpg';
+                $video->presenter = $data['presenter'] ?? null;
+                //Convert unix timestamps
+                $video->duration = (new Carbon($data['end'] ?? null))->diff(new Carbon($data['start'] ?? null))->format('%h:%I');
+                $video->subtitles = $data['subtitles'] ?? null;
+                $video->tags = $data['tags'] ?? null;
                 $video->presentation = $presentation_json;
                 $video->course_id = 1;
                 $video->category_id = 1;
                 $video->save();
-                echo 'Stored a new recording<br>';
+                $new_recording++;
             }
-            else echo 'No new recordings<br>';
-
         }
-
+        if($new_recording > 0) return redirect('/')->with('status', 'New recordings stored in db');
+        else return redirect('/')->with('status', 'No new recordings');
     }
 }
