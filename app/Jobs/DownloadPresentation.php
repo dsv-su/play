@@ -77,7 +77,7 @@ class DownloadPresentation implements ShouldQueue
                 'title' => $title,
                 'description' => $presentation['Description'],
                 'recorded' => $presentation['RecordDate'],
-                'length' => $presentation['Duration'],
+                'duration' => $presentation['Duration'],
                 'owner' => $presentation['Owner'],
                 'tags' => $presentation['TagList']
             );
@@ -120,7 +120,11 @@ class DownloadPresentation implements ShouldQueue
                         echo "Filesize does not match. Error!\n";
                         $client->request('GET', $streamurl, ['sink' => $this->path . '/' . $title . '/' . $filename]);
                     }
-                    $metadata['sources'][] = $filename;
+                    $metadata['sources'][] = array(
+                        'video' => "./storage/mediasite/$this->type/$this->foldername/$title/$filename",
+                        'poster' => '',
+                        'audio' => true
+                    );
                 }
             }
 
@@ -135,28 +139,8 @@ class DownloadPresentation implements ShouldQueue
             // Maybe use mediasiteID to ensure that we don't download same thing twice?
             $video = new Video;
             $video->title = $metadata['title'];
-            $video->length = $metadata['length'];
+            $video->duration = $metadata['duration'];
             $video->tags = implode(', ', $metadata['tags']);
-            $video->source1 = array_key_exists(0, $metadata['sources']) ? "./storage/mediasite/$this->type/" . $this->foldername . '/' . $title . '/' . $metadata['sources'][0] : null;
-            $video->source2 = array_key_exists(1, $metadata['sources']) ? "./storage/mediasite/$this->type/" . $this->foldername . '/' . $title . '/' . $metadata['sources'][1] : null;
-            $video->source3 = array_key_exists(2, $metadata['sources']) ? "./storage/mediasite/$this->type/" . $this->foldername . '/' . $title . '/' . $metadata['sources'][2] : null;
-            $video->source4 = array_key_exists(3, $metadata['sources']) ? "./storage/mediasite/$this->type/" . $this->foldername . '/' . $title . '/' . $metadata['sources'][3] : null;
-
-            if (!$video->source1) {
-                if (!$video->source2) {
-                    if (!$video->source3) {
-                        if (!$video->source4) {
-                            return false;
-                        }
-                        $video->source3 = $video->source4;
-                        $video->source4 = null;
-                    }
-                    $video->source2 = $video->source3;
-                    $video->source3 = null;
-                }
-                $video->source1 = $video->source2;
-                $video->source2 = null;
-            }
 
             $semester = $year = 'Unknown';
             if ($this->type == 'course') {
@@ -175,26 +159,21 @@ class DownloadPresentation implements ShouldQueue
 
             // Dummy for now. We don't have categories
             $video->category_id = 1;
+
+            // Store JSON
+            $video->presentation = json_encode($metadata, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
             $video->save();
 
-            //Update presentsation status
+            // Update presentsation status
             $localpresentation = MediasitePresentation::where('mediasite_id', $presentationid)->firstOrFail();
             $localpresentation->status = 1;
             $localpresentation->video_id = $video->id;
             $localpresentation->save();
 
-            //Make sure to remove videos that are unattached (without relation to mediasite_presentation)
-            $othervideos = Video::where('source1', $video->source1)->get();
-            if ($othervideos->count() > 1) {
-                foreach ($othervideos as $othervideo) {
-                    if (!$othervideo->mediasite_presentation()->count()) {
-                        $othervideo->delete();
-                    }
-                }
-            }
             return true;
         } catch (GuzzleException $e) {
-            dd($e);
+            report($e);
         }
     }
 }
