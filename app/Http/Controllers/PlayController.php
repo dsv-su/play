@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\Course;
 use App\Jobs\DownloadPresentation;
 use App\MediasiteFolder;
 use App\MediasitePresentation;
@@ -54,8 +55,7 @@ class PlayController extends Controller
      */
     public function player(Video $video)
     {
-        $url = url('/multiplayer') . '?' . http_build_query(['presentation' => URL::to('/').'/presentation/'.$video->id, 'playlist' => URL::to('/').'/playlist/'.$video->course->id]);
-
+        $url = url('/multiplayer') . '?' . urldecode(http_build_query(['presentation' => URL::to('/') . '/presentation/' . $video->id, 'playlist' => URL::to('/') . '/playlist/' . $video->course->id]));
         return redirect()->away($url);
     }
 
@@ -185,7 +185,14 @@ class PlayController extends Controller
     public function removeDeletedVideos()
     {
         foreach (Video::all() as $video) {
-            if (!file_exists($video->source1) && strpos($video->source1, 'http') === false) {
+            $sources = json_decode($video->presentation)->sources;
+            $delete = true;
+            foreach ($sources as $source) {
+                if (file_exists($source->video) || strpos($source->video, 'http') !== false) {
+                    $delete = false;
+                }
+            }
+            if ($delete) {
                 $mediasite_presentation = $video->mediasite_presentation()->first();
                 if ($mediasite_presentation) {
                     $mediasite_presentation->video_id = null;
@@ -201,7 +208,8 @@ class PlayController extends Controller
      * @param MediasiteFolder $folder
      * @return bool
      */
-    public function findPresentationLeafs(MediasiteFolder $folder)
+    public
+    function findPresentationLeafs(MediasiteFolder $folder)
     {
         if ($folder->presentations()->count()) {
             return true;
@@ -220,7 +228,8 @@ class PlayController extends Controller
      * @param $folders
      * @param $subfolders
      */
-    public function getSubFolders(MediasiteFolder $folder, $folders, &$subfolders)
+    public
+    function getSubFolders(MediasiteFolder $folder, $folders, &$subfolders)
     {
         foreach ($folders as $f) {
             if ($f->parent == $folder->id) {
@@ -235,7 +244,8 @@ class PlayController extends Controller
      * @param $url
      * @return array|mixed
      */
-    public function getMediasiteFolders($mediasite, $url)
+    public
+    function getMediasiteFolders($mediasite, $url)
     {
         $folders = array();
 
@@ -268,7 +278,8 @@ class PlayController extends Controller
      * @param $mediasite
      * @param $url
      */
-    public function getMediasitePresentations($mediasite, $url)
+    public
+    function getMediasitePresentations($mediasite, $url)
     {
         $folders = MediasiteFolder::all();
         foreach ($folders as $folder) {
@@ -288,7 +299,7 @@ class PlayController extends Controller
         }
     }
 
-    // Not used now. The plan is to call it via ajax when downloading. The call is very eager.
+// Not used now. The plan is to call it via ajax when downloading. The call is very eager.
 
     /**
      * @param MediasiteFolder $folder
@@ -296,7 +307,8 @@ class PlayController extends Controller
      * @param $url
      * @return string|null
      */
-    public function calculateFolderSize(MediasiteFolder $folder, $mediasite, $url)
+    public
+    function calculateFolderSize(MediasiteFolder $folder, $mediasite, $url)
     {
         $folderid = $folder->id;
         try {
@@ -323,7 +335,8 @@ class PlayController extends Controller
      * @param $bytes
      * @return string
      */
-    public static function bytesToHuman($bytes)
+    public
+    static function bytesToHuman($bytes)
     {
         $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
         for ($i = 0; $bytes > 1000; $i++) {
@@ -336,7 +349,8 @@ class PlayController extends Controller
      * @return RedirectResponse
      * @throws Exception
      */
-    public function mediasiteUserDownload()
+    public
+    function mediasiteUserDownload()
     {
         $folderid = request()->folderid ?? null;
         $username = request()->username ?? null;
@@ -356,7 +370,8 @@ class PlayController extends Controller
      * @return RedirectResponse
      * @throws Exception
      */
-    public function mediasiteCourseDownload()
+    public
+    function mediasiteCourseDownload()
     {
         $folderid = request()->folderid ?? null;
         $coursename = request()->coursename ?? null;
@@ -370,7 +385,8 @@ class PlayController extends Controller
      * @return RedirectResponse
      * @throws Exception
      */
-    public function mediasiteRecordingDownload()
+    public
+    function mediasiteRecordingDownload()
     {
         $folderid = request()->folderid ?? null;
         $foldername = request()->foldername ?? null;
@@ -384,7 +400,8 @@ class PlayController extends Controller
      * @return RedirectResponse
      * @throws Exception
      */
-    public function mediasiteOtherDownload()
+    public
+    function mediasiteOtherDownload()
     {
         $folderid = request()->folderid ?? null;
         $foldername = request()->foldername ?? null;
@@ -401,7 +418,8 @@ class PlayController extends Controller
      * @return bool
      * @throws Exception
      */
-    public function processDownload($type, $foldername, $folderid)
+    public
+    function processDownload($type, $foldername, $folderid)
     {
         $system = new AuthHandler();
         $system = $system->authorize();
@@ -426,145 +444,6 @@ class PlayController extends Controller
             $presentations = MediasitePresentation::where('mediasite_folder_id', MediasiteFolder::where('mediasite_id', $folderid)->firstOrFail()->id)->get();
             foreach ($presentations as $presentation) {
                 DownloadPresentation::dispatch($presentation, $type, $path, $foldername);
-                /*
-                try {
-                    $presentationid = $presentation['Id'];
-
-                    // Check if it's already downloaded
-                    $locallysaved = MediasitePresentation::where('mediasite_id', $presentationid)
-                        ->where('status', 1)->first();
-                    // We skip only if mediasite presentation has a correct pointer to a local video
-                    if ($locallysaved && $locallysaved->video_id) {
-                        continue;
-                    }
-
-                    $title = trim($presentation['Title']);
-
-                    // Now let's create a json with all relevant metadata
-                    $metadata = array(
-                        'mediasiteid' => $presentation['Id'],
-                        'title' => $title,
-                        'description' => $presentation['Description'],
-                        'recorded' => $presentation['RecordDate'],
-                        'length' => $presentation['Duration'],
-                        'owner' => $presentation['Owner'],
-                        'tags' => $presentation['TagList']
-                    );
-
-                    // Presenters
-                    $presenters = array();
-                    try {
-                        $presenters = json_decode($mediasite->get($url . "/Presentations('$presentationid')/Presenters")->getBody(), true)['value'];
-                    } catch (GuzzleException $e) {
-                        abort(503);
-                    }
-                    foreach ($presenters as $presenter) {
-                        $metadata['presenters'][] = array('fullname' => $presenter['DisplayName'], 'email' => $presenter['Email']);
-                    }
-
-                    $streams = array();
-                    try {
-                        $streams = json_decode($mediasite->get($url . "/Presentations('$presentationid')/OnDemandContent")->getBody(), true)['value'];
-                    } catch (GuzzleException $e) {
-                        abort(503);
-                    }
-
-                    $emptystreams = true;
-                    foreach ($streams as $stream) {
-                        $filename = $stream['FileNameWithExtension'];
-                        // Skip zero length
-                        if ($stream['Length'] > 0) {
-                            $emptystreams = false;
-                            $streamurl = "https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/$filename";
-                            $client = new Client();
-                            if (!file_exists($path . $title . '/' . $filename)) {
-                                // download only if it hasn't been done before
-                                if (!is_dir($path . $title)) {
-                                    mkdir($path . $title);
-                                }
-                                $client->request('GET', $streamurl, ['sink' => $path . '/' . $title . '/' . $filename]);
-                            }
-                            if (filesize($path . '/' . $title . '/' . $filename) != $stream['FileLength']) {
-                                // filesize doesn't match! retrying.
-                                echo 'Filesize does not match. Error!';
-                                $client->request('GET', $streamurl, ['sink' => $path . '/' . $title . '/' . $filename]);
-                            }
-                            $metadata['sources'][$stream['StreamType']] = $filename;
-                        }
-                    }
-
-                    if ($emptystreams) {
-                        return false;
-                    }
-
-                    // Save metadata json
-                    file_put_contents($path . '/' . $title . '/data.json', json_encode($metadata, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
-
-                    // Let's import the data to videos table.
-                    // Maybe use mediasiteID to ensure that we don't download same thing twice?
-                    $video = new Video;
-                    $video->title = $metadata['title'];
-                    $video->length = $metadata['length'];
-                    $video->tags = implode(', ', $metadata['tags']);
-                    $video->source1 = array_key_exists('Video1', $metadata['sources']) ? "./storage/mediasite/$type/" . $foldername . '/' . $title . '/' . $metadata['sources']['Video1'] : null;
-                    $video->source2 = array_key_exists('Video2', $metadata['sources']) ? "./storage/mediasite/$type/" . $foldername . '/' . $title . '/' . $metadata['sources']['Video2'] : null;
-                    $video->source3 = array_key_exists('Video3', $metadata['sources']) ? "./storage/mediasite/$type/" . $foldername . '/' . $title . '/' . $metadata['sources']['Video3'] : null;
-                    $video->source4 = array_key_exists('Video4', $metadata['sources']) ? "./storage/mediasite/$type/" . $foldername . '/' . $title . '/' . $metadata['sources']['Video4'] : null;
-
-                    if (!$video->source1) {
-                        if (!$video->source2) {
-                            if (!$video->source3) {
-                                if (!$video->source4) {
-                                    return false;
-                                }
-                                $video->source3 = $video->source4;
-                                $video->source4 = null;
-                            }
-                            $video->source2 = $video->source3;
-                            $video->source3 = null;
-                        }
-                        $video->source1 = $video->source2;
-                        $video->source2 = null;
-                    }
-
-                    $semester = $year = 'Unknown';
-                    if ($type == 'course') {
-                        // We also need to create a course and a category.
-                        $term = array();
-                        $re = '/([V|H|S]T)(19|20)\d{2}/';
-                        preg_match($re, $title, $term, 0, 0);
-                        if ($term && $term[0]) {
-                            $semester = substr($term[0], 0, 2);
-                            $year = substr($term[0], 2, 4);
-                        }
-                    }
-                    $course = Course::firstOrCreate(array('course_name' => $foldername, 'semester' => $semester, 'year' => $year));
-                    $course_id = $course->id;
-                    $video->course_id = $course_id;
-
-                    // Dummy for now. We don't have categories
-                    $video->category_id = 1;
-                    $video->save();
-
-                    //Update presentsation status
-                    $localpresentation = MediasitePresentation::where('mediasite_id', $presentationid)->firstOrFail();
-                    $localpresentation->status = 1;
-                    $localpresentation->video_id = $video->id;
-                    $localpresentation->save();
-
-                    //Make sure to remove videos that are unattached (without relation to mediasite_presentation)
-                    $othervideos = Video::where('source1', $video->source1)->get();
-                    if ($othervideos->count() > 1) {
-                        foreach ($othervideos as $othervideo) {
-                            if (!$othervideo->mediasite_presentation()->count()) {
-                                $othervideo->delete();
-                            }
-                        }
-                    }
-                } catch (GuzzleException $e) {
-                    dd($e);
-                }
-                */
             }
 
             return true;
@@ -575,7 +454,8 @@ class PlayController extends Controller
     /**
      * @return Application|Factory|View
      */
-    public function upload()
+    public
+    function upload()
     {
         $data['upload'] = 0;
         return view('video.test', $data);
@@ -585,7 +465,8 @@ class PlayController extends Controller
      * @param Request $request
      * @return false|Application|Factory|View
      */
-    public function store(Request $request)
+    public
+    function store(Request $request)
     {
         if ($request->hasFile('file')) {
             $path = Storage::putFileAs('public', $request->file('file'), 'upload.txt');
@@ -621,12 +502,14 @@ class PlayController extends Controller
         return false;
     }
 
-    public function manage()
+    public
+    function manage()
     {
         return view('home.manage', ['videos' => Video::all(), 'courses' => Course::all(), 'categories' => Category::all()]);
     }
 
-    public function deleteVideoAjax(Request $request)
+    public
+    function deleteVideoAjax(Request $request)
     {
         try {
             $video = Video::find($request->video_id);
@@ -644,7 +527,9 @@ class PlayController extends Controller
                 rmdir($folder);
             }
 
-            $video->mediasite_presentation->delete();
+            $video->mediasite_presentation->video_id = null;
+            $video->mediasite_presentation->status = null;
+            $video->mediasite_presentation->save();
             $video->delete();
             return Response()->json(['message' => 'Video removed.']);
         } catch (Exception $e) {
@@ -655,7 +540,8 @@ class PlayController extends Controller
         }
     }
 
-    public function editVideoAjax(Request $request)
+    public
+    function editVideoAjax(Request $request)
     {
         try {
             $video = Video::find($request->video_id);
