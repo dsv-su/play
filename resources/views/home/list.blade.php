@@ -642,13 +642,13 @@
 
                             <div>
 
-                                <table>
+                                <table class="table table-striped">
                                     <thead>
                                     <tr>
-                                        <th>Video</th>
-                                        <th>Category</th>
-                                        <th>Course</th>
-                                        <th>Added on</th>
+                                        <th scope="col">Video</th>
+                                        <th scope="col">Category</th>
+                                        <th scope="col">Course</th>
+                                        <th scope="col">Added on</th>
                                     </tr>
                                     </thead>
                                     <tbody>
