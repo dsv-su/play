@@ -459,13 +459,13 @@ Här hittar du information om universitetets organisation, samarbeten och annan 
 
                         <div class="d-flex mb-3 flex-wrap flex-fill justify-content-center">
                             @foreach ($latest as $video)
-                                <div class="card video m-3" style="width: 18rem;">
+                                <div class="card video m-3" style="width: 14rem;">
                                     <a href="{{ route('player', ['video' => $video]) }}">
                                     <div class="card-header position-relative"
                                          style="background-image: url({{ asset($video->thumb) }}); height:200px;">
                                         <div class="title">{{ $video->title }}</div>
                                         <i class="fas fa-play-circle"></i>
-                                        <p> {{$video->duration}} </p>
+                                        <p class="p-1"> {{$video->getRealDuration()}} </p>
                                     </div></a>
                                     <div class="card-body">
                                         <p class="card-text">
