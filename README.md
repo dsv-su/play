@@ -55,7 +55,7 @@ Requirements are best determined using Server Requirements page of corresponding
         db_password=                            ; secret
         
         [conversion-server]
-        jwt_secret=                             ;used to your token
+        jwt_secret=                             ;used to sign your token
         jwt_public_key=                         ;A path or resource to your public key. E.g. 'file://path/to/public/key'
         jwt_private_key=                        ;A path or resource to your private key. E.g. 'file://path/to/private/key'
         jwt_passphrase=                         ;The passphrase for your private key. Can be null if none set.
@@ -92,13 +92,13 @@ Endpoints:
 
 Verb | URI | Action
 -----|-----|--------
-POST | /token | Request a token
-POST | /destroy | Destroy token
-POST | /refresh | Refresh token
-POST | /recordings | Add a new json file for the presentation
-GET | /permission | Check permission for presentation
+POST | /api/token | Request a token
+POST | /api/destroy | Destroy token
+POST | /api/refresh | Refresh token
+POST | /api/recordings | Add a new json file for the presentation
+GET | /api/permission | Check permission for presentation
 
-To recive a response with a token you have to POST to the /token endpoint with valid credentials
+To recive a response with a token you have to POST to the /api/token endpoint with valid credentials
 
 {
 
