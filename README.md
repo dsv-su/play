@@ -79,8 +79,41 @@ Requirements are best determined using Server Requirements page of corresponding
 
 * For developing purposes there are a couple of seeders to run. This will populate the database with testdata and videolinks. Reset (rollback) the migration and run `php artisan migrate:fresh --seed`
 
-## 4. Player
+## 4. API
+Endpoints:
+
+
+Verb | URI | Action
+-----|-----|--------
+POST | /token | Request a token
+POST | /destroy | Destroy token
+POST | /refresh | Refresh token
+POST | /recordings | Add a new json file for the presentation
+GET | /permission | Check permission for presentation
+
+To recive a response with a token you have to POST to the /token endpoint with valid credentials
+
+{
+
+    "email": "server@dsv.su.se",
+    "password": "password"
+}
+
+The response:
+
+{
+
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiO7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ",
+    "token_type": "bearer",
+    "expires_in": 3600
+}
+
+This token can then be used to make authenticated requests to all endpoints.
+
+
+## 5. Player
 The Player can play up to four interconnected streams simultaneously. A stream should always be in "focus" is here tagged as master. The streams that are not in focus appear as smaller display on one side of the player and are tagged slave1, slave2 and slave3. The master stream can be switched with the switch-button.
+
 
 
 ![Player](./public/images/player.png)

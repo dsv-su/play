@@ -24,7 +24,7 @@ class PresentationRequest extends FormRequest
     public function rules()
     {
         return [
-            'presentation_id' => 'required',
+            'id' => 'required',
             'title' => 'required',
             'thumb' => 'required',
             'start' => 'required',

@@ -12,6 +12,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class VideoApiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -28,7 +32,7 @@ class VideoApiController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PresentationRequest $request)
     {
         $video = new Video;
         $video->presentation_id = $request->id;
@@ -82,9 +86,10 @@ class VideoApiController extends Controller
 
     public function permission(Request $request)
     {
-
-        return $request->input('user');
+        //TODO
+        //return $request->input('user');
         //return $request->getContent();
+        return response()->json('Wait for it', 200);
 
     }
 }
