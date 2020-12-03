@@ -54,6 +54,13 @@ Requirements are best determined using Server Requirements page of corresponding
         db_username=                            ; DB user
         db_password=                            ; secret
         
+        [conversion-server]
+        jwt_secret=                             ;used to your token
+        jwt_public_key=                         ;A path or resource to your public key. E.g. 'file://path/to/public/key'
+        jwt_private_key=                        ;A path or resource to your private key. E.g. 'file://path/to/private/key'
+        jwt_passphrase=                         ;The passphrase for your private key. Can be null if none set.
+        jwt_ttl=60                              ;Specify the length of time (in minutes) that the token will be valid for. Defaults to 1 hour.
+        
         [mediasite]                             ; Mediasite API
         url =
         username =
@@ -112,21 +119,9 @@ This token can then be used to make authenticated requests to all endpoints.
 
 
 ## 5. Player
-The Player can play up to four interconnected streams simultaneously. A stream should always be in "focus" is here tagged as master. The streams that are not in focus appear as smaller display on one side of the player and are tagged slave1, slave2 and slave3. The master stream can be switched with the switch-button.
+The Player can play up to four interconnected streams simultaneously.
 
 
 
-![Player](./public/images/player.png)
 
-The player should have standard features:
-
-* play / pause 
-* speed 2x-6x
-* time with the opportunity to jump in the movie
-* full screen
-* volume control
-
-There is a common controlbar for all streams. It should be possible to hide
-the unfocused displays. If the smaller displays are hidden by the user, the main display should be scaled up to take it
-as much space as possible in the player window.
 
