@@ -24,44 +24,44 @@
 <div class="container">
     @foreach($videos as $video)
         @if(!app('request')->input('course') || ($video->course_id == app('request')->input('course')))
-        <div class="card" id="{{$video->id}}">
-            <meta name="csrf-token" content="{{ csrf_token() }}">
-            <img src="{{$video->image}}" alt="image alt">
-            <h5>{{$video->title}} ({{$video->duration}})</h5>
-            <p class="card-text" id="category">Category: {{$video->category->category_name}}</p>
-            <p class="card-text" id="course">Course: {{$video->course->course}}</p>
-            <p class="card-text" id="tags">Tags: {{$video->tags}}</p>
-            <p class="card-text">
-                <button class="delete" type="submit">Delete</button>
-                <button class="edit" type="submit">Edit</button>
-            </p>
-        </div>
-        <!-- The Modal -->
-        <div id="modal-{{$video->id}}" class="modal" style="display: none;">
-            <!-- Modal content -->
-            <div class="modal-content">
-                <form>
-                    <meta name="csrf-token" content="{{ csrf_token() }}">
-                    <span class="close">&times;</span>
-                    <h4>{{$video->title}}</h4>
-                    <p>Category:
-                        <select name="video_category[]" id="video_category" required>
-                            @foreach($categories as $category)
-                                <option value="{{$category->id}}"
-                                        @if ($category->id == $video->category_id) selected @endif>{{$category->category_name}}</option>
-                            @endforeach
-                        </select></p>
-                    <p>Course:
-                        <select name="video_course[]" id="video_course" required>
-                            @foreach($courses as $course)
-                                <option value="{{$course->id}}"
-                                        @if ($course->id == $video->course_id) selected @endif>{{$course->course}}</option>
-                            @endforeach
-                        </select></p>
-                    <button class="save" type="submit" id="{{$video->id}}">Save</button>
-                </form>
+            <div class="card" id="{{$video->id}}">
+                <meta name="csrf-token" content="{{ csrf_token() }}">
+                <img src="{{$video->image}}" alt="image alt">
+                <h5>{{$video->title}} ({{$video->duration}})</h5>
+                <p class="card-text" id="category">Category: {{$video->category->category_name}}</p>
+                <p class="card-text" id="course">Course: {{$video->course->course}}</p>
+                <p class="card-text" id="tags">Tags: {{$video->tags}}</p>
+                <p class="card-text">
+                    <button class="delete" type="submit">Delete</button>
+                    <button class="edit" type="submit">Edit</button>
+                </p>
             </div>
-        </div>
+            <!-- The Modal -->
+            <div id="modal-{{$video->id}}" class="modal" style="display: none;">
+                <!-- Modal content -->
+                <div class="modal-content">
+                    <form>
+                        <meta name="csrf-token" content="{{ csrf_token() }}">
+                        <span class="close">&times;</span>
+                        <h4>{{$video->title}}</h4>
+                        <p>Category:
+                            <select name="video_category[]" id="video_category" required>
+                                @foreach($categories as $category)
+                                    <option value="{{$category->id}}"
+                                            @if ($category->id == $video->category_id) selected @endif>{{$category->category_name}}</option>
+                                @endforeach
+                            </select></p>
+                        <p>Course:
+                            <select name="video_course[]" id="video_course" required>
+                                @foreach($courses as $course)
+                                    <option value="{{$course->id}}"
+                                            @if ($course->id == $video->course_id) selected @endif>{{$course->course}}</option>
+                                @endforeach
+                            </select></p>
+                        <button class="save" type="submit" id="{{$video->id}}">Save</button>
+                    </form>
+                </div>
+            </div>
         @endif
     @endforeach
 </div>
