@@ -7,12 +7,12 @@
         <!-- Navigation -->
         <div class="container d-flex h-100">
 
-            <div class="header-logo d-flex justify-content-center">
-                <a href="{{route('home')}}" class="text-decoration-none logo d-sm-flex align-items-center">
-                    <div class="text-uppercase">DSVPlay&nbsp;</div>
-                    <div class="svglogo">
-                        <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
-                             viewBox="0 0 60 60" style="enable-background:new 0 0 60 60;" xml:space="preserve">
+
+            <a href="{{route('home')}}" class="text-decoration-none logo d-sm-flex align-items-center">
+                DSVPlay&nbsp;
+
+                <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 60 60" style="enable-background:new 0 0 60 60;" xml:space="preserve">
                                 <g>
                                     <path fill="#fff" d="M45.563,29.174l-22-15c-0.307-0.208-0.703-0.231-1.031-0.058C22.205,14.289,22,14.629,22,15v30
                                         c0,0.371,0.205,0.711,0.533,0.884C22.679,45.962,22.84,46,23,46c0.197,0,0.394-0.059,0.563-0.174l22-15
@@ -21,9 +21,9 @@
                                         S14.561,2,30,2s28,12.561,28,28S45.439,58,30,58z"/>
                                 </g>
                             </svg>
-                    </div>
-                </a>
-            </div>
+
+            </a>
+
 
             <nav class="d-none d-xl-flex main-menu mega-menu__primary transition" aria-hidden="true">
                 <ul class="nav not-list-styled">
@@ -430,20 +430,91 @@ Här hittar du information om universitetets organisation, samarbeten och annan 
                 <div class="d-none d-md-flex">
                     <div class="collapse header-mega-menu-collapse__primary" id="primarySearchFormCollapse">
                         <div class="container">
+
                             <form class="form-inline form-main-search d-flex justify-content-between pt-10"
-                                  id="header-main-search-form" name="header-main-search-form" action="/s%C3%B6k"
-                                  method="get" data-search="/s%C3%B6k" role="search">
+                                  id="header-main-search-form" name="header-main-search-form"
+                                  action="{{ route('search') }}" method="POST" data-search="/s%C3%B6k"
+                                  role="search">
+                                @csrf
                                 <div>
-                                    <label for="header-main-search-text" class="sr-only">Sök på webbplatsen</label>
+                                    <label for="header-main-search-text" class="sr-only">Sök på videos</label>
                                     <input class="form-control form-control-main-search" type="search"
-                                           id="header-main-search-text" name="q" autocomplete="off" aria-haspopup="true"
-                                           placeholder="Sök på hela su.se" aria-labelledby="header-main-search-form">
+                                           id="header-main-search-text" name="q" autocomplete="off"
+                                           aria-haspopup="true"
+                                           placeholder="Sök på videos"
+                                           aria-labelledby="header-main-search-form">
                                 </div>
                                 <button id="header-main-search-button" type="submit"
-                                        class="button-remove-style cursor-pointer mb-1" aria-label="Utför sök">
+                                        class="button-remove-style cursor-pointer mb-1"
+                                        aria-label="Utför sök">
                                     <span class="toggler-icon__primary fas fa-search"></span>
                                 </button>
+
+                                <!--
+                                <div class="search_autocomplete" id="search_autocomplete">
+                                    <ul>
+                                        <li><b>test</b>video - Polopolymanual</li>
+                                        <li><b>Test</b>ar - Polopolymanual</li>
+                                        <li><b>Test</b> - Polopolymanual</li>
+                                        <li><b>Test</b> Construction and Language Assessment - Stockholm University</li>
+                                        <li><b>Test</b> Academic Video Online - Department of Social Anthropology</li>
+                                    </ul>
+                                </div>
+                                -->
+
+                                <!--
+                                                                        <div class="searchtext">
+                                                                            <input type="text" id="query" name="query" placeholder="Sök" onfocus="changeOutput()"
+                                                                                   class="search-input" autocomplete="off">
+                                                                        </div>
+
+                                                                        <button type="submit" class="search-button">
+                                                                            <i class="fas fa-search"></i>
+                                                                        </button>
+                                                                        -->
+
+                                <!--
+                                                                        <div class="search-option">
+                                                                            <div id="filtrera" class="filtrera" style="color: blue">Filtrera din sökning</div>
+                                                                            <div class="filter">
+                                                                                <input name="type" type="radio" value="type-lectures" id="type-lectures"
+                                                                                       class="filter-radio">
+                                                                                <label for="type-lectures">
+                                                                                    <i class="far fa-user"></i>
+                                                                                    <span>Föreläsare</span>
+                                                                                </label>
+
+                                                                            </div>
+
+                                                                            <div class="filter">
+                                                                                <input name="type" type="radio" value="type-category" id="type-category"
+                                                                                       class="filter-radio">
+                                                                                <label for="type-category">
+                                                                                    <i class="fas fa-broadcast-tower"></i>
+                                                                                    <span>Kategori</span>
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="filter">
+                                                                                <input name="type" type="radio" value="type-course" id="type-course"
+                                                                                       class="filter-radio">
+                                                                                <label for="type-cource">
+                                                                                    <i class="fas fa-book-open"></i>
+                                                                                    <span>Kurser</span>
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="filter">
+                                                                                <input name="type" type="radio" value="type-latest" id="type-latest"
+                                                                                       class="filter-radio">
+                                                                                <label for="type-latest">
+                                                                                    <i class="far fa-clock"></i>
+                                                                                    <span>Senaste</span>
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                        -->
+
                             </form>
+
                         </div>
                     </div>
                 </div>
@@ -453,21 +524,23 @@ Här hittar du information om universitetets organisation, samarbeten och annan 
 
     <main id="main-content" class="pl-pr-sm-down-0">
         <div class="container-fluid pl-pr-sm-down-0 my-5 pb-5">
+
             <div class="container">
                 <div class="row">
                     <div class="col-12">
 
                         <div class="d-flex mb-3 flex-wrap flex-fill justify-content-center">
                             @foreach ($latest as $video)
-                                <div class="card video m-3" style="width: 14rem;">
+                                <div class="card video m-3">
                                     <a href="{{ route('player', ['video' => $video]) }}">
-                                    <div class="card-header position-relative"
-                                         style="background-image: url({{ asset($video->thumb) }}); height:200px;">
-                                        <div class="title">{{ $video->title }}</div>
-                                        <i class="fas fa-play-circle"></i>
-                                        <p class="p-1"> {{$video->getRealDuration()}} </p>
-                                    </div></a>
-                                    <div class="card-body">
+                                        <div class="card-header position-relative"
+                                             style="background-image: url({{ asset(json_decode($video->presentation)->sources[0]->poster)}}); height:200px;">
+                                            <div class="title">{{ $video->title }}</div>
+                                            <i class="fas fa-play-circle"></i>
+                                            <p class="p-1"> {{$video->getRealDuration()}} </p>
+                                        </div>
+                                    </a>
+                                    <div class="card-body p-1">
                                         <p class="card-text">
                                             <a href="/course/{{$video->course->id}}">
                                                 Kurs: {{$video->course->course_name}} {{$video->course->semester}} {{$video->course->year}}
@@ -491,13 +564,11 @@ Här hittar du information om universitetets organisation, samarbeten och annan 
         <div class="container">
             <div class="row">
                 <div class="footer-section col-12 col-md-6 col-lg-5" aria-labelledby="footerContactInfo">
-                    <h2 id="footerContactInfo">DSV</h2>
-                    <p>SE-106 91 Stockholm</p>
+                    <h2 id="footerContactInfo">Stockholms universitet, DSV</h2>
+                    <p>Postbox 7003, 164 07 Kista</p>
                     <p class="mb-4">Telefon: 08-16 20 00</p>
                     <ul>
-                        <li><a href="/om-universitetet/kontakt">Kontakt</a></li>
-                        <li><a href="/om-universitetet/om-v%C3%A5ra-campus/%C3%B6ppettider">Öppettider</a></li>
-                        <li><a href="/om-webbplatsen-1.517562">Om webbplatsen</a></li>
+                        <li><a href="mailto:playsupport@dsv.su.se">Kontakt</a></li>
                     </ul>
                 </div>
 
@@ -538,5 +609,53 @@ Här hittar du information om universitetets organisation, samarbeten och annan 
             <a class="button-rounded-small su-js-link-to-top-button" aria-label="Tillbaka till toppen" href="#"
                style="display: inline;"><span class="fas fa-lg fa-arrow-up"></span></a></div>
     </footer>
+
+    <!-- Typeahead.js Bundle -->
+    <script src="{{ asset('./js/typeahead/typeahead.bundle.js') }}"></script>
+    <script>
+        jQuery(document).ready(function ($) {
+            // Set the Options for "Bloodhound" suggestion engine
+            var engine = new Bloodhound({
+                remote: {
+                    url: '/find?query=%QUERY%',
+                    wildcard: '%QUERY%'
+                },
+                datumTokenizer: Bloodhound.tokenizers.whitespace('query'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace
+            });
+
+            $("#header-main-search-text").typeahead({
+                classNames: {
+                    menu: 'search_autocomplete'
+                },
+                hint: true,
+                autoselect: true,
+                highlight: true,
+                minLength: 1
+            }, {
+                source: engine.ttAdapter(),
+
+                limit: 7,
+                // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
+                name: 'autocomplete-items',
+                displayKey: 'tags',
+                // the key from the array we want to display
+                templates: {
+                    empty: [
+                        ''
+                    ],
+                    header: [
+                        ''
+                    ],
+                    suggestion: function (data) {
+                        if (data.tags == null) {
+                            return '<li><a href="/player/' + data.id + '"> ' + 'Titel: ' + data.title + ', ' + 'Kategori: ' + data.category.category_name + '</a></li>';
+                        } else
+                            return '<li><a href="/player/' + data.id + '"> ' + data.tags + ', Titel: ' + data.title + ', ' + 'Kategori: ' + data.category.category_name + '</a></li>';
+                    }
+                }
+            });
+        });
+    </script>
 
 @endsection
