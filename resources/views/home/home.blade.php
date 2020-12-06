@@ -528,7 +528,7 @@ Här hittar du information om universitetets organisation, samarbeten och annan 
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-
+                        <h1 class="word-wrap_xs-only banner-text">Latest videos</h1>
                         <div class="d-flex mb-3 flex-wrap flex-fill justify-content-center">
                             @foreach ($latest as $video)
                                 <div class="card video m-3">
