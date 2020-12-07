@@ -64,7 +64,7 @@ class TestController extends Controller
 
     public function daisy()
     {
-        $data['courses'] = Course::all();
+        $data['courses'] = Course::all()->sortBy('course');
         $data['categories'] = Category::all();
         return view ('home.courses', $data);
     }
@@ -367,4 +367,5 @@ class TestController extends Controller
         if($new_recording > 0) return redirect('/')->with('status', 'New recordings stored in db');
         else return redirect('/')->with('status', 'No new recordings');
     }
+
 }

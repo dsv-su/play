@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\URL;
+use Nicolaslopezj\Searchable\SearchableTrait;
 use Spatie\Searchable\Searchable;
 use Spatie\Searchable\SearchResult;
-use Nicolaslopezj\Searchable\SearchableTrait;
 
 
 /**
@@ -16,7 +16,7 @@ class Video extends Model implements Searchable
 {
     use SearchableTrait;
 
-    protected $fillable = ['presentation_id','title', 'tags', 'duration', 'thumb', 'course_id','category_id'];
+    protected $fillable = ['presentation_id', 'title', 'presenter', 'tags', 'duration', 'thumb', 'course_id', 'category_id'];
     protected $searchable = [
         'columns' => [
             'videos.title' => 10,
@@ -35,7 +35,7 @@ class Video extends Model implements Searchable
 
     public function getLinkAttribute()
     {
-        return $this->attributes['link'] = URL::to('/').'/player/'.$this->id;
+        return $this->attributes['link'] = URL::to('/') . '/player/' . $this->id;
     }
 
     public function category()
@@ -46,6 +46,24 @@ class Video extends Model implements Searchable
     public function mediasite_presentation()
     {
         return $this->hasOne(MediasitePresentation::class);
+    }
+
+    public function getRealDuration()
+    {
+        $hh = floor($this->duration / (1000 * 60 * 60));
+        $mm = floor(($this->duration % (1000 * 60 * 60)) / (1000 * 60));
+        $ss = (($this->duration % (1000 * 60 * 60)) % (1000 * 60)) / 1000;
+        $return = '';
+        if ($hh) {
+            $return .= $hh . 'h';
+        }
+        if ($mm) {
+            $return .= ' ' . $mm . 'm';
+        }
+        if (!$hh & !$mm) {
+            $return .= $ss.'s';
+        }
+        return $return;
     }
 
     public function course()

@@ -54,6 +54,13 @@ Requirements are best determined using Server Requirements page of corresponding
         db_username=                            ; DB user
         db_password=                            ; secret
         
+        [conversion-server]
+        jwt_secret=                             ;used to sign your token
+        jwt_public_key=                         ;A path or resource to your public key. E.g. 'file://path/to/public/key'
+        jwt_private_key=                        ;A path or resource to your private key. E.g. 'file://path/to/private/key'
+        jwt_passphrase=                         ;The passphrase for your private key. Can be null if none set.
+        jwt_ttl=60                              ;Specify the length of time (in minutes) that the token will be valid for. Defaults to 1 hour.
+        
         [mediasite]                             ; Mediasite API
         url =
         username =
@@ -79,21 +86,42 @@ Requirements are best determined using Server Requirements page of corresponding
 
 * For developing purposes there are a couple of seeders to run. This will populate the database with testdata and videolinks. Reset (rollback) the migration and run `php artisan migrate:fresh --seed`
 
-## 4. Player
-The Player can play up to four interconnected streams simultaneously. A stream should always be in "focus" is here tagged as master. The streams that are not in focus appear as smaller display on one side of the player and are tagged slave1, slave2 and slave3. The master stream can be switched with the switch-button.
+## 4. API
+Endpoints:
 
 
-![Player](./public/images/player.png)
+Verb | URI | Action
+-----|-----|--------
+POST | /api/token | Request a token
+POST | /api/destroy | Destroy token
+POST | /api/refresh | Refresh token
+POST | /api/recordings | Add a new json file for the presentation
+GET | /api/permission | Check permission for presentation
 
-The player should have standard features:
+To recive a response with a token you have to POST to the /api/token endpoint with valid credentials
 
-* play / pause 
-* speed 2x-6x
-* time with the opportunity to jump in the movie
-* full screen
-* volume control
+{
 
-There is a common controlbar for all streams. It should be possible to hide
-the unfocused displays. If the smaller displays are hidden by the user, the main display should be scaled up to take it
-as much space as possible in the player window.
+    "email": "server@dsv.su.se",
+    "password": "password"
+}
+
+The response:
+
+{
+
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiO7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ",
+    "token_type": "bearer",
+    "expires_in": 3600
+}
+
+This token can then be used to make authenticated requests to all endpoints.
+
+
+## 5. Player
+The Player can play up to four interconnected streams simultaneously.
+
+
+
+
 
