@@ -31,7 +31,6 @@ class PresentationRequest extends FormRequest
             'end' => 'required',
             'presenter' => 'required',
             'tags' => 'required',
-            'course_id' => 'required',
         ];
     }
 }

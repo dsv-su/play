@@ -44,9 +44,10 @@ class VideoApiController extends Controller
         $video->tags = json_encode($request->tags, true);
         $video->sources = json_encode($request->sources, true);
         $video->presentation = json_encode($request->all(), true);
-        $video->course_id = $request->course_id;
-        $video->category_id = $request->category_id;
-        $video->save();
+        $video->course_id = $request->course_id ?? 1;
+        $video->category_id = $request->category_id ?? 1;
+        $id = $video->save();
+
         return response()->json('Presentation has been created', Response::HTTP_CREATED);
     }
 
