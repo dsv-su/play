@@ -525,10 +525,20 @@ Här hittar du information om universitetets organisation, samarbeten och annan 
     <main id="main-content" class="pl-pr-sm-down-0">
         <div class="container-fluid pl-pr-sm-down-0 my-5 pb-5">
 
+            <div class="container banner-inner">
+                <div class="row no-gutters w-100">
+                    <div class="col-12">
+                        <div>
+                            <h1 class="word-wrap_xs-only">Latest videos</h1>
+                        </div>
+
+                    </div> <!-- col-12 -->
+                </div> <!-- row no-gutters -->
+            </div>
+
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <h1 class="word-wrap_xs-only banner-text">Latest videos</h1>
                         <div class="d-flex mb-3 flex-wrap flex-fill justify-content-center">
                             @foreach ($latest as $video)
                                 <div class="card video m-3">

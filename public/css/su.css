@@ -30,7 +30,7 @@
 }
 
 body {
-    font-family: "TheSansB2-Light", Verdana, sans-serif;
+    font-family: "TheSansB2-Plain", Verdana, sans-serif;
     line-height: 1.625;
     color: #4c4c4c;
 }
@@ -822,7 +822,12 @@ input::-ms-clear {
 }
 
 #header-main-search-form .search_autocomplete li.active, #header-main-search-form .search_autocomplete li:hover {
-    background: #eef9fa
+    background: #eef9fa;
+}
+
+#header-main-search-form .search_autocomplete li.active a, #header-main-search-form .search_autocomplete li:hover a {
+    font-family: "TheSansB2-Plain";
+    text-decoration: none;
 }
 
 #header-main-search-form .search_autocomplete li:last-child {
@@ -1090,10 +1095,6 @@ input[type=text]:focus, input[type=search]:focus, .education-search-main-inputs 
 .fa-spin-2x {
     -webkit-animation: fa-spin 1s infinite linear;
     animation: fa-spin 1s infinite linear
-}
-
-.card.video {
-    width: 16rem;
 }
 
 .su-card {
@@ -5165,6 +5166,10 @@ p.kill-p, .kill-p p {
 
 
 /* VIDEO */
+.video.card {
+    width: 16rem;
+}
+
 .video i {
     cursor: pointer;
     position: absolute;
@@ -5175,6 +5180,11 @@ p.kill-p, .kill-p p {
     color: var(--light);
     opacity: 0.85;
     transition: var(--ease);
+}
+
+.video:hover {
+    transform: scale(1.03);
+    opacity: 0.9;
 }
 
 .video .card-header {
