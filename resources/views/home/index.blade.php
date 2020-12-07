@@ -629,6 +629,8 @@
 
                 </div>
                 <!-- -->
+                <div class="mt-5 py-2 bg-light">
+                <h4 class="text-white text-center"><a href="{{route('home_su')}}">Try out a new design</a></h4></div>
             </div>
 
         </section> <!--end Top section -->
@@ -640,7 +642,7 @@
                     {{ session('status') }}
                 </div>
             @endif
-            <!-- -->
+        <!-- -->
 
             @if ($search == 1)
                 <div class="playlist_one">
