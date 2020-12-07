@@ -48,24 +48,6 @@ class Video extends Model implements Searchable
         return $this->hasOne(MediasitePresentation::class);
     }
 
-    public function getRealDuration()
-    {
-        $hh = floor($this->duration / (1000 * 60 * 60));
-        $mm = floor(($this->duration % (1000 * 60 * 60)) / (1000 * 60));
-        $ss = (($this->duration % (1000 * 60 * 60)) % (1000 * 60)) / 1000;
-        $return = '';
-        if ($hh) {
-            $return .= $hh . 'h';
-        }
-        if ($mm) {
-            $return .= ' ' . $mm . 'm';
-        }
-        if (!$hh & !$mm) {
-            $return .= $ss.'s';
-        }
-        return $return;
-    }
-
     public function course()
     {
         return $this->belongsTo(Course::class);

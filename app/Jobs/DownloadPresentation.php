@@ -6,6 +6,7 @@ use App\Course;
 use App\MediasitePresentation;
 use App\Services\AuthHandler;
 use App\Video;
+use Carbon\Carbon;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -139,7 +140,7 @@ class DownloadPresentation implements ShouldQueue
             // Maybe use mediasiteID to ensure that we don't download same thing twice?
             $video = new Video;
             $video->title = $metadata['title'];
-            $video->duration = $metadata['duration'];
+            $video->duration = (new Carbon($metadata['duration'] ?? null))->format('H:i');
             $video->tags = implode(', ', $metadata['tags']);
 
             $semester = $year = 'Unknown';

@@ -547,7 +547,7 @@ Här hittar du information om universitetets organisation, samarbeten och annan 
                                              style="background-image: url({{ asset(json_decode($video->presentation)->sources[0]->poster)}}); height:200px;">
                                             <div class="title">{{ $video->title }}</div>
                                             <i class="fas fa-play-circle"></i>
-                                            <p class="p-1"> {{$video->getRealDuration()}} </p>
+                                            <p class="p-1"> {{$video->duration}} </p>
                                         </div>
                                     </a>
                                     <div class="card-body p-1">
