@@ -5167,7 +5167,7 @@ p.kill-p, .kill-p p {
 
 /* VIDEO */
 .video.card {
-    width: 16rem;
+    min-width: 16rem;
 }
 
 .video i {
