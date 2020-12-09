@@ -7,6 +7,7 @@ use App\Cattura;
 use App\Course;
 use App\CourseSearchAspect;
 use App\PlayerJson;
+use App\Presenter;
 use App\Services\DaisyAPI;
 use App\Services\DaisyIntegration;
 use App\System;
@@ -141,7 +142,7 @@ class TestController extends Controller
     public function search(Request $request)
     {
         /*****************************
-         * In working progress
+         * In working progress --> This is all for testing - will be rewritten!!
          */
 
         // If the environment is local
@@ -243,8 +244,30 @@ class TestController extends Controller
 
         elseif ($request->input('type') == 'type-lectures')
         {
-            dd('Sorry, LECTURES search has not been implemented');
+            dd('Sorry, PRESENTATORS search has not been implemented');
+            $search = (new Search())
+                ->registerModel(Presenter::class, function(ModelSearchAspect $modelSearchAspect) {
+                    $modelSearchAspect
+                        ->addSearchableAttribute('name'); // return results for partial matches on presenters
+                })
+                ->perform($searchString);
+            foreach ($search as $subject)
+            {
+                foreach ($subject as $item)
+                {
+                    $searchResults = Video::with('video_presenter')->where('video_presenter.presenter_id', $item->id)->get();
+                    // Searchtype
+                    $search = 3;
+                    return view('home.index', compact('searchResults','categories', 'search', 'play_user'));
+                }
+            }
+            $searchResults = $search;
+            // Searchtype 1
+            $search = 1;
+            return view('home.index', compact('searchResults','categories', 'search', 'play_user'));
+
         }
+
         elseif ($request->input('type') == 'type-category')
         {
             $search = (new Search())

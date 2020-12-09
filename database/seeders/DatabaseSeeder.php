@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
         Model::unguard(); // Disable mass assignment
 
         $this->call(CategorySeeder::class);
-        $this->call(CourseSeeder::class);
+        //$this->call(CourseSeeder::class);
         $this->call(UserSeeder::class);
 
         Model::reguard(); // Enable mass assignment

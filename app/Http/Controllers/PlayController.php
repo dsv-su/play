@@ -11,6 +11,7 @@ use App\Services\AuthHandler;
 use App\Services\ConfigurationHandler;
 use App\UploadHandler;
 use App\Video;
+use App\VideoCourse;
 use Exception;
 use File;
 use GuzzleHttp\Client;
@@ -43,9 +44,9 @@ class PlayController extends Controller
         $init->check_system();
 
         $data['search'] = 0;
-        $data['latest'] = Video::with('category', 'course')->latest('id')->take(8)->get();
+        $data['latest'] = Video::with('category', 'video_course.course')->latest('id')->take(8)->get();
         $data['categories'] = Category::all();
-
+        //dd($data);
         return view('home.index', $data);
     }
 
@@ -79,10 +80,12 @@ class PlayController extends Controller
      */
     public function player(Video $video)
     {
+        $playlist = VideoCourse::where('video_id', $video->id)->first();
+
         // Production
-        $url = url('/multiplayer') . '?' . urldecode(http_build_query(['presentation' => URL::to('/').'/presentation/'.$video->id, 'playlist' => URL::to('/').'/playlist/'.$video->course->id]));
+        $url = url('/multiplayer') . '?' . urldecode(http_build_query(['presentation' => URL::to('/').'/presentation/'.$video->id, 'playlist' => URL::to('/').'/playlist/'.$playlist->course_id]));
         // Dev
-        //$url = url('/multiplayer') . '?' . http_build_query(['presentation' => 'presentation/'.$video->id, 'playlist' => 'playlist/'.$video->course->id]);
+        //$url = url('/multiplayer') . '?' . http_build_query(['presentation' => 'presentation/'.$video->id, 'playlist' => 'playlist/'.$playlist->course_id]);
         return redirect()->away($url);
     }
 
@@ -94,7 +97,9 @@ class PlayController extends Controller
 
     public function playlist($id)
     {
-        $playlist = Video::where('course_id', $id)->get();
+        $videos = VideoCourse::where('course_id', $id)->pluck('video_id')->toArray();
+
+        $playlist = Video::whereIn('id', $videos)->get();
         //Build json playlist
         $json = Collection::make([
             'title' => 'My Playlist'

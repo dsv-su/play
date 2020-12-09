@@ -14,9 +14,9 @@ class Course extends Model implements Searchable
 {
     protected $fillable = ['course_name', 'semester', 'year'];
 
-    public function video()
+    public function video_course()
     {
-        return $this->hasMany(Video::class);
+        return $this->hasMany(VideoCourse::class);
     }
 
     public function getSearchResult(): SearchResult

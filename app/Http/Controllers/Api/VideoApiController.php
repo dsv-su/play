@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PresentationRequest;
 use App\Http\Resources\Presentation\PresentationResource;
+use App\Services\CourseStore;
+use App\Services\PresenterStore;
+use App\Services\VideoStore;
 use App\Video;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -39,19 +41,15 @@ class VideoApiController extends Controller
 
         if($payload->get('per') == 'store')
         {
-            $video = new Video;
-            $video->presentation_id = $request->id;
-            $video->title = $request->title;
-            $video->thumb = $request->thumb;
-            $video->presenter = $request->presenter;
-            $video->duration = (new Carbon($request->end ?? null))->diff(new Carbon($request->start ?? null))->format('%h:%I');
-            $video->subtitles = $request->subtitles;
-            $video->tags = json_encode($request->tags, true);
-            $video->sources = json_encode($request->sources, true);
-            $video->presentation = json_encode($request->all(), true);
-            $video->course_id = $request->course_id ?? 1;
-            $video->category_id = $request->category_id ?? 1;
-            $id = $video->save();
+            //Store video
+            $video = new VideoStore($request);
+            $video = $video->presentation();
+            //Store presenter
+            $presenter = new PresenterStore($request, $video);
+            $presenter->presenter();
+            //Store course
+            $course = new CourseStore($request, $video);
+            $course->course();
 
             return response()->json('Presentation has been created', Response::HTTP_CREATED);
         }

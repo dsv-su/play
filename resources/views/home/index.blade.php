@@ -794,8 +794,11 @@
                                                                                 </a>
 
                                                                                 <div class="footer">
-                                                                                    <a href="/course/{{$video->course->id}}">
-                                                                                        Kurs: {{$video->course->course_name}} {{$video->course->semester}} {{$video->course->year}}
+                                                                                    @foreach($video->video_course->all() as $item)
+                                                                                        <a href="/course/{{$item->course->id}}">
+
+                                                                                        Kurs: {{$item->course->course_name}} &nbsp;
+                                                                                    @endforeach
                                                                                         <br>
                                                                                         Kategori: {{$video->category->category_name}}
                                                                                     </a>

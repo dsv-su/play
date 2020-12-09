@@ -16,7 +16,7 @@ class Video extends Model implements Searchable
 {
     use SearchableTrait;
 
-    protected $fillable = ['presentation_id', 'title', 'presenter', 'tags', 'duration', 'thumb', 'course_id', 'category_id'];
+    protected $fillable = ['presentation_id', 'title', 'presenter', 'tags', 'duration', 'thumb', 'category_id'];
     protected $searchable = [
         'columns' => [
             'videos.title' => 10,
@@ -38,6 +38,16 @@ class Video extends Model implements Searchable
         return $this->attributes['link'] = URL::to('/') . '/player/' . $this->id;
     }
 
+    public function video_presenter()
+    {
+        return $this->hasMany(VideoPresenter::class);
+    }
+
+    public function video_course()
+    {
+        return $this->hasMany(VideoCourse::class);
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);
@@ -46,11 +56,6 @@ class Video extends Model implements Searchable
     public function mediasite_presentation()
     {
         return $this->hasOne(MediasitePresentation::class);
-    }
-
-    public function course()
-    {
-        return $this->belongsTo(Course::class);
     }
 
     public function getSearchResult(): SearchResult
