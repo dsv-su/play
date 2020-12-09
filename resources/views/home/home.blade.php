@@ -537,32 +537,41 @@ Här hittar du information om universitetets organisation, samarbeten och annan 
             </div>
 
             <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="d-flex mb-3 flex-wrap flex-fill justify-content-center">
-                            @foreach ($latest as $video)
-                                <div class="card video m-3">
-                                    <a href="{{ route('player', ['video' => $video]) }}">
-                                        <div class="card-header position-relative"
-                                             style="background-image: url({{ asset(json_decode($video->presentation)->sources[0]->poster)}}); height:200px;">
-                                            <div class="title">{{ $video->title }}</div>
-                                            <i class="fas fa-play-circle"></i>
-                                            <p class="p-1"> {{$video->duration}} </p>
-                                        </div>
-                                    </a>
-                                    <div class="card-body p-1">
-                                        <p class="card-text">
-                                            <a href="/course/{{$video->course->id}}">
-                                                Kurs: {{$video->course->course_name}} {{$video->course->semester}} {{$video->course->year}}
-                                                <br>
-                                                Kategori: {{$video->category->category_name}}
-                                            </a></p>
+
+                <div class="d-flex mb-3 flex-wrap">
+                    @foreach ($latest as $video)
+                        <div class="col my-3">
+                            <div class="card video m-auto">
+                                <a href="{{ route('player', ['video' => $video]) }}">
+                                    <div class="card-header position-relative"
+                                         style="background-image: url({{ asset(json_decode($video->presentation)->sources[0]->poster)}}); height:200px;">
+                                        <div class="title">{{ $video->title }}</div>
+                                        <i class="fas fa-play-circle"></i>
+                                        <p class="p-1"> {{$video->duration}} </p>
                                     </div>
+                                </a>
+                                <div class="card-body p-1">
+                                    <p class="card-text">
+                                        <a href="/course/{{$video->course->id}}">
+                                            Kurs: {{$video->course->course_name}} {{$video->course->semester}} {{$video->course->year}}
+                                            <br>
+                                            Kategori: {{$video->category->category_name}}
+                                        </a></p>
                                 </div>
-                            @endforeach
+                            </div>
                         </div>
+                    @endforeach
+                    <div class="col">
+                        <div class="card video my-3 mx-auto border-0"></div>
                     </div>
-                </div><!-- /.row -->
+                    <div class="col">
+                        <div class="card video my-3 mx-auto border-0"></div>
+                    </div>
+                    <div class="col">
+                        <div class="card video my-3 mx-auto border-0"></div>
+                    </div>
+                </div>
+
             </div><!-- /.container -->
         </div><!-- /.container-fluid -->
 
