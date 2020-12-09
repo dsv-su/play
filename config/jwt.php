@@ -29,8 +29,7 @@ return [
     |
     */
 
-    //'secret' => env('JWT_SECRET'),
-    'secret' => $system_config['conversion-server']['jwt_secret'],
+    'secret' => $system_config['jwt']['jwt_secret'],
     /*
     |--------------------------------------------------------------------------
     | JWT Authentication Keys
@@ -61,7 +60,7 @@ return [
         |
         */
 
-        'public' => $system_config['conversion-server']['jwt_public_key'],
+        'public' => $system_config['jwt']['jwt_public_key'],
 
         /*
         |--------------------------------------------------------------------------
@@ -74,7 +73,7 @@ return [
         |
         */
 
-        'private' => $system_config['conversion-server']['jwt_private_key'],
+        'private' => $system_config['jwt']['jwt_private_key'],
 
         /*
         |--------------------------------------------------------------------------
@@ -85,7 +84,7 @@ return [
         |
         */
 
-        'passphrase' => $system_config['conversion-server']['jwt_passphrase'],
+        'passphrase' => $system_config['jwt']['jwt_passphrase'],
     ],
 
     /*
@@ -104,8 +103,7 @@ return [
     |
     */
 
-    'ttl' => $system_config['conversion-server']['jwt_ttl'],
-
+    'ttl' => null,
 
     /*
     |--------------------------------------------------------------------------
@@ -154,7 +152,7 @@ return [
     'required_claims' => [
         'iss',
         'iat',
-        'exp',
+        //'exp',
         'nbf',
         'sub',
         'jti',

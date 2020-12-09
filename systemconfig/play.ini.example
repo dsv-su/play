@@ -14,12 +14,16 @@ db_database=                            ; Database used
 db_username=                            ; DB user
 db_password=                            ; secret
 
-[conversion-server]
-jwt_secret=             ;used to your token
-jwt_public_key=         ;A path or resource to your public key. E.g. 'file://path/to/public/key'
-jwt_private_key=        ;A path or resource to your private key. E.g. 'file://path/to/private/key'
-jwt_passphrase=         ;The passphrase for your private key. Can be null if none set.
-jwt_ttl=60              ;Specify the length of time (in minutes) that the token will be valid for. Defaults to 1 hour.
+[jwt]
+jwt_secret=                             ; Used to sign your token
+jwt_public_key=                         ; A path or resource to your public key. E.g. 'file://path/to/public/key'
+jwt_private_key=                        ; A path or resource to your private key. E.g. 'file://path/to/private/key'
+jwt_passphrase=                         ; The passphrase for your private key. Can be null if none set.
+
+[tokens]                                ; Issued tokens with different permissions
+;Permission=Store
+
+;Permission=Read
 
 [mediasite]                             ; Mediasite API
 url =

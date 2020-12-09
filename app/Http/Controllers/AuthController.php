@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 
@@ -15,7 +16,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api', ['except' => ['store', 'read']]);
     }
 
     /**
@@ -23,11 +24,22 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login()
+    public function store()
     {
         $credentials = request(['email', 'password']);
 
-        if (! $token = auth()->attempt($credentials)) {
+        if (! $token = auth()->claims(['per' => 'store'])->attempt($credentials)) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        return $this->respondWithToken($token);
+    }
+
+    public function read()
+    {
+        $credentials = request(['email', 'password']);
+
+        if (! $token = auth()->claims(['per' => 'read'])->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
@@ -35,13 +47,13 @@ class AuthController extends Controller
     }
 
     /**
-     * Get the authenticated User.
+     * Test the token.
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function me()
+    public function token_test()
     {
-        return response()->json(auth()->user());
+        return response()->json(['Message' => 'Token is valid']);
     }
 
     /**

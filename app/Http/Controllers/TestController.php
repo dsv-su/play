@@ -309,19 +309,15 @@ class TestController extends Controller
     {
 
         //Video
-        $video = './mediasite/KM - Kunskapsnätverk/KM HT2015 Lecture 1/cf6ebf54-4887-4207-935a-f20422390f63.mp4';
-        //$video = './mediasite/KM - Kunskapsnätverk/KM HT2015 Seminar 1/f3cfa8f5-3ef5-4781-b350-7d88140212c9.mp4';
-        //$video ='https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/fabefa3e-6758-468b-aae1-b7b512d084fa.mp4?playbackTicket=&site=play2.dsv.su.se';
+        $video = '/videos/oceans.mp4';
 
         FFMpeg::fromDisk('public')
             ->open($video)
-            ->getFrameFromSeconds(8)
+            ->getFrameFromSeconds(27)
             ->export()
             ->toDisk('public')
-            ->save('frame1.png');
-        $updatevideo = Video::find(14);
-        $updatevideo->image = Storage::url('frame1.png');
-        $updatevideo->save();
+            ->save('/images/videocovers/oceans4.png');
+
         return 'Done';
     }
 

@@ -84,38 +84,45 @@ Requirements are best determined using Server Requirements page of corresponding
 
 * Create the database with `php artisan migrate` (this should create database tables needed)
 
-* For developing purposes there are a couple of seeders to run. This will populate the database with testdata and videolinks. Reset (rollback) the migration and run `php artisan migrate:fresh --seed`
+* For developing purposes there are a couple of seeders to run. Reset (rollback) the migration and run `php artisan migrate:fresh --seed`
 
 ## 4. API
-Endpoints:
+Issued valid tokens are stored in the play.ini file (/systemconfig). There are tokens for storing new presentations and for retrieving presentation metadata (not yet fully implemented).
 
+Endpoints for storing presentations:
+
+Verb | URI | Action
+-----|-----|-------
+POST | /api/recordings | Add a new json file for the presentation (requires a token with permission=store)
+GET | /api/recordings | Request a list of all presentations in json format (requires a token with permission=read)
+GET | /api/permission | Check user permission for presentation (not yet implemented)
+
+Endpoints for issuing/destroying tokens:
 
 Verb | URI | Action
 -----|-----|--------
-POST | /api/token | Request a token
-POST | /api/destroy | Destroy token
-POST | /api/refresh | Refresh token
-POST | /api/recordings | Add a new json file for the presentation
-GET | /api/permission | Check permission for presentation
+POST | /api/token_store | Issue a token with permission to store a presentation
+POST | /api/token_read | Issue a token with permission to read
+POST | /api/destroy | Destroy token sent
 
-To recive a response with a token you have to POST to the /api/token endpoint with valid credentials
 
-{
+To issue a new token you have to POST to the /api/token_store or /api/token_read endpoint with valid credentials,
+e.g.
 
-    "email": "server@dsv.su.se",
-    "password": "password"
-}
+    {
+
+        "email": "server@dsv.su.se",
+        "password": "password"
+    }
 
 The response:
 
-{
+    {
 
-    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiO7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ",
-    "token_type": "bearer",
-    "expires_in": 3600
-}
-
-This token can then be used to make authenticated requests to all endpoints.
+        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiO7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ",
+        "token_type": "bearer"
+       
+    }
 
 
 ## 5. Player

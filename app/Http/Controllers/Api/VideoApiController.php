@@ -34,21 +34,31 @@ class VideoApiController extends Controller
      */
     public function store(PresentationRequest $request)
     {
-        $video = new Video;
-        $video->presentation_id = $request->id;
-        $video->title = $request->title;
-        $video->thumb = $request->thumb;
-        $video->presenter = $request->presenter;
-        $video->duration = (new Carbon($request->end ?? null))->diff(new Carbon($request->start ?? null))->format('%h:%I');
-        $video->subtitles = $request->subtitles;
-        $video->tags = json_encode($request->tags, true);
-        $video->sources = json_encode($request->sources, true);
-        $video->presentation = json_encode($request->all(), true);
-        $video->course_id = $request->course_id ?? 1;
-        $video->category_id = $request->category_id ?? 1;
-        $id = $video->save();
 
-        return response()->json('Presentation has been created', Response::HTTP_CREATED);
+        $payload = auth()->payload();
+
+        if($payload->get('per') == 'store')
+        {
+            $video = new Video;
+            $video->presentation_id = $request->id;
+            $video->title = $request->title;
+            $video->thumb = $request->thumb;
+            $video->presenter = $request->presenter;
+            $video->duration = (new Carbon($request->end ?? null))->diff(new Carbon($request->start ?? null))->format('%h:%I');
+            $video->subtitles = $request->subtitles;
+            $video->tags = json_encode($request->tags, true);
+            $video->sources = json_encode($request->sources, true);
+            $video->presentation = json_encode($request->all(), true);
+            $video->course_id = $request->course_id ?? 1;
+            $video->category_id = $request->category_id ?? 1;
+            $id = $video->save();
+
+            return response()->json('Presentation has been created', Response::HTTP_CREATED);
+        }
+        else {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
     }
 
     /**
