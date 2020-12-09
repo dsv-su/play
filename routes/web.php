@@ -53,4 +53,5 @@ Route::middleware('entitlements')->group(function () {
     Route::get('/daisy', 'TestController@daisy')->name('daisy');
     Route::get('/daisyload', 'TestController@daisyLoadCourses');
     Route::get('/json', 'TestController@storeJson');
+    Route::get('/send', 'TestController@send');
 });

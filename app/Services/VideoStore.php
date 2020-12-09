@@ -21,8 +21,7 @@ class VideoStore extends Model
         $this->video->presentation_id = $this->request->id;
         $this->video->title = $this->request->title;
         $this->video->thumb = $this->request->thumb;
-        //$this->video->presenter = $this->request->presenter;
-        $this->video->duration = (new Carbon($this->request->end ?? null))->diff(new Carbon($this->request->start ?? null))->format('%h:%I');
+        $this->video->duration = $this->request->duration;
         $this->video->subtitles = $this->request->subtitles;
         $this->video->tags = json_encode($this->request->tags, true);
         $this->video->sources = json_encode($this->request->sources, true);

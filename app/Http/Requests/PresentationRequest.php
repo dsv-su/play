@@ -27,9 +27,9 @@ class PresentationRequest extends FormRequest
             'id' => 'required',
             'title' => 'required',
             'thumb' => 'required',
-            'start' => 'required',
-            'end' => 'required',
-            'presenter' => 'required',
+            'duration' => 'required',
+            'presenters' => 'array',
+            'courses' => 'array',
             'tags' => 'required',
         ];
     }

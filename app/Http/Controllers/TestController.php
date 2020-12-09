@@ -14,6 +14,7 @@ use App\System;
 use App\Video;
 use App\Category;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -24,7 +25,75 @@ use Spatie\Searchable\Search;
 
 class TestController extends Controller
 {
+    public function send()
+    {
+        $token ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcGxheS1kZXYuZHN2LnN1LnNlXC9hcGlcL3Rva2VuX3N0b3JlIiwiaWF0IjoxNjA3NTIxODA5LCJuYmYiOjE2MDc1MjE4MDksImp0aSI6IktzV3p0OHRaVllSMDNSU2wiLCJzdWIiOjEsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEiLCJwZXIiOiJzdG9yZSJ9.aPKd1p81tZa3ppLzrzyLE6D9Nvf2mj3CN43fjor2quo';
+        $endpoint = 'https://play-dev.dsv.su.se/api/recordings';
+        $payload = '{
+    "id": "Oceans",
+    "title": "Oceans",
+    "presenter": "Ryan Dias",
+    "thumb": "https://people.dsv.su.se/~rydi5898/oceans.png",
+    "start": 1605880800,
+    "end": 1605882420,
+    "tags": [
+        "Test",
+        "Oceans",
+        "Wale",
+        "HT2020"
+    ],
+    "sources": [
+        {
+            "video": "https://people.dsv.su.se/~rydi5898/oceans.mp4",
+            "poster": "https://people.dsv.su.se/~rydi5898/oceans1.png",
+            "audio": true
+        },
+        {
+            "video": "https://people.dsv.su.se/~rydi5898/oceans.mp4",
+            "poster": "https://people.dsv.su.se/~rydi5898/oceans2.png",
+            "audio": false
+        },
+        {
+            "video": "https://people.dsv.su.se/~rydi5898/oceans.mp4",
+            "poster": "https://people.dsv.su.se/~rydi5898/oceans3.png",
+            "audio": false
+        },
+        {
+            "video": "https://people.dsv.su.se/~rydi5898/oceans.mp4",
+            "poster": "https://people.dsv.su.se/~rydi5898/oceans4.png",
+            "audio": false
+        }
+    ],
+    "subtitles": "subs.vtt",
+    "courses": [
+        "Testcourse",
+        "Val2020"
+    ]
+}';
 
+        $client = new Client(['base_uri' => $endpoint]);
+        $headers = [
+            'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json',
+        ];
+        try {
+            $response = $client->request('POST', $endpoint, [
+                'headers' => $headers,
+                'body' => $payload,
+            ]);
+        } catch (\Exception $e) {
+            /**
+             * If there is an exception; Client error;
+             */
+            if ($e->hasResponse()) {
+                $this->response = $e->getResponse();
+                }
+                return $this->response->getStatusCode();
+
+            }
+
+        return $response;
+    }
 
     public function index()
     {
