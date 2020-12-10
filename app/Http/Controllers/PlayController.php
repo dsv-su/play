@@ -80,12 +80,18 @@ class PlayController extends Controller
      */
     public function player(Video $video)
     {
-        $playlist = VideoCourse::where('video_id', $video->id)->first();
+        if(!$playlist = VideoCourse::where('video_id', $video->id)->first())
+        {
+            $url = url('/multiplayer') . '?' . urldecode(http_build_query(['presentation' => URL::to('/').'/presentation/'.$video->id]));
+        }
+        else
+        {
+            // Production
+            $url = url('/multiplayer') . '?' . urldecode(http_build_query(['presentation' => URL::to('/').'/presentation/'.$video->id, 'playlist' => URL::to('/').'/playlist/'.$playlist->course_id]));
+            // Dev
+            //$url = url('/multiplayer') . '?' . http_build_query(['presentation' => 'presentation/'.$video->id, 'playlist' => 'playlist/'.$playlist->course_id]);
+        }
 
-        // Production
-        $url = url('/multiplayer') . '?' . urldecode(http_build_query(['presentation' => URL::to('/').'/presentation/'.$video->id, 'playlist' => URL::to('/').'/playlist/'.$playlist->course_id]));
-        // Dev
-        //$url = url('/multiplayer') . '?' . http_build_query(['presentation' => 'presentation/'.$video->id, 'playlist' => 'playlist/'.$playlist->course_id]);
         return redirect()->away($url);
     }
 
@@ -109,7 +115,6 @@ class PlayController extends Controller
             ->makeHidden('presentation')
             ->makeHidden('duration')
             ->makeHidden('tags')
-            ->makeHidden('course_id')
             ->makeHidden('category_id')
             ->makeHidden('created_at')
             ->makeHidden('updated_at');
