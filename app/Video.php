@@ -48,6 +48,15 @@ class Video extends Model implements Searchable
         return $this->hasMany(VideoCourse::class);
     }
 
+    public function course_ids() {
+        $vcs = $this->hasMany(VideoCourse::class)->get();
+        $array = null;
+        foreach ($vcs as $vc) {
+            $array[] = $vc->course_id;
+        }
+        return $array;
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);

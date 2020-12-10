@@ -6,6 +6,7 @@ use App\Course;
 use App\MediasitePresentation;
 use App\Services\AuthHandler;
 use App\Video;
+use App\VideoCourse;
 use Carbon\Carbon;
 use Exception;
 use GuzzleHttp\Client;
@@ -155,8 +156,6 @@ class DownloadPresentation implements ShouldQueue
                 }
             }
             $course = Course::firstOrCreate(array('course_name' => $this->foldername, 'semester' => $semester, 'year' => $year));
-            $course_id = $course->id;
-            $video->course_id = $course_id;
 
             // Dummy for now. We don't have categories
             $video->category_id = 1;
@@ -171,6 +170,9 @@ class DownloadPresentation implements ShouldQueue
             $localpresentation->status = 1;
             $localpresentation->video_id = $video->id;
             $localpresentation->save();
+
+            // Assign course
+            VideoCourse::create(array('video_id' => $video->id, 'course_id' => $course->id));
 
             return true;
         } catch (GuzzleException $e) {

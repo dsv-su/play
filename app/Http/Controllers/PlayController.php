@@ -51,30 +51,6 @@ class PlayController extends Controller
     }
 
     /**
-     * @return Application|Factory|View
-     */
-    public function home_su()
-    {
-
-        // If the environment is local
-        if (app()->environment('local')) {
-            $data['play_user'] = 'För Efternamn';
-        } else {
-            $data['play_user'] = $_SERVER['displayName'];
-        }
-
-        //Initiate system
-        $init = new ConfigurationHandler();
-        $init->check_system();
-
-        $data['search'] = 0;
-        $data['latest'] = Video::with('category', 'course')->latest('id')->take(8)->get();
-        $data['categories'] = Category::all();
-
-        return view('home.home', $data);
-    }
-
-    /**
      * @param Video $video
      * @return RedirectResponse
      */

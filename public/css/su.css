@@ -826,7 +826,6 @@ input::-ms-clear {
 }
 
 #header-main-search-form .search_autocomplete li.active a, #header-main-search-form .search_autocomplete li:hover a {
-    font-family: "TheSansB2-Plain";
     text-decoration: none;
 }
 
