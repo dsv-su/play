@@ -1,4 +1,4 @@
-@extends('layouts.dsvplay')
+@extends('layouts.suplay')
 @section('content')
     <form action="{{ route('mediasiteCourseDownload') }}" method="POST">
         @csrf

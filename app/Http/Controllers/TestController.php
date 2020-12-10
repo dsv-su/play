@@ -61,10 +61,10 @@ class TestController extends Controller
          */
         $categories = Category::all();
         $course = $course;
-        $Results = Video::where('course_id', $course->id)->get();
+        $results = Video::with('category', 'video_course.course')->latest('id')->take(8)->get();
         // Searchtype
 
-        return view('course.index', compact('Results','categories', 'course', 'play_user'));
+        return view('course.index', compact('results','categories', 'course', 'play_user'));
     }
 
     public function daisy()
