@@ -17,4 +17,4 @@ Route::post('destroy', 'AuthController@logout');
 Route::apiResource('recordings', 'Api\VideoApiController');
 
 //Check permissions
-Route::get('permission', 'Api\VideoApiController@permission');
+Route::get('permissions', 'Api\VideoApiController@permissions');

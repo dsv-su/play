@@ -56,8 +56,10 @@ class PlayController extends Controller
      */
     public function player(Video $video)
     {
+        
         if(!$playlist = VideoCourse::where('video_id', $video->id)->first())
         {
+            //No playlist
             $url = url('/multiplayer') . '?' . urldecode(http_build_query(['presentation' => URL::to('/').'/presentation/'.$video->id]));
         }
         else

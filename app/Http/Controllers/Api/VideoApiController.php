@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PresentationRequest;
+use App\Http\Resources\Presentation\PermissionsResource;
 use App\Http\Resources\Presentation\PresentationResource;
 use App\Services\CourseStore;
 use App\Services\PresenterStore;
@@ -93,12 +94,16 @@ class VideoApiController extends Controller
         //
     }
 
-    public function permission(Request $request)
+    public function permissions(Request $request)
     {
-        //TODO
-        //return $request->input('user');
-        //return $request->getContent();
-        return response()->json('Wait for it', 200);
+
+        $video = Video::where('presentation_id', $request->id)->first();
+        $entitlements = explode(";", $video->entitlement);
+
+        return response()->json([
+            'public' => $video->permission,
+            'entitlements' => $entitlements
+        ], 200);
 
     }
 }

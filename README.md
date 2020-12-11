@@ -95,7 +95,23 @@ Verb | URI | Action
 -----|-----|-------
 POST | /api/recordings | Add a new json file for the presentation (requires a token with permission=store)
 GET | /api/recordings | Request a list of all presentations in json format (requires a token with permission=read)
-GET | /api/permission | Check user permission for presentation (not yet implemented)
+
+
+Endpoints for checking presentation permissions:
+
+Verb | URI | Action
+-----|-----|-------
+GET | /api/permission | Check user permission for presentation
+
+The presentation id should be sent as json and the response will show the presentations permissions:
+
+    {
+        "public": "public",
+        "entitlements": [
+        "entitlement",
+        "entitlement"
+        ]
+    }
 
 Endpoints for issuing/destroying tokens:
 
