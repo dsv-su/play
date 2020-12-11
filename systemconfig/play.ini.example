@@ -5,6 +5,9 @@ app_url=http://localhost                ; Set this to localhost or your domain
 authorization_parameter=entitlement     ; The authorization parameter NOTE! Not used for dev enviroments
 authorization=                          ; Authorization entitlements NOTE! Not used for dev enviroments
 login_route=/login                      ; The SSO login route for your application (The production server should be set ut with this route)
+default_presentation_permission=public
+default_presentation_entitlement='xxxxxxxx;xxxxxxxxxx'
+
 
 [database]
 db=mysql                                ; Here you can specify which database you use: mysql, sqlite, pgsql, sqlsrv or redis
