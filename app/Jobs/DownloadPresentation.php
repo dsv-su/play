@@ -4,9 +4,13 @@ namespace App\Jobs;
 
 use App\Course;
 use App\MediasitePresentation;
+use App\Presenter;
 use App\Services\AuthHandler;
+use App\Tag;
 use App\Video;
 use App\VideoCourse;
+use App\VideoPresenter;
+use App\VideoTag;
 use Carbon\Carbon;
 use Exception;
 use GuzzleHttp\Client;
@@ -142,7 +146,6 @@ class DownloadPresentation implements ShouldQueue
             $video = new Video;
             $video->title = $metadata['title'];
             $video->duration = (new Carbon($metadata['duration'] ?? null))->format('H:i');
-            $video->tags = implode(', ', $metadata['tags']);
 
             $semester = $year = 'Unknown';
             if ($this->type == 'course') {
@@ -164,6 +167,18 @@ class DownloadPresentation implements ShouldQueue
             $video->presentation = json_encode($metadata, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
             $video->save();
+
+            // Tags
+            foreach ($metadata['tags'] as $tag) {
+                $tag = Tag::firstOrCreate(array('name' => $tag));
+                VideoTag::create(array('video_id' => $video->id, 'tag_id' => $tag->id));
+            }
+
+            // Presenters
+            foreach ($metadata['presenters'] as $presenter) {
+                $p = Presenter::firstOrCreate(array('name' => $presenter['fullname']));
+                VideoPresenter::create(array('video_id' => $video->id, 'presenter_id' => $p->id));
+            }
 
             // Update presentsation status
             $localpresentation = MediasitePresentation::where('mediasite_id', $presentationid)->firstOrFail();

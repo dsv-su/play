@@ -12,6 +12,8 @@ use App\Services\ConfigurationHandler;
 use App\UploadHandler;
 use App\Video;
 use App\VideoCourse;
+use App\VideoPresenter;
+use App\VideoTag;
 use Exception;
 use File;
 use GuzzleHttp\Client;
@@ -56,16 +58,13 @@ class PlayController extends Controller
      */
     public function player(Video $video)
     {
-        
-        if(!$playlist = VideoCourse::where('video_id', $video->id)->first())
-        {
+
+        if (!$playlist = VideoCourse::where('video_id', $video->id)->first()) {
             //No playlist
-            $url = url('/multiplayer') . '?' . urldecode(http_build_query(['presentation' => URL::to('/').'/presentation/'.$video->id]));
-        }
-        else
-        {
+            $url = url('/multiplayer') . '?' . urldecode(http_build_query(['presentation' => URL::to('/') . '/presentation/' . $video->id]));
+        } else {
             // Production
-            $url = url('/multiplayer') . '?' . urldecode(http_build_query(['presentation' => URL::to('/').'/presentation/'.$video->id, 'playlist' => URL::to('/').'/playlist/'.$playlist->course_id]));
+            $url = url('/multiplayer') . '?' . urldecode(http_build_query(['presentation' => URL::to('/') . '/presentation/' . $video->id, 'playlist' => URL::to('/') . '/playlist/' . $playlist->course_id]));
             // Dev
             //$url = url('/multiplayer') . '?' . http_build_query(['presentation' => 'presentation/'.$video->id, 'playlist' => 'playlist/'.$playlist->course_id]);
         }
@@ -106,7 +105,7 @@ class PlayController extends Controller
         return view('player.index');
     }
 
-    public function mediasiteFetch()
+    public function mediasiteFetch(): RedirectResponse
     {
         $system = new AuthHandler();
         $system = $system->authorize();
@@ -168,7 +167,7 @@ class PlayController extends Controller
      * @param MediasiteFolder $folder
      * @return MediasiteFolder
      */
-    public function getTopParent(MediasiteFolder $folder)
+    public function getTopParent(MediasiteFolder $folder): MediasiteFolder
     {
         if (!$folder->parent) {
             return $folder;
@@ -224,7 +223,7 @@ class PlayController extends Controller
      * @return bool
      */
     public
-    function findPresentationLeafs(MediasiteFolder $folder)
+    function findPresentationLeafs(MediasiteFolder $folder): bool
     {
         if ($folder->presentations()->count()) {
             return true;
@@ -260,7 +259,7 @@ class PlayController extends Controller
      * @return array|mixed
      */
     public
-    function getMediasiteFolders($mediasite, $url)
+    function getMediasiteFolders($mediasite, $url): array
     {
         $folders = array();
 
@@ -323,7 +322,7 @@ class PlayController extends Controller
      * @return string|null
      */
     public
-    function calculateFolderSize(MediasiteFolder $folder, $mediasite, $url)
+    function calculateFolderSize(MediasiteFolder $folder, $mediasite, $url): ?string
     {
         $folderid = $folder->id;
         try {
@@ -351,7 +350,7 @@ class PlayController extends Controller
      * @return string
      */
     public
-    static function bytesToHuman($bytes)
+    static function bytesToHuman($bytes): string
     {
         $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
         for ($i = 0; $bytes > 1000; $i++) {
@@ -365,7 +364,7 @@ class PlayController extends Controller
      * @throws Exception
      */
     public
-    function mediasiteUserDownload()
+    function mediasiteUserDownload(): RedirectResponse
     {
         $folderid = request()->folderid ?? null;
         $username = request()->username ?? null;
@@ -386,7 +385,7 @@ class PlayController extends Controller
      * @throws Exception
      */
     public
-    function mediasiteCourseDownload()
+    function mediasiteCourseDownload(): RedirectResponse
     {
         $folderid = request()->folderid ?? null;
         $coursename = request()->coursename ?? null;
@@ -401,7 +400,7 @@ class PlayController extends Controller
      * @throws Exception
      */
     public
-    function mediasiteRecordingDownload()
+    function mediasiteRecordingDownload(): RedirectResponse
     {
         $folderid = request()->folderid ?? null;
         $foldername = request()->foldername ?? null;
@@ -416,7 +415,7 @@ class PlayController extends Controller
      * @throws Exception
      */
     public
-    function mediasiteOtherDownload()
+    function mediasiteOtherDownload(): RedirectResponse
     {
         $folderid = request()->folderid ?? null;
         $foldername = request()->foldername ?? null;
@@ -434,7 +433,7 @@ class PlayController extends Controller
      * @throws Exception
      */
     public
-    function processDownload($type, $foldername, $folderid)
+    function processDownload($type, $foldername, $folderid): bool
     {
         $system = new AuthHandler();
         $system = $system->authorize();
@@ -524,35 +523,47 @@ class PlayController extends Controller
     }
 
     public
-    function deleteVideoAjax(Request $request)
+    function deleteVideoAjax(Request $request): \Illuminate\Http\JsonResponse
     {
-        try {
-            $video = Video::find($request->video_id);
-            $folder = dirname($video->source1);
-            if (is_dir($folder)) {
-                $files = glob($folder . '/*');
-                // Loop through the file list
-                foreach ($files as $file) {
-                    // Check for file
-                    if (is_file($file)) {
-                        // Use unlink function to delete the file.
-                        unlink($file);
-                    }
+        $video = Video::find($request->video_id);
+        $folder = dirname($video->source1);
+        if (is_dir($folder)) {
+            $files = glob($folder . '/*');
+            // Loop through the file list
+            foreach ($files as $file) {
+                // Check for file
+                if (is_file($file)) {
+                    // Use unlink function to delete the file.
+                    unlink($file);
                 }
-                rmdir($folder);
             }
+            rmdir($folder);
+        }
 
+        if ($video->mediasite_presentation) {
             $video->mediasite_presentation->video_id = null;
             $video->mediasite_presentation->status = null;
             $video->mediasite_presentation->save();
+        }
+        foreach ($video->video_course as $vc) {
+            VideoCourse::find($vc->id)->delete();
+        }
+        foreach ($video->video_tag as $vt) {
+            VideoTag::find($vt->id)->delete();
+        }
+        foreach ($video->video_presenter as $vp) {
+            VideoPresenter::find($vp->id)->delete();
+        }
+        try {
             $video->delete();
-            return Response()->json(['message' => 'Video removed.']);
         } catch (Exception $e) {
             report($e);
             return Response()->json([
                 'message' => 'Error',
             ]);
         }
+        return Response()->json(['message' => 'Video removed.']);
+
     }
 
     public

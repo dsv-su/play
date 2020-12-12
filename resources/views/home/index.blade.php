@@ -28,11 +28,19 @@
                         </a>
                         <div class="card-body p-1">
                             <p class="card-text">
-                                Kurs: @foreach($video->video_course as $vc) <a
-                                        href="/course/{{$vc->course_id}}">{{\App\Course::find($vc->course_id)->course_name}}</a> @endforeach
-                                <br>
-                                Kategori: {{$video->category->category_name}}
+                                @foreach($video->video_course as $vc) <a
+                                        href="/course/{{$vc->course_id}}"
+                                        class="badge badge-primary">{{\App\Course::find($vc->course_id)->course_name}}</a> @endforeach
                             </p>
+                            <p class="card-text">
+                                <span class="badge badge-light">{{$video->category->category_name}}</span>
+                            </p>
+                            <p class="card-text">
+                                @foreach($video->presenters() as $presenter) <span
+                                        class="badge badge-light">{{$presenter->name}}</span> @endforeach</p>
+                            <p class="card-text" id="tags">@foreach($video->tags() as $tag) <span
+                                        class="badge badge-secondary">{{$tag->name}}</span> @endforeach</p>
+                            <p class="card-text">
                         </div>
                     </div>
                 </div>

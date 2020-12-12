@@ -2,7 +2,11 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\URL;
 use Nicolaslopezj\Searchable\SearchableTrait;
 use Spatie\Searchable\Searchable;
@@ -33,36 +37,47 @@ class Video extends Model implements Searchable
         'tags' => 'array',
     ];
 
-    public function getLinkAttribute()
+    public function getLinkAttribute(): string
     {
         return $this->attributes['link'] = URL::to('/') . '/player/' . $this->id;
     }
 
-    public function video_presenter()
+    public function video_presenter(): HasMany
     {
         return $this->hasMany(VideoPresenter::class);
     }
 
-    public function video_course()
+    public function video_course(): HasMany
     {
         return $this->hasMany(VideoCourse::class);
     }
 
-    public function course_ids() {
-        $vcs = $this->hasMany(VideoCourse::class)->get();
-        $array = null;
-        foreach ($vcs as $vc) {
-            $array[] = $vc->course_id;
-        }
-        return $array;
+    public function video_tag(): HasMany
+    {
+        return $this->hasMany(VideoTag::class);
     }
 
-    public function category()
+    public function tags(): Collection
+    {
+        return $this->belongsToMany(Tag::class, 'video_tags', 'video_id', 'tag_id')->get();
+    }
+
+    public function courses(): Collection
+    {
+        return $this->belongsToMany(Course::class, 'video_courses', 'video_id', 'course_id')->get();
+    }
+
+    public function presenters(): Collection
+    {
+        return $this->belongsToMany(Presenter::class, 'video_presenters', 'video_id', 'presenter_id')->get();
+    }
+
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function mediasite_presentation()
+    public function mediasite_presentation(): HasOne
     {
         return $this->hasOne(MediasitePresentation::class);
     }
