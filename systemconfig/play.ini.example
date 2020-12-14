@@ -1,11 +1,11 @@
 [global]
-app_env=local                           ; Make sure this is set to local NOTE! For production enviroment the settings should be set to: app_env=production and app_debug=false.
-app_debug=true                          ; Make sure this is set to true
-app_url=http://localhost                ; Set this to localhost or your domain
-authorization_parameter=entitlement     ; The authorization parameter NOTE! Not used for dev enviroments
-authorization=                          ; Authorization entitlements NOTE! Not used for dev enviroments
-login_route=/login                      ; The SSO login route for your application (The production server should be set ut with this route)
-default_presentation_permission=public
+app_env=local                               ; Make sure this is set to local NOTE! For production enviroment the settings should be set to: app_env=production and app_debug=false.
+app_debug=true                              ; Make sure this is set to true
+app_url=http://localhost                    ; Set this to localhost or your domain
+authorization_parameter=entitlement         ; The authorization parameter NOTE! Not used for dev enviroments
+authorization=                              ; Authorization entitlements NOTE! Not used for dev enviroments
+login_route=/login                          ; The SSO login route for your application (The production server should be set ut with this route)
+default_presentation_permission='false'     ; If the presentation should be public or respect the entitlents setting
 default_presentation_entitlement='xxxxxxxx;xxxxxxxxxx'
 
 
