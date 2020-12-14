@@ -8,6 +8,7 @@ use App\Http\Resources\Presentation\PermissionsResource;
 use App\Http\Resources\Presentation\PresentationResource;
 use App\Services\CourseStore;
 use App\Services\PresenterStore;
+use App\Services\TagsStore;
 use App\Services\VideoStore;
 use App\Video;
 use Illuminate\Http\Request;
@@ -51,6 +52,9 @@ class VideoApiController extends Controller
             //Store course
             $course = new CourseStore($request, $video);
             $course->course();
+            //Store tags
+            $tags = new TagsStore($request, $video);
+            $tags->tags();
 
             return response()->json('Presentation has been created', Response::HTTP_CREATED);
         }

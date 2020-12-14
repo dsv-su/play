@@ -46,7 +46,6 @@ class VideoStore extends Model
         $this->video->thumb = $this->request->thumb;
         $this->video->duration = $this->request->duration;
         $this->video->subtitles = $this->request->subtitles;
-        $this->video->tags = json_encode($this->request->tags, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         $this->video->sources = json_encode($this->request->sources, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         $this->video->presentation = json_encode($this->request->all(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         $this->video->permission = $this->permission();
