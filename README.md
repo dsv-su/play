@@ -45,6 +45,8 @@ Requirements are best determined using Server Requirements page of corresponding
         authorization_parameter=entitlement     ; The authorization parameter NOTE! Not used for dev enviroments
         authorization=                          ; Authorization entitlements NOTE! Not used for dev enviroments
         login_route=/login                      ; The SSO login route for your application (The production server should be set ut with this route) 
+        default_presentation_permission='false' ; If the presentation should be public or respect the entitlents setting
+        default_presentation_entitlement='entitlemnts xxxx;xxxxx'
         
         [database]
         db=mysql                                ; Here you can specify which database you use: mysql, sqlite, pgsql, sqlsrv or redis 
@@ -54,12 +56,11 @@ Requirements are best determined using Server Requirements page of corresponding
         db_username=                            ; DB user
         db_password=                            ; secret
         
-        [conversion-server]
+        [jwt]
         jwt_secret=                             ;used to sign your token
         jwt_public_key=                         ;A path or resource to your public key. E.g. 'file://path/to/public/key'
         jwt_private_key=                        ;A path or resource to your private key. E.g. 'file://path/to/private/key'
         jwt_passphrase=                         ;The passphrase for your private key. Can be null if none set.
-        jwt_ttl=60                              ;Specify the length of time (in minutes) that the token will be valid for. Defaults to 1 hour.
         
         [mediasite]                             ; Mediasite API
         url =
