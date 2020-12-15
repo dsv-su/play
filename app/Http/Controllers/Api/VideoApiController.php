@@ -98,10 +98,9 @@ class VideoApiController extends Controller
         //
     }
 
-    public function permissions(Request $request)
+    public function permissions($id)
     {
-
-        $video = Video::where('presentation_id', $request->id)->first();
+        $video = Video::where('presentation_id', $id)->first();
         $entitlements = explode(";", $video->entitlement);
 
         return response()->json([

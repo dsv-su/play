@@ -1,5 +1,11 @@
 <?php
 
+$file = base_path().'/systemconfig/play.ini';
+if (!file_exists($file)) {
+    $file = base_path().'/systemconfig/play.ini.example';
+}
+$system_config = parse_ini_file($file, true);
+
 return [
 
     /*
@@ -64,6 +70,21 @@ return [
             'endpoint' => env('AWS_URL'),
         ],
 
+        'sftp' => [
+            'driver' => 'sftp',
+            'host' => $system_config['sftp']['host'],
+            'username' => $system_config['sftp']['username'],
+            'password' => $system_config['sftp']['password'],
+
+            // Settings for SSH key based authentication...
+            //'privateKey' => '/path/to/privateKey',
+            //'password' => 'encryption-password',
+
+            // Optional SFTP Settings...
+            // 'port' => 22,
+            // 'root' => '',
+            // 'timeout' => 30,
+        ],
     ],
 
     /*

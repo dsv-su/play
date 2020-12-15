@@ -15,9 +15,11 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.0",
         "laravel/tinker": "^2.0",
+        "league/flysystem-sftp": "^1.0",
         "nicolaslopezj/searchable": "1.*",
         "pbmedia/laravel-ffmpeg": "^7.1",
         "php-ffmpeg/php-ffmpeg": "^0.16.0",
+        "spatie/laravel-medialibrary": "^8.0.0",
         "spatie/laravel-searchable": "^1.6",
         "tymon/jwt-auth": "^1.0"
     },

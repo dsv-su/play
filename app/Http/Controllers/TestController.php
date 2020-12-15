@@ -6,6 +6,7 @@ use App\CategorySearchAspect;
 use App\Cattura;
 use App\Course;
 use App\CourseSearchAspect;
+use App\ManualPresentation;
 use App\PlayerJson;
 use App\Presenter;
 use App\Services\DaisyAPI;
@@ -17,14 +18,36 @@ use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 use Spatie\Searchable\ModelSearchAspect;
 use Spatie\Searchable\Search;
+use function MongoDB\BSON\toJSON;
 
 class TestController extends Controller
 {
+
+    private function uri()
+    {
+        $this->file = base_path().'/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            $this->file = base_path().'/systemconfig/play.ini.example';
+        }
+        $this->system_config = parse_ini_file($this->file, true);
+
+        return $this->system_config['test']['uri'];
+    }
+    private function token()
+    {
+        $this->file = base_path().'/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            $this->file = base_path().'/systemconfig/play.ini.example';
+        }
+        $this->system_config = parse_ini_file($this->file, true);
+
+        return $this->system_config['test']['token'];
+    }
+
     public function send()
     {
 
