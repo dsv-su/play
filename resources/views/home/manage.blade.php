@@ -101,15 +101,15 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <label for="video_category">Category:</label>
-                                        <select name="video_category[]" id="video_category" required>
+                                        <label for="video_category_{{$video->id}}">Category:</label>
+                                        <select name="video_category[]" id="video_category_{{$video->id}}" required>
                                             @foreach($categories as $category)
                                                 <option value="{{$category->id}}"
                                                         @if ($category->id == $video->category_id) selected @endif>{{$category->category_name}}</option>
                                             @endforeach
                                         </select>
-                                        <label for="video_course">Course:</label>
-                                        <select name="video_course[]" id="video_course" required>
+                                        <label for="video_course_{{$video->id}}">Course:</label>
+                                        <select name="video_course[]" id="video_course_{{$video->id}}" required>
                                             @foreach($courses as $course)
                                                 <option value="{{$course->id}}"
                                                         @if ($course->id == $video->course_id) selected @endif>{{$course->course}}</option>
@@ -181,8 +181,8 @@
                 let formData = new FormData();
                 let video_id = $(this).attr('id');
                 formData.append("video_id", video_id);
-                formData.append('category_id', $(this).closest('form').find('#video_category').val());
-                formData.append('course_id', $(this).closest('form').find('#video_course').val());
+                formData.append('category_id', $(this).closest('form').find('#video_category_'+video_id).val());
+                formData.append('course_id', $(this).closest('form').find('#video_course_'+video_id).val());
 
                 $.ajax({
                     type: 'POST',

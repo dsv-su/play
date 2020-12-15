@@ -130,7 +130,7 @@ class PlayController extends Controller
     public function mediasite()
     {
         // This requires a correctly symlinked storage folder
-        $this->removeDeletedVideos();
+        // $this->removeDeletedVideos();
 
         $courses = $users = $recordings = $other = $folders = array();
         $folders = MediasiteFolder::all()->sortBy('name');
