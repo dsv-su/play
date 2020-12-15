@@ -52,7 +52,7 @@ class DownloadPresentation implements ShouldQueue
      * @return bool
      * @throws Exception
      */
-    public function handle()
+    public function handle(): bool
     {
         $system = new AuthHandler();
         $system = $system->authorize();
@@ -145,7 +145,7 @@ class DownloadPresentation implements ShouldQueue
             // Maybe use mediasiteID to ensure that we don't download same thing twice?
             $video = new Video;
             $video->title = $metadata['title'];
-            $video->duration = (new Carbon($metadata['duration'] ?? null))->format('H:i');
+            $video->duration = (Carbon::createFromTimestampMs($metadata['duration'] ?? null))->subHour()->format('H:i:s');
 
             $semester = $year = 'Unknown';
             if ($this->type == 'course') {
