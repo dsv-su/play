@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Nicolaslopezj\Searchable\SearchableTrait;
 use Spatie\Searchable\Searchable;
 use Spatie\Searchable\SearchResult;
 
@@ -12,7 +13,21 @@ use Spatie\Searchable\SearchResult;
  */
 class Course extends Model implements Searchable
 {
-    protected $fillable = ['course_name', 'semester', 'year'];
+    use SearchableTrait;
+
+    protected $fillable = ['name', 'designation'];
+    protected $searchable = [
+        'columns' => [
+            'name' => 5,
+            'designation' => 10
+        ]
+    ];
+    protected $appends = ['type'];
+
+    public function getTypeAttribute(): string
+    {
+        return 'course';
+    }
 
     public function video_course()
     {
@@ -25,7 +40,7 @@ class Course extends Model implements Searchable
 
         return new SearchResult(
             $this,
-            $this->course_name,
+            $this->name,
             //$url
             $this->id
         );

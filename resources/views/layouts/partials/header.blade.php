@@ -22,7 +22,7 @@
         </a>
 
 
-        <nav class="d-none d-xl-flex main-menu mega-menu__primary transition" aria-hidden="true">
+        <nav class="d-none d-lg-flex main-menu mega-menu__primary transition" aria-hidden="true">
             <ul class="nav not-list-styled">
                 <li class="nav-item mega-menu-item" style="">
                     <div class="position-relative">
@@ -267,18 +267,7 @@ Här hittar du information om universitetets organisation, samarbeten och annan 
             </ul>
         </nav>
 
-        <nav class="d-flex align-items-center ml-auto" aria-label="Huvudmeny">
-            <button id="togglerSearch_desktop" class="navbar-toggler collapsed d-none d-md-flex"
-                    data-toggle="collapse" data-target="#primarySearchFormCollapse"
-                    aria-controls="primarySearchFormCollapse" aria-expanded="false" aria-pressed="false"
-                    aria-label="Visa och dölj sök på webbplatsen">
-                <span id="navbar-search_desktop" class="toggler-icon__primary fas fa-search"></span>
-                <span id="navbar-search-close_desktop" class="d-none toggler-icon__primary fas fa-times"></span>
-            </button>
-            <button id="togglerSearch" class="navbar-toggler collapsed d-flex d-md-none"
-                    onclick="javascript:window.location.href='/s%C3%B6k'">
-                <span id="navbar-search" class="toggler-icon__primary fas fa-search"></span>
-            </button>
+        <nav class="d-lg-none d-flex align-items-center ml-auto" aria-label="Huvudmeny">
             <button id="togglerHamburger_desktop" class="navbar-toggler collapsed" data-toggle="collapse"
                     data-target="#primaryHamburgerCollapse" aria-controls="primaryHamburgerCollapse"
                     aria-expanded="false" aria-pressed="false" aria-label="Visa och dölj huvudmeny">
@@ -425,6 +414,7 @@ Här hittar du information om universitetets organisation, samarbeten och annan 
             </div>
 
             <div class="d-none d-md-flex">
+            <!--
                 <div class="collapse header-mega-menu-collapse__primary" id="primarySearchFormCollapse">
                     <div class="container">
 
@@ -447,7 +437,7 @@ Här hittar du information om universitetets organisation, samarbeten och annan 
                                 <span class="toggler-icon__primary fas fa-search"></span>
                             </button>
 
-                            <!--
+
                             <div class="search_autocomplete" id="search_autocomplete">
                                 <ul>
                                     <li><b>test</b>video - Polopolymanual</li>
@@ -457,9 +447,9 @@ Här hittar du information om universitetets organisation, samarbeten och annan 
                                     <li><b>Test</b> Academic Video Online - Department of Social Anthropology</li>
                                 </ul>
                             </div>
-                            -->
 
-                            <!--
+
+
                                                                     <div class="searchtext">
                                                                         <input type="text" id="query" name="query" placeholder="Sök" onfocus="changeOutput()"
                                                                                class="search-input" autocomplete="off">
@@ -509,13 +499,29 @@ Här hittar du information om universitetets organisation, samarbeten och annan 
                                                                             </label>
                                                                         </div>
                                                                     </div>
-                                                                    -->
+
 
                         </form>
 
                     </div>
                 </div>
+                  -->
             </div>
         </nav>
     </div>
 </header>
+
+<div class="container align-self-center">
+    <form class="form-inline form-main-search d-flex justify-content-between pt-5"
+          id="header-main-search-form" name="header-main-search-form"
+          action="{{ route('search') }}" method="POST" data-search="/s%C3%B6k"
+          role="search">
+        @csrf
+            <label for="header-main-search-text" class="sr-only">Sök på videos</label>
+            <input class="form-control w-100 mx-auto" type="search"
+                   id="header-main-search-text" name="q" autocomplete="off"
+                   aria-haspopup="true"
+                   placeholder="Sök på videos"
+                   aria-labelledby="header-main-search-form">
+    </form>
+</div>

@@ -22,12 +22,9 @@
             minLength: 1
         }, {
             source: engine.ttAdapter(),
-
-            limit: 7,
+            limit: 10,
             // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
             name: 'autocomplete-items',
-            displayKey: 'tags',
-            // the key from the array we want to display
             templates: {
                 empty: [
                     ''
@@ -36,11 +33,20 @@
                     ''
                 ],
                 suggestion: function (data) {
-                    if (data.tags == null) {
-                        return '<li><a href="/player/' + data.id + '"> ' + 'Titel: ' + data.title + ', ' + 'Kategori: ' + data.category.category_name + '</a></li>';
-                    } else
-                        return '<li><a href="/player/' + data.id + '"> ' + data.tags + ', Titel: ' + data.title + ', ' + 'Kategori: ' + data.category.category_name + '</a></li>';
+                    console.log(data);
+                    if (data.type == 'course') {
+                        return '<li>Course: ' + data.name + ' (' + data.designation + ')</li>';
+                    } else if (data.type == 'tag') {
+                        return '<li>Tag: ' + data.name + '</li>';
+                    } else {
+                        return '<li><a href="/player/' + data.id + '">Video: ' + data.title + '</a></li>';
+                    }
                 }
+            }
+        }).on('keyup', function(e) {
+            if(e.which == 13) {
+                console.log($(".tt-suggestion:first-child", this).find('a'));
+                return false;
             }
         });
     });

@@ -11,7 +11,7 @@ class CourseSearchAspect extends SearchAspect
     public function getResults(string $term): Collection
     {
         return Course::query()
-            ->where('course_name','LIKE', "%{$term}%")
+            ->where('name','LIKE', "%{$term}%")
             ->get();
 
     }

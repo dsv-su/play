@@ -147,18 +147,24 @@ class DownloadPresentation implements ShouldQueue
             $video->title = $metadata['title'];
             $video->duration = (Carbon::createFromTimestampMs($metadata['duration'] ?? null))->subHour()->format('H:i:s');
 
-            $semester = $year = 'Unknown';
+
+            $semester = $year = '';
+            $designation = '';
             if ($this->type == 'course') {
                 // We also need to create a course and a category.
-                $term = array();
+                $designation = explode(' - ', $this->foldername)[0] ?? $this->foldername;
+
                 $re = '/([V|H|S]T)(19|20)\d{2}/';
                 preg_match($re, $title, $term, 0, 0);
                 if ($term && $term[0]) {
-                    $semester = substr($term[0], 0, 2);
-                    $year = substr($term[0], 2, 4);
+                  //  $semester = substr($term[0], 0, 2);
+                  //  $year = substr($term[0], 2, 4);
+                    Tag::firstOrCreate(array('name' => $term[0]));
                 }
+
             }
-            $course = Course::firstOrCreate(array('course_name' => $this->foldername, 'semester' => $semester, 'year' => $year));
+
+            $course = Course::firstOrCreate(array('name' => $this->foldername, 'designation' => $designation));
 
             // Dummy for now. We don't have categories
             $video->category_id = 1;
