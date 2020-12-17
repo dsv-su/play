@@ -18,11 +18,11 @@ class CreateManualPresentationsTable extends Migration
             $table->string('base');
             $table->string('title');
             $table->string('presenters');
-            $table->date('created');
-            $table->time('duration', 0);
+            $table->integer('created');
+            $table->integer('duration');
             $table->string('courses');
             $table->string('tags');
-            $table->string('thumb');
+            $table->string('thumb')->nullable();
             $table->json('sources');
             $table->timestamps();
         });

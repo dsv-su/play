@@ -32,10 +32,6 @@
                     <label>Presentator</label>
                     <input class="form-control form-control-sm" name="presenter[]" type="text">
                 </div>
-                <div class="col">
-                    <label>Additional Presentator</label>
-                    <input class="form-control form-control-sm" name="presenter[]" type="text">
-                </div>
             </div>
             <!--Second row -->
             <div class="form-row">

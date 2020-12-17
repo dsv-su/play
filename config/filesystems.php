@@ -72,17 +72,15 @@ return [
 
         'sftp' => [
             'driver' => 'sftp',
+            //Play-store server setting
             'host' => $system_config['sftp']['host'],
             'username' => $system_config['sftp']['username'],
-            'password' => $system_config['sftp']['password'],
-
-            // Settings for SSH key based authentication...
-            //'privateKey' => '/path/to/privateKey',
-            //'password' => 'encryption-password',
-
-            // Optional SFTP Settings...
-            // 'port' => 22,
-            // 'root' => '',
+            'privateKey' => $system_config['sftp']['privateKey'],
+            'password' => $system_config['sftp']['pk-password'],
+            'root' => '/data0/incoming/',
+            'visibility' => 'public',
+            //'permPublic' => 664,
+            //'directoryPerm' => 775
             // 'timeout' => 30,
         ],
     ],
