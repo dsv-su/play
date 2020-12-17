@@ -18,9 +18,9 @@ class PresenterStore extends Model
     {
         foreach ($this->presenters as $this->item)
         {
-            if(!$this->db_presenter = Presenter::where('name', $this->item)->first()) {
+            if(!$this->db_presenter = Presenter::where('username', $this->item)->first()) {
                 $this->presenter = Presenter::create([
-                    'name' => $this->item,
+                    'username' => $this->item,
                 ]);
 
                 VideoPresenter::create([
