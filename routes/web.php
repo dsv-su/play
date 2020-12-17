@@ -45,6 +45,11 @@ Route::middleware('entitlements')->group(function () {
     Route::get('/upload', 'PlayController@upload');
     Route::post('/store', 'PlayController@store')->name('store');
 
+    //Manual upload
+    Route::get('/manual_upload', 'ManualUploadController@index');
+    Route::post('/manual_store', 'ManualUploadController@store')->name('manual_store');
+    Route::get('/manual_send/{id}', 'ManualUploadController@send');
+
     //Testing routes
     Route::get('/php', 'TestController@php')->name('php');
     Route::get('/server', 'TestController@server')->name('server');

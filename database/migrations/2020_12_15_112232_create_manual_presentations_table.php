@@ -15,8 +15,15 @@ class CreateManualPresentationsTable extends Migration
     {
         Schema::create('manual_presentations', function (Blueprint $table) {
             $table->id();
+            $table->string('base');
             $table->string('title');
-            $table->json('presentation')->nullable();
+            $table->string('presenters');
+            $table->date('created');
+            $table->time('duration', 0);
+            $table->string('courses');
+            $table->string('tags');
+            $table->string('thumb');
+            $table->json('sources');
             $table->timestamps();
         });
     }

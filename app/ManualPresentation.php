@@ -4,11 +4,39 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
 
-class ManualPresentation extends Model implements HasMedia
+class ManualPresentation extends Model
 {
-    use HasFactory, InteractsWithMedia;
-    protected $fillable = ['title'];
+    use HasFactory;
+    protected $fillable = ['base','title','creation', 'presenters', 'courses', 'tags', 'thumb', 'sources'];
+
+    protected $casts = [
+        'presenters' => 'array',
+        'tags' => 'array',
+        'courses' => 'array',
+        'sources' =>  'array',
+    ];
+
+    public function setPresentersAttribute($value)
+    {
+        $this->attributes['presenters'] = json_encode($value);
+    }
+
+    public function setTagsAttribute($value)
+    {
+        $this->attributes['tags'] = json_encode($value);
+    }
+
+    public function setCoursesAttribute($value)
+    {
+        $this->attributes['courses'] = json_encode($value);
+    }
+
+    public function setSourcesAttribute($value)
+    {
+        $this->attributes['sources'] = json_encode($value);
+    }
+
+
+
 }
