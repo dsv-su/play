@@ -35,7 +35,7 @@
                     </option>
                     @foreach($courses as $course)
                         <option value="{{$course->id}}"
-                                @if(app('request')->input('course') == $course->id) selected @endif>{{$course->course_name}}</option>
+                                @if(app('request')->input('course') == $course->id) selected @endif>{{$course->name}}</option>
                     @endforeach
                 </select>
             </div>
@@ -58,7 +58,6 @@
                             <div class="card-header position-relative"
                                  style="background-image: url({{ asset(json_decode($video->presentation)->sources[0]->poster)}}); height:200px;">
                                 <div class="title">{{ $video->title }}</div>
-                                <i class="fas fa-play-circle"></i>
                                 <p class="p-1"> {{$video->duration}} </p>
                             </div>
                         </a>
@@ -66,7 +65,7 @@
                             <p class="card-text">
                                 @foreach($video->video_course as $vc) <a
                                         href="/course/{{$vc->course_id}}"
-                                        class="badge badge-primary">{{\App\Course::find($vc->course_id)->course_name}}</a> @endforeach
+                                        class="badge badge-primary">{{\App\Course::find($vc->course_id)->name}}</a> @endforeach
                             </p>
                             <p class="card-text">
                                 <span class="badge badge-light">{{$video->category->category_name}}</span>

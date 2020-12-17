@@ -789,8 +789,18 @@ input::-ms-clear {
     position: relative
 }
 
+#header-main-search-text {
+    font-size: 150%;
+}
+
+#header-main-search-form .form-control-main-search {
+    background-color: #fff;
+
+}
+
 #header-main-search-form .twitter-typeahead {
-    position: inherit !important;
+    margin: auto;
+    width: 75%;
 }
 
 #header-main-search-form .search_autocomplete {
@@ -814,6 +824,7 @@ input::-ms-clear {
 
 #header-main-search-form .search_autocomplete li {
     border-bottom: 0;
+    font-size: 120%;
     padding: .3rem 0 .3rem 1.8rem;
     cursor: pointer;
     display: block;

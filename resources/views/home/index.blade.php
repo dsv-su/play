@@ -22,7 +22,6 @@
                             <div class="card-header position-relative"
                                  style=" @if ($video->sources && json_decode($video->sources)[0]->poster) background-image: url({{ asset(json_decode($video->sources)[0]->poster)}}); @endif height:200px;">
                                 <div class="title">{{ $video->title }}</div>
-                                <i class="fas fa-play-circle"></i>
                                 <p class="p-1"> {{$video->duration}} </p>
                             </div>
                         </a>
@@ -30,7 +29,7 @@
                             <p class="card-text">
                                 @foreach($video->video_course as $vc) <a
                                         href="/course/{{$vc->course_id}}"
-                                        class="badge badge-primary">{{\App\Course::find($vc->course_id)->course_name}}</a> @endforeach
+                                        class="badge badge-primary">{{\App\Course::find($vc->course_id)->designation}}</a> @endforeach
                             </p>
                             <p class="card-text">
                                 <span class="badge badge-light">{{$video->category->category_name}}</span>
