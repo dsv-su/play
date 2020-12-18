@@ -20,9 +20,9 @@ class CourseStore extends Model
         foreach ($this->courses as $this->item)
         {
             //Check if course exists
-            if(!$this->db_course = Course::where('course_name', $this->item)->first()) {
+            if(!$this->db_course = Course::where('name', $this->item)->first()) {
                 $this->course = Course::create([
-                    'course_name' => $this->item,
+                    'name' => $this->item,
                 ]);
 
                 VideoCourse::create([

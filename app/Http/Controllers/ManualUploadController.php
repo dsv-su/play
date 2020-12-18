@@ -100,7 +100,7 @@ class ManualUploadController extends Controller
 
         $directory = '/upload/'.$dirname;
         $contents = Storage::disk('public')->files($directory);
-
+        Storage::disk('sftp')->makeDirectory($dirname);
         $x=1;
         try {
             foreach($contents as $sendfile) {
@@ -113,6 +113,8 @@ class ManualUploadController extends Controller
             dd('Error'. $e->getMessage());
         }
 
+        //Remove temp storage
+        Storage::disk('public')->deleteDirectory($directory);
 
         // Send notify
         return redirect()->action([ManualUploadController::class, 'send'], ['id' => $file->id]);
