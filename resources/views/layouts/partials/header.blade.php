@@ -22,7 +22,7 @@
         </a>
 
 
-        <nav class="d-none d-lg-flex main-menu mega-menu__primary transition" aria-hidden="true">
+        <nav class="d-none d-lg-flex main-menu mega-menu__primary transition w-100" aria-hidden="true">
             <ul class="nav not-list-styled">
                 <li class="nav-item mega-menu-item" style="">
                     <div class="position-relative">
@@ -126,8 +126,6 @@
                                         </li>
                                     </ul>
                                 </li>
-
-
                             </ul>
                         </div>
                     </div>
@@ -159,112 +157,10 @@
                         </div>
                     </div>
                 </li>
-
-                <li class="nav-item mega-menu-item" style="">
-
-                    <div class="position-relative">
-                        <a class="text-uppercase nav-link mega-menu-link level-1" aria-haspopup="true"
-                           aria-expanded="false" href="#">
-                            Profile
-                        </a>
-                    </div>
-
-                    <div class="mega-menu-collapse">
-                        <div class="container">
-
-                            <ul class="list-unstyled row no-gutters">
-
-                                <li class="mega-menu-collapse-col col">
-                                    <span class="level-1 text-uppercase d-block mb-3">Om universitetet</span>
-                                    <span>Stockholms universitet erbjuder ett brett utbildningsutbud i nära samspel med forskning. Samarbeten och partnerskap främjar utbildningens kvalitet och det livslånga lärandet.
-Här hittar du information om universitetets organisation, samarbeten och annan fakta om Stockholms universitet.</span>
-                                </li>
-                                <li class="mega-menu-collapse-col col">
-                                    <a class="nav-link level-2" href="/om-universitetet/forskningsfinansiering">
-                                        Forskningsfinansiering</a>
-                                    <a class="nav-link level-2" href="/om-universitetet/information-om-covid-19">
-                                        Information om covid-19</a>
-                                    <a class="nav-link level-2" href="/om-universitetet/jobba-p%C3%A5-su">
-                                        Jobba på SU</a>
-                                    <a class="nav-link level-2" href="/om-universitetet/kontakt">
-                                        Kontakt</a>
-                                    <a class="nav-link level-2" href="/om-universitetet/kultur-och-historia">
-                                        Kultur och historia</a>
-                                    <a class="nav-link level-2"
-                                       href="/om-universitetet/milj%C3%B6-klimat-och-h%C3%A5llbarhet">
-                                        Miljö, klimat och hållbarhet</a>
-                                    <a class="nav-link level-2" href="/om-universitetet/om-v%C3%A5ra-campus">
-                                        Om våra campus</a>
-                                    <a class="nav-link level-2" href="/om-universitetet/organisation">
-                                        Organisation</a>
-                                    <a class="nav-link level-2"
-                                       href="/om-universitetet/priser-och-akademiska-h%C3%B6gtider">
-                                        Priser och akademiska högtider</a>
-                                    <a class="nav-link level-2"
-                                       href="/om-universitetet/samarbeten-och-samh%C3%A4llsutveckling">
-                                        Samarbeten och samhällsutveckling </a>
-                                    <a class="nav-link level-2" href="/om-universitetet/strategier">
-                                        Strategier</a>
-                                    <a class="nav-link level-2" href="/om-universitetet/universitetsfakta">
-                                        Universitetsfakta</a>
-                                </li>
-
-                                <li class="mega-menu-collapse-col col">
-                                    <ul class="navbar-nav">
-                                        <li class="nav-item">
-                                            <a href="/nyheter" class="pb-3 nav-link d-flex align-items-center">
-                                                    <span class="fas fa-newspaper fa-icon-border mr-2"
-                                                          aria-hidden="true"></span>
-                                                <span class="d-inline-block first-letter-capitalized level-2">Nyheter</span>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="/kalender" class="pb-3 nav-link d-flex align-items-center">
-                                                    <span class="fas fa-calendar-alt fa-icon-border mr-2"
-                                                          aria-hidden="true"></span>
-                                                <span class="d-inline-block first-letter-capitalized level-2">Kalender</span>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="/om-universitetet/kontakt/press-och-media"
-                                               class="pb-3 nav-link d-flex align-items-center">
-                                                    <span class="fas fa-user-edit fa-icon-border mr-2"
-                                                          aria-hidden="true"></span>
-                                                <span class="d-inline-block first-letter-capitalized level-2">Press och media</span>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="https://www.su.se/biblioteket/"
-                                               class="pb-3 nav-link d-flex align-items-center">
-                                                    <span class="fas fa-book-reader fa-icon-border mr-2"
-                                                          aria-hidden="true"></span>
-                                                <span class="d-inline-block first-letter-capitalized level-2">Bibliotek</span>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="/om-universitetet/kontakt/institutioner-och-centra"
-                                               class="pb-3 nav-link d-flex align-items-center">
-                                                    <span class="fas fa-hotel fa-icon-border mr-2"
-                                                          aria-hidden="true"></span>
-                                                <span class="d-inline-block first-letter-capitalized level-2">Institutioner och centra</span>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="/om-universitetet/om-v%C3%A5ra-campus/%C3%B6ppettider"
-                                               class="pb-3 nav-link d-flex align-items-center">
-                                                    <span class="fas fa-door-open fa-icon-border mr-2"
-                                                          aria-hidden="true"></span>
-                                                <span class="d-inline-block first-letter-capitalized level-2">Öppettider</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-
-                            </ul>
-                        </div>
-                    </div>
-                </li>
             </ul>
+            <div class="align-middle ml-auto my-auto">
+                {{$play_user ?? 'Not logged in'}}
+            </div>
         </nav>
 
         <nav class="d-lg-none d-flex align-items-center ml-auto" aria-label="Huvudmeny">
@@ -380,30 +276,8 @@ Här hittar du information om universitetets organisation, samarbeten och annan 
                                             </div>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link text-uppercase d-inline-block pr-0"
-                                               href="/om-universitetet">Profile</a>
-
-                                            <div class="float-right pt-1 pr-2">
-                                                <button type="button" data-toggle="collapse"
-                                                        data-target="#sub-level-menu3" aria-expanded="false"
-                                                        aria-controls="sub-level-menu3" aria-pressed="false"
-                                                        aria-label="Visa mer"
-                                                        class="button-remove-style su-js-toggle-btn">
-                                                    <span class="not-pressed"></span>
-                                                    <span class="pressed"></span>
-                                                </button>
-                                            </div>
-                                            <div class="su-js-has-toggle-btn collapse" id="sub-level-menu3"
-                                                 data-parent="#accordionMenu">
-                                                <div id="accordionSubMenu_Omuniversitetet">
-                                                    <ul class="main-menu-sub navbar-nav pb-4">
-                                                        <li class="nav-item pl-3">
-                                                            <a class="nav-link d-inline-block pr-0"
-                                                               href="#">Link 1</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
+                                            <span class="nav-link">
+                                                {{$play_user ?? 'Not logged in'}}</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -423,105 +297,90 @@ Här hittar du information om universitetets organisation, samarbeten och annan 
                               action="{{ route('search') }}" method="POST" data-search="/s%C3%B6k"
                               role="search">
                             @csrf
-                            <div>
-                                <label for="header-main-search-text" class="sr-only">Sök på videos</label>
-                                <input class="form-control form-control-main-search" type="search"
-                                       id="header-main-search-text" name="q" autocomplete="off"
-                                       aria-haspopup="true"
-                                       placeholder="Sök på videos"
-                                       aria-labelledby="header-main-search-form">
-                            </div>
-                            <button id="header-main-search-button" type="submit"
-                                    class="button-remove-style cursor-pointer mb-1"
-                                    aria-label="Utför sök">
-                                <span class="toggler-icon__primary fas fa-search"></span>
-                            </button>
-
-
-                            <div class="search_autocomplete" id="search_autocomplete">
-                                <ul>
-                                    <li><b>test</b>video - Polopolymanual</li>
-                                    <li><b>Test</b>ar - Polopolymanual</li>
-                                    <li><b>Test</b> - Polopolymanual</li>
-                                    <li><b>Test</b> Construction and Language Assessment - Stockholm University</li>
-                                    <li><b>Test</b> Academic Video Online - Department of Social Anthropology</li>
-                                </ul>
-                            </div>
-
-
-
-                                                                    <div class="searchtext">
-                                                                        <input type="text" id="query" name="query" placeholder="Sök" onfocus="changeOutput()"
-                                                                               class="search-input" autocomplete="off">
-                                                                    </div>
-
-                                                                    <button type="submit" class="search-button">
-                                                                        <i class="fas fa-search"></i>
-                                                                    </button>
-                                                                    -->
-
-                            <!--
-                                                                    <div class="search-option">
-                                                                        <div id="filtrera" class="filtrera" style="color: blue">Filtrera din sökning</div>
-                                                                        <div class="filter">
-                                                                            <input name="type" type="radio" value="type-lectures" id="type-lectures"
-                                                                                   class="filter-radio">
-                                                                            <label for="type-lectures">
-                                                                                <i class="far fa-user"></i>
-                                                                                <span>Föreläsare</span>
-                                                                            </label>
-
-                                                                        </div>
-
-                                                                        <div class="filter">
-                                                                            <input name="type" type="radio" value="type-category" id="type-category"
-                                                                                   class="filter-radio">
-                                                                                   class="filter-radio">
-                                                                            <label for="type-category">
-                                                                                <i class="fas fa-broadcast-tower"></i>
-                                                                                <span>Kategori</span>
-                                                                            </label>
-                                                                        </div>
-                                                                        <div class="filter">
-                                                                            <input name="type" type="radio" value="type-course" id="type-course"
-                                                                                   class="filter-radio">
-                                                                            <label for="type-cource">
-                                                                                <i class="fas fa-book-open"></i>
-                                                                                <span>Kurser</span>
-                                                                            </label>
-                                                                        </div>
-                                                                        <div class="filter">
-                                                                            <input name="type" type="radio" value="type-latest" id="type-latest"
-                                                                                   class="filter-radio">
-                                                                            <label for="type-latest">
-                                                                                <i class="far fa-clock"></i>
-                                                                                <span>Senaste</span>
-                                                                            </label>
-                                                                        </div>
-                                                                    </div>
-
-
-                        </form>
-
+                    <div>
+                        <label for="header-main-search-text" class="sr-only">Sök på videos</label>
+                        <input class="form-control form-control-main-search" type="search"
+                               id="header-main-search-text" name="q" autocomplete="off"
+                               aria-haspopup="true"
+                               placeholder="Sök på videos"
+                               aria-labelledby="header-main-search-form">
                     </div>
-                </div>
-                  -->
+                    <button id="header-main-search-button" type="submit"
+                            class="button-remove-style cursor-pointer mb-1"
+                            aria-label="Utför sök">
+                        <span class="toggler-icon__primary fas fa-search"></span>
+                    </button>
+
+
+                    <div class="search_autocomplete" id="search_autocomplete">
+                        <ul>
+                            <li><b>test</b>video - Polopolymanual</li>
+                            <li><b>Test</b>ar - Polopolymanual</li>
+                            <li><b>Test</b> - Polopolymanual</li>
+                            <li><b>Test</b> Construction and Language Assessment - Stockholm University</li>
+                            <li><b>Test</b> Academic Video Online - Department of Social Anthropology</li>
+                        </ul>
+                    </div>
+
+
+
+                                                            <div class="searchtext">
+                                                                <input type="text" id="query" name="query" placeholder="Sök" onfocus="changeOutput()"
+                                                                       class="search-input" autocomplete="off">
+                                                            </div>
+
+                                                            <button type="submit" class="search-button">
+                                                                <i class="fas fa-search"></i>
+                                                            </button>
+-->
+
+                <!--
+                                                        <div class="search-option">
+                                                            <div id="filtrera" class="filtrera" style="color: blue">Filtrera din sökning</div>
+                                                            <div class="filter">
+                                                                <input name="type" type="radio" value="type-lectures" id="type-lectures"
+                                                                       class="filter-radio">
+                                                                <label for="type-lectures">
+                                                                    <i class="far fa-user"></i>
+                                                                    <span>Föreläsare</span>
+                                                                </label>
+
+                                                            </div>
+
+                                                            <div class="filter">
+                                                                <input name="type" type="radio" value="type-category" id="type-category"
+                                                                       class="filter-radio">
+                                                                       class="filter-radio">
+                                                                <label for="type-category">
+                                                                    <i class="fas fa-broadcast-tower"></i>
+                                                                    <span>Kategori</span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="filter">
+                                                                <input name="type" type="radio" value="type-course" id="type-course"
+                                                                       class="filter-radio">
+                                                                <label for="type-cource">
+                                                                    <i class="fas fa-book-open"></i>
+                                                                    <span>Kurser</span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="filter">
+                                                                <input name="type" type="radio" value="type-latest" id="type-latest"
+                                                                       class="filter-radio">
+                                                                <label for="type-latest">
+                                                                    <i class="far fa-clock"></i>
+                                                                    <span>Senaste</span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+
+            </form>
+
+        </div>
+    </div>
+      -->
             </div>
         </nav>
     </div>
 </header>
-
-<div class="container align-self-center">
-    <form class="form-inline form-main-search d-flex justify-content-between pt-5"
-          id="header-main-search-form" name="header-main-search-form"
-          action="{{ route('search') }}" method="POST" data-search="/s%C3%B6k"
-          role="search">
-        @csrf
-            <label for="header-main-search-text" class="sr-only">Sök på videos</label>
-            <input class="form-control w-100 mx-auto" type="search"
-                   id="header-main-search-text" name="q" autocomplete="off"
-                   aria-haspopup="true"
-                   placeholder="Sök på videos"
-                   aria-labelledby="header-main-search-form">
-    </form>
-</div>

@@ -1,18 +1,32 @@
 @extends('layouts.suplay')
 @section('content')
 
+    <div class="container align-self-center">
+        <form class="form-inline form-main-search d-flex justify-content-between"
+              id="header-main-search-form" name="header-main-search-form"
+              action="{{ route('search') }}" method="POST" data-search="/s%C3%B6k"
+              role="search">
+            @csrf
+            <label for="header-main-search-text" class="sr-only">Sök på videos</label>
+            <input class="form-control w-100 mx-auto" type="search"
+                   id="header-main-search-text" name="q" autocomplete="off"
+                   aria-haspopup="true"
+                   placeholder="Sök på videos"
+                   aria-labelledby="header-main-search-form">
+        </form>
+    </div>
+
     <div class="container banner-inner">
         <div class="row no-gutters w-100">
             <div class="col-12">
                 <div>
                     <h1 class="word-wrap_xs-only">Latest videos</h1>
                 </div>
-
             </div> <!-- col-12 -->
         </div> <!-- row no-gutters -->
     </div>
 
-    <div class="container">
+    <div class="container px-0">
 
         <div class="d-flex mb-3 flex-wrap">
             @foreach ($latest as $video)
