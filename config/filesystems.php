@@ -79,6 +79,16 @@ return [
             'password' => $system_config['sftp']['pk-password'],
             'root' => '/data0/incoming/',
             'visibility' => 'public',
+            'permissions' => [
+                'file' => [
+                    'public' => 0664,
+                    'private' => 0600,
+                ],
+                'dir' => [
+                    'public' => 0775,
+                    'private' => 0700,
+                ],
+            ],
             //'permPublic' => 664,
             //'directoryPerm' => 775
             // 'timeout' => 30,

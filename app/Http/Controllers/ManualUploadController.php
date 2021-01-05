@@ -18,7 +18,16 @@ class ManualUploadController extends Controller
      */
     public function index()
     {
-        return view('manual.index');
+        // If the environment is local
+        if (app()->environment('local')) {
+            $data['presenter'] = 'rydi5898';
+            $data['play_user'] = 'För Efternamn';
+        } else {
+            $data['presenter'] = $_SERVER['eppn'];
+            $data['play_user'] = $_SERVER['displayName'];
+        }
+
+        return view('manual.index', $data);
     }
 
     /**
@@ -37,13 +46,31 @@ class ManualUploadController extends Controller
      * @param  \Illuminate\Http\Request  $request
      *
      */
-    public function store(Request $request)
+    public function step1(Request $request)
     {
         $this->validate($request, [
+            'title' => 'required',
+            'created' => 'required',
             'filenames' => 'required',
             'filenames.*' => 'required'
         ]);
+        \Session::put('step1', $request->all());
+        $data = array_merge($data, $request->all());
+        dd($data);
+        return view('manual.step1', $data);
+        dd($request->all());
+    }
 
+    public function store(Request $request)
+    {
+
+        $this->validate($request, [
+            'title' => 'required',
+            'created' => 'required',
+            'filenames' => 'required',
+            'filenames.*' => 'required'
+        ]);
+        dd($request->all());
         $files = [];
 
         if($request->hasfile('filenames'))
@@ -52,17 +79,27 @@ class ManualUploadController extends Controller
             $dirname = Carbon::now()->toDateString('Y-m-d').'_'.rand(1,999);
             Storage::disk('public')->makeDirectory('upload/'. $dirname);
             //Presentators
-            foreach($request->presenter as $presenter)
-            {
-                $presenters[] = $presenter;
+            // If the environment is local
+            if (app()->environment('local')) {
+                $presenters[] = 'rydi5898';
+            } else {
+                $presenters[] = $_SERVER['eppn'];
             }
+
+            if($request->presenters){
+                foreach($request->presenter as $presenter)
+                {
+                    $presenters[] = $presenter;
+                }
+            }
+
             //Courses
-            foreach($request->course as $course)
+            foreach($request->courses as $course)
             {
                 $courses[] = $course;
             }
             //Tags
-            foreach($request->tag as $tag)
+            foreach($request->tags as $tag)
             {
                 $tags[] = $tag;
             }
@@ -106,7 +143,7 @@ class ManualUploadController extends Controller
             foreach($contents as $sendfile) {
                 $media = Storage::disk('public')->get($sendfile);
 
-                $response = Storage::disk('sftp')->put($dirname.'/media'.$x.'.mp4', $media);
+                $response = Storage::disk('sftp')->put($dirname.'/media'.$x.'.mp4', $media, 'public');
                 $x++;
             }
         } catch (\RunTimeException $e) {

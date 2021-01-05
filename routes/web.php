@@ -47,6 +47,7 @@ Route::middleware('entitlements')->group(function () {
 
     //Manual upload
     Route::get('/manual_upload', 'ManualUploadController@index');
+    Route::post('/manual_step1_store', 'ManualUploadController@step1')->name('manual_step1');
     Route::post('/manual_store', 'ManualUploadController@store')->name('manual_store');
     Route::get('/manual_send/{id}', 'ManualUploadController@send');
 
