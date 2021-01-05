@@ -831,11 +831,15 @@ input::-ms-clear {
     width: 100%
 }
 
-#header-main-search-form .search_autocomplete li.active, #header-main-search-form .search_autocomplete li:hover {
+#header-main-search-form .search_autocomplete li.active,
+#header-main-search-form .search_autocomplete li.tt-cursor {
     background: #eef9fa;
 }
 
-#header-main-search-form .search_autocomplete li.active a, #header-main-search-form .search_autocomplete li:hover a {
+#header-main-search-form .search_autocomplete li.active a,
+#header-main-search-form .search_autocomplete li:hover a,
+#header-main-search-form .search_autocomplete li.tt-cursor a {
+    color: inherit;
     text-decoration: none;
 }
 

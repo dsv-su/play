@@ -16,8 +16,8 @@
             classNames: {
                 menu: 'search_autocomplete'
             },
-            hint: true,
-            autoselect: true,
+            hint: false,
+            autoselect: false,
             highlight: true,
             minLength: 1
         }, {
@@ -25,6 +25,15 @@
             limit: 10,
             // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
             name: 'autocomplete-items',
+            display: function(item) {
+                if (item.type == 'course') {
+                    return item.name;
+                } else if (item.type == 'tag') {
+                    return item.name;
+                } else {
+                    return item.title;
+                }
+            },
             templates: {
                 empty: [
                     ''
@@ -33,7 +42,7 @@
                     ''
                 ],
                 suggestion: function (data) {
-                    console.log(data);
+                    //console.log(data);
                     if (data.type == 'course') {
                         return '<li>Course: ' + data.name + ' (' + data.designation + ')</li>';
                     } else if (data.type == 'tag') {
@@ -44,10 +53,18 @@
                 }
             }
         }).on('keyup', function(e) {
+            const selected = $("#header-main-search-text").attr('aria-activedescendant');
+           // console.log($("#"+selected).find('a').prop('href'));
             if(e.which == 13) {
-                console.log($(".tt-suggestion:first-child", this).find('a'));
-                return false;
+                if (selected) {
+                    window.location.href = $("#"+selected).find('a').prop('href');
+                } else {
+                    window.location.href = $(".tt-suggestion:first-child").find('a').prop('href');
+                }
             }
+        }).on("mouseover", ".tt-suggestion", function () {
+            $('.tt-suggestion').removeClass('tt-cursor');
+            $(this).addClass('tt-cursor');
         });
     });
 </script>
