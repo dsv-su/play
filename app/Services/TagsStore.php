@@ -18,13 +18,16 @@ class TagsStore extends Model
     {
         foreach ($this->tags as $this->item)
         {
-            $this->tag = Tag::create([
-                'name' => json_encode($this->item, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
-            ]);
-            VideoTag::create([
-                'video_id' => $this->video->id,
-                'tag_id' => $this->tag->id,
-            ]);
+            if($this->item) {
+                $this->tag = Tag::create([
+                    'name' => json_encode($this->item, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
+                ]);
+                VideoTag::create([
+                    'video_id' => $this->video->id,
+                    'tag_id' => $this->tag->id,
+                ]);
+            }
+
         }
     }
 }
