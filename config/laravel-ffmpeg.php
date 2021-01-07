@@ -2,12 +2,12 @@
 
 return [
     'ffmpeg' => [
-        'binaries' => env('FFMPEG_BINARIES', '/usr/local/bin/ffmpeg'),
+        'binaries' => env('FFMPEG_BINARIES', 'ffmpeg'),
         'threads'  => 12,
     ],
 
     'ffprobe' => [
-        'binaries' => env('FFPROBE_BINARIES', '/usr/local/bin/ffprobe'),
+        'binaries' => env('FFPROBE_BINARIES', 'ffprobe'),
     ],
 
     'timeout' => 3600,
