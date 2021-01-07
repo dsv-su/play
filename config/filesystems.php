@@ -96,8 +96,8 @@ return [
                     'private' => 0700,
                 ],
             ],
-            //'permPublic' => 664,
-            //'directoryPerm' => 775
+            'permPublic' => 0664,
+            'directoryPerm' => 0775,
             // 'timeout' => 30,
         ],
     ],
