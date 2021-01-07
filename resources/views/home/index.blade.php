@@ -1,6 +1,10 @@
 @extends('layouts.suplay')
 @section('content')
-
+    @if (session('status'))
+        <div class="alert alert-success">
+            {{ session('status') }}
+        </div>
+    @endif
     <div class="container align-self-center">
         <form class="form-inline form-main-search d-flex justify-content-between"
               id="header-main-search-form" name="header-main-search-form"

@@ -46,8 +46,11 @@ Route::middleware('entitlements')->group(function () {
     Route::post('/store', 'PlayController@store')->name('store');
 
     //Manual upload
-    Route::get('/manual_upload', 'ManualUploadController@index');
+    Route::get('/manual_upload', 'ManualUploadController@index')->name('manual_upload');
     Route::post('/manual_step1_store', 'ManualUploadController@step1')->name('manual_step1');
+    Route::post('/gen_thumb/{id}', 'ManualUploadController@gen_thumb')->name('gen_thumb');
+    Route::post('/gen_poster/{id}', 'ManualUploadController@gen_poster')->name('gen_poster');
+    Route::get('/manual_step3_store/{id}', 'ManualUploadController@step3')->name('manual_step3');
     Route::post('/manual_store', 'ManualUploadController@store')->name('manual_store');
     Route::get('/manual_send/{id}', 'ManualUploadController@send');
 

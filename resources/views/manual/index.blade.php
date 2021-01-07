@@ -20,7 +20,7 @@
             <div class="row">
             <h2>Manuell uppladdning - steg 1</h2>
             </div>
-            <form method="post" action="{{route('manual_store')}}" enctype="multipart/form-data">
+            <form method="post" action="{{route('manual_step1')}}" enctype="multipart/form-data">
                 @csrf
                 <br>
             <div class="row">
@@ -51,10 +51,11 @@
                     <p>
                         Ange eventuellt ytterligare presentatörer.
                     </p>
+                    <div class="col-4">
                     <button type="button" name="presenteradd" class="btn btn-outline-primary btn-sm presenteradd">Presentatör <i class="fas fa-user-plus"></i></button>
                     <table class="table table-sm" id="presenter_table">
                     </table>
-
+                    </div>
                     <br>
                     <!-- Section 2 -->
                     <div class="icon">2</div>
@@ -86,7 +87,7 @@
                     <p class="description">
                         Ladda upp videomedia. Upp till 4 mediafiler är möjliga att ladda upp.
                     </p>
-
+                    <div class="col-12">
                     <button type="button" name="mediaadd" class="btn btn-outline-primary btn-sm mediaadd"><i class="fas fa-plus"></i> Lägg till</button>
                     <table class="table table-sm" id="media_table">
                         <tr>
@@ -94,11 +95,12 @@
                             <td><input type="file" name="filenames[]" class="form-control"></td>
                         </tr>
                     </table>
+                    </div>
                     <br>
                 </div>
 
             </div>
-                <button type="submit" class="btn btn-primary btn-lg">Nästa <i class="fas fa-forward"></i></button>
+                <button type="submit" class="btn btn-primary btn-lg float-right">Nästa <i class="fas fa-forward"></i></button>
             </form>
     </div>
     <!-- Modal for max upload-->
