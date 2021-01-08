@@ -282,7 +282,10 @@ class ManualUploadController extends Controller
      */
     public function destroy($id)
     {
-        //
+        //Remove temp storage in dev
+        Storage::disk('public')->deleteDirectory($id);
+        $data['presentations'] = ManualPresentation::all();
+        return view('manual.admin', $data);
     }
 
     private function uri()
@@ -293,7 +296,7 @@ class ManualUploadController extends Controller
         }
         $this->system_config = parse_ini_file($this->file, true);
 
-        return $this->system_config['test']['uri'];
+        return $this->system_config['sftp']['uri'];
     }
 
     private function token()
@@ -344,7 +347,7 @@ class ManualUploadController extends Controller
             }
          }
         //Change manualupdate status
-        $video->status = 'stored';
+        $video->status = 'sent';
         $video->save();
         if($response->getBody() == 'OK') {
             return redirect('/')->with('status', 'Presentationen har laddats upp!');

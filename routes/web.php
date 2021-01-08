@@ -55,6 +55,7 @@ Route::middleware('entitlements')->group(function () {
     Route::get('/manual_send/{id}', 'ManualUploadController@send');
     Route::get('/manual_admin', 'ManualUploadController@admin')->name('manual_admin');
     Route::get('/manual_admin_erase/{id}', 'ManualUploadController@admin_erase')->name('manual_admin_erase');
+    Route::get('/dev_destroy/{id}', 'ManualUploadController@destroy');
 
     //Testing routes
     Route::get('/php', 'TestController@php')->name('php');
