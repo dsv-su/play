@@ -53,6 +53,8 @@ Route::middleware('entitlements')->group(function () {
     Route::get('/manual_step3_store/{id}', 'ManualUploadController@step3')->name('manual_step3');
     Route::post('/manual_store', 'ManualUploadController@store')->name('manual_store');
     Route::get('/manual_send/{id}', 'ManualUploadController@send');
+    Route::get('/manual_admin', 'ManualUploadController@admin')->name('manual_admin');
+    Route::get('/manual_admin_erase/{id}', 'ManualUploadController@admin_erase')->name('manual_admin_erase');
 
     //Testing routes
     Route::get('/php', 'TestController@php')->name('php');

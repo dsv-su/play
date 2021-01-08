@@ -31,6 +31,20 @@ class ManualUploadController extends Controller
         return view('manual.index', $data);
     }
 
+    public function admin()
+    {
+        $data['presentations'] = ManualPresentation::all();
+        return view('manual.admin', $data);
+    }
+
+    public function admin_erase($id)
+    {
+        $manual = ManualPresentation::find($id);
+        Storage::disk('public')->deleteDirectory($manual->local);
+        ManualPresentation::destroy($id);
+        return back()->withInput();
+    }
+
     /**
      * Show the form for creating a new resource.
      *
