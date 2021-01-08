@@ -100,7 +100,7 @@ class ManualUploadController extends Controller
             }
         }
 
-        if($response->getBody() == 'Error logged') {
+        if($response->getBody() == 'OK') {
             //Change manualupdate status
             $video->status = 'notified';
             $video->save();
