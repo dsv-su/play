@@ -115,7 +115,6 @@ class ManualUploadController extends Controller
 
     public function admin_unregister($id)
     {
-        $manual = ManualPresentation::find($id);
         ManualPresentation::destroy($id);
         return back()->withInput();
     }
