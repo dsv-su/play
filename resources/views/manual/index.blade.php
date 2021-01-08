@@ -39,8 +39,8 @@
                             <small class="text-danger">{{ $errors->first('title') }}</small>
                         </div>
                         <div class="col-4">
-                            <label>Inspelningsdatum</label>
-                            <input class="form-control form-control-sm" name="created" type="date" value="{{ old('created') ? old('created'): $created ?? '' }}">
+                            <label for="creationdate">Inspelningsdatum</label>
+                            <input id="creationdate" class="form-control form-control-sm datepicker" name="created" type="text" value="{{ old('created') ? old('created'): $created ?? '' }}">
                             <small class="text-danger">{{ $errors->first('created') }}</small>
                         </div>
                     </div>
@@ -124,6 +124,9 @@
     </div>
     <script>
         $(document).ready(function() {
+            $('.datepicker').datepicker({
+                language:'sv'
+            });
             var count = 2;
             $(document).on('click', '.presenteradd', function(){
                 var html = '';
