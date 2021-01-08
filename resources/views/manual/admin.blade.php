@@ -19,14 +19,22 @@
                 <tbody>
                     @if($presentation->status == 'pending')
                         <tr class="table-warning">
-                    @elseif($presentation->status == 'failed')
-                        <tr class="danger">
+                    @elseif($presentation->status == 'failed' or $presentation->status == 'stored')
+                        <tr class="table-danger">
                     @endif
                             <td>{{$presentation->created_at}}</td>
                             <td>{{$presentation->status}}</td>
                             <td>{{$presentation->title}}</td>
                             <td>{{$presentation->local}}</td>
-                            <td><a role="button" class="btn btn-danger btn-sm" href="{{route('manual_admin_erase', $presentation->id)}}">Erase</button></td>
+                            @if($presentation->status == 'failed' or $presentation->status == 'stored')
+                                <td><a role="button" class="btn btn-danger btn-sm" href="{{route('manual_admin_notify', $presentation->id)}}">Notify</button></td>
+                            @elseif($presentation->status == 'pending')
+                                <td><a role="button" class="btn btn-warning btn-sm" href="{{route('manual_admin_erase', $presentation->id)}}">Erase</button></td>
+                            @elseif($presentation->status == 'notified')
+                                <td><a role="button" class="btn btn-info btn-sm" href="{{route('manual_admin_unregister', $presentation->id)}}">Unregister</button></td>
+                            @elseif($presentation->status == 'sent')
+                                <td><a role="button" class="btn btn-primary btn-sm" href="{{route('manual_admin_unregister', $presentation->id)}}">Unregister</button></td>
+                            @endif
                         </tr>
                 </tbody>
 

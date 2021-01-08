@@ -45,6 +45,81 @@ class ManualUploadController extends Controller
         return back()->withInput();
     }
 
+    public function admin_notify($id)
+    {
+        $video = ManualPresentation::find($id);
+        $video->makeHidden('status')
+                ->makeHidden('local')
+                ->makeHidden('base')
+                ->makeHidden('title')
+                ->makeHidden('presenters')
+                ->makeHidden('created')
+                ->makeHidden('duration')
+                ->makeHidden('courses')
+                ->makeHidden('tags')
+                ->makeHidden('thumbs')
+                ->makeHidden('sources')
+                ->makeHidden('created_at')->makeHidden('updated_at');
+        //Make json wrapper
+        $json = Collection::make([
+            'status' => 'failure',
+            'type' => 'manual'
+        ]);
+        $json['message'] = $video->status;
+        $json['upload_dir'] = $video->local;
+        $json = $json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
+        //Print body (for testing)
+        //return $json;
+        /******************************************************************************/
+
+        $client = new Client(['base_uri' => $this->uri()]);
+        $headers = [
+            //'Authorization' => 'Bearer ' . $this->token(),
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+        ];
+        try {
+            $response = $client->request('POST', $this->uri(), [
+                'headers' => $headers,
+                'body' => $json
+            ]);
+        } catch (\Exception $e) {
+            /**
+             * If there is an exception; Client error;
+             */
+            if ($e->hasResponse()) {
+                //return $response = $e->getResponse()->getStatusCode();
+                //Change manualupdate status
+                $video->status = 'failed';
+                $video->save();
+                return $response = $e->getResponse()->getBody();
+            }
+        }
+
+        if($response->getBody() == 'OK') {
+            //Change manualupdate status
+            $video->status = 'notified';
+            $video->save();
+            return back()->withInput();
+        }
+        else {
+            //Change manualupdate status
+            $video->status = 'failed';
+            $video->save();
+            return $response->getBody();
+        }
+
+        return back()->withInput();
+    }
+
+    public function admin_unregister($id)
+    {
+        $manual = ManualPresentation::find($id);
+        ManualPresentation::destroy($id);
+        return back()->withInput();
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -282,6 +357,10 @@ class ManualUploadController extends Controller
      */
     public function destroy($id)
     {
+        /************************
+         * Dev testing
+         * ->to be removed
+         */
         //Remove temp storage in dev
         Storage::disk('public')->deleteDirectory($id);
         $data['presentations'] = ManualPresentation::all();
@@ -343,16 +422,25 @@ class ManualUploadController extends Controller
         */
         if ($e->hasResponse()) {
             //return $response = $e->getResponse()->getStatusCode();
+            //Change manualupdate status
+            $video->status = 'failed';
+            $video->save();
             return $response = $e->getResponse()->getBody();
             }
          }
-        //Change manualupdate status
-        $video->status = 'sent';
-        $video->save();
+
         if($response->getBody() == 'OK') {
+            //Change manualupdate status
+            $video->status = 'sent';
+            $video->save();
             return redirect('/')->with('status', 'Presentationen har laddats upp!');
         }
-        else return $response->getBody();
+        else {
+            //Change manualupdate status
+            $video->status = 'failed';
+            $video->save();
+            return $response->getBody();
+        }
 
 
     }
