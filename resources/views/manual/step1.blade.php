@@ -38,7 +38,7 @@
                             @if($thumb == null)
                                 <svg class="bd-placeholder-img" width="100%" height="250" xmlns="http://www.w3.org/2000/svg" aria-label="Placeholder: Image" preserveAspectRatio="xMidYMid slice" role="img"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Ingen bild</text></svg>
                             @else
-                                <img id="thumb" class="bd-placeholder-img" width="100%" height="250" src="{{'/'.$local.'/image/primary_thumb'.$id.'.png'}}">
+                                <img id="thumb" class="bd-placeholder-img" width="100%" height="250" src="{{'/storage/'.$local.'/image/primary_thumb'.$id.'.png'}}">
                             @endif
 
                         </div>
@@ -78,7 +78,7 @@
                         @if($thumb == null)
                         <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" aria-label="Placeholder: Image cap" preserveAspectRatio="xMidYMid slice" role="img"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Ingen bild</text></svg>
                         @else
-                            <img class="bd-placeholder-img" width="100%" height="180" src="{{'/'.$local.'/image/poster_'.($loop->index+1).'.png'}}">
+                            <img class="bd-placeholder-img" width="100%" height="180" src="{{'/storage/'.$local.'/image/poster_'.($loop->index+1).'.png'}}">
                         @endif
                         <div class="card-body">
                             <h5 class="card-title">Poster {{($loop->index+1)}}</h5>

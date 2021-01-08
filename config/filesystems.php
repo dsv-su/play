@@ -98,7 +98,6 @@ return [
             ],
             'permPublic' => 0664,
             'directoryPerm' => 0775,
-            // 'timeout' => 30,
         ],
     ],
 
