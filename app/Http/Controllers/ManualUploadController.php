@@ -65,8 +65,11 @@ class ManualUploadController extends Controller
             'status' => 'failure',
             'type' => 'manual'
         ]);
-        $json['message'] = $video->status;
-        $json['upload_dir'] = $video->local;
+        $json['package'] = Collection::make([
+            'message' => $video->status,
+            'base' => $video->base
+            ]);
+
         $json = $json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
         //Print body (for testing)
@@ -97,7 +100,7 @@ class ManualUploadController extends Controller
             }
         }
 
-        if($response->getBody() == 'OK') {
+        if($response->getBody() == 'Error logged') {
             //Change manualupdate status
             $video->status = 'notified';
             $video->save();

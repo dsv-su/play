@@ -12,6 +12,7 @@
                     <th scope="col">Status</th>
                     <th scope="col">Title</th>
                     <th scope="col">Local</th>
+                    <th scope="col">Uploader</th>
                     <th scope="col">Action</th>
                 </tr>
                 </thead>
@@ -26,14 +27,19 @@
                             <td>{{$presentation->status}}</td>
                             <td>{{$presentation->title}}</td>
                             <td>{{$presentation->local}}</td>
+                            @foreach($presentation->presenters as $uploader)
+                                @if ($loop->first)
+                                    <td>{{$uploader}}</td>
+                                @endif
+                            @endforeach
                             @if($presentation->status == 'failed' or $presentation->status == 'stored')
-                                <td><button role="button" class="btn btn-danger btn-sm" href="{{route('manual_admin_notify', $presentation->id)}}">Notify</button></td>
+                                <td><a role="button" class="btn btn-danger btn-sm" href="{{route('manual_admin_notify', $presentation->id)}}">Notify</a></td>
                             @elseif($presentation->status == 'pending')
-                                <td><button role="button" class="btn btn-warning btn-sm" href="{{route('manual_admin_erase', $presentation->id)}}">Erase</button></td>
+                                <td><a role="button" class="btn btn-warning btn-sm" href="{{route('manual_admin_erase', $presentation->id)}}">Erase</a></td>
                             @elseif($presentation->status == 'notified')
-                                <td><button role="button" class="btn btn-info btn-sm" href="{{route('manual_admin_unregister', $presentation->id)}}">Unregister</button></td>
+                                <td><a role="button" class="btn btn-info btn-sm" href="{{route('manual_admin_unregister', $presentation->id)}}">Unregister</a></td>
                             @elseif($presentation->status == 'sent')
-                                <td><button role="button" class="btn btn-primary btn-sm" href="{{route('manual_admin_unregister', $presentation->id)}}">Unregister</button></td>
+                                <td><a role="button" class="btn btn-primary btn-sm" href="{{route('manual_admin_unregister', $presentation->id)}}">Unregister</a></td>
                             @endif
                         </tr>
                 </tbody>

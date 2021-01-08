@@ -146,6 +146,7 @@
                                 <li class="mega-menu-collapse-col col">
                                     <a class="nav-link level-2" href="#">Hantera uppspelning</a>
                                     <a class="nav-link level-2" href="{{ route('manual_upload') }}">Manuell uppladdning</a>
+                                    <a class="nav-link level-2" href="{{ route('manual_admin') }}">Only for administrators</a>
                                     <a class="nav-link level-2" href="{{ route('manage') }}">Manage videos</a>
                                     <a class="nav-link level-2" href="{{ route('mediasiteFetch') }}">Sync items from
                                         Mediasite</a>
