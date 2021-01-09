@@ -38,3 +38,9 @@ sfapikey =
 url =
 username =
 password =
+
+[sftp]                                  ; DSV Storage server credentials
+host=
+username=
+privateKey=
+pk-password=

@@ -72,16 +72,32 @@ return [
 
         'sftp' => [
             'driver' => 'sftp',
+            //Test server setting
+            /*
+            'host' => $system_config['sftp']['host'],
+            'username' => $system_config['sftp']['username'],
+            'password' => $system_config['sftp']['password'],
+            */
             //Play-store server setting
             'host' => $system_config['sftp']['host'],
             'username' => $system_config['sftp']['username'],
             'privateKey' => $system_config['sftp']['privateKey'],
             'password' => $system_config['sftp']['pk-password'],
             'root' => '/data0/incoming/',
+            //->
             'visibility' => 'public',
-            //'permPublic' => 664,
-            //'directoryPerm' => 775
-            // 'timeout' => 30,
+            'permissions' => [
+                'file' => [
+                    'public' => 0664,
+                    'private' => 0600,
+                ],
+                'dir' => [
+                    'public' => 0775,
+                    'private' => 0700,
+                ],
+            ],
+            'permPublic' => 0664,
+            'directoryPerm' => 0775,
         ],
     ],
 

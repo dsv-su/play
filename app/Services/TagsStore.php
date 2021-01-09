@@ -16,15 +16,16 @@ class TagsStore extends Model
 
     public function tags()
     {
-        foreach ($this->tags as $this->item)
-        {
-            $this->tag = Tag::create([
-                'name' => $this->item
-            ]);
-            VideoTag::create([
-                'video_id' => $this->video->id,
-                'tag_id' => $this->tag->id,
-            ]);
+        foreach ($this->tags as $this->item) {
+            if ($this->item) {
+                $this->tag = Tag::create([
+                    'name' => $this->item
+                ]);
+                VideoTag::create([
+                    'video_id' => $this->video->id,
+                    'tag_id' => $this->tag->id,
+                ]);
+            }
         }
     }
 }

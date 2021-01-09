@@ -73,6 +73,13 @@ Requirements are best determined using Server Requirements page of corresponding
         username =
         password =
         
+        [sftp]
+        host=
+        username=
+        privateKey=
+        pk-password=
+
+        
 * Once the global settings are entered you can install the dependencies. `composer install`
 
 * Make sure that .env file is present (copy .env.example to .env). 

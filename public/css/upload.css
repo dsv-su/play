@@ -1,0 +1,20 @@
+.icon {
+    width: 70px;
+    height: 70px;
+    line-height: 70px;
+    border-radius: 50%;
+    background: #002f5f;
+    box-sizing: border-box;
+    text-align: center;
+    margin: auto 0;
+    font-size: 25px;
+    color: #fff;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px #837cb6;
+    z-index: 2;
+}
+
+.title {
+    color: #333fff;
+}
+
