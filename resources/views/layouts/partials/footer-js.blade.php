@@ -17,7 +17,7 @@
                 menu: 'search_autocomplete'
             },
             hint: false,
-            autoselect: false,
+            autoselect: true,
             highlight: true,
             minLength: 1
         }, {
@@ -25,10 +25,8 @@
             limit: 10,
             // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
             name: 'autocomplete-items',
-            display: function(item) {
-                if (item.type == 'course') {
-                    return item.name;
-                } else if (item.type == 'tag') {
+            display: function (item) {
+                if (item.type == 'course' || item.type == 'tag') {
                     return item.name;
                 } else {
                     return item.title;
@@ -42,7 +40,6 @@
                     ''
                 ],
                 suggestion: function (data) {
-                    //console.log(data);
                     if (data.type == 'course') {
                         return '<li>Course: ' + data.name + ' (' + data.designation + ')</li>';
                     } else if (data.type == 'tag') {
@@ -52,14 +49,14 @@
                     }
                 }
             }
-        }).on('keyup', function(e) {
-            $(".tt-suggestion:first-child").addClass('tt-cursor');
+        }).on('keyup', function (e) {
+            //$(".tt-suggestion:first-child").addClass('tt-cursor');
             let selected = $("#header-main-search-text").attr('aria-activedescendant');
-           // console.log($("#"+selected).find('a').prop('href'));
-            if(e.which == 13) {
+            if (e.which == 13) {
                 if (selected) {
-                    window.location.href = $("#"+selected).find('a').prop('href');
+                    window.location.href = $("#" + selected).find('a').prop('href');
                 } else {
+                    $(".tt-suggestion:first-child").addClass('tt-cursor');
                     window.location.href = $(".tt-suggestion:first-child").find('a').prop('href');
                 }
             }

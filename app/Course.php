@@ -2,7 +2,9 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Nicolaslopezj\Searchable\SearchableTrait;
 use Spatie\Searchable\Searchable;
 use Spatie\Searchable\SearchResult;
@@ -29,9 +31,14 @@ class Course extends Model implements Searchable
         return 'course';
     }
 
-    public function video_course()
+    public function video_course(): HasMany
     {
         return $this->hasMany(VideoCourse::class);
+    }
+
+    public function videos(): Collection
+    {
+        return $this->hasManyThrough(Video::class, VideoCourse::class, 'course_id', 'id', 'id', 'video_id')->get();
     }
 
     public function getSearchResult(): SearchResult

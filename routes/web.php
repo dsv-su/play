@@ -26,7 +26,10 @@ Route::middleware('entitlements')->group(function () {
     Route::post('/mediasiteRecordingDownload', 'PlayController@mediasiteRecordingDownload')->name('mediasiteRecordingDownload');
     Route::post('/mediasiteUserDownload', 'PlayController@mediasiteUserDownload')->name('mediasiteUserDownload');
     Route::post('/mediasiteOtherDownload', 'PlayController@mediasiteOtherDownload')->name('mediasiteOtherDownload');
-    Route::get('find', 'TestController@find')->name('find');
+    Route::get('/find', 'PlayController@find')->name('find');
+    Route::get('/course/{course}', 'PlayController@showCourseVideos')->name('course.videos');
+    Route::get('/tag/{tag}', 'PlayController@showTagVideos')->name('tag.videos');
+    Route::get('/presenter/{presenter}', 'PlayController@showPresenterVideos')->name('presenter.videos');
 
     Route::get('/player/{video}', 'PlayController@player')->name('player');
     Route::get('/multiplayer', 'PlayController@multiplayer')->name('multiplayer');
@@ -40,7 +43,7 @@ Route::middleware('entitlements')->group(function () {
     Route::post('/manage/deleteAjax', 'PlayController@deleteVideoAjax')->name('manage.deleteVideo');
     Route::post('/manage/editAjax', 'PlayController@editVideoAjax')->name('manage.editVideo');
     Route::get('/categories/{category}', 'TestController@show')->name('categories.show');
-    Route::get('/course/{course}', 'TestController@show')->name('course.show');
+
 
     Route::get('/upload', 'PlayController@upload');
     Route::post('/store', 'PlayController@store')->name('store');
