@@ -19,7 +19,7 @@ class TagsStore extends Model
         foreach ($this->tags as $this->item)
         {
             $this->tag = Tag::create([
-                'name' => json_encode($this->item, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
+                'name' => $this->item
             ]);
             VideoTag::create([
                 'video_id' => $this->video->id,

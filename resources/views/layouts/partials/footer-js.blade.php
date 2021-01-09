@@ -53,7 +53,8 @@
                 }
             }
         }).on('keyup', function(e) {
-            const selected = $("#header-main-search-text").attr('aria-activedescendant');
+            $(".tt-suggestion:first-child").addClass('tt-cursor');
+            let selected = $("#header-main-search-text").attr('aria-activedescendant');
            // console.log($("#"+selected).find('a').prop('href'));
             if(e.which == 13) {
                 if (selected) {
@@ -62,9 +63,6 @@
                     window.location.href = $(".tt-suggestion:first-child").find('a').prop('href');
                 }
             }
-        }).on("mouseover", ".tt-suggestion", function () {
-            $('.tt-suggestion').removeClass('tt-cursor');
-            $(this).addClass('tt-cursor');
         });
     });
 </script>
