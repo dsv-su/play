@@ -41,9 +41,9 @@
                 ],
                 suggestion: function (data) {
                     if (data.type == 'course') {
-                        return '<li>Course: ' + data.name + ' (' + data.designation + ')</li>';
+                        return '<li><a href="/course/' + data.id + '">Course: ' + data.name + ' (' + data.designation + ')</a></li>';
                     } else if (data.type == 'tag') {
-                        return '<li>Tag: ' + data.name + '</li>';
+                        return '<li><a href="/tag/' + data.id + '">Tag: ' + data.name + '</a></li>';
                     } else {
                         return '<li><a href="/player/' + data.id + '">Video: ' + data.title + '</a></li>';
                     }
