@@ -47,6 +47,8 @@ class PlayController extends Controller
         $init = new ConfigurationHandler();
         $init->check_system();
 
+        $totalcourses = Course::where('designation', '<>', '')->count();
+        $data['courses'] = Course::where('designation', '<>', '')->orderBy('designation')->get()->chunk(ceil($totalcourses / 3));
         $data['search'] = 0;
         $data['latest'] = Video::with('category', 'video_course.course')->latest('id')->take(8)->get();
         $data['categories'] = Category::all();
@@ -596,6 +598,8 @@ class PlayController extends Controller
         $init->check_system();
 
         $data['course'] = Course::find($courseid)->name;
+        $totalcourses = Course::where('designation', '<>', '')->count();
+        $data['courses'] = Course::where('designation', '<>', '')->orderBy('designation')->get()->chunk(ceil($totalcourses / 3));
         $data['latest'] = Course::find($courseid)->videos();
         return view('home.index', $data);
     }
@@ -613,6 +617,8 @@ class PlayController extends Controller
         $init = new ConfigurationHandler();
         $init->check_system();
         $data['tag'] = Tag::find($tagid)->name;
+        $totalcourses = Course::where('designation', '<>', '')->count();
+        $data['courses'] = Course::where('designation', '<>', '')->orderBy('designation')->get()->chunk(ceil($totalcourses / 3));
         $data['latest'] = Tag::find($tagid)->videos();
         return view('home.index', $data);
     }
@@ -629,6 +635,8 @@ class PlayController extends Controller
         //Initiate system
         $init = new ConfigurationHandler();
         $init->check_system();
+        $totalcourses = Course::where('designation', '<>', '')->count();
+        $data['courses'] = Course::where('designation', '<>', '')->orderBy('designation')->get()->chunk(ceil($totalcourses / 3));
         $data['presenter'] = Presenter::find($presenterid)->name;
         $data['latest'] = Presenter::find($presenterid)->videos();
         return view('home.index', $data);
