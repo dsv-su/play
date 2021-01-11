@@ -54,6 +54,33 @@ class PlayController extends Controller
         return view('home.index', $data);
     }
 
+    /**
+     * @return Application|Factory|View
+     */
+    public function myVideos()
+    {
+        // If the environment is local
+        if (app()->environment('local')) {
+            $data['play_user'] = 'För Efternamn';
+        } else {
+            $data['play_user'] = $_SERVER['displayName'];
+        }
+
+        //Initiate system
+        $init = new ConfigurationHandler();
+        $init->check_system();
+
+        // Get all videos where the current user is a presenter
+        $mycourses = Course::all();
+        foreach ($mycourses as $key => $course) {
+            $course->myvideos = $course->userVideos(Presenter::find(5));
+        }
+
+        $data['courses'] = $this->getActiveCourses();
+        $data['mycourses'] = $mycourses;
+        return view('home.my', $data);
+    }
+
     private function getActiveCourses() {
         $courses = Course::where('designation', '<>', '')->orderBy('designation')->get()->filter(function ($course) {
             return !$course->videos()->isEmpty();

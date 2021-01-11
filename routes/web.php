@@ -30,6 +30,8 @@ Route::middleware('entitlements')->group(function () {
     Route::get('/course/{course}', 'PlayController@showCourseVideos')->name('course.videos');
     Route::get('/tag/{tag}', 'PlayController@showTagVideos')->name('tag.videos');
     Route::get('/presenter/{presenter}', 'PlayController@showPresenterVideos')->name('presenter.videos');
+    Route::get('/my', 'PlayController@myVideos')->name('my.videos');
+
 
     Route::get('/player/{video}', 'PlayController@player')->name('player');
     Route::get('/multiplayer', 'PlayController@multiplayer')->name('multiplayer');

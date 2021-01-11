@@ -75,6 +75,15 @@
                 <li class="nav-item mega-menu-item" style="">
                     <div class="position-relative">
                         <a class="text-uppercase nav-link mega-menu-link level-1" aria-haspopup="true"
+                           aria-expanded="false" href="/my">
+                            My videos
+                        </a>
+                    </div>
+                </li>
+
+                <li class="nav-item mega-menu-item" style="">
+                    <div class="position-relative">
+                        <a class="text-uppercase nav-link mega-menu-link level-1" aria-haspopup="true"
                            aria-expanded="false" href="#">
                             Manage
                         </a>
@@ -165,6 +174,12 @@
                                                 </div>
                                             </div>
                                         </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link text-uppercase d-inline-block pr-0"
+                                               href="/my">My videos</a>
+                                        </li>
+
                                         <li class="nav-item">
                                             <a class="nav-link text-uppercase d-inline-block pr-0"
                                                href="#">Manage</a>
