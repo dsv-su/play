@@ -26,20 +26,13 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
 
-class PlayController extends Controller
+class PlayController extends BaseController
 {
     /**
      * @return Application|Factory|View
      */
     public function index()
     {
-
-        // If the environment is local
-        if (app()->environment('local')) {
-            $data['play_user'] = 'För Efternamn';
-        } else {
-            $data['play_user'] = $_SERVER['displayName'];
-        }
 
         //Initiate system
         $init = new ConfigurationHandler();

@@ -12,45 +12,21 @@ use App\Presenter;
 use App\Services\DaisyIntegration;
 use App\System;
 use App\Tag;
+use App\User;
 use App\Video;
+use App\VideoCourse;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 use Spatie\Searchable\ModelSearchAspect;
 use Spatie\Searchable\Search;
 
-class TestController extends Controller
+class TestController extends BaseController
 {
-
-    private function uri()
-    {
-        $this->file = base_path() . '/systemconfig/play.ini';
-        if (!file_exists($this->file)) {
-            $this->file = base_path() . '/systemconfig/play.ini.example';
-        }
-        $this->system_config = parse_ini_file($this->file, true);
-
-        return $this->system_config['test']['uri'];
-    }
-
-    private function token()
-    {
-        $this->file = base_path() . '/systemconfig/play.ini';
-        if (!file_exists($this->file)) {
-            $this->file = base_path() . '/systemconfig/play.ini.example';
-        }
-        $this->system_config = parse_ini_file($this->file, true);
-
-        return $this->system_config['test']['token'];
-    }
-
-    public function send()
-    {
-
-    }
-
     public function index()
     {
         $videos = Video::with('category', 'course')->get();
@@ -170,13 +146,14 @@ class TestController extends Controller
          */
 
         // If the environment is local
+        /*
         if (app()->environment('local')) {
             $play_user = 'Förnamn Efternamn';
         } else {
 
             $play_user = $_SERVER['displayName'];
         }
-
+        */
 
         /**************************
          * Check if searchstring is empty
@@ -318,20 +295,50 @@ class TestController extends Controller
 
     /*************************************************************************************
      */
-    public function thumb()
+    protected function respondWithToken($token)
+    {
+        return response()->json([
+            'access_token' => $token
+            //'token_type' => 'bearer',
+            //'expires_in' => auth()->factory()->getTTL() * 60
+        ]);
+    }
+
+    public function token(Video $video)
     {
 
-        //Video
-        $video = '/videos/oceans.mp4';
+        $credentials = [
+            'email'=> 'playticket@dsv.su.se',
+            'password' => 'password'
+    ];
+        //dd($credentials);
 
-        FFMpeg::fromDisk('public')
-            ->open($video)
-            ->getFrameFromSeconds(27)
-            ->export()
-            ->toDisk('public')
-            ->save('/images/videocovers/oceans4.png');
+        if (! $token = auth()->claims(['id' => $video->id])->setTTL(60)->attempt($credentials)) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+        //dd($token);
 
-        return 'Done';
+        if (!$playlist = VideoCourse::where('video_id', $video->id)->first()) {
+            //No playlist
+            $url = url('/multiplayer') . '?' . urldecode(http_build_query(['presentation' => URL::to('/') . '/presentation/' . $video->id, 'authparam' => $token]));
+        } else {
+            // Production
+            $url = url('/multiplayer') . '?' . urldecode(http_build_query(['presentation' => URL::to('/') . '/presentation/' . $video->id, 'playlist' => URL::to('/') . '/playlist/' . $playlist->course_id, 'authparam' => $token]));
+            // Dev
+            //$url = url('/multiplayer') . '?' . http_build_query(['presentation' => 'presentation/'.$video->id, 'playlist' => 'playlist/'.$playlist->course_id]);
+        }
+
+        return redirect()->away($url);
+    }
+
+    public function decode($token)
+    {
+        return unserialize(Crypt::decryptString($token));
+    }
+
+    public function stream()
+    {
+
     }
 
     public function php()
@@ -344,37 +351,5 @@ class TestController extends Controller
         dd($_SERVER);
     }
 
-    public function storeJson()
-    {
-
-        // Store json in db
-        $directory = '/videos';
-        $directories = Storage::disk('public')->directories($directory);
-        $new_recording = 0;
-        foreach ($directories as $recording) {
-            $presentation_json = Storage::disk('public')->get($recording . '/presentation.json');
-            $data = json_decode($presentation_json, true);
-            //dd($data['id']);
-            if (!Video::where('presentation_id', $data['id'])->first()) {
-                $x = mt_rand(1, 9);
-                $video = new Video();
-                $video->presentation_id = $data['id'];
-                $video->title = $data['title'];
-                $video->thumb = $data['thumb'] ?? 'images/videocovers/kurs' . $x . '.jpg';
-                $video->presenter = $data['presenter'] ?? null;
-                //Convert unix timestamps
-                $video->duration = (new Carbon($data['end'] ?? null))->diff(new Carbon($data['start'] ?? null))->format('%h:%I');
-                $video->subtitles = $data['subtitles'] ?? null;
-                $video->tags = $data['tags'] ?? null;
-                $video->presentation = $presentation_json;
-                $video->course_id = 1;
-                $video->category_id = 1;
-                $video->save();
-                $new_recording++;
-            }
-        }
-        if ($new_recording > 0) return redirect('/')->with('status', 'New recordings stored in db');
-        else return redirect('/')->with('status', 'No new recordings');
-    }
 
 }

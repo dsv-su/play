@@ -13,12 +13,14 @@ use App\Services\VideoStore;
 use App\Video;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class VideoApiController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api');
+        //$this->middleware('auth:api');
+        $this->middleware('auth:api', ['except' => ['permission']]);
     }
     /**
      * Display a listing of the resource.
@@ -98,6 +100,49 @@ class VideoApiController extends Controller
         //
     }
 
+    public function perm($id)
+    {
+        auth()->invalidate();
+        //$video = Video::where('presentation_id', $id)->first();
+        return response()->json([
+            'Permission' => 'True'
+        ], 200);
+    }
+
+    public function permission()
+    {
+        $ticket = json_encode(request(['token']));
+        try {
+            JWTAuth::parseToken($ticket)->authenticate();
+            JWTAuth::parseToken($ticket)->invalidate();
+            return response()->json([
+                'Permission' => 'Granted'
+            ]);
+        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+
+            // Token is expired
+            return response()->json([
+                'Permission' => 'Denied'
+            ]);
+
+        } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+
+            // Token is invalid
+            return response()->json([
+                'Permission' => 'Denied'
+            ]);
+
+        } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
+
+            // Token is not present
+            return response()->json([
+                'Permission' => 'Denied'
+            ]);
+        }
+
+
+    }
+
     public function permissions($id)
     {
         $video = Video::where('presentation_id', $id)->first();
@@ -109,4 +154,5 @@ class VideoApiController extends Controller
         ], 200);
 
     }
+
 }

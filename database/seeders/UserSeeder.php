@@ -21,5 +21,10 @@ class UserSeeder extends Seeder
             'email' => 'CSserver@dsv.su.se',
             'password' => Hash::make('password'),
         ]);
+        DB::table('users')->insert([
+            'name' => 'TicketHandler',
+            'email' => 'playticket@dsv.su.se',
+            'password' => Hash::make('password'),
+        ]);
     }
 }

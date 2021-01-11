@@ -62,9 +62,8 @@ Route::middleware('entitlements')->group(function () {
     //Testing routes
     Route::get('/php', 'TestController@php')->name('php');
     Route::get('/server', 'TestController@server')->name('server');
-    Route::get('/thumb', 'TestController@thumb')->name('thumb');
     Route::get('/daisy', 'TestController@daisy')->name('daisy');
     Route::get('/daisyload', 'TestController@daisyLoadCourses');
-    Route::get('/json', 'TestController@storeJson');
-    Route::get('/send', 'TestController@send');
+    Route::get('/token/{video}', 'TestController@token');
+    Route::get('/decode/{token}', 'TestController@decode');
 });

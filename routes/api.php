@@ -18,3 +18,7 @@ Route::apiResource('recordings', 'Api\VideoApiController');
 
 //Check permissions
 Route::get('permissions/{id}', 'Api\VideoApiController@permissions');
+
+//Check permissions with ticket
+Route::get('ticket/{id}', 'Api\VideoApiController@perm');
+Route::post('perm', 'Api\VideoApiController@permission');
