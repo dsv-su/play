@@ -36,6 +36,10 @@ class PlayController extends BaseController
      */
     public function index()
     {
+        //Initiate system
+        $init = new ConfigurationHandler();
+        $init->check_system();
+
         $data['search'] = 0;
         $data['latest'] = Video::with('category', 'video_course.course')->latest('id')->take(8)->get();
         $data['categories'] = Category::all();
