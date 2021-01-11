@@ -46,7 +46,7 @@ class Course extends Model implements Searchable
         return $this->videos()->filter(function ($video) use ($user) {
              foreach ($video->presenters() as $presenter) {
                  // Dummy value to test the output.
-                 return $presenter->id == $user->id;
+                 return isset($user->id) ? ($presenter->id == $user->id) : false;
              }
         });
     }
