@@ -21,7 +21,7 @@
     <title>DSVPlay</title>
 </head>
 <body>
-@include('layouts.partials.header')
+@include('layouts.partials.header_upload')
 <main id="main-content" class="pl-pr-sm-down-0">
     <div class="container-fluid pl-pr-sm-down-0 my-5 pb-5">
         @yield('content')
