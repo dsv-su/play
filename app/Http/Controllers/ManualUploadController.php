@@ -22,10 +22,8 @@ class ManualUploadController extends BaseController
         // If the environment is local
         if (app()->environment('local')) {
             $data['presenter'] = 'rydi5898';
-            $data['play_user'] = 'För Efternamn';
         } else {
             $data['presenter'] = $_SERVER['eppn'];
-            $data['play_user'] = $_SERVER['displayName'];
         }
 
         return view('manual.index', $data);
