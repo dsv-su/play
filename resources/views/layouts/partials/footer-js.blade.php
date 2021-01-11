@@ -17,7 +17,7 @@
                 menu: 'search_autocomplete'
             },
             hint: false,
-            autoselect: false,
+            autoselect: true,
             highlight: true,
             minLength: 1
         }, {
@@ -25,10 +25,8 @@
             limit: 10,
             // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
             name: 'autocomplete-items',
-            display: function(item) {
-                if (item.type == 'course') {
-                    return item.name;
-                } else if (item.type == 'tag') {
+            display: function (item) {
+                if (item.type == 'course' || item.type == 'tag') {
                     return item.name;
                 } else {
                     return item.title;
@@ -42,29 +40,26 @@
                     ''
                 ],
                 suggestion: function (data) {
-                    //console.log(data);
                     if (data.type == 'course') {
-                        return '<li>Course: ' + data.name + ' (' + data.designation + ')</li>';
+                        return '<li><a href="/course/' + data.id + '">Course: ' + data.name + ' (' + data.designation + ')</a></li>';
                     } else if (data.type == 'tag') {
-                        return '<li>Tag: ' + data.name + '</li>';
+                        return '<li><a href="/tag/' + data.id + '">Tag: ' + data.name + '</a></li>';
                     } else {
                         return '<li><a href="/player/' + data.id + '">Video: ' + data.title + '</a></li>';
                     }
                 }
             }
-        }).on('keyup', function(e) {
-            const selected = $("#header-main-search-text").attr('aria-activedescendant');
-           // console.log($("#"+selected).find('a').prop('href'));
-            if(e.which == 13) {
+        }).on('keyup', function (e) {
+            //$(".tt-suggestion:first-child").addClass('tt-cursor');
+            let selected = $("#header-main-search-text").attr('aria-activedescendant');
+            if (e.which == 13) {
                 if (selected) {
-                    window.location.href = $("#"+selected).find('a').prop('href');
+                    window.location.href = $("#" + selected).find('a').prop('href');
                 } else {
+                    $(".tt-suggestion:first-child").addClass('tt-cursor');
                     window.location.href = $(".tt-suggestion:first-child").find('a').prop('href');
                 }
             }
-        }).on("mouseover", ".tt-suggestion", function () {
-            $('.tt-suggestion').removeClass('tt-cursor');
-            $(this).addClass('tt-cursor');
         });
     });
 </script>

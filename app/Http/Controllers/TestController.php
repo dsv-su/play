@@ -34,14 +34,6 @@ class TestController extends BaseController
         return view('home.list', compact('videos'), $data);
     }
 
-    public function find(Request $request)
-    {
-        $courses = Course::search($request->get('query'), null, true, true)->take(3)->get();
-        $videos = Video::search($request->get('query'), null, true, true)->take(5)->get();
-        $tags = Tag::search($request->get('query'), null, true, true)->take(3)->get();
-        return $courses->merge($videos)->merge($tags);
-    }
-
     public function show(Course $course)
     {
         /*********************************

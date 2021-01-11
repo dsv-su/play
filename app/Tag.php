@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Nicolaslopezj\Searchable\SearchableTrait;
@@ -25,8 +26,9 @@ class Tag extends Model
         return 'tag';
     }
 
-    public function videos() {
-        $this->belongsToMany(Video::class);
+    public function videos(): Collection
+    {
+        return $this->hasManyThrough(Video::class, VideoTag::class, 'tag_id', 'id', 'id', 'video_id')->get();
     }
 
 }

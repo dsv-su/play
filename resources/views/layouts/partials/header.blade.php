@@ -36,95 +36,36 @@
                             <ul class="list-unstyled row no-gutters">
                                 <li class="mega-menu-collapse-col col">
                                     <div class="container pl-0 pr-0">
-                                        <a class="nav-link d-flex align-items-center nav-link__border-bottom"
-                                           href="/utbildning#Vill-studera">
-                                                <span class="fas fa-street-view fa-icon-border mr-2"
-                                                      aria-hidden="true"></span>
-                                            <span class="d-inline-block first-letter-capitalized level-2">Vill studera</span></a>
                                         <ul class="navbar-nav">
-                                            <li class="nav-item"><a class="nav-link" href="#">Link 1</a></li>
+                                            @foreach($courses[0] as $course)
+                                                <li class="nav-item"><a class="nav-link"
+                                                                        href="/course/{{$course->id}}">{{$course->name}}</a>
+                                                </li>
+                                            @endforeach
                                         </ul>
                                     </div>
                                 </li>
                                 <li class="mega-menu-collapse-col col">
                                     <div class="container pl-0 pr-0">
-                                        <a class="nav-link d-flex align-items-center nav-link__border-bottom"
-                                           href="/utbildning#Ny-student">
-                                                <span class="fas fa-walking fa-icon-border mr-2"
-                                                      aria-hidden="true"></span>
-                                            <span class="d-inline-block first-letter-capitalized level-2">Ny student</span></a>
                                         <ul class="navbar-nav">
-                                            <li class="nav-item"><a class="nav-link" href="#">Link 1</a></li>
+                                            @foreach($courses[1] as $course)
+                                                <li class="nav-item"><a class="nav-link"
+                                                                        href="/course/{{$course->id}}">{{$course->name}}</a>
+                                                </li>
+                                            @endforeach
                                         </ul>
                                     </div>
                                 </li>
                                 <li class="mega-menu-collapse-col col">
                                     <div class="container pl-0 pr-0">
-                                        <a class="nav-link d-flex align-items-center nav-link__border-bottom"
-                                           href="/utbildning#Under-utbildningen">
-                                                <span class="fas fa-address-card fa-icon-border mr-2"
-                                                      aria-hidden="true"></span>
-                                            <span class="d-inline-block first-letter-capitalized level-2">Under utbildningen</span></a>
                                         <ul class="navbar-nav">
-                                            <li class="nav-item"><a class="nav-link" href="#">Link 1</a></li>
+                                            @foreach($courses[2] as $course)
+                                                <li class="nav-item"><a class="nav-link"
+                                                                        href="/course/{{$course->id}}">{{$course->name}}</a>
+                                                </li>
+                                            @endforeach
                                         </ul>
                                     </div>
-                                </li>
-                                <li class="mega-menu-collapse-col col">
-                                    <div class="container pl-0 pr-0">
-                                        <a class="nav-link d-flex align-items-center nav-link__border-bottom"
-                                           href="/utbildning#Examen-och-karriär">
-                                                <span class="fas fa-user-graduate fa-icon-border mr-2"
-                                                      aria-hidden="true"></span>
-                                            <span class="d-inline-block first-letter-capitalized level-2">Examen och karriär</span></a>
-                                        <ul class="navbar-nav">
-                                            <li class="nav-item"><a class="nav-link" href="#">Link 1</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-
-                                <li class="mega-menu-collapse-col col">
-
-                                    <ul class="navbar-nav">
-                                        <li class="nav-item">
-                                            <a href="/nyheter" class="pb-3 nav-link d-flex align-items-center">
-                                                    <span class="fas fa-newspaper fa-icon-border mr-2"
-                                                          aria-hidden="true"></span>
-                                                <span class="d-inline-block first-letter-capitalized level-2">Nyheter</span>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="/kalender" class="pb-3 nav-link d-flex align-items-center">
-                                                    <span class="fas fa-calendar fa-icon-border mr-2"
-                                                          aria-hidden="true"></span>
-                                                <span class="d-inline-block first-letter-capitalized level-2">Kalender</span>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="/sok-kurser-och-program"
-                                               class="pb-3 nav-link d-flex align-items-center">
-                                                    <span class="fas fa-search fa-icon-border mr-2"
-                                                          aria-hidden="true"></span>
-                                                <span class="d-inline-block first-letter-capitalized level-2">Sök kurser och program</span>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="/utbildning/alla-amnen"
-                                               class="pb-3 nav-link d-flex align-items-center">
-                                                    <span class="fas fa-book-reader fa-icon-border mr-2"
-                                                          aria-hidden="true"></span>
-                                                <span class="d-inline-block first-letter-capitalized level-2">Alla ämnen</span>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="/utbildning/it-f%C3%B6r-studenter/digitala-verktyg-och-tj%C3%A4nster"
-                                               class="pb-3 nav-link d-flex align-items-center">
-                                                    <span class="fas fa-sign-in-alt fa-icon-border mr-2"
-                                                          aria-hidden="true"></span>
-                                                <span class="d-inline-block first-letter-capitalized level-2">Digitala verktyg och tjänster</span>
-                                            </a>
-                                        </li>
-                                    </ul>
                                 </li>
                             </ul>
                         </div>
@@ -145,8 +86,10 @@
                                 </li>
                                 <li class="mega-menu-collapse-col col">
                                     <a class="nav-link level-2" href="#">Hantera uppspelning</a>
-                                    <a class="nav-link level-2" href="{{ route('manual_upload') }}">Manuell uppladdning</a>
-                                    <a class="nav-link level-2" href="{{ route('manual_admin') }}">Only for administrators</a>
+                                    <a class="nav-link level-2" href="{{ route('manual_upload') }}">Manuell
+                                        uppladdning</a>
+                                    <a class="nav-link level-2" href="{{ route('manual_admin') }}">Only for
+                                        administrators</a>
                                     <a class="nav-link level-2" href="{{ route('manage') }}">Manage videos</a>
                                     <a class="nav-link level-2" href="{{ route('mediasiteFetch') }}">Sync items from
                                         Mediasite</a>
@@ -194,7 +137,7 @@
                                     <ul class="navbar-nav top main-menu not-list-styled">
                                         <li class="nav-item">
                                             <a class="nav-link text-uppercase d-inline-block pr-0"
-                                               href="/utbildning">Catalogue</a>
+                                               href="#">Catalogue</a>
                                             <div class="float-right pt-1 pr-2">
                                                 <button type="button" data-toggle="collapse"
                                                         data-target="#sub-level-menu1" aria-expanded="false"
@@ -209,32 +152,15 @@
                                                  data-parent="#accordionMenu">
                                                 <div id="accordionSubMenu_Utbildning">
                                                     <ul class="main-menu-sub navbar-nav pb-4">
-                                                        <li class="nav-item pl-3">
-                                                            <a href="/nyheter" class="nav-link">
-                                                                <span class="d-inline-block first-letter-capitalized level-2">Nyheter</span>
-                                                            </a>
-                                                        </li>
-                                                        <li class="nav-item pl-3">
-                                                            <a href="/kalender" class="nav-link">
-                                                                <span class="d-inline-block first-letter-capitalized level-2">Kalender</span>
-                                                            </a>
-                                                        </li>
-                                                        <li class="nav-item pl-3">
-                                                            <a href="/sok-kurser-och-program" class="nav-link">
-                                                                <span class="d-inline-block first-letter-capitalized level-2">Sök kurser och program</span>
-                                                            </a>
-                                                        </li>
-                                                        <li class="nav-item pl-3">
-                                                            <a href="/utbildning/alla-amnen" class="nav-link">
-                                                                <span class="d-inline-block first-letter-capitalized level-2">Alla ämnen</span>
-                                                            </a>
-                                                        </li>
-                                                        <li class="nav-item pl-3">
-                                                            <a href="/utbildning/it-f%C3%B6r-studenter/digitala-verktyg-och-tj%C3%A4nster"
-                                                               class="nav-link">
-                                                                <span class="d-inline-block first-letter-capitalized level-2">Digitala verktyg och tjänster</span>
-                                                            </a>
-                                                        </li>
+                                                        @foreach($courses as $coursechunk)
+                                                            @foreach($coursechunk as $course)
+                                                                <li class="nav-item pl-3">
+                                                                    <a href="/course/{{$course->id}}" class="nav-link">
+                                                                        <span class="d-inline-block first-letter-capitalized level-2">{{$course->name}}</span>
+                                                                    </a>
+                                                                </li>
+                                                            @endforeach
+                                                        @endforeach
                                                     </ul>
                                                 </div>
                                             </div>
@@ -257,7 +183,6 @@
                                                  data-parent="#accordionMenu">
                                                 <div id="accordionSubMenu_Forskning">
                                                     <ul class="main-menu-sub navbar-nav pb-4">
-                                                        <li class="mega-menu-collapse-col col">
                                                         <li class="nav-item pl-3"><a class="nav-link level-2"
                                                                                      href="#">Hantera
                                                                 uppspelning</a></li>
@@ -272,7 +197,6 @@
                                                                                      href="{{ route('mediasite') }}">Retrive
                                                                 from
                                                                 Mediasite</a></li>
-                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>

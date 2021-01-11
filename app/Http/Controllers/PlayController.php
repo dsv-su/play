@@ -7,8 +7,10 @@ use App\Course;
 use App\Jobs\DownloadPresentation;
 use App\MediasiteFolder;
 use App\MediasitePresentation;
+use App\Presenter;
 use App\Services\AuthHandler;
 use App\Services\ConfigurationHandler;
+use App\Tag;
 use App\UploadHandler;
 use App\Video;
 use App\VideoCourse;
@@ -19,6 +21,7 @@ use File;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -33,23 +36,29 @@ class PlayController extends BaseController
      */
     public function index()
     {
-
         //Initiate system
         $init = new ConfigurationHandler();
         $init->check_system();
 
+        $data['courses'] = $this->getActiveCourses();
         $data['search'] = 0;
         $data['latest'] = Video::with('category', 'video_course.course')->latest('id')->take(8)->get();
         $data['categories'] = Category::all();
-        //dd($data);
         return view('home.index', $data);
+    }
+
+    private function getActiveCourses() {
+        $courses = Course::where('designation', '<>', '')->orderBy('designation')->get()->filter(function ($course) {
+            return !$course->videos()->isEmpty();
+        });
+        return $courses->chunk(ceil($courses->count() / 3));
     }
 
     /**
      * @param Video $video
      * @return RedirectResponse
      */
-    public function player(Video $video)
+    public function player(Video $video): RedirectResponse
     {
 
         if (!$playlist = VideoCourse::where('video_id', $video->id)->first()) {
@@ -71,7 +80,7 @@ class PlayController extends BaseController
         return $video->presentation;
     }
 
-    public function playlist($id)
+    public function playlist($id): string
     {
         $videos = VideoCourse::where('course_id', $id)->pluck('video_id')->toArray();
 
@@ -217,8 +226,7 @@ class PlayController extends BaseController
      * @param MediasiteFolder $folder
      * @return bool
      */
-    public
-    function findPresentationLeafs(MediasiteFolder $folder): bool
+    public function findPresentationLeafs(MediasiteFolder $folder): bool
     {
         if ($folder->presentations()->count()) {
             return true;
@@ -237,8 +245,7 @@ class PlayController extends BaseController
      * @param $folders
      * @param $subfolders
      */
-    public
-    function getSubFolders(MediasiteFolder $folder, $folders, &$subfolders)
+    public function getSubFolders(MediasiteFolder $folder, $folders, &$subfolders)
     {
         foreach ($folders as $f) {
             if ($f->parent == $folder->id) {
@@ -253,8 +260,7 @@ class PlayController extends BaseController
      * @param $url
      * @return array|mixed
      */
-    public
-    function getMediasiteFolders($mediasite, $url): array
+    public function getMediasiteFolders($mediasite, $url): array
     {
         $folders = array();
 
@@ -287,8 +293,7 @@ class PlayController extends BaseController
      * @param $mediasite
      * @param $url
      */
-    public
-    function getMediasitePresentations($mediasite, $url)
+    public function getMediasitePresentations($mediasite, $url)
     {
         $folders = MediasiteFolder::all();
         foreach ($folders as $folder) {
@@ -316,8 +321,7 @@ class PlayController extends BaseController
      * @param $url
      * @return string|null
      */
-    public
-    function calculateFolderSize(MediasiteFolder $folder, $mediasite, $url): ?string
+    public function calculateFolderSize(MediasiteFolder $folder, $mediasite, $url): ?string
     {
         $folderid = $folder->id;
         try {
@@ -344,8 +348,7 @@ class PlayController extends BaseController
      * @param $bytes
      * @return string
      */
-    public
-    static function bytesToHuman($bytes): string
+    public static function bytesToHuman($bytes): string
     {
         $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
         for ($i = 0; $bytes > 1000; $i++) {
@@ -358,8 +361,7 @@ class PlayController extends BaseController
      * @return RedirectResponse
      * @throws Exception
      */
-    public
-    function mediasiteUserDownload(): RedirectResponse
+    public function mediasiteUserDownload(): RedirectResponse
     {
         $folderid = request()->folderid ?? null;
         $username = request()->username ?? null;
@@ -379,8 +381,7 @@ class PlayController extends BaseController
      * @return RedirectResponse
      * @throws Exception
      */
-    public
-    function mediasiteCourseDownload(): RedirectResponse
+    public function mediasiteCourseDownload(): RedirectResponse
     {
         $folderid = request()->folderid ?? null;
         $coursename = request()->coursename ?? null;
@@ -394,8 +395,7 @@ class PlayController extends BaseController
      * @return RedirectResponse
      * @throws Exception
      */
-    public
-    function mediasiteRecordingDownload(): RedirectResponse
+    public function mediasiteRecordingDownload(): RedirectResponse
     {
         $folderid = request()->folderid ?? null;
         $foldername = request()->foldername ?? null;
@@ -409,8 +409,7 @@ class PlayController extends BaseController
      * @return RedirectResponse
      * @throws Exception
      */
-    public
-    function mediasiteOtherDownload(): RedirectResponse
+    public function mediasiteOtherDownload(): RedirectResponse
     {
         $folderid = request()->folderid ?? null;
         $foldername = request()->foldername ?? null;
@@ -427,8 +426,7 @@ class PlayController extends BaseController
      * @return bool
      * @throws Exception
      */
-    public
-    function processDownload($type, $foldername, $folderid): bool
+    public function processDownload($type, $foldername, $folderid): bool
     {
         $system = new AuthHandler();
         $system = $system->authorize();
@@ -463,8 +461,7 @@ class PlayController extends BaseController
     /**
      * @return Application|Factory|View
      */
-    public
-    function upload()
+    public function upload()
     {
         $data['upload'] = 0;
         return view('video.test', $data);
@@ -474,8 +471,7 @@ class PlayController extends BaseController
      * @param Request $request
      * @return false|Application|Factory|View
      */
-    public
-    function store(Request $request)
+    public function store(Request $request)
     {
         if ($request->hasFile('file')) {
             $path = Storage::putFileAs('public', $request->file('file'), 'upload.txt');
@@ -511,14 +507,12 @@ class PlayController extends BaseController
         return false;
     }
 
-    public
-    function manage()
+    public function manage()
     {
         return view('home.manage', ['videos' => Video::all(), 'courses' => Course::all(), 'categories' => Category::all()]);
     }
 
-    public
-    function deleteVideoAjax(Request $request): \Illuminate\Http\JsonResponse
+    public function deleteVideoAjax(Request $request): JsonResponse
     {
         $video = Video::find($request->video_id);
         $folder = dirname($video->source1);
@@ -561,8 +555,7 @@ class PlayController extends BaseController
 
     }
 
-    public
-    function editVideoAjax(Request $request)
+    public function editVideoAjax(Request $request): JsonResponse
     {
         try {
             $video = Video::find($request->video_id);
@@ -580,5 +573,68 @@ class PlayController extends BaseController
                 'message' => 'Error.',
             ]);
         }
+    }
+
+    public function find(Request $request)
+    {
+        $courses = Course::search($request->get('query'), null, true, true)->take(3)->get();
+        $videos = Video::search($request->get('query'), null, true, true)->take(5)->get();
+        $tags = Tag::search($request->get('query'), null, true, true)->take(3)->get();
+        return $courses->merge($videos)->merge($tags);
+    }
+
+    public function showCourseVideos($courseid)
+    {
+        // If the environment is local
+        if (app()->environment('local')) {
+            $data['play_user'] = 'För Efternamn';
+        } else {
+            $data['play_user'] = $_SERVER['displayName'];
+        }
+
+        //Initiate system
+        $init = new ConfigurationHandler();
+        $init->check_system();
+
+        $data['course'] = Course::find($courseid)->name;
+        $data['courses'] = $this->getActiveCourses();
+        $data['latest'] = Course::find($courseid)->videos();
+        return view('home.index', $data);
+    }
+
+    public function showTagVideos($tagid)
+    {
+        // If the environment is local
+        if (app()->environment('local')) {
+            $data['play_user'] = 'För Efternamn';
+        } else {
+            $data['play_user'] = $_SERVER['displayName'];
+        }
+
+        //Initiate system
+        $init = new ConfigurationHandler();
+        $init->check_system();
+        $data['tag'] = Tag::find($tagid)->name;
+        $data['courses'] = $this->getActiveCourses();
+        $data['latest'] = Tag::find($tagid)->videos();
+        return view('home.index', $data);
+    }
+
+    public function showPresenterVideos($presenterid)
+    {
+        // If the environment is local
+        if (app()->environment('local')) {
+            $data['play_user'] = 'För Efternamn';
+        } else {
+            $data['play_user'] = $_SERVER['displayName'];
+        }
+
+        //Initiate system
+        $init = new ConfigurationHandler();
+        $init->check_system();
+        $data['courses'] = $this->getActiveCourses();
+        $data['presenter'] = Presenter::find($presenterid)->name;
+        $data['latest'] = Presenter::find($presenterid)->videos();
+        return view('home.index', $data);
     }
 }
