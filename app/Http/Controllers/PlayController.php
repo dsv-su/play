@@ -80,20 +80,50 @@ class PlayController extends BaseController
         });
         return $courses->chunk(ceil($courses->count() / 3));
     }
+    private function ticket_user()
+    {
+        $this->file = base_path().'/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            $this->file = base_path().'/systemconfig/play.ini.example';
+        }
+        $this->system_config = parse_ini_file($this->file, true);
 
+        return $this->system_config['ticket']['email'];
+    }
+
+    private function ticket_pass()
+    {
+        $this->file = base_path().'/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            $this->file = base_path().'/systemconfig/play.ini.example';
+        }
+        $this->system_config = parse_ini_file($this->file, true);
+
+        return $this->system_config['ticket']['password'];
+    }
     /**
      * @param Video $video
      * @return RedirectResponse
      */
     public function player(Video $video): RedirectResponse
     {
+        $credentials = [
+            'email'=> $this->ticket_user(),
+            'password' => $this->ticket_pass()
+        ];
+
+        //Issue a valid ticket for requester
+        if (! $token = auth()->claims(['id' => $video->id])->setTTL(60)->attempt($credentials)) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
 
         if (!$playlist = VideoCourse::where('video_id', $video->id)->first()) {
             //No playlist
-            $url = url('/multiplayer') . '?' . urldecode(http_build_query(['presentation' => URL::to('/') . '/presentation/' . $video->id]));
+            $url = url('/multiplayer') . '?' . urldecode(http_build_query(['presentation' => URL::to('/') . '/presentation/' . $video->id, 'authtoken' => $token]));
         } else {
             // Production
-            $url = url('/multiplayer') . '?' . urldecode(http_build_query(['presentation' => URL::to('/') . '/presentation/' . $video->id, 'playlist' => URL::to('/') . '/playlist/' . $playlist->course_id]));
+            $url = url('/multiplayer') . '?' . urldecode(http_build_query(['presentation' => URL::to('/') . '/presentation/' . $video->id, 'playlist' => URL::to('/') . '/playlist/' . $playlist->course_id, 'authtoken' => $token]));
             // Dev
             //$url = url('/multiplayer') . '?' . http_build_query(['presentation' => 'presentation/'.$video->id, 'playlist' => 'playlist/'.$playlist->course_id]);
         }

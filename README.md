@@ -57,11 +57,15 @@ Requirements are best determined using Server Requirements page of corresponding
         db_password=                            ; secret
         
         [jwt]
-        jwt_secret=                             ;used to sign your token
-        jwt_public_key=                         ;A path or resource to your public key. E.g. 'file://path/to/public/key'
-        jwt_private_key=                        ;A path or resource to your private key. E.g. 'file://path/to/private/key'
-        jwt_passphrase=                         ;The passphrase for your private key. Can be null if none set.
+        jwt_secret=                             ; used to sign your token
+        jwt_public_key=                         ; A path or resource to your public key. E.g. 'file://path/to/public/key'
+        jwt_private_key=                        ; A path or resource to your private key. E.g. 'file://path/to/private/key'
+        jwt_passphrase=                         ; The passphrase for your private key. Can be null if none set.
         
+        [ticket]                                ; Tickethandler credentials
+        email=
+        password=
+  
         [mediasite]                             ; Mediasite API
         url =
         username =
