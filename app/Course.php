@@ -41,6 +41,16 @@ class Course extends Model implements Searchable
         return $this->hasManyThrough(Video::class, VideoCourse::class, 'course_id', 'id', 'id', 'video_id')->get();
     }
 
+    public function userVideos($user): Collection
+    {
+        return $this->videos()->filter(function ($video) use ($user) {
+             foreach ($video->presenters() as $presenter) {
+                 // Dummy value to test the output.
+                 return $presenter->id == $user->id;
+             }
+        });
+    }
+
     public function getSearchResult(): SearchResult
     {
         //$url = route('player', $this->id);

@@ -34,41 +34,56 @@
                     <div class="mega-menu-collapse">
                         <div class="container">
                             <ul class="list-unstyled row no-gutters">
-                                <li class="mega-menu-collapse-col col">
-                                    <div class="container pl-0 pr-0">
-                                        <ul class="navbar-nav">
-                                            @foreach($courses[0] as $course)
-                                                <li class="nav-item"><a class="nav-link"
-                                                                        href="/course/{{$course->id}}">{{$course->name}}</a>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="mega-menu-collapse-col col">
-                                    <div class="container pl-0 pr-0">
-                                        <ul class="navbar-nav">
-                                            @foreach($courses[1] as $course)
-                                                <li class="nav-item"><a class="nav-link"
-                                                                        href="/course/{{$course->id}}">{{$course->name}}</a>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="mega-menu-collapse-col col">
-                                    <div class="container pl-0 pr-0">
-                                        <ul class="navbar-nav">
-                                            @foreach($courses[2] as $course)
-                                                <li class="nav-item"><a class="nav-link"
-                                                                        href="/course/{{$course->id}}">{{$course->name}}</a>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                </li>
+                                @if (isset($courses[0]))
+                                    <li class="mega-menu-collapse-col col">
+                                        <div class="container pl-0 pr-0">
+                                            <ul class="navbar-nav">
+                                                @foreach($courses[0] as $course)
+                                                    <li class="nav-item"><a class="nav-link"
+                                                                            href="/course/{{$course->id}}">{{$course->name}}</a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </li>
+                                @endif
+                                @if (isset($courses[1]))
+                                    <li class="mega-menu-collapse-col col">
+                                        <div class="container pl-0 pr-0">
+                                            <ul class="navbar-nav">
+                                                @foreach($courses[1] as $course)
+                                                    <li class="nav-item"><a class="nav-link"
+                                                                            href="/course/{{$course->id}}">{{$course->name}}</a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </li>
+                                @endif
+                                @if (isset($courses[2]))
+                                    <li class="mega-menu-collapse-col col">
+                                        <div class="container pl-0 pr-0">
+                                            <ul class="navbar-nav">
+                                                @foreach($courses[2] as $course)
+                                                    <li class="nav-item"><a class="nav-link"
+                                                                            href="/course/{{$course->id}}">{{$course->name}}</a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </li>
+                                @endif
                             </ul>
                         </div>
+                    </div>
+                </li>
+
+                <li class="nav-item mega-menu-item" style="">
+                    <div class="position-relative">
+                        <a class="text-uppercase nav-link mega-menu-link level-1" aria-haspopup="true"
+                           aria-expanded="false" href="/my">
+                            My videos
+                        </a>
                     </div>
                 </li>
 
@@ -165,6 +180,12 @@
                                                 </div>
                                             </div>
                                         </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link text-uppercase d-inline-block pr-0"
+                                               href="/my">My videos</a>
+                                        </li>
+
                                         <li class="nav-item">
                                             <a class="nav-link text-uppercase d-inline-block pr-0"
                                                href="#">Manage</a>
