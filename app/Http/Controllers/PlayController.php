@@ -73,7 +73,7 @@ class PlayController extends Controller
         // Get all videos where the current user is a presenter
         $mycourses = Course::all();
         foreach ($mycourses as $key => $course) {
-            $course->myvideos = $course->userVideos(Presenter::find(9));
+            $course->myvideos = $course->userVideos(Presenter::where('username', $_SERVER['eppn'] ?? 'rydi5898@su.se')->first());
         }
 
         $data['courses'] = $this->getActiveCourses();
