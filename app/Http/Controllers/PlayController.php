@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
 
-class PlayController extends BaseController
+class PlayController extends Controller
 {
     /**
      * @return Application|Factory|View
@@ -40,6 +40,14 @@ class PlayController extends BaseController
         $init = new ConfigurationHandler();
         $init->check_system();
 
+        // If the environment is local
+        if (app()->environment('local')) {
+            $data['play_user'] = 'För Efternamn';
+        } else {
+            $data['play_user'] = $_SERVER['displayName'];
+        }
+
+        $data['courses'] = $this->getActiveCourses();
         $data['search'] = 0;
         $data['latest'] = Video::with('category', 'video_course.course')->latest('id')->take(8)->get();
         $data['categories'] = Category::all();
@@ -51,24 +59,35 @@ class PlayController extends BaseController
      */
     public function myVideos()
     {
+        //Initiate system
+        $init = new ConfigurationHandler();
+        $init->check_system();
+
+        // If the environment is local
+        if (app()->environment('local')) {
+            $data['play_user'] = 'För Efternamn';
+        } else {
+            $data['play_user'] = $_SERVER['displayName'];
+        }
+
         // Get all videos where the current user is a presenter
         $mycourses = Course::all();
         foreach ($mycourses as $key => $course) {
             $course->myvideos = $course->userVideos(Presenter::where('username', $_SERVER['eppn'] ?? 'rydi5898@su.se')->first());
         }
 
-        //$data['courses'] = $this->getActiveCourses(); //->Moved to BaseController
+        $data['courses'] = $this->getActiveCourses();
         $data['mycourses'] = $mycourses;
         return view('home.my', $data);
     }
-    /* -> Moved to BaseController
+
     private function getActiveCourses() {
         $courses = Course::where('designation', '<>', '')->orderBy('designation')->get()->filter(function ($course) {
             return !$course->videos()->isEmpty();
         });
         return $courses->chunk(ceil($courses->count() / 3));
     }
-    */
+
     private function ticket_user()
     {
         $this->file = base_path().'/systemconfig/play.ini';
@@ -631,6 +650,18 @@ class PlayController extends BaseController
 
     public function showCourseVideos($courseid)
     {
+        //Initiate system
+        $init = new ConfigurationHandler();
+        $init->check_system();
+
+        // If the environment is local
+        if (app()->environment('local')) {
+            $data['play_user'] = 'För Efternamn';
+        } else {
+            $data['play_user'] = $_SERVER['displayName'];
+        }
+
+        $data['courses'] = $this->getActiveCourses();
         $data['course'] = Course::find($courseid)->name;
         $data['latest'] = Course::find($courseid)->videos();
         return view('home.index', $data);
@@ -638,6 +669,18 @@ class PlayController extends BaseController
 
     public function showTagVideos($tagid)
     {
+        //Initiate system
+        $init = new ConfigurationHandler();
+        $init->check_system();
+
+        // If the environment is local
+        if (app()->environment('local')) {
+            $data['play_user'] = 'För Efternamn';
+        } else {
+            $data['play_user'] = $_SERVER['displayName'];
+        }
+
+        $data['courses'] = $this->getActiveCourses();
         $data['tag'] = Tag::find($tagid)->name;
         $data['latest'] = Tag::find($tagid)->videos();
         return view('home.index', $data);
@@ -645,6 +688,18 @@ class PlayController extends BaseController
 
     public function showPresenterVideos($presenterid)
     {
+        //Initiate system
+        $init = new ConfigurationHandler();
+        $init->check_system();
+
+        // If the environment is local
+        if (app()->environment('local')) {
+            $data['play_user'] = 'För Efternamn';
+        } else {
+            $data['play_user'] = $_SERVER['displayName'];
+        }
+
+        $data['courses'] = $this->getActiveCourses();
         $data['presenter'] = Presenter::find($presenterid)->name;
         $data['latest'] = Presenter::find($presenterid)->videos();
         return view('home.index', $data);
