@@ -10,7 +10,7 @@ use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 use Storage;
 use GuzzleHttp\Client;
 
-class ManualUploadController extends BaseController
+class ManualUploadController extends Controller
 {
     /**
      * Display a listing of the resource.
