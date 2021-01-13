@@ -45,7 +45,7 @@ class TicketHandler extends Model
             if (!app()->environment('local')) {
                 //Check entitlements
                 $this->entitlements = explode(";", $video->entitlement);
-                $this->server = explode(";", $_SERVER[$auth_param]);
+                $this->server = explode(";", $_SERVER['entitlement']);
                 foreach($this->entitlements as $this->entitlement)
                 {
                     foreach($this->server as $this->server_entitlement)
