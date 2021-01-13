@@ -226,6 +226,8 @@ class ManualUploadController extends Controller
             $file->created = strtotime($request->created);
             $file->duration = $durationInSeconds;
             $file->sources = $files;
+            $file->permission = $request->permission;
+            $file->entitlement = $request->entitlement;
             $id = $file->save();
 
 
@@ -409,7 +411,13 @@ class ManualUploadController extends Controller
     public function send($id)
     {
         $video = ManualPresentation::find($id);
-        $video->makeHidden('status')->makeHidden('local')->makeHidden('created_at')->makeHidden('updated_at');
+        $video
+            ->makeHidden('status')
+            ->makeHidden('local')
+            ->makeHidden('created_at')
+            ->makeHidden('updated_at')
+            ->makeHidden('permission')
+            ->makeHidden('entitlement');
         //Make json wrapper
         $json = Collection::make([
             'status' => 'success',
