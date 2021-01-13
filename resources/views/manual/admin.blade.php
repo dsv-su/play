@@ -48,6 +48,42 @@
             </table>
 
         </div>
+        <div class="row">
+            <h2>Ändra uppspelningsbehörighet - Admin</h2>
+        </div>
+        <div class="row">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col">Presentation</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Duration</th>
+                    <th scope="col">Permission</th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+                @foreach($videos as $video)
+                    <tbody>
+                    @if($video->permission == 'true')
+                        <tr class="table-warning">
+                        @else
+                        <tr>
+                    @endif
+                            <td>{{$video->presentation_id}}</td>
+                            <td>{{$video->title}}</td>
+                            <td>{{$video->duration}}</td>
+                            @if($video->permission == 'true')
+                                <td>private</td>
+                            @else
+                                <td>public</td>
+                            @endif
+                            <td><a role="button" class="btn btn-primary btn-sm" href="{{route('admin_permission', $video->id)}}">Modify</a></td>
+                        </tr>
+                    </tbody>
 
+                @endforeach
+            </table>
+
+        </div>
     </div>
 @endsection
