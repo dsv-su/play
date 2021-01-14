@@ -26,7 +26,7 @@ class CheckEntitlement
         $match = 0;
         if(!$request->server('REMOTE_USER'))
         {
-            if($system->global->app_debug == true) {
+            if($system->global->app_env == 'local') {
                 return $next($request);
             } else {
                 return redirect($system->global->login_route);

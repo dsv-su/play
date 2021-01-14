@@ -16,6 +16,14 @@ class PlayAuthenticate
      */
     public function handle(Request $request, Closure $next)
     {
-        return $next($request);
+        if(!app()->environment('local')) {
+            if($request->server('REMOTE_USER')) {
+                return $next($request);
+            }
+        }
+        else {
+            return $next($request);
+        }
+
     }
 }
