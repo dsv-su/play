@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\AuthHandler;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -16,10 +17,13 @@ class PlayAuthenticate
      */
     public function handle(Request $request, Closure $next)
     {
-        if(!app()->environment('local')) {
+        $system = new AuthHandler();
+        $system = $system->authorize();
+        if(!$system->global->app_env == 'local') {
             if($request->server('REMOTE_USER')) {
                 return $next($request);
             }
+            return redirect($system->global->login_route);
         }
         else {
             return $next($request);

@@ -17,7 +17,7 @@ if (class_exists(AuthHandler::class))
 //Endpoint
 Route::get($login, 'SystemController@login')->name('login');
 
-Route::middleware('playauth','entitlements')->group(function () {
+Route::middleware('entitlements')->group(function () {
     Route::get('/', 'PlayController@index')->name('home');
     Route::get('/manage', 'PlayController@manage')->name('manage');
     Route::get('/mediasite', 'PlayController@mediasite')->name('mediasite');
