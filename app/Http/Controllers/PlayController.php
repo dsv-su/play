@@ -38,15 +38,7 @@ class PlayController extends Controller
     public function index()
     {
         //Initiate system
-        $init = new ConfigurationHandler();
-        $init->check_system();
-
-        // If the environment is local
-        if (app()->environment('local')) {
-            $data['play_user'] = 'För Efternamn';
-        } else {
-            $data['play_user'] = $_SERVER['displayName'];
-        }
+        app()->make('init')->check_system();
 
         $data['courses'] = $this->getActiveCourses();
         $data['search'] = 0;
@@ -60,17 +52,6 @@ class PlayController extends Controller
      */
     public function myVideos()
     {
-        //Initiate system
-        $init = new ConfigurationHandler();
-        $init->check_system();
-
-        // If the environment is local
-        if (app()->environment('local')) {
-            $data['play_user'] = 'För Efternamn';
-        } else {
-            $data['play_user'] = $_SERVER['displayName'];
-        }
-
         // Get all videos where the current user is a presenter
         $mycourses = Course::all();
         foreach ($mycourses as $key => $course) {
@@ -623,17 +604,6 @@ class PlayController extends Controller
 
     public function showCourseVideos($courseid)
     {
-        //Initiate system
-        $init = new ConfigurationHandler();
-        $init->check_system();
-
-        // If the environment is local
-        if (app()->environment('local')) {
-            $data['play_user'] = 'För Efternamn';
-        } else {
-            $data['play_user'] = $_SERVER['displayName'];
-        }
-
         $data['courses'] = $this->getActiveCourses();
         $data['course'] = Course::find($courseid)->name;
         $data['latest'] = Course::find($courseid)->videos();
@@ -642,17 +612,6 @@ class PlayController extends Controller
 
     public function showTagVideos($tagid)
     {
-        //Initiate system
-        $init = new ConfigurationHandler();
-        $init->check_system();
-
-        // If the environment is local
-        if (app()->environment('local')) {
-            $data['play_user'] = 'För Efternamn';
-        } else {
-            $data['play_user'] = $_SERVER['displayName'];
-        }
-
         $data['courses'] = $this->getActiveCourses();
         $data['tag'] = Tag::find($tagid)->name;
         $data['latest'] = Tag::find($tagid)->videos();
@@ -661,17 +620,6 @@ class PlayController extends Controller
 
     public function showPresenterVideos($presenterid)
     {
-        //Initiate system
-        $init = new ConfigurationHandler();
-        $init->check_system();
-
-        // If the environment is local
-        if (app()->environment('local')) {
-            $data['play_user'] = 'För Efternamn';
-        } else {
-            $data['play_user'] = $_SERVER['displayName'];
-        }
-
         $data['courses'] = $this->getActiveCourses();
         $data['presenter'] = Presenter::find($presenterid)->name;
         $data['latest'] = Presenter::find($presenterid)->videos();
