@@ -27,13 +27,6 @@ class PlayServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // If the environment is local
-        if (app()->environment('local')) {
-            $play_user = 'Developer';
-        } else {
-            $play_user = $_SERVER['displayName'];
-        }
-
-        View::share('play_user', $play_user);
+       //
     }
 }

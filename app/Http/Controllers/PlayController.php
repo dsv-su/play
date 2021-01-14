@@ -40,6 +40,13 @@ class PlayController extends Controller
         //Initiate system
         app()->make('init')->check_system();
 
+        // If the environment is local
+        if (app()->environment('local')) {
+            $data['play_user'] = 'Developer';
+        } else {
+            $data['play_user'] = $_SERVER['displayName'];
+        }
+
         $data['courses'] = $this->getActiveCourses();
         $data['search'] = 0;
         $data['latest'] = Video::with('category', 'video_course.course')->latest('id')->take(8)->get();
@@ -52,6 +59,13 @@ class PlayController extends Controller
      */
     public function myVideos()
     {
+        // If the environment is local
+        if (app()->environment('local')) {
+            $data['play_user'] = 'Developer';
+        } else {
+            $data['play_user'] = $_SERVER['displayName'];
+        }
+
         // Get all videos where the current user is a presenter
         $mycourses = Course::all();
         foreach ($mycourses as $key => $course) {
@@ -604,6 +618,13 @@ class PlayController extends Controller
 
     public function showCourseVideos($courseid)
     {
+        // If the environment is local
+        if (app()->environment('local')) {
+            $data['play_user'] = 'Developer';
+        } else {
+            $data['play_user'] = $_SERVER['displayName'];
+        }
+
         $data['courses'] = $this->getActiveCourses();
         $data['course'] = Course::find($courseid)->name;
         $data['latest'] = Course::find($courseid)->videos();
@@ -612,6 +633,13 @@ class PlayController extends Controller
 
     public function showTagVideos($tagid)
     {
+        // If the environment is local
+        if (app()->environment('local')) {
+            $data['play_user'] = 'Developer';
+        } else {
+            $data['play_user'] = $_SERVER['displayName'];
+        }
+
         $data['courses'] = $this->getActiveCourses();
         $data['tag'] = Tag::find($tagid)->name;
         $data['latest'] = Tag::find($tagid)->videos();
@@ -620,6 +648,13 @@ class PlayController extends Controller
 
     public function showPresenterVideos($presenterid)
     {
+        // If the environment is local
+        if (app()->environment('local')) {
+            $data['play_user'] = 'Developer';
+        } else {
+            $data['play_user'] = $_SERVER['displayName'];
+        }
+        
         $data['courses'] = $this->getActiveCourses();
         $data['presenter'] = Presenter::find($presenterid)->name;
         $data['latest'] = Presenter::find($presenterid)->videos();
