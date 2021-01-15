@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -52,6 +53,11 @@ class Video extends Model implements Searchable
     public function video_tag(): HasMany
     {
         return $this->hasMany(VideoTag::class);
+    }
+
+    public function getRecordedDate(): string
+    {
+        return Carbon::parse(json_decode($this->presentation)->recorded)->format('Y-m-d H:i:s') ?? '';
     }
 
     public function tags(): Collection

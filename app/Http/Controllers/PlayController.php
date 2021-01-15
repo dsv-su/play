@@ -48,6 +48,7 @@ class PlayController extends Controller
         }
 
         $data['courses'] = $this->getActiveCourses();
+        $data['hasmycourses'] = ($this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'psoko@su.se')->count() > 0);
         $data['search'] = 0;
         $data['latest'] = Video::with('category', 'video_course.course')->latest('id')->take(8)->get();
         $data['categories'] = Category::all();
@@ -70,15 +71,26 @@ class PlayController extends Controller
             $data['play_user'] = $_SERVER['displayName'];
         }
 
+        $data['courses'] = $this->getActiveCourses();
+        $data['mycourses'] = $this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'psoko@su.se');
+        if (!$data['mycourses']->count()) {
+            abort(404);
+        } else {
+            $data['hasmycourses'] = ($this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'psoko@su.se')->count() > 0);
+        }
+        return view('home.my', $data);
+    }
+
+    private function getUserCoursesWithVideos($username) {
         // Get all videos where the current user is a presenter
         $mycourses = Course::all();
         foreach ($mycourses as $key => $course) {
-            $course->myvideos = $course->userVideos(Presenter::where('username', $_SERVER['eppn'] ?? 'rydi5898@su.se')->first());
+            $course->myvideos = $course->userVideos(Presenter::where('username', $username)->first());
+            if ($course->myvideos->isEmpty()) {
+                unset($mycourses[$key]);
+            }
         }
-
-        $data['courses'] = $this->getActiveCourses();
-        $data['mycourses'] = $mycourses;
-        return view('home.my', $data);
+        return $mycourses;
     }
 
     private function getActiveCourses() {
@@ -663,6 +675,7 @@ class PlayController extends Controller
 
         $data['courses'] = $this->getActiveCourses();
         $data['course'] = Course::find($courseid)->name;
+        $data['hasmycourses'] = ($this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'rydi5898@su.se')->count() > 0);
         $data['latest'] = Course::find($courseid)->videos();
         return view('home.index', $data);
     }
@@ -681,6 +694,7 @@ class PlayController extends Controller
         }
 
         $data['courses'] = $this->getActiveCourses();
+        $data['hasmycourses'] = ($this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'rydi5898@su.se')->count() > 0);
         $data['tag'] = Tag::find($tagid)->name;
         $data['latest'] = Tag::find($tagid)->videos();
         return view('home.index', $data);
@@ -700,6 +714,7 @@ class PlayController extends Controller
         }
 
         $data['courses'] = $this->getActiveCourses();
+        $data['hasmycourses'] = ($this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'rydi5898@su.se')->count() > 0);
         $data['presenter'] = Presenter::find($presenterid)->name;
         $data['latest'] = Presenter::find($presenterid)->videos();
         return view('home.index', $data);
