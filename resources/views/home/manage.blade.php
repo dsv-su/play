@@ -33,7 +33,7 @@
                     <option value="0" @if(!app('request')->input('course')) selected @endif
                     >Choose course
                     </option>
-                    @foreach($courses as $course)
+                    @foreach($allcourses as $course)
                         <option value="{{$course->id}}"
                                 @if(app('request')->input('course') == $course->id) selected @endif>{{$course->name}}</option>
                     @endforeach
@@ -109,7 +109,7 @@
                                         </select>
                                         <label for="video_course_{{$video->id}}">Course:</label>
                                         <select name="video_course[]" id="video_course_{{$video->id}}" required>
-                                            @foreach($courses as $course)
+                                            @foreach($allcourses as $course)
                                                 <option value="{{$course->id}}"
                                                         @if ($course->id == $video->course_id) selected @endif>{{$course->course}}</option>
                                             @endforeach

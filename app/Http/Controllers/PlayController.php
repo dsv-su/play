@@ -9,7 +9,6 @@ use App\MediasiteFolder;
 use App\MediasitePresentation;
 use App\Presenter;
 use App\Services\AuthHandler;
-use App\Services\ConfigurationHandler;
 use App\Services\TicketHandler;
 use App\Tag;
 use App\UploadHandler;
@@ -77,7 +76,8 @@ class PlayController extends Controller
         return view('home.my', $data);
     }
 
-    private function getUserCoursesWithVideos($username) {
+    private function getUserCoursesWithVideos($username)
+    {
         // Get all videos where the current user is a presenter
         $mycourses = Course::all();
         foreach ($mycourses as $key => $course) {
@@ -89,7 +89,8 @@ class PlayController extends Controller
         return $mycourses;
     }
 
-    private function getActiveCourses() {
+    private function getActiveCourses()
+    {
         $courses = Course::where('designation', '<>', '')->orderBy('designation')->get()->filter(function ($course) {
             return !$course->videos()->isEmpty();
         });
@@ -205,10 +206,12 @@ class PlayController extends Controller
         );
 
         return view('home.mediasite', [
-            'courses' => $courses,
+            'mediasitecourses' => $courses,
             'users' => $users,
             'recordings' => $recordings,
-            'other' => $other
+            'other' => $other,
+            'courses' => $this->getActiveCourses(),
+            'hasmycourses' => $this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'rydi5898@su.se')->count() > 0
         ]);
     }
 
@@ -554,7 +557,7 @@ class PlayController extends Controller
 
     public function manage()
     {
-        return view('home.manage', ['videos' => Video::all(), 'courses' => Course::all(), 'categories' => Category::all()]);
+        return view('home.manage', ['videos' => Video::all(), 'allcourses' => Course::all(), 'courses' => $this->getActiveCourses(), 'categories' => Category::all(), 'hasmycourses' => $this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'rydi5898@su.se')->count() > 0]);
     }
 
     public function deleteVideoAjax(Request $request): JsonResponse
@@ -668,7 +671,7 @@ class PlayController extends Controller
         } else {
             $data['play_user'] = $_SERVER['displayName'];
         }
-        
+
         $data['courses'] = $this->getActiveCourses();
         $data['hasmycourses'] = ($this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'rydi5898@su.se')->count() > 0);
         $data['presenter'] = Presenter::find($presenterid)->name;
