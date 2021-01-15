@@ -83,6 +83,20 @@
                     <!-- Section 3 -->
                     <div class="icon">3</div>
                     <br>
+                    <h4 class="title">Uppspelningsrättigheter</h4>
+                    <p class="description">
+                        Alla uppladdade presentationer är publika om inte annat specificeras
+                    </p>
+                    <p>Entitlement:</p>
+                    <select name="permission" class="form-control" id="permission">
+                        <option value="false" selected>Public</option>
+                        <option value="true">Private</option>
+                    </select>
+                    <div id="entitlement"></div>
+                    <br>
+                    <!-- Section 4 -->
+                    <div class="icon">4</div>
+                    <br>
                     <h4 class="title">Ladda upp media</h4>
                     <p class="description">
                         Ladda upp videomedia. Upp till 4 mediafiler är möjliga att ladda upp.
@@ -127,6 +141,21 @@
             $('.datepicker').datepicker({
                 language:'sv'
             });
+            var ent = 0;
+            $(document).on('change', '#permission', function(){
+                var data = $(this).val();
+                if(data == 'true') {
+                    var html = '';
+                    html += '<input type="text" class="form-control" id="input_entitlement" name="entitlement"  value="urn:mace:swami.se:gmai:dsv-user:staff;urn:mace:swami.se:gmai:dsv-user:student">';
+                    $('#entitlement').append(html);
+                    ent++;
+                }
+                else if (data == 'false' && ent==1) {
+                    $("#input_entitlement").remove();
+                    ent = 0;
+                }
+            });
+
             var count = 2;
             $(document).on('click', '.presenteradd', function(){
                 var html = '';

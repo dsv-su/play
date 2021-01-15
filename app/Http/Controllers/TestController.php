@@ -25,7 +25,7 @@ use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 use Spatie\Searchable\ModelSearchAspect;
 use Spatie\Searchable\Search;
 
-class TestController extends BaseController
+class TestController extends Controller
 {
     public function index()
     {

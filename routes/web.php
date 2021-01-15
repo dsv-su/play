@@ -63,6 +63,8 @@ Route::middleware('entitlements')->group(function () {
     Route::get('/manual_admin_notify/{id}', 'ManualUploadController@admin_notify')->name('manual_admin_notify');
     Route::get('/manual_admin_unregister/{id}', 'ManualUploadController@admin_unregister')->name('manual_admin_unregister');
     Route::get('/dev_destroy/{id}', 'ManualUploadController@destroy');
+    Route::get('/admin_permission/{id}', 'ManualUploadController@admin_permission')->name('admin_permission');
+    Route::post('/admin_permission_store/{id}', 'ManualUploadController@admin_permission_store')->name('admin_permission_store');
 
     //Testing routes
     Route::get('/php', 'TestController@php')->name('php');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ManualPresentation;
+use App\Video;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -10,7 +11,7 @@ use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 use Storage;
 use GuzzleHttp\Client;
 
-class ManualUploadController extends BaseController
+class ManualUploadController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,8 +22,10 @@ class ManualUploadController extends BaseController
     {
         // If the environment is local
         if (app()->environment('local')) {
+            $data['play_user'] = 'Developer';
             $data['presenter'] = 'rydi5898';
         } else {
+            $data['play_user'] = $_SERVER['displayName'];
             $data['presenter'] = $_SERVER['eppn'];
         }
 
@@ -32,6 +35,7 @@ class ManualUploadController extends BaseController
     public function admin()
     {
         $data['presentations'] = ManualPresentation::all();
+        $data['videos'] = Video::all();
         return view('manual.admin', $data);
     }
 
@@ -120,6 +124,19 @@ class ManualUploadController extends BaseController
         return back()->withInput();
     }
 
+    public function admin_permission($id)
+    {
+        $video = Video::find($id);
+        return view('manual.permission', $video);
+    }
+    public function admin_permission_store($id, Request $request)
+    {
+        $video = Video::find($id);
+        $video->permission = $request->permission;
+        $video->entitlement = $request->entitlement;
+        $video->save();
+        return redirect()->route('manual_admin');
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -209,6 +226,8 @@ class ManualUploadController extends BaseController
             $file->created = strtotime($request->created);
             $file->duration = $durationInSeconds;
             $file->sources = $files;
+            $file->permission = $request->permission;
+            $file->entitlement = $request->entitlement;
             $id = $file->save();
 
 
@@ -392,7 +411,13 @@ class ManualUploadController extends BaseController
     public function send($id)
     {
         $video = ManualPresentation::find($id);
-        $video->makeHidden('status')->makeHidden('local')->makeHidden('created_at')->makeHidden('updated_at');
+        $video
+            ->makeHidden('status')
+            ->makeHidden('local')
+            ->makeHidden('created_at')
+            ->makeHidden('updated_at')
+            ->makeHidden('permission')
+            ->makeHidden('entitlement');
         //Make json wrapper
         $json = Collection::make([
             'status' => 'success',
