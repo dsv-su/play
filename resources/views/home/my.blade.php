@@ -30,63 +30,114 @@
         </div> <!-- row no-gutters -->
     </div>
 
-    @foreach($mycourses as $course)
-        @if ($course->myvideos->isEmpty())
-            @continue
-        @endif
-        <div class="container banner-inner">
-            <div class="row no-gutters w-100">
-                <div class="col-12">
-                    <div>
-                        <h2 class="word-wrap_xs-only">{{$course->name}}</h2>
-                    </div>
-                </div> <!-- col-12 -->
-            </div> <!-- row no-gutters -->
-        </div>
-
-        <div class="container px-0">
-            <div class="d-flex mb-3 flex-wrap">
-                @foreach ($course->myvideos as $video)
-                    <div class="col my-3">
-                        <div class="card video m-auto">
-                            <a href="{{ route('player', ['video' => $video]) }}">
-                                <div class="card-header position-relative"
-                                     style=" @if ($video->sources && json_decode($video->sources)[0]->poster) background-image: url({{ asset(json_decode($video->sources)[0]->poster)}}); @endif height:200px;">
-                                    <div class="title">{{ $video->title }}</div>
-                                    <p class="p-1"> {{$video->duration}} </p>
-                                </div>
-                            </a>
-                            <div class="card-body p-1">
-                                <p class="card-text">
-                                    @foreach($video->video_course as $vc) <a
-                                            href="/course/{{$vc->course_id}}"
-                                            class="badge badge-primary">{{\App\Course::find($vc->course_id)->designation}}</a> @endforeach
-                                </p>
-                            <!--  <p class="card-text">
-                                <span class="badge badge-light">{{$video->category->category_name}}</span>
-                            </p> -->
-                                <p class="card-text">
-                                    @foreach($video->presenters() as $presenter) <a href="/presenter/{{$presenter->id}}"
-                                                                                    class="badge badge-light">{{$presenter->name}}</a> @endforeach
-                                </p>
-                                <p class="card-text" id="tags">@foreach($video->tags() as $tag) <a
-                                            href="/tag/{{$tag->id}}"
-                                            class="badge badge-secondary">{{$tag->name}}</a> @endforeach</p>
-                                <p class="card-text">
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-                <div class="col">
-                    <div class="card video my-0 mx-auto border-0"></div>
-                </div>
-                <div class="col">
-                    <div class="card video my-0 mx-auto border-0"></div>
-                </div>
-                <div class="col">
-                    <div class="card video my-0 mx-auto border-0"></div>
-                </div>
+    <div class="container">
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                <label for="filter_course">Course:</label>
+                <!-- Filtering -->
+                <select class="custom-select" name="filter_course" id="filter_course">
+                    <option value="0" @if(!app('request')->input('course')) selected @endif
+                    >Choose course
+                    </option>
+                    @foreach($mycourses as $course)
+                        <option value="{{$course->id}}"
+                                @if(app('request')->input('course') == $course->id) selected @endif>{{$course->name}}</option>
+                    @endforeach
+                </select>
+                <p class="card-text my-1" id="course_list">
             </div>
-        </div><!-- /.container -->
-    @endforeach
+            <div class="col-md-4 mb-3">
+                <label for="filter_tag">Tag:</label>
+                <!-- Filtering -->
+                <select class="custom-select" name="filter_tag" id="filter_tag">
+                    <option value="0" @if(!app('request')->input('tag')) selected @endif
+                    >Choose tag
+                    </option>
+                    @foreach($tags as $tag)
+                        <option value="{{$tag->id}}">{{$tag->name}}</option>
+                    @endforeach
+                </select>
+                <p class="card-text my-1" id="tag_list">
+                </p>
+            </div>
+            <form id="filter">
+                <meta name="csrf-token" content="{{ csrf_token() }}">
+            </form>
+        </div>
+    </div>
+
+    <div id="mycourses">
+        @include('home.videolist', $mycourses)
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('select#filter_tag').on('change', function () {
+                $('#tag_list').append('<span class="badge badge-dark mr-1"><span onclick="remove_tag(this)" data-id=' + $(this).val() + '><i class="fas fa-times mr-1"></i></span>' + $(this).find("option:selected").text() + '</span>');
+                $('#filter').append('<input type=hidden id="tag_list[]" value=' + $(this).val() + '>');
+                $(this).find("option:selected").hide();
+                submit_form();
+                $(this).val(0);
+            });
+            $('select#filter_course').on('change', function () {
+                $('#course_list').append('<span class="badge badge-dark mr-1"><span onclick="remove_course(this)" data-id=' + $(this).val() + '><i class="fas fa-times mr-1"></i></span>' + $(this).find("option:selected").text() + '</span>');
+                $('#filter').append('<input type=hidden id="course_list[]" value=' + $(this).val() + '>');
+                $(this).find("option:selected").hide();
+                submit_form();
+                $(this).val(0);
+            });
+        });
+
+        function submit_form() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            let formData = new FormData();
+           // let tags = [];
+            $.each($('#filter input'), function () {
+              //  tags.push($(this).val());
+                formData.append($(this).attr('id'), $(this).val());
+            });
+          //  formData.append('tags', JSON.stringify(tags));
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('my.filter') }}",
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: (data) => {
+                  //  alert('dddd');
+                    $('#mycourses').html(data);
+                    //$(this).closest('div.modal').hide();
+                },
+                error: function () {
+                    alert('There was an error in filtering.');
+                }
+            });
+            //   console.log($('form').serialize());
+            for (var value of formData.values()) {
+                  console.log(value);
+            }
+        }
+
+        function remove_tag(item) {
+            item.closest('span.badge').remove();
+            let id = $(item).attr('data-id');
+            $('#filter_tag').children("option[value^=" + id + "]").show();
+            $('#filter').children("input[id$='tag_list[]'][value^=" + id + "]").remove();
+            submit_form();
+        }
+
+        function remove_course(item) {
+            item.closest('span.badge').remove();
+            let id = $(item).attr('data-id');
+            $('#filter_course').children("option[value^=" + id + "]").show();
+            $('#filter').children("input[id$='course_list[]'][value^=" + id + "]").remove();
+            submit_form();
+        }
+    </script>
+
 @endsection
