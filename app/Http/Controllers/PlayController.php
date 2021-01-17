@@ -84,12 +84,20 @@ class PlayController extends Controller
         $mycourses = $this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'psoko@su.se');
         $tags = $request->tag_list ?? array();
         $courses = $request->course_list ?? array();
+        $searchsplit = $request->text ? preg_split('/\s+/', strtolower($request->text)) : array();
+
         foreach ($mycourses as $keycourse => $course) {
             if ($courses && !in_array($course->id, $courses)) {
                 unset($mycourses[$keycourse]);
                 continue;
             }
             foreach ($course->myvideos as $keyvideo => $video) {
+                foreach ($searchsplit as $search) {
+                    if (!str_contains(strtolower($video->title), $search)) {
+                        unset($course->myvideos[$keyvideo]);
+                        continue;
+                    }
+                }
                 foreach ($tags as $tag_id) {
                     if (!$video->has_tag($tag_id)) {
                         unset($course->myvideos[$keyvideo]);

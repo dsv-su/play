@@ -32,37 +32,38 @@
 
     <div class="container">
         <div class="form-row">
-            <div class="col-md-4 mb-3">
+            <div class="col-md-3 mb-1">
+                <label for="filter_text">Title:</label>
+                <input class="form-control" type="text" name="filter_text" id="filter_text"
+                       placeholder="Type your request">
+            </div>
+            <div class="col-md-3 mb-1">
                 <label for="filter_course">Course:</label>
-                <!-- Filtering -->
                 <select class="custom-select" name="filter_course" id="filter_course">
-                    <option value="0" @if(!app('request')->input('course')) selected @endif
-                    >Choose course
-                    </option>
+                    <option value="0">Choose course</option>
                     @foreach($mycourses as $course)
-                        <option value="{{$course->id}}"
-                                @if(app('request')->input('course') == $course->id) selected @endif>{{$course->name}}</option>
+                        <option value="{{$course->id}}">{{$course->name}}</option>
                     @endforeach
                 </select>
-                <p class="card-text my-1" id="course_list">
             </div>
-            <div class="col-md-4 mb-3">
+            <div class="col-md-3 mb-1">
                 <label for="filter_tag">Tag:</label>
-                <!-- Filtering -->
                 <select class="custom-select" name="filter_tag" id="filter_tag">
-                    <option value="0" @if(!app('request')->input('tag')) selected @endif
-                    >Choose tag
-                    </option>
+                    <option value="0">Choose tag</option>
                     @foreach($tags as $tag)
                         <option value="{{$tag->id}}">{{$tag->name}}</option>
                     @endforeach
                 </select>
-                <p class="card-text my-1" id="tag_list">
-                </p>
             </div>
-            <form id="filter">
-                <meta name="csrf-token" content="{{ csrf_token() }}">
-            </form>
+        </div>
+        <div class="form-row">
+            <div class="col my-1 d-inline-flex">
+                <p class="card-text" id="course_list"></p>
+                <p class="card-text" id="tag_list"></p>
+                <form id="filter">
+                    <meta name="csrf-token" content="{{ csrf_token() }}">
+                </form>
+            </div>
         </div>
     </div>
 
@@ -86,6 +87,14 @@
                 submit_form();
                 $(this).val(0);
             });
+            $('input#filter_text').on('change', function (e) {
+                $('#filter').children("input[id$='text']").remove();
+                if ($(this).val()) {
+                    $('#filter').append('<input type=hidden id="text" value="' + $(this).val() + '">');
+                }
+                submit_form();
+            });
+            $('#filter_text').tooltip({'trigger': 'focus', 'title': 'Press Enter or leave the field to apply'});
         });
 
         function submit_form() {
@@ -95,12 +104,9 @@
                 }
             });
             let formData = new FormData();
-           // let tags = [];
             $.each($('#filter input'), function () {
-              //  tags.push($(this).val());
                 formData.append($(this).attr('id'), $(this).val());
             });
-          //  formData.append('tags', JSON.stringify(tags));
             $.ajax({
                 type: 'POST',
                 url: "{{ route('my.filter') }}",
@@ -109,17 +115,14 @@
                 contentType: false,
                 processData: false,
                 success: (data) => {
-                  //  alert('dddd');
                     $('#mycourses').html(data);
-                    //$(this).closest('div.modal').hide();
                 },
                 error: function () {
                     alert('There was an error in filtering.');
                 }
             });
-            //   console.log($('form').serialize());
-            for (var value of formData.values()) {
-                  console.log(value);
+            for (let value of formData.values()) {
+                console.log(value);
             }
         }
 
