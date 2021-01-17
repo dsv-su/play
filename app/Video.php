@@ -91,7 +91,11 @@ class Video extends Model implements Searchable
     }
 
     public function getPresentationDate() {
-        return json_decode($this->presentation)->recorded ?? null;
+        $presentation = json_decode($this->presentation);
+        if ($presentation) {
+            return $presentation->creation ?? strtotime($presentation->recorded);
+        }
+        return null;
     }
 
     public function getSearchResult(): SearchResult

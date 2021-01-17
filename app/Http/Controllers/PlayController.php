@@ -94,11 +94,11 @@ class PlayController extends Controller
                 continue;
             }
             foreach ($course->myvideos as $keyvideo => $video) {
-                if ($datestart && $video->getPresentationDate() && $datestart>strtotime($video->getPresentationDate())) {
+                if ($datestart && $video->getPresentationDate() && $datestart>$video->getPresentationDate()) {
                     unset($course->myvideos[$keyvideo]);
                     continue;
                 }
-                if ($dateend && $video->getPresentationDate() && $dateend<strtotime($video->getPresentationDate())) {
+                if ($dateend && $video->getPresentationDate() && $dateend<$video->getPresentationDate()) {
                     unset($course->myvideos[$keyvideo]);
                     continue;
                 }

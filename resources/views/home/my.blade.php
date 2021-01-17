@@ -137,8 +137,8 @@
             $('#daterange').on('apply.daterangepicker', function (ev, picker) {
                 $('#filter').children("input[id$='datestart']").remove();
                 $('#filter').children("input[id$='dateend']").remove();
-                console.log(Math.ceil(picker.startDate / 1000));
-                console.log(Math.ceil(picker.endDate / 1000));
+           //     console.log(Math.ceil(picker.startDate / 1000));
+           //     console.log(Math.ceil(picker.endDate / 1000));
                 $('#filter').append('<input type=hidden id="datestart" value=' + Math.ceil(picker.startDate / 1000) + '>');
                 $('#filter').append('<input type=hidden id="dateend" value=' + Math.ceil(picker.endDate / 1000) + '>');
                 submit_form();
@@ -171,7 +171,7 @@
                 }
             });
             for (let value of formData.values()) {
-                console.log(value);
+            //    console.log(value);
             }
         }
 
