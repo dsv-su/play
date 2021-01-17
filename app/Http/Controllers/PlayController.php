@@ -85,6 +85,8 @@ class PlayController extends Controller
         $tags = $request->tag_list ?? array();
         $courses = $request->course_list ?? array();
         $searchsplit = $request->text ? preg_split('/\s+/', strtolower($request->text)) : array();
+        $datestart = $request->datestart ?? null;
+        $dateend = $request->dateend ?? null;
 
         foreach ($mycourses as $keycourse => $course) {
             if ($courses && !in_array($course->id, $courses)) {
@@ -92,6 +94,14 @@ class PlayController extends Controller
                 continue;
             }
             foreach ($course->myvideos as $keyvideo => $video) {
+                if ($datestart && $video->getPresentationDate() && $datestart>strtotime($video->getPresentationDate())) {
+                    unset($course->myvideos[$keyvideo]);
+                    continue;
+                }
+                if ($dateend && $video->getPresentationDate() && $dateend<strtotime($video->getPresentationDate())) {
+                    unset($course->myvideos[$keyvideo]);
+                    continue;
+                }
                 foreach ($searchsplit as $search) {
                     if (!str_contains(strtolower($video->title), $search)) {
                         unset($course->myvideos[$keyvideo]);

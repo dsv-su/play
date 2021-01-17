@@ -32,12 +32,12 @@
 
     <div class="container">
         <div class="form-row">
-            <div class="col-md-3 mb-1">
+            <div class="col-12 col-md-6 col-lg-3 mb-1">
                 <label for="filter_text">Title:</label>
                 <input class="form-control" type="text" name="filter_text" id="filter_text"
                        placeholder="Type your request">
             </div>
-            <div class="col-md-3 mb-1">
+            <div class="col-12 col-md-6 col-lg-3 mb-1">
                 <label for="filter_course">Course:</label>
                 <select class="custom-select" name="filter_course" id="filter_course">
                     <option value="0">Choose course</option>
@@ -46,7 +46,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-3 mb-1">
+            <div class="col-12 col-md-6 col-lg-3 mb-1">
                 <label for="filter_tag">Tag:</label>
                 <select class="custom-select" name="filter_tag" id="filter_tag">
                     <option value="0">Choose tag</option>
@@ -54,6 +54,14 @@
                         <option value="{{$tag->id}}">{{$tag->name}}</option>
                     @endforeach
                 </select>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3 mb-1">
+                <label for="daterange">Dates:</label>
+                <div id="daterange" class="form-control"
+                     style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+                    <i class="fa fa-calendar"></i>&nbsp;
+                    <span></span><i class="fa fa-caret-down ml-1"></i>
+                </div>
             </div>
         </div>
         <div class="form-row">
@@ -71,8 +79,40 @@
         @include('home.videolist', $mycourses)
     </div>
 
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+
     <script>
         $(document).ready(function () {
+            var start = 1000;
+            var end = moment();
+
+            function cb(start, end) {
+                if (start < 30000) {
+                    $('#daterange span').html('All');
+                } else {
+                    $('#daterange span').html(start.format('MMM D, YYYY') + ' - ' + end.format('MMM D, YYYY'));
+                }
+            }
+
+            $('#daterange').daterangepicker({
+                startDate: start,
+                endDate: end,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'Last 365 Days': [moment().subtract(365, 'days'), moment()],
+                    'All': [1000, end]
+                }
+            }, cb);
+            cb(start, end);
+            $('#filter').append('<input type=hidden id="datestart" value=' + Math.ceil(start / 1000) + '>');
+            $('#filter').append('<input type=hidden id="dateend" value=' + Math.ceil(end / 1000) + '>');
+            submit_form();
+
             $('select#filter_tag').on('change', function () {
                 $('#tag_list').append('<span class="badge badge-dark mr-1"><span onclick="remove_tag(this)" data-id=' + $(this).val() + '><i class="fas fa-times mr-1"></i></span>' + $(this).find("option:selected").text() + '</span>');
                 $('#filter').append('<input type=hidden id="tag_list[]" value=' + $(this).val() + '>');
@@ -92,6 +132,15 @@
                 if ($(this).val()) {
                     $('#filter').append('<input type=hidden id="text" value="' + $(this).val() + '">');
                 }
+                submit_form();
+            });
+            $('#daterange').on('apply.daterangepicker', function (ev, picker) {
+                $('#filter').children("input[id$='datestart']").remove();
+                $('#filter').children("input[id$='dateend']").remove();
+                console.log(Math.ceil(picker.startDate / 1000));
+                console.log(Math.ceil(picker.endDate / 1000));
+                $('#filter').append('<input type=hidden id="datestart" value=' + Math.ceil(picker.startDate / 1000) + '>');
+                $('#filter').append('<input type=hidden id="dateend" value=' + Math.ceil(picker.endDate / 1000) + '>');
                 submit_form();
             });
             $('#filter_text').tooltip({'trigger': 'focus', 'title': 'Press Enter or leave the field to apply'});

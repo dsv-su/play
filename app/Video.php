@@ -65,7 +65,7 @@ class Video extends Model implements Searchable
         return $this->belongsToMany(Tag::class, 'video_tags', 'video_id', 'tag_id')->get();
     }
 
-    public function has_tag($tag_id)
+    public function has_tag($tag_id): bool
     {
         return $this->belongsToMany(Tag::class, 'video_tags', 'video_id', 'tag_id')->where('tag_id', $tag_id)->count()>0;
     }
@@ -88,6 +88,10 @@ class Video extends Model implements Searchable
     public function mediasite_presentation(): HasOne
     {
         return $this->hasOne(MediasitePresentation::class);
+    }
+
+    public function getPresentationDate() {
+        return json_decode($this->presentation)->recorded ?? null;
     }
 
     public function getSearchResult(): SearchResult
