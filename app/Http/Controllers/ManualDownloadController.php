@@ -35,7 +35,6 @@ class ManualDownloadController extends Controller
     {
         $this->download_dir = 'download';
         $this->store_server = 'https://play-store.dsv.su.se/presentation/';
-        //Storage::disk('public')->makeDirectory($this->download_dir);
     }
 
     public function step1(Video $video)
@@ -252,7 +251,7 @@ class ManualDownloadController extends Controller
                 $id = $presentation->save();
             }
             //Get downloaded files names
-            $data['files'] = $this->getDownloadedVideoFiles($video->presentation_id);
+            $data['files'] = $downloaded_files;
         }
         //New media
         elseif ($request->media == 'new_media'){
@@ -326,6 +325,9 @@ class ManualDownloadController extends Controller
                     $default_entitlement = 'urn:mace:swami.se:gmai:dsv-user:staff;urn:mace:swami.se:gmai:dsv-user:student';
                 }
 
+                //Generate default thumb and posters
+                $thumb = $this->gen_default_thumb_posters($video, $duration/3);
+
                 //Store in model
                 $presentation = new Presentation();
                 $presentation->presentation_id = $video->presentation_id;
@@ -336,7 +338,7 @@ class ManualDownloadController extends Controller
                 $presentation->presenters = $presenters;
                 $presentation->tags = $tags;
                 $presentation->courses = $courses;
-                $presentation->thumb = '/image/'.$video->thumb;
+                $presentation->thumb = '/image/'.$thumb;
                 $presentation->created = strtotime($request->created);
                 $presentation->duration = $duration;
                 $presentation->sources = $files;
@@ -345,8 +347,9 @@ class ManualDownloadController extends Controller
                 $id = $presentation->save();
                 //Variables for view
                 $data['thumb'] = null;
-                $data['files'] = $this->getDownloadedVideoFiles($video->presentation_id);
+                $data['files'] = $files;
                 $data['media'] = $request->media;
+
                 return view('manual.edit_step2', $presentation, $data);
             }
         }
@@ -418,6 +421,31 @@ class ManualDownloadController extends Controller
         }
 
 
+    }
+
+    private function gen_default_thumb_posters(Video $video, $seconds)
+    {
+        $this->files = $this->getDownloadedVideoFiles($video->presentation_id);
+
+        //Create posters
+        $x = 1;
+        foreach($this->files as $this->file) {
+            FFMpeg::fromDisk('public')
+                ->open($this->download_dir.'/'.$video->presentation_id.'/video/'.$this->file)
+                ->getFrameFromSeconds($seconds)
+                ->export()
+                ->toDisk('public')
+                ->save($this->download_dir.'/'.$video->presentation_id.'/poster/poster_'.$x.'.png');
+            $x++;
+        }
+        //Create thumb
+        FFMpeg::fromDisk('public')
+            ->open($this->download_dir.'/'.$video->presentation_id.'/video/'.$this->files[0])
+            ->getFrameFromSeconds($seconds)
+            ->export()
+            ->toDisk('public')
+            ->save($this->download_dir.'/'.$video->presentation_id.'/image/primary_thumb'.$video->id.'.png');
+        return 'primary_thumb'.$video->id.'.png';
     }
 
     public function gen_thumb_download($id, Request $request)

@@ -82,6 +82,7 @@
                                     Edit
                                 </button>
                                 <button class="delete btn btn-danger" type="submit">Delete</button>
+                                <a href="{{route('download', $video->id)}}" type="button" class="btn btn-success">Download</a>
                             </p>
                         </div>
                     </div>

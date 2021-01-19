@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ManualPresentation;
+use App\Presentation;
 use App\Video;
 use Carbon\Carbon;
 use Exception;
@@ -216,6 +217,11 @@ class ManualUploadController extends Controller
             $media = FFMpeg::fromDisk('public')->open('/' . $dirname . '/video/media1.mp4');
             $durationInSeconds = $media->getDurationInSeconds();
 
+            //Default entitlement
+            if($request->permission == 'false') {
+                $default_entitlement = 'urn:mace:swami.se:gmai:dsv-user:staff;urn:mace:swami.se:gmai:dsv-user:student';
+            }
+
             //Store in model
             $file = new ManualPresentation();
             $file->status = 'pending';
@@ -230,9 +236,10 @@ class ManualUploadController extends Controller
             $file->duration = $durationInSeconds;
             $file->sources = $files;
             $file->permission = $request->permission;
-            $file->entitlement = $request->entitlement;
+            $file->entitlement = $request->entitlement ?? $default_entitlement;
             $id = $file->save();
-
+            $file->thumb = $this->gen_thumb_poster($file, $durationInSeconds/3);
+            $file->save();
 
             return view('manual.step1', $file, compact('durationInSeconds'));
         }
@@ -252,10 +259,10 @@ class ManualUploadController extends Controller
             ->toDisk('public')
             ->save('/' . $presentation->local . '/image/primary_thumb' . $id . '.png');
         //Store thumb in model
-        $presentation->thumb = 'primary_thumb' . $id . '.png';
+        $presentation->thumb = '/image/primary_thumb' . $id . '.png';
         $presentation->save();
         $durationInSeconds = $presentation->duration;
-
+    /*
         //Create posters
         $poster = 1;
         foreach ($presentation->sources as $source) {
@@ -267,7 +274,7 @@ class ManualUploadController extends Controller
                 ->save('/' . $presentation->local . '/image/poster_' . $poster . '.png');
             $poster++;
         }
-
+    */
 
         return view('manual.step1', $presentation, compact('durationInSeconds'));
     }
@@ -466,5 +473,30 @@ class ManualUploadController extends Controller
             $video->save();
             return $response->getBody();
         }
+    }
+
+    private function gen_thumb_poster(ManualPresentation $manualPresentation, $seconds)
+    {
+        //Create thumb and store in folder
+        FFMpeg::fromDisk('public')
+            ->open('/' . $manualPresentation->local . '/video/media1.mp4')
+            ->getFrameFromSeconds($seconds)
+            ->export()
+            ->toDisk('public')
+            ->save('/' . $manualPresentation->local . '/image/primary_thumb' . $manualPresentation->id . '.png');
+
+        //Create posters
+        $poster = 1;
+        foreach ($manualPresentation->sources as $source) {
+            FFMpeg::fromDisk('public')
+                ->open('/' . $manualPresentation->local . '/video/media' . $poster . '.mp4')
+                ->getFrameFromSeconds($seconds)
+                ->export()
+                ->toDisk('public')
+                ->save('/' . $manualPresentation->local . '/image/poster_' . $poster . '.png');
+            $poster++;
+        }
+
+        return '/image/primary_thumb' . $manualPresentation->id . '.png';
     }
 }

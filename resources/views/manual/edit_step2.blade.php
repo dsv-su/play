@@ -11,7 +11,7 @@
                 <br>
                 <h4 class="title">Generera en miniatyr (thumb)</h4>
                 <p class="description">
-                    Använd samma eller generera en ny miniatyr (thumb) för visning av presentationen på webbsidan.
+                    En miniatyr (thumb) har genererats för visning av presentationen på webbsidan.
                 </p>
             </div>
         </div>
@@ -22,7 +22,7 @@
                         @if($thumb == null)
                             <svg class="bd-placeholder-img" width="100%" height="250" xmlns="http://www.w3.org/2000/svg" aria-label="Placeholder: Image" preserveAspectRatio="xMidYMid slice" role="img"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Ingen bild</text></svg>
                         @else
-                            <img id="thumb" class="bd-placeholder-img" width="100%" height="250" src="{{'/storage/download/'.$presentation_id.'/image/'.$thumb}}">
+                            <img id="thumb" class="bd-placeholder-img" width="100%" height="250" src="{{'/storage/download/'.$presentation_id.$thumb}}">
                         @endif
 
                     </div>
@@ -31,7 +31,7 @@
                             <h5 class="card-title">Titel: {{$title}}</h5>
                             <form method="post" action="{{route('gen_thumb_download', $id)}}">
                                 @csrf
-                                <p class="card-text">Längd på primärvideo: {{ $duration }} sek.</p>
+                                <p class="card-text">Längd på primärvideo: {{ $duration }} sekunder.</p>
                                 <p class="card-text"><small class="text-muted">Antalet sekunder in i videon:</small></p>
                                 <input type="number" name="seconds"  min="1" max="{{$duration}}">
                                 <input type="hidden" name="media" value="{{$media}}">
@@ -84,7 +84,6 @@
                 @endforeach
             </div>
             <br>
-
             <a href="{{route('download_step4', $id)}}" role="button" class="btn btn-primary btn-lg float-right">Nästa <i class="fas fa-forward"></i></a>
         @endif
 

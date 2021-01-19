@@ -68,7 +68,7 @@ Route::middleware('entitlements')->group(function () {
     Route::post('/admin_permission_store/{id}', 'ManualUploadController@admin_permission_store')->name('admin_permission_store');
 
     //Manual download
-    Route::get('/download/{video}', 'ManualDownloadController@step1');
+    Route::get('/download/{video}', 'ManualDownloadController@step1')->name('download');
     Route::get('/download_step2/{video}', 'ManualDownloadController@step2');
     Route::get('/download_presentation/{video}', 'ManualDownloadController@download');
     Route::get('/download_step3/{video}', 'ManualDownloadController@step3')->name('download_step3');

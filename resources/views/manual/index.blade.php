@@ -139,7 +139,9 @@
     <script>
         $(document).ready(function() {
             $('.datepicker').datepicker({
-                language:'sv'
+                language:'sv',
+                weekStart: 1,
+                todayHighlight: true
             });
             var ent = 0;
             $(document).on('change', '#permission', function(){

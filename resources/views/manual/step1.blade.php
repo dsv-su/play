@@ -27,7 +27,7 @@
                     <br>
                     <h4 class="title">Generera en miniatyr (thumb)</h4>
                     <p class="description">
-                        Generera en miniatyr (thumb) för visning av presentationen på webbsidan.
+                        En miniatyr (thumb) har genererats för visning av presentationen på webbsidan.
                     </p>
                 </div>
             </div>
