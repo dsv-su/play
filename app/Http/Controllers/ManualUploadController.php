@@ -5,18 +5,25 @@ namespace App\Http\Controllers;
 use App\ManualPresentation;
 use App\Video;
 use Carbon\Carbon;
+use Exception;
+use GuzzleHttp\Client;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
+use RunTimeException;
 use Storage;
-use GuzzleHttp\Client;
 
 class ManualUploadController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Application|Factory|View|Response
      */
     public function index()
     {
@@ -51,17 +58,17 @@ class ManualUploadController extends Controller
     {
         $video = ManualPresentation::find($id);
         $video->makeHidden('status')
-                ->makeHidden('local')
-                ->makeHidden('base')
-                ->makeHidden('title')
-                ->makeHidden('presenters')
-                ->makeHidden('created')
-                ->makeHidden('duration')
-                ->makeHidden('courses')
-                ->makeHidden('tags')
-                ->makeHidden('thumbs')
-                ->makeHidden('sources')
-                ->makeHidden('created_at')->makeHidden('updated_at');
+            ->makeHidden('local')
+            ->makeHidden('base')
+            ->makeHidden('title')
+            ->makeHidden('presenters')
+            ->makeHidden('created')
+            ->makeHidden('duration')
+            ->makeHidden('courses')
+            ->makeHidden('tags')
+            ->makeHidden('thumbs')
+            ->makeHidden('sources')
+            ->makeHidden('created_at')->makeHidden('updated_at');
         //Make json wrapper
         $json = Collection::make([
             'status' => 'failure',
@@ -70,7 +77,7 @@ class ManualUploadController extends Controller
         $json['package'] = Collection::make([
             'message' => $video->status,
             'base' => $video->base
-            ]);
+        ]);
 
         $json = $json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
@@ -89,7 +96,7 @@ class ManualUploadController extends Controller
                 'headers' => $headers,
                 'body' => $json
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             /**
              * If there is an exception; Client error;
              */
@@ -102,13 +109,12 @@ class ManualUploadController extends Controller
             }
         }
 
-        if($response->getBody() == 'OK') {
+        if ($response->getBody() == 'OK') {
             //Change manualupdate status
             $video->status = 'notified';
             $video->save();
             return back()->withInput();
-        }
-        else {
+        } else {
             //Change manualupdate status
             $video->status = 'failed';
             $video->save();
@@ -118,7 +124,7 @@ class ManualUploadController extends Controller
         return back()->withInput();
     }
 
-    public function admin_unregister($id)
+    public function admin_unregister($id): RedirectResponse
     {
         ManualPresentation::destroy($id);
         return back()->withInput();
@@ -129,7 +135,8 @@ class ManualUploadController extends Controller
         $video = Video::find($id);
         return view('manual.permission', $video);
     }
-    public function admin_permission_store($id, Request $request)
+
+    public function admin_permission_store($id, Request $request): RedirectResponse
     {
         $video = Video::find($id);
         $video->permission = $request->permission;
@@ -137,10 +144,11 @@ class ManualUploadController extends Controller
         $video->save();
         return redirect()->route('manual_admin');
     }
+
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -150,12 +158,12 @@ class ManualUploadController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      *
      */
     public function step1(Request $request)
     {
-        if($request->isMethod('post')) {
+        if ($request->isMethod('post')) {
             //First validation
             $this->validate($request, [
                 'title' => 'required',
@@ -166,20 +174,18 @@ class ManualUploadController extends Controller
 
             //Store uploaded videofiles
             $files = [];
-            if($request->hasfile('filenames'))
-            {
+            if ($request->hasfile('filenames')) {
                 //Make unique directory
-                $dirname = Carbon::now()->toDateString('Y-m-d').'_'.rand(1,999);
-                Storage::disk('public')->makeDirectory( $dirname.'/video');
+                $dirname = Carbon::now()->toDateString('Y-m-d') . '_' . rand(1, 999);
+                Storage::disk('public')->makeDirectory($dirname . '/video');
                 //Files
                 $audio = 0;
-                foreach($request->file('filenames') as $file)
-                {
-                    $name = 'media'.($audio+1).'.'.$file->extension();
-                    $file->move(storage_path('/app/public/'.$dirname.'/video'), $name);
-                    $files[$audio]['video'] = '/video/'.$name;
-                    $files[$audio]['poster'] = '/image/poster_'.($audio+1).'.png';
-                    if($audio == 0){
+                foreach ($request->file('filenames') as $file) {
+                    $name = 'media' . ($audio + 1) . '.' . $file->extension();
+                    $file->move(storage_path('/app/public/' . $dirname . '/video'), $name);
+                    $files[$audio]['video'] = '/video/' . $name;
+                    $files[$audio]['poster'] = '/image/poster_' . ($audio + 1) . '.png';
+                    if ($audio == 0) {
                         $files[$audio]['playAudio'] = true;
                     } else {
                         $files[$audio]['playAudio'] = false;
@@ -188,36 +194,33 @@ class ManualUploadController extends Controller
                 }
             }
             //Presenters
-            if($request->presenters){
-                foreach($request->presenters as $presenter)
-                {
+            if ($request->presenters) {
+                foreach ($request->presenters as $presenter) {
                     $presenters[] = $presenter;
                 }
             }
             //Courses
-            if($request->courses) {
+            if ($request->courses) {
                 foreach ($request->courses as $course) {
                     $courses[] = $course;
                 }
-            }
-            else $courses[] = '';
+            } else $courses[] = '';
             //Tags
-            if($request->tags) {
+            if ($request->tags) {
                 foreach ($request->tags as $tag) {
                     $tags[] = $tag;
                 }
-            }
-            else $tags[] = '';
+            } else $tags[] = '';
 
             //Determine duration of media
-            $media = FFMpeg::fromDisk('public')->open('/'.$dirname.'/video/media1.mp4');
+            $media = FFMpeg::fromDisk('public')->open('/' . $dirname . '/video/media1.mp4');
             $durationInSeconds = $media->getDurationInSeconds();
 
             //Store in model
             $file = new ManualPresentation();
             $file->status = 'pending';
             $file->local = $dirname;
-            $file->base = '/data0/incoming/'.$dirname;
+            $file->base = '/data0/incoming/' . $dirname;
             $file->title = $request->title;
             $file->presenters = $presenters;
             $file->tags = $tags;
@@ -229,7 +232,6 @@ class ManualUploadController extends Controller
             $file->permission = $request->permission;
             $file->entitlement = $request->entitlement;
             $id = $file->save();
-
 
 
             return view('manual.step1', $file, compact('durationInSeconds'));
@@ -244,26 +246,25 @@ class ManualUploadController extends Controller
 
         //Create thumb and store in folder
         FFMpeg::fromDisk('public')
-            ->open('/'.$presentation->local.'/video/media1.mp4')
+            ->open('/' . $presentation->local . '/video/media1.mp4')
             ->getFrameFromSeconds($request->seconds)
             ->export()
             ->toDisk('public')
-            ->save('/'.$presentation->local.'/image/primary_thumb'.$id.'.png');
+            ->save('/' . $presentation->local . '/image/primary_thumb' . $id . '.png');
         //Store thumb in model
-        $presentation->thumb = 'primary_thumb'.$id.'.png';
+        $presentation->thumb = 'primary_thumb' . $id . '.png';
         $presentation->save();
         $durationInSeconds = $presentation->duration;
 
         //Create posters
         $poster = 1;
-        foreach ($presentation->sources as $source)
-        {
+        foreach ($presentation->sources as $source) {
             FFMpeg::fromDisk('public')
-                ->open('/'.$presentation->local.'/video/media'.$poster.'.mp4')
+                ->open('/' . $presentation->local . '/video/media' . $poster . '.mp4')
                 ->getFrameFromSeconds($request->seconds)
                 ->export()
                 ->toDisk('public')
-                ->save('/'.$presentation->local.'/image/poster_'.$poster.'.png');
+                ->save('/' . $presentation->local . '/image/poster_' . $poster . '.png');
             $poster++;
         }
 
@@ -277,11 +278,11 @@ class ManualUploadController extends Controller
         $durationInSeconds = $presentation->duration;
 
         FFMpeg::fromDisk('public')
-            ->open('/'.$presentation->local.'/video/media'.$request->poster.'.mp4')
+            ->open('/' . $presentation->local . '/video/media' . $request->poster . '.mp4')
             ->getFrameFromSeconds($request->seconds)
             ->export()
             ->toDisk('public')
-            ->save('/'.$presentation->local.'/image/poster_'.$request->poster.'.png');
+            ->save('/' . $presentation->local . '/image/poster_' . $request->poster . '.png');
 
         return view('manual.step1', $presentation, compact('durationInSeconds'));
     }
@@ -292,31 +293,31 @@ class ManualUploadController extends Controller
 
         // Make remote folders and send all files
         //Send video files
-        $directory = '/'.$presentation->local.'/video';
-        $remote_dir = $presentation->local.'/video';
+        $directory = '/' . $presentation->local . '/video';
+        $remote_dir = $presentation->local . '/video';
         $contents = Storage::disk('public')->files($directory);
         Storage::disk('sftp')->makeDirectory($remote_dir);
         try {
-            foreach($contents as $sendfile) {
+            foreach ($contents as $sendfile) {
                 $media = Storage::disk('public')->get($sendfile);
                 $response = Storage::disk('sftp')->put($sendfile, $media, 'public');
             }
-        } catch (\RunTimeException $e) {
-            dd('Error'. $e->getMessage());
+        } catch (RunTimeException $e) {
+            dd('Error' . $e->getMessage());
         }
 
         //Send image files
-        $directory = '/'.$presentation->local.'/image';
-        $remote_dir = $presentation->local.'/image';
+        $directory = '/' . $presentation->local . '/image';
+        $remote_dir = $presentation->local . '/image';
         $contents = Storage::disk('public')->files($directory);
         Storage::disk('sftp')->makeDirectory($remote_dir);
         try {
-            foreach($contents as $sendfile) {
+            foreach ($contents as $sendfile) {
                 $media = Storage::disk('public')->get($sendfile);
                 $response = Storage::disk('sftp')->put($sendfile, $media, 'public');
             }
-        } catch (\RunTimeException $e) {
-            dd('Error'. $e->getMessage());
+        } catch (RunTimeException $e) {
+            dd('Error' . $e->getMessage());
         }
 
         //Remove temp storage
@@ -334,12 +335,12 @@ class ManualUploadController extends Controller
         //
     }
 
-            /**
-             * Display the specified resource.
-             *
-             * @param  int  $id
-             * @return \Illuminate\Http\Response
-             */
+    /**
+     * Display the specified resource.
+     *
+     * @param int $id
+     * @return Response
+     */
     public function show($id)
     {
         //
@@ -348,8 +349,8 @@ class ManualUploadController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Response
      */
     public function edit($id)
     {
@@ -359,9 +360,9 @@ class ManualUploadController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $id
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -371,8 +372,8 @@ class ManualUploadController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Application|Factory|View|Response
      */
     public function destroy($id)
     {
@@ -388,9 +389,9 @@ class ManualUploadController extends Controller
 
     private function uri()
     {
-        $this->file = base_path().'/systemconfig/play.ini';
+        $this->file = base_path() . '/systemconfig/play.ini';
         if (!file_exists($this->file)) {
-            $this->file = base_path().'/systemconfig/play.ini.example';
+            $this->file = base_path() . '/systemconfig/play.ini.example';
         }
         $this->system_config = parse_ini_file($this->file, true);
 
@@ -399,9 +400,9 @@ class ManualUploadController extends Controller
 
     private function token()
     {
-        $this->file = base_path().'/systemconfig/play.ini';
+        $this->file = base_path() . '/systemconfig/play.ini';
         if (!file_exists($this->file)) {
-            $this->file = base_path().'/systemconfig/play.ini.example';
+            $this->file = base_path() . '/systemconfig/play.ini.example';
         }
         $this->system_config = parse_ini_file($this->file, true);
 
@@ -432,41 +433,38 @@ class ManualUploadController extends Controller
 
         $client = new Client(['base_uri' => $this->uri()]);
         $headers = [
-        //'Authorization' => 'Bearer ' . $this->token(),
-        'Content-Type' => 'application/json',
-        'Accept' => 'application/json',
+            //'Authorization' => 'Bearer ' . $this->token(),
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
         ];
         try {
-        $response = $client->request('POST', $this->uri(), [
-        'headers' => $headers,
-        'body' => $json
-        ]);
-        } catch (\Exception $e) {
-        /**
-        * If there is an exception; Client error;
-        */
-        if ($e->hasResponse()) {
-            //return $response = $e->getResponse()->getStatusCode();
-            //Change manualupdate status
-            $video->status = 'failed';
-            $video->save();
-            return $response = $e->getResponse()->getBody();
+            $response = $client->request('POST', $this->uri(), [
+                'headers' => $headers,
+                'body' => $json
+            ]);
+        } catch (Exception $e) {
+            /**
+             * If there is an exception; Client error;
+             */
+            if ($e->hasResponse()) {
+                //return $response = $e->getResponse()->getStatusCode();
+                //Change manualupdate status
+                $video->status = 'failed';
+                $video->save();
+                return $response = $e->getResponse()->getBody();
             }
-         }
+        }
 
-        if($response->getBody() == 'OK') {
+        if ($response->getBody() == 'OK') {
             //Change manualupdate status
             $video->status = 'sent';
             $video->save();
             return redirect('/')->with('status', 'Presentationen har laddats upp!');
-        }
-        else {
+        } else {
             //Change manualupdate status
             $video->status = 'failed';
             $video->save();
             return $response->getBody();
         }
-
-
     }
 }

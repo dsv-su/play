@@ -89,6 +89,14 @@ class DownloadPresentation implements ShouldQueue
             );
 
             // Presenters
+
+            $users = array();
+            try {
+                $users = json_decode($mediasite->get($url . "/UserProfiles")->getBody(), true)['value'];
+            } catch (GuzzleException $e) {
+                abort(503);
+            }
+
             $presenters = array();
             try {
                 $presenters = json_decode($mediasite->get($url . "/Presentations('$presentationid')/Presenters")->getBody(), true)['value'];
@@ -96,8 +104,15 @@ class DownloadPresentation implements ShouldQueue
                 abort(503);
             }
             foreach ($presenters as $presenter) {
-                $metadata['presenters'][] = array('fullname' => $presenter['DisplayName'], 'email' => $presenter['Email']);
+                $array = array_filter($users, function ($user) use ($presenter) {
+                    return $user['DisplayName'] == $presenter['DisplayName'];
+                });
+                $presenter = array_pop($array);
+                Presenter::firstOrCreate(array('name' => $presenter['DisplayName'], 'username' => $presenter['UserName']));
+                $metadata['presenters'][] = $presenter['UserName'];
             }
+
+
 
             $streams = array();
             try {
@@ -182,7 +197,7 @@ class DownloadPresentation implements ShouldQueue
 
             // Presenters
             foreach ($metadata['presenters'] as $presenter) {
-                $p = Presenter::firstOrCreate(array('name' => $presenter['fullname']));
+                $p = Presenter::where(array('username' => $presenter))->first();
                 VideoPresenter::create(array('video_id' => $video->id, 'presenter_id' => $p->id));
             }
 

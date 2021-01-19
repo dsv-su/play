@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Searchable\Searchable;
 use Spatie\Searchable\SearchResult;
 
@@ -26,7 +27,7 @@ class Category extends Model implements Searchable
         );
     }
 
-    public function video()
+    public function video(): HasMany
     {
         return $this->hasMany(Video::class);
     }

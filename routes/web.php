@@ -31,6 +31,7 @@ Route::middleware('entitlements')->group(function () {
     Route::get('/tag/{tag}', 'PlayController@showTagVideos')->name('tag.videos');
     Route::get('/presenter/{presenter}', 'PlayController@showPresenterVideos')->name('presenter.videos');
     Route::get('/my', 'PlayController@myVideos')->name('my.videos');
+    Route::post('/my/filter', 'PlayController@myVideosFilter')->name('my.filter');
 
 
     Route::get('/player/{video}', 'PlayController@player')->name('player');

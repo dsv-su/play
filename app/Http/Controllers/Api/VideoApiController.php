@@ -11,6 +11,7 @@ use App\Services\PresenterStore;
 use App\Services\TagsStore;
 use App\Services\VideoStore;
 use App\Video;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -35,10 +36,10 @@ class VideoApiController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param PresentationRequest $request
+     * @return JsonResponse
      */
-    public function store(PresentationRequest $request)
+    public function store(PresentationRequest $request): JsonResponse
     {
 
         $payload = auth()->payload();

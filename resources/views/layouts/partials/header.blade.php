@@ -78,6 +78,7 @@
                     </div>
                 </li>
 
+                @if ($hasmycourses)
                 <li class="nav-item mega-menu-item" style="">
                     <div class="position-relative">
                         <a class="text-uppercase nav-link mega-menu-link level-1" aria-haspopup="true"
@@ -86,6 +87,7 @@
                         </a>
                     </div>
                 </li>
+                @endif
 
                 <li class="nav-item mega-menu-item" style="">
                     <div class="position-relative">
@@ -181,10 +183,12 @@
                                             </div>
                                         </li>
 
+                                        @if ($hasmycourses)
                                         <li class="nav-item">
                                             <a class="nav-link text-uppercase d-inline-block pr-0"
                                                href="/my">My videos</a>
                                         </li>
+                                        @endif
 
                                         <li class="nav-item">
                                             <a class="nav-link text-uppercase d-inline-block pr-0"

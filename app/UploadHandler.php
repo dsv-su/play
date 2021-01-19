@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Storage;
 
 class UploadHandler
 {
-    public function getUpload($file)
+    public function getUpload($file): array
     {
 
         //Get array of streams

@@ -43,11 +43,11 @@ class Course extends Model implements Searchable
 
     public function userVideos($user): Collection
     {
-        return $this->videos()->filter(function ($video) use ($user) {
-             foreach ($video->presenters() as $presenter) {
-                 // Dummy value to test the output.
-                 return isset($user->id) ? ($presenter->id == $user->id) : false;
-             }
+        return $this->hasManyThrough(Video::class, VideoCourse::class, 'course_id', 'id', 'id', 'video_id')->orderBy('created_at', 'desc')->get()->filter(function ($video) use ($user) {
+            foreach ($video->presenters() as $presenter) {
+                // Dummy value to test the output.
+                return isset($user->id) ? ($presenter->id == $user->id) : false;
+            }
         });
     }
 

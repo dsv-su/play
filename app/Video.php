@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -54,9 +55,19 @@ class Video extends Model implements Searchable
         return $this->hasMany(VideoTag::class);
     }
 
+    public function getRecordedDate(): string
+    {
+        return Carbon::parse(json_decode($this->presentation)->recorded)->format('Y-m-d H:i:s') ?? '';
+    }
+
     public function tags(): Collection
     {
         return $this->belongsToMany(Tag::class, 'video_tags', 'video_id', 'tag_id')->get();
+    }
+
+    public function has_tag($tag_id): bool
+    {
+        return $this->belongsToMany(Tag::class, 'video_tags', 'video_id', 'tag_id')->where('tag_id', $tag_id)->count()>0;
     }
 
     public function courses(): Collection
@@ -77,6 +88,14 @@ class Video extends Model implements Searchable
     public function mediasite_presentation(): HasOne
     {
         return $this->hasOne(MediasitePresentation::class);
+    }
+
+    public function getPresentationDate() {
+        $presentation = json_decode($this->presentation);
+        if ($presentation) {
+            return $presentation->creation ?? strtotime($presentation->recorded);
+        }
+        return null;
     }
 
     public function getSearchResult(): SearchResult

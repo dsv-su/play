@@ -2,9 +2,8 @@
 
 namespace App\Services;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Video;
-use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 
 class VideoStore extends Model
 {
@@ -18,9 +17,9 @@ class VideoStore extends Model
 
     private function permission()
     {
-        $this->file = base_path().'/systemconfig/play.ini';
+        $this->file = base_path() . '/systemconfig/play.ini';
         if (!file_exists($this->file)) {
-            $this->file = base_path().'/systemconfig/play.ini.example';
+            $this->file = base_path() . '/systemconfig/play.ini.example';
         }
         $this->system_config = parse_ini_file($this->file, true);
 
@@ -29,16 +28,16 @@ class VideoStore extends Model
 
     private function entitlement()
     {
-        $this->file = base_path().'/systemconfig/play.ini';
+        $this->file = base_path() . '/systemconfig/play.ini';
         if (!file_exists($this->file)) {
-            $this->file = base_path().'/systemconfig/play.ini.example';
+            $this->file = base_path() . '/systemconfig/play.ini.example';
         }
         $this->system_config = parse_ini_file($this->file, true);
 
         return $this->system_config['global']['default_presentation_entitlement'];
     }
 
-    public function presentation()
+    public function presentation(): Video
     {
         $this->video = new Video;
         $this->video->presentation_id = $this->request->id;

@@ -7916,3 +7916,7 @@ blockquote p ~ p::before {
     font-weight: 500;
     font-size: 90%;
 }
+
+.badge .fa-times {
+    cursor: pointer;
+}

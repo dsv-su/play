@@ -4,7 +4,7 @@
         @csrf
         Choose a course folder to download:<br/><br/>
         Course: <select id="course">
-            @foreach($courses as $folder)
+            @foreach($mediasitecourses as $folder)
                 <option value="{{$folder['id']}}">{{$folder['name']}}</option>
             @endforeach
         </select><br/><br/>
