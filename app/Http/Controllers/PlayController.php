@@ -654,7 +654,7 @@ class PlayController extends Controller
         } else {
             $data['play_user'] = $_SERVER['displayName'];
         }
-        
+
         $data['courses'] = $this->getActiveCourses();
         $data['presenter'] = Presenter::find($presenterid)->name;
         $data['latest'] = Presenter::find($presenterid)->videos();

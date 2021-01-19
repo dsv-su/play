@@ -42,6 +42,9 @@ class VideoStore extends Model
     {
         $this->video = new Video;
         $this->video->presentation_id = $this->request->id;
+        $this->video->origin = $this->request->origin;
+        $this->video->notification_id = $this->request->notification_id;
+        $this->video->creation = $this->request->creation;
         $this->video->title = $this->request->title;
         $this->video->thumb = $this->request->thumb;
         $this->video->duration = $this->request->duration;

@@ -88,7 +88,7 @@
                                 <p class="card-text"><small class="text-muted">Antalet sekunder in i videon:</small></p>
                                 <input type="number" name="seconds"  min="1" max="{{$durationInSeconds}}">
                                 <input type="hidden" name="poster"  value="{{($loop->index+1)}}">
-                                <button type="submit" class="btn btn-primary btn-sm">Regenerera</button>
+                                <button type="submit"  class="btn btn-primary btn-sm">Regenerera</button>
                             </form>
                         </div>
                     </div>
@@ -102,7 +102,14 @@
     </div>
 
     <script>
-
+        $(document).ready(function() {
+            function remove_cache(url) {
+                return url.replace(/\?cache=\d*/, "") + "?cache=" + new Date().getTime().toString();
+            }
+            $("img, input[type=image]").each(function() {
+                this.src = remove_cache(this.src);
+            });
+        });
     </script>
 
 @endsection

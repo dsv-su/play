@@ -5,10 +5,10 @@ namespace App;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ManualPresentation extends Model
+class Presentation extends Model
 {
     use HasFactory;
-    protected $fillable = ['base','title','creation', 'presenters', 'courses', 'tags', 'thumb','permission', 'entitlement', 'sources'];
+    protected $fillable = ['presentation_id', 'local','base','title','creation', 'presenters', 'courses', 'tags', 'thumb','permission', 'entitlement', 'sources'];
 
     protected $casts = [
         'presenters' => 'array',
@@ -36,7 +36,4 @@ class ManualPresentation extends Model
     {
         $this->attributes['sources'] = json_encode($value);
     }
-
-
-
 }

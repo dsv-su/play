@@ -222,7 +222,7 @@ class ManualUploadController extends Controller
             $file->presenters = $presenters;
             $file->tags = $tags;
             $file->courses = $courses;
-            $file->thumb = $request->thumb; //TODO
+            $file->thumb = '/image/'.$request->thumb; //TODO
             $file->created = strtotime($request->created);
             $file->duration = $durationInSeconds;
             $file->sources = $files;

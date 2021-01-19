@@ -66,6 +66,17 @@ Route::middleware('entitlements')->group(function () {
     Route::get('/admin_permission/{id}', 'ManualUploadController@admin_permission')->name('admin_permission');
     Route::post('/admin_permission_store/{id}', 'ManualUploadController@admin_permission_store')->name('admin_permission_store');
 
+    //Manual download
+    Route::get('/download/{video}', 'ManualDownloadController@step1');
+    Route::get('/download_step2/{video}', 'ManualDownloadController@step2');
+    Route::get('/download_presentation/{video}', 'ManualDownloadController@download');
+    Route::get('/download_step3/{video}', 'ManualDownloadController@step3')->name('download_step3');
+    Route::post('/download_store/{video}', 'ManualDownloadController@store')->name('download_store');
+    Route::post('/gen_thumb_download/{id}', 'ManualDownloadController@gen_thumb_download')->name('gen_thumb_download');
+    Route::post('/gen_poster_download/{id}', 'ManualDownloadController@gen_poster_download')->name('gen_poster_download');
+    Route::get('/download_step4/{presentation}', 'ManualDownloadController@step4')->name('download_step4');
+    Route::get('/download_send/{presentation}', 'ManualDownloadController@send');
+
     //Testing routes
     Route::get('/php', 'TestController@php')->name('php');
     Route::get('/server', 'TestController@server')->name('server');
