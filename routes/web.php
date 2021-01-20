@@ -82,6 +82,7 @@ Route::middleware('entitlements')->group(function () {
     //Testing routes
     Route::get('/upload_destroy/{id}', 'AdminController@destroy_upload')->name('upload_delete');
     Route::get('/download_destroy/{id}', 'AdminController@destroy_download')->name('download_delete');
+    Route::get('/dev_destroy/{id}', 'AdminController@dev_destroy');
     Route::get('/php', 'TestController@php')->name('php');
     Route::get('/server', 'TestController@server')->name('server');
     Route::get('/daisy', 'TestController@daisy')->name('daisy');
