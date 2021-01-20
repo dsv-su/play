@@ -57,9 +57,10 @@ class TestController extends Controller
 
     public function daisy()
     {
-        $data['courses'] = Course::all()->sortBy('course');
+        dd(public_path().'/storage/');
+        /*$data['courses'] = Course::all()->sortBy('course');
         $data['categories'] = Category::all();
-        return view('home.courses', $data);
+        return view('home.courses', $data);*/
     }
 
     public function daisyLoadCourses()

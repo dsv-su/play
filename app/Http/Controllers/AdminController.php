@@ -160,4 +160,10 @@ class AdminController extends Controller
         $data['videos'] = Video::all();
         return view('manual.admin', $data);
     }
+
+    public function dev_destroy($id)
+    {
+        Storage::disk('public')->deleteDirectory('/download/'.$id);
+        return redirect()->route('home');
+    }
 }
