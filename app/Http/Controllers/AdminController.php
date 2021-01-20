@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ManualPresentation;
+use App\Presentation;
 use App\Video;
 use GuzzleHttp\Client;
 use Illuminate\Http\RedirectResponse;
@@ -14,7 +15,8 @@ class AdminController extends Controller
 {
     public function admin()
     {
-        $data['presentations'] = ManualPresentation::all();
+        $data['manual_presentations'] = ManualPresentation::all();
+        $data['presentations'] = Presentation::all();
         $data['videos'] = Video::all();
         return view('manual.admin', $data);
     }
@@ -137,7 +139,9 @@ class AdminController extends Controller
          */
         //Remove temp storage in dev
         Storage::disk('public')->deleteDirectory($id);
-        $data['presentations'] = ManualPresentation::all();
+        $data['manual_presentations'] = ManualPresentation::all();
+        $data['presentations'] = Presentation::all();
+        $data['videos'] = Video::all();
         return view('manual.admin', $data);
     }
 
@@ -148,8 +152,12 @@ class AdminController extends Controller
          * ->to be removed
          */
         //Remove temp storage in dev
-        Storage::disk('public')->deleteDirectory('/download/'.$id);
-        $data['presentations'] = ManualPresentation::all();
+        $presentation = Presentation::find($id);
+        Storage::disk('public')->deleteDirectory('/download/'.$presentation->presentation_id);
+        Presentation::destroy($id);
+        $data['manual_presentations'] = ManualPresentation::all();
+        $data['presentations'] = Presentation::all();
+        $data['videos'] = Video::all();
         return view('manual.admin', $data);
     }
 }
