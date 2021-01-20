@@ -85,7 +85,7 @@ Route::middleware('entitlements')->group(function () {
     Route::get('/dev_destroy/{id}', 'AdminController@dev_destroy');
     Route::get('/php', 'TestController@php')->name('php');
     Route::get('/server', 'TestController@server')->name('server');
-    Route::get('/daisy', 'TestController@daisy')->name('daisy');
+    Route::get('/daisy/{video}', 'TestController@daisy')->name('daisy');
     Route::get('/daisyload', 'TestController@daisyLoadCourses');
     Route::get('/token/{video}', 'TestController@token');
     Route::get('/decode/{token}', 'TestController@decode');

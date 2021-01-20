@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\URL;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 use Spatie\Searchable\ModelSearchAspect;
 use Spatie\Searchable\Search;
+use ZanySoft\Zip\Zip;
 
 class TestController extends Controller
 {
@@ -55,9 +56,19 @@ class TestController extends Controller
         return view('course.index', compact('results', 'categories', 'course', 'play_user'));
     }
 
-    public function daisy()
+    public function daisy(Video $video)
     {
-        dd(public_path().'/storage/');
+        //Create zip file of downloaded files and folders
+        $this->destination = public_path().'/storage/'.'download/'.$video->presentation_id.'/';
+        $this->zipFileName = $this->destination.$video->presentation_id.'.zip';
+        //Directory of unzipped files
+        $this->public_dir = public_path().'/storage/'.'download/'.$video->presentation_id.'/';
+
+        //Creates a zip file of the entire raw folder
+        $this->zip = Zip::create( $this->zipFileName);
+        $this->zip->add($this->public_dir, true); //Zip only contents of file
+        $this->zip->add($this->public_dir . $this->zipFileName);
+        $this->zip->close();
         /*$data['courses'] = Course::all()->sortBy('course');
         $data['categories'] = Category::all();
         return view('home.courses', $data);*/
