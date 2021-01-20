@@ -179,7 +179,8 @@ class ManualDownloadController extends Controller
                 //First validation
                 $this->validate($request, [
                     'title' => 'required',
-                    'created' => 'required'
+                    'created' => 'required',
+                    'validate' => 'required'
                 ]);
 
                 //Get existing files
@@ -232,23 +233,45 @@ class ManualDownloadController extends Controller
                 $media = FFMpeg::fromDisk('public')->open('/'.$dirname.'/video/media1.mp4');
                 $duration = $media->getDurationInSeconds();
 
-                //Store in model
-                $presentation = new Presentation();
-                $presentation->presentation_id = $video->presentation_id;
-                $presentation->status = 'update';
-                $presentation->local = $dirname;
-                $presentation->base = '/data0/incoming/' . $video->presentation_id;
-                $presentation->title = $request->title;
-                $presentation->presenters = $presenters;
-                $presentation->tags = $tags;
-                $presentation->courses = $courses;
-                $presentation->thumb =  '/image/'.$video->thumb;
-                $presentation->created = strtotime($request->created);
-                $presentation->duration = $duration;
-                $presentation->sources = $files; //json_decode($video->sources, true);
-                $presentation->permission = $request->permission;
-                $presentation->entitlement = $request->entitlement ?? $default_entitlement;
-                $id = $presentation->save();
+                //Check if presentation exist
+                if(!$presentation = Presentation::where('presentation_id', $presentation->presentation_id ?? $video->presentation_id)->first()) {
+                    //Store in model
+                    $presentation = new Presentation();
+                    $presentation->presentation_id = $video->presentation_id;
+                    $presentation->status = 'update';
+                    $presentation->local = $dirname;
+                    $presentation->base = '/data0/incoming/' . $video->presentation_id;
+                    $presentation->title = $request->title;
+                    $presentation->presenters = $presenters;
+                    $presentation->tags = $tags;
+                    $presentation->courses = $courses;
+                    $presentation->thumb =  '/image/'.$video->thumb;
+                    $presentation->created = strtotime($request->created);
+                    $presentation->duration = $duration;
+                    $presentation->sources = $files; //json_decode($video->sources, true);
+                    $presentation->permission = $request->permission;
+                    $presentation->entitlement = $request->entitlement ?? $default_entitlement;
+                    $id = $presentation->save();
+                }
+                else {
+                    //Update Presentation
+                    $presentation->presentation_id = $video->presentation_id;
+                    $presentation->status = 'update';
+                    $presentation->local = $dirname;
+                    $presentation->base = '/data0/incoming/' . $video->presentation_id;
+                    $presentation->title = $request->title;
+                    $presentation->presenters = $presenters;
+                    $presentation->tags = $tags;
+                    $presentation->courses = $courses;
+                    $presentation->thumb =  '/image/'.$video->thumb;
+                    $presentation->created = strtotime($request->created);
+                    $presentation->duration = $duration;
+                    $presentation->sources = $files; //json_decode($video->sources, true);
+                    $presentation->permission = $request->permission;
+                    $presentation->entitlement = $request->entitlement ?? $default_entitlement;
+                    $id = $presentation->save();
+                }
+
             }
             //Get downloaded files names
             $data['files'] = $downloaded_files;
@@ -262,7 +285,8 @@ class ManualDownloadController extends Controller
                     'title' => 'required',
                     'created' => 'required',
                     'filenames' => 'required',
-                    'filenames.*' => 'required'
+                    'filenames.*' => 'required',
+                    'validate' => 'required'
                 ]);
 
                 //Remove old files
@@ -328,23 +352,45 @@ class ManualDownloadController extends Controller
                 //Generate default thumb and posters
                 $thumb = $this->gen_default_thumb_posters($video, $duration/3);
 
-                //Store in model
-                $presentation = new Presentation();
-                $presentation->presentation_id = $video->presentation_id;
-                $presentation->status = 'newmedia';
-                $presentation->local = $dirname;
-                $presentation->base = '/data0/incoming/'.$video->presentation_id;
-                $presentation->title = $request->title;
-                $presentation->presenters = $presenters;
-                $presentation->tags = $tags;
-                $presentation->courses = $courses;
-                $presentation->thumb = '/image/'.$thumb;
-                $presentation->created = strtotime($request->created);
-                $presentation->duration = $duration;
-                $presentation->sources = $files;
-                $presentation->permission = $request->permission;
-                $presentation->entitlement = $request->entitlement ?? $default_entitlement;
-                $id = $presentation->save();
+                //Check if presentation exist
+                if(!$presentation = Presentation::where('presentation_id', $presentation->presentation_id ?? $video->presentation_id)->first()) {
+                    //Store in model
+                    $presentation = new Presentation();
+                    $presentation->presentation_id = $video->presentation_id;
+                    $presentation->status = 'newmedia';
+                    $presentation->local = $dirname;
+                    $presentation->base = '/data0/incoming/'.$video->presentation_id;
+                    $presentation->title = $request->title;
+                    $presentation->presenters = $presenters;
+                    $presentation->tags = $tags;
+                    $presentation->courses = $courses;
+                    $presentation->thumb = '/image/'.$thumb;
+                    $presentation->created = strtotime($request->created);
+                    $presentation->duration = $duration;
+                    $presentation->sources = $files;
+                    $presentation->permission = $request->permission;
+                    $presentation->entitlement = $request->entitlement ?? $default_entitlement;
+                    $id = $presentation->save();
+                }
+                else {
+                    //Update Presentation
+                    $presentation->presentation_id = $video->presentation_id;
+                    $presentation->status = 'newmedia';
+                    $presentation->local = $dirname;
+                    $presentation->base = '/data0/incoming/'.$video->presentation_id;
+                    $presentation->title = $request->title;
+                    $presentation->presenters = $presenters;
+                    $presentation->tags = $tags;
+                    $presentation->courses = $courses;
+                    $presentation->thumb = '/image/'.$thumb;
+                    $presentation->created = strtotime($request->created);
+                    $presentation->duration = $duration;
+                    $presentation->sources = $files;
+                    $presentation->permission = $request->permission;
+                    $presentation->entitlement = $request->entitlement ?? $default_entitlement;
+                    $id = $presentation->save();
+                }
+
                 //Variables for view
                 $data['thumb'] = null;
                 $data['files'] = $files;

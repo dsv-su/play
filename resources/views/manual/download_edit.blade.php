@@ -135,7 +135,7 @@
                 </div>
 
             </div>
-            <button type="submit" class="btn btn-primary btn-lg float-right">Nästa <i class="fas fa-forward"></i></button>
+            <button id="next" type="submit" class="btn btn-primary btn-lg float-right">Nästa <i class="fas fa-forward"></i></button>
         </form>
     </div>
     <!-- Modal for max upload-->
@@ -227,15 +227,20 @@
                 var y = document.getElementById("new_media");
                 if (x.style.display === "block") {
                     x.style.display = "none";
+                    $("#next").hide();
                 } else {
                     x.style.display = "block";
                     var html ='<input type="hidden" name="media" value="existing_media">';
+                    html += '<input type="hidden" name="validate" value="true">';
                     $('#existing_media_table').append(html);
+                    $("#next").show();
                 }
                 if (y.style.display === "block") {
                     y.style.display = "none";
                     var html ='<input type="hidden" name="media" value="existing_media">';
+                    html += '<input type="hidden" name="validate" value="true">';
                     $('#media_table').append(html);
+                    $("#next").show();
                 }
             });
             $(document).on('click', '#newMedia', function(){
@@ -243,22 +248,27 @@
                 var y = document.getElementById("existing_media");
                 if (x.style.display === "block") {
                     x.style.display = "none";
+                    $("#next").hide();
                 } else {
                     x.style.display = "block";
                     var html ='<input type="hidden" name="media" value="new_media">';
+                    html += '<input type="hidden" name="validate" value="true">';
                     $('#media_table').append(html);
+                    $("#next").show();
                 }
                 if (y.style.display === "block") {
                     y.style.display = "none";
                     var html ='<input type="hidden" name="media" value="new_media">';
+                    html += '<input type="hidden" name="validate" value="true">';
                     $('#existing_media_table').append(html);
+                    $("#next").show();
                 }
             });
             $(document).on('click', '.mediaremove', function(){
                 count--;
                 $(this).closest('tr').remove();
             });
-
+            $("#next").hide();
         });
     </script>
 @endsection
