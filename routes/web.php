@@ -59,13 +59,14 @@ Route::middleware('entitlements')->group(function () {
     Route::get('/manual_step3_store/{id}', 'ManualUploadController@step3')->name('manual_step3');
     Route::post('/manual_store', 'ManualUploadController@store')->name('manual_store');
     Route::get('/manual_send/{id}', 'ManualUploadController@send');
-    Route::get('/manual_admin', 'ManualUploadController@admin')->name('manual_admin');
-    Route::get('/manual_admin_erase/{id}', 'ManualUploadController@admin_erase')->name('manual_admin_erase');
-    Route::get('/manual_admin_notify/{id}', 'ManualUploadController@admin_notify')->name('manual_admin_notify');
-    Route::get('/manual_admin_unregister/{id}', 'ManualUploadController@admin_unregister')->name('manual_admin_unregister');
-    Route::get('/dev_destroy/{id}', 'ManualUploadController@destroy');
-    Route::get('/admin_permission/{id}', 'ManualUploadController@admin_permission')->name('admin_permission');
-    Route::post('/admin_permission_store/{id}', 'ManualUploadController@admin_permission_store')->name('admin_permission_store');
+
+    //Admin upload/download
+    Route::get('/manual_admin', 'AdminController@admin')->name('manual_admin');
+    Route::get('/manual_admin_erase/{id}', 'AdminController@admin_erase')->name('manual_admin_erase');
+    Route::get('/manual_admin_notify/{id}', 'AdminController@admin_notify')->name('manual_admin_notify');
+    Route::get('/manual_admin_unregister/{id}', 'AdminController@admin_unregister')->name('manual_admin_unregister');
+    Route::get('/admin_permission/{id}', 'AdminController@admin_permission')->name('admin_permission');
+    Route::post('/admin_permission_store/{id}', 'AdminController@admin_permission_store')->name('admin_permission_store');
 
     //Manual download
     Route::get('/download/{video}', 'ManualDownloadController@step1')->name('download');
@@ -79,6 +80,7 @@ Route::middleware('entitlements')->group(function () {
     Route::get('/download_send/{presentation}', 'ManualDownloadController@send');
 
     //Testing routes
+    Route::get('/dev_destroy/{id}', 'AdminController@destroy_upload');
     Route::get('/php', 'TestController@php')->name('php');
     Route::get('/server', 'TestController@server')->name('server');
     Route::get('/daisy', 'TestController@daisy')->name('daisy');
