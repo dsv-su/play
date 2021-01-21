@@ -117,6 +117,7 @@ class ManualDownloadController extends Controller
 
     public function step4(Presentation $presentation)
     {
+
         // Make remote folders and send all files
         //Send video files
         $directory = $this->download_dir.'/'.$presentation->presentation_id.'/video';

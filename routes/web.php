@@ -77,7 +77,7 @@ Route::middleware('entitlements')->group(function () {
     Route::post('/gen_thumb_download/{id}', 'ManualDownloadController@gen_thumb_download')->name('gen_thumb_download');
     Route::post('/gen_poster_download/{id}', 'ManualDownloadController@gen_poster_download')->name('gen_poster_download');
     Route::get('/download_step4/{presentation}', 'ManualDownloadController@step4')->name('download_step4');
-    Route::get('/download_send/{presentation}', 'ManualDownloadController@send');
+    Route::get('/download_send/{id}', 'ManualDownloadController@send');
 
     //Testing routes
     Route::get('/upload_destroy/{id}', 'AdminController@destroy_upload')->name('upload_delete');
