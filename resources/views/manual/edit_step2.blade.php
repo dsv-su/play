@@ -84,7 +84,7 @@
                 @endforeach
             </div>
             <br>
-            <a href="{{route('download_step4', $id)}}" role="button" class="btn btn-primary btn-lg float-right">Nästa <i class="fas fa-forward"></i></a>
+            <a href="{{route('download_step4', $pid)}}" role="button" class="btn btn-primary btn-lg float-right">Nästa <i class="fas fa-forward"></i></a>
         @endif
 
     </div>

@@ -28,7 +28,7 @@
                             <td>{{$presentation->title}}</td>
                             @if($presentation->status == 'failed' or $presentation->status == 'stored')
                                 <td><a role="button" class="btn btn-danger btn-sm" href="{{route('download_delete', $presentation->id)}}">Erase</a></td>
-                            @elseif($presentation->status == 'update')
+                            @elseif($presentation->status == 'update' or $presentation->status == 'newmedia')
                                 <td><a role="button" class="btn btn-warning btn-sm" href="{{route('download_delete', $presentation->id)}}">Erase</a></td>
                             @elseif($presentation->status == 'sent')
                                 <td><a role="button" class="btn btn-primary btn-sm" href="#">Unregister</a></td>

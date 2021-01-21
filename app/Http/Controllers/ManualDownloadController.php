@@ -251,7 +251,8 @@ class ManualDownloadController extends Controller
                     $presentation->sources = $files; //json_decode($video->sources, true);
                     $presentation->permission = $request->permission;
                     $presentation->entitlement = $request->entitlement ?? $default_entitlement;
-                    $id = $presentation->save();
+                    $presentation->save();
+                    $data['pid'] = $presentation->id;
                 }
                 else {
                     //Update Presentation
@@ -269,12 +270,14 @@ class ManualDownloadController extends Controller
                     $presentation->sources = $files; //json_decode($video->sources, true);
                     $presentation->permission = $request->permission;
                     $presentation->entitlement = $request->entitlement ?? $default_entitlement;
-                    $id = $presentation->save();
+                    $presentation->save();
+                    $data['pid'] = $presentation->id;
                 }
 
             }
             //Get downloaded files names
             $data['files'] = $downloaded_files;
+
         }
         //New media
         elseif ($request->media == 'new_media'){
@@ -370,7 +373,8 @@ class ManualDownloadController extends Controller
                     $presentation->sources = $files;
                     $presentation->permission = $request->permission;
                     $presentation->entitlement = $request->entitlement ?? $default_entitlement;
-                    $id = $presentation->save();
+                    $presentation->save();
+                    $data['pid'] = $presentation->id;
                 }
                 else {
                     //Update Presentation
@@ -388,9 +392,10 @@ class ManualDownloadController extends Controller
                     $presentation->sources = $files;
                     $presentation->permission = $request->permission;
                     $presentation->entitlement = $request->entitlement ?? $default_entitlement;
-                    $id = $presentation->save();
+                    $presentation->save();
+                    $data['pid'] = $presentation->id;
                 }
-
+                //New media
                 //Variables for view
                 $data['thumb'] = null;
                 $data['files'] = $files;
@@ -399,7 +404,7 @@ class ManualDownloadController extends Controller
                 return view('manual.edit_step2', $presentation, $data);
             }
         }
-
+        //Existing media
         $data['media'] = $request->media;
 
         return view('manual.edit_step2', $video, $data);
