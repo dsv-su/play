@@ -43,6 +43,8 @@ class AdminController extends Controller
             ->makeHidden('tags')
             ->makeHidden('thumbs')
             ->makeHidden('sources')
+            ->makeHidden('permission')
+            ->makeHidden('entitlement')
             ->makeHidden('created_at')->makeHidden('updated_at');
         //Make json wrapper
         $json = Collection::make([
@@ -101,7 +103,7 @@ class AdminController extends Controller
 
     public function admin_download_notify_resend($id)
     {
-        $video = ManualPresentation::find($id);
+        $video = Presentation::find($id);
         $video->makeHidden('status')
             ->makeHidden('local')
             ->makeHidden('base')
@@ -113,11 +115,13 @@ class AdminController extends Controller
             ->makeHidden('tags')
             ->makeHidden('thumbs')
             ->makeHidden('sources')
+            ->makeHidden('permission')
+            ->makeHidden('entitlement')
             ->makeHidden('created_at')->makeHidden('updated_at');
         //Make json wrapper
         $json = Collection::make([
-            'status' => 'failure',
-            'type' => 'manual'
+            'status' => 'success',
+            'type' => 'update'
         ]);
         $json['package'] = Collection::make([
             'message' => $video->status,
