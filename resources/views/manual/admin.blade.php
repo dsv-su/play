@@ -28,10 +28,12 @@
                             <td>{{$presentation->title}}</td>
                             @if($presentation->status == 'failed' or $presentation->status == 'stored')
                                 <td><a role="button" class="btn btn-danger btn-sm" href="{{route('download_delete', $presentation->id)}}">Erase</a></td>
+                                <td><a role="button" class="btn btn-danger btn-sm" href="{{route('admin_download_notify_resend', $presentation->id)}}">Resend Notify</a></td>
                             @elseif($presentation->status == 'update' or $presentation->status == 'newmedia')
                                 <td><a role="button" class="btn btn-warning btn-sm" href="{{route('download_delete', $presentation->id)}}">Erase</a></td>
                             @elseif($presentation->status == 'sent')
                                 <td><a role="button" class="btn btn-primary btn-sm" href="#">Unregister</a></td>
+                                <td><a role="button" class="btn btn-warning btn-sm" href="{{route('admin_download_notify_resend', $presentation->id)}}">Resend Notify</a></td>
                             @endif
                         </tr>
                     </tbody>
@@ -72,7 +74,7 @@
                                 @endif
                             @endforeach
                             @if($manual_presentation->status == 'failed' or $manual_presentation->status == 'stored')
-                                <td><a role="button" class="btn btn-danger btn-sm" href="{{route('manual_admin_notify', $manual_presentation->id)}}">Notify</a></td>
+                                <td><a role="button" class="btn btn-danger btn-sm" href="{{route('manual_admin_notify_fail', $manual_presentation->id)}}">Notify fail</a></td>
                             @elseif($manual_presentation->status == 'pending')
                                 <td><a role="button" class="btn btn-warning btn-sm" href="{{route('manual_admin_erase', $manual_presentation->id)}}">Erase</a></td>
                             @elseif($manual_presentation->status == 'notified')

@@ -29,7 +29,77 @@ class AdminController extends Controller
         return back()->withInput();
     }
 
-    public function admin_notify($id)
+    public function admin_upload_notify_fail($id)
+    {
+        $video = ManualPresentation::find($id);
+        $video->makeHidden('status')
+            ->makeHidden('local')
+            ->makeHidden('base')
+            ->makeHidden('title')
+            ->makeHidden('presenters')
+            ->makeHidden('created')
+            ->makeHidden('duration')
+            ->makeHidden('courses')
+            ->makeHidden('tags')
+            ->makeHidden('thumbs')
+            ->makeHidden('sources')
+            ->makeHidden('created_at')->makeHidden('updated_at');
+        //Make json wrapper
+        $json = Collection::make([
+            'status' => 'failure',
+            'type' => 'manual'
+        ]);
+        $json['package'] = Collection::make([
+            'message' => $video->status,
+            'base' => $video->base
+        ]);
+
+        $json = $json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
+        //Print body (for testing)
+        //return $json;
+        /******************************************************************************/
+
+        $client = new Client(['base_uri' => $this->uri()]);
+        $headers = [
+            //'Authorization' => 'Bearer ' . $this->token(),
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+        ];
+        try {
+            $response = $client->request('POST', $this->uri(), [
+                'headers' => $headers,
+                'body' => $json
+            ]);
+        } catch (Exception $e) {
+            /**
+             * If there is an exception; Client error;
+             */
+            if ($e->hasResponse()) {
+                //return $response = $e->getResponse()->getStatusCode();
+                //Change manualupdate status
+                $video->status = 'failed';
+                $video->save();
+                return $response = $e->getResponse()->getBody();
+            }
+        }
+
+        if ($response->getBody() == 'OK') {
+            //Change manualupdate status
+            $video->status = 'notified';
+            $video->save();
+            return back()->withInput();
+        } else {
+            //Change manualupdate status
+            $video->status = 'failed';
+            $video->save();
+            return $response->getBody();
+        }
+
+        return back()->withInput();
+    }
+
+    public function admin_download_notify_resend($id)
     {
         $video = ManualPresentation::find($id);
         $video->makeHidden('status')

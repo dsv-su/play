@@ -505,10 +505,13 @@ class ManualDownloadController extends Controller
         if($request->media == 'new_media') {
             $video = Presentation::find($id);
             $data['media'] = 'new_media';
+            $data['pid'] = $video->id;
         }
         else {
             $video = Video::find($id);
             $data['media'] = 'existing_media';
+            $presentation = Presentation::where('presentation_id', $video->presentation_id)->first();
+            $data['pid'] = $presentation->id;
         }
 
         $data['files'] = $this->getDownloadedVideoFiles($video->presentation_id);
@@ -531,10 +534,13 @@ class ManualDownloadController extends Controller
         if($request->media == 'new_media') {
             $video = Presentation::find($id);
             $data['media'] = 'new_media';
+            $data['pid'] = $video->id;
         }
         else {
             $video = Video::find($id);
             $data['media'] = 'existing_media';
+            $presentation = Presentation::where('presentation_id', $video->presentation_id)->first();
+            $data['pid'] = $presentation->id;
         }
 
         $data['files'] = $this->getDownloadedVideoFiles($video->presentation_id);

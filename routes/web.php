@@ -63,10 +63,11 @@ Route::middleware('entitlements')->group(function () {
     //Admin upload/download
     Route::get('/manual_admin', 'AdminController@admin')->name('manual_admin');
     Route::get('/manual_admin_erase/{id}', 'AdminController@admin_erase')->name('manual_admin_erase');
-    Route::get('/manual_admin_notify/{id}', 'AdminController@admin_notify')->name('manual_admin_notify');
+    Route::get('/manual_admin_notify/{id}', 'AdminController@admin_upload_notify_fail')->name('manual_admin_notify_fail');
     Route::get('/manual_admin_unregister/{id}', 'AdminController@admin_unregister')->name('manual_admin_unregister');
     Route::get('/admin_permission/{id}', 'AdminController@admin_permission')->name('admin_permission');
     Route::post('/admin_permission_store/{id}', 'AdminController@admin_permission_store')->name('admin_permission_store');
+    Route::get('/admin_download_notify_resend/{id}', 'AdminController@admin_download_notify_resend')->name('admin_download_notify_resend');
 
     //Manual download
     Route::get('/download/{video}', 'ManualDownloadController@step1')->name('download');
