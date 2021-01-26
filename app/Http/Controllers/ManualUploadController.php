@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\ManualPresentation;
-use App\Presentation;
 use App\Video;
 use Carbon\Carbon;
 use Exception;

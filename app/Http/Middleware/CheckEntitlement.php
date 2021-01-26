@@ -6,6 +6,7 @@ use App\Services\AuthHandler;
 use Closure;
 use Illuminate\Http\Request;
 
+
 class CheckEntitlement
 {
     /**
@@ -30,7 +31,7 @@ class CheckEntitlement
             if($system->global->app_env == 'local') {
                 return $next($request);
             } else {
-                return redirect($system->global->login_route);
+                return redirect()->guest(route('sulogin'));
             }
         }
         else

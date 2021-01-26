@@ -14,9 +14,12 @@ use Illuminate\Support\Facades\Route;
 
 if (class_exists(AuthHandler::class))
     $login = app()->make('SystemService')->authorize()->global->login_route;
-//Endpoint
-Route::get($login, 'SystemController@login')->name('login');
 
+// SU idp Endpoints
+Route::get('/sulogin', 'SystemController@SUlogin')->name('sulogin');
+Route::get($login, 'SystemController@SUidpReturn')->name('login');
+
+//Protected routes
 Route::middleware('entitlements')->group(function () {
     Route::get('/', 'PlayController@index')->name('home');
     Route::get('/manage', 'PlayController@manage')->name('manage');
