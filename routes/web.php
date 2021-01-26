@@ -20,7 +20,7 @@ Route::get('/sulogin', 'SystemController@SUlogin')->name('sulogin');
 Route::get($login, 'SystemController@SUidpReturn')->name('login');
 
 //Protected routes
-Route::middleware('entitlements')->group(function () {
+Route::middleware('entitlements', 'playauth')->group(function () {
     Route::get('/', 'PlayController@index')->name('home');
     Route::get('/manage', 'PlayController@manage')->name('manage');
     Route::get('/mediasite', 'PlayController@mediasite')->name('mediasite');

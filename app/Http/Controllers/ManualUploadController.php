@@ -27,16 +27,7 @@ class ManualUploadController extends Controller
      */
     public function index()
     {
-        // If the environment is local
-        if (app()->environment('local')) {
-            $data['play_user'] = 'Developer';
-            $data['presenter'] = 'rydi5898';
-        } else {
-            $data['play_user'] = $_SERVER['displayName'];
-            $data['presenter'] = $_SERVER['eppn'];
-        }
-
-        return view('manual.index', $data);
+        return view('manual.index');
     }
 
 

@@ -46,8 +46,8 @@
                     </div>
                     <br>
                     <h4 class="title">Presentatör</h4>
-                    <p><small><strong>{{$play_user ?? 'Not logged in'}} ({{$presenter}})</strong></small></p>
-                    <input type="hidden" name="presenters[]" value="{{$presenter}}">
+                    <p><small><strong>{{app()->make('play_user')}} ({{app()->make('presenter')}})</strong></small></p>
+                    <input type="hidden" name="presenters[]" value="{{app()->make('presenter')}}">
                     <p>
                         Ange eventuellt ytterligare presentatörer.
                     </p>

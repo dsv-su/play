@@ -41,13 +41,6 @@ class PlayController extends Controller
         //Initiate system
         app()->make('init')->check_system();
 
-        // If the environment is local
-        if (app()->environment('local')) {
-            $data['play_user'] = 'Developer';
-        } else {
-            $data['play_user'] = $_SERVER['displayName'];
-        }
-
         $data['courses'] = $this->getActiveCourses();
         $data['hasmycourses'] = ($this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'psoko@su.se')->count() > 0);
         $data['search'] = 0;

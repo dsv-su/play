@@ -81,7 +81,7 @@
                 </li>
             </ul>
             <div class="align-middle ml-auto my-auto">
-                {{$play_user ?? 'Not logged in'}}
+                {{app()->make('play_user')}}
             </div>
         </nav>
 

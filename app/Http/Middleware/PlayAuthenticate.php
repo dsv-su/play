@@ -19,13 +19,22 @@ class PlayAuthenticate
     {
         $system = new AuthHandler();
         $system = $system->authorize();
-        if(!$system->global->app_env == 'local') {
-            if($request->server('REMOTE_USER')) {
-                return $next($request);
-            }
-            return redirect($system->global->login_route);
+        if($system->global->app_env == 'local') {
+            app()->bind('play_user', function() {
+                return 'Developer';
+            });
+            app()->bind('presenter', function() {
+                return 'dsv-dev@su.se';
+            });
+            return $next($request);
         }
         else {
+            app()->bind('play_user', function() {
+                return $_SERVER['displayName'];
+            });
+            app()->bind('presenter', function() {
+                return $_SERVER['eppn'];
+            });
             return $next($request);
         }
 
