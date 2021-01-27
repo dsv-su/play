@@ -15,7 +15,6 @@ class CreatePresentationsTable extends Migration
     {
         Schema::create('presentations', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('presentation_id');
             $table->string('status');
             $table->string('local');
             $table->string('base');

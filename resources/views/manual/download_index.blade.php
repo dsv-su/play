@@ -2,7 +2,7 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <h2>Nerladdning av presentation id: {{$presentation_id}}</h2>
+            <h2>Nerladdning av presentation id: {{$id}}</h2>
             <br>
         </div>
         <br>

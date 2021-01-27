@@ -18,7 +18,7 @@ class CreateVideosTable extends Migration
             $table->string('origin')->nullable();
             $table->string('notification_id')->nullable();
             $table->string('creation')->nullable();
-            $table->string('presentation_id')->nullable();
+            //$table->string('presentation_id')->nullable();
             $table->string('title');
             $table->string('thumb')->nullable();
             $table->time('duration', 0)->nullable();
