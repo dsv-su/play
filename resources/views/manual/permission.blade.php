@@ -14,7 +14,7 @@
                     <h5 class="card-title">Titel: {{$title}}</h5>
                     <form method="post" action="{{route('admin_permission_store', $id)}}">
                         @csrf
-                        <p class="card-text"><small class="text-muted">VideoID: {{$id}}, PresentationId: {{$presentation_id}}</small></p>
+                        <p class="card-text"><small class="text-muted">VideoID: {{$id}}, PresentationId: {{$id}}</small></p>
                         <p class="card-text">Längd: {{ $duration }} sek.</p>
                         <p class="card-text"><small class="text-muted">Entitlement:</small></p>
                         <select name="permission" class="form-control">
