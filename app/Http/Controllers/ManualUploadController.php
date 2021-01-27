@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\ManualPresentation;
-use App\Video;
 use Carbon\Carbon;
 use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
@@ -147,19 +145,6 @@ class ManualUploadController extends Controller
         $presentation->thumb = '/image/primary_thumb' . $id . '.png';
         $presentation->save();
         $durationInSeconds = $presentation->duration;
-    /*
-        //Create posters
-        $poster = 1;
-        foreach ($presentation->sources as $source) {
-            FFMpeg::fromDisk('public')
-                ->open('/' . $presentation->local . '/video/media' . $poster . '.mp4')
-                ->getFrameFromSeconds($request->seconds)
-                ->export()
-                ->toDisk('public')
-                ->save('/' . $presentation->local . '/image/poster_' . $poster . '.png');
-            $poster++;
-        }
-    */
 
         return view('manual.step1', $presentation, compact('durationInSeconds'));
     }
@@ -310,7 +295,7 @@ class ManualUploadController extends Controller
         $json = $json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
         //Print body (for testing)
-        return $json;
+        //return $json;
         /******************************************************************************/
 
         $client = new Client(['base_uri' => $this->uri()]);

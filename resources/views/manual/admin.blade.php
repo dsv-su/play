@@ -8,9 +8,9 @@
             <table class="table table-bordered">
                 <thead>
                 <tr>
+                    <th scope="col">Status</th>
                     <th scope="col">Id</th>
                     <th scope="col">Updated</th>
-                    <th scope="col">Status</th>
                     <th scope="col">Title</th>
                     <th scope="col">Action</th>
                 </tr>
@@ -22,9 +22,9 @@
                     @elseif($presentation->status == 'failed' or $presentation->status == 'stored')
                         <tr class="table-danger">
                             @endif
-                            <td>{{$presentation->presentation_id}}</td>
-                            <td>{{$presentation->updated_at}}</td>
                             <td>{{$presentation->status}}</td>
+                            <td>{{$presentation->id}}</td>
+                            <td>{{$presentation->updated_at}}</td>
                             <td>{{$presentation->title}}</td>
                             @if($presentation->status == 'failed' or $presentation->status == 'stored')
                                 <td><a role="button" class="btn btn-danger btn-sm" href="{{route('download_delete', $presentation->id)}}">Erase</a></td>
@@ -49,8 +49,10 @@
             <table class="table table-bordered">
                 <thead>
                 <tr>
-                    <th scope="col">Created</th>
                     <th scope="col">Status</th>
+                    <th scope="col">Id</th>
+                    <th scope="col">Created</th>
+
                     <th scope="col">Title</th>
                     <th scope="col">Local</th>
                     <th scope="col">Uploader</th>
@@ -64,8 +66,9 @@
                     @elseif($manual_presentation->status == 'failed' or $manual_presentation->status == 'stored')
                         <tr class="table-danger">
                     @endif
-                            <td>{{$manual_presentation->created_at}}</td>
                             <td>{{$manual_presentation->status}}</td>
+                            <td>{{$manual_presentation->id}}</td>
+                            <td>{{$manual_presentation->created_at}}</td>
                             <td>{{$manual_presentation->title}}</td>
                             <td>{{$manual_presentation->local}}</td>
                             @foreach($manual_presentation->presenters as $uploader)
@@ -96,7 +99,7 @@
             <table class="table table-bordered">
                 <thead>
                 <tr>
-                    <th scope="col">Presentation</th>
+                    <th scope="col">PresentationId</th>
                     <th scope="col">Title</th>
                     <th scope="col">Duration</th>
                     <th scope="col">Permission</th>
@@ -110,7 +113,7 @@
                         @else
                         <tr>
                     @endif
-                            <td>{{$video->presentation_id}}</td>
+                            <td>{{$video->id}}</td>
                             <td>{{$video->title}}</td>
                             <td>{{$video->duration}}</td>
                             @if($video->permission == 'true')

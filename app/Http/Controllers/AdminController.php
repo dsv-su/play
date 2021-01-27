@@ -227,7 +227,7 @@ class AdminController extends Controller
          */
         //Remove temp storage in dev
         $presentation = Presentation::find($id);
-        Storage::disk('public')->deleteDirectory('/download/'.$presentation->presentation_id);
+        Storage::disk('public')->deleteDirectory($presentation->local); //If it not already has been deleted
         Presentation::destroy($id);
         $data['manual_presentations'] = ManualPresentation::all();
         $data['presentations'] = Presentation::all();
@@ -237,7 +237,11 @@ class AdminController extends Controller
 
     public function dev_destroy($id)
     {
-        Storage::disk('public')->deleteDirectory('/download/'.$id);
+        /************************
+         * Dev testing
+         * ->to be removed
+         */
+        Storage::disk('public')->deleteDirectory($id);
         return redirect()->route('home');
     }
 }

@@ -77,7 +77,7 @@ return [
             'host' => $system_config['sftp']['host'],
             'username' => $system_config['sftp']['username'],
             'password' => $system_config['sftp']['password'],
-             */
+            */
             //Play-store server setting
             'host' => $system_config['sftp']['host'],
             'username' => $system_config['sftp']['username'],
