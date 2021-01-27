@@ -123,11 +123,13 @@ class AdminController extends Controller
             'status' => 'success',
             'type' => 'update'
         ]);
+        /*
         $json['package'] = Collection::make([
             'message' => $video->status,
             'base' => $video->base
         ]);
-
+        */
+        $json['package'] = $video;
         $json = $json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
         //Print body (for testing)
