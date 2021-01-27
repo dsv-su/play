@@ -310,7 +310,7 @@ class ManualUploadController extends Controller
         $json = $json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
         //Print body (for testing)
-        //return $json;
+        return $json;
         /******************************************************************************/
 
         $client = new Client(['base_uri' => $this->uri()]);

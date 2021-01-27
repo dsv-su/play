@@ -15,7 +15,8 @@ class CreateVideoCoursesTable extends Migration
     {
         Schema::create('video_courses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('video_id')->constrained();
+            $table->uuid('video_id');
+            $table->foreign('video_id')->references('id')->on('videos');
             $table->foreignId('course_id')->constrained();
             $table->timestamps();
         });

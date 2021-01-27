@@ -28,18 +28,47 @@ class ManualDownloadController extends Controller
 
     protected $directory, $contents, $file;
     protected $video_name;
-    protected $download_dir, $store_server;
+    protected  $download_dir;
+    protected $store_server;
     private $download;
 
     public function __construct()
     {
-        $this->download_dir = 'download';
         $this->store_server = 'https://play-store.dsv.su.se/presentation/';
+    }
+    public function initDownload(Video $video)
+    {
+        $download_dir = $this->setDownloaddir();
+        $presentation = new Presentation();
+        $presentation->id = $video->presentation_id;
+        $presentation->presentation_id = $video->presentation_id;
+        $presentation->status = 'request download';
+        $presentation->local = $download_dir;
+        $presentation->base = '/data0/incoming/' . $download_dir;
+        $presentation->title = $video->title;
+        $presentation->presenters = '[]';
+        $presentation->tags = '[]';
+        $presentation->courses = '[]';
+        $presentation->thumb =  '/image/'.$video->thumb;
+        $presentation->created = $video->creation;
+        $presentation->duration = $video->duration;
+        $presentation->sources = $video->files;
+        $presentation->permission = $video->permission;
+        $presentation->entitlement = $video->entitlement;
+        $presentation->save();
+
+        return true;
+    }
+    private function setDownloaddir()
+    {
+        return Carbon::now()->toDateString('Y-m-d') . '_' . rand(1, 999);
     }
 
     public function step1(Video $video)
     {
-        if($this->checkDownload($video)) {
+        $this->initDownload($video);
+
+        if($this->checkDownload()) {
             return redirect('/')->with('status', 'Presentationen har redan laddats ner och finns tillgänglig under "Hantera uppspelning"!');
         } else {
             return view('manual.download_index', $video);
@@ -49,7 +78,9 @@ class ManualDownloadController extends Controller
 
     public function step2(Video $video)
     {
-        $path = $this->download_dir.'/'.$video->presentation_id.'/';
+        $presentation = Presentation::latest()->first();
+        $path = $presentation->local.'/';
+
         if (Storage::disk('public')->exists($path.$video->presentation_id.'.zip')) {
             return Storage::disk('public')->download($path.$video->presentation_id.'.zip');
         }
@@ -60,10 +91,11 @@ class ManualDownloadController extends Controller
 
     public function download(Video $video)
     {
+        $presentation = Presentation::latest()->first();
         //Download directories to use
-        $dir_thumb = $this->download_dir.'/'.$video->presentation_id.'/image/';
-        $dir_video = $this->download_dir.'/'.$video->presentation_id.'/video/';
-        $dir_poster = $this->download_dir.'/'.$video->presentation_id.'/poster/';
+        $dir_thumb = $presentation->local.'/'.'/image/';
+        $dir_video = $presentation->local.'/'.'/video/';
+        $dir_poster = $presentation->local.'/'.'/poster/';
 
         //Download Files
 
@@ -84,23 +116,14 @@ class ManualDownloadController extends Controller
         }
 
         //Make zipfolder of presentation
-        $file = new DownloadZip($video, $this->download_dir.'/'.$video->presentation_id);
+        $file = new DownloadZip($video, $presentation->local);
         $file->makezip();
 
     }
 
     public function step3(Video $video)
     {
-        /* --> */
-        // If the environment is local
-        if (app()->environment('local')) {
-            $data['play_user'] = 'Developer';
-            $data['presenter'] = 'rydi5898';
-        } else {
-            $data['play_user'] = $_SERVER['displayName'];
-            $data['presenter'] = $_SERVER['eppn'];
-        }
-        /* --> */
+        $presentation = Presentation::where('presentation_id', $video->presentation_id)->latest()->first();
         //Form input
         $data['presenters'] = $video->presenters();
         $data['courses'] = $video->courses();
@@ -110,20 +133,19 @@ class ManualDownloadController extends Controller
         $data['date'] = $this->getDateAttribute($video->creation);
 
         //Get downloaded files names
-        $data['download_files'] = $this->getDownloadedVideoFiles($video->presentation_id);
+        $data['download_files'] = $this->getDownloadedVideoFiles($presentation->local);
 
         return view('manual.download_edit', $video, $data);
     }
 
-    public function step4(Presentation $presentation)
+    public function step4($id)
     {
-
+        $presentation = Presentation::find($id);
         // Make remote folders and send all files
         //Send video files
-        $directory = $this->download_dir.'/'.$presentation->presentation_id.'/video';
-        $remote_dir = $presentation->presentation_id.'/video';
+        $directory = $presentation->local.'/video';
         $contents = Storage::disk('public')->files($directory);
-        Storage::disk('sftp')->makeDirectory($remote_dir);
+
         try {
             foreach($contents as $sendfile) {
                 $media = Storage::disk('public')->get($sendfile);
@@ -134,10 +156,9 @@ class ManualDownloadController extends Controller
         }
 
         //Send image files
-        $directory = $this->download_dir.'/'.$presentation->presentation_id.'/image';
-        $remote_dir = $presentation->presentation_id.'/image';
+        $directory = $presentation->local.'/image';
         $contents = Storage::disk('public')->files($directory);
-        Storage::disk('sftp')->makeDirectory($remote_dir);
+
         try {
             foreach($contents as $sendfile) {
                 $media = Storage::disk('public')->get($sendfile);
@@ -148,10 +169,9 @@ class ManualDownloadController extends Controller
         }
 
         //Send image poster files
-        $directory = $this->download_dir.'/'.$presentation->presentation_id.'/poster';
-        $remote_dir = $presentation->presentation_id.'/image';
+        $directory = $presentation->local.'/poster';
         $contents = Storage::disk('public')->files($directory);
-        //Storage::disk('sftp')->makeDirectory($remote_dir);
+
         try {
             foreach($contents as $sendfile) {
                 $media = Storage::disk('public')->get($sendfile);
@@ -161,7 +181,7 @@ class ManualDownloadController extends Controller
             dd('Error'. $e->getMessage());
         }
         //Remove temp storage
-        Storage::disk('public')->deleteDirectory($this->download_dir.'/'.$presentation->presentation_id);
+        Storage::disk('public')->deleteDirectory($presentation->local);
         //Change manualupdate status
         $presentation->status = 'stored';
         $presentation->save();
@@ -173,6 +193,7 @@ class ManualDownloadController extends Controller
 
     public function store(Request $request, Video $video)
     {
+        $presentation = Presentation::where('presentation_id', $video->presentation_id)->latest()->first();
         //Existing presentation files
         if($request->media == 'existing_media') {
 
@@ -187,7 +208,7 @@ class ManualDownloadController extends Controller
                 //Get existing files
                 $files = [];
                 $audio = 0;
-                $downloaded_files = $this->getDownloadedVideoFiles($video->presentation_id);
+                $downloaded_files = $this->getDownloadedVideoFiles($presentation->local);
                 foreach ($downloaded_files as $file) {
                     $files[$audio]['video'] = '/video/'.$file;
                     $files[$audio]['poster'] = '/image/poster_'.($audio+1).'.png';
@@ -202,7 +223,7 @@ class ManualDownloadController extends Controller
                 //Store metadata
 
                 //Dirname
-                $dirname = $this->download_dir.'/'.$video->presentation_id;
+                $dirname = $presentation->local;
 
                 //Presenters
                 if ($request->presenters) {
@@ -234,46 +255,20 @@ class ManualDownloadController extends Controller
                 $media = FFMpeg::fromDisk('public')->open('/'.$dirname.'/video/media1.mp4');
                 $duration = $media->getDurationInSeconds();
 
-                //Check if presentation exist
-                if(!$presentation = Presentation::where('presentation_id', $presentation->presentation_id ?? $video->presentation_id)->first()) {
-                    //Store in model
-                    $presentation = new Presentation();
-                    $presentation->presentation_id = $video->presentation_id;
-                    $presentation->status = 'update';
-                    $presentation->local = $dirname;
-                    $presentation->base = '/data0/incoming/' . $video->presentation_id;
-                    $presentation->title = $request->title;
-                    $presentation->presenters = $presenters;
-                    $presentation->tags = $tags;
-                    $presentation->courses = $courses;
-                    $presentation->thumb =  '/image/'.$video->thumb;
-                    $presentation->created = strtotime($request->created);
-                    $presentation->duration = $duration;
-                    $presentation->sources = $files; //json_decode($video->sources, true);
-                    $presentation->permission = $request->permission;
-                    $presentation->entitlement = $request->entitlement ?? $default_entitlement;
-                    $presentation->save();
-                    $data['pid'] = $presentation->id;
-                }
-                else {
-                    //Update Presentation
-                    $presentation->presentation_id = $video->presentation_id;
-                    $presentation->status = 'update';
-                    $presentation->local = $dirname;
-                    $presentation->base = '/data0/incoming/' . $video->presentation_id;
-                    $presentation->title = $request->title;
-                    $presentation->presenters = $presenters;
-                    $presentation->tags = $tags;
-                    $presentation->courses = $courses;
-                    $presentation->thumb =  '/image/'.$video->thumb;
-                    $presentation->created = strtotime($request->created);
-                    $presentation->duration = $duration;
-                    $presentation->sources = $files; //json_decode($video->sources, true);
-                    $presentation->permission = $request->permission;
-                    $presentation->entitlement = $request->entitlement ?? $default_entitlement;
-                    $presentation->save();
-                    $data['pid'] = $presentation->id;
-                }
+                //Update Presentation
+                $presentation->status = 'update';
+                $presentation->title = $request->title;
+                $presentation->presenters = $presenters;
+                $presentation->tags = $tags;
+                $presentation->courses = $courses;
+                $presentation->created = strtotime($request->created);
+                $presentation->duration = $duration;
+                $presentation->sources = $files; //json_decode($video->sources, true);
+                $presentation->permission = $request->permission;
+                $presentation->entitlement = $request->entitlement ?? $default_entitlement;
+                $presentation->save();
+                $data['pid'] = $presentation->id;
+
 
             }
             //Get downloaded files names
@@ -293,15 +288,17 @@ class ManualDownloadController extends Controller
                     'validate' => 'required'
                 ]);
 
-                //Remove old files
-                Storage::disk('public')->deleteDirectory($this->download_dir.'/'.$video->presentation_id);
+                //Remove old files except zip
+                Storage::disk('public')->deleteDirectory($presentation->local.'/image');
+                Storage::disk('public')->deleteDirectory($presentation->local.'/poster');
+                Storage::disk('public')->deleteDirectory($presentation->local.'/video');
 
                 //Store uploaded videofiles
                 $files = [];
                 if($request->hasfile('filenames'))
                 {
                     //Dirname
-                    $dirname = $this->download_dir.'/'.$video->presentation_id;
+                    $dirname = $presentation->local;
 
                     //Replace Files
                     $audio = 0;
@@ -354,51 +351,24 @@ class ManualDownloadController extends Controller
                 }
 
                 //Generate default thumb and posters
-                $thumb = $this->gen_default_thumb_posters($video, $duration/3);
+                $thumb = $this->gen_default_thumb_posters($presentation, $duration/3);
 
-                //Check if presentation exist
-                if(!$presentation = Presentation::where('presentation_id', $presentation->presentation_id ?? $video->presentation_id)->first()) {
-                    //Store in model
-                    $presentation = new Presentation();
-                    $presentation->presentation_id = $video->presentation_id;
-                    $presentation->status = 'newmedia';
-                    $presentation->local = $dirname;
-                    $presentation->base = '/data0/incoming/'.$video->presentation_id;
-                    $presentation->title = $request->title;
-                    $presentation->presenters = $presenters;
-                    $presentation->tags = $tags;
-                    $presentation->courses = $courses;
-                    $presentation->thumb = '/image/'.$thumb;
-                    $presentation->created = strtotime($request->created);
-                    $presentation->duration = $duration;
-                    $presentation->sources = $files;
-                    $presentation->permission = $request->permission;
-                    $presentation->entitlement = $request->entitlement ?? $default_entitlement;
-                    $presentation->save();
-                    $data['pid'] = $presentation->id;
-                }
-                else {
-                    //Update Presentation
-                    $presentation->presentation_id = $video->presentation_id;
-                    $presentation->status = 'newmedia';
-                    $presentation->local = $dirname;
-                    $presentation->base = '/data0/incoming/'.$video->presentation_id;
-                    $presentation->title = $request->title;
-                    $presentation->presenters = $presenters;
-                    $presentation->tags = $tags;
-                    $presentation->courses = $courses;
-                    $presentation->thumb = '/image/'.$thumb;
-                    $presentation->created = strtotime($request->created);
-                    $presentation->duration = $duration;
-                    $presentation->sources = $files;
-                    $presentation->permission = $request->permission;
-                    $presentation->entitlement = $request->entitlement ?? $default_entitlement;
-                    $presentation->save();
-                    $data['pid'] = $presentation->id;
-                }
+                //Update Presentation
+                $presentation->status = 'newmedia';
+                $presentation->presenters = $presenters;
+                $presentation->tags = $tags;
+                $presentation->courses = $courses;
+                $presentation->thumb = '/image/'.$thumb;
+                $presentation->created = strtotime($request->created);
+                $presentation->duration = $duration;
+                $presentation->sources = $files;
+                $presentation->permission = $request->permission;
+                $presentation->entitlement = $request->entitlement ?? $default_entitlement;
+                $presentation->save();
+                $data['pid'] = $presentation->id;
+
                 //New media
                 //Variables for view
-                $data['thumb'] = null;
                 $data['files'] = $files;
                 $data['media'] = $request->media;
 
@@ -408,14 +378,14 @@ class ManualDownloadController extends Controller
         //Existing media
         $data['media'] = $request->media;
 
-        return view('manual.edit_step2', $video, $data);
+        return view('manual.edit_step2', $presentation, $data);
     }
 
     public function send($id)
     {
         $video = Presentation::find($id);
         $video
-            ->makeHidden('id')
+            ->makeHidden('presentation_id')
             ->makeHidden('status')
             ->makeHidden('local')
             ->makeHidden('created_at')
@@ -432,7 +402,7 @@ class ManualDownloadController extends Controller
         $json = $json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
         //Print body (for testing)
-        //return $json;
+        return $json;
         /******************************************************************************/
 
         $client = new Client(['base_uri' => $this->uri()]);
@@ -475,91 +445,76 @@ class ManualDownloadController extends Controller
 
     }
 
-    private function gen_default_thumb_posters(Video $video, $seconds)
+    private function gen_default_thumb_posters(Presentation $presentation, $seconds)
     {
-        $this->files = $this->getDownloadedVideoFiles($video->presentation_id);
+        $this->files = $this->getDownloadedVideoFiles($presentation->local);
 
         //Create posters
         $x = 1;
         foreach($this->files as $this->file) {
             FFMpeg::fromDisk('public')
-                ->open($this->download_dir.'/'.$video->presentation_id.'/video/'.$this->file)
+                ->open($presentation->local.'/video/'.$this->file)
                 ->getFrameFromSeconds($seconds)
                 ->export()
                 ->toDisk('public')
-                ->save($this->download_dir.'/'.$video->presentation_id.'/poster/poster_'.$x.'.png');
+                ->save($presentation->local.'/poster/poster_'.$x.'.png');
             $x++;
         }
         //Create thumb
         FFMpeg::fromDisk('public')
-            ->open($this->download_dir.'/'.$video->presentation_id.'/video/'.$this->files[0])
+            ->open($presentation->local.'/video/'.$this->files[0])
             ->getFrameFromSeconds($seconds)
             ->export()
             ->toDisk('public')
-            ->save($this->download_dir.'/'.$video->presentation_id.'/image/primary_thumb'.$video->id.'.png');
-        return 'primary_thumb'.$video->id.'.png';
+            ->save($presentation->local.$presentation->thumb);
+        return 'primary_thumb.png';
     }
 
     public function gen_thumb_download($id, Request $request)
     {
-        if($request->media == 'new_media') {
-            $video = Presentation::find($id);
-            $data['media'] = 'new_media';
-            $data['pid'] = $video->id;
-        }
-        else {
-            $video = Video::find($id);
-            $data['media'] = 'existing_media';
-            $presentation = Presentation::where('presentation_id', $video->presentation_id)->first();
-            $data['pid'] = $presentation->id;
-        }
+        $presentation = Presentation::find($id);
 
-        $data['files'] = $this->getDownloadedVideoFiles($video->presentation_id);
+        $data['media'] = $request->media;
+        $data['pid'] = $presentation->id;
+        $data['files'] = $this->getDownloadedVideoFiles($presentation->local);
 
         //Create thumb and store in folder
         FFMpeg::fromDisk('public')
-            ->open($this->download_dir.'/'.$video->presentation_id.'/video/'.$data['files'][0])
+            ->open($presentation->local.'/video/'.$data['files'][0])
             ->getFrameFromSeconds($request->seconds)
             ->export()
             ->toDisk('public')
-            ->save($this->download_dir.'/'.$video->presentation_id.'/image/'.$video->thumb);
+            ->save($presentation->local.$presentation->thumb);
 
         //Get downloaded files names
 
-        return view('manual.edit_step2', $video, $data);
+        return view('manual.edit_step2', $presentation, $data);
     }
 
     public function gen_poster_download($id, Request $request)
     {
-        if($request->media == 'new_media') {
-            $video = Presentation::find($id);
-            $data['media'] = 'new_media';
-            $data['pid'] = $video->id;
-        }
-        else {
-            $video = Video::find($id);
-            $data['media'] = 'existing_media';
-            $presentation = Presentation::where('presentation_id', $video->presentation_id)->first();
-            $data['pid'] = $presentation->id;
-        }
+        $presentation = Presentation::find($id);
 
-        $data['files'] = $this->getDownloadedVideoFiles($video->presentation_id);
+        $data['media'] = $request->media;
+        $data['pid'] = $presentation->id;
+        $data['files'] = $this->getDownloadedVideoFiles($presentation->local);
 
         FFMpeg::fromDisk('public')
-            ->open($this->download_dir.'/'.$video->presentation_id.'/video/'.$data['files'][0])
+            ->open($presentation->local.'/video/'.$data['files'][0])
             ->getFrameFromSeconds($request->seconds)
             ->export()
             ->toDisk('public')
-            ->save($this->download_dir.'/'.$video->presentation_id.'/poster/poster_'.$request->poster.'.png');
+            ->save($presentation->local.'/poster/poster_'.$request->poster.'.png');
 
-        return view('manual.edit_step2', $video, $data);
+        return view('manual.edit_step2', $presentation, $data);
     }
 
 
-    private function checkDownload(Video $video)
+    private function checkDownload()
     {
-        foreach (Storage::disk('public')->directories($this->download_dir) as $this->download) {
-            if(substr($this->download, strrpos($this->download, '/') + 1) == $video->presentation_id) {
+        foreach (Storage::disk('public')->directories() as $this->download) {
+            $folder = substr($this->download, strrpos($this->download, '/'));
+            if( Presentation::where('local', $folder)->first()) {
                 return true;
             }
         }
@@ -573,11 +528,12 @@ class ManualDownloadController extends Controller
 
     private function getDownloadedVideoFiles($directory)
     {
-        $this->directory = $this->download_dir.'/'.$directory.'/video';
+        $this->directory = $directory.'/video';
 
         foreach(Storage::disk('public')->files($this->directory) as $this->file) {
             $this->video_name[] = substr($this->file, strrpos($this->file, '/') + 1);
         }
+
         return $this->video_name;
     }
 

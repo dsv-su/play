@@ -40,6 +40,7 @@ class VideoStore extends Model
     public function presentation(): Video
     {
         $this->video = new Video;
+        $this->video->id = $this->request->id;
         $this->video->presentation_id = $this->request->id;
         $this->video->origin = $this->request->origin;
         $this->video->notification_id = $this->request->notification_id;

@@ -18,7 +18,8 @@ class CreateMediasitePresentations extends Migration
             $table->text('name');
             $table->text('mediasite_id');
             $table->foreignId('mediasite_folder_id')->constrained();
-            $table->foreignId('video_id')->nullable()->constrained();
+            $table->uuid('video_id');
+            $table->foreign('video_id')->references('id')->on('videos');
             $table->integer('status')->nullable();
             $table->timestamps();
         });

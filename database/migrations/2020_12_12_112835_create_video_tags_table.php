@@ -15,7 +15,8 @@ class CreateVideoTagsTable extends Migration
     {
         Schema::create('video_tags', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('video_id')->constrained();
+            $table->uuid('video_id');
+            $table->foreign('video_id')->references('id')->on('videos');
             $table->foreignId('tag_id')->constrained();
             $table->timestamps();
         });

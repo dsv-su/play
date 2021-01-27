@@ -80,7 +80,7 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::post('/download_store/{video}', 'ManualDownloadController@store')->name('download_store');
     Route::post('/gen_thumb_download/{id}', 'ManualDownloadController@gen_thumb_download')->name('gen_thumb_download');
     Route::post('/gen_poster_download/{id}', 'ManualDownloadController@gen_poster_download')->name('gen_poster_download');
-    Route::get('/download_step4/{presentation}', 'ManualDownloadController@step4')->name('download_step4');
+    Route::get('/download_step4/{id}', 'ManualDownloadController@step4')->name('download_step4');
     Route::get('/download_send/{id}', 'ManualDownloadController@send');
 
     //Testing routes

@@ -2,7 +2,7 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <h2>Redigering av presentation - steg 2</h2>
+            <h2>Redigering av presentation {{$id}}- steg 2</h2>
         </div>
         <br>
         <div class="row">
@@ -22,7 +22,7 @@
                         @if($thumb == null)
                             <svg class="bd-placeholder-img" width="100%" height="250" xmlns="http://www.w3.org/2000/svg" aria-label="Placeholder: Image" preserveAspectRatio="xMidYMid slice" role="img"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Ingen bild</text></svg>
                         @else
-                            <img id="thumb" class="bd-placeholder-img" width="100%" height="250" src="{{'/storage/download/'.$presentation_id.$thumb}}">
+                            <img id="thumb" class="bd-placeholder-img" width="100%" height="250" src="{{'/storage/'.$local.$thumb}}">
                         @endif
 
                     </div>
@@ -65,7 +65,7 @@
                         @if($thumb == null)
                             <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" aria-label="Placeholder: Image cap" preserveAspectRatio="xMidYMid slice" role="img"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Ingen bild</text></svg>
                         @else
-                            <img class="bd-placeholder-img" width="100%" height="180" src="{{'/storage/download/'.$presentation_id.'/poster/poster_'.($loop->index+1).'.png'}}">
+                            <img class="bd-placeholder-img" width="100%" height="180" src="{{'/storage/'.$local.'/poster/poster_'.($loop->index+1).'.png'}}">
                         @endif
                         <div class="card-body">
                             <h5 class="card-title">Poster {{($loop->index+1)}}</h5>
@@ -84,7 +84,7 @@
                 @endforeach
             </div>
             <br>
-            <a href="{{route('download_step4', $pid)}}" role="button" class="btn btn-primary btn-lg float-right">Nästa <i class="fas fa-forward"></i></a>
+            <a href="{{route('download_step4', $id)}}" role="button" class="btn btn-primary btn-lg float-right">Nästa <i class="fas fa-forward"></i></a>
         @endif
 
     </div>

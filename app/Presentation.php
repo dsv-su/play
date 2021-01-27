@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Presentation extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'id';
+    protected $keyType = 'string';
+    public $incrementing = false;
+
     protected $fillable = ['presentation_id', 'local','base','title','creation', 'presenters', 'courses', 'tags', 'thumb','permission', 'entitlement', 'sources'];
 
     protected $casts = [
