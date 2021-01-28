@@ -193,7 +193,6 @@ class PlayController extends Controller
             'title' => 'My Playlist'
         ]);
         $playlist
-            ->makeHidden('presentation_id')
             ->makeHidden('presentation')
             ->makeHidden('duration')
             ->makeHidden('tags')
