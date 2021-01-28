@@ -41,11 +41,14 @@ class PlayController extends Controller
         //Initiate system
         app()->make('init')->check_system();
 
+        //-->
         $data['courses'] = $this->getActiveCourses();
         $data['hasmycourses'] = ($this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'psoko@su.se')->count() > 0);
         $data['search'] = 0;
         $data['latest'] = Video::with('category', 'video_course.course')->latest('id')->take(8)->get();
         $data['categories'] = Category::all();
+        // <--
+        
         return view('home.index', $data);
     }
 
@@ -185,6 +188,7 @@ class PlayController extends Controller
     public
     function playlist($id): string
     {
+        //Generate a playlist of videos associated with the course
         $videos = VideoCourse::where('course_id', $id)->pluck('video_id')->toArray();
 
         $playlist = Video::whereIn('id', $videos)->get();
@@ -193,7 +197,14 @@ class PlayController extends Controller
             'title' => 'My Playlist'
         ]);
         $playlist
+            ->makeHidden('id')
             ->makeHidden('presentation')
+            ->makeHidden('notification_id')
+            ->makeHidden('creation')
+            ->makeHidden('subtitles')
+            ->makeHidden('sources')
+            ->makeHidden('origin')
+            ->makeHidden('type')
             ->makeHidden('duration')
             ->makeHidden('tags')
             ->makeHidden('category_id')
