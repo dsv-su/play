@@ -26,7 +26,9 @@
                             <td>{{$presentation->id}}</td>
                             <td>{{$presentation->updated_at}}</td>
                             <td>{{$presentation->title}}</td>
-                            @if($presentation->status == 'failed' or $presentation->status == 'stored')
+                            @if($presentation->status == 'request download')
+                                <td><a role="button" class="btn btn-danger btn-sm" href="{{route('download_delete', $presentation->id)}}">Erase</a></td>
+                            @elseif($presentation->status == 'failed' or $presentation->status == 'stored')
                                 <td><a role="button" class="btn btn-danger btn-sm" href="{{route('download_delete', $presentation->id)}}">Erase</a></td>
                                 <td><a role="button" class="btn btn-danger btn-sm" href="{{route('admin_download_notify_resend', $presentation->id)}}">Resend Notify</a></td>
                             @elseif($presentation->status == 'update' or $presentation->status == 'newmedia')

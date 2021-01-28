@@ -50,10 +50,10 @@ class ManualDownloadController extends Controller
                 $presentation->tags = '[]';
                 $presentation->courses = '[]';
                 // -> Remove /image after refacoring
-                $presentation->thumb = '/image/'.$video->thumb;
+                $presentation->thumb = 'image/'.$video->thumb;
                 $presentation->created = $video->creation;
                 $presentation->duration = $video->duration;
-                $presentation->sources = $video->files;
+                $presentation->sources = json_decode($video->sources, true);;
                 $presentation->permission = $video->permission;
                 $presentation->entitlement = $video->entitlement;
                 $presentation->save();
@@ -221,8 +221,8 @@ class ManualDownloadController extends Controller
                 $audio = 0;
                 $downloaded_files = $this->getDownloadedVideoFiles($presentation->local);
                 foreach ($downloaded_files as $file) {
-                    $files[$audio]['video'] = '/video/'.$file;
-                    $files[$audio]['poster'] = '/image/poster_'.($audio+1).'.png';
+                    $files[$audio]['video'] = 'video/'.$file;
+                    $files[$audio]['poster'] = 'image/poster_'.($audio+1).'.png';
                     if($audio == 0){
                         $files[$audio]['playAudio'] = true;
                     } else {
@@ -315,8 +315,8 @@ class ManualDownloadController extends Controller
                     {
                         $name = 'media'.($audio+1).'.'.$file->extension();
                         $file->move(storage_path('/app/public/'.$dirname.'/video/'), $name);
-                        $files[$audio]['video'] = '/video/'.$name;
-                        $files[$audio]['poster'] = '/image/poster_'.($audio+1).'.png';
+                        $files[$audio]['video'] = 'video/'.$name;
+                        $files[$audio]['poster'] = 'image/poster_'.($audio+1).'.png';
                         if($audio == 0){
                             $files[$audio]['playAudio'] = true;
                         } else {
@@ -468,7 +468,7 @@ class ManualDownloadController extends Controller
             $x++;
         }
         //Create thumb
-        // -> Note this assumes the thumb url is /image/....
+        // -> Note this assumes the thumb url is image/....
         FFMpeg::fromDisk('public')
             ->open($presentation->local.'/video/'.$this->files[0])
             ->getFrameFromSeconds($seconds)

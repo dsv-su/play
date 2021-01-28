@@ -67,8 +67,8 @@ class ManualUploadController extends Controller
                 foreach ($request->file('filenames') as $file) {
                     $name = 'media' . ($audio + 1) . '.' . $file->extension();
                     $file->move(storage_path('/app/public/' . $dirname . '/video'), $name);
-                    $files[$audio]['video'] = '/video/' . $name;
-                    $files[$audio]['poster'] = '/image/poster_' . ($audio + 1) . '.png';
+                    $files[$audio]['video'] = 'video/' . $name;
+                    $files[$audio]['poster'] = 'image/poster_' . ($audio + 1) . '.png';
                     if ($audio == 0) {
                         $files[$audio]['playAudio'] = true;
                     } else {
@@ -114,7 +114,7 @@ class ManualUploadController extends Controller
             $file->presenters = $presenters;
             $file->tags = $tags;
             $file->courses = $courses;
-            $file->thumb = '/image/'.$request->thumb; //TODO
+            $file->thumb = 'image/'.$request->thumb; //TODO
             $file->created = strtotime($request->created);
             $file->duration = $durationInSeconds;
             $file->sources = $files;
@@ -142,7 +142,7 @@ class ManualUploadController extends Controller
             ->toDisk('public')
             ->save('/' . $presentation->local . '/image/primary_thumb' . $id . '.png');
         //Store thumb in model
-        $presentation->thumb = '/image/primary_thumb' . $id . '.png';
+        $presentation->thumb = 'image/primary_thumb' . $id . '.png';
         $presentation->save();
         $durationInSeconds = $presentation->duration;
 
@@ -357,6 +357,6 @@ class ManualUploadController extends Controller
             $poster++;
         }
 
-        return '/image/primary_thumb' . $manualPresentation->id . '.png';
+        return 'image/primary_thumb' . $manualPresentation->id . '.png';
     }
 }
