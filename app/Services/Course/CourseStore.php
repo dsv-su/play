@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Course;
 
 use App\Course;
 use App\VideoCourse;
@@ -32,7 +32,7 @@ class CourseStore extends Model
                     ]);
                 }
                 else{
-                    VideoCourse::create([
+                    VideoCourse::updateOrCreate([
                         'video_id' => $this->video->id,
                         'course_id' => $this->db_course->id,
                     ]);

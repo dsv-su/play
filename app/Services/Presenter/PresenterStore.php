@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Presenter;
 
 use App\Presenter;
 use App\VideoPresenter;
@@ -30,7 +30,7 @@ class PresenterStore extends Model
             }
             else
             {
-                VideoPresenter::create([
+                VideoPresenter::updateOrCreate([
                     'video_id' => $this->video->id,
                     'presenter_id' => $this->db_presenter->id,
                 ]);

@@ -49,7 +49,7 @@ class ManualDownloadController extends Controller
                 $presentation->presenters = '[]';
                 $presentation->tags = '[]';
                 $presentation->courses = '[]';
-                // -> Remove /image after refacoring
+                // -> Remove image/ after refacoring
                 $presentation->thumb = 'image/'.$video->thumb;
                 $presentation->created = $video->creation;
                 $presentation->duration = $video->duration;
@@ -99,8 +99,8 @@ class ManualDownloadController extends Controller
 
         //Download directories to use
         $dir_thumb = $presentation->local.'/';
-        $dir_video = $presentation->local.'/'.'/video/';
-        $dir_poster = $presentation->local.'/'.'/poster/';
+        $dir_video = $presentation->local.'/video/';
+        $dir_poster = $presentation->local.'/poster/';
 
         //Download Files
 

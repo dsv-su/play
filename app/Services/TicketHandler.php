@@ -24,12 +24,12 @@ class TicketHandler extends Model
         //Check permission for requested video
         if($this->check_permission($this->video)) {
             //Issue a valid ticket for requester
-            if (!$this->token = auth()->claims(['id' => $this->video->id])->setTTL(60)->attempt($this->credentials)) {
+            if (!$this->token = auth()->attempt($this->credentials)) {
                 return response()->json(['error' => 'Unauthorized'], 401);
                 }
             }
             else {
-                $this->token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.Not authorized';
+                $this->token = 'Not authorized';
                 //abort(401);
                 }
 

@@ -48,7 +48,7 @@ class PlayController extends Controller
         $data['latest'] = Video::with('category', 'video_course.course')->latest('id')->take(8)->get();
         $data['categories'] = Category::all();
         // <--
-        
+
         return view('home.index', $data);
     }
 

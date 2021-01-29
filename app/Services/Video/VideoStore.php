@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Video;
 
 use App\Video;
 use Illuminate\Database\Eloquent\Model;

@@ -11,11 +11,8 @@ use App\PlayerJson;
 use App\Presenter;
 use App\Services\DaisyIntegration;
 use App\System;
-use App\Tag;
-use App\User;
 use App\Video;
 use App\VideoCourse;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +21,6 @@ use Illuminate\Support\Facades\URL;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 use Spatie\Searchable\ModelSearchAspect;
 use Spatie\Searchable\Search;
-use ZanySoft\Zip\Zip;
 
 class TestController extends Controller
 {

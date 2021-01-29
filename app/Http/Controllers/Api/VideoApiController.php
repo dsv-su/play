@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PresentationRequest;
-use App\Http\Resources\Presentation\PermissionsResource;
 use App\Http\Resources\Presentation\PresentationResource;
-use App\Services\CourseStore;
-use App\Services\PresenterStore;
-use App\Services\TagsStore;
-use App\Services\VideoStore;
+use App\Services\Course\CourseStore;
+use App\Services\Presenter\PresenterStore;
+use App\Services\Tag\TagsStore;
+use App\Services\Video\VideoStore;
+use App\Services\Video\VideoUpdate;
 use App\Video;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -46,18 +46,38 @@ class VideoApiController extends Controller
 
         if($payload->get('per') == 'store')
         {
-            //Store video
-            $video = new VideoStore($request);
-            $video = $video->presentation();
-            //Store presenter
-            $presenter = new PresenterStore($request, $video);
-            $presenter->presenter();
-            //Store course
-            $course = new CourseStore($request, $video);
-            $course->course();
-            //Store tags
-            $tags = new TagsStore($request, $video);
-            $tags->tags();
+            //Check if video exist
+            if(!$presentation = Video::find($request->id)) {
+                //Store video
+                $video = new VideoStore($request);
+                $video = $video->presentation();
+                //Store presenter
+                $presenter = new PresenterStore($request, $video);
+                $presenter->presenter();
+                //Store course
+                $course = new CourseStore($request, $video);
+                $course->course();
+                //Store tags
+                $tags = new TagsStore($request, $video);
+                $tags->tags();
+            }
+            else {
+                //Update existing video
+                $video = new VideoUpdate($presentation, $request);
+                $video = $video->presentation_update();
+                //Store presenter
+                $presenter = new PresenterStore($request, $video);
+                $presenter->presenter();
+                //Store course
+                $course = new CourseStore($request, $video);
+                $course->course();
+                //Store tags
+                $tags = new TagsStore($request, $video);
+                $tags->tags();
+
+                return response()->json('Presentation has been updated', Response::HTTP_CREATED);
+            }
+
 
             return response()->json('Presentation has been created', Response::HTTP_CREATED);
         }
@@ -71,7 +91,7 @@ class VideoApiController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return
      */
     public function show($id)
     {

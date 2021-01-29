@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Tag;
 
 use App\Tag;
 use App\VideoTag;
@@ -29,7 +29,7 @@ class TagsStore extends Model
                 }
                 else
                 {
-                    VideoTag::create([
+                    VideoTag::updateOrCreate([
                         'video_id' => $this->video->id,
                         'tag_id' => $this->db_tag->id,
                     ]);
@@ -40,4 +40,5 @@ class TagsStore extends Model
 
         }
     }
+
 }
