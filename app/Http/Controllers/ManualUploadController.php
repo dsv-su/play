@@ -326,7 +326,7 @@ class ManualUploadController extends Controller
             //Change manualupdate status
             $video->status = 'sent';
             $video->save();
-            return redirect('/')->with('status', 'Presentationen har laddats upp!');
+            return redirect('/')->with(['message' => 'Presentationen har laddats upp!']);
         } else {
             //Change manualupdate status
             $video->status = 'failed';

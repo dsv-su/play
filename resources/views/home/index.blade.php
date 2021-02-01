@@ -1,8 +1,8 @@
 @extends('layouts.suplay')
 @section('content')
-    @if (session('status'))
-        <div class="alert alert-success">
-            {{ session('status') }}
+    @if(session()->has('message'))
+        <div class="alert {{session('alert') ?? 'alert-info'}}">
+            {{ session('message') }}
         </div>
     @endif
     <div class="container align-self-center">

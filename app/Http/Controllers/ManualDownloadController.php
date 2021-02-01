@@ -69,13 +69,13 @@ class ManualDownloadController extends Controller
     {
         if($this->initDownload($video)) {
             if ($this->checkDownload()) {
-                return redirect('/')->with('status', 'Presentationen har redan laddats ner och finns tillgänglig under "Hantera uppspelning"!');
+                return redirect('/')->with(['message' => 'Presentationen har redan laddats ner och finns tillgänglig under "Hantera uppspelning"!', 'alert' => 'alert-success']);
             } else {
                 return view('manual.download_index', $video);
             }
         }
         else {
-            return redirect('/')->with('status', 'Det existerar en reviderad Presentation i Administratorgränssnittet - under utveckling!');
+            return redirect('/')->with(['message' => 'Det existerar en reviderad Presentation i Administratorgränssnittet - under utveckling!']);
         }
 
     }
@@ -89,7 +89,7 @@ class ManualDownloadController extends Controller
             return Storage::disk('public')->download($path.$video->id.'.zip');
         }
         else {
-            return redirect('/')->with('status', 'Ett fel har inträffat. Error: File not found!');
+            return redirect('/')->with(['message' => 'Ett fel har inträffat. Error: File not found!', 'alert' => 'alert-danger']);
         }
     }
 
@@ -440,7 +440,7 @@ class ManualDownloadController extends Controller
             //Change manualupdate status
             $video->status = 'sent';
             $video->save();
-            return redirect('/')->with('status', 'Presentationen har redigerats och laddats upp!');
+            return redirect('/')->with(['message' => 'Presentationen har redigerats och laddats upp!']);
         }
         else {
             //Change manualupdate status

@@ -93,4 +93,5 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::get('/daisyload', 'TestController@daisyLoadCourses');
     Route::get('/token/{video}', 'TestController@token');
     Route::get('/decode/{token}', 'TestController@decode');
+    Route::get('/reload', 'ReloadPlayStoreController@index');
 });
