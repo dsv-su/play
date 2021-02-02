@@ -121,6 +121,13 @@
                 </li>
             </ul>
             <div class="align-middle ml-auto my-auto">
+                @if(app()->make('store_status') == 'on')
+                    <span class="badge badge-pill badge-success"><i class="fas fa-plug"></i> Play-store</span>
+                @else
+                    <span class="badge badge-pill badge-danger">Play-store</span>
+                @endif
+            </div>
+            <div class="align-middle ml-auto my-auto">
                 {{app()->make('play_user') ?? 'Not logged in'}}
             </div>
         </nav>

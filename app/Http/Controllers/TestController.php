@@ -9,6 +9,7 @@ use App\Course;
 use App\CourseSearchAspect;
 use App\PlayerJson;
 use App\Presenter;
+use App\Services\CheckPlayStoreApi;
 use App\Services\DaisyIntegration;
 use App\System;
 use App\Video;
@@ -285,51 +286,6 @@ class TestController extends Controller
 
     /*************************************************************************************
      */
-    protected function respondWithToken($token)
-    {
-        return response()->json([
-            'access_token' => $token
-            //'token_type' => 'bearer',
-            //'expires_in' => auth()->factory()->getTTL() * 60
-        ]);
-    }
-
-    public function token(Video $video)
-    {
-
-        $credentials = [
-            'email'=> 'playticket@dsv.su.se',
-            'password' => 'password'
-    ];
-        //dd($credentials);
-
-        if (! $token = auth()->claims(['id' => $video->id])->setTTL(60)->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-        //dd($token);
-
-        if (!$playlist = VideoCourse::where('video_id', $video->id)->first()) {
-            //No playlist
-            $url = url('/multiplayer') . '?' . urldecode(http_build_query(['presentation' => URL::to('/') . '/presentation/' . $video->id, 'authparam' => $token]));
-        } else {
-            // Production
-            $url = url('/multiplayer') . '?' . urldecode(http_build_query(['presentation' => URL::to('/') . '/presentation/' . $video->id, 'playlist' => URL::to('/') . '/playlist/' . $playlist->course_id, 'authparam' => $token]));
-            // Dev
-            //$url = url('/multiplayer') . '?' . http_build_query(['presentation' => 'presentation/'.$video->id, 'playlist' => 'playlist/'.$playlist->course_id]);
-        }
-
-        return redirect()->away($url);
-    }
-
-    public function decode($token)
-    {
-        return unserialize(Crypt::decryptString($token));
-    }
-
-    public function stream()
-    {
-
-    }
 
     public function php()
     {
