@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Services\CheckPlayStoreApi;
+use App\Services\CountPresentations;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -22,6 +23,10 @@ class StatusPlayStore
         if($check['running'] == true) {
             app()->bind('store_status', function() {
                 return 'on';
+            });
+            app()->bind('total_videos', function() {
+                $videos = new CountPresentations();
+                return $videos->latest();
             });
         }
         else {

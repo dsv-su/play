@@ -122,9 +122,21 @@
             </ul>
             <div class="align-middle ml-auto my-auto">
                 @if(app()->make('store_status') == 'on')
-                    <span class="badge badge-pill badge-success"><i class="fas fa-plug"></i> Play-store</span>
+                    <div>
+                        <button type="button" class="btn btn-outline-primary">
+                            <i class="fas fa-plug"></i> <span class="badge badge-success">Play-store</span>
+                        </button>
+                    </div>
+                    <div>
+                        <a href="{{route('reload')}}" role="button" class="btn btn-outline-primary">
+                            Presentations: <span class="badge badge-light">{{app()->make('total_videos')}}</span>
+                        </a>
+                    </div>
+
                 @else
-                    <span class="badge badge-pill badge-danger">Play-store</span>
+                    <button type="button" class="btn btn-outline-primary">
+                        Offline <span class="badge badge-danger">Play-store</span>
+                    </button>
                 @endif
             </div>
             <div class="align-middle ml-auto my-auto">

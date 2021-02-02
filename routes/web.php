@@ -91,5 +91,5 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::get('/server', 'TestController@server')->name('server');
     Route::get('/daisy/{video}', 'TestController@daisy')->name('daisy');
     Route::get('/daisyload', 'TestController@daisyLoadCourses');
-    Route::get('/reload', 'ReloadPlayStoreController@index');
+    Route::get('/reload', 'ReloadPlayStoreController@index')->name('reload');
 });

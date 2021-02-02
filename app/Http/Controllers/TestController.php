@@ -10,6 +10,7 @@ use App\CourseSearchAspect;
 use App\PlayerJson;
 use App\Presenter;
 use App\Services\CheckPlayStoreApi;
+use App\Services\CountPresentations;
 use App\Services\DaisyIntegration;
 use App\System;
 use App\Video;
@@ -55,7 +56,6 @@ class TestController extends Controller
 
     public function daisy(Video $video)
     {
-
         /*$data['courses'] = Course::all()->sortBy('course');
         $data['categories'] = Category::all();
         return view('home.courses', $data);*/

@@ -49,8 +49,7 @@ class ManualDownloadController extends Controller
                 $presentation->presenters = '[]';
                 $presentation->tags = '[]';
                 $presentation->courses = '[]';
-                // -> Remove image/ after refacoring
-                $presentation->thumb = 'image/'.$video->thumb;
+                $presentation->thumb = $video->thumb;
                 $presentation->created = $video->creation;
                 $presentation->duration = $video->duration;
                 $presentation->sources = json_decode($video->sources, true);;
