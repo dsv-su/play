@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Presentation;
 use App\Services\DownloadZip;
+use App\Services\Notify\PlayStoreNotify;
 use App\Video;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -196,9 +197,10 @@ class ManualDownloadController extends Controller
         $presentation->save();
 
         // Send notify
-        return redirect()->action([ManualDownloadController::class, 'send'], ['id' => $presentation->id]);
+        $notify = new PlayStoreNotify($presentation);
+        $notify->sendSuccess('update');
+        return redirect('/')->with(['message' => 'Presentationen har redigerats och laddats upp!']);
     }
-
 
     public function store(Request $request, Video $video)
     {
@@ -388,69 +390,6 @@ class ManualDownloadController extends Controller
         return view('manual.edit_step2', $presentation, $data);
     }
 
-    public function send($id)
-    {
-        $video = Presentation::find($id);
-        $video
-            ->makeHidden('status')
-            ->makeHidden('local')
-            ->makeHidden('created_at')
-            ->makeHidden('updated_at')
-            ->makeHidden('permission')
-            ->makeHidden('entitlement');
-
-        //Make json wrapper
-        $json = Collection::make([
-            'status' => 'success',
-            'type' => 'update'
-        ]);
-        $json['package'] = $video;
-        $json = $json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-
-        //Print body (for testing)
-        //return $json;
-        /******************************************************************************/
-
-        $client = new Client(['base_uri' => $this->uri()]);
-        $headers = [
-            //'Authorization' => 'Bearer ' . $this->token(),
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
-        ];
-        try {
-            $response = $client->request('POST', $this->uri(), [
-                'headers' => $headers,
-                'body' => $json
-            ]);
-        } catch (\Exception $e) {
-            /**
-             * If there is an exception; Client error;
-             */
-            if ($e->hasResponse()) {
-                //return $response = $e->getResponse()->getStatusCode();
-                //Change manualupdate status
-                $video->status = 'failed';
-                $video->save();
-                return $response = $e->getResponse()->getBody();
-            }
-        }
-
-        if($response->getBody() == 'OK') {
-            //Change manualupdate status
-            $video->status = 'sent';
-            $video->save();
-            return redirect('/')->with(['message' => 'Presentationen har redigerats och laddats upp!']);
-        }
-        else {
-            //Change manualupdate status
-            $video->status = 'failed';
-            $video->save();
-            return $response->getBody();
-        }
-
-
-    }
-
     private function gen_default_thumb_posters(Presentation $presentation, $seconds)
     {
         $this->files = $this->getDownloadedVideoFiles($presentation->local);
@@ -542,17 +481,6 @@ class ManualDownloadController extends Controller
         }
 
         return $this->video_name;
-    }
-
-    private function uri()
-    {
-        $this->file = base_path().'/systemconfig/play.ini';
-        if (!file_exists($this->file)) {
-            $this->file = base_path().'/systemconfig/play.ini.example';
-        }
-        $this->system_config = parse_ini_file($this->file, true);
-
-        return $this->system_config['sftp']['uri'];
     }
 
     private function setDownloaddir()

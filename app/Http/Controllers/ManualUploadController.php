@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ManualPresentation;
+use App\Services\Notify\PlayStoreNotify;
 use Carbon\Carbon;
 use Exception;
 use GuzzleHttp\Client;
@@ -18,22 +19,12 @@ use Storage;
 
 class ManualUploadController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Application|Factory|View|Response
-     */
+
     public function index()
     {
         return view('manual.index');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     *
-     */
     public function step1(Request $request)
     {
         if ($request->isMethod('post')) {
@@ -193,135 +184,8 @@ class ManualUploadController extends Controller
         $presentation->save();
 
         // Send notify
-        return redirect()->action([ManualUploadController::class, 'send'], ['id' => $presentation->id]);
-    }
-
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @param int $id
-     * @return Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return Application|Factory|View|Response
-     */
-
-
-    private function uri()
-    {
-        $this->file = base_path() . '/systemconfig/play.ini';
-        if (!file_exists($this->file)) {
-            $this->file = base_path() . '/systemconfig/play.ini.example';
-        }
-        $this->system_config = parse_ini_file($this->file, true);
-
-        return $this->system_config['sftp']['uri'];
-    }
-
-    private function token()
-    {
-        $this->file = base_path() . '/systemconfig/play.ini';
-        if (!file_exists($this->file)) {
-            $this->file = base_path() . '/systemconfig/play.ini.example';
-        }
-        $this->system_config = parse_ini_file($this->file, true);
-
-        return $this->system_config['test']['token'];
-    }
-
-    public function send($id)
-    {
-        $video = ManualPresentation::find($id);
-        $video
-            ->makeHidden('status')
-            ->makeHidden('local')
-            ->makeHidden('created_at')
-            ->makeHidden('updated_at')
-            ->makeHidden('permission')
-            ->makeHidden('entitlement');
-        //Make json wrapper
-        $json = Collection::make([
-            'status' => 'success',
-            'type' => 'manual'
-        ]);
-        $json['package'] = $video;
-        $json = $json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-
-        //Print body (for testing)
-        //return $json;
-        /******************************************************************************/
-
-        $client = new Client(['base_uri' => $this->uri()]);
-        $headers = [
-            //'Authorization' => 'Bearer ' . $this->token(),
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
-        ];
-        try {
-            $response = $client->request('POST', $this->uri(), [
-                'headers' => $headers,
-                'body' => $json
-            ]);
-        } catch (Exception $e) {
-            /**
-             * If there is an exception; Client error;
-             */
-            if ($e->hasResponse()) {
-                //return $response = $e->getResponse()->getStatusCode();
-                //Change manualupdate status
-                $video->status = 'failed';
-                $video->save();
-                return $response = $e->getResponse()->getBody();
-            }
-        }
-
-        if ($response->getBody() == 'OK') {
-            //Change manualupdate status
-            $video->status = 'sent';
-            $video->save();
-            return redirect('/')->with(['message' => 'Presentationen har laddats upp!']);
-        } else {
-            //Change manualupdate status
-            $video->status = 'failed';
-            $video->save();
-            return $response->getBody();
-        }
+        $notify = new PlayStoreNotify($presentation);
+        $notify->sendSuccess('manual');
     }
 
     private function gen_thumb_poster(ManualPresentation $manualPresentation, $seconds)

@@ -82,6 +82,7 @@ Requirements are best determined using Server Requirements page of corresponding
         username=
         privateKey=
         pk-password=
+        reload=                                 ; Base-Uri for Storage server
 
         
 * Once the global settings are entered you can install the dependencies. `composer install`
