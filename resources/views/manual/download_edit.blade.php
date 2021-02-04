@@ -1,4 +1,4 @@
-@extends('layouts.suplay_upload')
+@extends('layouts.suplay')
 @section('content')
     <div class="container">
         <div class="row">

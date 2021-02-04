@@ -156,6 +156,47 @@ class PlayStoreNotify extends Model
         }
     }
 
+    public function sendDelete()
+    {
+        $this->client = new Client(['base_uri' => $this->base_uri()]);
+        $this->headers = [
+            //'Authorization' => 'Bearer ' . $this->token(),
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+        ];
+        try {
+            $this->response = $this->client->request('DELETE', $this->base_uri().'/'.$this->presentation->id, [
+                'headers' => $this->headers
+            ]);
+        } catch (\Exception $e) {
+            /**
+             * If there is an exception; Client error;
+             */
+            if ($e->hasResponse()) {
+                return $this->response = $e->getResponse()->getBody();
+            }
+        }
+
+        if($this->response->getBody()) {
+            return true;
+        }
+        else {
+            //TODO Error handling
+            return $this->response->getBody();
+        }
+    }
+
+    private function base_uri()
+    {
+        $this->file = base_path().'/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            $this->file = base_path().'/systemconfig/play.ini.example';
+        }
+        $this->system_config = parse_ini_file($this->file, true);
+
+        return $this->system_config['store']['list_uri'];
+    }
+
     private function uri()
     {
         $this->file = base_path().'/systemconfig/play.ini';
@@ -164,6 +205,6 @@ class PlayStoreNotify extends Model
         }
         $this->system_config = parse_ini_file($this->file, true);
 
-        return $this->system_config['sftp']['uri'];
+        return $this->system_config['store']['notify_uri'];
     }
 }

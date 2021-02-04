@@ -91,5 +91,6 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::get('/server', 'TestController@server')->name('server');
     Route::get('/daisy/{video}', 'TestController@daisy')->name('daisy');
     Route::get('/daisyload', 'TestController@daisyLoadCourses');
-    Route::get('/reload', 'ReloadPlayStoreController@index')->name('reload');
+    Route::get('/reload', 'ReloadPlayStoreController@index')->name('reload'); //Reload all presentations from play store
+    Route::get('/del/{video}', 'TestController@del')->name('del'); //Send delete notification to play-store
 });

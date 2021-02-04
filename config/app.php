@@ -184,6 +184,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\SystemServiceProvider::class,
         App\Providers\PlayServiceProvider::class,
+        App\Providers\ViewServiceProvider::class,
 
     ],
 

@@ -9,6 +9,8 @@ use App\MediasiteFolder;
 use App\MediasitePresentation;
 use App\Presenter;
 use App\Services\AuthHandler;
+use App\Services\Header\CourseNav;
+use App\Services\Notify\PlayStoreNotify;
 use App\Services\TicketHandler;
 use App\Tag;
 use App\UploadHandler;
@@ -41,13 +43,9 @@ class PlayController extends Controller
         //Initiate system
         app()->make('init')->check_system();
 
-        //-->
-        $data['courses'] = $this->getActiveCourses();
-        $data['hasmycourses'] = ($this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'psoko@su.se')->count() > 0);
         $data['search'] = 0;
         $data['latest'] = Video::with('category', 'video_course.course')->latest('id')->take(8)->get();
         $data['categories'] = Category::all();
-        // <--
 
         return view('home.index', $data);
     }
@@ -57,19 +55,12 @@ class PlayController extends Controller
      */
     public function myVideos()
     {
-        // If the environment is local
-        if (app()->environment('local')) {
-            $data['play_user'] = 'Developer';
-        } else {
-            $data['play_user'] = $_SERVER['displayName'];
-        }
-
-        $data['courses'] = $this->getActiveCourses();
-        $data['mycourses'] = $this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'psoko@su.se');
+        //--> This should be refactored
+        $data['mycourses'] = $this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'dsv-dev@su.se');
         if (!$data['mycourses']->count()) {
             abort(404);
         } else {
-            $data['hasmycourses'] = ($this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'psoko@su.se')->count() > 0);
+            $data['hasmycourses'] = ($this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'dsv-dev@su.se')->count() > 0);
         }
         $data['tags'] = $this->getFilterableItems($data['mycourses']);
         return view('home.my', $data);
@@ -77,7 +68,7 @@ class PlayController extends Controller
 
     public function myVideosFilter(Request $request)
     {
-        $mycourses = $this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'psoko@su.se');
+        $mycourses = $this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'dsv-dev@su.se');
         $tags = $request->tag_list ?? array();
         $courses = $request->course_list ?? array();
         $searchsplit = $request->text ? preg_split('/\s+/', strtolower($request->text)) : array();
@@ -145,15 +136,6 @@ class PlayController extends Controller
         return $tags;
     }
 
-    private
-    function getActiveCourses()
-    {
-        $courses = Course::where('designation', '<>', '')->orderBy('designation')->get()->filter(function ($course) {
-            return !$course->videos()->isEmpty();
-        });
-        return $courses->chunk(ceil($courses->count() / 3));
-    }
-
     /**
      * @param Video $video
      * @return RedirectResponse
@@ -178,15 +160,14 @@ class PlayController extends Controller
         return redirect()->away($url);
     }
 
-    public
-    function presentation($id)
+    public function presentation($id)
     {
         $video = Video::find($id);
+
         return $video->presentation;
     }
 
-    public
-    function playlist($id): string
+    public function playlist($id): string
     {
         //Generate a playlist of videos associated with the course
         $videos = VideoCourse::where('course_id', $id)->pluck('video_id')->toArray();
@@ -213,12 +194,11 @@ class PlayController extends Controller
             ->makeHidden('created_at')
             ->makeHidden('updated_at');
         $json['items'] = $playlist->toArray();
-        return $json->toJson(JSON_PRETTY_PRINT);
 
+        return $json->toJson(JSON_PRETTY_PRINT);
     }
 
-    public
-    function multiplayer()
+    public function multiplayer()
     {
         return view('player.index');
     }
@@ -281,7 +261,7 @@ class PlayController extends Controller
             'recordings' => $recordings,
             'other' => $other,
             'courses' => $this->getActiveCourses(),
-            'hasmycourses' => $this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'rydi5898@su.se')->count() > 0
+            'hasmycourses' => $this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'dsv-dev@su.se')->count() > 0
         ]);
     }
 
@@ -641,10 +621,9 @@ class PlayController extends Controller
         return false;
     }
 
-    public
-    function manage()
+    public function manage()
     {
-        return view('home.manage', ['videos' => Video::all(), 'allcourses' => Course::all(), 'courses' => $this->getActiveCourses(), 'categories' => Category::all(), 'hasmycourses' => $this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'rydi5898@su.se')->count() > 0]);
+        return view('home.manage', ['videos' => Video::all(), 'allcourses' => Course::all(),  'categories' => Category::all()]);
     }
 
     public
@@ -721,54 +700,27 @@ class PlayController extends Controller
         return $courses->merge($videos)->merge($tags);
     }
 
-    public
-    function showCourseVideos($courseid)
+    public function showCourseVideos($courseid)
     {
-        // If the environment is local
-        if (app()->environment('local')) {
-            $data['play_user'] = 'Developer';
-        } else {
-            $data['play_user'] = $_SERVER['displayName'];
-        }
-
-        $data['courses'] = $this->getActiveCourses();
         $data['course'] = Course::find($courseid)->name;
-        $data['hasmycourses'] = ($this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'rydi5898@su.se')->count() > 0);
         $data['latest'] = Course::find($courseid)->videos();
+
         return view('home.index', $data);
     }
 
-    public
-    function showTagVideos($tagid)
+    public function showTagVideos($tagid)
     {
-        // If the environment is local
-        if (app()->environment('local')) {
-            $data['play_user'] = 'Developer';
-        } else {
-            $data['play_user'] = $_SERVER['displayName'];
-        }
-
-        $data['courses'] = $this->getActiveCourses();
-        $data['hasmycourses'] = ($this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'rydi5898@su.se')->count() > 0);
         $data['tag'] = Tag::find($tagid)->name;
         $data['latest'] = Tag::find($tagid)->videos();
+
         return view('home.index', $data);
     }
 
-    public
-    function showPresenterVideos($presenterid)
+    public function showPresenterVideos($presenterid)
     {
-        // If the environment is local
-        if (app()->environment('local')) {
-            $data['play_user'] = 'Developer';
-        } else {
-            $data['play_user'] = $_SERVER['displayName'];
-        }
-
-        $data['courses'] = $this->getActiveCourses();
-        $data['hasmycourses'] = ($this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'rydi5898@su.se')->count() > 0);
         $data['presenter'] = Presenter::find($presenterid)->name;
         $data['latest'] = Presenter::find($presenterid)->videos();
+
         return view('home.index', $data);
     }
 }

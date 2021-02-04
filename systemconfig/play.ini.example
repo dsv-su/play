@@ -48,4 +48,8 @@ host=
 username=
 privateKey=
 pk-password=
-reload=                                 ; Base-Uri storage server
+
+[store]
+base_uri=                               ; Base-Uri storage server
+notify_uri=                             ; Notify Uri storage server
+list_uri=                               ; Presentations listings and delete uri storage server

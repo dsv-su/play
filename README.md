@@ -77,12 +77,16 @@ Requirements are best determined using Server Requirements page of corresponding
         username =
         password =
         
-        [sftp]
+        [sftp]                                  ; sFTP settings storage server
         host=
         username=
         privateKey=
         pk-password=
-        reload=                                 ; Base-Uri for Storage server
+
+        [store]
+        base_uri=                               ; Base-Uri storage server
+        notify_uri=                             ; Notify Uri storage server
+        list_uri=                               ; Presentations listings and delete uri storage server
 
         
 * Once the global settings are entered you can install the dependencies. `composer install`

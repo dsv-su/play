@@ -9,10 +9,15 @@
     <link rel="stylesheet" type="text/css" href="{{asset('bootstrap/bootstrap-4.5.3-dist/css/bootstrap.min.css')}}"/>
     <link rel="stylesheet" href="{{asset('./css/fontawesome/css/all.css')}}">
     <link rel="stylesheet" href="{{asset('/css/su.css')}}">
+    <link rel="stylesheet" href="{{asset('/css/upload.css')}}">
     <script src="{{asset('./js/jquery-3.5.1.min.js')}}"></script>
     <script src="{{asset('js/popper.min.js')}}"></script>
     <script src="{{asset('bootstrap/bootstrap-4.5.3-dist/js/bootstrap.bundle.js')}}"></script>
     <script src="{{asset('js/su.js')}}"></script>
+    <!-- Include Bootstrap Datepicker -->
+    <link rel="stylesheet" type="text/css" href="{{asset('bootstrap/datepicker/bootstrap-datepicker.min.css')}}" />
+    <script src="{{asset('bootstrap/datepicker/bootstrap-datepicker.min.js')}}"></script>
+    <script src="{{asset('bootstrap/datepicker/bootstrap-datepicker.sv.js')}}"></script>
     <title>DSVPlay</title>
 </head>
 <body>

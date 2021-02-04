@@ -41,6 +41,6 @@ class CheckPlayStoreApi extends Model
         }
         $this->system_config = parse_ini_file($this->file, true);
 
-        return $this->system_config['sftp']['reload'];
+        return $this->system_config['store']['base_uri'];
     }
 }

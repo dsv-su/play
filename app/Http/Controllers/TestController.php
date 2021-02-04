@@ -290,6 +290,14 @@ class TestController extends Controller
     /*************************************************************************************
      */
 
+    public function del(Video $video)
+    {
+        //Send Delete notification
+        $notify = new PlayStoreNotify($video);
+        $notify->sendDelete();
+        return back()->with(['message' => 'Presentationen har raderats']);
+    }
+
     public function php()
     {
         return phpinfo();
