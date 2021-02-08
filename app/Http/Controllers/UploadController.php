@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ManualPresentation;
 use App\Services\Notify\PlayStoreNotify;
+use App\Services\Store\SftpPlayStore;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
@@ -67,7 +68,7 @@ class UploadController extends Controller
                     $name = 'media' . ($audio + 1) . '.' . $file->extension();
                     $file->move(storage_path('/app/public/' . $dirname . '/video'), $name);
                     $files[$audio]['video'] = 'video/' . $name;
-                    $files[$audio]['poster'] = 'image/poster_' . ($audio + 1) . '.png';
+                    $files[$audio]['poster'] = 'poster/poster_' . ($audio + 1) . '.png';
                     if ($audio == 0) {
                         $files[$audio]['playAudio'] = true;
                     } else {
@@ -152,7 +153,7 @@ class UploadController extends Controller
                 ->getFrameFromSeconds($seconds)
                 ->export()
                 ->toDisk('public')
-                ->save('/' . $manualPresentation->local . '/image/poster_' . $poster . '.png');
+                ->save('/' . $manualPresentation->local . '/poster/poster_' . $poster . '.png');
             $poster++;
         }
 
@@ -189,7 +190,7 @@ class UploadController extends Controller
             ->getFrameFromSeconds($request->seconds)
             ->export()
             ->toDisk('public')
-            ->save('/' . $presentation->local . '/image/poster_' . $request->poster . '.png');
+            ->save('/' . $presentation->local . '/poster/poster_' . $request->poster . '.png');
         $final = 1;
 
         return view('upload.index', $presentation, compact('durationInSeconds', 'final'));
@@ -199,39 +200,14 @@ class UploadController extends Controller
     {
         $presentation = ManualPresentation::find($id);
 
-        // Make remote folders and send all files
-        //Send video files
-        $directory = '/' . $presentation->local . '/video';
-        $remote_dir = $presentation->local . '/video';
-        $contents = Storage::disk('public')->files($directory);
-        Storage::disk('sftp')->makeDirectory($remote_dir);
-        try {
-            foreach ($contents as $sendfile) {
-                $media = Storage::disk('public')->get($sendfile);
-                $response = Storage::disk('sftp')->put($sendfile, $media, 'public');
-            }
-        } catch (RunTimeException $e) {
-            $presentation->status = 'failed';
-            $presentation->save();
-            dd('Error' . $e->getMessage());
-        }
-
-        //Send image files
-        $directory = '/' . $presentation->local . '/image';
-        $remote_dir = $presentation->local . '/image';
-        $contents = Storage::disk('public')->files($directory);
-        Storage::disk('sftp')->makeDirectory($remote_dir);
-        try {
-            foreach ($contents as $sendfile) {
-                $media = Storage::disk('public')->get($sendfile);
-                $response = Storage::disk('sftp')->put($sendfile, $media, 'public');
-            }
-        } catch (RunTimeException $e) {
-            dd('Error' . $e->getMessage());
-        }
+        $upload = new SftpPlayStore($presentation);
+        $upload->sftpVideo();
+        $upload->sftpImage();
+        $upload->sftpPoster();
 
         //Remove temp storage
         Storage::disk('public')->deleteDirectory($presentation->local);
+
         //Change manualupdate status
         $presentation->status = 'stored';
         $presentation->save();

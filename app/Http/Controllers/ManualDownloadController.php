@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Presentation;
 use App\Services\DownloadZip;
 use App\Services\Notify\PlayStoreNotify;
+use App\Services\Store\SftpPlayStore;
 use App\Video;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -148,46 +149,11 @@ class ManualDownloadController extends Controller
     {
         $presentation = Presentation::find($id);
 
-        // Make remote folders and send all files
-
-        //Send video files
-        $directory = $presentation->local.'/video';
-        $contents = Storage::disk('public')->files($directory);
-
-        try {
-            foreach($contents as $sendfile) {
-                $media = Storage::disk('public')->get($sendfile);
-                $response = Storage::disk('sftp')->put($sendfile, $media, 'public');
-            }
-        } catch (\RunTimeException $e) {
-            dd('Error'. $e->getMessage());
-        }
-
-        //Send image files
-        $directory = $presentation->local.'/image';
-        $contents = Storage::disk('public')->files($directory);
-
-        try {
-            foreach($contents as $sendfile) {
-                $media = Storage::disk('public')->get($sendfile);
-                $response = Storage::disk('sftp')->put($sendfile, $media, 'public');
-            }
-        } catch (\RunTimeException $e) {
-            dd('Error'. $e->getMessage());
-        }
-
-        //Send image poster files
-        $directory = $presentation->local.'/poster';
-        $contents = Storage::disk('public')->files($directory);
-
-        try {
-            foreach($contents as $sendfile) {
-                $media = Storage::disk('public')->get($sendfile);
-                $response = Storage::disk('sftp')->put($sendfile, $media, 'public');
-            }
-        } catch (\RunTimeException $e) {
-            dd('Error'. $e->getMessage());
-        }
+        //Make remote folders and send all files
+        $upload = new SftpPlayStore($presentation);
+        $upload->sftpVideo();
+        $upload->sftpImage();
+        $upload->sftpPoster();
 
         //Remove temp storage
         Storage::disk('public')->deleteDirectory($presentation->local);
@@ -223,7 +189,7 @@ class ManualDownloadController extends Controller
                 $downloaded_files = $this->getDownloadedVideoFiles($presentation->local);
                 foreach ($downloaded_files as $file) {
                     $files[$audio]['video'] = 'video/'.$file;
-                    $files[$audio]['poster'] = 'image/poster_'.($audio+1).'.png';
+                    $files[$audio]['poster'] = 'poster/poster_'.($audio+1).'.png';
                     if($audio == 0){
                         $files[$audio]['playAudio'] = true;
                     } else {
