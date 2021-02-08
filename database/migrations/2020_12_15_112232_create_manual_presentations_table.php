@@ -16,6 +16,7 @@ class CreateManualPresentationsTable extends Migration
         Schema::create('manual_presentations', function (Blueprint $table) {
             $table->id();
             $table->string('status');
+            $table->string('user')->nullable();
             $table->string('local');
             $table->string('base');
             $table->string('title');

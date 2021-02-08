@@ -5,29 +5,45 @@ namespace App\Http\Controllers;
 use App\ManualPresentation;
 use App\Services\Notify\PlayStoreNotify;
 use Carbon\Carbon;
-use Exception;
-use GuzzleHttp\Client;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Collection;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
-use RunTimeException;
 use Storage;
 
-class ManualUploadController extends Controller
+class UploadController extends Controller
 {
 
-    public function index()
+    public function init_upload()
     {
-        return view('manual.index');
+        //Initate New upload
+        $file = new ManualPresentation();
+        $file->status = 'init';
+        $file->user = app()->make('presenter');
+        $file->local = '-';
+        $file->base = '-';
+        $file->title = '';
+        $file->presenters = [];
+        $file->tags = [];
+        $file->courses = [];
+        $file->thumb = '';
+        $file->created = now()->format('Y-m-d');
+        $file->duration = 0;
+        $file->sources = [];
+        $file->save();
+
+        return $file;
     }
 
-    public function step1(Request $request)
+    public function upload()
+    {
+        $final = 0;
+        $durationInSeconds = 0;
+        return view('upload.index', $this->init_upload(), compact('final', 'durationInSeconds'));
+    }
+
+    public function step1($id, Request $request)
     {
         if ($request->isMethod('post')) {
+
             //First validation
             $this->validate($request, [
                 'title' => 'required',
@@ -35,6 +51,9 @@ class ManualUploadController extends Controller
                 'filenames' => 'required',
                 'filenames.*' => 'required'
             ]);
+
+            //Retrived the upload
+            $manualPresentation = ManualPresentation::find($id);
 
             //Store uploaded videofiles
             $files = [];
@@ -57,7 +76,11 @@ class ManualUploadController extends Controller
                     $audio++;
                 }
             }
+
             //Presenters
+            //Add current user in array
+            $presenters[] = app()->make('presenter');
+
             if ($request->presenters) {
                 foreach ($request->presenters as $presenter) {
                     $presenters[] = $presenter;
@@ -85,32 +108,58 @@ class ManualUploadController extends Controller
                 $default_entitlement = 'urn:mace:swami.se:gmai:dsv-user:staff;urn:mace:swami.se:gmai:dsv-user:student';
             }
 
-            //Store in model
-            $file = new ManualPresentation();
-            $file->status = 'pending';
-            $file->local = $dirname;
-            $file->base = '/data0/incoming/' . $dirname;
-            $file->title = $request->title;
-            $file->presenters = $presenters;
-            $file->tags = $tags;
-            $file->courses = $courses;
-            $file->thumb = 'image/'.$request->thumb; //TODO
-            $file->created = strtotime($request->created);
-            $file->duration = $durationInSeconds;
-            $file->sources = $files;
-            $file->permission = $request->permission;
-            $file->entitlement = $request->entitlement ?? $default_entitlement;
-            $id = $file->save();
-            $file->thumb = $this->gen_thumb_poster($file, $durationInSeconds/3);
-            $file->save();
+            //Update model
+            $manualPresentation->status = 'pending';
+            $manualPresentation->local = $dirname;
+            $manualPresentation->base = '/data0/incoming/' . $dirname;
+            $manualPresentation->title = $request->title;
+            $manualPresentation->presenters = $presenters;
+            $manualPresentation->tags = $tags;
+            $manualPresentation->courses = $courses;
+            //$manualPresentation->thumb = 'image/'.$request->thumb; //TODO
+            $manualPresentation->created = strtotime($request->created);
+            $manualPresentation->duration = $durationInSeconds;
+            $manualPresentation->sources = $files;
+            $manualPresentation->permission = $request->permission;
+            $manualPresentation->entitlement = $request->entitlement ?? $default_entitlement;
+            //$id = $manualPresentation->save();
+            $manualPresentation->thumb = $this->gen_thumb_poster($manualPresentation, $durationInSeconds/3);
+            $id =$manualPresentation->save();
 
-            return view('manual.step1', $file, compact('durationInSeconds'));
+            $final = 1;
+
+            return view('upload.index', $manualPresentation, compact('durationInSeconds', 'final'));
         }
 
-        return redirect()->route('manual_upload');
+        return back()->withInput();
     }
 
-    public function gen_thumb($id, Request $request)
+    private function gen_thumb_poster(ManualPresentation $manualPresentation, $seconds)
+    {
+        //Create thumb and store in folder
+        FFMpeg::fromDisk('public')
+            ->open('/' . $manualPresentation->local . '/video/media1.mp4')
+            ->getFrameFromSeconds($seconds)
+            ->export()
+            ->toDisk('public')
+            ->save('/' . $manualPresentation->local . '/image/primary_thumb.png');
+
+        //Create posters
+        $poster = 1;
+        foreach ($manualPresentation->sources as $source) {
+            FFMpeg::fromDisk('public')
+                ->open('/' . $manualPresentation->local . '/video/media' . $poster . '.mp4')
+                ->getFrameFromSeconds($seconds)
+                ->export()
+                ->toDisk('public')
+                ->save('/' . $manualPresentation->local . '/image/poster_' . $poster . '.png');
+            $poster++;
+        }
+
+        return 'image/primary_thumb.png';
+    }
+
+    public function thumb($id, Request $request)
     {
         $presentation = ManualPresentation::find($id);
 
@@ -125,11 +174,12 @@ class ManualUploadController extends Controller
         $presentation->thumb = 'image/primary_thumb' . $id . '.png';
         $presentation->save();
         $durationInSeconds = $presentation->duration;
+        $final = 1;
 
-        return view('manual.step1', $presentation, compact('durationInSeconds'));
+        return view('upload.index', $presentation, compact('durationInSeconds', 'final'));
     }
 
-    public function gen_poster($id, Request $request)
+    public function poster($id, Request $request)
     {
         $presentation = ManualPresentation::find($id);
         $durationInSeconds = $presentation->duration;
@@ -140,11 +190,12 @@ class ManualUploadController extends Controller
             ->export()
             ->toDisk('public')
             ->save('/' . $presentation->local . '/image/poster_' . $request->poster . '.png');
+        $final = 1;
 
-        return view('manual.step1', $presentation, compact('durationInSeconds'));
+        return view('upload.index', $presentation, compact('durationInSeconds', 'final'));
     }
 
-    public function step3($id)
+    public function store($id)
     {
         $presentation = ManualPresentation::find($id);
 
@@ -160,6 +211,8 @@ class ManualUploadController extends Controller
                 $response = Storage::disk('sftp')->put($sendfile, $media, 'public');
             }
         } catch (RunTimeException $e) {
+            $presentation->status = 'failed';
+            $presentation->save();
             dd('Error' . $e->getMessage());
         }
 
@@ -186,30 +239,7 @@ class ManualUploadController extends Controller
         // Send notify
         $notify = new PlayStoreNotify($presentation);
         $notify->sendSuccess('manual');
-    }
 
-    private function gen_thumb_poster(ManualPresentation $manualPresentation, $seconds)
-    {
-        //Create thumb and store in folder
-        FFMpeg::fromDisk('public')
-            ->open('/' . $manualPresentation->local . '/video/media1.mp4')
-            ->getFrameFromSeconds($seconds)
-            ->export()
-            ->toDisk('public')
-            ->save('/' . $manualPresentation->local . '/image/primary_thumb' . $manualPresentation->id . '.png');
-
-        //Create posters
-        $poster = 1;
-        foreach ($manualPresentation->sources as $source) {
-            FFMpeg::fromDisk('public')
-                ->open('/' . $manualPresentation->local . '/video/media' . $poster . '.mp4')
-                ->getFrameFromSeconds($seconds)
-                ->export()
-                ->toDisk('public')
-                ->save('/' . $manualPresentation->local . '/image/poster_' . $poster . '.png');
-            $poster++;
-        }
-
-        return 'image/primary_thumb' . $manualPresentation->id . '.png';
+        return redirect('/')->with(['message' => 'Presentationen har laddats upp!']);
     }
 }

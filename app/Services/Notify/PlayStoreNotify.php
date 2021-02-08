@@ -21,6 +21,7 @@ class PlayStoreNotify extends Model
         // type: manual | type: update
         $this->presentation
             ->makeHidden('status')
+            ->makeHidden('user')
             ->makeHidden('local')
             ->makeHidden('permission')
             ->makeHidden('entitlement')
@@ -85,6 +86,7 @@ class PlayStoreNotify extends Model
         $this->presentation
             ->makeHidden('id')
             ->makeHidden('status')
+            ->makeHidden('user')
             ->makeHidden('base')
             ->makeHidden('local')
             ->makeHidden('title')

@@ -73,18 +73,14 @@
                             <td>{{$manual_presentation->created_at}}</td>
                             <td>{{$manual_presentation->title}}</td>
                             <td>{{$manual_presentation->local}}</td>
-                            @foreach($manual_presentation->presenters as $uploader)
-                                @if ($loop->first)
-                                    <td>{{$uploader}}</td>
-                                @endif
-                            @endforeach
+                            <td>{{$manual_presentation->user}}</td>
                             @if($manual_presentation->status == 'failed' or $manual_presentation->status == 'stored')
                                 <td><a role="button" class="btn btn-danger btn-sm" href="{{route('manual_admin_notify_fail', $manual_presentation->id)}}">Notify fail</a></td>
                             @elseif($manual_presentation->status == 'pending')
                                 <td><a role="button" class="btn btn-warning btn-sm" href="{{route('manual_admin_erase', $manual_presentation->id)}}">Erase</a></td>
                             @elseif($manual_presentation->status == 'notified')
                                 <td><a role="button" class="btn btn-info btn-sm" href="{{route('manual_admin_unregister', $manual_presentation->id)}}">Unregister</a></td>
-                            @elseif($manual_presentation->status == 'sent')
+                            @elseif($manual_presentation->status == 'sent' or $manual_presentation->status == 'init')
                                 <td><a role="button" class="btn btn-primary btn-sm" href="{{route('manual_admin_unregister', $manual_presentation->id)}}">Unregister</a></td>
                             @endif
                         </tr>

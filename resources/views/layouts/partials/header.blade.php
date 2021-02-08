@@ -103,7 +103,7 @@
                                 </li>
                                 <li class="mega-menu-collapse-col col">
                                     <a class="nav-link level-2" href="#">Hantera uppspelning</a>
-                                    <a class="nav-link level-2" href="{{ route('manual_upload') }}">Manuell
+                                    <a class="nav-link level-2" href="{{ route('user_upload') }}">Manuell
                                         uppladdning</a>
                                     <a class="nav-link level-2" href="{{ route('manual_admin') }}">Only for
                                         administrators</a>
