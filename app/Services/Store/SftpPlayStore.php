@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 
 class SftpPlayStore extends Model
 {
+    protected $public_path;
     protected $video_directory, $image_directory, $poster_directory;
     protected $video_remote_dir, $image_remote_dir;
     protected $presentation, $response, $contents, $sendfile, $media, $name;
@@ -28,6 +29,9 @@ class SftpPlayStore extends Model
 
     private function settings()
     {
+        //Local public path
+        $this->public_path = public_path().'/storage/';
+
         //Temporary directories
         $this->video_directory =  $this->presentation->local . '/video';
         $this->image_directory = $this->presentation->local . '/image';
@@ -52,7 +56,10 @@ class SftpPlayStore extends Model
         try {
             foreach ($this->contents as $this->sendfile) {
                 $this->media = Storage::disk('public')->get($this->sendfile);
-                $this->response = Storage::disk('sftp')->put($this->sendfile, $this->media, 'public');
+                //$this->response = Storage::disk('sftp')->put($this->sendfile, $this->media, 'public');
+                $this->name = substr($this->sendfile, strrpos($this->sendfile, '/') + 1);
+                //Automatic Streaming
+                $this->response = Storage::disk('sftp')->putFileAs($this->video_remote_dir, new File($this->public_path.$this->sendfile), $this->name);
             }
         } catch (RunTimeException $e) {
             $this->presentation->status = 'failed';
@@ -69,7 +76,10 @@ class SftpPlayStore extends Model
         try {
             foreach ($this->contents as $this->sendfile) {
                 $this->media = Storage::disk('public')->get($this->sendfile);
-                $this->response = Storage::disk('sftp')->put($this->sendfile, $this->media, 'public');
+                //$this->response = Storage::disk('sftp')->put($this->sendfile, $this->media, 'public');
+                $this->name = substr($this->sendfile, strrpos($this->sendfile, '/') + 1);
+                //Automatic Streaming
+                $this->response = Storage::disk('sftp')->putFileAs($this->image_remote_dir, new File($this->public_path.$this->sendfile), $this->name);
             }
         } catch (RunTimeException $e) {
             dd('Error' . $e->getMessage());
@@ -84,7 +94,10 @@ class SftpPlayStore extends Model
         try {
             foreach ($this->contents as $this->sendfile) {
                 $this->media = Storage::disk('public')->get($this->sendfile);
-                $this->response = Storage::disk('sftp')->put($this->sendfile, $this->media, 'public');
+                //$this->response = Storage::disk('sftp')->put($this->sendfile, $this->media, 'public');
+                $this->name = substr($this->sendfile, strrpos($this->sendfile, '/') + 1);
+                //Automatic Streaming
+                $this->response = Storage::disk('sftp')->putFileAs($this->poster_remote_dir, new File($this->public_path.$this->sendfile), $this->name);
             }
         } catch (RunTimeException $e) {
             dd('Error' . $e->getMessage());
