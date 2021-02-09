@@ -44,7 +44,7 @@ class PlayController extends Controller
         app()->make('init')->check_system();
 
         $data['search'] = 0;
-        $data['latest'] = Video::with('category', 'video_course.course')->latest('id')->take(8)->get();
+        $data['latest'] = Video::with('category', 'video_course.course')->latest('created_at')->take(8)->get();
         $data['categories'] = Category::all();
 
         return view('home.index', $data);

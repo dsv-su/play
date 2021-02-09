@@ -378,7 +378,7 @@ class ManualDownloadController extends Controller
             ->getFrameFromSeconds($seconds)
             ->export()
             ->toDisk('public')
-            ->save($presentation->local.$presentation->thumb);
+            ->save($presentation->local.'/'.$presentation->thumb);
         return $presentation->thumb;
     }
 
@@ -396,7 +396,7 @@ class ManualDownloadController extends Controller
             ->getFrameFromSeconds($request->seconds)
             ->export()
             ->toDisk('public')
-            ->save($presentation->local.$presentation->thumb);
+            ->save($presentation->local.'/'.$presentation->thumb);
 
         //Get downloaded files names
 
