@@ -55,8 +55,6 @@ class SftpPlayStore extends Model
 
         try {
             foreach ($this->contents as $this->sendfile) {
-                $this->media = Storage::disk('public')->get($this->sendfile);
-                //$this->response = Storage::disk('sftp')->put($this->sendfile, $this->media, 'public');
                 $this->name = substr($this->sendfile, strrpos($this->sendfile, '/') + 1);
                 //Automatic Streaming
                 $this->response = Storage::disk('sftp')->putFileAs($this->video_remote_dir, new File($this->public_path.$this->sendfile), $this->name);
@@ -75,8 +73,6 @@ class SftpPlayStore extends Model
 
         try {
             foreach ($this->contents as $this->sendfile) {
-                $this->media = Storage::disk('public')->get($this->sendfile);
-                //$this->response = Storage::disk('sftp')->put($this->sendfile, $this->media, 'public');
                 $this->name = substr($this->sendfile, strrpos($this->sendfile, '/') + 1);
                 //Automatic Streaming
                 $this->response = Storage::disk('sftp')->putFileAs($this->image_remote_dir, new File($this->public_path.$this->sendfile), $this->name);
@@ -93,8 +89,6 @@ class SftpPlayStore extends Model
 
         try {
             foreach ($this->contents as $this->sendfile) {
-                $this->media = Storage::disk('public')->get($this->sendfile);
-                //$this->response = Storage::disk('sftp')->put($this->sendfile, $this->media, 'public');
                 $this->name = substr($this->sendfile, strrpos($this->sendfile, '/') + 1);
                 //Automatic Streaming
                 $this->response = Storage::disk('sftp')->putFileAs($this->poster_remote_dir, new File($this->public_path.$this->sendfile), $this->name);
