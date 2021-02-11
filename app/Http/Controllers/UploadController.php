@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ManualPresentation;
+use App\Services\Ffmpeg\DetermineDurationVideo;
 use App\Services\Notify\PlayStoreNotify;
 use App\Services\Store\SftpPlayStore;
 use Carbon\Carbon;
@@ -50,7 +51,7 @@ class UploadController extends Controller
                 'title' => 'required',
                 'created' => 'required',
                 'filenames' => 'required',
-                'filenames.*' => 'required'
+                'filenames.*' => 'required|mimes:mp4,mov,avi,webm,mpg,mpeg,wmv,qt,avchd'
             ]);
 
             //Retrived the upload
@@ -87,12 +88,14 @@ class UploadController extends Controller
                     $presenters[] = $presenter;
                 }
             }
+
             //Courses
             if ($request->courses) {
                 foreach ($request->courses as $course) {
                     $courses[] = $course;
                 }
             } else $courses[] = '';
+
             //Tags
             if ($request->tags) {
                 foreach ($request->tags as $tag) {
@@ -100,9 +103,15 @@ class UploadController extends Controller
                 }
             } else $tags[] = '';
 
-            //Determine duration of media
-            $media = FFMpeg::fromDisk('public')->open('/' . $dirname . '/video/media1.mp4');
-            $durationInSeconds = $media->getDurationInSeconds();
+            //Determine duration of primary media
+            $primary_video_name = substr($files[0]['video'], strrpos($files[0]['video'], '/') + 1);
+            $media = new DetermineDurationVideo($dirname);
+            $durationInSeconds = $media->duration($primary_video_name);
+
+            //Check media diffs (+- 3 sec)
+            if(!$media->check()) {
+                return back()->withInput()->with(['error' => 'Mediafilerna har olika längd och skiljer åt mer än +/- 3 sek. Kontrollera och ladda upp på nytt!']);;
+            }
 
             //Default entitlement
             if($request->permission == 'false') {

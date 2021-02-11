@@ -14,11 +14,16 @@
                         </ul>
                     </div>
                 @endif
-                    @if(session('success'))
-                        <div class="alert alert-success">
-                            {{ session('success') }}
-                        </div>
-                    @endif
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+                @if(session('error'))
+                        <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
                 <h2 id="heading">Ladda upp presentation</h2>
                 <p>Fyll i alla steg i formuläret för att ladda upp din presentation</p>
                     <!-- progressbar -->
@@ -86,6 +91,10 @@
                             <br>
                             <button type="button" name="courseadd" class="btn btn-outline-primary btn-sm courseadd">Kurs <i class="fas fa-chalkboard"></i></button>
                             <table class="table table-sm" id="course_table">
+                                @if(count($courses) > 0)
+                                H
+                                @endif
+
                             </table>
                             <p class="description">
                                 Gör även inspelningen sökbar genom att ange taggar.

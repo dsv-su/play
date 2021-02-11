@@ -8,9 +8,7 @@ use App\Services\Notify\PlayStoreNotify;
 use App\Services\Store\SftpPlayStore;
 use App\Video;
 use Carbon\Carbon;
-use GuzzleHttp\Client;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 use Storage;
 
