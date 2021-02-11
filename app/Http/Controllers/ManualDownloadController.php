@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Presentation;
 use App\Services\DownloadZip;
+use App\Services\Ffmpeg\DetermineDurationVideo;
 use App\Services\Notify\PlayStoreNotify;
 use App\Services\Store\SftpPlayStore;
 use App\Video;
@@ -227,9 +228,10 @@ class ManualDownloadController extends Controller
                     $default_entitlement = 'urn:mace:swami.se:gmai:dsv-user:staff;urn:mace:swami.se:gmai:dsv-user:student';
                 }
 
-                //Determine duration of media
-                $media = FFMpeg::fromDisk('public')->open('/'.$dirname.'/video/media1.mp4');
-                $duration = $media->getDurationInSeconds();
+                //Determine duration of primary media
+                $primary_video_name = substr($files[0]['video'], strrpos($files[0]['video'], '/') + 1);
+                $media = new DetermineDurationVideo($dirname);
+                $duration = $media->duration($primary_video_name);
 
                 //Update Presentation
                 $presentation->status = 'update';
@@ -258,7 +260,7 @@ class ManualDownloadController extends Controller
                     'title' => 'required',
                     'created' => 'required',
                     'filenames' => 'required',
-                    'filenames.*' => 'required',
+                    'filenames.*' => 'required|mimes:mp4,mov,avi,webm,mpg,mpeg,wmv,qt,avchd',
                     'validate' => 'required'
                 ]);
 
@@ -315,9 +317,15 @@ class ManualDownloadController extends Controller
                 }
                 else $tags[] = '';
 
-                //Determine duration of media
-                $media = FFMpeg::fromDisk('public')->open('/'.$dirname.'/video/media1.mp4');
-                $duration = $media->getDurationInSeconds();
+                //Determine duration of primary media
+                $primary_video_name = substr($files[0]['video'], strrpos($files[0]['video'], '/') + 1);
+                $media = new DetermineDurationVideo($dirname);
+                $duration = $media->duration($primary_video_name);
+
+                //Check media diffs (+- 3 sec)
+                if(!$media->check()) {
+                    return back()->withInput()->with(['error' => 'Mediafilerna har olika längd och skiljer åt mer än +/- 3 sek. Kontrollera och ladda upp på nytt!']);
+                }
 
                 //Default entitlement
                 if($request->permission == 'false') {

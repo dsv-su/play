@@ -1,6 +1,26 @@
 @extends('layouts.suplay')
 @section('content')
     <div class="container">
+        @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                Fel på inmatningen!.<br><br>
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
         <div class="row">
             <h2>Redigering av presentation: <strong>{{$title}}</strong></h2>
         </div>

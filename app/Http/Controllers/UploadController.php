@@ -110,7 +110,7 @@ class UploadController extends Controller
 
             //Check media diffs (+- 3 sec)
             if(!$media->check()) {
-                return back()->withInput()->with(['error' => 'Mediafilerna har olika längd och skiljer åt mer än +/- 3 sek. Kontrollera och ladda upp på nytt!']);;
+                return back()->withInput()->with(['error' => 'Mediafilerna har olika längd och skiljer åt mer än +/- 3 sek. Kontrollera och ladda upp på nytt!']);
             }
 
             //Default entitlement
