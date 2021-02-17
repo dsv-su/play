@@ -16,12 +16,15 @@ use Spatie\Searchable\SearchResult;
 class Video extends Model implements Searchable
 {
     use SearchableTrait;
+    //UUID
     protected $primaryKey = 'id';
     protected $keyType = 'string';
     public $incrementing = false;
 
     protected $fillable = ['presentation_id', 'title', 'thumb','creation','origin','notification_id', 'presenter', 'duration', 'thumb', 'category_id'];
     protected $table = 'videos';
+
+    //
     protected $searchable = [
         'columns' => [
             'videos.title' => 10,
@@ -31,6 +34,8 @@ class Video extends Model implements Searchable
             'categories' => ['videos.category_id', 'categories.id'],
         ],
     ];
+
+    //Playlist
     protected $appends = ['link', 'type'];
 
     public function getLinkAttribute(): string

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ManualPresentation;
 use App\Services\Ffmpeg\DetermineDurationVideo;
+use App\Services\Ldap\SukatUser;
 use App\Services\Notify\PlayStoreNotify;
 use App\Services\Store\SftpPlayStore;
 use Carbon\Carbon;
@@ -226,5 +227,10 @@ class UploadController extends Controller
         $notify->sendSuccess('manual');
 
         return redirect('/')->with(['message' => 'Presentationen har laddats upp!']);
+    }
+
+    public function ldap_search(Request $request)
+    {
+        return SukatUser::whereStartsWith('cn', $request->q)->get();
     }
 }

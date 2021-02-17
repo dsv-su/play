@@ -60,6 +60,7 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::post('/thumb/{id}', 'UploadController@thumb')->name('thumb');
     Route::post('/poster/{id}', 'UploadController@poster')->name('poster');
     Route::get('/upload_store/{id}', 'UploadController@store')->name('upload_store');
+    Route::get('/ldap_search', 'UploadController@ldap_search')->name('ldap_search');
 
     //Admin upload/download
     Route::get('/manual_admin', 'AdminController@admin')->name('manual_admin');

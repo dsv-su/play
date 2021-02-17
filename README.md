@@ -88,6 +88,13 @@ Requirements are best determined using Server Requirements page of corresponding
         notify_uri=                             ; Notify Uri storage server
         list_uri=                               ; Presentations listings and delete uri storage server
 
+        [sukat]                                 ; SUKAT OpenLDAP account credentials
+        host=
+        username=
+        password=
+        port=389
+        base_dn=
+        timeout=5
         
 * Once the global settings are entered you can install the dependencies. `composer install`
 

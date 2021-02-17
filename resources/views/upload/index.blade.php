@@ -1,4 +1,4 @@
-@extends('layouts.suplay')
+@extends('layouts.suplay_upload')
 @section('content')
 <div class="container-fluid">
     <div class="row justify-content-center">
@@ -285,6 +285,8 @@
 </div>
 <!-- js -->
 <script src="{{ asset('./js/upload.js') }}"></script>
+<!-- Typeahead.js Bundle -->
+<script src="{{ asset('./js/typeahead/typeahead.bundle.js') }}"></script>
     <script>
     $(document).ready(function() {
 

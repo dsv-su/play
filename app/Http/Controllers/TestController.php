@@ -22,6 +22,7 @@ use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 use Spatie\Searchable\ModelSearchAspect;
 use Spatie\Searchable\Search;
 
+
 class TestController extends Controller
 {
     public function index()
@@ -133,16 +134,6 @@ class TestController extends Controller
         /*****************************
          * In working progress --> This is all for testing - will be rewritten!!
          */
-
-        // If the environment is local
-        /*
-        if (app()->environment('local')) {
-            $play_user = 'Förnamn Efternamn';
-        } else {
-
-            $play_user = $_SERVER['displayName'];
-        }
-        */
 
         /**************************
          * Check if searchstring is empty
