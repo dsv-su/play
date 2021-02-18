@@ -72,7 +72,7 @@ class TestController extends Controller
             'courseSegment?semester=20202',
             'courseSegment?semester=20191',
             'courseSegment?semester=20192',
-            'courseSegment?semester=20181',
+           /* 'courseSegment?semester=20181',
             'courseSegment?semester=20182',
             'courseSegment?semester=20171',
             'courseSegment?semester=20172',
@@ -89,7 +89,7 @@ class TestController extends Controller
             'courseSegment?semester=20111',
             'courseSegment?semester=20112',
             'courseSegment?semester=20101',
-            'courseSegment?semester=20102',
+            'courseSegment?semester=20102',*/
         );
 
 
@@ -119,13 +119,13 @@ class TestController extends Controller
                 // } else $course->semester = 'HT';
                 // $course->year = substr($item['semester'], 0, 4);
                 $course->name = $item['name'];
-
+                $course->designation = $item['designation'];
                 $course->save();
             }
             $course->save();
         }
 
-        return redirect()->route('daisy');
+        dd('DOne');
 
     }
 

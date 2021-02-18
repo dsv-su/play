@@ -24,6 +24,7 @@ class CourseStore extends Model
                 if(!$this->db_course = Course::where('name', $this->item)->first()) {
                     $this->course = Course::create([
                         'name' => $this->item,
+                        'designation' => $this->item,
                     ]);
 
                     VideoCourse::create([

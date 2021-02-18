@@ -24,8 +24,13 @@
         <div class="row no-gutters w-100">
             <div class="col-12">
                 <div>
-                    <h1 class="word-wrap_xs-only">Latest videos @if (isset($course))
-                            from {{$course}} course @elseif (isset($tag)) labelled by {{$tag}} @elseif (isset($presenter)) by {{$presenter}} @endif</h1>
+                    <span class="su-theme-anchor"></span>
+                    <h2 class="su-theme-header mb-4">
+                        <span class="far fa-clock fa-icon-border mr-2" aria-hidden="true"></span>
+                        Senast tillagt @if (isset($course))
+                            from {{$course}} course @elseif (isset($tag)) labelled by {{$tag}} @elseif (isset($presenter)) by {{$presenter}} @endif
+                    </h2>
+
                 </div>
             </div> <!-- col-12 -->
         </div> <!-- row no-gutters -->

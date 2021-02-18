@@ -109,17 +109,11 @@ body {
     display: flex;
     align-items: center;
 }
-.playlist-item a:hover {
-    border-color: var(--highlight);
-}
 .playlist-item img {
     width: 150px;
     height: auto;
     margin: var(--gap);
     border: 1px solid var(--fade);
-}
-.playlist-item a:hover img {
-    border-color: var(--highlight);
 }
 .playlist-item span {
     margin: calc(var(--gap) * 3);
@@ -127,7 +121,7 @@ body {
 }
 .current a {
     background-color: var(--background-other);
-    color: var(--highlight);
+    color: var(--fade-other);
 }
 
 /** control box **/
@@ -337,13 +331,16 @@ body {
 /** element showing **/
 
 #about.expand {
-    height: calc(100vh - var(--controls-fullheight));
+    height: 100vh;
+    grid-template-columns: 3rem auto;
 }
 #about.expand #playlist {
     display: flex;
+    margin-bottom: var(--controls-fullheight);
+    place-self: stretch;
 }
 .stream:hover > .fade {
-    opacity: 60%;
+    opacity: 80%;
 }
 #progress-container:hover,
 #progress-container:focus-within {
@@ -380,11 +377,18 @@ body {
 
 /** highlighting **/
 
-.fade:hover,
-.fade:focus,
-*:hover > .fade,
-*:focus > .fade {
+svg:hover,
+svg:focus,
+*:hover > svg,
+*:focus > svg {
     fill: var(--highlight);
+}
+.playlist-item a:hover {
+    border-color: var(--highlight);
+    color: var(--highlight);
+}
+.playlist-item a:hover img {
+    border-color: var(--highlight);
 }
 #speed-select:focus-within #speed-current,
 #speed-select:hover #speed-current {

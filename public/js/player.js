@@ -8,7 +8,13 @@ function init() {
     var [presentation, playlist] = getArgs()
     var read = new XMLHttpRequest()
     read.addEventListener('load', function() {
-        var data = JSON.parse(read.responseText)
+        var data = null
+        try {
+            data = JSON.parse(read.responseText)
+        } catch(e) {
+            console.log("Unable to parse as JSON:")
+            console.log(read.responseText)
+        }
 
         body.dataset.id = data.id
         loadStreams(data.sources, mainstream)
@@ -52,6 +58,7 @@ function getArgs() {
     var data, playlist
     get.split('&').forEach(function(arg) {
         [name, value] = arg.split('=')
+        value = decodeURIComponent(value)
         switch(name) {
         case 'presentation':
         case 'play':
@@ -77,7 +84,7 @@ function loadStreams(streamlist, mainstream) {
     var main = streamlist[0]
     
     mainstream.src = main.video
-    mainstream.muted = !main.audio
+    mainstream.muted = !main.playAudio
     mainstream.poster = main.poster
     mainstream.load()
     mainstream.preload = 'auto'
@@ -85,7 +92,7 @@ function loadStreams(streamlist, mainstream) {
         var newstream = template.content.cloneNode(true)
         var video = newstream.querySelector('video')
         video.src = streamlist[i].video
-        video.muted = !streamlist[i].audio
+        video.muted = !streamlist[i].playAudio
         video.poster = streamlist[i].poster
         video.load()
         video.preload = 'auto'
@@ -162,7 +169,7 @@ function setupFullscreen() {
 
 function setupHiding(body, mainstream) {
     const selector = 'nocursor'
-    var timer = window.setTimeout(hide, 1500)
+    var timer = null
     var controls = document.querySelector('#controls')
     var about = document.querySelector('#about')
     
@@ -185,13 +192,15 @@ function setupHiding(body, mainstream) {
         if(hover.length > 0) {
             return
         }
-        timer = window.setTimeout(hide, 1500)
+        timer = window.setTimeout(hide, 2500)
     }
 
     body.addEventListener('mousemove', reveal)
+    body.addEventListener('mouseleave', hide)
     body.addEventListener('keyup', function(event) {
         if(event.key === 'Tab') {
             reveal()}})
+    hide()
 }
 
 function setupLoader(mainstream) {
@@ -268,7 +277,15 @@ function setupPlayback(body, mainstream) {
 function setupPlaylist(body, playlistfile) {
     var read = new XMLHttpRequest()
     read.addEventListener('load', function() {
-        doSetup(JSON.parse(read.responseText))})
+        var data = null
+        try {
+            data = JSON.parse(read.responseText)
+        } catch(e) {
+            console.log("Could not parse as JSON:")
+            console.log(read.responseText)
+        }
+        doSetup(data)
+    })
     read.open('GET', playlistfile)
     read.send()
 
@@ -427,22 +444,22 @@ function setupSubs(subs, mainstream) {
 
 function setupSwitching(mainstream) {
     var main = mainstream.parentNode
-    var others = document.querySelectorAll('.secondary')
 
     function switchStreams(event) {
+        var curmain = main.querySelector('video')
         var target = event.currentTarget
-        var stream = target.querySelector('video')
-        var other = main.querySelector('video')
-        main.replaceChild(stream, other)
-        target.insertBefore(other, target.firstElementChild)
+        var newmain = target.querySelector('video')
+        main.replaceChild(newmain, curmain)
+        target.insertBefore(curmain, target.firstElementChild)
     }
 
-    others.forEach(function(div) {
-        div.addEventListener('click', switchStreams)
-        div.addEventListener('keyup', function(event) {
-            if(!event.isComposing && event.key === 'Enter') {
-                switchStreams(event)}})
-    })
+    document.querySelectorAll('.secondary')
+        .forEach(function(div) {
+            div.addEventListener('click', switchStreams)
+            div.addEventListener('keyup', function(event) {
+                if(!event.isComposing && event.key === 'Enter') {
+                    switchStreams(event)}})
+        })
 }
 
 function setupSync(mainstream) {
