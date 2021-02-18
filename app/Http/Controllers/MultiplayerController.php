@@ -27,7 +27,7 @@ class MultiplayerController extends Controller
             /* old $url = url('/multiplayer') . '?' . urldecode(http_build_query(['presentation' => URL::to('/') . '/presentation/' . $video->id, 'playlist' => URL::to('/') . '/playlist/' . $playlist->course_id, 'authtoken' => $token]));*/
             //$url = url('/multiplayer') . '?' . urldecode(http_build_query(['presentation' => $video->id, 'playlist' =>  $playlist->course_id]));
             // Dev
-            $url = url('/multiplayer') . '?' . http_build_query(['presentation' => 'presentation/'.$video->id, 'playlist' => 'playlist/'.$playlist->course_id]);
+            $url = url('/multiplayer') . '?' . http_build_query(['presentation' => '/presentation/'.$video->id, 'playlist' => '/playlist/'.$playlist->course_id]);
         }
 
         return redirect()->away($url);
