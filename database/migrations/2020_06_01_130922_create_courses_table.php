@@ -17,6 +17,8 @@ class CreateCoursesTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('designation')->nullable();
+            $table->string('semester')->nullable();
+            $table->string('year')->nullable();
             $table->timestamps();
         });
     }

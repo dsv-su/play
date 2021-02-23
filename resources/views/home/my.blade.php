@@ -24,7 +24,7 @@
         <div class="row no-gutters w-100">
             <div class="col-12">
                 <div>
-                    <h1 class="word-wrap_xs-only">My videos</h1>
+                    <h1 class="word-wrap_xs-only">Mina videor</h1>
                 </div>
             </div> <!-- col-12 -->
         </div> <!-- row no-gutters -->
@@ -33,30 +33,30 @@
     <div class="container">
         <div class="form-row">
             <div class="col-12 col-md-6 col-lg-3 mb-1">
-                <label for="filter_text">Title:</label>
+                <label for="filter_text">Titel:</label>
                 <input class="form-control" type="text" name="filter_text" id="filter_text"
-                       placeholder="Type your request">
+                       placeholder="Sök titel">
             </div>
             <div class="col-12 col-md-6 col-lg-3 mb-1">
-                <label for="filter_course">Course:</label>
+                <label for="filter_course">Kurs:</label>
                 <select class="custom-select" name="filter_course" id="filter_course">
-                    <option value="0">Choose course</option>
+                    <option value="0">Välj kurs</option>
                     @foreach($mycourses as $course)
                         <option value="{{$course->id}}">{{$course->name}}</option>
                     @endforeach
                 </select>
             </div>
             <div class="col-12 col-md-6 col-lg-3 mb-1">
-                <label for="filter_tag">Tag:</label>
+                <label for="filter_tag">Tagg:</label>
                 <select class="custom-select" name="filter_tag" id="filter_tag">
-                    <option value="0">Choose tag</option>
+                    <option value="0">Välj tagg</option>
                     @foreach($tags as $tag)
                         <option value="{{$tag->id}}">{{$tag->name}}</option>
                     @endforeach
                 </select>
             </div>
             <div class="col-12 col-md-6 col-lg-3 mb-1">
-                <label for="daterange">Dates:</label>
+                <label for="daterange">Datum:</label>
                 <div id="daterange" class="form-control"
                      style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
                     <i class="fa fa-calendar"></i>&nbsp;
@@ -90,7 +90,7 @@
 
             function cb(start, end) {
                 if (start < 30000) {
-                    $('#daterange span').html('All');
+                    $('#daterange span').html('Alla datum');
                 } else {
                     $('#daterange span').html(start.format('MMM D, YYYY') + ' - ' + end.format('MMM D, YYYY'));
                 }
@@ -100,12 +100,12 @@
                 startDate: start,
                 endDate: end,
                 ranges: {
-                    'Today': [moment(), moment()],
-                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                    'Last 365 Days': [moment().subtract(365, 'days'), moment()],
-                    'All': [1000, end]
+                    'Idag': [moment(), moment()],
+                    'Igår': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Senaste 7 dagar': [moment().subtract(6, 'days'), moment()],
+                    'Senaste 30 dagar': [moment().subtract(29, 'days'), moment()],
+                    'Senaste 365 dagar': [moment().subtract(365, 'days'), moment()],
+                    'Alla': [1000, end]
                 }
             }, cb);
             cb(start, end);
@@ -143,7 +143,7 @@
                 $('#filter').append('<input type=hidden id="dateend" value=' + Math.ceil(picker.endDate / 1000) + '>');
                 submit_form();
             });
-            $('#filter_text').tooltip({'trigger': 'focus', 'title': 'Press Enter or leave the field to apply'});
+            $('#filter_text').tooltip({'trigger': 'focus', 'title': 'Tryck retur eller lämna fältet tomt'});
         });
 
         function submit_form() {

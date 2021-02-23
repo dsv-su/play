@@ -28,73 +28,42 @@
                     <div class="position-relative">
                         <a class="text-uppercase nav-link mega-menu-link level-1" aria-haspopup="true"
                            aria-expanded="false" href="#">
-                            Navigera
+                            Kurser
                         </a>
                     </div>
                     <div class="mega-menu-collapse">
                         <div class="container">
                             <ul class="list-unstyled row no-gutters">
-                                <li class="mega-menu-collapse-col col">
-                                    <span class="level-1 text-uppercase d-block mb-3">Navigera</span>
-                                    <span>Här kan du navigera bland inspelningar från undervisningsmoment efter termin, kurs eller kategori.</span>
 
-                                </li>
-                                <li class="mega-menu-collapse-col col">
-                                    <a class="nav-link d-flex align-items-center nav-link__border-bottom" href="">
-                                        <span class="fas fa-layer-group fa-icon-border mr-2" aria-hidden="true"></span>
-                                        <span class="d-inline-block first-letter-capitalized level-2">Termin</span>
-                                    </a>
-                                    @if($semesters ?? '')
-                                        @foreach($semesters as $semester)
-                                            <a class="nav-link" href="{{route('semester', $semester)}}">{{$semester}}</a>
-                                        @endforeach
-                                            <a class="nav-link" href="">[Alla]</a>
-                                    @endif
-                                </li>
-                                <li class="mega-menu-collapse-col col">
-                                    <a class="nav-link d-flex align-items-center nav-link__border-bottom" href="">
-                                        <span class="fas fa-address-card fa-icon-border mr-2" aria-hidden="true"></span>
-                                        <span class="d-inline-block first-letter-capitalized level-2">Kurs</span>
-                                    </a>
-                                    @if($designations ?? '')
-                                        @foreach($designations as $designation)
-                                            <a class="nav-link" href="{{route('designation', $designation)}}">{{$designation}}</a>
-                                        @endforeach
-                                        <a class="nav-link" href="">[Alla]</a>
-                                    @endif
-                                </li>
-                                <li class="mega-menu-collapse-col col">
-                                    <a class="nav-link d-flex align-items-center nav-link__border-bottom" href="">
-                                        <span class="fas fa-book fa-icon-border mr-2" aria-hidden="true"></span>
-                                        <span class="d-inline-block first-letter-capitalized level-2">Kategori</span>
-                                    </a>
-                                    @if($nav_categories ?? '')
-                                        @foreach($nav_categories as $category)
-                                            <a class="nav-link" href="{{route('category', $category)}}">{{$category}}</a>
-                                        @endforeach
-                                        <a class="nav-link" href="">[Alla]</a>
-                                    @endif
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </li>
-                <div class="mega-menu-collapse level-2">
-                    <div class="container">
-                        <ul class="list-unstyled row no-gutters">
-                                @if (isset($courses[0]))
                                     <li class="mega-menu-collapse-col col">
                                         <div class="container pl-0 pr-0">
+                                            <a class="nav-link d-flex align-items-center nav-link__border-bottom" href="">
+                                                <span class="fas fa-layer-group fa-icon-border mr-2" aria-hidden="true"></span>
+                                                <span class="d-inline-block first-letter-capitalized level-2">Termin</span>
+                                            </a>
                                             <ul class="navbar-nav">
-                                                @foreach($courses[0] as $course)
-                                                    <li class="nav-item"><a class="nav-link"
-                                                                            href="/course/{{$course->id}}">{{$course->name}}</a>
-                                                    </li>
-                                                @endforeach
+                                                <li class="nav-item"><a class="nav-link mega-menu-link level-2" aria-haspopup="true" aria-expanded="false" href="">VT2021</a></li>
+                                                <li class="nav-item"><a class="nav-link" href="">HT2020</a></li>
+                                                <li class="nav-item"><a class="nav-link" href="">VT2020</a></li>
+                                                <li class="nav-item"><a class="nav-link" href="">HT2019</a></li>
+                                                <li class="nav-item"><a class="nav-link" href="">VT2019</a></li>
                                             </ul>
                                         </div>
                                     </li>
-                                @endif
+
+                                    @if (isset($courses[0]))
+                                        <li class="mega-menu-collapse-col col">
+                                            <div class="container pl-0 pr-0">
+                                                <ul class="navbar-nav">
+                                                    @foreach($courses[0] as $course)
+                                                        <li class="nav-item"><a class="nav-link"
+                                                                                href="/course/{{$course->id}}">{{$course->name}}</a>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    @endif
                                 @if (isset($courses[1]))
                                     <li class="mega-menu-collapse-col col">
                                         <div class="container pl-0 pr-0">
@@ -131,7 +100,7 @@
                     <div class="position-relative">
                         <a class="text-uppercase nav-link mega-menu-link level-1" aria-haspopup="true"
                            aria-expanded="false" href="/my">
-                            Mina videor
+                            My videos
                         </a>
                     </div>
                 </li>
@@ -141,43 +110,18 @@
                     <div class="position-relative">
                         <a class="text-uppercase nav-link mega-menu-link level-1" aria-haspopup="true"
                            aria-expanded="false" href="#">
-                            Hantera
+                            Manage
                         </a>
                     </div>
                     <div class="mega-menu-collapse">
                         <div class="container">
                             <ul class="list-unstyled row no-gutters">
                                 <li class="mega-menu-collapse-col col">
-                                    <span class="level-1 text-uppercase d-block mb-3">Hantera</span>
-                                    <span>Här kan du hantera dina inspelningar. Ladda upp, ladda ner, ändra uppspelningsrättigheter och byta kursassociation mm.</span>
-
                                 </li>
                                 <li class="mega-menu-collapse-col col">
-                                    <a class="nav-link level-2" href="{{ route('manage') }}"><span class="fas fa-video fa-icon-border mr-2" aria-hidden="true"></span> Hantera inspelningar</a>
-                                    <a class="nav-link level-2" href="{{ route('user_upload') }}"><span class="fas fa-upload fa-icon-border mr-2" aria-hidden="true"></span> Manuell
+                                    <a class="nav-link level-2" href="#">Hantera uppspelning</a>
+                                    <a class="nav-link level-2" href="{{ route('user_upload') }}">Manuell
                                         uppladdning</a>
-                                </li>
-                                <li class="mega-menu-collapse-col col">
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </li>
-
-                <li class="nav-item mega-menu-item" style="">
-                    <div class="position-relative">
-                        <a class="text-uppercase nav-link mega-menu-link level-1" aria-haspopup="true"
-                           aria-expanded="false" href="#">
-                            Admin
-                        </a>
-                    </div>
-                    <div class="mega-menu-collapse">
-                        <div class="container">
-                            <ul class="list-unstyled row no-gutters">
-                                <li class="mega-menu-collapse-col col">
-                                    <span class="level-1 text-uppercase d-block mb-3">Administrator</span>
-                                </li>
-                                <li class="mega-menu-collapse-col col">
                                     <a class="nav-link level-2" href="{{ route('manual_admin') }}">Only for
                                         administrators</a>
                                     <a class="nav-link level-2" href="{{ route('manage') }}">Manage videos</a>

@@ -2,6 +2,7 @@
 
 namespace App\Services\Header;
 
+use App\Category;
 use App\Course;
 use App\Presenter;
 use Illuminate\Database\Eloquent\Model;
@@ -18,8 +19,32 @@ class CourseNav extends Model
 
     public function compose(View $view)
     {
+        $view->with('nav_categories', $this->getCategory());
+        $view->with('designations', $this->getDesignation());
+        $view->with('semesters', $this->getSemesters());
         $view->with('courses', $this->getActiveCourses());
         $view->with('hasmycourses', ($this->getUserCoursesWithVideos(app()->make('presenter') ?? 'dsv-dev@su.se')->count() > 0));
+    }
+
+    private function getCategory()
+    {
+        return Category::pluck('category_name')->take(6);
+    }
+
+    private function getDesignation()
+    {
+        return Course::pluck('designation')->take(6);
+    }
+
+    private function getSemesters()
+    {
+        $courses = Course::distinct('year')->pluck('year')->take(3);
+        foreach($courses as $course) {
+            $semester[] = 'VT '.$course;
+            $semester[] = 'HT '.$course;
+        }
+
+        return $semester ?? '';
     }
 
     private function getActiveCourses()

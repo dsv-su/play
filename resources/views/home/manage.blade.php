@@ -5,7 +5,7 @@
         <div class="row no-gutters w-100">
             <div class="col-12">
                 <div>
-                    <h1 class="word-wrap_xs-only">Video management</h1>
+                    <h1 class="word-wrap_xs-only">Video hantering</h1>
                 </div>
 
             </div> <!-- col-12 -->
@@ -14,11 +14,11 @@
     <div class="container">
         <div class="form-row">
             <div class="col-md-4 mb-3">
-                <label for="filter_category">Category:</label>
+                <label for="filter_category">Kategori:</label>
                 <!-- Filtering -->
                 <select class="custom-select" name="filter_category" id="filter_category">
                     <option value="0" @if(!app('request')->input('category')) selected @endif
-                    >Choose category
+                    >Välj kategori
                     </option>
                     @foreach($categories as $category)
                         <option value="{{$category->id}}"
@@ -27,11 +27,11 @@
                 </select>
             </div>
             <div class="col-md-4 mb-3">
-                <label for="filter_course">Course:</label>
+                <label for="filter_course">Kurs:</label>
                 <!-- Filtering -->
                 <select class="custom-select" name="filter_course" id="filter_course">
                     <option value="0" @if(!app('request')->input('course')) selected @endif
-                    >Choose course
+                    >Välj kurs
                     </option>
                     @foreach($allcourses as $course)
                         <option value="{{$course->id}}"

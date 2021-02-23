@@ -9,9 +9,6 @@ use App\MediasiteFolder;
 use App\MediasitePresentation;
 use App\Presenter;
 use App\Services\AuthHandler;
-use App\Services\Header\CourseNav;
-use App\Services\Notify\PlayStoreNotify;
-use App\Services\TicketHandler;
 use App\Tag;
 use App\UploadHandler;
 use App\Video;
@@ -27,9 +24,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
 
 class PlayController extends Controller
@@ -44,7 +39,8 @@ class PlayController extends Controller
         app()->make('init')->check_system();
 
         $data['search'] = 0;
-        $data['latest'] = Video::with('category', 'video_course.course')->latest('created_at')->take(8)->get();
+        //$data['latest'] = Video::with('category', 'video_course.course')->latest('created_at')->take(8)->get();
+        $data['latest'] = Video::with('category', 'video_course.course')->latest('creation')->take(8)->get();
         $data['categories'] = Category::all();
 
         return view('home.index', $data);

@@ -24,6 +24,17 @@ Route::middleware('entitlements', 'playauth')->group(function () {
 
     Route::get('/', 'PlayController@index')->name('home');
 
+    //Search
+    Route::get('/semester/{semester}', 'SearchController@searchBySemester')->name('semester');
+    Route::get('/designation/{designation}', 'SearchController@searchByDesignation')->name('designation');
+    Route::get('/category/{category}', 'SearchController@searchByCategory')->name('category');
+
+    //Multiplayer
+    Route::get('/player/{video}', 'MultiplayerController@player')->name('player');
+    Route::get('/multiplayer', 'MultiplayerController@multiplayer')->name('multiplayer');
+    Route::get('/presentation/{id}', 'MultiplayerController@presentation');
+    Route::get('/playlist/{id}', 'MultiplayerController@playlist');
+
     //Manage
     Route::get('/manage', 'PlayController@manage')->name('manage');
     Route::post('/manage/deleteAjax', 'PlayController@deleteVideoAjax')->name('manage.deleteVideo');
@@ -34,23 +45,6 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::get('/my', 'PlayController@myVideos')->name('my.videos');
     Route::post('/my/filter', 'PlayController@myVideosFilter')->name('my.filter');
 
-    //Mediasite
-    Route::get('/mediasite', 'PlayController@mediasite')->name('mediasite');
-    Route::get('/mediasiteFetch', 'PlayController@mediasiteFetch')->name('mediasiteFetch');
-    Route::post('/mediasiteCourseDownload', 'PlayController@mediasiteCourseDownload')->name('mediasiteCourseDownload');
-    Route::post('/mediasiteRecordingDownload', 'PlayController@mediasiteRecordingDownload')->name('mediasiteRecordingDownload');
-    Route::post('/mediasiteUserDownload', 'PlayController@mediasiteUserDownload')->name('mediasiteUserDownload');
-    Route::post('/mediasiteOtherDownload', 'PlayController@mediasiteOtherDownload')->name('mediasiteOtherDownload');
-    Route::get('/upload', 'PlayController@upload');
-    Route::post('/store', 'PlayController@store')->name('store');
-    Route::get('/find', 'PlayController@find')->name('find');
-
-    //Multiplayer
-    Route::get('/player/{video}', 'MultiplayerController@player')->name('player');
-    Route::get('/multiplayer', 'MultiplayerController@multiplayer')->name('multiplayer');
-    Route::get('/presentation/{id}', 'MultiplayerController@presentation');
-    Route::get('/playlist/{id}', 'MultiplayerController@playlist');
-
     //Upload
     Route::get('/user_upload', 'UploadController@upload')->name('user_upload');
     Route::post('/upload_step1/{id}', 'UploadController@step1')->name('upload_step1');
@@ -58,15 +52,6 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::post('/poster/{id}', 'UploadController@poster')->name('poster');
     Route::get('/upload_store/{id}', 'UploadController@store')->name('upload_store');
     Route::get('/ldap_search', 'UploadController@ldap_search')->name('ldap_search');
-
-    //Admin
-    Route::get('/manual_admin', 'AdminController@admin')->name('manual_admin');
-    Route::get('/manual_admin_erase/{id}', 'AdminController@admin_erase')->name('manual_admin_erase');
-    Route::get('/manual_admin_notify/{id}', 'AdminController@admin_upload_notify_fail')->name('manual_admin_notify_fail');
-    Route::get('/manual_admin_unregister/{id}', 'AdminController@admin_unregister')->name('manual_admin_unregister');
-    Route::get('/admin_permission/{id}', 'AdminController@admin_permission')->name('admin_permission');
-    Route::post('/admin_permission_store/{id}', 'AdminController@admin_permission_store')->name('admin_permission_store');
-    Route::get('/admin_download_notify_resend/{id}', 'AdminController@admin_download_notify_resend')->name('admin_download_notify_resend');
 
     //Download
     Route::get('/download/{video}', 'ManualDownloadController@step1')->name('download');
@@ -79,6 +64,26 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::get('/download_step4/{id}', 'ManualDownloadController@step4')->name('download_step4');
     Route::get('/download_send/{id}', 'ManualDownloadController@send');
 
+    //Admin
+    Route::get('/manual_admin', 'AdminController@admin')->name('manual_admin');
+    Route::get('/manual_admin_erase/{id}', 'AdminController@admin_erase')->name('manual_admin_erase');
+    Route::get('/manual_admin_notify/{id}', 'AdminController@admin_upload_notify_fail')->name('manual_admin_notify_fail');
+    Route::get('/manual_admin_unregister/{id}', 'AdminController@admin_unregister')->name('manual_admin_unregister');
+    Route::get('/admin_permission/{id}', 'AdminController@admin_permission')->name('admin_permission');
+    Route::post('/admin_permission_store/{id}', 'AdminController@admin_permission_store')->name('admin_permission_store');
+    Route::get('/admin_download_notify_resend/{id}', 'AdminController@admin_download_notify_resend')->name('admin_download_notify_resend');
+
+    //Mediasite
+    Route::get('/mediasite', 'PlayController@mediasite')->name('mediasite');
+    Route::get('/mediasiteFetch', 'PlayController@mediasiteFetch')->name('mediasiteFetch');
+    Route::post('/mediasiteCourseDownload', 'PlayController@mediasiteCourseDownload')->name('mediasiteCourseDownload');
+    Route::post('/mediasiteRecordingDownload', 'PlayController@mediasiteRecordingDownload')->name('mediasiteRecordingDownload');
+    Route::post('/mediasiteUserDownload', 'PlayController@mediasiteUserDownload')->name('mediasiteUserDownload');
+    Route::post('/mediasiteOtherDownload', 'PlayController@mediasiteOtherDownload')->name('mediasiteOtherDownload');
+    Route::get('/upload', 'PlayController@upload');
+    Route::post('/store', 'PlayController@store')->name('store');
+    Route::get('/find', 'PlayController@find')->name('find');
+
     //Testing routes --> to be removed before production
     Route::get('/categories/{category}', 'TestController@show')->name('categories.show');
     Route::get('/videos/{video}', 'TestController@show')->name('videos.show');
@@ -89,7 +94,7 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::get('/dev_destroy/{id}', 'AdminController@dev_destroy');
     Route::get('/php', 'TestController@php')->name('php');
     Route::get('/server', 'TestController@server')->name('server');
-    Route::get('/daisy/{video}', 'TestController@daisy')->name('daisy');
+    Route::get('/daisy', 'TestController@daisy')->name('daisy');
     Route::get('/daisyload', 'TestController@daisyLoadCourses');
     Route::get('/reload', 'ReloadPlayStoreController@index')->name('reload'); //Reload all presentations from play store
     Route::get('/del/{video}', 'TestController@del')->name('del'); //Send delete notification to play-store

@@ -125,17 +125,8 @@ Endpoints for checking presentation permissions:
 
 Verb | URI | Action
 -----|-----|-------
-GET | /api/permission | Check user permission for presentation
+GET | /api/perm | Check user permission for presentation
 
-The presentation id should be sent as json and the response will show the presentations permissions:
-
-    {
-        "public": "public",
-        "entitlements": [
-        "entitlement",
-        "entitlement"
-        ]
-    }
 
 Endpoints for issuing/destroying tokens:
 
@@ -164,8 +155,11 @@ The response:
        
     }
 
+## 5. Database
 
-## 5. Player
+![Database](./public/images/play_db.png)
+
+## 6. Player
 The Player can play up to four interconnected streams simultaneously.
 
 

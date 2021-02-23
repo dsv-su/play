@@ -53,11 +53,9 @@ class TestController extends Controller
         return view('course.index', compact('results', 'categories', 'course', 'play_user'));
     }
 
-    public function daisy(Video $video)
+    public function daisy()
     {
-        /*$data['courses'] = Course::all()->sortBy('course');
-        $data['categories'] = Category::all();
-        return view('home.courses', $data);*/
+
     }
 
     public function daisyLoadCourses()
@@ -68,11 +66,12 @@ class TestController extends Controller
          * ********************************/
 
         $endpoints = array(
+            'courseSegment?semester=20211',
             'courseSegment?semester=20201',
             'courseSegment?semester=20202',
             'courseSegment?semester=20191',
             'courseSegment?semester=20192',
-           /* 'courseSegment?semester=20181',
+            /*'courseSegment?semester=20181',
             'courseSegment?semester=20182',
             'courseSegment?semester=20171',
             'courseSegment?semester=20172',
@@ -113,13 +112,13 @@ class TestController extends Controller
             //Store id db table
             foreach ($array['courseSegmentInstance'] as $item) {
                 $course = new Course();
-                $course->designation = $item['designation'];
-                // if (substr($item['semester'], 4) == '1') {
-                //   $course->semester = 'VT';
-                // } else $course->semester = 'HT';
-                // $course->year = substr($item['semester'], 0, 4);
                 $course->name = $item['name'];
                 $course->designation = $item['designation'];
+                if (substr($item['semester'], 4) == '1') {
+                      $course->semester = 'VT';
+                 } else $course->semester = 'HT';
+                $course->year = substr($item['semester'], 0, 4);
+
                 $course->save();
             }
             $course->save();

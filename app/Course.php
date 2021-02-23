@@ -17,7 +17,7 @@ class Course extends Model implements Searchable
 {
     use SearchableTrait;
 
-    protected $fillable = ['name', 'designation'];
+    protected $fillable = ['name', 'designation', 'semester', 'year'];
     protected $searchable = [
         'columns' => [
             'name' => 5,
