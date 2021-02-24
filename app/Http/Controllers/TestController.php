@@ -25,39 +25,6 @@ use Spatie\Searchable\Search;
 
 class TestController extends Controller
 {
-    public function index()
-    {
-        $videos = Video::with('category', 'course')->get();
-        $data['categories'] = Category::all();
-        return view('home.list', compact('videos'), $data);
-    }
-
-    public function show(Course $course)
-    {
-        /*********************************
-         * Check if enviroment is local or remote
-         */
-        if (app()->environment('local')) {
-            $play_user = 'Förnamn Efternamn';
-        } else {
-
-            $play_user = $_SERVER['displayName'];
-        }
-        /*********************************
-         * Get all categories for nav-menu
-         */
-        $categories = Category::all();
-        $results = Video::with('category', 'video_course.course')->latest('id')->take(8)->get();
-        // Searchtype
-
-        return view('course.index', compact('results', 'categories', 'course', 'play_user'));
-    }
-
-    public function daisy()
-    {
-
-    }
-
     public function daisyLoadCourses()
     {
         /***********************************

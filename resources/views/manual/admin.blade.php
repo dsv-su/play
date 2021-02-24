@@ -1,6 +1,26 @@
 @extends('layouts.suplay')
 @section('content')
     <div class="container">
+        <div class="align-middle ml-auto my-auto">
+            @if(app()->make('store_status') == 'on')
+                <div>
+                    <button type="button" class="btn btn-outline-primary">
+                        <i class="fas fa-plug"></i> <span class="badge badge-success">Play-store</span>
+                    </button>
+                </div>
+                <div>
+                    <a href="{{route('reload')}}" role="button" class="btn btn-outline-primary">
+                        Presentations: <span class="badge badge-light">{{app()->make('total_videos')}}</span>
+                    </a>
+                </div>
+
+            @else
+                <button type="button" class="btn btn-outline-primary">
+                    Offline <span class="badge badge-danger">Play-store</span>
+                </button>
+            @endif
+        </div>
+
         <div class="row">
             <h2>Download - Admin</h2>
         </div>

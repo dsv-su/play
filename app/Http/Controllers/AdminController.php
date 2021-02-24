@@ -14,6 +14,11 @@ use Storage;
 
 class AdminController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('play-store-status:api');
+    }
+
     public function admin()
     {
         $data['manual_presentations'] = ManualPresentation::all();

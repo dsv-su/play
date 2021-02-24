@@ -85,16 +85,12 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::get('/find', 'PlayController@find')->name('find');
 
     //Testing routes --> to be removed before production
-    Route::get('/categories/{category}', 'TestController@show')->name('categories.show');
-    Route::get('/videos/{video}', 'TestController@show')->name('videos.show');
-    Route::get('/list', 'TestController@index')->name('list');
     Route::post('/search', 'TestController@search')->name('search');
     Route::get('/upload_destroy/{id}', 'AdminController@destroy_upload')->name('upload_delete');
     Route::get('/download_destroy/{id}', 'AdminController@destroy_download')->name('download_delete');
     Route::get('/dev_destroy/{id}', 'AdminController@dev_destroy');
     Route::get('/php', 'TestController@php')->name('php');
     Route::get('/server', 'TestController@server')->name('server');
-    Route::get('/daisy', 'TestController@daisy')->name('daisy');
     Route::get('/daisyload', 'TestController@daisyLoadCourses');
     Route::get('/reload', 'ReloadPlayStoreController@index')->name('reload'); //Reload all presentations from play store
     Route::get('/del/{video}', 'TestController@del')->name('del'); //Send delete notification to play-store

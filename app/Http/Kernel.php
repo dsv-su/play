@@ -20,7 +20,6 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-        \App\Http\Middleware\StatusPlayStore::class,
     ];
 
     /**
@@ -65,5 +64,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'entitlements' => \App\Http\Middleware\CheckEntitlement::class,
         'playauth' => \App\Http\Middleware\PlayAuthenticate::class,
+        'play-store-status' => \App\Http\Middleware\StatusPlayStore::class,
     ];
 }

@@ -148,25 +148,6 @@
                 </li>
             </ul>
             <div class="align-middle ml-auto my-auto">
-                @if(app()->make('store_status') == 'on')
-                    <div>
-                        <button type="button" class="btn btn-outline-primary">
-                            <i class="fas fa-plug"></i> <span class="badge badge-success">Play-store</span>
-                        </button>
-                    </div>
-                    <div>
-                        <a href="{{route('reload')}}" role="button" class="btn btn-outline-primary">
-                            Presentations: <span class="badge badge-light">{{app()->make('total_videos')}}</span>
-                        </a>
-                    </div>
-
-                @else
-                    <button type="button" class="btn btn-outline-primary">
-                        Offline <span class="badge badge-danger">Play-store</span>
-                    </button>
-                @endif
-            </div>
-            <div class="align-middle ml-auto my-auto">
                 {{app()->make('play_user') ?? 'Not logged in'}}
             </div>
         </nav>
@@ -183,24 +164,30 @@
                 <div class="collapse main-menu header-mega-menu-collapse__primary" id="primaryHamburgerCollapse">
                     <div class="container pb-5 pt-5">
                         <div class="row no-gutters">
+                            <!--
                             <div id="hamburgerMenuColumn1"
                                  class="col-12 pr-0 col-md-6 col-lg-7 text-lg-right text-md-right pt-3 pt-md-0 pr-md-5 order-xs-2 order-sm-2 order-md-1 order-lg-1">
                                 <ul class="list-unstyled">
+
                                     <li><a href="#">Link 1</a></li>
                                     <li><a href="#">Link 2</a></li>
                                     <li><a href="#">Link 3</a></li>
                                     <li><a href="#">Link 4</a></li>
                                     <li><a href="#">Link 5</a></li>
+
                                 </ul>
                             </div>
-
-                            <div id="hamburgerMenuColumn2"
+                            -->
+                            <div id="hamburgerMenuColumn1"
                                  class="col-12 col-md-6 col-lg-5 pb-3 text-left pl-md-5 order-first order-sm-last order-sm-1 order-md-2 order-lg-2">
                                 <div id="accordionMenu">
                                     <ul class="navbar-nav top main-menu not-list-styled">
                                         <li class="nav-item">
                                             <a class="nav-link text-uppercase d-inline-block pr-0"
-                                               href="#">Catalogue</a>
+                                               href="#">
+                                                <span class="fas fa-layer-group fa-icon-border mr-2" aria-hidden="true"></span>
+                                                <span class="d-inline-block first-letter-capitalized level-3">Termin</span>
+                                            </a>
                                             <div class="float-right pt-1 pr-2">
                                                 <button type="button" data-toggle="collapse"
                                                         data-target="#sub-level-menu1" aria-expanded="false"
@@ -215,31 +202,28 @@
                                                  data-parent="#accordionMenu">
                                                 <div id="accordionSubMenu_Utbildning">
                                                     <ul class="main-menu-sub navbar-nav pb-4">
-                                                        @foreach($nav_courses as $coursechunk)
-                                                            @foreach($coursechunk as $course)
-                                                                <li class="nav-item pl-3">
-                                                                    <a href="/course/{{$course->id}}" class="nav-link">
-                                                                        <span class="d-inline-block first-letter-capitalized level-2">{{$course->name}}</span>
+                                                        <li class="nav-item pl-3">
+                                                            @if($semesters ?? '')
+                                                                @foreach($semesters as $semester)
+                                                                    <a class="nav-link" href="{{route('semester', $semester)}}">
+                                                                        <span class="d-inline-block first-letter-capitalized level-2">{{$semester}}</span>
                                                                     </a>
-                                                                </li>
-                                                            @endforeach
-                                                        @endforeach
+                                                                @endforeach
+                                                                    <a class="nav-link" href="">
+                                                                        <span class="d-inline-block first-letter-capitalized level-2">[Alla]</span>
+                                                                    </a>
+                                                            @endif
+                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>
                                         </li>
-
-                                        @if ($hasmycourses)
                                         <li class="nav-item">
                                             <a class="nav-link text-uppercase d-inline-block pr-0"
-                                               href="/my">My videos</a>
-                                        </li>
-                                        @endif
-
-                                        <li class="nav-item">
-                                            <a class="nav-link text-uppercase d-inline-block pr-0"
-                                               href="#">Manage</a>
-
+                                               href="#">
+                                                <span class="fas fa-address-card fa-icon-border mr-2" aria-hidden="true"></span>
+                                                <span class="d-inline-block first-letter-capitalized level-2">Kurs</span>
+                                            </a>
                                             <div class="float-right pt-1 pr-2">
                                                 <button type="button" data-toggle="collapse"
                                                         data-target="#sub-level-menu2" aria-expanded="false"
@@ -252,29 +236,96 @@
                                             </div>
                                             <div class="su-js-has-toggle-btn collapse" id="sub-level-menu2"
                                                  data-parent="#accordionMenu">
+                                                <div id="accordionSubMenu_Utbildning">
+                                                    <ul class="main-menu-sub navbar-nav pb-4">
+                                                        <li class="nav-item pl-3">
+                                                            @if($designations ?? '')
+                                                                @foreach($designations as $designation)
+                                                                    <a class="nav-link" href="{{route('designation', $designation)}}">
+                                                                        <span class="d-inline-block first-letter-capitalized level-2">{{$designation}}</span>
+                                                                    </a>
+                                                                @endforeach
+                                                                <a class="nav-link" href="">[Alla]</a>
+                                                            @endif
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link text-uppercase d-inline-block pr-0"
+                                               href="#">
+                                                <span class="fas fa-book fa-icon-border mr-2" aria-hidden="true"></span>
+                                                <span class="d-inline-block first-letter-capitalized level-2">Kategori</span>
+                                            </a>
+                                            <div class="float-right pt-1 pr-2">
+                                                <button type="button" data-toggle="collapse"
+                                                        data-target="#sub-level-menu3" aria-expanded="false"
+                                                        aria-controls="sub-level-menu3" aria-pressed="false"
+                                                        aria-label="Visa mer"
+                                                        class="button-remove-style su-js-toggle-btn">
+                                                    <span class="not-pressed"></span>
+                                                    <span class="pressed"></span>
+                                                </button>
+                                            </div>
+                                            <div class="su-js-has-toggle-btn collapse" id="sub-level-menu3"
+                                                 data-parent="#accordionMenu">
+                                                <div id="accordionSubMenu_Utbildning">
+                                                    <ul class="main-menu-sub navbar-nav pb-4">
+                                                        <li class="nav-item pl-3">
+                                                            @if($nav_categories ?? '')
+                                                                @foreach($nav_categories as $category)
+                                                                    <a class="nav-link" href="{{route('category', $category)}}">
+                                                                        <span class="d-inline-block first-letter-capitalized level-2">{{$category}}</span>
+                                                                    </a>
+                                                                @endforeach
+                                                                <a class="nav-link" href="">[Alla]</a>
+                                                            @endif
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        @if ($hasmycourses)
+                                        <li class="nav-item">
+                                            <a class="nav-link text-uppercase d-inline-block pr-0"
+                                               href="/my">Mina videor</a>
+                                        </li>
+                                        @endif
+
+                                        <li class="nav-item">
+                                            <a class="nav-link text-uppercase d-inline-block pr-0"
+                                               href="#">Hantera</a>
+
+                                            <div class="float-right pt-1 pr-2">
+                                                <button type="button" data-toggle="collapse"
+                                                        data-target="#sub-level-menu4" aria-expanded="false"
+                                                        aria-controls="sub-level-menu4" aria-pressed="false"
+                                                        aria-label="Visa mer"
+                                                        class="button-remove-style su-js-toggle-btn">
+                                                    <span class="not-pressed"></span>
+                                                    <span class="pressed"></span>
+                                                </button>
+                                            </div>
+                                            <div class="su-js-has-toggle-btn collapse" id="sub-level-menu4"
+                                                 data-parent="#accordionMenu">
                                                 <div id="accordionSubMenu_Forskning">
                                                     <ul class="main-menu-sub navbar-nav pb-4">
-                                                        <li class="nav-item pl-3"><a class="nav-link level-2"
-                                                                                     href="#">Hantera
-                                                                uppspelning</a></li>
-                                                        <li class="nav-item pl-3"><a class="nav-link level-2"
-                                                                                     href="{{ route('manage') }}">Manage
-                                                                videos</a></li>
-                                                        <li class="nav-item pl-3"><a class="nav-link level-2"
-                                                                                     href="{{ route('mediasiteFetch') }}">Sync
-                                                                items from
-                                                                Mediasite</a></li>
-                                                        <li class="nav-item pl-3"><a class="nav-link level-2"
-                                                                                     href="{{ route('mediasite') }}">Retrive
-                                                                from
-                                                                Mediasite</a></li>
+                                                        <li class="nav-item pl-3">
+                                                            <a class="nav-link level-2" href="{{ route('manage') }}">
+                                                                <span class="fas fa-video fa-icon-border mr-2" aria-hidden="true"></span> Hantera inspelningar</a>
+                                                            <a class="nav-link level-2" href="{{ route('user_upload') }}">
+                                                                <span class="fas fa-upload fa-icon-border mr-2" aria-hidden="true"></span> Manuell
+                                                                uppladdning</a>
+                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>
                                         </li>
                                         <li class="nav-item">
                                             <span class="nav-link">
-                                                {{$play_user ?? 'Not logged in'}}</span>
+                                                {{app()->make('play_user') ?? 'Not logged in'}}
+                                            </span>
                                         </li>
                                     </ul>
                                 </div>
@@ -284,100 +335,7 @@
                 </div>
             </div>
 
-            <div class="d-none d-md-flex">
-            <!--
-                <div class="collapse header-mega-menu-collapse__primary" id="primarySearchFormCollapse">
-                    <div class="container">
 
-                        <form class="form-inline form-main-search d-flex justify-content-between pt-10"
-                              id="header-main-search-form" name="header-main-search-form"
-                              action="{{ route('search') }}" method="POST" data-search="/s%C3%B6k"
-                              role="search">
-                            @csrf
-                    <div>
-                        <label for="header-main-search-text" class="sr-only">Sök på videos</label>
-                        <input class="form-control form-control-main-search" type="search"
-                               id="header-main-search-text" name="q" autocomplete="off"
-                               aria-haspopup="true"
-                               placeholder="Sök på videos"
-                               aria-labelledby="header-main-search-form">
-                    </div>
-                    <button id="header-main-search-button" type="submit"
-                            class="button-remove-style cursor-pointer mb-1"
-                            aria-label="Utför sök">
-                        <span class="toggler-icon__primary fas fa-search"></span>
-                    </button>
-
-
-                    <div class="search_autocomplete" id="search_autocomplete">
-                        <ul>
-                            <li><b>test</b>video - Polopolymanual</li>
-                            <li><b>Test</b>ar - Polopolymanual</li>
-                            <li><b>Test</b> - Polopolymanual</li>
-                            <li><b>Test</b> Construction and Language Assessment - Stockholm University</li>
-                            <li><b>Test</b> Academic Video Online - Department of Social Anthropology</li>
-                        </ul>
-                    </div>
-
-
-
-                                                            <div class="searchtext">
-                                                                <input type="text" id="query" name="query" placeholder="Sök" onfocus="changeOutput()"
-                                                                       class="search-input" autocomplete="off">
-                                                            </div>
-
-                                                            <button type="submit" class="search-button">
-                                                                <i class="fas fa-search"></i>
-                                                            </button>
--->
-
-                <!--
-                                                        <div class="search-option">
-                                                            <div id="filtrera" class="filtrera" style="color: blue">Filtrera din sökning</div>
-                                                            <div class="filter">
-                                                                <input name="type" type="radio" value="type-lectures" id="type-lectures"
-                                                                       class="filter-radio">
-                                                                <label for="type-lectures">
-                                                                    <i class="far fa-user"></i>
-                                                                    <span>Föreläsare</span>
-                                                                </label>
-
-                                                            </div>
-
-                                                            <div class="filter">
-                                                                <input name="type" type="radio" value="type-category" id="type-category"
-                                                                       class="filter-radio">
-                                                                       class="filter-radio">
-                                                                <label for="type-category">
-                                                                    <i class="fas fa-broadcast-tower"></i>
-                                                                    <span>Kategori</span>
-                                                                </label>
-                                                            </div>
-                                                            <div class="filter">
-                                                                <input name="type" type="radio" value="type-course" id="type-course"
-                                                                       class="filter-radio">
-                                                                <label for="type-cource">
-                                                                    <i class="fas fa-book-open"></i>
-                                                                    <span>Kurser</span>
-                                                                </label>
-                                                            </div>
-                                                            <div class="filter">
-                                                                <input name="type" type="radio" value="type-latest" id="type-latest"
-                                                                       class="filter-radio">
-                                                                <label for="type-latest">
-                                                                    <i class="far fa-clock"></i>
-                                                                    <span>Senaste</span>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-
-
-            </form>
-
-        </div>
-    </div>
-      -->
-            </div>
         </nav>
     </div>
 </header>
