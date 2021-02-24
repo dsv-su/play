@@ -78,15 +78,15 @@ class Video extends Model implements Searchable
         return $this->belongsToMany(Tag::class, 'video_tags', 'video_id', 'tag_id')->where('tag_id', $tag_id)->count()>0;
     }
 
-    /*public function courses(): Collection
-    {
-        return $this->belongsToMany(Course::class, 'video_courses', 'video_id', 'course_id')->get();
-    }*/
-
     public function courses(): Collection
     {
-        return $this->belongsToMany(Course::class, VideoCourse::class, 'video_id', 'course_id')->get();
+        return $this->belongsToMany(Course::class, 'video_courses', 'video_id', 'course_id')->get();
     }
+
+    /*public function courses(): Collection
+    {
+        return $this->belongsToMany(Course::class, VideoCourse::class, 'video_id', 'course_id')->get();
+    }*/
 
     public function presenters(): Collection
     {

@@ -98,17 +98,19 @@ class ManualDownloadController extends Controller
         $presentation = Presentation::latest()->first();
 
         //Download directories to use
-        $dir_thumb = $presentation->local.'/';
+        $dir_thumb = $presentation->local.'/image/';
         $dir_video = $presentation->local.'/video/';
         $dir_poster = $presentation->local.'/poster/';
 
         //Download Files
 
         //Image
-        $thumb_url = $this->store_server.$video->id.'/'.$video->thumb;
+        //$thumb_url = $this->store_server.$video->id.'/'.$video->thumb;
+        $thumb_url = $video->thumb;
+        $thumb_name = substr($video->thumb, strrpos($video->thumb, '/') + 1);
         $download_thumb = file_get_contents($thumb_url);
-        Storage::disk('public')->put($dir_thumb.$video->thumb, $download_thumb);
-
+        //Storage::disk('public')->put($dir_thumb.$video->thumb, $download_thumb);
+        Storage::disk('public')->put($dir_thumb.$thumb_name, $download_thumb);
         //Video and poster files
         foreach (json_decode($video->sources, true) as $source) {
             $video_name = substr($source['video'], strrpos($source['video'], '/') + 1);

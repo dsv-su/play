@@ -17,7 +17,7 @@ class CategorySeeder extends Seeder
     {
         //factory('App\Category', 10)->create();
         DB::table('categories')->insert([
-            'category_name' => 'Artificiell Intelligens',
+            'category_name' => 'Okategoriserad',
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);

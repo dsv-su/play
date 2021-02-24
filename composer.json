@@ -14,6 +14,7 @@
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "hedii/artisan-log-cleaner": "^4.1",
         "laravel/framework": "^8.0",
         "laravel/tinker": "^2.0",
         "league/flysystem-cached-adapter": "^1.1",

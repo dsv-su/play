@@ -79,52 +79,6 @@
                         </div>
                     </div>
                 </li>
-                <div class="mega-menu-collapse level-2">
-                    <div class="container">
-                        <ul class="list-unstyled row no-gutters">
-                                @if (isset($courses[0]))
-                                    <li class="mega-menu-collapse-col col">
-                                        <div class="container pl-0 pr-0">
-                                            <ul class="navbar-nav">
-                                                @foreach($courses[0] as $course)
-                                                    <li class="nav-item"><a class="nav-link"
-                                                                            href="/course/{{$course->id}}">{{$course->name}}</a>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                    </li>
-                                @endif
-                                @if (isset($courses[1]))
-                                    <li class="mega-menu-collapse-col col">
-                                        <div class="container pl-0 pr-0">
-                                            <ul class="navbar-nav">
-                                                @foreach($courses[1] as $course)
-                                                    <li class="nav-item"><a class="nav-link"
-                                                                            href="/course/{{$course->id}}">{{$course->name}}</a>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                    </li>
-                                @endif
-                                @if (isset($courses[2]))
-                                    <li class="mega-menu-collapse-col col">
-                                        <div class="container pl-0 pr-0">
-                                            <ul class="navbar-nav">
-                                                @foreach($courses[2] as $course)
-                                                    <li class="nav-item"><a class="nav-link"
-                                                                            href="/course/{{$course->id}}">{{$course->name}}</a>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                    </li>
-                                @endif
-                            </ul>
-                        </div>
-                    </div>
-                </li>
 
                 @if ($hasmycourses)
                 <li class="nav-item mega-menu-item" style="">
@@ -261,7 +215,7 @@
                                                  data-parent="#accordionMenu">
                                                 <div id="accordionSubMenu_Utbildning">
                                                     <ul class="main-menu-sub navbar-nav pb-4">
-                                                        @foreach($courses as $coursechunk)
+                                                        @foreach($nav_courses as $coursechunk)
                                                             @foreach($coursechunk as $course)
                                                                 <li class="nav-item pl-3">
                                                                     <a href="/course/{{$course->id}}" class="nav-link">

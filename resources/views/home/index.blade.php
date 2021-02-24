@@ -44,7 +44,7 @@
                     <div class="card video m-auto" >
                         <a href="{{ route('player', ['video' => $video]) }}">
                             <div class="card-header position-relative"
-                                 style=" @if ($video->sources && json_decode($video->sources)[0]->poster) background-image: url({{ asset(json_decode($video->sources)[0]->poster)}}); @endif height:200px;">
+                                 style="background-image: url({{ asset($video->thumb)}}); height:200px;">
                                 <div class="title">{{ $video->title }}</div>
                                 <!-- For testing permission handling -->
                                 @if($video->permission == 'true')

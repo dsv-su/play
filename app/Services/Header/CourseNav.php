@@ -22,7 +22,7 @@ class CourseNav extends Model
         $view->with('nav_categories', $this->getCategory());
         $view->with('designations', $this->getDesignation());
         $view->with('semesters', $this->getSemesters());
-        $view->with('courses', $this->getActiveCourses());
+        $view->with('nav_courses', $this->getActiveCourses());
         $view->with('hasmycourses', ($this->getUserCoursesWithVideos(app()->make('presenter') ?? 'dsv-dev@su.se')->count() > 0));
     }
 

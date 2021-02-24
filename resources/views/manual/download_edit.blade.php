@@ -54,9 +54,11 @@
                         Redigera presentationens presentatörer.
                     </p>
                     <div class="col-4">
-                    @foreach($presenters as $presenter)
-                        <input class="form-control" type="text" name="presenters[]" value="{{$presenter->username}}">
-                    @endforeach
+                        @if(count($presenters) > 0)
+                            @foreach($presenters as $presenter)
+                                <input class="form-control" type="text" name="presenters[]" value="{{$presenter->username}}">
+                            @endforeach
+                        @endif
                     </div>
                     <p>
                         Lägg till eventuellt ytterligare presentatörer.
@@ -75,9 +77,11 @@
                         Redigera inspelningens association med en eller fler kurser.
                     </p>
                     <div class="col-4">
-                        @foreach($courses as $course)
-                            <input class="form-control" type="text" name="courses[]" value="{{$course->name}}">
-                        @endforeach
+                        @if(count($courses) > 0)
+                            @foreach($courses as $course)
+                                <input class="form-control" type="text" name="courses[]" value="{{$course->designation}}">
+                            @endforeach
+                        @endif
                     </div>
                     <div class="col-4">
                         <button type="button" name="courseadd" class="btn btn-outline-primary btn-sm courseadd">Kurs <i class="fas fa-chalkboard"></i></button>
@@ -89,9 +93,11 @@
                         Redigera inspelningens association med en eller fler taggar.
                     </p>
                     <div class="col-4">
-                        @foreach($tags as $tag)
-                            <input class="form-control" type="text" name="tags[]" value="{{$tag->name}}">
-                        @endforeach
+                        @if(count($tags) > 0)
+                            @foreach($tags as $tag)
+                                <input class="form-control" type="text" name="tags[]" value="{{$tag->name}}">
+                            @endforeach
+                        @endif
                     </div>
                     <div class="col-4">
                         <button type="button" name="tagadd" class="btn btn-outline-primary btn-sm tagadd">Tagg <i class="fas fa-tags"></i></button>
