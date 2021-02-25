@@ -11,6 +11,7 @@ use App\ManualPresentation;
 use App\PlayerJson;
 use App\Presenter;
 use App\Services\DaisyIntegration;
+use App\Services\Ldap\SukatUser;
 use App\Services\Notify\PlayStoreNotify;
 use App\System;
 use App\Video;
@@ -25,6 +26,11 @@ use Spatie\Searchable\Search;
 
 class TestController extends Controller
 {
+    public function test()
+    {
+
+    }
+
     public function daisyLoadCourses()
     {
         /***********************************

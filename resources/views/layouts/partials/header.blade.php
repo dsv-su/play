@@ -63,18 +63,18 @@
                                         <a class="nav-link" href="">[Alla]</a>
                                     @endif
                                 </li>
+                                @if($nav_categories ?? '')
                                 <li class="mega-menu-collapse-col col">
                                     <a class="nav-link d-flex align-items-center nav-link__border-bottom" href="">
                                         <span class="fas fa-book fa-icon-border mr-2" aria-hidden="true"></span>
                                         <span class="d-inline-block first-letter-capitalized level-2">Kategori</span>
                                     </a>
-                                    @if($nav_categories ?? '')
                                         @foreach($nav_categories as $category)
                                             <a class="nav-link" href="{{route('category', $category)}}">{{$category}}</a>
                                         @endforeach
                                         <a class="nav-link" href="">[Alla]</a>
-                                    @endif
                                 </li>
+                                @endif
                             </ul>
                         </div>
                     </div>

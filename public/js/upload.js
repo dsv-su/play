@@ -57,7 +57,7 @@ $(document).ready(function() {
             // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
             name: 'autocomplete-items',
             display: function (item) {
-                return item.uid+'@su.se';
+                return item.uid;
             },
             templates: {
                 empty: [

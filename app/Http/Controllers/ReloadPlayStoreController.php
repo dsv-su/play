@@ -19,6 +19,6 @@ class ReloadPlayStoreController extends Controller
            //store
            $load->reloadstore(new Request($video));
        }
-       return redirect()->back()->with(['message' => 'All presentations have been reloaded successfully!', 'alert' => 'alert-success']);
+       return redirect('/')->with(['message' => 'All presentations have been reloaded successfully!', 'alert' => 'alert-success']);
    }
 }

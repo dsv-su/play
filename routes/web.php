@@ -85,6 +85,7 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::get('/find', 'PlayController@find')->name('find');
 
     //Testing routes --> to be removed before production
+    Route::get('/test', 'TestController@test');
     Route::post('/search', 'TestController@search')->name('search');
     Route::get('/upload_destroy/{id}', 'AdminController@destroy_upload')->name('upload_delete');
     Route::get('/download_destroy/{id}', 'AdminController@destroy_download')->name('download_delete');

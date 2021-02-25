@@ -23,12 +23,12 @@ class CourseNav extends Model
 
     public function compose(View $view)
     {
-        $view->with('nav_categories', $this->getCategory());
+        //$view->with('nav_categories', $this->getCategory()); //For now disabled
         $view->with('designations', $this->getDesignation());
         $view->with('semesters', $this->getSemesters());
         //$view->with('nav_courses', $this->getActiveCourses()); //To be removed
         //--> This should be refactores -> causes expensive db queries
-        $view->with('hasmycourses', ($this->getUserCoursesWithVideos($this->getUserName() ?? 'dsv-dev@su.se')->count() > 0));
+        //$view->with('hasmycourses', ($this->getUserCoursesWithVideos($this->getUserName() ?? 'dsv-dev@su.se')->count() > 0));
         //<--
     }
 
