@@ -5186,7 +5186,7 @@ p.kill-p, .kill-p p {
 }
 
 .video i {
-    cursor: pointer;
+    /*cursor: pointer;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -5194,7 +5194,7 @@ p.kill-p, .kill-p p {
     transform: translate(-50%, -50%);
     color: var(--light);
     opacity: 0.85;
-    transition: var(--ease);
+    transition: var(--ease);*/
 }
 
 .video:hover {
@@ -5214,10 +5214,15 @@ p.kill-p, .kill-p p {
     top: 0;
     padding: 4px 4px 4px 4px;
     background-color: var(--light);
-    color: var(--blue);
+    color: #002f5f;
     /*opacity: 0.85;*/
     transition: var(--ease);
 }
+
+.video .card-text {
+    font-size: 0.8em;
+}
+
 /* For testing purpose */
 .video .card-header .permission {
     position: absolute;

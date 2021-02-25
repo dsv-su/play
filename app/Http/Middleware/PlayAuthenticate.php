@@ -23,7 +23,7 @@ class PlayAuthenticate
             app()->bind('play_user', function() {
                 return 'Developer';
             });
-            app()->bind('presenter', function() {
+            app()->bind('play_username', function() {
                 return 'dsv-dev@su.se';
             });
             return $next($request);
@@ -32,7 +32,7 @@ class PlayAuthenticate
             app()->bind('play_user', function() {
                 return $_SERVER['displayName'];
             });
-            app()->bind('presenter', function() {
+            app()->bind('play_username', function() {
                 return $_SERVER['eppn'];
             });
             return $next($request);

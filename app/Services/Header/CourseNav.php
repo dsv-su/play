@@ -5,11 +5,15 @@ namespace App\Services\Header;
 use App\Category;
 use App\Course;
 use App\Presenter;
+use App\Services\AuthHandler;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\View\View;
 
+
 class CourseNav extends Model
 {
+
+
     /**
      * Bind data to the view.
      *
@@ -23,7 +27,21 @@ class CourseNav extends Model
         $view->with('designations', $this->getDesignation());
         $view->with('semesters', $this->getSemesters());
         //$view->with('nav_courses', $this->getActiveCourses()); //To be removed
-        $view->with('hasmycourses', ($this->getUserCoursesWithVideos(app()->make('presenter') ?? 'dsv-dev@su.se')->count() > 0));
+        //--> This should be refactores -> causes expensive db queries
+        $view->with('hasmycourses', ($this->getUserCoursesWithVideos($this->getUserName() ?? 'dsv-dev@su.se')->count() > 0));
+        //<--
+    }
+
+    private function getUserName()
+    {
+        $system = new AuthHandler();
+        $system = $system->authorize();
+        if($system->global->app_env == 'local') {
+            return 'dsv-dev@su.se';
+        }
+        else {
+            return $_SERVER['eppn'];
+        }
     }
 
     private function getCategory()

@@ -20,7 +20,7 @@ class UploadController extends Controller
         //Initate New upload
         $file = new ManualPresentation();
         $file->status = 'init';
-        $file->user = app()->make('presenter');
+        $file->user = app()->make('play_username');
         $file->local = '-';
         $file->base = '-';
         $file->title = '';
@@ -82,7 +82,7 @@ class UploadController extends Controller
 
             //Presenters
             //Add current user in array
-            $presenters[] = app()->make('presenter');
+            $presenters[] = app()->make('play_username');
 
             if ($request->presenters) {
                 foreach ($request->presenters as $presenter) {

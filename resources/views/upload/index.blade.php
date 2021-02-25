@@ -63,7 +63,7 @@
                             <small class="text-danger">{{ $errors->first('created') }}</small>
 
                             <label class="fieldlabels">Presentatör: </label>
-                            <p><small><strong>{{app()->make('play_user')}} ({{app()->make('presenter')}})</strong></small></p>
+                            <p><small><strong>{{app()->make('play_user')}} ({{app()->make('play_username')}})</strong></small></p>
 
                             <label class="fieldlabels">Ange eventuellt ytterligare presentatörer.</label>
                             <button type="button" name="presenteradd" class="btn btn-outline-primary btn-sm presenteradd">Presentatör <i class="fas fa-user-plus"></i></button>
