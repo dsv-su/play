@@ -126,7 +126,7 @@ class VideoApiController extends Controller
         auth()->invalidate();
         //$video = Video::where('presentation_id', $id)->first();
         return response()->json([
-            'Permission' => 'True'
+            'permission' => 'true'
         ], 200);
     }
 
@@ -137,27 +137,27 @@ class VideoApiController extends Controller
             JWTAuth::parseToken($ticket)->authenticate();
             JWTAuth::parseToken($ticket)->invalidate();
             return response()->json([
-                'Permission' => 'Granted'
+                'permission' => 'granted'
             ]);
         } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
 
             // Token is expired
             return response()->json([
-                'Permission' => 'Denied'
+                'permission' => 'denied'
             ]);
 
         } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
 
             // Token is invalid
             return response()->json([
-                'Permission' => 'Denied'
+                'permission' => 'denied'
             ]);
 
         } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
 
             // Token is not present
             return response()->json([
-                'Permission' => 'Denied'
+                'permission' => 'denied'
             ]);
         }
 

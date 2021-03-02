@@ -89,12 +89,73 @@ $(document).ready(function() {
     $(document).on('click', '.presenterremove', function(){
         $(this).closest('tr').remove();
     });
+    var course = 1;
     $(document).on('click', '.courseadd', function(){
         var html = '';
         html += '<tr>';
-        html += '<td><input type="text" name="courses[]" class="form-control form-control-sm" placeholder="Kursnamn" required></td>';
+        html += '<td>';
+        html += '<div class="d-flex justify-content-between" id="course-search">';
+        html += '<label for="course-search-text" class="sr-only">Kurs</label>';
+        html += '<input type="text" name="courses[]" id="course-search-text-'+course+'" class="form-control w-100 mx-auto" autocomplete="off" aria-haspopup="true" placeholder="Kursnamn" aria-labelledby="course-search" required>';
+        html += '</div>';
+        html += '</td>';
         html += '<td><button type="button" name="courseremove" class="btn btn-outline-danger btn-sm courseremove"><i class="fas fa-chalkboard"></i></button></td></tr>';
         $('#course_table').append(html);
+        /* */
+        /* Typeahead course name */
+        // Set the Options for "Bloodhound" suggestion engine
+        var engine = new Bloodhound({
+            remote: {
+                url: '/course_search?q=%QUERY%',
+                wildcard: '%QUERY%'
+            },
+            datumTokenizer: Bloodhound.tokenizers.whitespace('query'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace
+        });
+
+        $("#course-search-text-"+course).typeahead({
+            classNames: {
+                menu: 'search_autocomplete'
+            },
+            hint: false,
+            autoselect: true,
+            highlight: true,
+            minLength: 1
+        }, {
+            source: engine.ttAdapter(),
+            limit: 10,
+            // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
+            name: 'autocomplete-items',
+            display: function (item) {
+                return item.designation;
+            },
+            templates: {
+                empty: [
+                    '<div class="list-group search-results-dropdown"><div class="list-group-item">Nothing found.</div></div>'
+                ],
+                header: [
+                    '<div class="list-group search-results-dropdown">'
+                ],
+                suggestion: function (data) {
+
+                    return '<li>' + data.name + ' (' + data.designation + ')' + '</li>';
+
+                }
+            }
+        }).on('keyup', function (e) {
+            $(".tt-suggestion:first-child").addClass('tt-cursor');
+            let selected = $("#course-search-text-"+course).attr('aria-activedescendant');
+            if (e.which == 13) {
+                if (selected) {
+
+                } else {
+                    $(".tt-suggestion:first-child").addClass('tt-cursor');
+                }
+            }
+        });
+        course++;
+        /* end typeahead */
+        /* */
     });
     $(document).on('click', '.courseremove', function(){
         $(this).closest('tr').remove();

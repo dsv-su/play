@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Daisy;
 
 use App\System;
 use GuzzleHttp\Client;

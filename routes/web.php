@@ -52,6 +52,7 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::post('/poster/{id}', 'UploadController@poster')->name('poster');
     Route::get('/upload_store/{id}', 'UploadController@store')->name('upload_store');
     Route::get('/ldap_search', 'UploadController@ldap_search')->name('ldap_search');
+    Route::get('/course_search', 'UploadController@course_search')->name('course_search');
 
     //Download
     Route::get('/download/{video}', 'ManualDownloadController@step1')->name('download');
@@ -65,7 +66,18 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::get('/download_send/{id}', 'ManualDownloadController@send');
 
     //Admin
-    Route::get('/manual_admin', 'AdminController@admin')->name('manual_admin');
+    Route::prefix('admin/')->group(function () {
+        Route::get('/', 'AdminController@admin')->name('manual_admin');
+        Route::prefix('logs')->name('log-viewer::logs.')->group(function () {
+            Route::get('/', 'LogViewerController@listLogs')->name('list');
+            Route::delete('/delete', 'LogViewerController@delete')->name('delete');
+            Route::get('/{date}', 'LogViewerController@show')->name('show');
+            Route::get('/{date}/download', 'LogViewerController@download')->name('download');
+            Route::get('/{date}/{level}', 'LogViewerController@showByLevel')->name('filter');
+            Route::get('/{date}/{level}/search', 'LogViewerController@search')->name('search');
+        });
+    });
+
     Route::get('/manual_admin_erase/{id}', 'AdminController@admin_erase')->name('manual_admin_erase');
     Route::get('/manual_admin_notify/{id}', 'AdminController@admin_upload_notify_fail')->name('manual_admin_notify_fail');
     Route::get('/manual_admin_unregister/{id}', 'AdminController@admin_unregister')->name('manual_admin_unregister');
@@ -95,4 +107,8 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::get('/daisyload', 'TestController@daisyLoadCourses');
     Route::get('/reload', 'ReloadPlayStoreController@index')->name('reload'); //Reload all presentations from play store
     Route::get('/del/{video}', 'TestController@del')->name('del'); //Send delete notification to play-store
+
+
+
+    //-->
 });

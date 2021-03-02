@@ -65,5 +65,6 @@ class Kernel extends HttpKernel
         'entitlements' => \App\Http\Middleware\CheckEntitlement::class,
         'playauth' => \App\Http\Middleware\PlayAuthenticate::class,
         'play-store-status' => \App\Http\Middleware\StatusPlayStore::class,
+        'daisy-status' => \App\Http\Middleware\StatusDaisy::class,
     ];
 }

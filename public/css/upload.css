@@ -59,6 +59,64 @@
 
 }
 
+#course-search {
+    position: relative
+}
+
+#course-search .form-control-main-search {
+    background-color: #fff;
+
+}
+
+#course-search .twitter-typeahead {
+    margin: auto;
+    width: 75%;
+}
+
+#course-search .search_autocomplete {
+    -webkit-box-shadow: 0 0 6px 0 rgba(76, 76, 76, 0.2);
+    box-shadow: 0 0 6px 0 rgba(76, 76, 76, 0.2);
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #dadada;
+    width: 100%;
+    z-index: 99999;
+    color: #002f5f
+}
+
+#course-search .search_autocomplete ul, #course-search .autoc-autocomplete-items {
+    padding: 1.4rem 0;
+    margin: 0
+}
+
+#course-search .search_autocomplete li {
+    border-bottom: 0;
+    padding: .3rem 0 .3rem 1.8rem;
+    cursor: pointer;
+    display: block;
+    width: 100%
+}
+
+#course-search .search_autocomplete li.active,
+#course-search .search_autocomplete li.tt-cursor {
+    background: #eef9fa;
+}
+#course-search .search_autocomplete li.active a,
+#course-search .search_autocomplete li:hover a,
+#course-search .search_autocomplete li.tt-cursor a {
+    color: inherit;
+    text-decoration: none;
+}
+#course-search .search_autocomplete li:last-child {
+    border-bottom: 0
+}
+#course-search .search_autocomplete .autocomplete-separator {
+    border-bottom: #dadada
+}
+
 p {
     color: grey;
 }

@@ -174,7 +174,6 @@ return [
          * Package Service Providers...
          */
         ProtoneMedia\LaravelFFMpeg\Support\ServiceProvider::class,
-        Hedii\ArtisanLogCleaner\ArtisanLogCleanerServiceProvider::class,
         /*
          * Application Service Providers...
          */

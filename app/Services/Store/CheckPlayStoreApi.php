@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Store;
 
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;

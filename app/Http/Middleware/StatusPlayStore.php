@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\CheckPlayStoreApi;
+use App\Services\Store\CheckPlayStoreApi;
 use App\Services\CountPresentations;
 use Closure;
 use Illuminate\Http\Request;

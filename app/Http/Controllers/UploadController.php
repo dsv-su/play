@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Course;
 use App\ManualPresentation;
 use App\Services\Ffmpeg\DetermineDurationVideo;
 use App\Services\Ldap\SukatUser;
@@ -232,5 +233,10 @@ class UploadController extends Controller
     public function ldap_search(Request $request)
     {
         return SukatUser::whereStartsWith('cn', $request->q)->get();
+    }
+
+    public function course_search(Request $request)
+    {
+        return Course::where('name', 'LIKE', $request->q.'%')->get();
     }
 }
