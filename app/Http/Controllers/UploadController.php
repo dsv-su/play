@@ -237,6 +237,6 @@ class UploadController extends Controller
 
     public function course_search(Request $request)
     {
-        return Course::where('name', 'LIKE', $request->q.'%')->get();
+        return Course::where('name', 'LIKE', $request->course.'%')->get();
     }
 }

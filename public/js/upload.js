@@ -106,7 +106,7 @@ $(document).ready(function() {
         // Set the Options for "Bloodhound" suggestion engine
         var engine = new Bloodhound({
             remote: {
-                url: '/course_search?q=%QUERY%',
+                url: '/course_search?course=%QUERY%',
                 wildcard: '%QUERY%'
             },
             datumTokenizer: Bloodhound.tokenizers.whitespace('query'),
