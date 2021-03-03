@@ -24,7 +24,7 @@
                         {{ session('error') }}
                     </div>
                 @endif
-                <h2 id="heading">Ladda upp presentation</h2>
+                <h2 id="heading"><span class="fas fa-upload fa-icon-border mr-2" aria-hidden="true"></span>Ladda upp presentation</h2>
                 <p>Fyll i alla steg i formuläret för att ladda upp din presentation</p>
                     <!-- progressbar -->
                     <ul id="progressbar">
@@ -112,8 +112,14 @@
                                 <option value="false" selected>Public</option>
                                 <option value="true">Private</option>
                             </select>
-                            <div id="entitlement"></div>
-                            <br>
+                            <!--Video permission settings-->
+                            <div id="video_perm" hidden>
+                                <select class="form-control" name="video_permission">
+                                    @foreach($permissions as $permission)
+                                    <option value="{{$permission->id}}">{{$permission->id}}: {{$permission->scope}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
 
                         </div>
                         <input type="button" name="next" class="next action-button" value="Nästa" /> <input type="button" name="previous" class="previous action-button-previous" value="Föregående" />

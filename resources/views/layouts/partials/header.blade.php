@@ -236,6 +236,7 @@
                                                 </div>
                                             </div>
                                         </li>
+                                        @if($nav_categories ?? '')
                                         <li class="nav-item">
                                             <a class="nav-link text-uppercase d-inline-block pr-0"
                                                href="#">
@@ -257,19 +258,20 @@
                                                 <div id="accordionSubMenu_Utbildning">
                                                     <ul class="main-menu-sub navbar-nav pb-4">
                                                         <li class="nav-item pl-3">
-                                                            @if($nav_categories ?? '')
+
                                                                 @foreach($nav_categories as $category)
                                                                     <a class="nav-link" href="{{route('category', $category)}}">
                                                                         <span class="d-inline-block first-letter-capitalized level-2">{{$category}}</span>
                                                                     </a>
                                                                 @endforeach
                                                                 <a class="nav-link" href="">[Alla]</a>
-                                                            @endif
+
                                                         </li>
                                                     </ul>
                                                 </div>
                                             </div>
                                         </li>
+                                        @endif
                                         @if ($hasmycourses ?? '')
                                         <li class="nav-item">
                                             <a class="nav-link text-uppercase d-inline-block pr-0"

@@ -18,9 +18,12 @@
                 <a href="/course/{{$vc->course_id}}" class="badge badge-primary">{{\App\Course::find($vc->course_id)->designation}}</a>
             @endforeach
         </p>
+        @if(!$video->category->category_name == 'Okategoriserad') <!-- For now hide category -->
+            <button id="presenter_btn" class="transparent_btn presenter_btn"><i class="far fa-user"></i></button>
         <p class="card-text">
             <span class="badge badge-light">{{$video->category->category_name}}</span>
         </p>
+        @endif
         <p class="card-text">
             @foreach($video->presenters() as $presenter)
                 <a href="/presenter/{{$presenter->id}}" class="badge badge-light">{{$presenter->name}}</a>

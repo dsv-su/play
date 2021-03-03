@@ -15,7 +15,6 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
-        //factory('App\Category', 10)->create();
         DB::table('categories')->insert([
             'category_name' => 'Okategoriserad',
             'created_at' =>  Carbon::now(),

@@ -28,7 +28,7 @@
                     <h3 class="su-theme-header mb-4">
                         <span class="far fa-clock fa-icon-border mr-2" aria-hidden="true"></span>
                         Senast tillagt @if (isset($course))
-                            från <i>{{$course}}</i>  @elseif (isset($tag)) efter taggen: <i>{{$tag}}</i> @elseif (isset($presenter))  <i>{{$presenter}}</i>> @endif
+                            från kursen <i>{{$course}}</i>  @elseif (isset($tag)) efter taggen: <i>{{$tag}}</i> @elseif (isset($presenter))  av <i>{{$presenter}}</i> @endif
                     </h3>
 
                 </div>

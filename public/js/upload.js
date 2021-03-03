@@ -4,19 +4,11 @@ $(document).ready(function() {
         weekStart: 1,
         todayHighlight: true
     });
-    var ent = 0;
+    /* Toggle video permissions settings */
     $(document).on('change', '#permission', function(){
-        var data = $(this).val();
-        if(data == 'true') {
-            var html = '';
-            html += '<input type="text" class="form-control" id="input_entitlement" name="entitlement"  value="urn:mace:swami.se:gmai:dsv-user:staff;urn:mace:swami.se:gmai:dsv-user:student">';
-            $('#entitlement').append(html);
-            ent++;
-        }
-        else if (data == 'false' && ent==1) {
-            $("#input_entitlement").remove();
-            ent = 0;
-        }
+        var bool=$("#video_perm").is(":hidden")
+        $("#video_perm").toggleClass('hidden')
+        $("#video_perm").attr('hidden',!bool)
     });
 
     var count = 2;

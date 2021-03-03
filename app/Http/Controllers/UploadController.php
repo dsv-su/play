@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Course;
 use App\ManualPresentation;
+use App\Permission;
 use App\Services\Ffmpeg\DetermineDurationVideo;
 use App\Services\Ldap\SukatUser;
 use App\Services\Notify\PlayStoreNotify;
 use App\Services\Store\SftpPlayStore;
+use App\VideoPermission;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
@@ -41,7 +43,8 @@ class UploadController extends Controller
     {
         $final = 0;
         $durationInSeconds = 0;
-        return view('upload.index', $this->init_upload(), compact('final', 'durationInSeconds'));
+        $permissions = Permission::all();
+        return view('upload.index', $this->init_upload(), compact('final', 'durationInSeconds', 'permissions'));
     }
 
     public function step1($id, Request $request)
@@ -115,9 +118,19 @@ class UploadController extends Controller
                 return back()->withInput()->with(['error' => 'Mediafilerna har olika längd och skiljer åt mer än +/- 3 sek. Kontrollera och ladda upp på nytt!']);
             }
 
-            //Default entitlement
+            //Set video permissions
+            $video_permissions = new VideoPermission();
             if($request->permission == 'false') {
-                $default_entitlement = 'urn:mace:swami.se:gmai:dsv-user:staff;urn:mace:swami.se:gmai:dsv-user:student';
+                $video_permissions->notification_id = $manualPresentation->id;
+                $video_permissions->permission_id = $request->video_permission;
+                $video_permissions->type = 'public';
+                $video_permissions->save();
+                //$default_entitlement = 'urn:mace:swami.se:gmai:dsv-user:staff;urn:mace:swami.se:gmai:dsv-user:student';
+            } else {
+                $video_permissions->notification_id = $manualPresentation->id;
+                $video_permissions->permission_id = $request->video_permission;
+                $video_permissions->type = 'private';
+                $video_permissions->save();
             }
 
             //Update model
@@ -132,8 +145,8 @@ class UploadController extends Controller
             $manualPresentation->created = strtotime($request->created);
             $manualPresentation->duration = $durationInSeconds;
             $manualPresentation->sources = $files;
-            $manualPresentation->permission = $request->permission;
-            $manualPresentation->entitlement = $request->entitlement ?? $default_entitlement;
+            //$manualPresentation->permission = $request->permission;
+            //$manualPresentation->entitlement = $request->entitlement ?? $default_entitlement;
             //$id = $manualPresentation->save();
             $manualPresentation->thumb = $this->gen_thumb_poster($manualPresentation, $durationInSeconds/3);
             $id =$manualPresentation->save();

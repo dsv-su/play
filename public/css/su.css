@@ -5178,11 +5178,18 @@ p.kill-p, .kill-p p {
 /* VIDEO */
 .video.card {
     min-width: 14rem;
-    border-radius: 0;
+    border-radius: 5px;
     border: 0 none;
-    -moz-box-shadow: inset 0 0 0 1px #dadada;
+    /*-moz-box-shadow: inset 0 0 0 1px #dadada;
     -webkit-box-shadow: inset 0 0 0 1px #dadada;
-    box-shadow: inset 0 0 0 1px #dadada;
+    box-shadow: inset 0 0 0 1px #dadada;*/
+    box-shadow:
+        0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+        0 6.7px 5.3px rgba(0, 0, 0, 0.048),
+        0 12.5px 10px rgba(0, 0, 0, 0.06),
+        0 22.3px 17.9px rgba(0, 0, 0, 0.072),
+        0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+        0 100px 80px rgba(0, 0, 0, 0.12);
 }
 
 .video i {
@@ -5209,7 +5216,8 @@ p.kill-p, .kill-p p {
 
 .video .card-header .title {
     position: absolute;
-    font-family: "TheSansC5-SemiBoldWeb";
+    font-family: "TheSansC5-SemiBoldWeb", serif;
+    font-size: 1rem;
     left: 0;
     top: 0;
     padding: 4px 4px 4px 4px;
@@ -5237,18 +5245,71 @@ p.kill-p, .kill-p p {
 }
 /* --> end For testing purpose */
 .video .card-header {
-    border-bottom: 0px;
+    /*border-bottom: 0px;*/
 }
 
 .video .card-header p {
     margin-bottom: -1px;
-    margin-left: 0px;
+    margin-left: 0;
     background-color: var(--light);
-    color: var(--videoblue);
+    color: darkblue;
     position: absolute;
     left: 0;
     bottom: 0;
 }
+
+/* Video card buttons */
+
+.transparent_btn {
+    display: inline-block;
+    padding: 10px 10px;
+    color: #FFF;
+    border: 1px solid #FFF;
+    text-decoration: none;
+    font-size: 14px;
+    line-height: 120%;
+    background-color: rgba(255,255,255, 0);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-transition: background-color 300ms ease;
+    -moz-transition: background-color 300ms ease;
+    transition: background-color 300ms ease;
+    cursor: pointer;
+}
+
+.presenter_btn {
+    position: fixed;
+    left: 14rem;
+    top: 0;
+    transform: translateX(-330%);
+    font-size: 8px;
+    padding: 5px 5px;
+    cursor: pointer;
+    border-radius: 1px;
+    text-align: center;
+    z-index: 2;
+}
+
+.video .card-header:hover .presenter_btn {
+    animation-name: presenter;
+    animation-duration: 12s;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes presenter {
+    from {
+        background-color: rgba(0,0,0, 0.5);
+        color: #FFF;
+        transform: translateX(0);
+    }
+    to {
+        background-color: rgba(0,0,0, 0.5);
+        color: #FFF;
+        transform: translateX(0);
+    }
+}
+
 
 /* DSV LOGO */
 #main-header .logo {
