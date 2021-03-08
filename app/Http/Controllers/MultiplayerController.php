@@ -20,14 +20,12 @@ class MultiplayerController extends Controller
 
         if (!$playlist = VideoCourse::where('video_id', $video->id)->first()) {
             //No playlist
-            /* old $url = url('/multiplayer') . '?' . urldecode(http_build_query(['presentation' => URL::to('/') . '/presentation/' . $video->id, 'authtoken' => $token]));*/
             $url = url('/multiplayer') . '?' . urldecode(http_build_query(['p' =>  $video->id]));
         } else {
             // Production
-            /* old $url = url('/multiplayer') . '?' . urldecode(http_build_query(['presentation' => URL::to('/') . '/presentation/' . $video->id, 'playlist' => URL::to('/') . '/playlist/' . $playlist->course_id, 'authtoken' => $token]));*/
-            //$url = url('/multiplayer') . '?' . urldecode(http_build_query(['presentation' => $video->id, 'playlist' =>  $playlist->course_id]));
+            $url = url('/multiplayer') . '?' . urldecode(http_build_query(['p' => $video->id, 'l' =>  $playlist->course_id]));
             // Dev
-            $url = url('/multiplayer') . '?' . http_build_query(['p' => $video->id, 'l' => $playlist->course_id]);
+            //$url = url('/multiplayer') . '?' . http_build_query(['p' => $video->id, 'l' => $playlist->course_id]);
         }
 
         return redirect()->away($url);

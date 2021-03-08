@@ -14,12 +14,10 @@
             <div class="footer-section col-12 col-md-6 col-lg-4" aria-labelledby="footerShortCuts">
                 <h2 id="footerShortCuts">Genvägar</h2>
                 <ul class="list-two-columns">
-                    <li><a href="#">Link 1</a></li>
-                    <li><a href="#">Link 1</a></li>
-                    <li><a href="#">Link 1</a></li>
-                    <li><a href="#">Link 1</a></li>
-                    <li><a href="#">Link 1</a></li>
-                    <li><a href="#">Link 1</a></li>
+                    <li><a href="https://ilearn2.dsv.su.se">Ilearn</a></li>
+                    <li><a href="https://play.dsv.su.se">Play</a></li>
+                    <li><a href="https://daisy.dsv.su.se">Daisy</a></li>
+                    <li><a href="https://scipro.dsv.su.se">SciPro</a></li>
                 </ul>
             </div>
 

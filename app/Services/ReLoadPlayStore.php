@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Services\Course\CourseStore;
+use App\Services\PermissionHandler\PermissionHandler;
 use App\Services\Presenter\PresenterStore;
 use App\Services\Tag\TagsStore;
 use App\Services\Video\VideoStore;
@@ -33,6 +34,9 @@ class ReLoadPlayStore extends Model
             //Store video
             $video = new VideoStore($request);
             $video = $video->presentation();
+            //Set video permissions
+            $permission = new PermissionHandler($request,$video);
+            $permission->setPermission();
             //Store presenter
             $presenter = new PresenterStore($request, $video);
             $presenter->presenter();
@@ -47,6 +51,9 @@ class ReLoadPlayStore extends Model
             //Update existing video
             $video = new VideoUpdate($presentation, $request);
             $video = $video->presentation_update();
+            //Set video permissions
+            $permission = new PermissionHandler($request,$video);
+            $permission->setPermission();
             //Store presenter
             $presenter = new PresenterStore($request, $video);
             $presenter->presenter();
