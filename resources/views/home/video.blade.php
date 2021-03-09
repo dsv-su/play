@@ -5,8 +5,13 @@
              style="background-image: url({{ asset($video->thumb)}}); height:200px;">
             <div class="title">{{ $video->title }}</div>
             <!-- For testing permission handling -->
-            @if($video->permission == 'true')
-                <div class="permission">Privat</div>
+
+            @if($permissions ?? '')
+                @foreach($permissions as $permission)
+                    @if($video->id == $permission->video_id && $permission->type == 'private')
+                        <div class="permission">Privat</div>
+                    @endif
+            @endforeach
             @endif
             <!-- end permission handling -->
             <p class="p-1"> {{$video->duration}} </p>

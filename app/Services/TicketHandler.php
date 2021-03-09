@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Permission;
+use App\VideoPermission;
 use Illuminate\Database\Eloquent\Model;
 
 class TicketHandler extends Model
@@ -40,26 +42,29 @@ class TicketHandler extends Model
 
     private function check_permission($video)
     {
-        if($video->permission == 'true')
-        {
-            // If the environment is not local
-            if (!app()->environment('local')) {
-                //Check entitlements
-                $this->entitlements = explode(";", $video->entitlement);
-                $this->server = explode(";", $_SERVER['entitlement']);
-                foreach($this->entitlements as $this->entitlement)
-                {
-                    foreach($this->server as $this->server_entitlement)
-                    {
-                        if($this->entitlement == $this->server_entitlement) return true;
-                    }
-                }
-            }
+        //Get all permissions for the video
+        $this->permissions = VideoPermission::where('video_id', $video->id)->pluck('permission_id');
 
-            return false;
-        }
-        else {
-            return true;
+        //Get all permission entitlements
+        foreach($this->permissions as $this->permission) {
+            $this->entitlements = Permission::where('id', $this->permission)->pluck('entitlement');
+
+            //Check if user entitlement exists in permission entitlement
+            if (!app()->environment('local')) {
+                foreach ($this->entitlements as $this->entitlement) {
+                    $this->explicit_entitlements = explode(";", $this->entitlement);
+                    $this->server = explode(";", $_SERVER['entitlement']);
+                    foreach ($this->explicit_entitlements as $this->explicit_entitlement) {
+                        foreach ($this->server as $this->server_entitlement) {
+                            if ($this->explicit_entitlement == $this->server_entitlement) return true;
+                        }
+                    }
+
+                }
+                //
+            } else {
+                return true;
+            }
         }
     }
 

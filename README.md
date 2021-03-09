@@ -125,7 +125,7 @@ Endpoints for checking presentation permissions:
 
 Verb | URI | Action
 -----|-----|-------
-GET | /api/perm | Check user permission for presentation
+POST | /api/perm | Check user permission for presentation
 
 
 Endpoints for issuing/destroying tokens:

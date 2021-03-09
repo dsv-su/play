@@ -9,4 +9,12 @@ class VideoPermission extends Model
 {
     use HasFactory;
     protected $fillable = ['video_id', 'notification_id', 'permission_id', 'type'];
+
+    /**
+     * Get the permission that owns the video.
+     */
+    public function permission()
+    {
+        return $this->belongsTo(Permission::class);
+    }
 }

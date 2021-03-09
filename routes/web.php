@@ -67,7 +67,7 @@ Route::middleware('entitlements', 'playauth')->group(function () {
 
     //Admin
     Route::prefix('admin/')->group(function () {
-        Route::get('/', 'AdminController@admin')->name('manual_admin');
+        Route::get('/', 'AdminController@admin')->name('admin');
         Route::prefix('logs')->name('log-viewer::logs.')->group(function () {
             Route::get('/', 'LogViewerController@listLogs')->name('list');
             Route::delete('/delete', 'LogViewerController@delete')->name('delete');
@@ -81,8 +81,15 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::get('/manual_admin_erase/{id}', 'AdminController@admin_erase')->name('manual_admin_erase');
     Route::get('/manual_admin_notify/{id}', 'AdminController@admin_upload_notify_fail')->name('manual_admin_notify_fail');
     Route::get('/manual_admin_unregister/{id}', 'AdminController@admin_unregister')->name('manual_admin_unregister');
+    //new
+    Route::get('/set_permission/{video}', 'AdminController@adminSetPermission')->name('set_permission');
+    Route::post('/store_permission/{id}', 'AdminController@adminStorePermission')->name('store_permission');
+
+    //old
     Route::get('/admin_permission/{id}', 'AdminController@admin_permission')->name('admin_permission');
     Route::post('/admin_permission_store/{id}', 'AdminController@admin_permission_store')->name('admin_permission_store');
+    //end old
+
     Route::get('/admin_download_notify_resend/{id}', 'AdminController@admin_download_notify_resend')->name('admin_download_notify_resend');
 
     //Mediasite

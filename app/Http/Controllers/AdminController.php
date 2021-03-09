@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\ManualPresentation;
+use App\Permission;
 use App\Presentation;
 use App\Services\Notify\PlayStoreNotify;
 use App\Video;
+use App\VideoPermission;
 use GuzzleHttp\Client;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,7 +26,10 @@ class AdminController extends Controller
         $data['manual_presentations'] = ManualPresentation::all();
         $data['presentations'] = Presentation::all();
         $data['videos'] = Video::all();
-        return view('manual.admin', $data);
+        $data['owners'] = Video::with('video_presenter.presenter')->get();
+        $data['permissions'] = VideoPermission::with('permission')->get();
+
+        return view('admin.admin', $data);
     }
 
     public function admin_erase($id)
@@ -62,19 +67,35 @@ class AdminController extends Controller
         return back()->withInput();
     }
 
-    public function admin_permission($id)
+    public function adminSetPermission(Video $video)
     {
-        $video = Video::find($id);
-        return view('manual.permission', $video);
+        $permissions = Permission::all();
+        $thispermissions = VideoPermission::where('video_id', $video->id)->pluck('permission_id','type')->toArray();
+
+        return view('admin.permission.permission', $video, compact('permissions','thispermissions'));
     }
 
-    public function admin_permission_store($id, Request $request): RedirectResponse
+    public function adminStorePermission($id, Request $request): RedirectResponse
     {
-        $video = Video::find($id);
-        $video->permission = $request->permission;
-        $video->entitlement = $request->entitlement;
-        $video->save();
-        return redirect()->route('manual_admin');
+        $video_permissions = VideoPermission::where('video_id', $id)->get();
+        //Delete old settings
+        foreach($video_permissions as $vp) {
+            $vp->delete();
+        }
+        //Add new settings
+        foreach($request->perm as $permission) {
+            $vp = new VideoPermission();
+            $vp->video_id = $id;
+            $vp->permission_id = $permission;
+            if($permission == 1) {
+                $vp->type = 'public';
+            } else {
+                $vp->type = 'private';
+            }
+            $vp->save();
+        }
+
+        return redirect()->route('admin');
     }
 
     private function uri()

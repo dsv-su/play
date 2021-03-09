@@ -115,9 +115,8 @@
                                     <span class="level-1 text-uppercase d-block mb-3">Administrator</span>
                                 </li>
                                 <li class="mega-menu-collapse-col col">
+                                    <a class="nav-link level-2" href="{{route('admin')}}"><span class="fas fa-user-cog fa-icon-border mr-2" aria-hidden="true"></span>Admin settings</a>
                                     <a class="nav-link level-2" href="{{route('log-viewer::logs.list')}}"><span class="fas fa-bug fa-icon-border mr-2" aria-hidden="true"></span>Status and Logs</a>
-                                    <a class="nav-link level-2" href="{{ route('manual_admin') }}">Only for
-                                        administrators</a>
                                     <a class="nav-link level-2" href="{{ route('manage') }}">Manage videos</a>
                                     <a class="nav-link level-2" href="{{ route('mediasiteFetch') }}">Sync items from
                                         Mediasite</a>

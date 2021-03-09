@@ -13,6 +13,7 @@ use App\Tag;
 use App\UploadHandler;
 use App\Video;
 use App\VideoCourse;
+use App\VideoPermission;
 use App\VideoPresenter;
 use App\VideoTag;
 use Exception;
@@ -41,6 +42,7 @@ class PlayController extends Controller
         $data['search'] = 0;
 
         $data['latest'] = Video::with('category', 'video_course.course')->latest('creation')->take(8)->get();
+        $data['permissions'] = VideoPermission::all();
         $data['categories'] = Category::all();
 
         return view('home.index', $data);
