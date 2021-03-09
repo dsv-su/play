@@ -26,7 +26,7 @@
 
                         <h2>Video</h2>
                         <div class="container px-0">
-                            <div class="d-flex mb-3">
+                            <div class="d-flex mb-3 flex-wrap">
                             @foreach ($owners as $video)
                                 <div class="col my-3">
                                     @include('home.video')

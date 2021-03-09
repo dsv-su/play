@@ -24,8 +24,8 @@
                                 </select>
                             </div>
                         </div>
-
                         <button type="submit" class="btn btn-primary btn-sm">Modify</button>
+                        <a href="#" role="button" class="btn btn-secondary btn-sm">Add</a>
                     </form>
                 </div>
             </div>
