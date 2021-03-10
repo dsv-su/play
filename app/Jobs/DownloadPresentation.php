@@ -108,8 +108,10 @@ class DownloadPresentation implements ShouldQueue
                     return $user['DisplayName'] == $presenter['DisplayName'];
                 });
                 $presenter = array_pop($array);
-                Presenter::firstOrCreate(array('name' => $presenter['DisplayName'], 'username' => $presenter['UserName']));
-                $metadata['presenters'][] = $presenter['UserName'];
+                if ($presenter) {
+                    Presenter::firstOrCreate(array('name' => $presenter['DisplayName'], 'username' => $presenter['UserName']));
+                    $metadata['presenters'][] = $presenter['UserName'];
+                }
             }
 
 
@@ -160,6 +162,7 @@ class DownloadPresentation implements ShouldQueue
             // Maybe use mediasiteID to ensure that we don't download same thing twice?
             $video = new Video;
             $video->title = $metadata['title'];
+            $video->id = $metadata['mediasiteid'];
             $video->duration = (Carbon::createFromTimestampMs($metadata['duration'] ?? null))->subHour()->format('H:i:s');
 
 
@@ -196,9 +199,11 @@ class DownloadPresentation implements ShouldQueue
             }
 
             // Presenters
-            foreach ($metadata['presenters'] as $presenter) {
-                $p = Presenter::where(array('username' => $presenter))->first();
-                VideoPresenter::create(array('video_id' => $video->id, 'presenter_id' => $p->id));
+            if (key_exists('presenters', $metadata)) {
+                foreach ($metadata['presenters'] as $presenter) {
+                    $p = Presenter::where(array('username' => $presenter))->first();
+                    VideoPresenter::create(array('video_id' => $video->id, 'presenter_id' => $p->id));
+                }
             }
 
             // Update presentsation status
