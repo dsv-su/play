@@ -145,9 +145,6 @@ class UploadController extends Controller
             $manualPresentation->created = strtotime($request->created);
             $manualPresentation->duration = $durationInSeconds;
             $manualPresentation->sources = $files;
-            //$manualPresentation->permission = $request->permission;
-            //$manualPresentation->entitlement = $request->entitlement ?? $default_entitlement;
-            //$id = $manualPresentation->save();
             $manualPresentation->thumb = $this->gen_thumb_poster($manualPresentation, $durationInSeconds/3);
             $id =$manualPresentation->save();
 

@@ -54,8 +54,7 @@ class ManualDownloadController extends Controller
                 $presentation->created = $video->creation;
                 $presentation->duration = $video->duration;
                 $presentation->sources = json_decode($video->sources, true);;
-                $presentation->permission = $video->permission;
-                $presentation->entitlement = $video->entitlement;
+
                 $presentation->save();
 
                 return true;
@@ -225,7 +224,7 @@ class ManualDownloadController extends Controller
                     }
                 } else $tags[] = '';
 
-                //Default entitlement
+                //Default entitlement _> has to be refactored
                 if ($request->permission == 'false') {
                     $default_entitlement = 'urn:mace:swami.se:gmai:dsv-user:staff;urn:mace:swami.se:gmai:dsv-user:student';
                 }
@@ -244,8 +243,7 @@ class ManualDownloadController extends Controller
                 $presentation->created = strtotime($request->created);
                 $presentation->duration = $duration;
                 $presentation->sources = $files; //json_decode($video->sources, true);
-                $presentation->permission = $request->permission;
-                $presentation->entitlement = $request->entitlement ?? $default_entitlement;
+
                 $presentation->save();
 
             }
@@ -346,8 +344,7 @@ class ManualDownloadController extends Controller
                 $presentation->created = strtotime($request->created);
                 $presentation->duration = $duration;
                 $presentation->sources = $files;
-                $presentation->permission = $request->permission;
-                $presentation->entitlement = $request->entitlement ?? $default_entitlement;
+
                 $presentation->save();
 
                 //New media

@@ -2,6 +2,7 @@
 
 namespace App\Services\Video;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class VideoUpdate extends Model
@@ -21,7 +22,7 @@ class VideoUpdate extends Model
         $this->video->creation = $this->request->creation;
         $this->video->title = $this->request->title;
         $this->video->thumb = $this->request->thumb;
-        $this->video->duration = $this->request->duration;
+        $this->video->duration = Carbon::parse($this->request->duration);
         $this->video->subtitles = $this->request->subtitles;
         $this->video->sources = json_encode($this->request->sources, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         $this->video->presentation = json_encode($this->request->all(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);

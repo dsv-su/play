@@ -41,7 +41,7 @@ class PlayController extends Controller
 
         $data['search'] = 0;
 
-        $data['latest'] = Video::with('category', 'video_course.course')->latest('creation')->take(8)->get();
+        $data['latest'] = Video::with('category', 'video_course.course')->latest('creation')->take(24)->get();
         $data['permissions'] = VideoPermission::all();
         $data['categories'] = Category::all();
 
@@ -554,7 +554,8 @@ class PlayController extends Controller
 
     public function manage()
     {
-        return view('home.manage', ['videos' => Video::all(), 'allcourses' => Course::all(),  'categories' => Category::all()]);
+        return view('home.manage', ['videos' => Video::with('category', 'video_course.course')->latest('creation')->get(), 'allcourses' => Course::all(),  'categories' => Category::all()]);
+        //return view('home.manage', ['videos' => Video::all(), 'allcourses' => Course::all(),  'categories' => Category::all()]);
     }
 
     public

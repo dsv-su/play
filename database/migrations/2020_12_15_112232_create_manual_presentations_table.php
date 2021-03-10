@@ -26,8 +26,6 @@ class CreateManualPresentationsTable extends Migration
             $table->string('courses');
             $table->string('tags');
             $table->string('thumb')->nullable();
-            $table->string('permission')->nullable();
-            $table->string('entitlement')->nullable();
             $table->json('sources');
             $table->timestamps();
         });

@@ -26,8 +26,6 @@ class CreatePresentationsTable extends Migration
             $table->string('courses');
             $table->string('tags');
             $table->string('thumb')->nullable();
-            $table->string('permission');
-            $table->string('entitlement');
             $table->json('sources');
             $table->timestamps();
         });

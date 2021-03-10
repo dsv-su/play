@@ -32,6 +32,57 @@ class AdminController extends Controller
         return view('admin.admin', $data);
     }
 
+    public function addPermission()
+    {
+        $permissions = Permission::all();
+        $modify = 0;
+
+        return view('admin.permission.form', compact('permissions', 'modify'));
+    }
+    public function adminNewPermission(Request $request)
+    {
+        if ($request->isMethod('post')) {
+
+            //Validation
+            $this->validate($request, [
+                'permission' => 'required',
+                'entitlement' => 'required'
+            ]);
+            if($request->modify == 0){
+                Permission::updateOrCreate(
+                    ['scope' => $request->permission],
+                    ['entitlement' => $request->entitlement]
+                );
+            }
+            else {
+                $permission = Permission::find($request->pid);
+                $permission->scope = $request->permission;
+                $permission->entitlement = $request->entitlement;
+                $permission->save();
+                return redirect()->route('add_permission')->with(['message' => 'The permissions group has been updated']);
+            }
+
+
+            }
+        return back()->with(['message' => 'A new permission group has been created']);
+    }
+
+    public function modifyPermission(Permission $permission)
+    {
+        $modify = 1;
+        $thispermission = $permission;
+        $permissions = Permission::all();
+
+        return view('admin.permission.form', compact('permissions', 'thispermission', 'modify'));
+    }
+
+    public function deletePermission(Permission $permission)
+    {
+        $permission->delete();
+
+        return back()->with(['message' => 'The permissiongroup has been deleted']);
+    }
+
     public function admin_erase($id)
     {
         $manual = ManualPresentation::find($id);

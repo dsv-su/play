@@ -25,7 +25,8 @@
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary btn-sm">Modify</button>
-                        <a href="#" role="button" class="btn btn-secondary btn-sm">Add</a>
+                        <a href="{{route('add_permission')}}" role="button" class="btn btn-secondary btn-sm">Add/edit</a>
+                        <a href="{{route('admin')}}" role="button" class="btn btn-warning btn-sm">Cancel</a>
                     </form>
                 </div>
             </div>

@@ -9,7 +9,10 @@
                         <a class="nav-link active" id="video-tab" data-toggle="tab" href="#video" role="tab" aria-controls="video" aria-selected="true">Owner info</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="permission-tab" data-toggle="tab" href="#permission" role="tab" aria-controls="permission" aria-selected="false">Permissions</a>
+                        <a class="nav-link" id="permission-tab" data-toggle="tab" href="#permission" role="tab" aria-controls="permission" aria-selected="false">VideoPermissions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="permission-tab"  href="{{route('add_permission')}}" role="tab" aria-controls="permission" aria-selected="false">Permissions</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="upload-tab" data-toggle="tab" href="#upload" role="tab" aria-controls="upload" aria-selected="false">Upload</a>
@@ -40,7 +43,6 @@
                     <div class="tab-pane fade" id="permission" role="tabpanel" aria-labelledby="permission-tab">
                         <h2>Video Permissons</h2>
                         <div class="row">
-                            New
                             <table class="table table-bordered">
                                 <thead>
                                 <tr>

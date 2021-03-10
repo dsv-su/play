@@ -25,8 +25,6 @@ class CreateVideosTable extends Migration
             $table->string('subtitles')->nullable();
             $table->json('sources')->nullable();
             $table->json('presentation')->nullable();
-            $table->string('permission');
-            $table->string('entitlement')->nullable();
             $table->foreignId('category_id')->references('id')->on('categories');
             $table->timestamps();
         });
