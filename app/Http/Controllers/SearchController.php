@@ -13,6 +13,8 @@ class SearchController extends Controller
     {
         //Permissionslabel
         $permissions = VideoPermission::all();
+
+        //Search
         $term = substr($semester, 0, 2);
         $year = substr($semester, 3, 4);
         $videos = Video::with('video_course.course')->whereHas('video_course.course', function($query) use($term, $year){

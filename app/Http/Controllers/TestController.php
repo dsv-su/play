@@ -24,7 +24,8 @@ class TestController extends Controller
 {
     public function test(Request $request)
     {
-
+        $daisy = new DaisyIntegration();
+        $daisy->init();
     }
 
     public function daisyLoadCourses()

@@ -21,6 +21,13 @@ class CourseStore extends Model
 
     public function course()
     {
+        //If there is no course association
+        if(!count($this->courses)>0) {
+            VideoCourse::updateOrCreate([
+                'video_id' => $this->video->id,
+                'course_id' => 1,
+            ]);
+        }
         foreach ($this->courses as $this->item)
         {
             if($this->item) {
@@ -55,7 +62,7 @@ class CourseStore extends Model
                 }
             }
 
-        }
+        } //end foreach
     }
 
     public function convertYear($timestamp)

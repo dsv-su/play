@@ -51,7 +51,7 @@ class CourseNav extends Model
 
     private function getDesignation()
     {
-        return Course::pluck('designation')->take(6);
+        return Course::pluck('designation')->sortByDesc('id')->take(6);
     }
 
     private function getSemesters()
