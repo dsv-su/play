@@ -17,7 +17,7 @@ function init() {
         }
 
         body.dataset.id = data.id
-        loadStreams(data.sources, mainstream)
+        loadStreams(data.sources, mainstream, data.token)
 
         if(playlist) {
             setupPlaylist(body, playlist)
@@ -65,11 +65,17 @@ function getArgs() {
         case 'show':
         case 'p':
         case 's':
+            if(!value.startsWith('/presentation/')) {
+                value = '/presentation/' + value
+            }
             data = value
             break
         case 'playlist':
         case 'list':
         case 'l':
+            if(!value.startsWith('/playlist/')) {
+                value = '/playlist/' + value
+            }
             playlist = value
             break
         }
@@ -77,21 +83,21 @@ function getArgs() {
     return [data, playlist]
 }
 
-function loadStreams(streamlist, mainstream) {
+function loadStreams(streamlist, mainstream, token) {
     var mainparent = mainstream.parentNode
     var template = document.getElementById('stream-template')
 
     var main = streamlist[0]
     
-    mainstream.src = main.video
+    mainstream.src = main.video +"?token="+ token
     mainstream.muted = !main.playAudio
-    mainstream.poster = main.poster
+    mainstream.poster = main.poster +"?token="+ token
     mainstream.load()
     mainstream.preload = 'auto'
     for (var i = 1; i < streamlist.length; i++) {
         var newstream = template.content.cloneNode(true)
         var video = newstream.querySelector('video')
-        video.src = streamlist[i].video
+        video.src = streamlist[i].video +"?token="+ token
         video.muted = !streamlist[i].playAudio
         video.poster = streamlist[i].poster
         video.load()

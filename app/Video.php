@@ -48,6 +48,11 @@ class Video extends Model implements Searchable
         return 'video';
     }
 
+    public function video_stat(): HasMany
+    {
+        return $this->hasMany(VideoStat::class);
+    }
+
     public function video_presenter(): HasMany
     {
         return $this->hasMany(VideoPresenter::class);

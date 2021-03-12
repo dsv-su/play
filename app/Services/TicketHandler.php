@@ -31,7 +31,7 @@ class TicketHandler extends Model
                 }
             }
             else {
-                $this->token = 'Not authorized';
+                $this->token = '';
                 //abort(401);
                 }
 

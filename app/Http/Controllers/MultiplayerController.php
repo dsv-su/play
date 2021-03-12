@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\TicketHandler;
 use App\Video;
 use App\VideoCourse;
+use App\VideoStat;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -41,9 +42,13 @@ class MultiplayerController extends Controller
 
         $presentation = json_decode($video->presentation, true);
 
-
         //Add valid token
         $presentation['token'] = $token;
+
+        //Update stats
+        $stats = VideoStat::firstOrNew(['video_id' => $id]);
+        $stats->stats = $stats->stats + 1;
+        $stats->save();
 
         return json_encode($presentation);
     }

@@ -157,7 +157,7 @@ class VideoApiController extends Controller
 
             // Token is invalid
             return response()->json([
-                'permission' => 'denied'
+                'permission' => 'invalid'
             ]);
 
         } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {

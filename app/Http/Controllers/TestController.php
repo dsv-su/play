@@ -14,6 +14,7 @@ use App\Services\Ldap\CheckSUKATApi;
 use App\Services\Notify\PlayStoreNotify;
 use App\System;
 use App\Video;
+use App\VideoStat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Searchable\ModelSearchAspect;
