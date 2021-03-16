@@ -21,6 +21,7 @@ Route::get($login, 'SystemController@SUidpReturn')->name('login');
 
 //Multiplayer public access
 Route::get('/multiplayer', 'MultiplayerController@multiplayer')->name('multiplayer')->middleware('video-permission');
+Route::get('/presentation/{id}', 'MultiplayerController@presentation')->middleware('presentation-permission');
 
 //Protected routes
 Route::middleware('entitlements', 'playauth')->group(function () {
@@ -34,8 +35,6 @@ Route::middleware('entitlements', 'playauth')->group(function () {
 
     //Multiplayer
     Route::get('/player/{video}', 'MultiplayerController@player')->name('player');
-
-    Route::get('/presentation/{id}', 'MultiplayerController@presentation');
     Route::get('/playlist/{id}', 'MultiplayerController@playlist');
 
     //Manage
