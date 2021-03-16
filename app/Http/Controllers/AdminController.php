@@ -140,7 +140,11 @@ class AdminController extends Controller
             $vp->permission_id = $permission;
             if($permission == 1) {
                 $vp->type = 'public';
-            } else {
+            }
+            elseif ($permission == 4) {
+                $vp->type = 'external';
+            }
+            else {
                 $vp->type = 'private';
             }
             $vp->save();
