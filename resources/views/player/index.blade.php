@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="shortcut icon" href="{{ asset('./images/favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ asset('./css/player/favicon.ico') }}">
     <link rel="stylesheet" href="{{ asset('./css/player/range-style.css?a') }}">
     <link rel="stylesheet" href="{{ asset('./css/player/style.css?b')}}">
     <title></title>
