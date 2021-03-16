@@ -37,7 +37,6 @@
     </div>
 
     <div class="container px-0">
-
         <div class="d-flex mb-3 flex-wrap">
             @foreach ($latest as $video)
                 <div class="col my-3">

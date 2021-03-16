@@ -9,6 +9,7 @@ use App\VideoStat;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Redirect;
 
 class MultiplayerController extends Controller
 {
@@ -21,15 +22,11 @@ class MultiplayerController extends Controller
 
         if (!$playlist = VideoCourse::where('video_id', $video->id)->first()) {
             //No playlist
-            $url = url('/multiplayer') . '?' . urldecode(http_build_query(['p' =>  $video->id]));
+            return Redirect::to('multiplayer?p='.$video->id);
         } else {
             // Production
-            $url = url('/multiplayer') . '?' . urldecode(http_build_query(['p' => $video->id, 'l' =>  $playlist->course_id]));
-            // Dev
-            //$url = url('/multiplayer') . '?' . http_build_query(['p' => $video->id, 'l' => $playlist->course_id]);
+            return Redirect::to('multiplayer?p='.$video->id.'&l='.$playlist->course_id);
         }
-
-        return redirect()->away($url);
     }
 
     public function presentation($id)
