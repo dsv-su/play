@@ -20,7 +20,7 @@ Route::get('/sulogin', 'SystemController@SUlogin')->name('sulogin');
 Route::get($login, 'SystemController@SUidpReturn')->name('login');
 
 //Multiplayer public access
-Route::get('/multiplayer', 'MultiplayerController@multiplayer')->name('multiplayer');
+Route::get('/multiplayer', 'MultiplayerController@multiplayer')->name('multiplayer')->middleware('video-permission');
 
 //Protected routes
 Route::middleware('entitlements', 'playauth')->group(function () {
