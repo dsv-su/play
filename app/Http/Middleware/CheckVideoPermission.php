@@ -18,7 +18,8 @@ class CheckVideoPermission
     public function handle(Request $request, Closure $next)
     {
         $permission = VideoPermission::where('video_id', $request->p)->first();
-        if(!$permission->permission_id == 4) {
+        
+        if(!($permission->permission_id == 4)) {
             return redirect()->guest(route('sulogin'));
         }
         return $next($request);
