@@ -51,7 +51,7 @@ class TicketHandler extends Model
             $this->entitlements = Permission::where('id', $this->permission)->pluck('entitlement');
 
             //Check if user entitlement exists in permission entitlement
-            if (!app()->environment('local') or $this->permission != 4) {
+            if (!app()->environment('local') && $this->permission != 4) {
                 foreach ($this->entitlements as $this->entitlement) {
                     $this->explicit_entitlements = explode(";", $this->entitlement);
                     $this->server = explode(";", $_SERVER['entitlement']);
