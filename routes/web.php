@@ -19,6 +19,9 @@ if (class_exists(AuthHandler::class))
 Route::get('/sulogin', 'SystemController@SUlogin')->name('sulogin');
 Route::get($login, 'SystemController@SUidpReturn')->name('login');
 
+//Multiplayer public access
+Route::get('/multiplayer', 'MultiplayerController@multiplayer')->name('multiplayer');
+
 //Protected routes
 Route::middleware('entitlements', 'playauth')->group(function () {
 
@@ -31,7 +34,7 @@ Route::middleware('entitlements', 'playauth')->group(function () {
 
     //Multiplayer
     Route::get('/player/{video}', 'MultiplayerController@player')->name('player');
-    Route::get('/multiplayer', 'MultiplayerController@multiplayer')->name('multiplayer');
+
     Route::get('/presentation/{id}', 'MultiplayerController@presentation');
     Route::get('/playlist/{id}', 'MultiplayerController@playlist');
 

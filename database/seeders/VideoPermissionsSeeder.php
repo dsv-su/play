@@ -26,5 +26,9 @@ class VideoPermissionsSeeder extends Seeder
             'scope' => 'Test X',
             'entitlement' => 'urn:mace:swami.se:gmai:dsv-user:secret',
         ]);
+        DB::table('permissions')->insert([
+            'scope' => 'Publikt (Extern access utanför SU)',
+            'entitlement' => '',
+        ]);
     }
 }

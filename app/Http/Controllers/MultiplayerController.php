@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Redirect;
 
 class MultiplayerController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['entitlements', 'playauth'])->except('multiplayer');
+    }
+
     /**
      * @param Video $video
      * @return RedirectResponse
