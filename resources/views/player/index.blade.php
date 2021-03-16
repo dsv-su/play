@@ -5,10 +5,10 @@
     <meta name="viewport" content="initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" href="{{ asset('./images/favicon.ico') }}">
-    <link rel="stylesheet" href="{{ asset('./multiplayer/range-style.css?a') }}">
-    <link rel="stylesheet" href="{{ asset('./multiplayer/style.css?b')}}">
+    <link rel="stylesheet" href="{{ asset('./css/player/range-style.css?a') }}">
+    <link rel="stylesheet" href="{{ asset('./css/player/style.css?b')}}">
     <title></title>
-    <script src="{{asset('./multiplayer/player.js')}}" defer></script>
+    <script src="{{asset('./js/player.js')}}" defer></script>
 </head>
 <body>
 <div id="wrapper">
