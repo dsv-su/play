@@ -1,5 +1,6 @@
 <!-- ManageVideo - child view - will inherit all data available in the parent view-->
 <div class="col my-3">
+    <!--<style>.btn-sm { height: 3vh; width: 5vh; }</style>-->
     <p style="font-size: 75%; color: blue">{{$video->id}}</p>
     <div class="card video m-auto" id="{{$video->id}}">
         <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -26,12 +27,13 @@
                     class="badge badge-secondary">{{$tag->name}}</span> @endforeach</p>
             <p class="card-text">
             <p class="card-text">
-                <button type="button" class="btn btn-primary" data-toggle="modal"
-                        data-target="#modal-{{$video->id}}">
-                    Edit
-                </button>
-                <button class="delete btn btn-danger" type="submit">Delete</button>
-                <a href="{{route('download', $video->id)}}" type="button" class="btn btn-success">Download</a>
+                <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Redigera presentation">
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-{{$video->id}}" disabled><i class="far fa-edit"></i></button>
+                </span>
+
+                <button class="delete btn btn-danger btn-sm" type="submit" data-toggle="tooltip" data-placement="top" title="Radera presentation"><i class="far fa-trash-alt"></i></button>
+                <a href="{{route('download', $video->id)}}" type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Ladda ner presentation"><i class="fas fa-download"></i></a>
+                <a href="{{route('set_permission', $video->id)}}" type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Ändra rättigheter för presentation"><i class="far fa-hand-paper"></i></a>
             </p>
         </div>
     </div>

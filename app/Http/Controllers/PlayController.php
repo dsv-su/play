@@ -561,6 +561,9 @@ class PlayController extends Controller
 
     public function deleteVideoAjax(Request $request): JsonResponse
     {
+        /*** This method should be refactored
+        ***/
+
         $video = Video::find($request->video_id);
         $folder = dirname($video->source1);
         if (is_dir($folder)) {
@@ -588,7 +591,7 @@ class PlayController extends Controller
         foreach ($video->video_tag as $vt) {
             VideoTag::findOrFail($vt->id)->delete();
         }
-       
+
 
         foreach ($video->video_presenter as $vp) {
             VideoPresenter::findOrFail($vp->id)->delete();
