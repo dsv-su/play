@@ -15,6 +15,7 @@ use App\Video;
 use App\VideoCourse;
 use App\VideoPermission;
 use App\VideoPresenter;
+use App\VideoStat;
 use App\VideoTag;
 use Exception;
 use File;
@@ -558,8 +559,7 @@ class PlayController extends Controller
         //return view('home.manage', ['videos' => Video::all(), 'allcourses' => Course::all(),  'categories' => Category::all()]);
     }
 
-    public
-    function deleteVideoAjax(Request $request): JsonResponse
+    public function deleteVideoAjax(Request $request): JsonResponse
     {
         $video = Video::find($request->video_id);
         $folder = dirname($video->source1);
@@ -582,14 +582,22 @@ class PlayController extends Controller
             $video->mediasite_presentation->save();
         }
         foreach ($video->video_course as $vc) {
-            VideoCourse::find($vc->id)->delete();
+            VideoCourse::findOrFail($vc->id)->delete();
         }
+
         foreach ($video->video_tag as $vt) {
-            VideoTag::find($vt->id)->delete();
+            VideoTag::findOrFail($vt->id)->delete();
         }
+       
+
         foreach ($video->video_presenter as $vp) {
-            VideoPresenter::find($vp->id)->delete();
+            VideoPresenter::findOrFail($vp->id)->delete();
         }
+        foreach ($video->video_stat as $vp) {
+            VideoStat::where('video_id', $request->video_id)->firstOrFail()->delete();
+        }
+
+
         try {
             $video->delete();
         } catch (Exception $e) {
@@ -598,7 +606,7 @@ class PlayController extends Controller
                 'message' => 'Error',
             ]);
         }
-        return Response()->json(['message' => 'Video removed.']);
+        return Response()->json(['message' => 'Video deleted']);
 
     }
 

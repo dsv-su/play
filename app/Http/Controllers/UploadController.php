@@ -125,7 +125,6 @@ class UploadController extends Controller
                 $video_permissions->permission_id = $request->video_permission;
                 $video_permissions->type = 'public';
                 $video_permissions->save();
-                //$default_entitlement = 'urn:mace:swami.se:gmai:dsv-user:staff;urn:mace:swami.se:gmai:dsv-user:student';
             } else {
                 $video_permissions->notification_id = $manualPresentation->id;
                 $video_permissions->permission_id = $request->video_permission;

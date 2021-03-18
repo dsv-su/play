@@ -98,7 +98,13 @@ Requirements are best determined using Server Requirements page of corresponding
         
 * Once the global settings are entered you can install the dependencies. `composer install`
 
-* Make sure that .env file is present (copy .env.example to .env). 
+* Make sure that .env file is present (copy .env.example to .env). If you are setting up a dev enviroment add the following settings to the .env file:
+
+    FFMPEG_BINARIES=/usr/local/bin/ffmpeg
+    FFPROBE_BINARIES=/usr/local/bin/ffprobe
+    LOG_CHANNEL=daily
+    LDAP_CACHE=true
+  
 
 * Either create application key manually or do that with a command `php artisan key:generate`
 

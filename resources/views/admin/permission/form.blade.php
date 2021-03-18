@@ -33,8 +33,16 @@
                         <td>{{$permission->id}}</td>
                         <td>{{$permission->scope}}</td>
                         <td>{{$permission->entitlement}}</td>
-                        <td><a role="button" class="btn btn-primary btn-sm" href="{{route('modify_permission', $permission->id)}}">Modify</a></td>
-                        <td><a role="button" class="btn btn-danger btn-sm" href="{{route('delete_permission', $permission->id)}}">Delete</a></td>
+                        <td>
+                            @if($permission->id != 4) <!-- Disable action for public permission -->
+                            <a role="button" class="btn btn-primary btn-sm" href="{{route('modify_permission', $permission->id)}}">Modify</a>
+                            @endif
+                        </td>
+                        <td>
+                            @if($permission->id != 4) <!-- Disable action for public permission -->
+                            <a role="button" class="btn btn-danger btn-sm" href="{{route('delete_permission', $permission->id)}}">Delete</a>
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
                 </tbody>
