@@ -7,8 +7,10 @@ use App\Course;
 use App\Jobs\DownloadPresentation;
 use App\MediasiteFolder;
 use App\MediasitePresentation;
+use App\Presentation;
 use App\Presenter;
 use App\Services\AuthHandler;
+use App\Services\Notify\PlayStoreNotify;
 use App\Tag;
 use App\UploadHandler;
 use App\Video;
@@ -17,6 +19,7 @@ use App\VideoPermission;
 use App\VideoPresenter;
 use App\VideoStat;
 use App\VideoTag;
+use Carbon\Carbon;
 use Exception;
 use File;
 use GuzzleHttp\Client;
@@ -192,7 +195,6 @@ class PlayController extends Controller
             'users' => $users,
             'recordings' => $recordings,
             'other' => $other,
-            'courses' => $this->getActiveCourses(),
             'hasmycourses' => $this->getUserCoursesWithVideos($_SERVER['eppn'] ?? 'dsv-dev@su.se')->count() > 0
         ]);
     }
@@ -403,15 +405,14 @@ class PlayController extends Controller
     public
     function mediasiteUserDownload(): RedirectResponse
     {
-        $folderid = request()->folderid ?? null;
-        $username = request()->username ?? null;
+        $folderid = request()->user ?? null;
 
-        $this->processDownload('user', $username, $folderid);
+        $this->processDownload('user', $folderid);
 
         $subfolders = array();
         $this->getSubFolders(MediasiteFolder::where('mediasite_id', $folderid)->firstOrFail(), MediasiteFolder::all(), $subfolders);
         foreach ($subfolders as $subfolder) {
-            $this->processDownload('user', $username . '/' . $subfolder->name, $subfolder->mediasite_id);
+            $this->processDownload('user', $subfolder->mediasite_id);
         }
 
         return redirect()->route('home');
@@ -424,10 +425,9 @@ class PlayController extends Controller
     public
     function mediasiteCourseDownload(): RedirectResponse
     {
-        $folderid = request()->folderid ?? null;
-        $coursename = request()->coursename ?? null;
-
-        $this->processDownload('course', $coursename, $folderid);
+        $folderid = request()->course ?? null;
+        $designation = request()->designation ?? null;
+        $this->processDownload('course', $folderid, $designation);
 
         return redirect()->route('home');
     }
@@ -439,10 +439,9 @@ class PlayController extends Controller
     public
     function mediasiteRecordingDownload(): RedirectResponse
     {
-        $folderid = request()->folderid ?? null;
-        $foldername = request()->foldername ?? null;
+        $folderid = request()->recording ?? null;
 
-        $this->processDownload('various', $foldername, $folderid);
+        $this->processDownload('various', $folderid);
 
         return redirect()->route('home');
     }
@@ -454,10 +453,9 @@ class PlayController extends Controller
     public
     function mediasiteOtherDownload(): RedirectResponse
     {
-        $folderid = request()->folderid ?? null;
-        $foldername = request()->foldername ?? null;
+        $folderid = request()->other ?? null;
 
-        $this->processDownload('other', $foldername, $folderid);
+        $this->processDownload('other', $folderid);
 
         return redirect()->route('home');
     }
@@ -470,7 +468,7 @@ class PlayController extends Controller
      * @throws Exception
      */
     public
-    function processDownload($type, $foldername, $folderid): bool
+    function processDownload($type, $folderid, $designation = null): bool
     {
         $system = new AuthHandler();
         $system = $system->authorize();
@@ -483,18 +481,130 @@ class PlayController extends Controller
         ]);
         $url = $system->mediasite->url;
 
-        if (!is_dir(base_path() . "/storage/app/public/mediasite/$type/")) {
-            mkdir(base_path() . "/storage/app/public/mediasite/$type/");
-        }
-        $path = base_path() . "/storage/app/public/mediasite/$type/" . $foldername . '/';
-        if (!is_dir($path)) {
-            mkdir($path);
-        }
-
         if ($folderid) {
             $presentations = MediasitePresentation::where('mediasite_folder_id', MediasiteFolder::where('mediasite_id', $folderid)->firstOrFail()->id)->get();
             foreach ($presentations as $presentation) {
-                DownloadPresentation::dispatch($presentation, $type, $path, $foldername);
+
+                try {
+                    $presentationid = $presentation->mediasite_id;
+                    $presentation = json_decode($mediasite->get($url . "/Presentations('$presentationid')?\$select=full")->getBody(), true);
+
+                    $title = trim($presentation['Title']);
+
+                    // Now let's create a json with all relevant metadata
+                    $metadata = array(
+                        'mediasiteid' => $presentation['Id'],
+                        'title' => $title,
+                        'description' => $presentation['Description'],
+                        'recorded' => $presentation['RecordDate'],
+                        'duration' => $presentation['Duration'],
+                        'owner' => $presentation['Owner'],
+                        'tags' => $presentation['TagList']
+                    );
+
+                    // Presenters
+                    $users = array();
+                    try {
+                        $users = json_decode($mediasite->get($url . "/UserProfiles")->getBody(), true)['value'];
+                    } catch (GuzzleException $e) {
+                        abort(503);
+                    }
+
+                    $presenters = array();
+                    try {
+                        $presenters = json_decode($mediasite->get($url . "/Presentations('$presentationid')/Presenters")->getBody(), true)['value'];
+                    } catch (GuzzleException $e) {
+                        abort(503);
+                    }
+
+                    foreach ($presenters as $presenter) {
+                        $array = array_filter($users, function ($user) use ($presenter) {
+                            return $user['DisplayName'] == $presenter['DisplayName'];
+                        });
+                        $found = array_pop($array);
+                        if ($found) {
+                            $metadata['presenters'][] = $found['UserName'];
+                        }
+                    }
+
+                    $streams = array();
+                    try {
+                        $streams = json_decode($mediasite->get($url . "/Presentations('$presentationid')/OnDemandContent")->getBody(), true)['value'];
+                    } catch (GuzzleException $e) {
+                        abort(503);
+                    }
+
+                    $thumbs = array();
+                    try {
+                        $thumbs = json_decode($mediasite->get($url . "/Presentations('$presentationid')/ThumbnailContent")->getBody(), true)['value'];
+                    } catch (GuzzleException $e) {
+                        abort(503);
+                    }
+                    if (!empty($thumbs)) {
+                    }
+
+                    $emptystreams = true;
+                    foreach ($streams as $stream) {
+                        $filename = $stream['FileNameWithExtension'];
+                        // Skip zero length
+                        if ($stream['Length'] > 0) {
+                            $emptystreams = false;
+                            $streamurl = "https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/MP4Video/$filename";
+                            $thumb = array_filter($thumbs, function ($t) use ($stream) {
+                                return $t['StreamType'] == $stream['StreamType'];
+                            });
+                            $client = new Client();
+                            dump($thumb);
+                            $metadata['sources'][] = array(
+                                'video' => $streamurl,
+                                'poster' => array_pop($thumb)['ThumbnailUrl'],
+                                'audio' => true
+                            );
+                        }
+                    }
+                    if ($emptystreams) {
+                        return false;
+                    }
+
+                    $p = new Presentation();
+                    // $p->id = 20; // ?
+                    //  $p->status = 'request download';
+                    $p->title = $metadata['title'];
+                    $p->presenters = $metadata['presenters'] ?? [];
+                    $p->tags = $metadata['tags'] ?? [];
+                    //$p->courses = [];
+                    $presentationthumb = array_filter($thumbs, function ($t) {
+                        return $t['StreamType'] == 'Presentation';
+                    });
+                    $p->thumb = array_pop($presentationthumb)['ThumbnailUrl'];
+                    $p->created = strtotime($metadata['recorded']);
+                    $p->duration = $metadata['duration'];
+                    $p->sources = $metadata['sources'];
+
+                    $semester = $year = '';
+                    if ($type == 'course') {
+                        // We also need to create a course and a category.
+                        //$designation = explode(' - ', $foldername)[0] ?? $foldername;
+                        $p->courses = array($designation);
+                        $re = '/([V|H|S]T)(19|20)\d{2}/';
+                        preg_match($re, $title, $term, 0, 0);
+                        if ($term && $term[0]) {
+                            //  $semester = substr($term[0], 0, 2);
+                            //  $year = substr($term[0], 2, 4);
+                        }
+                    }
+
+                    dd($p);
+
+                    //$notify = new PlayStoreNotify($p);
+                    //$notify->sendSuccess('mediasite');
+
+                    //return true;
+                } catch (GuzzleException $e) {
+                    report($e);
+                }
+
+                //DownloadPresentation::dispatch($presentation, $type, $path, $foldername);
             }
 
             return true;
