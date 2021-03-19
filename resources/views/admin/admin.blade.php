@@ -141,8 +141,8 @@
                                             @elseif($presentation->status == 'update' or $presentation->status == 'newmedia')
                                                 <td><a role="button" class="btn btn-warning btn-sm" href="{{route('download_delete', $presentation->id)}}">Erase</a></td>
                                             @elseif($presentation->status == 'sent')
-                                                <td><a role="button" class="btn btn-primary btn-sm" href="{{route('download_delete', $presentation->id)}}">Unregister</a></td>
-                                                <td><a role="button" class="btn btn-warning btn-sm" href="{{route('admin_download_notify_resend', $presentation->id)}}">Resend Notify</a></td>
+                                                <td><a role="button" class="btn btn-primary btn-sm" href="{{route('download_delete', $presentation->id)}}">Unregister</a>
+                                                <a role="button" class="btn btn-warning btn-sm" href="{{route('admin_download_notify_resend', $presentation->id)}}">Resend Notify</a></td>
                                             @endif
                                         </tr>
                                     </tbody>
