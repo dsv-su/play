@@ -600,6 +600,7 @@ class PlayController extends Controller
             VideoStat::where('video_id', $request->video_id)->firstOrFail()->delete();
         }
 
+        VideoPermission::where('video_id', $request->video_id)->firstOrFail()->delete();
 
         try {
             $video->delete();

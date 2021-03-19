@@ -22,7 +22,7 @@ class CheckPresentationPermission
         $system = $system->authorize();
         if ($request->is('presentation/*')) {
             $id = substr($request->path(), strrpos($request->path(), '/') + 1);
-            $permission = VideoPermission::where('video_id', $id)->first();
+            $permission = VideoPermission::where('video_id', $id)->firstOrFail();
             if(!$request->server('REMOTE_USER')) {
                 if($permission->permission_id != 4) {
                     if($system->global->app_env == 'local') {

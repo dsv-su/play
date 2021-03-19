@@ -20,7 +20,7 @@ class CheckVideoPermission
     {
         $system = new AuthHandler();
         $system = $system->authorize();
-        $permission = VideoPermission::where('video_id', $request->p)->first();
+        $permission = VideoPermission::where('video_id', $request->p)->firstOrFail();
         if(!$request->server('REMOTE_USER')) {
             if($permission->permission_id != 4) {
                 if($system->global->app_env == 'local') {
