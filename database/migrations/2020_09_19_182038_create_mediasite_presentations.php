@@ -14,12 +14,21 @@ class CreateMediasitePresentations extends Migration
     public function up()
     {
         Schema::create('mediasite_presentations', function (Blueprint $table) {
-            $table->id();
-            $table->text('name');
-            $table->text('mediasite_id');
+            $table->uuid('id')->primary();
+            $table->string('status')->nullable();
+            $table->string('user')->nullable();
             $table->foreignId('mediasite_folder_id')->constrained();
-            $table->uuid('video_id');
-            $table->integer('status')->nullable();
+            $table->string('title')->nullable();
+            $table->string('presenters')->nullable();
+            $table->integer('created')->nullable();
+            $table->integer('duration')->nullable();
+            $table->string('courses')->nullable();
+            $table->string('tags')->nullable();
+            $table->string('thumb')->nullable();
+            $table->json('sources')->nullable();
+           // $table->id();
+          //  $table->text('name');
+           // $table->text('mediasite_id');
             $table->timestamps();
         });
     }

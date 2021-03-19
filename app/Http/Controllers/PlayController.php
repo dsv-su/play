@@ -341,8 +341,8 @@ class PlayController extends Controller
                 $presentations = json_decode($mediasite->get($url . "/Folders('$folderid')/Presentations?\$top=100000")->getBody(), true)['value'];
                 foreach ($presentations as $presentation) {
                     MediasitePresentation::firstOrCreate([
-                        'name' => $presentation['Title'],
-                        'mediasite_id' => $presentation['Id'],
+                        'title' => $presentation['Title'],
+                        'id' => $presentation['Id'],
                         'mediasite_folder_id' => $folder->id
                     ]);
                 }
@@ -486,20 +486,18 @@ class PlayController extends Controller
             foreach ($presentations as $presentation) {
 
                 try {
-                    $presentationid = $presentation->mediasite_id;
-                    $presentation = json_decode($mediasite->get($url . "/Presentations('$presentationid')?\$select=full")->getBody(), true);
-
-                    $title = trim($presentation['Title']);
+                    $presentationid = $presentation->id;
+                    $mediasite_presentation = json_decode($mediasite->get($url . "/Presentations('$presentationid')?\$select=full")->getBody(), true);
 
                     // Now let's create a json with all relevant metadata
                     $metadata = array(
-                        'mediasiteid' => $presentation['Id'],
-                        'title' => $title,
-                        'description' => $presentation['Description'],
-                        'recorded' => $presentation['RecordDate'],
-                        'duration' => $presentation['Duration'],
-                        'owner' => $presentation['Owner'],
-                        'tags' => $presentation['TagList']
+                        'mediasiteid' => $mediasite_presentation['Id'],
+                        'title' => trim($mediasite_presentation['Title']),
+                        'description' => $mediasite_presentation['Description'],
+                        'recorded' => $mediasite_presentation['RecordDate'],
+                        'duration' => $mediasite_presentation['Duration'],
+                        'owner' => $mediasite_presentation['Owner'],
+                        'tags' => $mediasite_presentation['TagList']
                     );
 
                     // Presenters
@@ -540,11 +538,9 @@ class PlayController extends Controller
                     } catch (GuzzleException $e) {
                         abort(503);
                     }
-                    if (!empty($thumbs)) {
-                    }
 
                     $emptystreams = true;
-                    foreach ($streams as $stream) {
+                    foreach ($streams as $key => $stream) {
                         $filename = $stream['FileNameWithExtension'];
                         // Skip zero length
                         if ($stream['Length'] > 0) {
@@ -554,11 +550,10 @@ class PlayController extends Controller
                                 return $t['StreamType'] == $stream['StreamType'];
                             });
                             $client = new Client();
-                            dump($thumb);
                             $metadata['sources'][] = array(
                                 'video' => $streamurl,
                                 'poster' => array_pop($thumb)['ThumbnailUrl'],
-                                'audio' => true
+                                'playAudio' => $key ? false : true
                             );
                         }
                     }
@@ -566,38 +561,38 @@ class PlayController extends Controller
                         return false;
                     }
 
-                    $p = new Presentation();
-                    // $p->id = 20; // ?
-                    //  $p->status = 'request download';
-                    $p->title = $metadata['title'];
-                    $p->presenters = $metadata['presenters'] ?? [];
-                    $p->tags = $metadata['tags'] ?? [];
+                   //$p = MediasitePresentation::where('mediasite_id', $presentationid)->first();
+                    $presentation->status = 'request download';
+                    $presentation->title = $metadata['title'];
+                    $presentation->presenters = $metadata['presenters'] ?? [];
+                    $presentation->tags = $metadata['tags'] ?? [];
+                    //$p->description = $metadata['description'];
                     //$p->courses = [];
                     $presentationthumb = array_filter($thumbs, function ($t) {
                         return $t['StreamType'] == 'Presentation';
                     });
-                    $p->thumb = array_pop($presentationthumb)['ThumbnailUrl'];
-                    $p->created = strtotime($metadata['recorded']);
-                    $p->duration = $metadata['duration'];
-                    $p->sources = $metadata['sources'];
+                    $presentation->thumb = array_pop($presentationthumb)['ThumbnailUrl'];
+                    $presentation->created = strtotime($metadata['recorded']);
+                    $presentation->duration = $metadata['duration'];
+                    $presentation->sources = $metadata['sources'];
 
                     $semester = $year = '';
                     if ($type == 'course') {
                         // We also need to create a course and a category.
                         //$designation = explode(' - ', $foldername)[0] ?? $foldername;
-                        $p->courses = array($designation);
+                        $presentation->courses = array($designation);
                         $re = '/([V|H|S]T)(19|20)\d{2}/';
-                        preg_match($re, $title, $term, 0, 0);
+                        preg_match($re, $metadata['title'], $term, 0, 0);
                         if ($term && $term[0]) {
                             //  $semester = substr($term[0], 0, 2);
                             //  $year = substr($term[0], 2, 4);
                         }
                     }
 
-                    dd($p);
+                    //dd($p);
 
-                    //$notify = new PlayStoreNotify($p);
-                    //$notify->sendSuccess('mediasite');
+                    $notify = new PlayStoreNotify($presentation);
+                    $notify->sendSuccess('mediasite');
 
                     //return true;
                 } catch (GuzzleException $e) {
