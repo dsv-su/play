@@ -28,6 +28,7 @@ class CourseStore extends Model
                 'course_id' => 1,
             ]);
         }
+
         foreach ($this->courses as $this->item)
         {
             if($this->item) {
