@@ -26,8 +26,13 @@
                            aria-controls="download" aria-selected="false">Download</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="download-tab" data-toggle="tab" href="#mediasite" role="tab"
+                        <a class="nav-link" id="medeiasite-tab" data-toggle="tab" href="#mediasite" role="tab"
                            aria-controls="mediasite" aria-selected="false">Mediasite</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="mediasite-folders-tab" data-toggle="tab" href="#mediasite-folders"
+                           role="tab"
+                           aria-controls="mediasite-folders" aria-selected="false">Mediasite Folders</a>
                     </li>
                 </ul>
             </div>
@@ -195,41 +200,56 @@
                                 </thead>
                                 @foreach($mediasite_presentations as $presentation)
                                     <tbody>
-                                    @if($presentation->status == 'pending')
-                                        <tr class="table-warning">
-                                    @elseif($presentation->status == 'failed' or $presentation->status == 'stored')
-                                        <tr class="table-danger">
-                                            @endif
-                                            <td>{{$presentation->status}}</td>
-                                            <td>{{$presentation->id}}</td>
-                                            <td>{{$presentation->updated_at}}</td>
-                                            <td>{{$presentation->title}}</td>
-                                            @if($presentation->status == 'request download')
-                                                <td><a role="button" class="btn btn-danger btn-sm" href="{{route('download_delete', $presentation->id)}}">Erase</a></td>
-                                            @elseif($presentation->status == 'failed' or $presentation->status == 'stored')
-                                                <td><a role="button" class="btn btn-danger btn-sm" href="{{route('download_delete', $presentation->id)}}">Erase</a></td>
-                                                <td><a role="button" class="btn btn-danger btn-sm" href="{{route('admin_download_notify_resend', $presentation->id)}}">Resend Notify</a></td>
-                                            @elseif($presentation->status == 'update' or $presentation->status == 'newmedia')
-                                                <td><a role="button" class="btn btn-warning btn-sm" href="{{route('download_delete', $presentation->id)}}">Erase</a></td>
-                                            @elseif($presentation->status == 'sent')
-                                                <td><a role="button" class="btn btn-primary btn-sm" href="{{route('download_delete', $presentation->id)}}">Unregister</a>
-                                                    <a role="button" class="btn btn-warning btn-sm" href="{{route('admin_download_notify_resend', $presentation->id)}}">Resend Notify</a></td>
-                                            @endif
-                                        </tr>
+                                    <tr>
+                                        <td>{{$presentation->status}}</td>
+                                        <td>{{$presentation->id}}</td>
+                                        <td>{{$presentation->updated_at}}</td>
+                                        <td>{{$presentation->title}}</td>
+                                        @if($presentation->status == 'sent')
+                                            <td><a role="button" class="btn btn-primary btn-sm" href="#">Unregister</a>
+                                                <a role="button" class="btn btn-warning btn-sm" href="#">Resend
+                                                    Notify</a></td>
+                                        @endif
+                                    </tr>
+                                    </tbody>
+                                @endforeach
+                            </table>
+
+                        </div>
+                    <!-- /.col-md-8 -->
+                </div>
+                    <div class="tab-pane fade" id="mediasite-folders" role="tabpanel"
+                         aria-labelledby="mediasite-folders-tab">
+                        <h2>Mediasite Folders</h2>
+                        <div class="row">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">Updated</th>
+                                    <th scope="col">Title</th>
+                                </tr>
+                                </thead>
+                                @foreach($mediasite_folders as $folder)
+                                    <tbody>
+                                    <tr class="@if ($folder->completed() == 1) table-success @elseif ($folder->completed() == 2) table-warning @elseif ($folder->completed() == 3) table-info @endif">
+                                        <td>@if ($folder->completed() == 1) completed @elseif ($folder->completed() == 2) partially completed @elseif ($folder->completed() == 3) empty @endif</td>
+                                        <td>{{$folder->id}}</td>
+                                        <td>{{$folder->updated_at}}</td>
+                                        <td>{{$folder->name}}</td>
+                                    </tr>
                                     </tbody>
 
                                 @endforeach
                             </table>
 
                         </div>
+                    </div>
                 </div>
+
             </div>
-            <!-- /.col-md-8 -->
-        </div>
-
-
-    </div>
-    <!-- /.container -->
+            <!-- /.container -->
 
 
 @endsection

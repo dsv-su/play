@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ManualPresentation;
+use App\MediasiteFolder;
 use App\MediasitePresentation;
 use App\Permission;
 use App\Presentation;
@@ -27,6 +28,7 @@ class AdminController extends Controller
         $data['manual_presentations'] = ManualPresentation::all();
         $data['presentations'] = Presentation::all();
         $data['mediasite_presentations'] = MediasitePresentation::all()->where('status', '<>' ,null);
+        $data['mediasite_folders'] = MediasiteFolder::all();
         $data['videos'] = Video::all();
         $data['owners'] = Video::with('video_presenter.presenter')->get();
         $data['permissions'] = VideoPermission::with('permission')->get();
