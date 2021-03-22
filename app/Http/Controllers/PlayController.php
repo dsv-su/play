@@ -684,11 +684,11 @@ class PlayController extends Controller
             rmdir($folder);
         }
 
-        if ($video->mediasite_presentation) {
+        /*if ($video->mediasite_presentation) {
             $video->mediasite_presentation->video_id = null;
             $video->mediasite_presentation->status = null;
             $video->mediasite_presentation->save();
-        }
+        }*/
         foreach ($video->video_course as $vc) {
             VideoCourse::findOrFail($vc->id)->delete();
         }

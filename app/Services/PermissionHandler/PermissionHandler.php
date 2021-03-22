@@ -8,7 +8,7 @@ use LdapRecord\Models\Model;
 class PermissionHandler extends Model
 {
     protected $notification_id, $video, $video_permission;
-    protected $perm;
+    protected $perm, $permission;
 
     public function __construct($request, $video)
     {
@@ -22,15 +22,16 @@ class PermissionHandler extends Model
         //Check if video or notification exists
 
         //If there is a notification id
-        if(!($this->notification_id)) {
+        if($this->notification_id) {
             if(!$this->video_permission = VideoPermission::where('notification_id', $this->notification_id)->first()) {
                 //No permissions exist
                 $this->permission = VideoPermission::create([
-                    'video_id' => $this->video_id,
-                    'notification_id' => $this->notification_id,
+                    'video_id' => $this->video_id[0],
+                    'notification_id' => $this->notification_id[0],
                     'permission_id' => 1,
                     'type' => 'public',
                 ]);
+
             } else {
                 //Update with video uid
                 $this->video_permission->video_id = $this->video->id;
