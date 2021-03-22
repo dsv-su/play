@@ -12,6 +12,7 @@ use App\Video;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
 class ReLoadPlayStore extends Model
@@ -29,44 +30,60 @@ class ReLoadPlayStore extends Model
 
     public function reloadstore(Request $request)
     {
+        //Start transaction
+        DB::beginTransaction();
+
         //Check if video exist
         if(!$presentation = Video::find($request->id)) {
-            //Store video
-            $video = new VideoStore($request);
-            $video = $video->presentation();
-            //Set video permissions
-            $permission = new PermissionHandler($request,$video);
-            $permission->setPermission();
-            //Store presenter
-            $presenter = new PresenterStore($request, $video);
-            $presenter->presenter();
-            //Store course
-            $course = new CourseStore($request, $video);
-            $course->course();
-            //Store tags
-            $tags = new TagsStore($request, $video);
-            $tags->tags();
+            try {
+                //Store video
+                $video = new VideoStore($request);
+                $video = $video->presentation();
+                //Set video permissions
+                $permission = new PermissionHandler($request, $video);
+                $permission->setPermission();
+                //Store presenter
+                $presenter = new PresenterStore($request, $video);
+                $presenter->presenter();
+                //Store course
+                $course = new CourseStore($request, $video);
+                $course->course();
+                //Store tags
+                $tags = new TagsStore($request, $video);
+                $tags->tags();
+
+            } catch (\Exception $e) {
+                DB::rollback(); // Something went wrong
+            }
         }
         else {
-            //Update existing video
-            $video = new VideoUpdate($presentation, $request);
-            $video = $video->presentation_update();
-            //Set video permissions
-            $permission = new PermissionHandler($request,$video);
-            $permission->setPermission();
-            //Store presenter
-            $presenter = new PresenterStore($request, $video);
-            $presenter->presenter();
-            //Store course
-            $course = new CourseStore($request, $video);
-            $course->course();
-            //Store tags
-            $tags = new TagsStore($request, $video);
-            $tags->tags();
+            try {
+                //Update existing video
+                $video = new VideoUpdate($presentation, $request);
+                $video = $video->presentation_update();
+                //Set video permissions
+                $permission = new PermissionHandler($request,$video);
+                $permission->setPermission();
+                //Store presenter
+                $presenter = new PresenterStore($request, $video);
+                $presenter->presenter();
+                //Store course
+                $course = new CourseStore($request, $video);
+                $course->course();
+                //Store tags
+                $tags = new TagsStore($request, $video);
+                $tags->tags();
+
+            } catch (\Exception $e) {
+                DB::rollback(); // Something went wrong
+            }
+
+            DB::commit();   // Successfully stored
 
             return response()->json('Presentation has been updated', Response::HTTP_CREATED);
         }
 
+        DB::commit();   // Successfully stored
 
         return response()->json('Presentation has been created', Response::HTTP_CREATED);
     }
