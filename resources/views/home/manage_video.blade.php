@@ -1,4 +1,5 @@
 <!-- ManageVideo - child view - will inherit all data available in the parent view-->
+
 <div class="col my-3">
     <!--<style>.btn-sm { height: 3vh; width: 5vh; }</style>-->
     <p style="font-size: 75%; color: blue">{{$video->id}}</p>
@@ -12,23 +13,24 @@
             </div>
         </a>
         <div class="card-body p-1">
-            <p class="card-text">
+            <p class="card-text" id="courses">
                 @foreach($video->video_course as $vc) <a
                     href="/course/{{$vc->course_id}}"
-                    class="badge badge-primary">{{\App\Course::find($vc->course_id)->name}}</a> @endforeach
+                    class="badge badge-primary">{{\App\Course::find($vc->course_id)->designation}}</a> @endforeach
             </p>
-            <p class="card-text">
+            <p class="card-text" id="category">
                 <span class="badge badge-light">{{$video->category->category_name}}</span>
             </p>
             <p class="card-text">
                 @foreach($video->presenters() as $presenter) <span
                     class="badge badge-light">{{$presenter->name}}</span> @endforeach</p>
-            <p class="card-text" id="tags">@foreach($video->tags() as $tag) <span
-                    class="badge badge-secondary">{{$tag->name}}</span> @endforeach</p>
+            <p class="card-text" id="tags">@foreach($video->tags() as $tag) <a
+                        href="/tag/{{$tag->id}}"
+                        class="badge badge-secondary">{{$tag->name}}</a> @endforeach</p>
             <p class="card-text">
             <p class="card-text">
                 <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Redigera presentation">
-                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-{{$video->id}}" disabled><i class="far fa-edit"></i></button>
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-{{$video->id}}"><i class="far fa-edit"></i></button>
                 </span>
 
                 <button class="delete btn btn-danger btn-sm" type="submit" data-toggle="tooltip" data-placement="top" title="Radera presentation"><i class="far fa-trash-alt"></i></button>
@@ -52,20 +54,33 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <label for="video_category_{{$video->id}}">Category:</label>
-                        <select name="video_category[]" id="video_category_{{$video->id}}" required>
+                        <div class="form-row">
+                        <label class="col-form-label" for="video_category_{{$video->id}}">Category:</label>
+                        <select class="col" name="video_category[]" id="video_category_{{$video->id}}" required>
                             @foreach($categories as $category)
                                 <option value="{{$category->id}}"
                                         @if ($category->id == $video->category_id) selected @endif>{{$category->category_name}}</option>
                             @endforeach
                         </select>
-                        <label for="video_course_{{$video->id}}">Course:</label>
-                        <select name="video_course[]" id="video_course_{{$video->id}}" required>
+                        </div>
+                        <div class="form-row">
+                        <label class="col-form-label" for="video_course_{{$video->id}}">Courses:</label>
+                        <select class="selectpicker col" multiple data-live-search="true" name="video_course[]" id="video_course_{{$video->id}}" required>
+                        <!--<select name="video_course[]" id="video_course_{{$video->id}}" required>-->
                             @foreach($allcourses as $course)
                                 <option value="{{$course->id}}"
-                                        @if ($course->id == $video->course_id) selected @endif>{{$course->course}}</option>
+                                        @if ($course->id == $video->course_id) selected @endif>{{$course->designation}}</option>
                             @endforeach
                         </select>
+                        </div>
+                        <div class="form-row">
+                            <label class="col-form-label" for="video_tag_{{$video->id}}">Tags:</label>
+                            <select class="selectpicker col" multiple data-live-search="true" name="video_tags[]" id="video_tag_{{$video->id}}" required>
+                                @foreach($alltags as $tag)
+                                    <option value="{{$tag->id}}">{{$tag->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
@@ -79,3 +94,11 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+    });
+</script>

@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use App\Course;
-use App\Jobs\DownloadPresentation;
 use App\MediasiteFolder;
 use App\MediasitePresentation;
-use App\Presentation;
 use App\Presenter;
 use App\Services\AuthHandler;
 use App\Services\Notify\PlayStoreNotify;
@@ -19,7 +17,6 @@ use App\VideoPermission;
 use App\VideoPresenter;
 use App\VideoStat;
 use App\VideoTag;
-use Carbon\Carbon;
 use Exception;
 use File;
 use GuzzleHttp\Client;
@@ -83,11 +80,11 @@ class PlayController extends Controller
                 continue;
             }
             foreach ($course->myvideos as $keyvideo => $video) {
-                if ($datestart && $video->getPresentationDate() && $datestart>$video->getPresentationDate()) {
+                if ($datestart && $video->getPresentationDate() && $datestart > $video->getPresentationDate()) {
                     unset($course->myvideos[$keyvideo]);
                     continue;
                 }
-                if ($dateend && $video->getPresentationDate() && $dateend<$video->getPresentationDate()) {
+                if ($dateend && $video->getPresentationDate() && $dateend < $video->getPresentationDate()) {
                     unset($course->myvideos[$keyvideo]);
                     continue;
                 }
@@ -561,7 +558,7 @@ class PlayController extends Controller
                         return false;
                     }
 
-                   //$p = MediasitePresentation::where('mediasite_id', $presentationid)->first();
+                    //$p = MediasitePresentation::where('mediasite_id', $presentationid)->first();
                     $presentation->status = 'request download';
                     $presentation->title = $metadata['title'];
                     $presentation->presenters = $metadata['presenters'] ?? [];
@@ -660,14 +657,13 @@ class PlayController extends Controller
 
     public function manage()
     {
-        return view('home.manage', ['videos' => Video::with('category', 'video_course.course')->latest('creation')->get(), 'allcourses' => Course::all(),  'categories' => Category::all()]);
-        //return view('home.manage', ['videos' => Video::all(), 'allcourses' => Course::all(),  'categories' => Category::all()]);
+        return view('home.manage', ['videos' => Video::with('category', 'video_course.course')->latest('creation')->get(), 'allcourses' => Course::all(), 'categories' => Category::all(), 'alltags' => Tag::all()]);
     }
 
     public function deleteVideoAjax(Request $request): JsonResponse
     {
         /*** This method should be refactored
-        ***/
+         ***/
 
         $video = Video::find($request->video_id);
         $folder = dirname($video->source1);
@@ -724,13 +720,44 @@ class PlayController extends Controller
     {
         try {
             $video = Video::find($request->video_id);
-            $video->course_id = $request->course_id;
+            $courses = json_decode($request->course_ids);
+            $tags = json_decode($request->tag_ids);
+
+            if (!empty($tags)) {
+                VideoTag::where('video_id', $video->id)->delete();
+                foreach ($tags as $tag) {
+                    VideoTag::updateOrCreate([
+                        'video_id' => $video->id,
+                        'tag_id' => $tag,
+                    ]);
+                }
+            }
+
+            if (!empty($courses)) {
+                VideoCourse::where('video_id', $video->id)->delete();
+                foreach ($courses as $course) {
+                    VideoCourse::updateOrCreate([
+                        'video_id' => $video->id,
+                        'course_id' => $course,
+                    ]);
+                }
+            }
+
             $video->category_id = $request->category_id;
             $video->save();
+            $tagnames = '';
+            $coursenames = '';
+            foreach ($video->video_course as $vc) {
+                $coursenames .= '<a href="/course/' . $vc->course_id . '" class="badge badge-primary">' . Course::find($vc->course_id)->designation . '</a>';
+            }
+            foreach ($video->video_tag as $vt) {
+                $tagnames .= '<a href="/tag/' . $vt->tag_id . '" class="badge badge-secondary">' . Tag::find($vt->tag_id)->name . '</a>';
+            }
             return Response()->json([
-                'message' => 'Video saved.',
-                'category' => 'Category: ' . $video->category->category_name,
-                'course' => 'Course: ' . $video->course->course_name,
+                'message' => 'Changes saved',
+                'category' => '<span class="badge badge-light">' . $video->category->category_name . '</span>',
+                'courses' => $coursenames,
+                'tags' => $tagnames
             ]);
         } catch (Exception $e) {
             report($e);

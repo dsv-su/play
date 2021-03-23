@@ -65,6 +65,8 @@
         </div>
 
     </div><!-- /.container -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
 
     <script>
         $(document).ready(function () {
@@ -106,7 +108,8 @@
                 let video_id = $(this).attr('id');
                 formData.append("video_id", video_id);
                 formData.append('category_id', $(this).closest('form').find('#video_category_'+video_id).val());
-                formData.append('course_id', $(this).closest('form').find('#video_course_'+video_id).val());
+                formData.append('course_ids', JSON.stringify($(this).closest('form').find('#video_course_'+video_id).val()));
+                formData.append('tag_ids', JSON.stringify($(this).closest('form').find('#video_tag_'+video_id).val()));
 
                 $.ajax({
                     type: 'POST',
@@ -116,10 +119,11 @@
                     contentType: false,
                     processData: false,
                     success: (data) => {
-                        alert('Changed saved.');
-                        $("#" + video_id).find('#course').text(data.course);
-                        $("#" + video_id).find('#category').text(data.category);
-                        $(this).closest('div.modal').hide();
+                        alert(data.message);
+                        $("#" + video_id).find('#courses').html(data.courses);
+                        $("#" + video_id).find('#tags').html(data.tags);
+                        $("#" + video_id).find('#category').html(data.category);
+                        $(this).closest('div.modal').modal('hide');
                     },
                     error: function () {
                         alert('There was an error in editing the video.');

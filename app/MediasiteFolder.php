@@ -20,28 +20,31 @@ class MediasiteFolder extends Model
 
     public function completed()
     {
+        $mediasitepresentations = $this->presentations;
+        $videos = array();
+        $somethingmissing = false;
 
-        $somethingexist = $this->presentations->where('status', 'sent')->count();
-        $return = 1;
         foreach ($this->presentations as $mp) {
-            $videos = Video::where('notification_id', $mp->id);
-            if ($mp->status != 'sent' || !$videos->count()) {
-                $return = 0;
-            }
-        }
-
-        if (!$this->presentations->count()) {
-            return 3;
-        }
-
-        if ($return == 0) {
-            if ($somethingexist>0) {
-                return 2;
+            $video = Video::where('notification_id', $mp->id)->where('origin', 'mediasite')->first();
+            if (!$video) {
+                $somethingmissing = true;
             } else {
-                return 0;
+                $videos[] = $video;
             }
-        } else {
+        }
+
+        if ($mediasitepresentations->count() == 0) {
+            // Folder is empty
+            return 3;
+        } elseif (count($videos) == 0) {
+            // Folder is not empty but there are no videos
+            return 0;
+        } elseif (!$somethingmissing) {
+            // Folder is not empty and there are videos
             return 1;
+        } else {
+            // Folder is not empty but some videos are missing
+            return 2;
         }
     }
 }

@@ -26,7 +26,7 @@
                            aria-controls="download" aria-selected="false">Download</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="medeiasite-tab" data-toggle="tab" href="#mediasite" role="tab"
+                        <a class="nav-link" id="mediasite-tab" data-toggle="tab" href="#mediasite" role="tab"
                            aria-controls="mediasite" aria-selected="false">Mediasite</a>
                     </li>
                     <li class="nav-item">
