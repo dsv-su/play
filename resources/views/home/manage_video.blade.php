@@ -56,7 +56,7 @@
                     <div class="modal-body">
                         <div class="form-row">
                         <label class="col-form-label" for="video_category_{{$video->id}}">Category:</label>
-                        <select class="col" name="video_category[]" id="video_category_{{$video->id}}" required>
+                        <select class="col form-control" name="video_category[]" id="video_category_{{$video->id}}" required>
                             @foreach($categories as $category)
                                 <option value="{{$category->id}}"
                                         @if ($category->id == $video->category_id) selected @endif>{{$category->category_name}}</option>
@@ -69,7 +69,7 @@
                         <!--<select name="video_course[]" id="video_course_{{$video->id}}" required>-->
                             @foreach($allcourses as $course)
                                 <option value="{{$course->id}}"
-                                        @if ($course->id == $video->course_id) selected @endif>{{$course->designation}}</option>
+                                        @if ($video->has_course($course->id)) selected @endif>{{$course->designation}}</option>
                             @endforeach
                         </select>
                         </div>
@@ -77,7 +77,7 @@
                             <label class="col-form-label" for="video_tag_{{$video->id}}">Tags:</label>
                             <select class="selectpicker col" multiple data-live-search="true" name="video_tags[]" id="video_tag_{{$video->id}}" required>
                                 @foreach($alltags as $tag)
-                                    <option value="{{$tag->id}}">{{$tag->name}}</option>
+                                    <option value="{{$tag->id}}" @if ($video->has_tag($tag->id)) selected @endif>{{$tag->name}}</option>
                                 @endforeach
                             </select>
                         </div>

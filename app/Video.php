@@ -88,6 +88,11 @@ class Video extends Model implements Searchable
         return $this->belongsToMany(Course::class, 'video_courses', 'video_id', 'course_id')->get();
     }
 
+    public function has_course($course_id): bool
+    {
+        return $this->belongsToMany(Course::class, 'video_courses', 'video_id', 'course_id')->where('course_id', $course_id)->count()>0;
+    }
+
     /*public function courses(): Collection
     {
         return $this->belongsToMany(Course::class, VideoCourse::class, 'video_id', 'course_id')->get();
