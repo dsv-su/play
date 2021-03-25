@@ -28,6 +28,10 @@ class PlayStoreNotify extends Model
             ->makeHidden('created_at')
             ->makeHidden('updated_at');
 
+        if ($type == 'mediasite') {
+            $this->presentation->makeHidden('video_id')->makeHidden('mediasite_folder_id');
+        }
+
         //Make json wrapper
         $this->json = Collection::make([
             'status' => 'success',
