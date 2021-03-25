@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PresentationRequest;
 use App\Http\Resources\Presentation\PresentationResource;
+use App\MediasitePresentation;
 use App\Services\Course\CourseStore;
 use App\Services\PermissionHandler\PermissionHandler;
 use App\Services\Presenter\PresenterStore;
@@ -25,6 +26,7 @@ class VideoApiController extends Controller
         //$this->middleware('auth:api');
         $this->middleware('auth:api', ['except' => ['permission']]);
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -45,13 +47,12 @@ class VideoApiController extends Controller
     {
         $payload = auth()->payload();
 
-        if($payload->get('per') == 'store')
-        {
+        if ($payload->get('per') == 'store') {
             //Start transaction
             DB::beginTransaction();
 
             //Check if video exist
-            if(!$presentation = Video::find($request->id)) {
+            if (!$presentation = Video::find($request->id)) {
                 try {
                     //Store video
                     $video = new VideoStore($request);
@@ -68,11 +69,15 @@ class VideoApiController extends Controller
                     //Store tags
                     $tags = new TagsStore($request, $video);
                     $tags->tags();
+                    //Update mediasite video link
+                    if ($request->type == 'mediasite') {
+                        $mp = MediasitePresentation::find($request->notification_id);
+                        $mp->video_id = $video->id;
+                    }
                 } catch (\Exception $e) {
                     DB::rollback(); // Something went wrong
                 }
-            }
-            else {
+            } else {
                 try {
                     //Update existing video
                     $video = new VideoUpdate($presentation, $request);
@@ -89,6 +94,11 @@ class VideoApiController extends Controller
                     //Store tags
                     $tags = new TagsStore($request, $video);
                     $tags->tags();
+                    //Update mediasite video link
+                    if ($request->type == 'mediasite') {
+                        $mp = MediasitePresentation::find($request->notification_id);
+                        $mp->video_id = $video->id;
+                    }
                 } catch (\Exception $e) {
                     DB::rollback(); // Something went wrong
                 }
@@ -99,8 +109,7 @@ class VideoApiController extends Controller
 
             DB::commit();   // Successfully stored
             return response()->json('Presentation has been created', Response::HTTP_CREATED);
-        }
-        else {
+        } else {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
@@ -109,7 +118,7 @@ class VideoApiController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return
      */
     public function show($id)
@@ -120,8 +129,8 @@ class VideoApiController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -132,7 +141,7 @@ class VideoApiController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

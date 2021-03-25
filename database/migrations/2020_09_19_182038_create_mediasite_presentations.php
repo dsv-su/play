@@ -17,6 +17,7 @@ class CreateMediasitePresentations extends Migration
             $table->uuid('id')->primary();
             $table->string('status')->nullable();
             $table->string('user')->nullable();
+            $table->uuid('video_id');
             $table->foreignId('mediasite_folder_id')->constrained();
             $table->string('title')->nullable();
             $table->string('presenters')->nullable();
