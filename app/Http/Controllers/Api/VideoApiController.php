@@ -70,9 +70,11 @@ class VideoApiController extends Controller
                     $tags = new TagsStore($request, $video);
                     $tags->tags();
                     //Update mediasite video link
-                    if ($request->type == 'mediasite') {
+                    if ($request->origin == 'mediasite') {
                         $mp = MediasitePresentation::find($request->notification_id);
                         $mp->video_id = $video->id;
+                        $mp->status = 'completed';
+                        $mp->save();
                     }
                 } catch (\Exception $e) {
                     DB::rollback(); // Something went wrong
@@ -95,9 +97,11 @@ class VideoApiController extends Controller
                     $tags = new TagsStore($request, $video);
                     $tags->tags();
                     //Update mediasite video link
-                    if ($request->type == 'mediasite') {
+                    if ($request->origin == 'mediasite') {
                         $mp = MediasitePresentation::find($request->notification_id);
                         $mp->video_id = $video->id;
+                        $mp->status = 'completed';
+                        $mp->save();
                     }
                 } catch (\Exception $e) {
                     DB::rollback(); // Something went wrong
