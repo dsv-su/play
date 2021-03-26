@@ -2,6 +2,7 @@
 
 namespace App\Services\Video;
 
+use App\MediasitePresentation;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,6 +29,13 @@ class VideoUpdate extends Model
         $this->video->presentation = json_encode($this->request->all(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         //$this->video->category_id = $this->request->category_id ?? 1;
         $this->video->save();
+
+        //Update mediasite video link
+        if ($this->request->origin == 'mediasite') {
+            $mp = MediasitePresentation::find($this->request->notification_id);
+            $mp->video_id = $this->video->id;
+            $mp->save();
+        }
 
         return $this->video;
     }
