@@ -774,7 +774,6 @@ class PlayController extends Controller
         $videos = Video::search($request->get('query'), null, true, true)->take(5)->get();
         $tags = Tag::search($request->get('query'), null, true, true)->take(3)->get();
         $presenters = Presenter::search($request->get('query'), null, true, true)->take(3)->get();
-        return $presenters;
         return $courses->merge($videos)->merge($tags)->merge($presenters);
     }
 
