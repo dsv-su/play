@@ -26,7 +26,7 @@
             // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
             name: 'autocomplete-items',
             display: function (item) {
-                if (item.type == 'course' || item.type == 'tag') {
+                if (item.type == 'course' || item.type == 'tag' || item.type == 'presenter') {
                     return item.name;
                 } else {
                     return item.title;
@@ -44,6 +44,8 @@
                         return '<li><a href="/course/' + data.id + '">Course: ' + data.name + ' (' + data.designation + ')</a></li>';
                     } else if (data.type == 'tag') {
                         return '<li><a href="/tag/' + data.id + '">Tag: ' + data.name + '</a></li>';
+                    } else if (data.type == 'presenter') {
+                        return '<li><a href="/presenter/' + data.id + '">Presenter: ' + data.name + '</a></li>';
                     } else {
                         return '<li><a href="/player/' + data.id + '">Video: ' + data.title + '</a></li>';
                     }
