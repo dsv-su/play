@@ -14,11 +14,16 @@
     <script src="{{asset('js/popper.min.js')}}"></script>
     <script src="{{asset('bootstrap/bootstrap-4.5.3-dist/js/bootstrap.bundle.js')}}"></script>
     <script src="{{asset('js/su.js')}}"></script>
+    <!-- Include Bootstrap Select -->
+    <script src="{{ asset('js/typeahead/typeahead.bundle.js') }}"></script>
+    <script src="{{ asset('bootstrap/select/bootstrap-select.min.js')}}"></script>
+    <link rel="stylesheet" href="{{asset('bootstrap/select/bootstrap-select.min.css')}}" />
     <!-- Include Bootstrap Datepicker -->
     <link rel="stylesheet" type="text/css" href="{{asset('bootstrap/datepicker/bootstrap-datepicker.min.css')}}" />
     <script src="{{asset('bootstrap/datepicker/bootstrap-datepicker.min.js')}}"></script>
     <script src="{{asset('bootstrap/datepicker/bootstrap-datepicker.sv.js')}}"></script>
     <title>DSVPlay</title>
+    @include('layouts.partials.custom-js')
 </head>
 <body>
 @include('layouts.partials.header')
@@ -28,6 +33,6 @@
     </div>
 </main>
 @include('layouts.partials.footer')
-@include('layouts.partials.footer-js')
+
 </body>
 </html>
