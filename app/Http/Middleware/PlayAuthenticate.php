@@ -42,30 +42,28 @@ class PlayAuthenticate
             $server = explode(";", $_SERVER['entitlement']);
 
             // Roles
-            $role_admin = 'urn:mace:swami.se:gmai:dsv-user:play-admin';
-            $role_uploader = 'urn:mace:swami.se:gmai:dsv-user:play-uploader';
-            $role_staff = 'urn:mace:swami.se:gmai:dsv-user:staff';
-            foreach($server as $entitlement) {
-                if($entitlement == $role_admin) {
-                    app()->bind('play_role', function () {
-                        return 'Administrator';
-                    });
-                }
-                elseif($entitlement == $role_uploader) {
-                    app()->bind('play_role', function() {
-                        return 'Uploader';
-                    });
-                }
-                elseif($entitlement == $role_staff) {
-                    app()->bind('play_role', function() {
-                        return 'Staff';
-                    });
-                }
-                else {
-                    app()->bind('play_role', function() {
-                        return 'Student';
-                    });
-                }
+            $role_admin = $system->global->admin;
+            $role_uploader = $system->global->uploader;
+            $role_staff = $system->global->staff;
+            if(in_array($role_admin, $server)) {
+                app()->bind('play_role', function () {
+                    return 'Administrator';
+                });
+            }
+            elseif (in_array($role_uploader, $server)) {
+                app()->bind('play_role', function () {
+                    return 'Uploader';
+                });
+            }
+            elseif (in_array($role_staff, $server)) {
+                app()->bind('play_role', function () {
+                    return 'Staff';
+                });
+            }
+            else  {
+                app()->bind('play_role', function () {
+                    return 'Student';
+                });
             }
 
             return $next($request);
