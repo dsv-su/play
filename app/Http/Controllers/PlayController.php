@@ -37,11 +37,7 @@ class PlayController extends Controller
      */
     public function index()
     {
-        //Initiate system
-        app()->make('init')->check_system();
-
         $data['search'] = 0;
-
         $data['latest'] = Video::with('category', 'video_course.course')->latest('creation')->take(24)->get();
         $data['permissions'] = VideoPermission::all();
         $data['categories'] = Category::all();

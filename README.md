@@ -95,6 +95,10 @@ Requirements are best determined using Server Requirements page of corresponding
         port=389
         base_dn=
         timeout=5
+
+        [recorders]                             ; Cattura Recorders
+        FriendlyName = recorder.dns.name
+        OtherRecorder = other.name
         
 * Once the global settings are entered you can install the dependencies. `composer install`
 

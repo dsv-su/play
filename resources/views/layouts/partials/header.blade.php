@@ -130,7 +130,7 @@
                 </li>
             </ul>
             <div class="align-middle ml-auto my-auto">
-                {{app()->make('play_user') ?? 'Not logged in'}}
+                {{app()->make('play_user') ?? 'Not logged in'}} @if(app()->make('play_role'))[{{app()->make('play_role') ?? ''}}]@endif
             </div>
         </nav>
 
