@@ -9,6 +9,7 @@ use App\Course;
 use App\CourseSearchAspect;
 use App\PlayerJson;
 use App\Presenter;
+use App\Services\Cattura\CheckCatturaRecorderStatus;
 use App\Services\Daisy\DaisyIntegration;
 use App\Services\Ldap\CheckSUKATApi;
 use App\Services\Notify\PlayStoreNotify;

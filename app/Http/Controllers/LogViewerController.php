@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Cattura\CheckCatturaRecorderStatus;
 use Arcanedev\LogViewer\Contracts\LogViewer as LogViewerContract;
 use Arcanedev\LogViewer\Entities\{LogEntry, LogEntryCollection};
 use Arcanedev\LogViewer\Exceptions\LogNotFoundException;
@@ -81,8 +82,25 @@ class LogViewerController extends Controller
         $stats   = $this->logViewer->statsTable();
         $headers = $stats->header();
         $rows    = $this->paginate($stats->rows(), $request);
+        // Cattura
+        $store = new CheckCatturaRecorderStatus();
 
-        return $this->view('logs', compact('headers', 'rows'));
+        $file = base_path() . '/systemconfig/play.ini';
+        if (!file_exists($file)) {
+            $file = base_path() . '/systemconfig/play.ini.example';
+        }
+        $system_config = parse_ini_file($file, true);
+
+        foreach($system_config['recorders'] as $key => $system) {
+            $check = $store->call($system,'api/1/status?since=');
+            $cattura[] = [
+                'recorder' => $key,
+                'status' => $check['capture']['state'],
+                'url' => $system
+            ];
+        }
+        //dd($cattura);
+        return $this->view('logs', compact('headers', 'rows', 'cattura'));
     }
 
     /**

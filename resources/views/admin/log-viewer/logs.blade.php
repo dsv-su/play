@@ -44,6 +44,21 @@
                         Offline <span class="badge badge-danger">Daisy OK</span>
                     </button>
                 @endif
+                @foreach($cattura as $recorder)
+                    <a href="{{$recorder['url']}}">
+                    <button type="button" class="btn btn-outline-primary">
+                        @if(!$recorder['status'] == 'IDLE')
+                        <i class="fas fa-video"></i>
+                        @else
+                        <i class="fas fa-video-slash"></i>
+                        @endif
+                        {{$recorder['recorder']}} <span
+                            @if($recorder['status'] == 'IDLE') class="badge badge-danger"
+                            @else class="badge badge-success"
+                            @endif >{{$recorder['status']}}</span>
+                    </button>
+                    </a>
+                @endforeach
                     </div>
             </div>
             <br>
