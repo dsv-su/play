@@ -31,6 +31,7 @@ class SystemController extends Controller
 
     public function SUidpReturn()
     {
+        Session::regenerate();
         $system = new AuthHandler();
         $system = $system->authorize();
 
@@ -64,7 +65,7 @@ class SystemController extends Controller
             });
         }
 
-        Session::regenerate();
+
         return redirect()->intended('/');
     }
 
