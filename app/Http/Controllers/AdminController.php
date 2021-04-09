@@ -38,6 +38,7 @@ class AdminController extends Controller
 
     public function emulateUser(Request $request)
     {
+        dd($request->role);
         app()->bind('play_role', function () use($request){
             return $request->role;
         });

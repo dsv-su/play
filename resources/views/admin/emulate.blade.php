@@ -10,7 +10,7 @@
                     <form class="form-inline" method="post" action="{{route('emulateUser')}}">
                      @csrf
                         <label class="my-1 mr-2" for="role">{{app()->make('play_user') ?? 'Not logged in'}}</label>
-                        <select class="custom-select my-1 mr-sm-2" id="role">
+                        <select name="role" class="custom-select my-1 mr-sm-2" id="role">
                             <option @if(app()->make('play_role') == 'Administrator') selected @endif value="Administrator">[Administrator]</option>
                             <option @if(app()->make('play_role') == 'Uploader') selected @endif value="Uploader">[Uploader]</option>
                             <option @if(app()->make('play_role') == 'Staff') selected @endif value="Staff">[Staff]</option>
