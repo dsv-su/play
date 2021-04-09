@@ -33,6 +33,10 @@ class PlayAuthenticate
                 return 'Administrator';
             });
 
+            app()->bind('play_auth', function () {
+                return 'Administrator';
+            });
+
             return $next($request);
         }
         else {
@@ -42,7 +46,7 @@ class PlayAuthenticate
             app()->bind('play_username', function() {
                 return substr($_SERVER['eppn'], 0, strpos($_SERVER['eppn'], "@"));
             });
-            /*
+
             // Get Shibboleth entitlements
             $server = explode(";", $_SERVER['entitlement']);
 
@@ -53,26 +57,26 @@ class PlayAuthenticate
 
             // Assign role to user
             if(in_array($role_admin, $server)) {
-                app()->bind('play_role', function () {
+                app()->bind('play_auth', function () {
                     return 'Administrator';
                 });
             }
             elseif (in_array($role_uploader, $server)) {
-                app()->bind('play_role', function () {
+                app()->bind('play_auth', function () {
                     return 'Uploader';
                 });
             }
             elseif (in_array($role_staff, $server)) {
-                app()->bind('play_role', function () {
+                app()->bind('play_auth', function () {
                     return 'Staff';
                 });
             }
             else  {
-                app()->bind('play_role', function () {
+                app()->bind('play_auth', function () {
                     return 'Student';
                 });
             }
-            */
+
             return $next($request);
         }
 

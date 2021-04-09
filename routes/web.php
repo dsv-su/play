@@ -70,6 +70,7 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     //Admin
     Route::prefix('admin/')->group(function () {
         Route::get('/', 'AdminController@admin')->name('admin');
+        Route::post('/emulate', 'AdminController@emulateUser')->name('emulateUser');
         Route::prefix('logs')->name('log-viewer::logs.')->group(function () {
             Route::get('/', 'LogViewerController@listLogs')->name('list');
             Route::delete('/delete', 'LogViewerController@delete')->name('delete');
@@ -104,6 +105,7 @@ Route::middleware('entitlements', 'playauth')->group(function () {
 
     //Testing routes --> to be removed before production
     Route::get('/test', 'TestController@test');
+    Route::get('/role', 'TestController@emulate');
     Route::post('/search', 'TestController@search')->name('search');
     Route::get('/upload_destroy/{id}', 'AdminController@destroy_upload')->name('upload_delete');
     Route::get('/download_destroy/{id}', 'AdminController@destroy_download')->name('download_delete');

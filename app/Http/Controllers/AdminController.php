@@ -36,11 +36,12 @@ class AdminController extends Controller
         return view('admin.admin', $data);
     }
 
-    public function emulateUser($role)
+    public function emulateUser(Request $request)
     {
-        app()->bind('play_role', function () use($role) {
-            return $role;
+        app()->bind('play_role', function () use($request){
+            return $request->role;
         });
+
         return redirect()->route('home');
     }
 

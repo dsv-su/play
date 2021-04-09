@@ -38,6 +38,11 @@ class TestController extends Controller
         }
     }
 
+    public function emulate()
+    {
+        return view('admin.emulate');
+    }
+
     public function daisyLoadCourses()
     {
         /***********************************
