@@ -32,40 +32,6 @@ class SystemController extends Controller
     public function SUidpReturn()
     {
         Session::regenerate();
-        $system = new AuthHandler();
-        $system = $system->authorize();
-
-        // Get Shibboleth entitlements
-        $server = explode(";", $_SERVER['entitlement']);
-
-        // Roles
-        $role_admin = $system->global->admin;
-        $role_uploader = $system->global->uploader;
-        $role_staff = $system->global->staff;
-
-        // Assign role to user
-        if(in_array($role_admin, $server)) {
-            app()->bind('play_role', function () {
-                return 'Administrator';
-            });
-        }
-        elseif (in_array($role_uploader, $server)) {
-            app()->bind('play_role', function () {
-                return 'Uploader';
-            });
-        }
-        elseif (in_array($role_staff, $server)) {
-            app()->bind('play_role', function () {
-                return 'Staff';
-            });
-        }
-        else  {
-            app()->bind('play_role', function () {
-                return 'Student';
-            });
-        }
-
-
         return redirect()->intended('/');
     }
 

@@ -134,7 +134,7 @@
                 @if(!app()->make('play_auth') == 'Administrator')
                     {{app()->make('play_user') ?? 'Not logged in'}}
                 @else
-                    @if(app()->make('play_auth') == 'Administrator')
+                    @if(app()->make('play_auth') == 'DisabledAdministrator')
                         <form class="form-inline" method="post" action="{{route('emulateUser')}}">
                             @csrf
                             <label class="my-1 mr-2" for="role">{{app()->make('play_user') ?? 'Not logged in'}}</label>
@@ -148,7 +148,7 @@
                             <button type="submit" class="btn btn-primary-outline my-1">Change</button>
                         </form>
                     @else
-                        [{{app()->make('play_role') ?? ''}}]
+                        {{app()->make('play_user') ?? 'Not logged in'}} [{{app()->make('play_role') ?? ''}}]
                     @endif
                 @endif
             </div>
