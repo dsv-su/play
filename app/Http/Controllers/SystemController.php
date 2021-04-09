@@ -31,6 +31,9 @@ class SystemController extends Controller
 
     public function SUidpReturn()
     {
+        app()->bind('play_role', function () {
+            return '';
+        });
         Session::regenerate();
         return redirect()->intended('/');
     }

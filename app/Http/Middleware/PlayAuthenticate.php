@@ -29,11 +29,11 @@ class PlayAuthenticate
                 return 'dsv-dev';
             });
 
-            app()->bind('play_role', function () {
+            app()->bind('play_auth', function () {
                 return 'Administrator';
             });
 
-            app()->bind('play_auth', function () {
+            app()->bind('play_role', function () {
                 return 'Administrator';
             });
 
@@ -60,33 +60,33 @@ class PlayAuthenticate
                 app()->bind('play_auth', function () {
                     return 'Administrator';
                 });
-                app()->bind('play_role', function () {
+                /*app()->bind('play_role', function () {
                     return 'Administrator';
-                });
+                });*/
             }
             elseif (in_array($role_uploader, $server)) {
                 app()->bind('play_auth', function () {
                     return 'Uploader';
                 });
-                app()->bind('play_role', function () {
+                /*app()->bind('play_role', function () {
                     return 'Uploader';
-                });
+                });*/
             }
             elseif (in_array($role_staff, $server)) {
                 app()->bind('play_auth', function () {
                     return 'Staff';
                 });
-                app()->bind('play_role', function () {
+                /*app()->bind('play_role', function () {
                     return 'Staff';
-                });
+                });*/
             }
             else  {
                 app()->bind('play_auth', function () {
                     return 'Student';
                 });
-                app()->bind('play_role', function () {
+                /*app()->bind('play_role', function () {
                     return 'Student';
-                });
+                });*/
             }
 
             return $next($request);
