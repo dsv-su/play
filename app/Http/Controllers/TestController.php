@@ -9,6 +9,7 @@ use App\Course;
 use App\CourseSearchAspect;
 use App\PlayerJson;
 use App\Presenter;
+use App\Services\AuthHandler;
 use App\Services\Cattura\CheckCatturaRecorderStatus;
 use App\Services\Daisy\DaisyIntegration;
 use App\Services\Ldap\CheckSUKATApi;
@@ -26,8 +27,15 @@ class TestController extends Controller
 {
     public function test(Request $request)
     {
-        $daisy = new DaisyIntegration();
-        $daisy->init();
+        if (!System::find(1)) {
+            //Initiate system
+            app()->make('init')->check_system();
+            return redirect()->action([TestController::class, 'test']);
+        } else {
+            $daisy = new DaisyIntegration();
+            $daisy->init();
+            return redirect()->route('home');
+        }
     }
 
     public function daisyLoadCourses()

@@ -36,6 +36,14 @@ class AdminController extends Controller
         return view('admin.admin', $data);
     }
 
+    public function emulateUser($role)
+    {
+        app()->bind('play_role', function () use($role) {
+            return $role;
+        });
+        return redirect()->route('home');
+    }
+
     public function addPermission()
     {
         $permissions = Permission::all();
@@ -179,7 +187,7 @@ class AdminController extends Controller
         $data['manual_presentations'] = ManualPresentation::all();
         $data['presentations'] = Presentation::all();
         $data['videos'] = Video::all();
-        return view('manual.admin', $data);
+        return redirect()->route('admin');
     }
 
     public function destroy_download($id)
@@ -195,7 +203,7 @@ class AdminController extends Controller
         $data['manual_presentations'] = ManualPresentation::all();
         $data['presentations'] = Presentation::all();
         $data['videos'] = Video::all();
-        return view('manual.admin', $data);
+        return redirect()->route('admin');
     }
 
     public function dev_destroy($id)

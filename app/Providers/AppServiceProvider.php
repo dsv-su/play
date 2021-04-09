@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Services\Daisy\DaisyIntegration;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 

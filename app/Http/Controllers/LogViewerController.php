@@ -82,6 +82,7 @@ class LogViewerController extends Controller
         $stats   = $this->logViewer->statsTable();
         $headers = $stats->header();
         $rows    = $this->paginate($stats->rows(), $request);
+
         // Cattura
         $store = new CheckCatturaRecorderStatus();
 
@@ -91,6 +92,12 @@ class LogViewerController extends Controller
         }
         $system_config = parse_ini_file($file, true);
 
+        /*$cattura[] = [
+            'recorder' => 'null',
+            'status' => 'IDLE',
+            'url' => 'null'
+        ];*/
+
         foreach($system_config['recorders'] as $key => $system) {
             $check = $store->call($system,'api/1/status?since=');
             $cattura[] = [
@@ -99,7 +106,7 @@ class LogViewerController extends Controller
                 'url' => $system
             ];
         }
-        //dd($cattura);
+
         return $this->view('logs', compact('headers', 'rows', 'cattura'));
     }
 

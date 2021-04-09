@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Services\ConfigurationHandler;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class PlayServiceProvider extends ServiceProvider
@@ -27,6 +26,6 @@ class PlayServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-       //
+        //
     }
 }

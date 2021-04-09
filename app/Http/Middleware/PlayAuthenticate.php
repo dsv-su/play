@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Services\AuthHandler;
+use App\System;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -19,6 +20,7 @@ class PlayAuthenticate
     {
         $system = new AuthHandler();
         $system = $system->authorize();
+
         if($system->global->app_env == 'local') {
             app()->bind('play_user', function() {
                 return 'Developer';
@@ -26,9 +28,11 @@ class PlayAuthenticate
             app()->bind('play_username', function() {
                 return 'dsv-dev';
             });
-            app()->bind('play_role', function() {
+
+            app()->bind('play_role', function () {
                 return 'Administrator';
             });
+
             return $next($request);
         }
         else {
@@ -38,6 +42,7 @@ class PlayAuthenticate
             app()->bind('play_username', function() {
                 return substr($_SERVER['eppn'], 0, strpos($_SERVER['eppn'], "@"));
             });
+            /*
             // Get Shibboleth entitlements
             $server = explode(";", $_SERVER['entitlement']);
 
@@ -45,6 +50,8 @@ class PlayAuthenticate
             $role_admin = $system->global->admin;
             $role_uploader = $system->global->uploader;
             $role_staff = $system->global->staff;
+
+            // Assign role to user
             if(in_array($role_admin, $server)) {
                 app()->bind('play_role', function () {
                     return 'Administrator';
@@ -65,7 +72,7 @@ class PlayAuthenticate
                     return 'Student';
                 });
             }
-
+            */
             return $next($request);
         }
 

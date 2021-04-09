@@ -39,7 +39,6 @@ class ConfigurationHandler extends Model
         return $files;
     }
 
-
     public function check_system()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');

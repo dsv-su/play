@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Database\Eloquent\Model;
+use phpDocumentor\Reflection\Types\Boolean;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
@@ -46,7 +47,7 @@ class AuthHandler extends Model
         $this->plugindir = base_path().'/systemconfig/';
         $this->list = $this->getFiles($this->plugindir);
         foreach ($this->list as $this->filename) {
-            // Read the .ini file and store in table
+            // Read the .ini file and store in model
             if (substr($this->filename, -3) == 'ini') {
                 $this->file = $this->plugindir . $this->filename;
                 if (!file_exists($this->file)) {

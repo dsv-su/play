@@ -21,6 +21,9 @@ class CreateSystemsTable extends Migration
             $table->string('authorization_parameter');
             $table->string('authorization', 200);
             $table->string('login_route');
+            $table->string('admin')->nullable();
+            $table->string('uploader')->nullable();
+            $table->string('staff')->nullable();
             $table->string('db')->nullable();
             $table->string('db_host')->nullable();
             $table->string('db_port')->nullable();

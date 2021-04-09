@@ -100,7 +100,7 @@
                         </div>
                     </div>
                 </li>
-
+                @if(app()->make('play_role') == 'Administrator')
                 <li class="nav-item mega-menu-item" style="">
                     <div class="position-relative">
                         <a class="text-uppercase nav-link mega-menu-link level-1" aria-haspopup="true"
@@ -128,6 +128,7 @@
                         </div>
                     </div>
                 </li>
+                @endif
             </ul>
             <div class="align-middle ml-auto my-auto">
                 {{app()->make('play_user') ?? 'Not logged in'}} @if(app()->make('play_role'))[{{app()->make('play_role') ?? ''}}]@endif
