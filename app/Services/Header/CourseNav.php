@@ -2,6 +2,7 @@
 
 namespace App\Services\Header;
 
+use App\AdminHandler;
 use App\Category;
 use App\Course;
 use App\Presenter;

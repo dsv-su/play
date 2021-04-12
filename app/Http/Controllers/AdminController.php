@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AdminHandler;
 use App\ManualPresentation;
 use App\MediasiteFolder;
 use App\MediasitePresentation;
@@ -38,10 +39,30 @@ class AdminController extends Controller
 
     public function emulateUser(Request $request)
     {
-        dd($request->role);
-        app()->bind('play_role', function () use($request){
-            return $request->role;
-        });
+        if(!$request->server('REMOTE_USER')) {
+
+            //No Shib_Session_ID
+            if($request->role == 'Administrator'){
+                AdminHandler::updateOrCreate(['Shib_Session_ID' => '9999'],['override' => false]);
+            } else {
+                $adminhandler = AdminHandler::firstOrCreate(['Shib_Session_ID' => '9999']);
+                $adminhandler->override = true;
+                $adminhandler->role = $request->role;
+                $adminhandler->save();
+            }
+
+        }
+        else {
+            //Has Shib_Session_ID
+            if($request->role == 'Administrator'){
+                AdminHandler::updateOrCreate(['Shib_Session_ID' => $request->server('Shib_Session_ID')], ['override' => false]);
+            } else {
+                $adminhandler = AdminHandler::firstOrCreate(['Shib_Session_ID' => $request->server('Shib_Session_ID')]);
+                $adminhandler->override = true;
+                $adminhandler->role = $request->role;
+                $adminhandler->save();
+            }
+        }
 
         return redirect()->route('home');
     }

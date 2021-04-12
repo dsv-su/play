@@ -146,3 +146,11 @@
         });
     });
 </script>
+<script>
+    $(document).ready(function() {
+        $('#role').on('change', function() {
+            document.forms['roleform'].submit();
+        });
+    });
+
+</script>

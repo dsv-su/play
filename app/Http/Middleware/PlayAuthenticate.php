@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\AdminHandler;
 use App\Services\AuthHandler;
 use App\System;
 use Closure;
@@ -33,9 +34,23 @@ class PlayAuthenticate
                 return 'Administrator';
             });
 
-            app()->bind('play_role', function () {
-                return 'Administrator';
-            });
+            if($adminhandler = AdminHandler::where('Shib_Session_ID', '9999')->first()) {
+                if($adminhandler->override == true) {
+                    //Override
+                    app()->bind('play_role', function () use($adminhandler){
+                        return $adminhandler->role;
+                    });
+                }
+                else{
+                    app()->bind('play_role', function () {
+                        return 'Administrator';
+                    });
+                }
+            } else {
+                app()->bind('play_role', function () {
+                    return 'Administrator';
+                });
+            }
 
             return $next($request);
         }
@@ -60,9 +75,24 @@ class PlayAuthenticate
                 app()->bind('play_auth', function () {
                     return 'Administrator';
                 });
-                app()->bind('play_role', function () {
-                    return 'Administrator';
-                });
+                if($adminhandler = AdminHandler::where('Shib_Session_ID', $request->server('Shib_Session_ID'))->first()) {
+                    if($adminhandler->override == true) {
+                        //Override
+                        app()->bind('play_role', function () use($adminhandler){
+                            return $adminhandler->role;
+                        });
+                    }
+                        else{
+                            app()->bind('play_role', function () {
+                                return 'Administrator';
+                            });
+                        }
+                } else {
+                    app()->bind('play_role', function () {
+                        return 'Administrator';
+                    });
+                }
+
             }
             elseif (in_array($role_uploader, $server)) {
                 app()->bind('play_auth', function () {

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Services\Daisy\DaisyIntegration;
 use Illuminate\Support\Facades\DB;
 
 class DaisyAPI extends DaisyIntegration
