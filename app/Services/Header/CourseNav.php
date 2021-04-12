@@ -2,7 +2,6 @@
 
 namespace App\Services\Header;
 
-use App\AdminHandler;
 use App\Category;
 use App\Course;
 use App\Presenter;
@@ -13,8 +12,6 @@ use Illuminate\View\View;
 
 class CourseNav extends Model
 {
-
-
     /**
      * Bind data to the view.
      *
@@ -38,7 +35,7 @@ class CourseNav extends Model
         $system = new AuthHandler();
         $system = $system->authorize();
         if($system->global->app_env == 'local') {
-            return 'dsv-dev@su.se';
+            return 'dsv-dev';
         }
         else {
             return $_SERVER['eppn'];

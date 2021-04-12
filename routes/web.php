@@ -38,7 +38,7 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::get('/playlist/{id}', 'MultiplayerController@playlist');
 
     //Manage
-    Route::get('/manage', 'PlayController@manage')->name('manage');
+    Route::get('/manage', 'ManagePresentationController@manage')->name('manage');
     Route::post('/manage/deleteAjax', 'PlayController@deleteVideoAjax')->name('manage.deleteVideo');
     Route::post('/manage/editAjax', 'PlayController@editVideoAjax')->name('manage.editVideo');
     Route::get('/course/{course}', 'PlayController@showCourseVideos')->name('course.videos');
