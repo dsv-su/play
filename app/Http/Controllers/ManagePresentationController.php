@@ -17,7 +17,7 @@ class ManagePresentationController extends Controller
         if(app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
             //If user is uploader or staff
             $user = Presenter::where('username', app()->make('play_username'))->first();
-            $user_videos = VideoPresenter::where('presenter_id', $user->id)->pluck('video_id');
+            $user_videos = VideoPresenter::where('presenter_id', $user->id ?? 0)->pluck('video_id');
             $videos = Video::whereIn('id', $user_videos)->with('category', 'video_course.course')->latest('creation')->get();
         } elseif (app()->make('play_role') == 'Administrator') {
             //If user is Administrator
