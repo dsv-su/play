@@ -27,7 +27,7 @@ class PermissionHandler extends Model
                 //No permissions exist
                 $this->permission = VideoPermission::create([
                     'video_id' => $this->video_id[0],
-                    'notification_id' => $this->notification_id[0],
+                    'notification_id' => $this->notification_id,
                     'permission_id' => 1,
                     'type' => 'public',
                 ]);

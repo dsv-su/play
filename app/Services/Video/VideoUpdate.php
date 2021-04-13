@@ -32,9 +32,12 @@ class VideoUpdate extends Model
 
         //Update mediasite video link
         if ($this->request->origin == 'mediasite') {
-            $mp = MediasitePresentation::find($this->request->notification_id);
-            $mp->video_id = $this->video->id;
-            $mp->save();
+            // If the Mediasite presentation doesnt exist - prevent error /RD
+            if($mp = MediasitePresentation::find($this->request->notification_id)) {
+                $mp->video_id = $this->video->id;
+                $mp->save();
+            }
+
         }
 
         return $this->video;

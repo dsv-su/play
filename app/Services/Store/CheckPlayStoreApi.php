@@ -19,7 +19,7 @@ class CheckPlayStoreApi extends Model
             $response = $client->request('GET', $uri, [
                 'headers' => $headers,
             ]);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             /**
              * If there is an exception; Client error;
              */

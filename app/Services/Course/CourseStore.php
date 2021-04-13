@@ -33,7 +33,8 @@ class CourseStore extends Model
         {
             if($this->item) {
                 //Check if course exists
-                if(!$this->db_course = Course::where('designation', $this->item)->first()) {
+
+                if(!$this->db_course = Course::where('designation', $this->item)->where('semester', $this->convertSemester($this->timestamp))->where('year', $this->convertYear($this->timestamp))->first()) {
                     $this->course = Course::create([
                         'name' => $this->item,
                         'designation' => $this->item,
@@ -48,14 +49,7 @@ class CourseStore extends Model
                     ]);
                 }
                 else{
-                    $this->db_course::updateOrCreate([
-                        'designation' => $this->item],
-                        [
-                        'name' => $this->item,
-                        'semester' => $this->convertSemester($this->timestamp),
-                        'year' => $this->convertYear($this->timestamp),
-                    ]);
-
+                    //The course exists
                     VideoCourse::updateOrCreate([
                         'video_id' => $this->video->id,
                         'course_id' => $this->db_course->id,

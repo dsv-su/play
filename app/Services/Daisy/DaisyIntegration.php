@@ -69,12 +69,14 @@ class DaisyIntegration extends Model
             foreach ($this->array['courseSegmentInstance'] as $this->item) {
                 if (substr($this->item['semester'], 4) == '1') {
                     Course::updateOrCreate(
-                        ['name' => $this->item['name'], 'designation' => $this->item['designation'], 'semester' => 'VT', 'year' => substr($this->item['semester'], 0, 4)]
+                        ['designation' => $this->item['designation'], 'semester' => 'VT', 'year' => substr($this->item['semester'], 0, 4)],
+                        ['name' => $this->item['name']]
                 );
                     }
                 else {
                     Course::updateOrCreate(
-                        ['name' => $this->item['name'], 'designation' => $this->item['designation'], 'semester' => 'HT', 'year' => substr($this->item['semester'], 0, 4)]
+                        ['designation' => $this->item['designation'], 'semester' => 'HT', 'year' => substr($this->item['semester'], 0, 4)],
+                        ['name' => $this->item['name']]
                     );
                 }
                 /*$this->course = new Course();
