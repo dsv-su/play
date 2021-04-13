@@ -53,7 +53,8 @@
                         <i class="fas fa-video-slash"></i>
                         @endif
                         {{$recorder['recorder']}} <span
-                            @if($recorder['status'] == 'IDLE') class="badge badge-danger"
+                            @if($recorder['status'] == 'ERROR') class="badge badge-danger"
+                            @elseif($recorder['status'] == 'IDLE') class="badge badge-warning"
                             @else class="badge badge-success"
                             @endif >{{$recorder['status']}}</span>
                     </button>

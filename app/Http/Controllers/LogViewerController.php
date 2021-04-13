@@ -92,12 +92,6 @@ class LogViewerController extends Controller
         }
         $system_config = parse_ini_file($file, true);
 
-        /*$cattura[] = [
-            'recorder' => 'null',
-            'status' => 'IDLE',
-            'url' => 'null'
-        ];*/
-
         foreach($system_config['recorders'] as $key => $system) {
             $check = $store->call($system,'api/1/status?since=');
             $cattura[] = [

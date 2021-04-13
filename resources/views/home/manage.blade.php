@@ -4,21 +4,35 @@
     <div class="container banner-inner">
         <div class="row no-gutters w-100">
             <div class="col-12">
-                <div>
-                    <h1 class="word-wrap_xs-only">Video hantering</h1>
-                </div>
-
+                @if(app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')
+                    <div>
+                        <h1 class="word-wrap_xs-only">Hantera dina presentationer</h1>
+                        <p class="lead-light mb-5 mb-lg-0">Här kan du redigera, ladda ner, ändra rättigheter eller ta bort en presentation du har laddat upp.</p>
+                    </div>
+                @elseif(app()->make('play_role') == 'Administrator')
+                    <div>
+                        <h1 class="word-wrap_xs-only">Manage all presentations</h1>
+                    </div>
+                @endif
             </div> <!-- col-12 -->
         </div> <!-- row no-gutters -->
     </div>
     <div class="container">
         <div class="form-row">
             <div class="col-md-4 mb-3">
+                @if(app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')
                 <label for="filter_category">Kategori:</label>
+                @else
+                <label for="filter_category">Category:</label>
+                @endif
                 <!-- Filtering -->
                 <select class="custom-select" name="filter_category" id="filter_category">
                     <option value="0" @if(!app('request')->input('category')) selected @endif
-                    >Välj kategori
+                    @if(app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')
+                        >Välj kategori
+                    @else
+                        >Choose category
+                    @endif
                     </option>
                     @foreach($categories as $category)
                         <option value="{{$category->id}}"
@@ -27,11 +41,19 @@
                 </select>
             </div>
             <div class="col-md-4 mb-3">
+                @if(app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')
                 <label for="filter_course">Kurs:</label>
+                @else
+                <label for="filter_course">Course:</label>
+                @endif
                 <!-- Filtering -->
                 <select class="custom-select" name="filter_course" id="filter_course">
                     <option value="0" @if(!app('request')->input('course')) selected @endif
+                    @if(app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')
                     >Välj kurs
+                    @else
+                    >Choose course
+                    @endif
                     </option>
                     @foreach($allcourses as $course)
                         <option value="{{$course->id}}"
