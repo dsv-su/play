@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Services\AuthHandler;
 use App\Services\ConfigurationHandler;
+use App\Services\Daisy\DaisyIntegration;
+use App\System;
 use Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
@@ -26,22 +28,25 @@ class SystemController extends Controller
 
     /**
      * Redirect user to intended route on returned successful login
-     * from the SU IdP. Assign role to user.
+     * from the SU IdP.
      */
 
     public function SUidpReturn()
     {
-        app()->bind('play_role', function () {
-            return '';
-        });
         Session::regenerate();
         return redirect()->intended('/');
     }
 
     public function start()
     {
-        //Persist system configuration
-        $init = new ConfigurationHandler();
-        $init->system();
+        if (!System::find(1)) {
+            //Initiate system
+            app()->make('init')->check_system();
+            return redirect()->action([SystemController::class, 'start']);
+        } else {
+            $daisy = new DaisyIntegration();
+            $daisy->init();
+            return redirect('/')->with(['message' => 'Play has initiated successfully!', 'alert' => 'alert-success']);
+        }
     }
 }

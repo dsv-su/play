@@ -4,22 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use App\CategorySearchAspect;
-use App\Cattura;
 use App\Course;
 use App\CourseSearchAspect;
-use App\PlayerJson;
 use App\Presenter;
-use App\Services\AuthHandler;
-use App\Services\Cattura\CheckCatturaRecorderStatus;
-use App\Services\Daisy\DaisyIntegration;
-use App\Services\Ldap\CheckSUKATApi;
 use App\Services\Notify\PlayStoreNotify;
-use App\Services\Override;
-use App\System;
 use App\Video;
-use App\VideoStat;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Spatie\Searchable\ModelSearchAspect;
 use Spatie\Searchable\Search;
 
@@ -28,89 +18,6 @@ class TestController extends Controller
 {
     public function test(Request $request)
     {
-        if (!System::find(1)) {
-            //Initiate system
-            app()->make('init')->check_system();
-            return redirect()->action([TestController::class, 'test']);
-        } else {
-            $daisy = new DaisyIntegration();
-            $daisy->init();
-            return redirect()->route('home');
-        }
-    }
-
-    public function emulate()
-    {
-        return view('admin.emulate');
-    }
-
-    public function daisyLoadCourses()
-    {
-        /***********************************
-         * //Loads courses from Daisy API -> db
-         * from 2010 - 2020
-         * ********************************/
-
-        $endpoints = array(
-            'courseSegment?semester=20211',
-            'courseSegment?semester=20201',
-            'courseSegment?semester=20202',
-            'courseSegment?semester=20191',
-            'courseSegment?semester=20192',
-            /*'courseSegment?semester=20181',
-            'courseSegment?semester=20182',
-            'courseSegment?semester=20171',
-            'courseSegment?semester=20172',
-            'courseSegment?semester=20161',
-            'courseSegment?semester=20162',
-            'courseSegment?semester=20151',
-            'courseSegment?semester=20152',
-            'courseSegment?semester=20141',
-            'courseSegment?semester=20142',
-            'courseSegment?semester=20131',
-            'courseSegment?semester=20132',
-            'courseSegment?semester=20121',
-            'courseSegment?semester=20122',
-            'courseSegment?semester=20111',
-            'courseSegment?semester=20112',
-            'courseSegment?semester=20101',
-            'courseSegment?semester=20102',*/
-        );
-
-
-        $system = System::find(1);
-        $daisy = new DaisyIntegration($system);
-
-        // Delete Table courses
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        DB::table('courses')->truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-
-        foreach ($endpoints as $endp) {
-            $res = $daisy->getResource($endp);
-
-            //Convert xml to an array
-            $xml = simplexml_load_string($res->getBody()->getContents());
-            $json = json_encode($xml);
-            $array = json_decode($json, TRUE);
-
-
-            //Store id db table
-            foreach ($array['courseSegmentInstance'] as $item) {
-                $course = new Course();
-                $course->name = $item['name'];
-                $course->designation = $item['designation'];
-                if (substr($item['semester'], 4) == '1') {
-                      $course->semester = 'VT';
-                 } else $course->semester = 'HT';
-                $course->year = substr($item['semester'], 0, 4);
-
-                $course->save();
-            }
-            $course->save();
-        }
-
-        dd('DOne');
 
     }
 

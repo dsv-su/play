@@ -9,6 +9,7 @@ use App\MediasitePresentation;
 use App\Presenter;
 use App\Services\AuthHandler;
 use App\Services\Notify\PlayStoreNotify;
+use App\System;
 use App\Tag;
 use App\UploadHandler;
 use App\Video;
@@ -32,11 +33,15 @@ use Illuminate\View\View;
 class PlayController extends Controller
 {
     /**
-     * @return Application|Factory|View
-     * @throws BindingResolutionException
+     *
+     *
      */
+
     public function index()
     {
+        if(!System::find(1)) {
+            return redirect()->action([SystemController::class, 'start']);
+        }
         $data['search'] = 0;
         $data['latest'] = Video::with('category', 'video_course.course')->latest('creation')->take(24)->get();
         $data['permissions'] = VideoPermission::all();

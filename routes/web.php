@@ -80,7 +80,7 @@ Route::middleware('entitlements', 'playauth')->group(function () {
             Route::get('/{date}/{level}/search', 'LogViewerController@search')->name('search');
         });
     });
-
+    Route::get('/start', 'SystemController@start');
     Route::get('/manual_admin_erase/{id}', 'AdminController@admin_erase')->name('manual_admin_erase');
     Route::get('/manual_admin_notify/{id}', 'AdminController@admin_upload_notify_fail')->name('manual_admin_notify_fail');
     Route::get('/manual_admin_unregister/{id}', 'AdminController@admin_unregister')->name('manual_admin_unregister');
@@ -105,14 +105,12 @@ Route::middleware('entitlements', 'playauth')->group(function () {
 
     //Testing routes --> to be removed before production
     Route::get('/test', 'TestController@test')->name('test');
-    Route::get('/role', 'TestController@emulate');
     Route::post('/search', 'TestController@search')->name('search');
     Route::get('/upload_destroy/{id}', 'AdminController@destroy_upload')->name('upload_delete');
     Route::get('/download_destroy/{id}', 'AdminController@destroy_download')->name('download_delete');
     Route::get('/dev_destroy/{id}', 'AdminController@dev_destroy');
     Route::get('/php', 'TestController@php')->name('php');
     Route::get('/server', 'TestController@server')->name('server');
-    Route::get('/daisyload', 'TestController@daisyLoadCourses');
     Route::get('/reload', 'ReloadPlayStoreController@index')->name('reload'); //Reload all presentations from play store
     Route::get('/del/{video}', 'TestController@del')->name('del'); //Send delete notification to play-store
 

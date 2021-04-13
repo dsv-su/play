@@ -26,7 +26,6 @@ class DaisyIntegration extends Model
 
     }
 
-
     public function init()
     {
         $this->endpoints = array(
@@ -35,7 +34,7 @@ class DaisyIntegration extends Model
             'courseSegment?semester=20202',
             'courseSegment?semester=20191',
             'courseSegment?semester=20192',
-            /*'courseSegment?semester=20181',
+            'courseSegment?semester=20181',
             'courseSegment?semester=20182',
             'courseSegment?semester=20171',
             'courseSegment?semester=20172',
@@ -52,7 +51,7 @@ class DaisyIntegration extends Model
             'courseSegment?semester=20111',
             'courseSegment?semester=20112',
             'courseSegment?semester=20101',
-            'courseSegment?semester=20102',*/
+            'courseSegment?semester=20102',
         );
 
 
@@ -79,17 +78,8 @@ class DaisyIntegration extends Model
                         ['name' => $this->item['name']]
                     );
                 }
-                /*$this->course = new Course();
-                $this->course->name = $this->item['name'];
-                $this->course->designation = $this->item['designation'];
-                if (substr($this->item['semester'], 4) == '1') {
-                    $this->course->semester = 'VT';
-                } else $this->course->semester = 'HT';
-                $this->course->year = substr($this->item['semester'], 0, 4);
-
-                $this->course->save();*/
             }
-            //$this->course->save();
+
         }
     }
 }
