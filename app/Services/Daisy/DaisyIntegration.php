@@ -36,7 +36,7 @@ class DaisyIntegration extends Model
             'courseSegment?semester=20192',
             'courseSegment?semester=20181',
             'courseSegment?semester=20182',
-            'courseSegment?semester=20171',
+            /*'courseSegment?semester=20171',
             'courseSegment?semester=20172',
             'courseSegment?semester=20161',
             'courseSegment?semester=20162',
@@ -51,7 +51,7 @@ class DaisyIntegration extends Model
             'courseSegment?semester=20111',
             'courseSegment?semester=20112',
             'courseSegment?semester=20101',
-            'courseSegment?semester=20102',
+            'courseSegment?semester=20102',*/
         );
 
 
