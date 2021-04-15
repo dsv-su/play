@@ -147,7 +147,7 @@
                             </select>
                         </form>
                     @else
-                        {{app()->make('play_user') ?? 'Not logged in'}} [{{app()->make('play_role') ?? ''}}]
+                        {{app()->make('play_user') ?? 'Not logged in'}}
                     @endif
                 @endif
             </div>

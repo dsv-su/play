@@ -35,7 +35,7 @@
 
                 <button class="delete btn btn-danger btn-sm" type="submit" data-toggle="tooltip" data-placement="top" title="Radera presentation"><i class="far fa-trash-alt"></i></button>
                 <a href="{{route('download', $video->id)}}" type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Ladda ner presentation"><i class="fas fa-download"></i></a>
-                <a href="{{route('set_permission', $video->id)}}" type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Ändra rättigheter för presentation"><i class="far fa-hand-paper"></i></a>
+                <a href="{{route('edit_permission', $video->id)}}" type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Ändra rättigheter för presentation"><i class="far fa-hand-paper"></i></a>
             </p>
         </div>
     </div>

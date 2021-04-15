@@ -21,7 +21,7 @@ class AdminController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('play-store-status:api');
+        $this->middleware('play-admin')->except('emulateUser');
     }
 
     public function admin()
@@ -64,7 +64,7 @@ class AdminController extends Controller
             }
         }
 
-        return redirect()->route('home');
+        return redirect()->back();
     }
 
     public function addPermission()
@@ -151,14 +151,6 @@ class AdminController extends Controller
     {
         ManualPresentation::destroy($id);
         return back()->withInput();
-    }
-
-    public function adminSetPermission(Video $video)
-    {
-        $permissions = Permission::all();
-        $thispermissions = VideoPermission::where('video_id', $video->id)->pluck('permission_id','type')->toArray();
-
-        return view('admin.permission.permission', $video, compact('permissions','thispermissions'));
     }
 
     public function adminStorePermission($id, Request $request): RedirectResponse
