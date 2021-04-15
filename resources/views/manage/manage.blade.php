@@ -73,7 +73,7 @@
                 @if(app('request')->input('category') && $video->category_id != app('request')->input('category'))
                     @continue
                 @endif
-                    @include('home.manage_video')
+                    @include('manage.manage_video')
             @endforeach
             <div class="col">
                 <div class="card video my-0 mx-auto border-0"></div>

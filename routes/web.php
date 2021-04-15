@@ -47,6 +47,7 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::get('/my', 'PlayController@myVideos')->name('my.videos');
     Route::post('/my/filter', 'PlayController@myVideosFilter')->name('my.filter');
     Route::get('/edit_permission/{video}', 'ManagePresentationController@SetPermission')->name('edit_permission');
+    Route::post('/store_permission/{id}', 'ManagePresentationController@storePermission')->name('store_permission');
 
     //Upload
     Route::get('/user_upload', 'UploadController@upload')->name('user_upload');
@@ -85,7 +86,6 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::get('/manual_admin_erase/{id}', 'AdminController@admin_erase')->name('manual_admin_erase');
     Route::get('/manual_admin_notify/{id}', 'AdminController@admin_upload_notify_fail')->name('manual_admin_notify_fail');
     Route::get('/manual_admin_unregister/{id}', 'AdminController@admin_unregister')->name('manual_admin_unregister');
-    Route::post('/store_permission/{id}', 'AdminController@adminStorePermission')->name('store_permission');
     Route::get('/add_permission', 'AdminController@addPermission')->name('add_permission');
     Route::get('/modify_permission/{permission}', 'AdminController@modifyPermission')->name('modify_permission');
     Route::get('/delete_permission/{permission}', 'AdminController@deletePermission')->name('delete_permission');

@@ -10,6 +10,7 @@ use App\Tag;
 use App\Video;
 use App\VideoPermission;
 use App\VideoPresenter;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class ManagePresentationController extends Controller
@@ -25,7 +26,7 @@ class ManagePresentationController extends Controller
             //If user is Administrator
             $videos = Video::with('category', 'video_course.course')->latest('creation')->get();
         }
-        return view('home.manage', ['videos' => $videos, 'allcourses' => Course::all(), 'categories' => Category::all(), 'alltags' => Tag::all()]);
+        return view('manage.manage', ['videos' => $videos, 'allcourses' => Course::all(), 'categories' => Category::all(), 'alltags' => Tag::all()]);
     }
 
     public function setPermission(Video $video)
@@ -33,6 +34,33 @@ class ManagePresentationController extends Controller
         $permissions = Permission::all();
         $thispermissions = VideoPermission::where('video_id', $video->id)->pluck('permission_id','type')->toArray();
 
-        return view('manage.permission', $video, compact('permissions','thispermissions'));
+        return view('manage.permission', compact('video','permissions','thispermissions'));
+    }
+
+    public function storePermission($id, Request $request): RedirectResponse
+    {
+        $video_permissions = VideoPermission::where('video_id', $id)->get();
+        //Delete old settings
+        foreach($video_permissions as $vp) {
+            $vp->delete();
+        }
+        //Add new settings
+        foreach($request->perm as $permission) {
+            $vp = new VideoPermission();
+            $vp->video_id = $id;
+            $vp->permission_id = $permission;
+            if($permission == 1) {
+                $vp->type = 'public';
+            }
+            elseif ($permission == 4) {
+                $vp->type = 'external';
+            }
+            else {
+                $vp->type = 'private';
+            }
+            $vp->save();
+        }
+
+        return redirect()->route('home');
     }
 }

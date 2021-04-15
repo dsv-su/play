@@ -153,33 +153,6 @@ class AdminController extends Controller
         return back()->withInput();
     }
 
-    public function adminStorePermission($id, Request $request): RedirectResponse
-    {
-        $video_permissions = VideoPermission::where('video_id', $id)->get();
-        //Delete old settings
-        foreach($video_permissions as $vp) {
-            $vp->delete();
-        }
-        //Add new settings
-        foreach($request->perm as $permission) {
-            $vp = new VideoPermission();
-            $vp->video_id = $id;
-            $vp->permission_id = $permission;
-            if($permission == 1) {
-                $vp->type = 'public';
-            }
-            elseif ($permission == 4) {
-                $vp->type = 'external';
-            }
-            else {
-                $vp->type = 'private';
-            }
-            $vp->save();
-        }
-
-        return redirect()->route('admin');
-    }
-
     private function uri()
     {
         $this->file = base_path() . '/systemconfig/play.ini';
