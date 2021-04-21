@@ -81,11 +81,17 @@ function getArgs() {
         case 'show':
         case 'p':
         case 's':
+            if(!value.startsWith('/presentation/')) {
+               value = '/presentation/' + value
+            }
             presentation = value
             break
         case 'playlist':
         case 'list':
         case 'l':
+            if(!value.startsWith('/playlist/')) {
+               value = '/playlist/' + value
+            }
             playlist = value
             break
         }
