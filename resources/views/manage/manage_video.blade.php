@@ -27,15 +27,16 @@
             <p class="card-text" id="tags">@foreach($video->tags() as $tag) <a
                         href="/tag/{{$tag->id}}"
                         class="badge badge-secondary">{{$tag->name}}</a> @endforeach</p>
+
             <p class="card-text">
-            <p class="card-text">
-                <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Redigera presentation">
-                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-{{$video->id}}"><i class="far fa-edit"></i></button>
-                </span>
+                <!--<span class="d-inline-block float-right" tabindex="0" data-toggle="tooltip" title="Redigera presentation">-->
+                <a href="{{route('presentation_edit', $video->id)}}" type="button" class="btn btn-outline-primary btn-sm float-right" data-toggle="tooltip" data-placement="top" title="Redigera presentation"><i class="far fa-edit"></i></a>
+                <!--<button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#modal-{{$video->id}}"><i class="far fa-edit"></i></button>-->
+                <!--</span>-->
 
                 <button class="delete btn btn-danger btn-sm" type="submit" data-toggle="tooltip" data-placement="top" title="Radera presentation"><i class="far fa-trash-alt"></i></button>
-                <a href="{{route('download', $video->id)}}" type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Ladda ner presentation"><i class="fas fa-download"></i></a>
-                <a href="{{route('edit_permission', $video->id)}}" type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Ändra rättigheter för presentation"><i class="far fa-hand-paper"></i></a>
+                <a href="{{route('download', $video->id)}}" type="button" class="btn btn-outline-primary btn-sm float-right" data-toggle="tooltip" data-placement="top" title="Ladda ner presentation"><i class="fas fa-download"></i></a>
+                <a href="{{route('edit_permission', $video->id)}}" type="button" class="btn btn-outline-primary btn-sm float-right" data-toggle="tooltip" data-placement="top" title="Ändra rättigheter för presentation"><i class="far fa-hand-paper"></i></a>
             </p>
         </div>
     </div>

@@ -3,6 +3,9 @@
 
     <div class="container banner-inner">
         <div class="row no-gutters w-100">
+            <!-- -->
+
+            <!-- -->
             <div class="col-12">
                 @if(app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')
                     <div>
@@ -87,5 +90,4 @@
         </div>
 
     </div><!-- /.container -->
-
 @endsection

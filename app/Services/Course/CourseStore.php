@@ -29,12 +29,12 @@ class CourseStore extends Model
             ]);
         }
 
-        foreach ($this->courses as $this->item)
+        foreach ($this->courses as $key => $this->item)
         {
             if($this->item) {
                 //Check if course exists
 
-                if(!$this->db_course = Course::where('designation', $this->item)->where('semester', $this->convertSemester($this->timestamp))->where('year', $this->convertYear($this->timestamp))->first()) {
+                if(! $this->db_course = Course::where('designation', $this->item)->where('semester', $this->convertSemester($this->timestamp))->where('year', $this->convertYear($this->timestamp))->first()) {
                     $this->course = Course::create([
                         'name' => $this->item,
                         'designation' => $this->item,
@@ -50,11 +50,19 @@ class CourseStore extends Model
                 }
                 else{
                     //The course exists
-                    VideoCourse::updateOrCreate([
+                    if($key == 0) {
+                        //Remove any old associations
+                        VideoCourse::where('video_id', $this->video->id)->delete();
+                    }
+                    //Create new associations
+                    VideoCourse::Create([
                         'video_id' => $this->video->id,
                         'course_id' => $this->db_course->id,
                     ]);
                 }
+            } else {
+                //Remove any old associations
+                VideoCourse::where('video_id', $this->video->id)->delete();
             }
 
         } //end foreach

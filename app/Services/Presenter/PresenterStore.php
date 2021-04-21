@@ -20,40 +20,54 @@ class PresenterStore extends Model
 
     public function presenter()
     {
-        foreach ($this->presenters as $this->item)
-        {
-            if(!$this->db_presenter = Presenter::where('username', $this->item)->first()) {
-                if($this->name = SukatUser::findBy('uid', $this->item)) {
-                    $this->presenter = Presenter::create([
-                        'username' => $this->item,
-                        'name' => $this->name->getFirstAttribute('cn'),
-                ]);
-                } else {
-                    $this->presenter = Presenter::create([
-                        'username' => $this->item,
-                    ]);
-                }
 
-                VideoPresenter::create([
-                    'video_id' => $this->video->id,
-                    'presenter_id' => $this->presenter->id,
-                ]);
-            }
-            else
-            {
-                if($this->name = SukatUser::findBy('uid', $this->item)) {
-                    $this->db_presenter::updateOrCreate([
-                        'username' => $this->item],
-                        [
+        foreach ($this->presenters as $key => $this->item)
+        {
+            if($this->item) {
+                if(! $this->db_presenter = Presenter::where('username', $this->item)->first()) {
+                    //Stores new presenters
+                    if($this->name = SukatUser::findBy('uid', $this->item)) {
+                        $this->presenter = Presenter::create([
                             'username' => $this->item,
                             'name' => $this->name->getFirstAttribute('cn'),
                         ]);
+                    } else {
+                        $this->presenter = Presenter::create([
+                            'username' => $this->item,
+                        ]);
+                    }
+
+                    VideoPresenter::create([
+                        'video_id' => $this->video->id,
+                        'presenter_id' => $this->presenter->id,
+                    ]);
                 }
-                VideoPresenter::updateOrCreate([
-                    'video_id' => $this->video->id,
-                    'presenter_id' => $this->db_presenter->id,
-                ]);
-            }
-        }
+                else
+                {
+                    //Updates presenters
+                    if($this->name = SukatUser::findBy('uid', $this->item)) {
+                        $this->db_presenter::updateOrCreate([
+                            'username' => $this->item],
+                            [
+                                'username' => $this->item,
+                                'name' => $this->name->getFirstAttribute('cn'),
+                            ]);
+                    }
+                    if($key == 0) {
+                        //Remove any old associations
+                        VideoPresenter::where('video_id', $this->video->id)->delete();
+                    }
+                    //Create new associations
+                    VideoPresenter::Create([
+                        'video_id' => $this->video->id,
+                        'presenter_id' => $this->db_presenter->id,
+                    ]);
+                }
+            } else {
+                //Remove any old associations
+                VideoPresenter::where('video_id', $this->video->id)->delete();
+            } // end check
+        } // end foreach
+
     }
 }

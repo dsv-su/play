@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" href="{{ asset('./css/player/favicon.ico') }}">
     <link rel="stylesheet" href="{{ asset('./css/player/range-style.css?a') }}">
-    <link rel="stylesheet" href="{{ asset('./css/player/style.css?b')}}">
+    <link rel="stylesheet" href="{{ asset('./css/player/style.css?a')}}">
     <title></title>
     <script src="{{asset('./js/player.js')}}" defer></script>
 </head>
@@ -61,10 +61,10 @@
                     <use href="#next-icon"></use>
                 </svg>
             </button>
-            <div id="speed-select">
+            <div class="select" id="speed-select">
                 <button id="speed-current"
                         title="Välj hastighet">1</button>
-                <ul id="speed-list">
+                <ul class="list" id="speed-list">
                     <li>
                         <button>4</button>
                     </li>
@@ -102,6 +102,12 @@
               </svg>
             </button>
             -->
+            <div class="select" id="resolution-select">
+                <button id="resolution-current"
+                        title="Välj upplösning"></button>
+                <ul class="list" id="resolution-list">
+                </ul>
+            </div>
             <button id="fullscreen-button"
                     title="Helskärm">
                 <svg>
@@ -119,6 +125,11 @@
             <use href="#switch-icon"></use>
         </svg>
     </div>
+</template>
+<template id="resolution-template">
+    <li>
+        <button></button>
+    </li>
 </template>
 <template id="listitem-template">
     <li class="playlist-item">

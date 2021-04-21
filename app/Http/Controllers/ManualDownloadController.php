@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\ManualPresentation;
+use App\Permission;
 use App\Presentation;
 use App\Services\DownloadZip;
 use App\Services\Ffmpeg\DetermineDurationVideo;
 use App\Services\Notify\PlayStoreNotify;
+use App\Services\Store\DownloadResource;
 use App\Services\Store\SftpPlayStore;
+use App\Services\TicketHandler;
 use App\Video;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -19,11 +23,6 @@ class ManualDownloadController extends Controller
     /**
      * Downloads media from storage server.
      *
-     * Step1: Check if the video already has been downloaded
-     * Step2: Download the video and all files to staging area
-     * Step3: Edit video metadata possibility to upload new files, generate new thumb and posters to staging area
-     * Step4: Upload modified video to play-store server from staging area
-     * Step5: Send notification to play-store
      *
      */
 
@@ -39,18 +38,20 @@ class ManualDownloadController extends Controller
     }
     public function initDownload(Video $video)
     {
+        //Initiates and starts the download/edit process
         if(!$presentation = Presentation::find($video->id)) {
                 $download_dir = $this->setDownloaddir();
                 $presentation = new Presentation();
                 $presentation->id = $video->id;
                 $presentation->status = 'request download';
+                $presentation->user = app()->make('play_user');
                 $presentation->local = $download_dir;
                 $presentation->base = '/data0/incoming/' . $download_dir;
                 $presentation->title = $video->title;
                 $presentation->presenters = '[]';
                 $presentation->tags = '[]';
                 $presentation->courses = '[]';
-                $presentation->thumb = $video->thumb;
+                $presentation->thumb = '';//$video->thumb;
                 $presentation->created = $video->creation;
                 $presentation->duration = $video->duration;
                 $presentation->sources = json_decode($video->sources, true);;
@@ -60,6 +61,7 @@ class ManualDownloadController extends Controller
                 return true;
             }
         else {
+                //Returns false if there already exist a download/edit
                 return false;
             }
     }
@@ -67,21 +69,24 @@ class ManualDownloadController extends Controller
     public function step1(Video $video)
     {
         if($this->initDownload($video)) {
-            if ($this->checkDownload()) {
-                return redirect('/')->with(['message' => 'Presentationen har redan laddats ner och finns tillgänglig under "Hantera uppspelning"!', 'alert' => 'alert-success']);
+            if ($this->checkDownload($video)) {
+                return redirect()->action([ManualDownloadController::class, 'step2'], ['video' => $video]);
             } else {
-                return view('manual.download_index', $video);
+                return view('download.download_index', compact('video'));
             }
         }
         else {
-            return redirect('/')->with(['message' => 'Det existerar en reviderad Presentation i Administratorgränssnittet - under utveckling!']);
+            if ($this->checkDownload($video)) {
+                return redirect()->action([ManualDownloadController::class, 'step2'], ['video' => $video]);
+            }
+            return view('download.download_index', compact('video'));
         }
 
     }
 
     public function step2(Video $video)
     {
-        $presentation = Presentation::latest()->first();
+        $presentation = Presentation::find($video->id);
         $path = $presentation->local.'/';
 
         if (Storage::disk('public')->exists($path.$video->id.'.zip')) {
@@ -104,20 +109,26 @@ class ManualDownloadController extends Controller
         //Download Files
 
         //Image
-        //$thumb_url = $this->store_server.$video->id.'/'.$video->thumb;
         $thumb_url = $video->thumb;
         $thumb_name = substr($video->thumb, strrpos($video->thumb, '/') + 1);
-        $download_thumb = file_get_contents($thumb_url);
-        //Storage::disk('public')->put($dir_thumb.$video->thumb, $download_thumb);
-        Storage::disk('public')->put($dir_thumb.$thumb_name, $download_thumb);
+        // Download thumb
+        \Storage::disk('public')->makeDirectory($dir_thumb);
+        $file = new DownloadResource($video, new TicketHandler($video));
+        $file->getFile($dir_thumb.$thumb_name,$thumb_url);
+
         //Video and poster files
         foreach (json_decode($video->sources, true) as $source) {
             $video_name = substr($source['video'], strrpos($source['video'], '/') + 1);
             $poster_name = substr($source['poster'], strrpos($source['poster'], '/') + 1);
-            $download_video = file_get_contents($source['video']);
-            $download_poster = file_get_contents($source['poster']);
-            Storage::disk('public')->put($dir_video.$video_name, $download_video);
-            Storage::disk('public')->put($dir_poster.$poster_name, $download_poster);
+
+            // Download video
+            \Storage::disk('public')->makeDirectory($dir_video);
+
+            $file->getFile($dir_video.$video_name, $source['video']);
+            // Download posters
+            \Storage::disk('public')->makeDirectory($dir_poster);
+
+            $file->getFile($dir_poster.$poster_name, $source['poster']);
 
         }
 
@@ -129,20 +140,31 @@ class ManualDownloadController extends Controller
 
     public function step3(Video $video)
     {
-        $presentation = Presentation::find($video->id);
+        if($presentation = Presentation::find($video->id)) {
 
-        //Form input
-        $data['presenters'] = $video->presenters();
-        $data['courses'] = $video->courses();
-        $data['tags'] = $video->tags();
+            $final = 0;
+            //Form input
+            if(count($owners = $video->presenters()) > 0) {
 
-        //Convert unixtimestamp to date
-        $data['date'] = $this->getDateAttribute($video->creation);
+            } else {
+                $owners = [];
+            }
+            $coursebindings = $video->courses();
 
-        //Get downloaded files names
-        $data['download_files'] = $this->getDownloadedVideoFiles($presentation->local);
+            $tags = $video->tags();
+            $permissions = Permission::all();
+            $durationInSeconds = 0;
+            //Convert unixtimestamp to date
+            $creationdate = $this->getDateAttribute($video->creation);
+            //Get downloaded files names
+            $download_files = $this->getDownloadedVideoFiles($presentation->local);
 
-        return view('manual.download_edit', $video, $data);
+            return view('download.index',  $presentation, compact('final', 'owners', 'creationdate', 'coursebindings', 'tags', 'permissions', 'durationInSeconds', 'download_files','video'));
+
+        } else {
+            return redirect()->action([ManualDownloadController::class, 'step1'], ['video' => $video]);
+        }
+
     }
 
     public function step4($id)
@@ -165,11 +187,16 @@ class ManualDownloadController extends Controller
         // Send notify
         $notify = new PlayStoreNotify($presentation);
         $notify->sendSuccess('update');
+
+        //Remove presentation
+        Presentation::destroy($id);
+
         return redirect('/')->with(['message' => 'Presentationen har redigerats och laddats upp!']);
     }
 
     public function store(Request $request, Video $video)
     {
+
         $presentation = Presentation::find($video->id);
 
         //Existing presentation files
@@ -208,7 +235,7 @@ class ManualDownloadController extends Controller
                     foreach ($request->presenters as $presenter) {
                         $presenters[] = $presenter;
                     }
-                }
+                } else $presenters[] = '';
 
                 //Courses
                 if ($request->courses) {
@@ -232,7 +259,7 @@ class ManualDownloadController extends Controller
                 //Determine duration of primary media
                 $primary_video_name = substr($files[0]['video'], strrpos($files[0]['video'], '/') + 1);
                 $media = new DetermineDurationVideo($dirname);
-                $duration = $media->duration($primary_video_name);
+                $durationInSeconds = $media->duration($primary_video_name);
 
                 //Update Presentation
                 $presentation->status = 'update';
@@ -240,8 +267,9 @@ class ManualDownloadController extends Controller
                 $presentation->presenters = $presenters;
                 $presentation->tags = $tags;
                 $presentation->courses = $courses;
+                $presentation->thumb = 'image/'.$this->getDownloadedThumbfile($dirname);
                 $presentation->created = strtotime($request->created);
-                $presentation->duration = $duration;
+                $presentation->duration = $durationInSeconds;
                 $presentation->sources = $files; //json_decode($video->sources, true);
 
                 $presentation->save();
@@ -294,11 +322,14 @@ class ManualDownloadController extends Controller
                 }
 
                 //Presenters
+
                 if($request->presenters){
                     foreach($request->presenters as $presenter)
                     {
                         $presenters[] = $presenter;
                     }
+                } else {
+                    $presenters[] = '';
                 }
 
                 //Courses
@@ -320,7 +351,7 @@ class ManualDownloadController extends Controller
                 //Determine duration of primary media
                 $primary_video_name = substr($files[0]['video'], strrpos($files[0]['video'], '/') + 1);
                 $media = new DetermineDurationVideo($dirname);
-                $duration = $media->duration($primary_video_name);
+                $durationInSeconds = $media->duration($primary_video_name);
 
                 //Check media diffs (+- 3 sec)
                 if(!$media->check()) {
@@ -333,7 +364,7 @@ class ManualDownloadController extends Controller
                 }
 
                 //Generate default thumb and posters
-                $thumb = $this->gen_default_thumb_posters($presentation, $duration/3);
+                $thumb = $this->gen_default_thumb_posters($presentation, $durationInSeconds/3);
 
                 //Update Presentation
                 $presentation->status = 'newmedia';
@@ -342,23 +373,17 @@ class ManualDownloadController extends Controller
                 $presentation->courses = $courses;
                 $presentation->thumb = $thumb;
                 $presentation->created = strtotime($request->created);
-                $presentation->duration = $duration;
+                $presentation->duration = $durationInSeconds;
                 $presentation->sources = $files;
-
                 $presentation->save();
 
-                //New media
-                //Variables for view
-                $data['files'] = $files;
-                $data['media'] = $request->media;
-
-                return view('manual.edit_step2', $presentation, $data);
+                $final = 1;
+                return view('download.index', $presentation, compact('durationInSeconds', 'final'));
             }
         }
-        //Existing media
-        $data['media'] = $request->media;
 
-        return view('manual.edit_step2', $presentation, $data);
+        $final = 1;
+        return view('download.index', $presentation, compact('durationInSeconds', 'final'));
     }
 
     private function gen_default_thumb_posters(Presentation $presentation, $seconds)
@@ -390,9 +415,6 @@ class ManualDownloadController extends Controller
     public function gen_thumb_download($id, Request $request)
     {
         $presentation = Presentation::find($id);
-
-        $data['media'] = $request->media;
-        $data['pid'] = $presentation->id;
         $data['files'] = $this->getDownloadedVideoFiles($presentation->local);
 
         //Create thumb and store in folder
@@ -404,16 +426,16 @@ class ManualDownloadController extends Controller
             ->save($presentation->local.'/'.$presentation->thumb);
 
         //Get downloaded files names
+        $final = 1;
 
-        return view('manual.edit_step2', $presentation, $data);
+        $durationInSeconds = $presentation->duration;
+
+        return view('download.index', $presentation, compact('durationInSeconds', 'final'));
     }
 
     public function gen_poster_download($id, Request $request)
     {
         $presentation = Presentation::find($id);
-
-        $data['media'] = $request->media;
-        $data['pid'] = $presentation->id;
         $data['files'] = $this->getDownloadedVideoFiles($presentation->local);
 
         FFMpeg::fromDisk('public')
@@ -422,16 +444,20 @@ class ManualDownloadController extends Controller
             ->export()
             ->toDisk('public')
             ->save($presentation->local.'/poster/poster_'.$request->poster.'.png');
+        $final = 1;
 
-        return view('manual.edit_step2', $presentation, $data);
+        $durationInSeconds = $presentation->duration;
+
+        return view('download.index', $presentation, compact('durationInSeconds', 'final'));
     }
 
 
-    private function checkDownload()
+    private function checkDownload(Video $video)
     {
+        $presentation = Presentation::find($video->id);
         foreach (Storage::disk('public')->directories() as $this->download) {
             $folder = substr($this->download, strrpos($this->download, '/'));
-            if( Presentation::where('local', $folder)->first()) {
+            if( $presentation->local == $folder) {
                 return true;
             }
         }
@@ -452,6 +478,15 @@ class ManualDownloadController extends Controller
         }
 
         return $this->video_name;
+    }
+
+    private function getDownloadedThumbfile($directory)
+    {
+        $this->directory = $directory.'/image';
+        foreach(Storage::disk('public')->files($this->directory) as $this->file) {
+            return $this->video_name[] = substr($this->file, strrpos($this->file, '/') + 1);
+        }
+        return 0;
     }
 
     private function setDownloaddir()

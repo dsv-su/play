@@ -1,10 +1,15 @@
 document.addEventListener('DOMContentLoaded', init)
 
 function init() {
+    var cookies = getCookies()
+    var defaultres = 720
+    if('resolution' in cookies) {
+        defaultres = cookies.resolution
+    }
     var mainstream = document.querySelector('.main > video')
     setupLoader(mainstream)
 
-    if(typeof localPresentation !== 'undefined') {
+    if(typeof localPresentation !== "undefined") {
         doSetup(localPresentation, null)
     } else {
         var [presentation, playlist] = getArgs()
@@ -13,12 +18,12 @@ function init() {
             var data = null
             try {
                 data = JSON.parse(read.responseText)
-                doSetup(data, playlist)
             } catch(e) {
                 console.log("Unable to parse as JSON:")
                 console.log(read.responseText)
                 throw new Error("Could not get presentation data.")
             }
+            doSetup(data, playlist)
         })
         read.open('GET', presentation)
         read.send()
@@ -28,11 +33,12 @@ function init() {
         var mainstream = document.querySelector('.main > video')
 
         body.dataset.id = presentation.id
-        loadStreams(presentation.sources, mainstream, presentation.token)
 
         if(playlist) {
             setupPlaylist(body, playlist)
         }
+        
+        loadStreams(presentation, mainstream, defaultres)
 
         function awaitLoad(callback) {
             var loaded = 0
@@ -42,13 +48,14 @@ function init() {
                     loaded += 1
                     if(loaded === streams.length) {
                         callback()}})})
-
+            
             setupHiding(body, mainstream)
             setupAbout(presentation.title)
             setupBlur()
             setupSpeed()
             setupFullscreen()
             setupVolume(mainstream)
+            setupResSwitching(presentation.sources, defaultres)
             setupSwitching(mainstream)
             setupSync(mainstream)
             setupPlayback(body, mainstream)
@@ -74,17 +81,11 @@ function getArgs() {
         case 'show':
         case 'p':
         case 's':
-            if(!value.startsWith('/presentation/')) {
-                value = '/presentation/' + value
-            }
             presentation = value
             break
         case 'playlist':
         case 'list':
         case 'l':
-            if(!value.startsWith('/playlist/')) {
-                value = '/playlist/' + value
-            }
             playlist = value
             break
         }
@@ -92,21 +93,57 @@ function getArgs() {
     return [presentation, playlist]
 }
 
-function loadStreams(streamlist, mainstream, token) {
+function getCookies() {
+    var out = new Object()
+    var cookies = document.cookie.split('; ')
+    cookies.forEach(function(cookie) {
+        var temp = cookie.split('=')
+        var name = temp[0]
+        var value = temp.slice(1).join('=')
+        out[name] = value
+    })
+    return out
+}
+
+function setCookie(name, value) {
+    var cookie = name + "=" + value
+    cookie += ";samesite=strict"
+    document.cookie = cookie
+}
+
+function loadStreams(presentation, mainstream, defaultres) {
+    var streamlist = presentation.sources
+    var token = presentation.token
     var mainparent = mainstream.parentNode
     var template = document.getElementById('stream-template')
 
     var main = streamlist[0]
-
-    mainstream.src = main.video +"?token="+ token
+    
+    if(typeof main.video === "string") {
+        mainstream.src = main.video +"?token="+ token
+    } else {
+        Object.keys(main.video).forEach(function(res) {
+            var tokenized = main.video[res] +"?token="+ token
+            mainstream.dataset[res] = tokenized
+        })
+        mainstream.src = mainstream.dataset[defaultres]
+    }
     mainstream.muted = !main.playAudio
-    mainstream.poster = main.poster +"?token="+ token
+    mainstream.poster = main.poster
     mainstream.load()
     mainstream.preload = 'auto'
     for (var i = 1; i < streamlist.length; i++) {
         var newstream = template.content.cloneNode(true)
         var video = newstream.querySelector('video')
-        video.src = streamlist[i].video +"?token="+ token
+        if(typeof streamlist[i].video === "string") {
+            video.src = streamlist[i].video +"?token="+ token
+        } else {
+            Object.keys(streamlist[i].video).forEach(function(res) {
+                var tokenized = streamlist[i].video[res] +"?token="+ token
+                video.dataset[res] = tokenized
+            })
+            video.src = video.dataset[defaultres]
+        }
         video.muted = !streamlist[i].playAudio
         video.poster = streamlist[i].poster
         video.load()
@@ -167,7 +204,7 @@ function setupBuffer(mainstream) {
 function setupFullscreen() {
     var body = document.querySelector('body')
     var icons = document.querySelectorAll('#fullscreen-button > svg > use')
-
+    
     function toggleFullscreen(event) {
         if(document.fullscreenElement) {
             document.exitFullscreen()
@@ -187,7 +224,7 @@ function setupHiding(body, mainstream) {
     var timer = null
     var controls = document.querySelector('#controls')
     var about = document.querySelector('#about')
-
+    
     function hide() {
         if(!body.classList.contains(selector)) {
             body.classList.add(selector)
@@ -222,7 +259,7 @@ function setupLoader(mainstream) {
     var playpause = document.querySelector('.main .fade')
     var loading = document.querySelector('#loading')
     var selector = 'hidden'
-
+    
     function showState(event) {
         switch(event.type) {
         case 'stalled':
@@ -245,7 +282,7 @@ function setupLoader(mainstream) {
             break
         }
     }
-
+    
     var events = ['loadstart',
                   'playing',
                   'stalled',
@@ -259,7 +296,7 @@ function setupPlayback(body, mainstream) {
     var playing = false
     var videos = document.querySelectorAll('video')
 
-    function togglePlayback(event) {
+    function togglePlayback() {
         event.stopPropagation() //play-button may overlap main
         videos.forEach(function(video) {
             if(!playing) {
@@ -275,11 +312,11 @@ function setupPlayback(body, mainstream) {
                 elem.classList.toggle(selector)})
     }
     function rewind() {
-        doPlay()
+        togglePlayback()
         mainstream.currentTime = 0
         mainstream.dispatchEvent(new CustomEvent('sync'))
     }
-
+    
     document.querySelectorAll('.main, #play-button')
         .forEach(function(button) {
             button.addEventListener('click', togglePlayback)})
@@ -415,10 +452,42 @@ function setupProgress(body, mainstream) {
     }, 1000)
 }
 
+function setupResSwitching(streamlist, defaultres) {
+    var videos = document.querySelectorAll('video')
+    var current = document.getElementById('resolution-current')
+    var list = document.getElementById('resolution-list')
+    var template = document.getElementById('resolution-template')
+    var resolutions = Object.keys(streamlist[0].video).sort(function(a, b) {
+        return b - a
+    })
+
+    current.textContent = defaultres
+
+    function setResolution(event) {
+        var resolution = event.currentTarget.textContent
+        if(current.textContent == resolution) {
+            return
+        }
+        videos.forEach(function(video) {
+            video.src = video.dataset[resolution]
+        })
+        current.textContent = resolution
+        setCookie('resolution', resolution)
+    }
+
+    resolutions.forEach(function(resolution) {
+        var newitem = template.content.cloneNode(true)
+        var button = newitem.querySelector('button')
+        button.textContent = resolution
+        button.addEventListener('click', setResolution)
+        list.appendChild(newitem)
+    })
+}
+
 function setupSpeed() {
     var videos = document.querySelectorAll('video')
     var current = document.querySelector('#speed-current')
-
+    
     function setSpeed(event) {
         var speed = event.currentTarget.textContent
         if(event.currentTarget.id == 'speed-current') {
@@ -441,7 +510,7 @@ function setupSubs(subs, mainstream) {
     mainstream.appendChild(subtrack)
 
     var icons = document.querySelectorAll('#subtitles-button > svg > use')
-
+    
     function toggleSubs(event) {
         icons.forEach(function(icon) {
             icon.classList.toggle('hidden')})
@@ -483,7 +552,7 @@ function setupSync(mainstream) {
         others.forEach(function(stream) {
             stream.currentTime = mainstream.currentTime})
     }
-
+    
     mainstream.addEventListener('sync', sync)
 }
 
@@ -495,7 +564,7 @@ function setupVolume(soundstream) {
 
     // There may be a cached setting to apply
     soundstream.volume = volume.value
-
+    
     function toggleVolume(event) {
         if(!muted) {
             mutedVol = volume.value
@@ -516,10 +585,10 @@ function setupVolume(soundstream) {
     function slideVolume(event) {
         soundstream.volume = event.currentTarget.value
     }
-
+    
     document.querySelector('#volume-button')
         .addEventListener('click', toggleVolume)
-
+    
     document.querySelector('#volume')
         .addEventListener('input', slideVolume)
 }

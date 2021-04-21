@@ -191,6 +191,7 @@ class AdminController extends Controller
         $data['manual_presentations'] = ManualPresentation::all();
         $data['presentations'] = Presentation::all();
         $data['videos'] = Video::all();
+        return redirect()->back();
         return redirect()->route('admin');
     }
 

@@ -52,7 +52,7 @@ class VideoApiController extends Controller
             DB::beginTransaction();
 
             //Check if video exist
-            if (!$presentation = Video::find($request->id)) {
+            if (! $presentation = Video::find($request->id)) {
                 try {
                     //Store video
                     $video = new VideoStore($request);

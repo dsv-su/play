@@ -125,7 +125,10 @@
     color: blue;
     font-weight: normal;
 }
-
+#heading_download {
+    color: #33cc33;
+    font-weight: normal;
+}
 #msform {
     text-align: center;
     position: relative;
@@ -233,6 +236,24 @@
 #msform .action-button-previous:hover,
 #msform .action-button-previous:focus {
     background-color: #000000;
+}
+
+#msform .action-button-existing {
+    width: 250px;
+    background: #4aa3df;
+    font-weight: bold;
+    color: white;
+    border: 0 none;
+    border-radius: 0;
+    cursor: pointer;
+    padding: 10px 5px;
+    margin: 10px 5px 10px 0;
+    float: right;
+}
+
+#msform .action-button-existing:hover,
+#msform .action-button-existing:focus {
+    background-color: blue;
 }
 
 .card {
