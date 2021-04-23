@@ -92,6 +92,11 @@
             <span id="of">/</span>
             <span id="duration"></span>
         </div>
+        <div id="center-controls" class="control-box">
+            <svg id="more-indicator" class="no-highlight hidden">
+                <use href="#down-icon"></use>
+            </svg>
+        </div>
         <div id="right-controls" class="control-box">
             <!--
             <button id="subtitles-button"
@@ -205,6 +210,10 @@
 
         <symbol id="mute-icon" viewBox="0 0 24 24">
             <path d="M12 3.984v4.219l-2.109-2.109zM4.266 3l16.734 16.734-1.266 1.266-2.063-2.063q-1.547 1.313-3.656 1.828v-2.063q1.172-0.328 2.25-1.172l-4.266-4.266v6.75l-5.016-5.016h-3.984v-6h4.734l-4.734-4.734zM18.984 12q0-2.391-1.383-4.219t-3.586-2.484v-2.063q3.047 0.656 5.016 3.117t1.969 5.648q0 2.203-1.031 4.172l-1.5-1.547q0.516-1.266 0.516-2.625zM16.5 12q0 0.422-0.047 0.609l-2.438-2.438v-2.203q1.031 0.516 1.758 1.688t0.727 2.344z"></path>
+        </symbol>
+
+        <symbol id="down-icon" viewBox="0 0 24 24">
+            <polygon points="6.23,20.23 8,22 18,12 8,2 6.23,3.77 14.46,12" transform="rotate(90, 12, 12)"/>
         </symbol>
 
         <symbol id="subtitles-off-icon" viewBox="0 0 24 24">

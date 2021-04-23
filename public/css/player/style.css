@@ -134,7 +134,8 @@ body {
     display: grid;
     grid-row-gap: var(--gap);
     row-gap: var(--gap);
-    grid-template-areas: "progress progress" "left right";
+    grid-template-areas: "progress progress progress" "left center right";
+    grid-template-columns: 1fr 24px 1fr;
 }
 #controls button {
     padding: 0 calc(var(--gap) * 2);
@@ -174,12 +175,13 @@ body {
     position: absolute;
     top: 0;
     right: 0;
-    translate: 50% -150%;
+    transform: translate(50%, -150%);
     background: var(--background);
     border-radius: var(--gap);
     padding: var(--gap);
     visibility: hidden;
     opacity: 0;
+    user-select: none;
 }
 .control-box {
     display: flex;
@@ -195,12 +197,17 @@ body {
 #left-controls {
     grid-area: left;
 }
+#center-controls {
+    grid-area: center;
+    justify-content: center;
+}
 #right-controls {
     grid-area: right;
     justify-content: flex-end;
 }
 .select {
     position: relative;
+    user-select: none;
 }
 .list {
     visibility: hidden;
@@ -361,7 +368,7 @@ body {
     position: absolute;
     top: 0;
     right: 0;
-    translate: 50% -25%;
+    transform: translate(50%, -25%);
     border: var(--progress-height) solid var(--spotlight);
     border-radius: var(--progress-height);
 }
@@ -386,6 +393,12 @@ svg:focus,
 *:focus > svg {
     fill: var(--highlight);
 }
+/* override highlight for non-interactive icons */
+.no-highlight:hover,
+*:hover > .no-highlight {
+    fill: var(--foreground);
+}
+
 .playlist-item a:hover {
     border-color: var(--highlight);
     color: var(--highlight);

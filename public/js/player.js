@@ -12,7 +12,10 @@ function init() {
     if(typeof localPresentation !== "undefined") {
         doSetup(localPresentation, null)
     } else {
-        var [presentation, playlist] = getArgs()
+        var args = getArgs()
+        if(args.hasMore) {
+            document.getElementById('more-indicator').classList.toggle('hidden')
+        }
         var read = new XMLHttpRequest()
         read.addEventListener('load', function() {
             var data = null
@@ -23,9 +26,9 @@ function init() {
                 console.log(read.responseText)
                 throw new Error("Could not get presentation data.")
             }
-            doSetup(data, playlist)
+            doSetup(data, args.playlist)
         })
-        read.open('GET', presentation)
+        read.open('GET', args.presentation)
         read.send()
     }
     function doSetup(presentation, playlist) {
@@ -71,7 +74,9 @@ function init() {
 
 function getArgs() {
     var get = window.location.search.substring(1)
-    var presentation, playlist
+    var out = {'presentation': null,
+               'playlist': null,
+               'hasMore': null}
     get.split('&').forEach(function(arg) {
         [name, value] = arg.split('=')
         value = decodeURIComponent(value)
@@ -81,22 +86,31 @@ function getArgs() {
         case 'show':
         case 'p':
         case 's':
-            if(!value.startsWith('/presentation/')) {
-               value = '/presentation/' + value
-            }
-            presentation = value
+            out.presentation = value
             break
         case 'playlist':
         case 'list':
         case 'l':
-            if(!value.startsWith('/playlist/')) {
-               value = '/playlist/' + value
-            }
-            playlist = value
+            out.playlist = value
+            break
+        case 'more':
+        case 'm':
+            out.hasMore = true
+            break
+        case 'debug':
+            out.debug = true
             break
         }
     })
-    return [presentation, playlist]
+    if(!out.debug) {
+        if(!out.presentation.startsWith('/presentation/')) {
+            out.presentation = '/presentation/' + out.presentation
+        }
+        if(!out.playlist.startsWith('/playlist/')) {
+            out.playlist = '/playlist/' + out.playlist
+        }
+    }
+    return out
 }
 
 function getCookies() {
@@ -471,12 +485,23 @@ function setupResSwitching(streamlist, defaultres) {
 
     function setResolution(event) {
         var resolution = event.currentTarget.textContent
+        var mainstream = document.querySelector('.main > video')
+        var playbutton = document.querySelector('#play-button')
+        var time = mainstream.currentTime
+        var paused = mainstream.paused
         if(current.textContent == resolution) {
             return
         }
+        if(!paused) {
+            playbutton.dispatchEvent(new Event('click'))
+        }
         videos.forEach(function(video) {
             video.src = video.dataset[resolution]
+            video.currentTime = time
         })
+        if(!paused) {
+            playbutton.dispatchEvent(new Event('click'))
+        }
         current.textContent = resolution
         setCookie('resolution', resolution)
     }
@@ -521,7 +546,6 @@ function setupSubs(subs, mainstream) {
         icons.forEach(function(icon) {
             icon.classList.toggle('hidden')})
         var track = mainstream.textTracks[0]
-        console.log(track)
         if(track.mode == 'disabled') {
             track.mode = 'showing'
         } else {
