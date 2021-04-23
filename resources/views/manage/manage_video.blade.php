@@ -29,15 +29,36 @@
                         class="badge badge-secondary">{{$tag->name}}</a> @endforeach</p>
 
             <p class="card-text">
-                <!--<span class="d-inline-block float-right" tabindex="0" data-toggle="tooltip" title="Redigera presentation">-->
-                <a href="{{route('presentation_edit', $video->id)}}" type="button" class="btn btn-outline-primary btn-sm float-right" data-toggle="tooltip" data-placement="top" title="Redigera presentation"><i class="far fa-edit"></i></a>
-                <!--<button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#modal-{{$video->id}}"><i class="far fa-edit"></i></button>-->
-                <!--</span>-->
 
-                <button class="delete btn btn-danger btn-sm" type="submit" data-toggle="tooltip" data-placement="top" title="Radera presentation"><i class="far fa-trash-alt"></i></button>
-                <a href="{{route('download', $video->id)}}" type="button" class="btn btn-outline-primary btn-sm float-right" data-toggle="tooltip" data-placement="top" title="Ladda ner presentation"><i class="fas fa-download"></i></a>
                 <a href="{{route('edit_permission', $video->id)}}" type="button" class="btn btn-outline-primary btn-sm float-right" data-toggle="tooltip" data-placement="top" title="Ändra rättigheter för presentation"><i class="far fa-hand-paper"></i></a>
+                 <div class="d-inline-flex">
+                <button class="delete btn btn-danger btn-sm" type="submit" data-toggle="tooltip" data-placement="top" title="Radera presentation"><i class="far fa-trash-alt"></i></button>
+                <!--<a href="{{route('presentation_edit', $video->id)}}" type="button" class="btn btn-outline-primary btn-sm float-right" data-toggle="tooltip" data-placement="top" title="Redigera presentation"><i class="far fa-edit"></i></a>-->
+                    <div class="dropdown">
+                        <a class="btn btn-outline-primary btn-sm float-right" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-download"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                            <form method="post" action="{{route('download', $video->id)}}">
+                                @csrf
+                            @foreach(json_decode($video->sources, true) as $source)
+                                @if(is_array($source['video']))
+                                    @foreach($source['video'] as $key => $source)
+                                        <button class="dropdown-item btn btn-outline-primary btn-sm" name="res" value="{{$key}}"><i class="fas fa-download"></i>
+                                            {{$key}}p</button>
+                                    @endforeach
+                                @elseif($loop->first)
+                                        <button class="dropdown-item btn btn-outline-primary btn-sm" name="res" value="old"><i class="fas fa-download"></i> 720p
+                                        </button>
+
+                                @endif
+                            @endforeach
+                            </form>
+                        </div>
+                    </div>
+            </div>
             </p>
+
         </div>
     </div>
     <!-- The Modal -->

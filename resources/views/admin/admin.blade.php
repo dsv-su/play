@@ -38,6 +38,7 @@
             </div>
             <!-- /.col-md-4 -->
             <div class="col-md-10">
+
                 <div class="tab-content" id="adminContent">
                     <div class="tab-pane fade show active" id="video" role="tabpanel" aria-labelledby="video-tab">
 
@@ -132,6 +133,7 @@
 
                         </div>
                     </div>
+
                     <div class="tab-pane fade" id="download" role="tabpanel" aria-labelledby="download-tab">
                         <h2>Download</h2>
                         <div class="row">

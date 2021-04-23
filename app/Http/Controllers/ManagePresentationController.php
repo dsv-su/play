@@ -6,6 +6,7 @@ use App\Category;
 use App\Course;
 use App\Permission;
 use App\Presenter;
+use App\Services\Video\VideoResolution;
 use App\Tag;
 use App\Video;
 use App\VideoPermission;
@@ -22,6 +23,7 @@ class ManagePresentationController extends Controller
             $user = Presenter::where('username', app()->make('play_username'))->first();
             $user_videos = VideoPresenter::where('presenter_id', $user->id ?? 0)->pluck('video_id');
             $videos = Video::whereIn('id', $user_videos)->with('category', 'video_course.course')->latest('creation')->get();
+
         } elseif (app()->make('play_role') == 'Administrator') {
             //If user is Administrator
             $videos = Video::with('category', 'video_course.course')->latest('creation')->get();

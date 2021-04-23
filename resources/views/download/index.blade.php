@@ -1,5 +1,6 @@
 @extends('layouts.suplay_upload')
 @section('content')
+    <!-- Download -->
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-11 col-sm-9 col-md-7 col-lg-6 col-xl-7 text-center p-0 mt-3 mb-2">
@@ -202,7 +203,7 @@
                                         @if($thumb == null)
                                             <svg class="bd-placeholder-img" width="100%" height="250" xmlns="http://www.w3.org/2000/svg" aria-label="Placeholder: Image" preserveAspectRatio="xMidYMid slice" role="img"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Ingen bild</text></svg>
                                         @else
-                                            <img id="thumb" class="bd-placeholder-img" width="100%" height="250" src="{{asset($local.'/'.$thumb)}}">
+                                            <img id="thumb" class="bd-placeholder-img" width="100%" height="250" src="{{asset('/storage/'.$local.'/'.$thumb)}}">
                                         @endif
 
                                     </div>

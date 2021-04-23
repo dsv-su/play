@@ -11,6 +11,7 @@ use App\Services\Notify\PlayStoreNotify;
 use App\Services\Store\DownloadResource;
 use App\Services\Store\SftpPlayStore;
 use App\Services\TicketHandler;
+use App\Services\Video\VideoResolution;
 use App\Video;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -36,14 +37,18 @@ class ManualDownloadController extends Controller
     {
         $this->store_server = 'https://play-store.dsv.su.se/presentation/';
     }
-    public function initDownload(Video $video)
+    public function initDownload(Video $video, $resolution)
     {
         //Initiates and starts the download/edit process
-        if(!$presentation = Presentation::find($video->id)) {
+        //if(!$presentation = Presentation::find($video->id)) {
+        if(! Presentation::where('id', $video->id)->where('resolution', $resolution)->first()) {
+                if(! $presentation = Presentation::find($video->id)) {
+                    $presentation = new Presentation();
+                }
                 $download_dir = $this->setDownloaddir();
-                $presentation = new Presentation();
                 $presentation->id = $video->id;
                 $presentation->status = 'request download';
+                $presentation->resolution = $resolution;
                 $presentation->user = app()->make('play_user');
                 $presentation->local = $download_dir;
                 $presentation->base = '/data0/incoming/' . $download_dir;
@@ -54,11 +59,11 @@ class ManualDownloadController extends Controller
                 $presentation->thumb = '';//$video->thumb;
                 $presentation->created = $video->creation;
                 $presentation->duration = $video->duration;
-                $presentation->sources = json_decode($video->sources, true);;
-
+                $presentation->sources = json_decode($video->sources, true);
                 $presentation->save();
 
                 return true;
+
             }
         else {
                 //Returns false if there already exist a download/edit
@@ -66,9 +71,14 @@ class ManualDownloadController extends Controller
             }
     }
 
-    public function step1(Video $video)
+    public function step1(Video $video, Request $request)
     {
-        if($this->initDownload($video)) {
+        if($request->res == 'old') {
+            $resolution = 999;
+        } else {
+            $resolution = $request->res;
+        }
+        if($this->initDownload($video, $resolution)) {
             if ($this->checkDownload($video)) {
                 return redirect()->action([ManualDownloadController::class, 'step2'], ['video' => $video]);
             } else {
@@ -118,13 +128,25 @@ class ManualDownloadController extends Controller
 
         //Video and poster files
         foreach (json_decode($video->sources, true) as $source) {
-            $video_name = substr($source['video'], strrpos($source['video'], '/') + 1);
+            // Support videos that havent been converted in multiple resolutions
+            if($presentation->resolution == '999') {
+                $video_name = substr($source['video'], strrpos($source['video'], '/') + 1);
+            } else {
+                $video_name = substr($source['video'][$presentation->resolution], strrpos($source['video'][$presentation->resolution], '/') + 1);
+            }
+
             $poster_name = substr($source['poster'], strrpos($source['poster'], '/') + 1);
 
             // Download video
             \Storage::disk('public')->makeDirectory($dir_video);
 
-            $file->getFile($dir_video.$video_name, $source['video']);
+            // Support videos that havent been converted in multiple resolutions
+            if($presentation->resolution == '999') {
+                $file->getFile($dir_video.$video_name, $source['video']);
+            } else {
+                $file->getFile($dir_video.$video_name, $source['video'][$presentation->resolution]);
+            }
+
             // Download posters
             \Storage::disk('public')->makeDirectory($dir_poster);
 

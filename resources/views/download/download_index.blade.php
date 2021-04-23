@@ -47,7 +47,7 @@
                     <div class="modal-body text-center">
                         <div class="loader"></div>
                         <div class="loader-txt">
-                            <p>Nerladdning pågår <br></p>
+                            <p>Nerladdning pågår<br></p>
                         </div>
                     </div>
                 </div>

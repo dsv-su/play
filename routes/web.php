@@ -60,7 +60,7 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::get('/course_search', 'UploadController@course_search')->name('course_search');
 
     //Download
-    Route::get('/download/{video}', 'ManualDownloadController@step1')->name('download');
+    Route::post('/download/{video}', 'ManualDownloadController@step1')->name('download');
     Route::get('/download_step2/{video}', 'ManualDownloadController@step2');
     Route::get('/download_presentation/{video}', 'ManualDownloadController@download');
     Route::get('/download_step3/{video}', 'ManualDownloadController@step3')->name('download_step3');
