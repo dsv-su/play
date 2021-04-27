@@ -698,7 +698,10 @@ class PlayController extends Controller
             VideoStat::where('video_id', $request->video_id)->firstOrFail()->delete();
         }
 
+        //Remove permissions for video
         VideoPermission::where('video_id', $request->video_id)->firstOrFail()->delete();
+        //Remove stats for video
+        VideoStat::where('video_id', $request->video_id)->firstOrFail()->delete();
 
         try {
             $video->delete();
@@ -708,8 +711,13 @@ class PlayController extends Controller
                 'message' => 'Error',
             ]);
         }
-        return Response()->json(['message' => 'Video deleted']);
 
+        //Send Delete notification -> when this is active
+        /*$notify = new PlayStoreNotify($video);
+        $notify->sendDelete();
+        return back()->with(['message' => 'Presentationen har raderats']);*/
+
+        return Response()->json(['message' => 'Video deleted']);
     }
 
     public

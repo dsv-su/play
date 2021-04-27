@@ -49,7 +49,7 @@ class MultiplayerController extends Controller
 
         //Update stats
         $stats = VideoStat::firstOrNew(['video_id' => $id]);
-        $stats->stats = $stats->stats + 1;
+        $stats->playback = $stats->playback + 1;
         $stats->save();
 
         return json_encode($presentation);

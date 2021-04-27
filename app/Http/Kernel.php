@@ -69,5 +69,6 @@ class Kernel extends HttpKernel
         'video-permission' => \App\Http\Middleware\CheckVideoPermission::class,
         'presentation-permission' => \App\Http\Middleware\CheckPresentationPermission::class,
         'play-admin' => \App\Http\Middleware\PlayAdmin::class,
+        'auth.basic.once' => \App\Http\Middleware\AuthenticateOnceWithBasicAuth::class,
     ];
 }

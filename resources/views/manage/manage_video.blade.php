@@ -48,7 +48,7 @@
                                             {{$key}}p</button>
                                     @endforeach
                                 @elseif($loop->first)
-                                        <button class="dropdown-item btn btn-outline-primary btn-sm" name="res" value="old"><i class="fas fa-download"></i> 720p
+                                        <button class="dropdown-item btn btn-outline-primary btn-sm" name="res" value="999"><i class="fas fa-download"></i> 720p
                                         </button>
 
                                 @endif

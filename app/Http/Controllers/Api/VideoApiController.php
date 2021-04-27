@@ -12,6 +12,7 @@ use App\Services\Presenter\PresenterStore;
 use App\Services\Tag\TagsStore;
 use App\Services\Video\VideoStore;
 use App\Services\Video\VideoUpdate;
+use App\tokenHandler;
 use App\Video;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -21,10 +22,11 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class VideoApiController extends Controller
 {
+
     public function __construct()
     {
-        //$this->middleware('auth:api');
         $this->middleware('auth:api', ['except' => ['permission']]);
+        //$this->middleware('auth.basic.once', ['except' => ['permission']]);
     }
 
     /**
@@ -150,12 +152,31 @@ class VideoApiController extends Controller
         ], 200);
     }
 
-    public function permission()
+    public function permission(Request $request)
     {
         $ticket = json_encode(request(['token']));
+        $video = Video::find($request->id);
+        $allow = count(json_decode($video->sources, true));
+
         try {
             JWTAuth::parseToken($ticket)->authenticate();
-            JWTAuth::parseToken($ticket)->invalidate();
+
+            if(!$tokenhandler = tokenHandler::first()) {
+                //New
+                tokenHandler::Create([
+                    'id' => $request->id,
+                    'token' => $request->token,
+                    'allow' => $allow - 1,
+                ]);
+            } else {
+                $tokenhandler->allow = $tokenhandler->allow - 1;
+                $tokenhandler->save();
+                if($tokenhandler->allow < 1) {
+                    JWTAuth::parseToken($ticket)->invalidate();
+                    $tokenhandler->delete();
+                }
+            }
+            
             return response()->json([
                 'permission' => 'granted'
             ]);

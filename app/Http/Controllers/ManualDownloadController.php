@@ -13,6 +13,7 @@ use App\Services\Store\SftpPlayStore;
 use App\Services\TicketHandler;
 use App\Services\Video\VideoResolution;
 use App\Video;
+use App\VideoStat;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
@@ -73,12 +74,7 @@ class ManualDownloadController extends Controller
 
     public function step1(Video $video, Request $request)
     {
-        if($request->res == 'old') {
-            $resolution = 999;
-        } else {
-            $resolution = $request->res;
-        }
-        if($this->initDownload($video, $resolution)) {
+        if($this->initDownload($video, $request->res)) {
             if ($this->checkDownload($video)) {
                 return redirect()->action([ManualDownloadController::class, 'step2'], ['video' => $video]);
             } else {
@@ -100,6 +96,11 @@ class ManualDownloadController extends Controller
         $path = $presentation->local.'/';
 
         if (Storage::disk('public')->exists($path.$video->id.'.zip')) {
+            //Register stats
+            $stats = VideoStat::firstOrNew(['video_id' => $video->id]);
+            $stats->download = $stats->download + 1;
+            $stats->save();
+
             return Storage::disk('public')->download($path.$video->id.'.zip');
         }
         else {
@@ -157,7 +158,6 @@ class ManualDownloadController extends Controller
         //Make zipfolder of presentation
         $file = new DownloadZip($video, $presentation->local);
         $file->makezip();
-
     }
 
     public function step3(Video $video)
