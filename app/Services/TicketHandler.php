@@ -26,7 +26,7 @@ class TicketHandler extends Model
         //Check permission for requested video
         if($this->check_permission($this->video)) {
             //Issue a valid ticket for requester
-            if (!$this->token = auth()->attempt($this->credentials)) {
+            if (!$this->token = auth()->claims(['id' => $this->video->id])->attempt($this->credentials)) {
                 return response()->json(['error' => 'Unauthorized'], 401);
                 }
             }

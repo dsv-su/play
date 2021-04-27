@@ -155,7 +155,9 @@ class VideoApiController extends Controller
     public function permission(Request $request)
     {
         $ticket = json_encode(request(['token']));
-        $video = Video::find($request->id);
+        $payload = auth()->payload();
+
+        $video = Video::find($payload->get('id'));
         $allow = count(json_decode($video->sources, true));
 
         try {
@@ -164,19 +166,25 @@ class VideoApiController extends Controller
             if(!$tokenhandler = tokenHandler::first()) {
                 //New
                 tokenHandler::Create([
-                    'id' => $request->id,
+                    'id' => $payload->get('id'),
                     'token' => $request->token,
                     'allow' => $allow - 1,
                 ]);
             } else {
-                $tokenhandler->allow = $tokenhandler->allow - 1;
-                $tokenhandler->save();
+
                 if($tokenhandler->allow < 1) {
                     JWTAuth::parseToken($ticket)->invalidate();
                     $tokenhandler->delete();
+                    // Token is expired
+                    return response()->json([
+                        'permission' => 'denied'
+                    ]);
+                } else {
+                    $tokenhandler->allow = $tokenhandler->allow - 1;
+                    $tokenhandler->save();
                 }
             }
-            
+
             return response()->json([
                 'permission' => 'granted'
             ]);
