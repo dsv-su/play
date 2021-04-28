@@ -11,6 +11,8 @@ class DaisyIntegration extends Model
 {
     protected $system, $res, $client;
     protected $endpoints, $endp, $xml, $json, $array, $item, $course;
+    protected $resource, $xml_resource, $json_resource, $array_resource;
+    protected $courses, $courselist, $course_xml, $course_json, $course_result, $list;
 
     public function __construct()
     {
@@ -24,6 +26,50 @@ class DaisyIntegration extends Model
             'auth' => [$this->system->daisy_username, $this->system->daisy_password]
         ]);
 
+    }
+
+    public function getDaisyPersonId($username)
+    {
+        $this->resource = $this->getResource('/person/username/'.$username.'@su.se');
+        //Convert xml to an array
+        $this->xml_resource = simplexml_load_string($this->resource->getBody()->getContents());
+        $this->json_resource = json_encode($this->xml_resource);
+        $this->array_resource = json_decode($this->json_resource, TRUE);
+        return $this->array_resource['id'];
+    }
+
+    public function getActiveStudentCourses($username)
+    {
+        $this->resource = $this->getResource('/person/username/'.$username.'@su.se');
+        //Convert xml to an array
+        $this->xml_resource = simplexml_load_string($this->resource->getBody()->getContents());
+        $this->json_resource = json_encode($this->xml_resource);
+        $this->array_resource = json_decode($this->json_resource, TRUE);
+        $this->course_result = $this->getResource('/person/'.$this->array_resource['id'].'/courseSegmentInstances');
+        $this->course_xml = simplexml_load_string($this->course_result->getBody()->getContents());
+        $this->course_json = json_encode($this->course_xml);
+        $this->courses = json_decode($this->course_json, TRUE);
+        foreach ($this->courses['courseSegmentInstance'] as $this->courselist) {
+            $this->list[] = $this->courselist['id'];
+        }
+        return $this->list;
+    }
+
+    public function getActiveStudentDesignations($username)
+    {
+        $this->resource = $this->getResource('/person/username/'.$username.'@su.se');
+        //Convert xml to an array
+        $this->xml_resource = simplexml_load_string($this->resource->getBody()->getContents());
+        $this->json_resource = json_encode($this->xml_resource);
+        $this->array_resource = json_decode($this->json_resource, TRUE);
+        $this->course_result = $this->getResource('/person/'.$this->array_resource['id'].'/courseSegmentInstances');
+        $this->course_xml = simplexml_load_string($this->course_result->getBody()->getContents());
+        $this->course_json = json_encode($this->course_xml);
+        $this->courses = json_decode($this->course_json, TRUE);
+        foreach ($this->courses['courseSegmentInstance'] as $this->courselist) {
+            $this->list[] = $this->courselist['designation'];
+        }
+        return $this->list;
     }
 
     public function init()
@@ -68,13 +114,13 @@ class DaisyIntegration extends Model
             foreach ($this->array['courseSegmentInstance'] as $this->item) {
                 if (substr($this->item['semester'], 4) == '1') {
                     Course::updateOrCreate(
-                        ['designation' => $this->item['designation'], 'semester' => 'VT', 'year' => substr($this->item['semester'], 0, 4)],
+                        ['id'=> $this->item['id'], 'designation' => $this->item['designation'], 'semester' => 'VT', 'year' => substr($this->item['semester'], 0, 4)],
                         ['name' => $this->item['name']]
                 );
                     }
                 else {
                     Course::updateOrCreate(
-                        ['designation' => $this->item['designation'], 'semester' => 'HT', 'year' => substr($this->item['semester'], 0, 4)],
+                        ['id'=> $this->item['id'], 'designation' => $this->item['designation'], 'semester' => 'HT', 'year' => substr($this->item['semester'], 0, 4)],
                         ['name' => $this->item['name']]
                     );
                 }

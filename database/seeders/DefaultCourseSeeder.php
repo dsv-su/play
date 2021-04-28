@@ -16,6 +16,7 @@ class DefaultCourseSeeder extends Seeder
     public function run()
     {
         DB::table('courses')->insert([
+            'id' => 999,
             'name' => 'Ingen kurstillhörighet',
             'designation' => 'Ingen kurstillhörighet',
             'semester' => 'VT',

@@ -16,8 +16,11 @@ use Spatie\Searchable\SearchResult;
 class Course extends Model implements Searchable
 {
     use SearchableTrait;
+    protected $primaryKey = 'id';
+    protected $keyType = 'integer';
+    public $incrementing = false;
 
-    protected $fillable = ['name', 'designation', 'semester', 'year'];
+    protected $fillable = ['id', 'name', 'designation', 'semester', 'year'];
     protected $searchable = [
         'columns' => [
             'name' => 5,

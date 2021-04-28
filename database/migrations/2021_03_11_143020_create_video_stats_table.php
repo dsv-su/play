@@ -17,7 +17,8 @@ class CreateVideoStatsTable extends Migration
             $table->id();
             $table->uuid('video_id');
             $table->foreign('video_id')->references('id')->on('videos');
-            $table->integer('stats')->nullable();
+            $table->integer('playback')->nullable();
+            $table->integer('download')->nullable();
             $table->timestamps();
         });
     }

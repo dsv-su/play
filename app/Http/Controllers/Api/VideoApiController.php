@@ -163,15 +163,16 @@ class VideoApiController extends Controller
         try {
             JWTAuth::parseToken($ticket)->authenticate();
 
-            if(!$tokenhandler = tokenHandler::first()) {
-                //New
+            //Allow the same token for all streams in presentation
+            if(!$tokenhandler = tokenHandler::find($payload->get('id'))) {
+                //New request
                 tokenHandler::Create([
                     'id' => $payload->get('id'),
                     'token' => $request->token,
                     'allow' => $allow - 1,
                 ]);
             } else {
-
+                //Expire token if all streams have passed
                 if($tokenhandler->allow < 1) {
                     JWTAuth::parseToken($ticket)->invalidate();
                     $tokenhandler->delete();
@@ -180,6 +181,7 @@ class VideoApiController extends Controller
                         'permission' => 'denied'
                     ]);
                 } else {
+                    //Pass next stream
                     $tokenhandler->allow = $tokenhandler->allow - 1;
                     $tokenhandler->save();
                 }
@@ -202,14 +204,13 @@ class VideoApiController extends Controller
                 'permission' => 'invalid'
             ]);
 
-        } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
+        }  catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
 
             // Token is not present
             return response()->json([
                 'permission' => 'denied'
             ]);
         }
-
 
     }
 

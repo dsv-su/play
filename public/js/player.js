@@ -103,10 +103,10 @@ function getArgs() {
         }
     })
     if(!out.debug) {
-        if(!out.presentation.startsWith('/presentation/')) {
+        if(out.presentation && !out.presentation.startsWith('/presentation/')) {
             out.presentation = '/presentation/' + out.presentation
         }
-        if(!out.playlist.startsWith('/playlist/')) {
+        if(out.playlist && !out.playlist.startsWith('/playlist/')) {
             out.playlist = '/playlist/' + out.playlist
         }
     }

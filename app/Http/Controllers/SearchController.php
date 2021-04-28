@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Daisy\DaisyIntegration;
 use App\Video;
 use App\VideoPermission;
 use Illuminate\Support\Facades\DB;
@@ -54,5 +55,16 @@ class SearchController extends Controller
         });
 
         return view('home.navigator', compact('category','videos', 'permissions'));
+    }
+
+    public function searchByUser($username)
+    {
+        $permissions = VideoPermission::all();
+        $daisy = new DaisyIntegration();
+        $courses = $daisy->getActiveStudentCourses($username);
+        $videos = Video::with('video_course.course')->whereHas('video_course.course', function($query) use($designation){
+            return $query->whereIn('id', $courses);
+        })->get();
+        dd($videos);
     }
 }
