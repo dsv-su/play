@@ -15,7 +15,7 @@ class CreateTokenHandlersTable extends Migration
     {
         Schema::create('token_handlers', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('token');
+            $table->text('token');
             $table->integer('allow');
             $table->timestamps();
         });

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PresentationRequest;
 use App\Http\Resources\Presentation\PresentationResource;
-use App\MediasitePresentation;
 use App\Services\Course\CourseStore;
 use App\Services\PermissionHandler\PermissionHandler;
 use App\Services\Presenter\PresenterStore;
@@ -162,16 +161,8 @@ class VideoApiController extends Controller
 
         try {
             JWTAuth::parseToken($ticket)->authenticate();
-
             //Allow the same token for all streams in presentation
-            if(!$tokenhandler = tokenHandler::find($payload->get('id'))) {
-                //New request
-                tokenHandler::Create([
-                    'id' => $payload->get('id'),
-                    'token' => $request->token,
-                    'allow' => $allow - 1,
-                ]);
-            } else {
+            if($tokenhandler = tokenHandler::where([['id', $payload->get('id')],['token', $request->token]])->first()) {
                 //Expire token if all streams have passed
                 if($tokenhandler->allow < 1) {
                     JWTAuth::parseToken($ticket)->invalidate();
@@ -185,6 +176,18 @@ class VideoApiController extends Controller
                     $tokenhandler->allow = $tokenhandler->allow - 1;
                     $tokenhandler->save();
                 }
+
+            } else {
+                //Remove old existing token
+                if($tokenhandler = tokenHandler::find($payload->get('id'))){
+                    $tokenhandler->delete();
+                }
+                //New request
+                tokenHandler::create([
+                    'id' => $payload->get('id'),
+                    'token' => $request->token,
+                    'allow' => $allow - 1,
+                ]);
             }
 
             return response()->json([

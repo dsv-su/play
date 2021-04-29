@@ -9,10 +9,8 @@ use App\CourseSearchAspect;
 use App\Presenter;
 use App\Services\Daisy\DaisyIntegration;
 use App\Services\Notify\PlayStoreNotify;
-use App\Services\Store\DownloadResource;
-use App\Services\TicketHandler;
+use App\tokenHandler;
 use App\Video;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Spatie\Searchable\ModelSearchAspect;
 use Spatie\Searchable\Search;
@@ -22,12 +20,6 @@ class TestController extends Controller
 {
     public function test()
     {
-        $video = Video::find('a2f526be-01ff-4dd5-9ec1-6b02e70baa2d');
-        $allow = count(json_decode($video->sources, true));
-        dd($allow);
-        $daisy = new DaisyIntegration();
-        //dd($daisy->getActiveStudentDesignations('kamo6703'));
-        dd($daisy->getActiveStudentCourses('kamo6703'));
 
     }
 
