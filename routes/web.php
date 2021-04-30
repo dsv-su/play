@@ -32,6 +32,7 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::get('/semester/{semester}', 'SearchController@searchBySemester')->name('semester');
     Route::get('/designation/{designation}', 'SearchController@searchByDesignation')->name('designation');
     Route::get('/category/{category}', 'SearchController@searchByCategory')->name('category');
+    Route::get('/student/{username}', 'SearchController@searchByUser');
 
     //Multiplayer
     Route::get('/player/{video}', 'MultiplayerController@player')->name('player');

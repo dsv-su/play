@@ -28,9 +28,20 @@
                 <div>
                     <span class="su-theme-anchor"></span>
                     <h3 class="su-theme-header mb-4">
+                        @if(count($latest)>0)
                         <span class="far fa-clock fa-icon-border mr-2" aria-hidden="true"></span>
-                        Senast tillagt @if (isset($course))
-                            från kursen <i>{{$course}}</i>  @elseif (isset($tag)) efter taggen: <i>{{$tag}}</i> @elseif (isset($presenter))  av <i>{{$presenter}}</i> @endif
+                        Senast tillagt
+                        @else
+                         Inga presentationer från pågående kurser
+                        @endif
+                        @if (in_array(app()->make('play_role'), [ 'Student','Student1', 'Student2', 'Student3']) && count($latest)>0)
+                            från dina pågående kurser
+                        @endif
+                        @if (isset($course))
+                            från kursen <i>{{$course}}</i>
+                        @elseif (isset($tag)) efter taggen: <i>{{$tag}}</i>
+                        @elseif (isset($presenter))  av <i>{{$presenter}}</i>
+                        @endif
                     </h3>
 
                 </div>

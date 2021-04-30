@@ -8,6 +8,7 @@ use App\MediasiteFolder;
 use App\MediasitePresentation;
 use App\Presenter;
 use App\Services\AuthHandler;
+use App\Services\Daisy\DaisyIntegration;
 use App\Services\Notify\PlayStoreNotify;
 use App\System;
 use App\Tag;
@@ -42,10 +43,38 @@ class PlayController extends Controller
         if(!System::find(1)) {
             return redirect()->action([SystemController::class, 'start']);
         }
-        $data['search'] = 0;
-        $data['latest'] = Video::with('category', 'video_course.course')->latest('creation')->take(24)->get();
-        $data['permissions'] = VideoPermission::all();
-        $data['categories'] = Category::all();
+        //For testing
+        if(in_array(app()->make('play_role'), [ 'Student1', 'Student2', 'Student3'] )) {
+            if(app()->make('play_role') == 'Student1') {
+                $courses = [6761, 6837, 6703, 6839, 6708, 6838, 6769];
+            }
+            elseif (app()->make('play_role') == 'Student2') {
+                $courses = [6817,6644,6737,6661,6816,6835,6780,6626,6656,6748,6604,6684,6819,6595];
+            }
+            elseif (app()->make('play_role') == 'Student3') {
+                $courses = [6798,6799,6760,6778,6828,6796,6719,6720];
+            }
+            $data['permissions'] = VideoPermission::all();
+            $data['latest'] = Video::with('video_course.course')->whereHas('video_course.course', function($query) use($courses){
+                return $query->whereIn('course_id', $courses);
+            })->get();
+
+        }
+        // end testing
+        elseif(app()->make('play_role') == 'Student') {
+            $data['permissions'] = VideoPermission::all();
+            $daisy = new DaisyIntegration();
+            $courses = $daisy->getActiveStudentCourses(app()->make('play_username'));
+            $data['latest'] = Video::with('video_course.course')->whereHas('video_course.course', function($query) use($courses){
+                return $query->whereIn('course_id', $courses);
+            })->get();
+        }
+        else {
+            $data['search'] = 0;
+            $data['latest'] = Video::with('category', 'video_course.course')->latest('creation')->take(24)->get();
+            $data['permissions'] = VideoPermission::all();
+            //$data['categories'] = Category::all();
+        }
 
         return view('home.index', $data);
     }

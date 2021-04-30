@@ -6,7 +6,9 @@ use App\Category;
 use App\Course;
 use App\Presenter;
 use App\Services\AuthHandler;
+use App\Services\Daisy\DaisyIntegration;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
 
@@ -22,8 +24,27 @@ class CourseNav extends Model
     public function compose(View $view)
     {
         //$view->with('nav_categories', $this->getCategory()); //For now disabled
-        $view->with('designations', $this->getDesignation());
-        $view->with('semesters', $this->getSemesters());
+        if(in_array(app()->make('play_role'), [ 'Student1', 'Student2', 'Student3'] )) {
+            if(app()->make('play_role') == 'Student1') {
+                $courses = [6761, 6837, 6703, 6839, 6708, 6838, 6769];
+            }
+            if(app()->make('play_role') == 'Student2') {
+                $courses = [6817,6644,6737,6661,6816,6835,6780,6626,6656,6748,6604,6684,6819,6595];
+            }
+            if(app()->make('play_role') == 'Student3') {
+                $courses = [6798,6799,6760,6778,6828,6796,6719,6720];
+            }
+            $view->with('designations', $this->getFakeStudentDesignation($courses));
+            $view->with('semesters', $this->getfakeStudentSemesters($courses));
+        }
+        elseif(app()->make('play_role') == 'Student') {
+            $view->with('designations', $this->getStudentDesignation(app()->make('play_username')));
+            $view->with('semesters', $this->getStudentSemesters(app()->make('play_username')));
+        }
+        else {
+            $view->with('designations', $this->getDesignation());
+            $view->with('semesters', $this->getSemesters());
+        }
         //$view->with('nav_courses', $this->getActiveCourses()); //To be removed
         //--> This should be refactores -> causes expensive db queries
         //$view->with('hasmycourses', ($this->getUserCoursesWithVideos($this->getUserName() ?? 'dsv-dev@su.se')->count() > 0));
@@ -45,6 +66,51 @@ class CourseNav extends Model
     private function getCategory()
     {
         return Category::pluck('category_name')->take(6);
+    }
+
+    /************************************************************
+     * For testing
+     */
+    private function getFakeStudentDesignation($courses)
+    {
+        return Course::whereIn('id', $courses)->pluck('designation')->sortByDesc('id')->take(6);
+    }
+
+    private function getFakeStudentSemesters($courses)
+    {
+        $course_segments = Course::whereIn('id', $courses)->distinct('year')->pluck('year')->take(3);
+        foreach($course_segments as $term) {
+            $semester[] = 'VT '.$term;
+            $semester[] = 'HT '.$term;
+        }
+        return $semester ?? '';
+    }
+
+    /***************************************************************
+     *  end test
+     */
+
+    private function getStudentDesignation($username)
+    {
+        return Cache::remember('student_designation', $seconds = 30, function () use($username) {
+            $daisy = new DaisyIntegration();
+            $courses = $daisy->getActiveStudentCourses($username);
+            return Course::whereIn('id', $courses)->pluck('designation')->sortByDesc('id')->take(6);
+        });
+    }
+
+    private function getStudentSemesters($username)
+    {
+        return Cache::remember('student_semesters', $seconds = 30, function () use($username){
+            $daisy = new DaisyIntegration();
+            $courses = $daisy->getActiveStudentCourses($username);
+            $course_segments = Course::whereIn('id', $courses)->distinct('year')->pluck('year')->take(3);
+            foreach($course_segments as $term) {
+                $semester[] = 'VT '.$term;
+                $semester[] = 'HT '.$term;
+            }
+            return $semester ?? '';
+        });
     }
 
     private function getDesignation()

@@ -9,7 +9,6 @@ use App\CourseSearchAspect;
 use App\Presenter;
 use App\Services\Daisy\DaisyIntegration;
 use App\Services\Notify\PlayStoreNotify;
-use App\tokenHandler;
 use App\Video;
 use Illuminate\Http\Request;
 use Spatie\Searchable\ModelSearchAspect;
@@ -20,7 +19,8 @@ class TestController extends Controller
 {
     public function test()
     {
-
+        $daisy = new DaisyIntegration();
+        dd($daisy->getActiveStudentCourses(''));
     }
 
     public function search(Request $request)

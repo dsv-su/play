@@ -13,6 +13,8 @@ use App\VideoPermission;
 use App\VideoPresenter;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class ManagePresentationController extends Controller
 {
@@ -26,7 +28,9 @@ class ManagePresentationController extends Controller
 
         } elseif (app()->make('play_role') == 'Administrator') {
             //If user is Administrator
-            $videos = Video::with('category', 'video_course.course')->latest('creation')->get();
+            $videos = Cache::remember('videos', $seconds = 30, function () {
+                return Video::with('category', 'video_course.course')->latest('creation')->get();
+            });
         }
         return view('manage.manage', ['videos' => $videos, 'allcourses' => Course::all(), 'categories' => Category::all(), 'alltags' => Tag::all()]);
     }

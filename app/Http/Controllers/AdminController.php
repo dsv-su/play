@@ -49,6 +49,10 @@ class AdminController extends Controller
                 $adminhandler->override = true;
                 $adminhandler->role = $request->role;
                 $adminhandler->save();
+                if (in_array($adminhandler->role, [ 'Student','Student1', 'Student2', 'Student3'])) {
+                    return redirect()->route('home');
+                }
+
             }
 
         }

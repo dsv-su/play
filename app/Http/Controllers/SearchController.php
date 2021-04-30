@@ -59,12 +59,14 @@ class SearchController extends Controller
 
     public function searchByUser($username)
     {
-        $permissions = VideoPermission::all();
         $daisy = new DaisyIntegration();
         $courses = $daisy->getActiveStudentCourses($username);
-        $videos = Video::with('video_course.course')->whereHas('video_course.course', function($query) use($designation){
-            return $query->whereIn('id', $courses);
+        $videos = Video::with('video_course.course')->whereHas('video_course.course', function($query) use($courses){
+            return $query->whereIn('course_id', $courses);
         })->get();
-        dd($videos);
+
+        $data['permissions'] = VideoPermission::all();
+        $data['latest'] =  $videos;
+        return view('home.index', $data);
     }
 }
