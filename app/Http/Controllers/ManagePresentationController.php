@@ -31,6 +31,8 @@ class ManagePresentationController extends Controller
             $videos = Cache::remember('videos', $seconds = 30, function () {
                 return Video::with('category', 'video_course.course')->latest('creation')->get();
             });
+        } else {
+            return redirect('home');
         }
         return view('manage.manage', ['videos' => $videos, 'allcourses' => Course::all(), 'categories' => Category::all(), 'alltags' => Tag::all()]);
     }
