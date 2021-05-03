@@ -28,6 +28,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -56,7 +57,7 @@ class PlayController extends Controller
             }
             $data['permissions'] = VideoPermission::all();
             $data['latest'] = Video::with('video_course.course')->whereHas('video_course.course', function($query) use($courses){
-                return $query->whereIn('course_id', $courses);
+                return $query->whereIn('course_id', $courses)->take(24);
             })->get();
 
         }
@@ -65,6 +66,15 @@ class PlayController extends Controller
             $data['permissions'] = VideoPermission::all();
             $daisy = new DaisyIntegration();
             $courses = $daisy->getActiveStudentCourses(app()->make('play_username'));
+            $data['latest'] = Video::with('video_course.course')->whereHas('video_course.course', function($query) use($courses){
+                return $query->whereIn('course_id', $courses)->take(24);
+            })->get();
+        }
+        //If user is Employee
+        elseif(App::environment('production') and (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')) {
+            $data['permissions'] = VideoPermission::all();
+            $daisy = new DaisyIntegration();
+            $courses = $daisy->getActiveEmployeeCourses(app()->make('play_username'));
             $data['latest'] = Video::with('video_course.course')->whereHas('video_course.course', function($query) use($courses){
                 return $query->whereIn('course_id', $courses);
             })->get();
