@@ -20,7 +20,9 @@ class TestController extends Controller
     public function test()
     {
         $daisy = new DaisyIntegration();
-        dd($daisy->getActiveStudentCourses(''));
+        //dd($daisy->getActiveEmployeeCourses(''));
+        dd($daisy->getActiveEmployeeDesignations(''));
+        //dd($daisy->getActiveEmployeeCourses(''));
     }
 
     public function search(Request $request)

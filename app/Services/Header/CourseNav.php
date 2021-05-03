@@ -8,6 +8,7 @@ use App\Presenter;
 use App\Services\AuthHandler;
 use App\Services\Daisy\DaisyIntegration;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
@@ -24,6 +25,7 @@ class CourseNav extends Model
     public function compose(View $view)
     {
         //$view->with('nav_categories', $this->getCategory()); //For now disabled
+        //Admin testing -> students
         if(in_array(app()->make('play_role'), [ 'Student1', 'Student2', 'Student3'] )) {
             if(app()->make('play_role') == 'Student1') {
                 $courses = [6761, 6837, 6703, 6839, 6708, 6838, 6769];
@@ -37,9 +39,15 @@ class CourseNav extends Model
             $view->with('designations', $this->getFakeStudentDesignation($courses));
             $view->with('semesters', $this->getfakeStudentSemesters($courses));
         }
+        //If user is Student
         elseif(app()->make('play_role') == 'Student') {
             $view->with('designations', $this->getStudentDesignation(app()->make('play_username')));
             $view->with('semesters', $this->getStudentSemesters(app()->make('play_username')));
+        }
+        //If user is Employee
+        elseif(App::environment('production') and (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')) {
+            $view->with('designations', $this->getEmployeeDesignation(app()->make('play_username')));
+            $view->with('semesters', $this->getEmployeeSemesters(app()->make('play_username')));
         }
         else {
             $view->with('designations', $this->getDesignation());
@@ -92,7 +100,7 @@ class CourseNav extends Model
 
     private function getStudentDesignation($username)
     {
-        return Cache::remember('student_designation', $seconds = 30, function () use($username) {
+        return Cache::remember('student_designation', $seconds = 180, function () use($username) {
             $daisy = new DaisyIntegration();
             $courses = $daisy->getActiveStudentCourses($username);
             return Course::whereIn('id', $courses)->pluck('designation')->sortByDesc('id')->take(6);
@@ -101,9 +109,33 @@ class CourseNav extends Model
 
     private function getStudentSemesters($username)
     {
-        return Cache::remember('student_semesters', $seconds = 30, function () use($username){
+        return Cache::remember('student_semesters', $seconds = 180, function () use($username){
             $daisy = new DaisyIntegration();
             $courses = $daisy->getActiveStudentCourses($username);
+            $course_segments = Course::whereIn('id', $courses)->distinct('year')->pluck('year')->take(3);
+            foreach($course_segments as $term) {
+                $semester[] = 'VT '.$term;
+                $semester[] = 'HT '.$term;
+            }
+            return $semester ?? '';
+        });
+    }
+
+    private function getEmployeeDesignation($username)
+    {
+        return Cache::remember('employee_designation', $seconds = 180, function () use($username) {
+            $daisy = new DaisyIntegration();
+            $courses = $daisy->getActiveEmployeeDesignations($username);
+            return $courses;
+            //return Course::whereIn('id', $courses)->pluck('designation')->sortByDesc('id')->take(6);
+        });
+    }
+
+    private function getEmployeeSemesters($username)
+    {
+        return Cache::remember('student_semesters', $seconds = 180, function () use($username){
+            $daisy = new DaisyIntegration();
+            $courses = $daisy->getActiveEmployeeCourses($username);
             $course_segments = Course::whereIn('id', $courses)->distinct('year')->pluck('year')->take(3);
             foreach($course_segments as $term) {
                 $semester[] = 'VT '.$term;

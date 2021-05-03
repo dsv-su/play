@@ -31,7 +31,6 @@
                                         @foreach($semesters as $semester)
                                             <a class="nav-link" href="{{route('semester', $semester)}}">{{$semester}}</a>
                                         @endforeach
-                                            <a class="nav-link" href="">[Alla]</a>
                                     @endif
                                 </li>
                                 <li class="mega-menu-collapse-col col">
@@ -43,7 +42,6 @@
                                         @foreach($designations as $designation)
                                             <a class="nav-link" href="{{route('designation', $designation)}}">{{$designation}}</a>
                                         @endforeach
-                                        <a class="nav-link" href="">[Alla]</a>
                                     @endif
                                 </li>
                                 @if($nav_categories ?? '')
