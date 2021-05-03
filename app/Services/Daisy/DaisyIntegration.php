@@ -50,11 +50,16 @@ class DaisyIntegration extends Model
         $this->course_xml = simplexml_load_string($this->course_result->getBody()->getContents());
         $this->course_json = json_encode($this->course_xml);
         $this->courses = json_decode($this->course_json, TRUE);
-        foreach ($this->courses['employeeContribution'] as $this->instance) {
-            $this->list[] = $this->instance['courseSegmentInstance']['id'];
+        if($this->courses) {
+            foreach ($this->courses['employeeContribution'] as $this->instance) {
+                $this->list[] = $this->instance['courseSegmentInstance']['id'];
+            }
+
+            return $this->list;
+        } else {
+            return $this->courses;
         }
 
-        return $this->list;
     }
 
     public function getActiveEmployeeDesignations($username)
@@ -69,11 +74,16 @@ class DaisyIntegration extends Model
         $this->course_xml = simplexml_load_string($this->course_result->getBody()->getContents());
         $this->course_json = json_encode($this->course_xml);
         $this->courses = json_decode($this->course_json, TRUE);
-        foreach ($this->courses['employeeContribution'] as $this->instance) {
-            $this->list[] = $this->instance['courseSegmentInstance']['designation'];
+        if($this->courses) {
+            foreach ($this->courses['employeeContribution'] as $this->instance) {
+                $this->list[] = $this->instance['courseSegmentInstance']['designation'];
+            }
+
+            return $this->list;
+        } else {
+            return $this->courses;
         }
 
-        return $this->list;
     }
 
     public function getActiveStudentCourses($username)

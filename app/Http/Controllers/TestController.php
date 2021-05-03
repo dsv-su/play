@@ -21,8 +21,7 @@ class TestController extends Controller
     {
         $daisy = new DaisyIntegration();
         //dd($daisy->getActiveEmployeeCourses(''));
-        dd($daisy->getActiveEmployeeDesignations(''));
-        //dd($daisy->getActiveEmployeeCourses(''));
+        //dd($daisy->getActiveEmployeeDesignations(''));
     }
 
     public function search(Request $request)
