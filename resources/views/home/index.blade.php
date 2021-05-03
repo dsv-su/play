@@ -32,7 +32,7 @@
                         <span class="far fa-clock fa-icon-border mr-2" aria-hidden="true"></span>
                         Senast tillagt
                         @else
-                         Inga presentationer från pågående kurser
+                         Inga presentationer från pågående kurser hittades
                         @endif
                         @if (in_array(app()->make('play_role'), [ 'Student','Student1', 'Student2', 'Student3']) && count($latest)>0)
                             från dina pågående kurser
