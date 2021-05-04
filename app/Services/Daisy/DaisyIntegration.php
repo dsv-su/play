@@ -28,6 +28,7 @@ class DaisyIntegration extends Model
 
     }
 
+    //Method for retrieving DaisyId with UserID
     public function getDaisyPersonId($username)
     {
         $this->resource = $this->getResource('/person/username/'.$username.'@su.se');
@@ -38,6 +39,19 @@ class DaisyIntegration extends Model
         return $this->array_resource['id'];
     }
 
+    //Method for retrieving course info from daisy with
+    public function getCourse($designation, $semester)
+    {
+        $this->course_subject = $this->getResource('/courseSegment?designation='.$designation.'&semester='.$semester);
+        //Convert xml to an array
+        $this->xml_resource = simplexml_load_string($this->course_subject->getBody()->getContents());
+        $this->json_resource = json_encode($this->xml_resource);
+        $this->array_resource = json_decode($this->json_resource, TRUE);
+        //dd($this->array_resource['courseSegmentInstance']);
+        return $this->array_resource['courseSegmentInstance'];
+    }
+
+    //Method for retrieving employees active courses from Daisy with UserID
     public function getActiveEmployeeCourses($username)
     {
         //Filters courses from ht2019-vt2021
@@ -61,7 +75,7 @@ class DaisyIntegration extends Model
         }
 
     }
-
+    //Method for retrieving Employees active course designations from Daisy with UserID
     public function getActiveEmployeeDesignations($username)
     {
         //Filters designations from vt2019-vt2021
@@ -86,6 +100,7 @@ class DaisyIntegration extends Model
 
     }
 
+    //Method for retrieving Students active courses from Daisy with UserID
     public function getActiveStudentCourses($username)
     {
         $this->resource = $this->getResource('/person/username/'.$username.'@su.se');
@@ -101,6 +116,7 @@ class DaisyIntegration extends Model
         return $this->list;
     }
 
+    //Method for retrieving Students active course designations from Daisy with UserID
     public function getActiveStudentDesignations($username)
     {
         $this->resource = $this->getResource('/person/username/'.$username.'@su.se');
@@ -118,6 +134,7 @@ class DaisyIntegration extends Model
         return $this->list;
     }
 
+    //Method for initiating play and preloading courses from Daisy
     public function init()
     {
         $this->endpoints = array(

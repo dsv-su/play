@@ -3,6 +3,7 @@
 namespace App\Services\Course;
 
 use App\Course;
+use App\Services\Daisy\DaisyIntegration;
 use App\VideoCourse;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 class CourseStore extends Model
 {
     protected $creation, $timestamp;
+    protected $daisy;
 
     public function __construct($request, $video)
     {
@@ -35,12 +37,15 @@ class CourseStore extends Model
                 //Check if course exists
 
                 if(! $this->db_course = Course::where('designation', $this->item)->where('semester', $this->convertSemester($this->timestamp))->where('year', $this->convertYear($this->timestamp))->first()) {
+                    //Retrive course information from Daisy
+                    $this->daisy = new DaisyIntegration();
+                    $this->retrieved_course = $this->daisy->getCourse($this->item, $this->convertYear($this->timestamp).$this->convertDaisySemester($this->timestamp));
                     $this->course = Course::create([
-                        'name' => $this->item,
-                        'designation' => $this->item,
+                        'id' =>  $this->retrieved_course['id'],
+                        'name' => $this->retrieved_course['name'],
+                        'designation' => $this->retrieved_course['designation'],
                         'semester' => $this->convertSemester($this->timestamp),
                         'year' => $this->convertYear($this->timestamp),
-
                     ]);
 
                     VideoCourse::create([
@@ -82,6 +87,17 @@ class CourseStore extends Model
         }
         else {
             return 'HT';
+        }
+    }
+
+    public function convertDaisySemester($timestamp)
+    {
+        $this->creation = Carbon::createFromTimestamp($timestamp)->toObject();
+        if(in_array($this->creation->month,[1,2,3,4,5,6])) {
+            return '1';
+        }
+        else {
+            return '2';
         }
     }
 

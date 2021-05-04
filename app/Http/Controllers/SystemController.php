@@ -44,8 +44,8 @@ class SystemController extends Controller
             app()->make('init')->check_system();
             return redirect()->action([SystemController::class, 'start']);
         } else {
-            $daisy = new DaisyIntegration();
-            $daisy->init();
+            //$daisy = new DaisyIntegration();
+            //$daisy->init();
             return redirect('/')->with(['message' => 'Play has initiated successfully!', 'alert' => 'alert-success']);
         }
     }
