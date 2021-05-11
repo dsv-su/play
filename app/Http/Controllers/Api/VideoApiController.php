@@ -179,8 +179,8 @@ class VideoApiController extends Controller
 
             } else {
                 //Remove old existing token
-                if($tokenhandler = tokenHandler::find($payload->get('id'))){
-                    $tokenhandler->delete();
+                if($oldtoken = tokenHandler::find($payload->get('id'))){
+                    $oldtoken->delete();
                 }
                 //New request
                 tokenHandler::create([

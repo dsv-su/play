@@ -116,7 +116,8 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::get('/reload', 'ReloadPlayStoreController@index')->name('reload'); //Reload all presentations from play store
     Route::get('/del/{video}', 'TestController@del')->name('del'); //Send delete notification to play-store
 
-
-
     //-->
 });
+Route::any('{query}',
+    function() { return redirect('/'); })
+    ->where('query', '.*');
