@@ -25,38 +25,41 @@ class CourseNav extends Model
     public function compose(View $view)
     {
         //$view->with('nav_categories', $this->getCategory()); //For now disabled
-        //Admin testing -> students
-        if(in_array(app()->make('play_role'), [ 'Student1', 'Student2', 'Student3'] )) {
-            if(app()->make('play_role') == 'Student1') {
-                $courses = [6761, 6837, 6703, 6839, 6708, 6838, 6769];
+        if(!app()->isDownForMaintenance()) {
+            //Admin testing -> students
+            if(in_array(app()->make('play_role'), [ 'Student1', 'Student2', 'Student3'] )) {
+                if(app()->make('play_role') == 'Student1') {
+                    $courses = [6761, 6837, 6703, 6839, 6708, 6838, 6769];
+                }
+                if(app()->make('play_role') == 'Student2') {
+                    $courses = [6817,6644,6737,6661,6816,6835,6780,6626,6656,6748,6604,6684,6819,6595];
+                }
+                if(app()->make('play_role') == 'Student3') {
+                    $courses = [6798,6799,6760,6778,6828,6796,6719,6720];
+                }
+                $view->with('designations', $this->getFakeStudentDesignation($courses));
+                $view->with('semesters', $this->getfakeStudentSemesters($courses));
             }
-            if(app()->make('play_role') == 'Student2') {
-                $courses = [6817,6644,6737,6661,6816,6835,6780,6626,6656,6748,6604,6684,6819,6595];
+            //If user is Student
+            elseif(app()->make('play_role') == 'Student') {
+                $view->with('designations', $this->getStudentDesignation(app()->make('play_username')));
+                $view->with('semesters', $this->getStudentSemesters(app()->make('play_username')));
             }
-            if(app()->make('play_role') == 'Student3') {
-                $courses = [6798,6799,6760,6778,6828,6796,6719,6720];
+            //If user is Employee
+            elseif(App::environment('production') and (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')) {
+                $view->with('designations', $this->getEmployeeDesignation(app()->make('play_username')));
+                $view->with('semesters', $this->getEmployeeSemesters(app()->make('play_username')));
             }
-            $view->with('designations', $this->getFakeStudentDesignation($courses));
-            $view->with('semesters', $this->getfakeStudentSemesters($courses));
+            else {
+                $view->with('designations', $this->getDesignation());
+                $view->with('semesters', $this->getSemesters());
+            }
+            //$view->with('nav_courses', $this->getActiveCourses()); //To be removed
+            //--> This should be refactores -> causes expensive db queries
+            //$view->with('hasmycourses', ($this->getUserCoursesWithVideos($this->getUserName() ?? 'dsv-dev@su.se')->count() > 0));
+            //<--
         }
-        //If user is Student
-        elseif(app()->make('play_role') == 'Student') {
-            $view->with('designations', $this->getStudentDesignation(app()->make('play_username')));
-            $view->with('semesters', $this->getStudentSemesters(app()->make('play_username')));
-        }
-        //If user is Employee
-        elseif(App::environment('production') and (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')) {
-            $view->with('designations', $this->getEmployeeDesignation(app()->make('play_username')));
-            $view->with('semesters', $this->getEmployeeSemesters(app()->make('play_username')));
-        }
-        else {
-            $view->with('designations', $this->getDesignation());
-            $view->with('semesters', $this->getSemesters());
-        }
-        //$view->with('nav_courses', $this->getActiveCourses()); //To be removed
-        //--> This should be refactores -> causes expensive db queries
-        //$view->with('hasmycourses', ($this->getUserCoursesWithVideos($this->getUserName() ?? 'dsv-dev@su.se')->count() > 0));
-        //<--
+
     }
 
     private function getUserName()
