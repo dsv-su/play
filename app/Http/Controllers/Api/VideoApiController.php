@@ -162,7 +162,7 @@ class VideoApiController extends Controller
         try {
             JWTAuth::parseToken($ticket)->authenticate();
             //Allow the same token for all streams in presentation
-            if($tokenhandler = tokenHandler::where([['id', $payload->get('id')],['token', $request->token]])->first()) {
+            if($tokenhandler = tokenHandler::where([['video_id', $payload->get('id')],['token', $request->token]])->first()) {
                 //Expire token if all streams have passed
                 if($tokenhandler->allow < 1) {
                     JWTAuth::parseToken($ticket)->invalidate();
@@ -179,12 +179,12 @@ class VideoApiController extends Controller
 
             } else {
                 //Remove old existing token
-                if($oldtoken = tokenHandler::find($payload->get('id'))){
+                if($oldtoken = tokenHandler::where('video_id', $payload->get('id'))->first()){
                     $oldtoken->delete();
                 }
                 //New request
                 tokenHandler::create([
-                    'id' => $payload->get('id'),
+                    'video_id' => $payload->get('id'),
                     'token' => $request->token,
                     'allow' => $allow - 1,
                 ]);

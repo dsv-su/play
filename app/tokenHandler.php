@@ -9,9 +9,9 @@ class tokenHandler extends Model
 {
     use HasFactory;
     //UUID
-    protected $primaryKey = 'id';
+    /*protected $primaryKey = 'id';
     protected $keyType = 'string';
     public $incrementing = false;
-
-    protected $fillable = ['id','token','allow'];
+    protected $fillable = ['id','token','allow'];*/
+    protected $fillable = ['video_id','token','allow'];
 }
