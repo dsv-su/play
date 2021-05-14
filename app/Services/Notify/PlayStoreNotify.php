@@ -28,6 +28,10 @@ class PlayStoreNotify extends Model
             ->makeHidden('created_at')
             ->makeHidden('updated_at');
 
+        if ($type == 'update') {
+            $this->presentation->makeHidden('resolution');
+        }
+
         if ($type == 'mediasite') {
             $this->presentation->makeHidden('video_id')->makeHidden('mediasite_folder_id');
         }

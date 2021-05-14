@@ -17,9 +17,9 @@ use Spatie\Searchable\Search;
 
 class TestController extends Controller
 {
-    public function test()
+    public function test(Request $request)
     {
-
+        return $request->session()->all();
     }
 
     public function search(Request $request)

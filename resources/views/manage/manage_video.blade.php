@@ -42,7 +42,7 @@
                             <form method="post" action="{{route('download', $video->id)}}">
                                 @csrf
                             @foreach(json_decode($video->sources, true) as $source)
-                                @if(is_array($source['video']))
+                                @if(is_array($source['video']) && $loop->first)
                                     @foreach($source['video'] as $key => $source)
                                         <button class="dropdown-item btn btn-outline-primary btn-sm" name="res" value="{{$key}}"><i class="fas fa-download"></i>
                                             {{$key}}p</button>
