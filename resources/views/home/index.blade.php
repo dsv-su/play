@@ -13,11 +13,11 @@
               action="{{ route('search') }}" method="POST" data-search="/s%C3%B6k"
               role="search">
             @csrf
-            <label for="header-main-search-text" class="sr-only">Sök på videos</label>
+            <label for="header-main-search-text" class="sr-only">{{ __("Search for videos") }}</label>
             <input class="form-control w-100 mx-auto" type="search"
                    id="header-main-search-text" name="q" autocomplete="off"
                    aria-haspopup="true"
-                   placeholder="Sök på videos"
+                   placeholder="{{ __("Search for videos") }}"
                    aria-labelledby="header-main-search-form">
         </form>
     </div>
@@ -30,17 +30,17 @@
                     <h3 class="su-theme-header mb-4">
                         @if(count($latest)>0)
                         <span class="far fa-clock fa-icon-border mr-2" aria-hidden="true"></span>
-                        Senast tillagt
+                            {{ __("Last added") }}
                         @else
-                         Inga presentationer från pågående kurser hittades
+                            {{ __("No presentations from ongoing courses were found") }}
                         @endif
                         @if (in_array(app()->make('play_role'), [ 'Student','Student1', 'Student2', 'Student3']) && count($latest)>0)
-                            från dina pågående kurser
+                                {{ __("from your ongoing courses") }}
                         @endif
                         @if (isset($course))
-                            från kursen <i>{{$course}}</i>
-                        @elseif (isset($tag)) efter taggen: <i>{{$tag}}</i>
-                        @elseif (isset($presenter))  av <i>{{$presenter}}</i>
+                                {{ __("from the course") }} <i>{{$course}}</i>
+                        @elseif (isset($tag)) {{ __("after the tag: ") }} <i>{{$tag}}</i>
+                        @elseif (isset($presenter))  {{ __("by") }} <i>{{$presenter}}</i>
                         @endif
                     </h3>
 

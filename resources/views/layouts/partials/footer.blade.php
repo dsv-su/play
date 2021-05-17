@@ -3,16 +3,16 @@
     <div class="container">
         <div class="row">
             <div class="footer-section col-12 col-md-6 col-lg-5" aria-labelledby="footerContactInfo">
-                <h2 id="footerContactInfo">Stockholms universitet, DSV</h2>
-                <p>Postbox 7003, 164 07 Kista</p>
-                <p class="mb-4">Telefon: 08-16 20 00</p>
+                <h2 id="footerContactInfo">@lang('lang.su')</h2>
+                <p>@lang('lang.post_nr')</p>
+                <p class="mb-4">@lang('lang.phone')</p>
                 <ul>
-                    <li><a href="mailto:playsupport@dsv.su.se">Kontakt</a></li>
+                    <li><a href="mailto:playsupport@dsv.su.se">@lang('lang.contact')</a></li>
                 </ul>
             </div>
 
             <div class="footer-section col-12 col-md-6 col-lg-4" aria-labelledby="footerShortCuts">
-                <h2 id="footerShortCuts">Genvägar</h2>
+                <h2 id="footerShortCuts">@lang('lang.shortcuts')</h2>
                 <ul class="list-two-columns">
                     <li><a href="https://ilearn2.dsv.su.se">Ilearn</a></li>
                     <li><a href="https://play.dsv.su.se">Play</a></li>

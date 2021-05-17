@@ -84,7 +84,7 @@ class CourseNav extends Model
      */
     private function getFakeStudentDesignation($courses)
     {
-        return Course::whereIn('id', $courses)->pluck('designation')->sortByDesc('id')->take(6);
+        return Course::whereIn('id', $courses)->pluck('designation')->sortByDesc('id')->take(6) ?? '';
     }
 
     private function getFakeStudentSemesters($courses)

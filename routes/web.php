@@ -27,7 +27,7 @@ Route::get('/presentation/{id}', 'MultiplayerController@presentation')->middlewa
 Route::middleware('entitlements', 'playauth')->group(function () {
 
     Route::get('/', 'PlayController@index')->name('home');
-
+    Route::get('lang/{lang}', 'LocalizationController@index');
     //Search
     Route::get('/semester/{semester}', 'SearchController@searchBySemester')->name('semester');
     Route::get('/designation/{designation}', 'SearchController@searchByDesignation')->name('designation');

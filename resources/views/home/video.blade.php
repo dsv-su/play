@@ -9,10 +9,10 @@
             @if($permissions ?? '')
                 @foreach($permissions as $permission)
                     @if($video->id == $permission->video_id && $permission->type == 'private')
-                        <div class="permission">Låst</div>
+                        <div class="permission">@lang('lang.locked')</div>
                     @endif
                     @if($video->id == $permission->video_id && $permission->type == 'external')
-                            <div class="permission">Publik</div>
+                            <div class="permission">@lang('lang.public')</div>
                     @endif
             @endforeach
             @endif

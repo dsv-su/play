@@ -5,7 +5,7 @@
         <div class="row no-gutters w-100">
             <div class="col-12">
                 <div>
-                    <h1 class="word-wrap_xs-only">{{$results->count()}}</span> videos från
+                    <h1 class="word-wrap_xs-only">{{$results->count()}}</span> {{ __("presentations from") }}
                         <strong>{{$course->course_name}} {{$course->semester}} {{$course->year}}</strong></h1>
                 </div>
 
@@ -28,10 +28,10 @@
                         </a>
                         <div class="card-body p-1">
                             <p class="card-text">
-                                Kurs: @foreach($video->video_course as $vc) <a
+                                @lang('lang.course'): @foreach($video->video_course as $vc) <a
                                         href="/course/{{$vc->course_id}}">{{\App\Course::find($vc->course_id)->course_name}}</a> @endforeach
                                 <br>
-                                Kategori: {{$video->category->category_name}}
+                                @lang('lang.category'): {{$video->category->category_name}}
                             </p>
                         </div>
                     </div>

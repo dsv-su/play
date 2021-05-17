@@ -11,53 +11,54 @@
                     <div class="position-relative">
                         <a class="text-uppercase nav-link mega-menu-link level-1" aria-haspopup="true"
                            aria-expanded="false" href="#">
-                            Navigera
+                            @lang('lang.navigate')
                         </a>
                     </div>
                     <div class="mega-menu-collapse">
                         <div class="container">
                             <ul class="list-unstyled row no-gutters">
                                 <li class="mega-menu-collapse-col col">
-                                    <span class="level-1 text-uppercase d-block mb-3">Navigera</span>
-                                    <span>Här kan du navigera bland inspelningar från undervisningsmoment efter termin, kurs eller kategori.</span>
+                                    <span class="level-1 text-uppercase d-block mb-3">@lang('lang.navigate')</span>
+                                    <span>{{ __("Here you can navigate among recordings from lectures by semester, course or category.") }}</span>
 
                                 </li>
                                 <li class="mega-menu-collapse-col col">
                                     <a class="nav-link d-flex align-items-center nav-link__border-bottom" href="">
                                         <span class="fas fa-layer-group fa-icon-border mr-2" aria-hidden="true"></span>
-                                        <span class="d-inline-block first-letter-capitalized level-2">Termin</span>
+                                        <span class="d-inline-block first-letter-capitalized level-2">@lang('lang.semester')</span>
                                     </a>
                                     @if($semesters ?? '')
                                         @foreach($semesters as $semester)
                                             <a class="nav-link" href="{{route('semester', $semester)}}">{{$semester}}</a>
                                         @endforeach
                                     @else
-                                        Inga registrerade terminer hittades
+                                        {{ __("No registered Semesters were found.") }}
                                     @endif
                                 </li>
                                 <li class="mega-menu-collapse-col col">
                                     <a class="nav-link d-flex align-items-center nav-link__border-bottom" href="">
                                         <span class="fas fa-address-card fa-icon-border mr-2" aria-hidden="true"></span>
-                                        <span class="d-inline-block first-letter-capitalized level-2">Kurs</span>
+                                        <span class="d-inline-block first-letter-capitalized level-2">@lang('lang.course')</span>
                                     </a>
-                                    @if($designations ?? '')
+                                    @if(count($designations)>0)
                                         @foreach($designations as $designation)
                                             <a class="nav-link" href="{{route('designation', $designation)}}">{{$designation}}</a>
                                         @endforeach
                                     @else
-                                        Inga aktiva kurser hittades
+                                        {{ __("No active courses found.") }}
                                     @endif
                                 </li>
                                 @if($nav_categories ?? '')
                                 <li class="mega-menu-collapse-col col">
                                     <a class="nav-link d-flex align-items-center nav-link__border-bottom" href="">
                                         <span class="fas fa-book fa-icon-border mr-2" aria-hidden="true"></span>
-                                        <span class="d-inline-block first-letter-capitalized level-2">Kategori</span>
+                                        <span class="d-inline-block first-letter-capitalized level-2">@lang('lang.category')</span>
                                     </a>
                                         @foreach($nav_categories as $category)
                                             <a class="nav-link" href="{{route('category', $category)}}">{{$category}}</a>
                                         @endforeach
-                                        <a class="nav-link" href="">[Alla]</a>
+                                    @else
+                                        {{ __("No active categories found.") }}
                                 </li>
                                 @endif
                             </ul>
@@ -80,21 +81,20 @@
                     <div class="position-relative">
                         <a class="text-uppercase nav-link mega-menu-link level-1" aria-haspopup="true"
                            aria-expanded="false" href="#">
-                            Hantera
+                            @lang('lang.manage')
                         </a>
                     </div>
                     <div class="mega-menu-collapse">
                         <div class="container">
                             <ul class="list-unstyled row no-gutters">
                                 <li class="mega-menu-collapse-col col">
-                                    <span class="level-1 text-uppercase d-block mb-3">Hantera</span>
-                                    <span>Här kan du hantera dina inspelningar. Ladda upp, ladda ner, ändra uppspelningsrättigheter och byta kursassociation mm.</span>
+                                    <span class="level-1 text-uppercase d-block mb-3">@lang('lang.manage')</span>
+                                    <span>{{ __("Here you can manage your recordings. Upload, download, change playback rights and change course association etc.") }}</span>
 
                                 </li>
                                 <li class="mega-menu-collapse-col col">
-                                    <a class="nav-link level-2" href="{{ route('manage') }}"><span class="fas fa-video fa-icon-border mr-2" aria-hidden="true"></span> Hantera inspelningar</a>
-                                    <a class="nav-link level-2" href="{{ route('user_upload') }}"><span class="fas fa-upload fa-icon-border mr-2" aria-hidden="true"></span> Manuell
-                                        uppladdning</a>
+                                    <a class="nav-link level-2" href="{{ route('manage') }}"><span class="fas fa-video fa-icon-border mr-2" aria-hidden="true"></span> @lang('lang.manage_recording')</a>
+                                    <a class="nav-link level-2" href="{{ route('user_upload') }}"><span class="fas fa-upload fa-icon-border mr-2" aria-hidden="true"></span> @lang('lang.manual_upload')</a>
                                 </li>
                                 <li class="mega-menu-collapse-col col">
                                 </li>
@@ -108,14 +108,14 @@
                     <div class="position-relative">
                         <a class="text-uppercase nav-link mega-menu-link level-1" aria-haspopup="true"
                            aria-expanded="false" href="#">
-                            Admin
+                            @lang('lang.admin')
                         </a>
                     </div>
                     <div class="mega-menu-collapse">
                         <div class="container">
                             <ul class="list-unstyled row no-gutters">
                                 <li class="mega-menu-collapse-col col">
-                                    <span class="level-1 text-uppercase d-block mb-3">Administrator</span>
+                                    <span class="level-1 text-uppercase d-block mb-3">@lang('lang.manage')</span>
                                 </li>
                                 <li class="mega-menu-collapse-col col">
                                     <a class="nav-link level-2" href="{{route('admin')}}"><span class="fas fa-user-cog fa-icon-border mr-2" aria-hidden="true"></span>Admin settings</a>
@@ -144,6 +144,38 @@
                     @endif
                 @endif
             </div>
+            <!-- Lang localization -->
+
+                <div class="align-middle ml-auto my-auto">
+                    <nav class="navbar navbar-expand-lg container">
+                        <div class="collapse navbar-collapse" id="navbarToggler">
+                            <ul class="navbar-nav ml-auto">
+                                @php $locale = session()->get('locale'); @endphp
+                                <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        @switch($locale)
+                                            @case('eng')
+                                            <img src="{{asset('images/globallinks-lang-en.gif')}}"> English
+                                            @break
+                                            @case('swe')
+                                            <img src="{{asset('images/globallinks-lang-sv.gif')}}"> Svenska
+                                            @break
+                                            @default
+                                            <img src="{{asset('images/globallinks-lang-en.gif')}}"> English
+                                        @endswitch
+                                        <span class="caret"></span>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right" style="background-color: #002f5f;" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="lang/en"><img src="{{asset('images/globallinks-lang-en.gif')}}">  English</a>
+                                        <a class="dropdown-item" href="lang/swe"><img src="{{asset('images/globallinks-lang-sv.gif')}}">  Svenska</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            <!-- end Lang localization -->
         </nav>
 
         <nav class="d-lg-none d-flex align-items-center ml-auto" aria-label="Huvudmeny">
@@ -180,7 +212,7 @@
                                             <a class="nav-link text-uppercase d-inline-block pr-0"
                                                href="#">
                                                 <span class="fas fa-layer-group fa-icon-border mr-2" aria-hidden="true"></span>
-                                                <span class="d-inline-block first-letter-capitalized level-3">Termin</span>
+                                                <span class="d-inline-block first-letter-capitalized level-3">@lang('lang.semester')</span>
                                             </a>
                                             <div class="float-right pt-1 pr-2">
                                                 <button type="button" data-toggle="collapse"
@@ -203,8 +235,9 @@
                                                                         <span class="d-inline-block first-letter-capitalized level-2">{{$semester}}</span>
                                                                     </a>
                                                                 @endforeach
+                                                            @else
                                                                     <a class="nav-link" href="">
-                                                                        <span class="d-inline-block first-letter-capitalized level-2">[Alla]</span>
+                                                                        {{ __("No registered Semesters were found.") }}
                                                                     </a>
                                                             @endif
                                                         </li>
@@ -216,7 +249,7 @@
                                             <a class="nav-link text-uppercase d-inline-block pr-0"
                                                href="#">
                                                 <span class="fas fa-address-card fa-icon-border mr-2" aria-hidden="true"></span>
-                                                <span class="d-inline-block first-letter-capitalized level-2">Kurs</span>
+                                                <span class="d-inline-block first-letter-capitalized level-2">@lang('lang.course')</span>
                                             </a>
                                             <div class="float-right pt-1 pr-2">
                                                 <button type="button" data-toggle="collapse"
@@ -233,13 +266,14 @@
                                                 <div id="accordionSubMenu_Utbildning">
                                                     <ul class="main-menu-sub navbar-nav pb-4">
                                                         <li class="nav-item pl-3">
-                                                            @if($designations ?? '')
+                                                            @if(count($designations)>0)
                                                                 @foreach($designations as $designation)
                                                                     <a class="nav-link" href="{{route('designation', $designation)}}">
                                                                         <span class="d-inline-block first-letter-capitalized level-2">{{$designation}}</span>
                                                                     </a>
                                                                 @endforeach
-                                                                <a class="nav-link" href="">[Alla]</a>
+                                                            @else
+                                                                    {{ __("No active courses found.") }}
                                                             @endif
                                                         </li>
                                                     </ul>
@@ -251,7 +285,7 @@
                                             <a class="nav-link text-uppercase d-inline-block pr-0"
                                                href="#">
                                                 <span class="fas fa-book fa-icon-border mr-2" aria-hidden="true"></span>
-                                                <span class="d-inline-block first-letter-capitalized level-2">Kategori</span>
+                                                <span class="d-inline-block first-letter-capitalized level-2">@lang('lang.category')</span>
                                             </a>
                                             <div class="float-right pt-1 pr-2">
                                                 <button type="button" data-toggle="collapse"
@@ -268,14 +302,15 @@
                                                 <div id="accordionSubMenu_Utbildning">
                                                     <ul class="main-menu-sub navbar-nav pb-4">
                                                         <li class="nav-item pl-3">
-
+                                                            @if($category ?? '')
                                                                 @foreach($nav_categories as $category)
                                                                     <a class="nav-link" href="{{route('category', $category)}}">
                                                                         <span class="d-inline-block first-letter-capitalized level-2">{{$category}}</span>
                                                                     </a>
                                                                 @endforeach
-                                                                <a class="nav-link" href="">[Alla]</a>
-
+                                                            @else
+                                                                    {{ __("No active categories found.") }}
+                                                            @endif
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -291,7 +326,7 @@
 
                                         <li class="nav-item">
                                             <a class="nav-link text-uppercase d-inline-block pr-0"
-                                               href="#">Hantera</a>
+                                               href="#">@lang('lang.manage')</a>
 
                                             <div class="float-right pt-1 pr-2">
                                                 <button type="button" data-toggle="collapse"
@@ -309,10 +344,9 @@
                                                     <ul class="main-menu-sub navbar-nav pb-4">
                                                         <li class="nav-item pl-3">
                                                             <a class="nav-link level-2" href="{{ route('manage') }}">
-                                                                <span class="fas fa-video fa-icon-border mr-2" aria-hidden="true"></span> Hantera inspelningar</a>
+                                                                <span class="fas fa-video fa-icon-border mr-2" aria-hidden="true"></span>@lang('lang.manage_recording')</a>
                                                             <a class="nav-link level-2" href="{{ route('user_upload') }}">
-                                                                <span class="fas fa-upload fa-icon-border mr-2" aria-hidden="true"></span> Manuell
-                                                                uppladdning</a>
+                                                                <span class="fas fa-upload fa-icon-border mr-2" aria-hidden="true"></span> @lang('lang.manual_upload')</a>
                                                         </li>
                                                     </ul>
                                                 </div>

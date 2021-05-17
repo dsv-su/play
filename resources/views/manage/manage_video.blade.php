@@ -30,11 +30,11 @@
 
             <p class="card-text">
 
-                <a href="{{route('edit_permission', $video->id)}}" type="button" class="btn btn-outline-primary btn-sm float-right" data-toggle="tooltip" data-placement="top" title="Ändra rättigheter för presentation"><i class="far fa-hand-paper"></i></a>
+                <a href="{{route('edit_permission', $video->id)}}" type="button" class="btn btn-outline-primary btn-sm float-right" data-toggle="tooltip" data-placement="top" title="{{ __("Change rights for presentation") }}"><i class="far fa-hand-paper"></i></a>
                  <div class="d-inline-flex">
-                <button class="delete btn btn-danger btn-sm" type="submit" data-toggle="tooltip" data-placement="top" title="Radera presentation"><i class="far fa-trash-alt"></i></button>
+                <button class="delete btn btn-danger btn-sm" type="submit" data-toggle="tooltip" data-placement="top" title="{{ __("Delete presentation") }}"><i class="far fa-trash-alt"></i></button>
                 <!--<a href="{{route('presentation_edit', $video->id)}}" type="button" class="btn btn-outline-primary btn-sm float-right" data-toggle="tooltip" data-placement="top" title="Redigera presentation"><i class="far fa-edit"></i></a>-->
-                    <div class="dropdown">
+                    <div class="dropdown" data-toggle="tooltip" data-placement="top" title="{{ __("Download presentation") }}">
                         <a class="btn btn-outline-primary btn-sm float-right" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-download"></i>
                         </a>
@@ -77,7 +77,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-row">
-                        <label class="col-form-label" for="video_category_{{$video->id}}">Category:</label>
+                        <label class="col-form-label" for="video_category_{{$video->id}}">@lang('lang.category'):</label>
                         <select class="col form-control" name="video_category[]" id="video_category_{{$video->id}}" required>
                             @foreach($categories as $category)
                                 <option value="{{$category->id}}"
@@ -86,7 +86,7 @@
                         </select>
                         </div>
                         <div class="form-row">
-                        <label class="col-form-label" for="video_course_{{$video->id}}">Courses:</label>
+                        <label class="col-form-label" for="video_course_{{$video->id}}">@lang('lang.course'):</label>
                         <select class="selectpicker col" multiple data-live-search="true" name="video_course[]" id="video_course_{{$video->id}}" required>
                         <!--<select name="video_course[]" id="video_course_{{$video->id}}" required>-->
                             @foreach($allcourses as $course)
@@ -96,7 +96,7 @@
                         </select>
                         </div>
                         <div class="form-row">
-                            <label class="col-form-label" for="video_tag_{{$video->id}}">Tags:</label>
+                            <label class="col-form-label" for="video_tag_{{$video->id}}">@lang('lang.tag'):</label>
                             <select class="selectpicker col" multiple data-live-search="true" name="video_tags[]" id="video_tag_{{$video->id}}" required>
                                 @foreach($alltags as $tag)
                                     <option value="{{$tag->id}}" @if ($video->has_tag($tag->id)) selected @endif>{{$tag->name}}</option>
@@ -105,10 +105,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __("Close") }}
                         </button>
                         <button type="button" class="btn btn-primary save" id="{{$video->id}}">
-                            Save changes
+                            {{ __("Save changes") }}
                         </button>
                     </div>
                 </form>

@@ -9,12 +9,12 @@
             <div class="col-12">
                 @if(app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')
                     <div>
-                        <h1 class="word-wrap_xs-only">Hantera dina presentationer</h1>
-                        <p class="lead-light mb-5 mb-lg-0">Här kan du redigera, ladda ner, ändra rättigheter eller ta bort en presentation du har laddat upp.</p>
+                        <h1 class="word-wrap_xs-only">{{ __("Manage your presentations") }}</h1>
+                        <p class="lead-light mb-5 mb-lg-0">{{ __("Here you can edit, download, change rights or delete a presentation you have uploaded.") }}</p>
                     </div>
                 @elseif(app()->make('play_role') == 'Administrator')
                     <div>
-                        <h1 class="word-wrap_xs-only">Manage all presentations</h1>
+                        <h1 class="word-wrap_xs-only">{{ __("Manage all presentations") }}</h1>
                     </div>
                 @endif
             </div> <!-- col-12 -->
@@ -24,17 +24,17 @@
         <div class="form-row">
             <div class="col-md-4 mb-3">
                 @if(app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')
-                <label for="filter_category">Kategori:</label>
+                <label for="filter_category">@lang('lang.category'):</label>
                 @else
-                <label for="filter_category">Category:</label>
+                <label for="filter_category">@lang('lang.category'):</label>
                 @endif
                 <!-- Filtering -->
                 <select class="custom-select" name="filter_category" id="filter_category">
                     <option value="0" @if(!app('request')->input('category')) selected @endif
                     @if(app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')
-                        >Välj kategori
+                        >{{ __("Choose category") }}
                     @else
-                        >Choose category
+                        >{{ __("Choose category") }}
                     @endif
                     </option>
                     @foreach($categories as $category)
@@ -45,17 +45,17 @@
             </div>
             <div class="col-md-4 mb-3">
                 @if(app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')
-                <label for="filter_course">Kurs:</label>
+                <label for="filter_course">@lang('lang.course'):</label>
                 @else
-                <label for="filter_course">Course:</label>
+                <label for="filter_course">@lang('lang.course'):</label>
                 @endif
                 <!-- Filtering -->
                 <select class="custom-select" name="filter_course" id="filter_course">
                     <option value="0" @if(!app('request')->input('course')) selected @endif
                     @if(app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')
-                    >Välj kurs
+                    >{{ __("Choose course") }}
                     @else
-                    >Choose course
+                    >{{ __("Choose course") }}
                     @endif
                     </option>
                     @foreach($allcourses as $course)

@@ -11,11 +11,11 @@
               action="{{ route('search') }}" method="POST" data-search="/s%C3%B6k"
               role="search">
             @csrf
-            <label for="header-main-search-text" class="sr-only">Sök på videos</label>
+            <label for="header-main-search-text" class="sr-only">{{ __("Search for videos") }}</label>
             <input class="form-control w-100 mx-auto" type="search"
                    id="header-main-search-text" name="q" autocomplete="off"
                    aria-haspopup="true"
-                   placeholder="Sök på videos"
+                   placeholder="{{ __("Search for videos") }}"
                    aria-labelledby="header-main-search-form">
         </form>
     </div>
@@ -27,13 +27,13 @@
                     <h3 class="su-theme-header mb-4">
                         @if($term ?? '' and $year ?? '')
                             <span class="fas fa-layer-group fa-icon-border mr-2" aria-hidden="true"></span>
-                            Presentationer från {{$term}} {{$year}}
+                            {{ __("presentations from") }} {{$term}} {{$year}}
                         @elseif($designation ?? '')
                             <span class="fas fa-address-card fa-icon-border mr-2" aria-hidden="true"></span>
-                            Kurs: <i>{{$designation}}</i>
+                            @lang('lang.course'): <i>{{$designation}}</i>
                         @elseif($category ?? '')
                             <span class="fas fa-address-card fa-icon-border mr-2" aria-hidden="true"></span>
-                            Kategori: <i>{{$category}}</i>
+                            @lang('lang.category'): <i>{{$category}}</i>
                         @endif
 
                     </h3>
@@ -66,7 +66,7 @@
             </div>
         @endforeach
         @else
-        <h3>Inga presentationer</h3>
+        <h3>{{ __("No presentations") }}</h3>
         @endif
     </div><!-- /.container -->
 @endsection
