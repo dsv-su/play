@@ -22,4 +22,8 @@ return [
     'locked' => 'Låst',
     'public' => 'Publik',
     'private' => 'Privat',
+    'relevant_courses' => 'Aktiva kurser',
+    'latest' => 'Alla kurser',
+    'viewed' => 'Mest spelade',
+    'downloaded' => 'Mest nerladdade',
 ];

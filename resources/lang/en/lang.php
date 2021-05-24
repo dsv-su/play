@@ -22,4 +22,8 @@ return [
     'locked' => 'Locked',
     'public' => 'Public',
     'private' => 'Private',
+    'relevant_courses' => 'Active courses',
+    'latest' => 'All courses',
+    'viewed' => 'Most viewed',
+    'downloaded' => 'Most downloaded',
 ];

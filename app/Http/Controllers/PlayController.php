@@ -29,13 +29,14 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class PlayController extends Controller
 {
     /**
-     *
+     *  For testing purposes. Should be refactored before production.
      *
      */
 
@@ -80,11 +81,39 @@ class PlayController extends Controller
             })->get();
         }
         else {
+            //If user is Admin
             $data['search'] = 0;
             $data['latest'] = Video::with('category', 'video_course.course')->latest('creation')->take(24)->get();
             $data['permissions'] = VideoPermission::all();
             //$data['categories'] = Category::all();
+            //-> Most viewed
+            $vid = DB::table('videos')
+                        ->select(['video_id', DB::raw('MAX(playback) AS playback')])
+                        ->whereNotNull('playback')
+                        ->join('video_stats','videos.id','=','video_stats.video_id')
+                        ->groupBy('video_id')
+                        ->take(5)->get();
+
+            $most_viewed = collect($vid)->map(function ($item) {
+                return $item->video_id;
+            });
+            $data['most_viewed'] = Video::with('category', 'video_course.course')->whereIn('id',$most_viewed)->take(24)->get();
+            //-> Most downloaded
+            $vid = DB::table('videos')
+                ->select(['video_id', DB::raw('MAX(download) AS download')])
+                ->whereNotNull('download')
+                ->join('video_stats','videos.id','=','video_stats.video_id')
+                ->groupBy('video_id')
+                ->take(5)->get();
+
+            $most_down = collect($vid)->map(function ($item) {
+                return $item->video_id;
+            });
+            $data['most_downloaded'] = Video::with('category', 'video_course.course')->whereIn('id',$most_down)->take(24)->get();
         }
+
+        //All courses (tab 2)
+        $data['all'] = Video::with('category', 'video_course.course')->latest('creation')->take(24)->get();
 
         return view('home.index', $data);
     }
