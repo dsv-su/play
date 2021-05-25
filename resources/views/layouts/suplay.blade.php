@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="{{asset('bootstrap/bootstrap-4.5.3-dist/css/bootstrap.min.css')}}"/>
     <link rel="stylesheet" href="{{asset('./css/fontawesome/css/all.css')}}">
     <link rel="stylesheet" href="{{asset('/css/su.css')}}">
-    <!--<link rel="stylesheet" href="{{asset('/css/verticaltabs.css')}}">-->s
+    <!--<link rel="stylesheet" href="{{asset('/css/verticaltabs.css')}}">-->
     <link rel="stylesheet" href="{{asset('/css/upload.css')}}">
     <script src="{{asset('./js/jquery-3.5.1.min.js')}}"></script>
     <script src="{{asset('js/popper.min.js')}}"></script>

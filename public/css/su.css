@@ -7991,3 +7991,11 @@ blockquote p ~ p::before {
 .badge .fa-times {
     cursor: pointer;
 }
+
+p.card-text {
+    margin-bottom: 0.5em;
+}
+
+.main-menu .nav {
+    min-width: 450px;
+}
