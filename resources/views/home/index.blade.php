@@ -50,15 +50,18 @@
     </div>
 
     <div class="container">
+        @if (isset($all) && isset($most_viewed) && isset($most_downloaded))
         <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
             <li class="nav-item pb-0">
                 <a class="nav-link active" href="#pane-A" data-toggle="tab"
                    title="@lang('lang.relevant_courses')">@lang('lang.relevant_courses')</a>
             </li>
+            @if (isset($all))
             <li class="nav-item pb-0">
                 <a class="nav-link" href="#pane-B" data-toggle="tab"
                    title="@lang('lang.latest')">@lang('lang.latest')</a>
             </li>
+            @endif
             @if(app()->make('play_role') == 'Administrator')
                 <li class="nav-item pb-0">
                     <a class="nav-link" href="#pane-C" data-toggle="tab"
@@ -70,6 +73,7 @@
                 </li>
             @endif
         </ul>
+        @endif
         <div class="tab-content" id="myTabContent">
             <div id="pane-A" class="tab-pane fade show active" role="tabpanel" aria-labelledby="tab-A">
                 @if (count($latest)>0)
@@ -96,6 +100,7 @@
                 @endif
             </div>
             <!-- Content tab 2 -->
+            @if (isset($all))
             <div id="pane-B" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-B">
                 <div class="card-deck inner">
                     @foreach ($all as $video)
@@ -115,8 +120,9 @@
                     s
                 </div>
             </div>
+            @endif
             <!-- Content tab 3 -->
-            @if(app()->make('play_role') == 'Administrator')
+            @if(app()->make('play_role') == 'Administrator' && isset($most_viewed) && isset($most_downloaded))
                 <div id="pane-C" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-C">
                     <div class="card-deck inner">
                         @foreach ($most_viewed as $video)
