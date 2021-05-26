@@ -21,7 +21,7 @@
         </div>
     </a>
     <div class="card-body p-1">
-        @if (!$video->video_course->isEmpty() && (!isset($designations)))
+        @if (!$video->video_course->isEmpty() && (!isset($designation)))
             <p class="card-text">
                 @foreach($video->video_course as $vc)
                     <a href="/course/{{$vc->course_id}}"

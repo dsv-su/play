@@ -5252,10 +5252,13 @@ p.kill-p, .kill-p p {
     margin-bottom: -1px;
     margin-left: 0;
     background-color: var(--light);
-    color: darkblue;
+    color: #002f5f;
     position: absolute;
     left: 0;
     bottom: 0;
+    font-size: 1rem;
+    font-family: "TheSansC5-SemiBoldWeb", serif;
+    font-weight: 400;
 }
 
 /* Video card buttons */
