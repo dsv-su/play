@@ -24,8 +24,8 @@
         @if (!$video->video_course->isEmpty() && (!isset($designation)))
             <p class="card-text">
                 @foreach($video->video_course as $vc)
-                    <a href="/course/{{$vc->course_id}}"
-                       class="badge badge-primary">{{\App\Course::find($vc->course_id)->designation}} {{\App\Course::find($vc->course_id)->semester}}{{\App\Course::find($vc->course_id)->year}}</a>
+                    <a href="/designation/{{\App\Course::find($vc->course_id)->designation}}"
+                       class="badge badge-primary">{{\App\Course::find($vc->course_id)->designation}}</a>
                 @endforeach
             </p>
         @endif

@@ -35,9 +35,9 @@ class SearchController extends Controller
         $permissions = VideoPermission::all();
         $videos = Video::with('video_course.course')->whereHas('video_course.course', function($query) use($designation){
             return $query->where('designation', $designation);
-        })->get();
+        })->orderBy('creation', 'desc')->get();
         $videos = $videos->groupBy(function ($item, $key) {
-            return $item->video_course[0]->course['year'] ?? '9999';
+            return $item->video_course[0]->course['semester'].$item->video_course[0]->course['year'] ?? 'UU9999';
         });
 
         return view('home.navigator', compact('designation','videos', 'permissions'));

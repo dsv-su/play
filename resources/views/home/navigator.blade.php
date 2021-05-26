@@ -44,24 +44,30 @@
     <div class="container px-0">
         @if(count($videos) > 0)
             @foreach ($videos as $key => $videocourse)
-                <div class="col">
-                    <h3>@if($designation ?? '') {{$designation}} @elseif($category ?? '') {{$category}} @endif {{$key}}
-                        ({{count($videocourse)}} st)</h3>
-                </div>
-                <div class="d-flex mb-3 flex-wrap">
-                    @foreach ($videocourse as $video)
-                        <div class="col my-3">
-                            @include('home.video')
+                <h3 class="col my-4">
+                    <a class="link" data-toggle="collapse" href="#collapse{{$key}}" role="button" aria-expanded="false"
+                       aria-controls="collapse{{$key}}">
+                        @if($designation ?? '') {{$designation}} @elseif($category ?? '') {{$category}} @endif {{$key}}
+                        ({{count($videocourse)}} st)
+                    </a>
+                </h3>
+
+                <div class="collapse @if ($videos->first() == $videocourse) show @endif" id="collapse{{$key}}">
+                    <div class="d-flex flex-wrap">
+                        @foreach ($videocourse as $video)
+                            <div class="col">
+                                @include('home.video')
+                            </div>
+                        @endforeach
+                        <div class="col">
+                            <div class="card video my-0 mx-auto border-0"></div>
                         </div>
-                    @endforeach
-                    <div class="col">
-                        <div class="card video my-0 mx-auto border-0"></div>
-                    </div>
-                    <div class="col">
-                        <div class="card video my-0 mx-auto border-0"></div>
-                    </div>
-                    <div class="col">
-                        <div class="card video my-0 mx-auto border-0"></div>
+                        <div class="col">
+                            <div class="card video my-0 mx-auto border-0"></div>
+                        </div>
+                        <div class="col">
+                            <div class="card video my-0 mx-auto border-0"></div>
+                        </div>
                     </div>
                 </div>
             @endforeach
