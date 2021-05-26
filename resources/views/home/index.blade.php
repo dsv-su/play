@@ -39,7 +39,7 @@
                             {{ __("from your ongoing courses") }}
                         @endif
                         @if (isset($course))
-                            {{ __("from the course") }} <i>{{$course}}</i>
+                            {{ __("from the course") }} <i>{{$course->name}} {{$course->semester}}{{$course->year}}</i>
                         @elseif (isset($tag)) {{ __("after the tag: ") }} <i>{{$tag}}</i>
                         @elseif (isset($presenter))  {{ __("by") }} <i>{{$presenter}}</i>
                         @endif

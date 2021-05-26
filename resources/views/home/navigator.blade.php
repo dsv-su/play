@@ -35,9 +35,7 @@
                             <span class="fas fa-address-card fa-icon-border mr-2" aria-hidden="true"></span>
                             @lang('lang.category'): <i>{{$category}}</i>
                         @endif
-
                     </h3>
-
                 </div>
             </div> <!-- col-12 -->
         </div> <!-- row no-gutters -->
@@ -45,15 +43,17 @@
 
     <div class="container px-0">
         @if(count($videos) > 0)
-        @foreach ($videos as $key => $videocourse)
-        <h3>@if($designation ?? '') {{$designation}} @elseif($category ?? '') {{$category}} @endif {{$key}} ({{count($videocourse)}} st)</h3>
-
-            <div class="d-flex mb-3 flex-wrap">
-                @foreach ($videocourse as $video)
-                <div class="col my-3">
-                    @include('home.video')
+            @foreach ($videos as $key => $videocourse)
+                <div class="col">
+                    <h3>@if($designation ?? '') {{$designation}} @elseif($category ?? '') {{$category}} @endif {{$key}}
+                        ({{count($videocourse)}} st)</h3>
                 </div>
-                @endforeach
+                <div class="d-flex mb-3 flex-wrap">
+                    @foreach ($videocourse as $video)
+                        <div class="col my-3">
+                            @include('home.video')
+                        </div>
+                    @endforeach
                     <div class="col">
                         <div class="card video my-0 mx-auto border-0"></div>
                     </div>
@@ -63,10 +63,10 @@
                     <div class="col">
                         <div class="card video my-0 mx-auto border-0"></div>
                     </div>
-            </div>
-        @endforeach
+                </div>
+            @endforeach
         @else
-        <h3>{{ __("No presentations") }}</h3>
+            <h3>{{ __("No presentations") }}</h3>
         @endif
     </div><!-- /.container -->
 @endsection

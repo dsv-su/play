@@ -21,11 +21,11 @@
         </div>
     </a>
     <div class="card-body p-1">
-        @if (!$video->video_course->isEmpty())
+        @if (!$video->video_course->isEmpty() && (!isset($designations)))
             <p class="card-text">
                 @foreach($video->video_course as $vc)
                     <a href="/course/{{$vc->course_id}}"
-                       class="badge badge-primary">{{\App\Course::find($vc->course_id)->designation}}</a>
+                       class="badge badge-primary">{{\App\Course::find($vc->course_id)->designation}} {{\App\Course::find($vc->course_id)->semester}}{{\App\Course::find($vc->course_id)->year}}</a>
                 @endforeach
             </p>
         @endif

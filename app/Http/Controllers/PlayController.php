@@ -852,7 +852,7 @@ class PlayController extends Controller
 
     public function showCourseVideos($courseid)
     {
-        $data['course'] = Course::find($courseid)->name;
+        $data['course'] = Course::find($courseid);
         $data['latest'] = Course::find($courseid)->videos();
 
         return view('home.index', $data);
