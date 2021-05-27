@@ -19,7 +19,7 @@
                             <ul class="list-unstyled row no-gutters">
                                 <li class="mega-menu-collapse-col col">
                                     <span class="level-1 text-uppercase d-block mb-3">@lang('lang.navigate')</span>
-                                    <span>{{ __("Here you can navigate among recordings from lectures by semester, course or category.") }}</span>
+                                    <span>{{ __("Here you can navigate among recordings from your teaching activities by semester, course or category.") }}</span>
 
                                 </li>
                                 <li class="mega-menu-collapse-col col">
@@ -32,7 +32,7 @@
                                             <a class="nav-link" href="{{route('semester', $semester)}}">{{$semester}}</a>
                                         @endforeach
                                     @else
-                                        {{ __("No registered Semesters were found.") }}
+                                        {{ __("No presentations from your registered Semesters were found.") }}
                                     @endif
                                 </li>
                                 <li class="mega-menu-collapse-col col">
@@ -41,8 +41,8 @@
                                         <span class="d-inline-block first-letter-capitalized level-2">@lang('lang.course')</span>
                                     </a>
                                     @if(count($designations)>0)
-                                        @foreach($designations as $designation)
-                                            <a class="nav-link" href="{{route('designation', $designation)}}">{{$designation}}</a>
+                                        @foreach($designations as $key => $designation)
+                                            <a class="nav-link" href="{{route('designation', $key)}}">{{$designation}}</a>
                                         @endforeach
                                     @else
                                         {{ __("No active courses found.") }}

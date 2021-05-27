@@ -50,6 +50,7 @@ class CourseNav extends Model
                 $view->with('designations', $this->getEmployeeDesignation(app()->make('play_username')));
                 $view->with('semesters', $this->getEmployeeSemesters(app()->make('play_username')));
             }
+            //If user is Admin or Dev-enviroment
             else {
                 $view->with('designations', $this->getDesignation());
                 $view->with('semesters', $this->getSemesters());
@@ -84,7 +85,9 @@ class CourseNav extends Model
      */
     private function getFakeStudentDesignation($courses)
     {
-        return Course::whereIn('id', $courses)->pluck('designation')->sortByDesc('id')->take(6) ?? '';
+        return Course::whereIn('id', $courses)->take(6)->get()->mapWithKeys(function ($item) {
+            return [$item['designation'] => $item['designation']. ' '.$item['semester'].' '.$item['year']];
+        });
     }
 
     private function getFakeStudentSemesters($courses)
@@ -105,8 +108,7 @@ class CourseNav extends Model
     {
         return Cache::remember('student_designation', $seconds = 180, function () use($username) {
             $daisy = new DaisyIntegration();
-            $courses = $daisy->getActiveStudentCourses($username);
-            return Course::whereIn('id', $courses)->pluck('designation')->sortByDesc('id')->take(6);
+            return $daisy->getActiveStudentDesignations($username);
         });
     }
 
@@ -128,21 +130,23 @@ class CourseNav extends Model
     {
         return Cache::remember('employee_designation', $seconds = 180, function () use($username) {
             $daisy = new DaisyIntegration();
-            $courses = $daisy->getActiveEmployeeDesignations($username);
-            return $courses;
-            //return Course::whereIn('id', $courses)->pluck('designation')->sortByDesc('id')->take(6);
+            return $daisy->getActiveEmployeeDesignations($username);
+            //return array_slice($daisy->getActiveEmployeeDesignations($username), 0, 6);
         });
     }
 
     private function getEmployeeSemesters($username)
     {
-        return Cache::remember('student_semesters', $seconds = 180, function () use($username){
+        return Cache::remember('employee_semesters', $seconds = 180, function () use($username){
             $daisy = new DaisyIntegration();
-            $courses = $daisy->getActiveEmployeeCourses($username);
-            $course_segments = Course::whereIn('id', $courses)->distinct('year')->pluck('year')->take(3);
+            $semesters = collect($daisy->getActiveEmployeeSemesters($username));
+            $course_segments = $semesters->unique()->sortDesc();
             foreach($course_segments as $term) {
-                $semester[] = 'VT '.$term;
-                $semester[] = 'HT '.$term;
+                if (substr($term, 4) == '1') {
+                    $semester[] = 'VT ' .substr($term,0,-1);
+                } else {
+                    $semester[] = 'HT '.substr($term,0,-1);
+                }
             }
             return $semester ?? '';
         });
@@ -150,7 +154,9 @@ class CourseNav extends Model
 
     private function getDesignation()
     {
-        return Course::pluck('designation')->sortByDesc('id')->take(6);
+        return Course::take(6)->get()->mapWithKeys(function ($item) {
+            return [$item['designation'] => $item['designation']. ' '.$item['semester'].' '.$item['year']];
+        });
     }
 
     private function getSemesters()
