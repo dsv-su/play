@@ -94,8 +94,8 @@ class CourseNav extends Model
     {
         $course_segments = Course::whereIn('id', $courses)->distinct('year')->pluck('year')->take(3);
         foreach($course_segments as $term) {
-            $semester[] = 'VT '.$term;
-            $semester[] = 'HT '.$term;
+            $semester[] = 'VT'.$term;
+            $semester[] = 'HT'.$term;
         }
         return $semester ?? '';
     }
@@ -119,8 +119,8 @@ class CourseNav extends Model
             $courses = $daisy->getActiveStudentCourses($username);
             $course_segments = Course::whereIn('id', $courses)->distinct('year')->pluck('year')->take(3);
             foreach($course_segments as $term) {
-                $semester[] = 'VT '.$term;
-                $semester[] = 'HT '.$term;
+                $semester[] = 'VT'.$term;
+                $semester[] = 'HT'.$term;
             }
             return $semester ?? '';
         });
@@ -143,9 +143,9 @@ class CourseNav extends Model
             $course_segments = $semesters->unique()->sortDesc();
             foreach($course_segments as $term) {
                 if (substr($term, 4) == '1') {
-                    $semester[] = 'VT ' .substr($term,0,-1);
+                    $semester[] = 'VT' .substr($term,0,-1);
                 } else {
-                    $semester[] = 'HT '.substr($term,0,-1);
+                    $semester[] = 'HT'.substr($term,0,-1);
                 }
             }
             return $semester ?? '';
@@ -155,7 +155,8 @@ class CourseNav extends Model
     private function getDesignation()
     {
         return Course::take(6)->get()->mapWithKeys(function ($item) {
-            return [$item['designation'] => $item['designation']. ' '.$item['semester'].' '.$item['year']];
+            //return [$item['designation'] => $item['designation']. ' '.$item['semester'].''.$item['year']];
+            return [$item['designation'] => $item['designation']];
         });
     }
 
@@ -163,8 +164,8 @@ class CourseNav extends Model
     {
         $courses = Course::distinct('year')->pluck('year')->take(3);
         foreach($courses as $course) {
-            $semester[] = 'VT '.$course;
-            $semester[] = 'HT '.$course;
+            $semester[] = 'VT'.$course;
+            $semester[] = 'HT'.$course;
         }
 
         return $semester ?? '';

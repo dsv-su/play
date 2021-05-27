@@ -27,7 +27,7 @@
                     <h3 class="su-theme-header mb-4">
                         @if($term ?? '' and $year ?? '')
                             <span class="fas fa-layer-group fa-icon-border mr-2" aria-hidden="true"></span>
-                            {{ __("presentations from") }} {{$term}} {{$year}}
+                            {{ __("presentations from") }} {{$term}}{{$year}}
                         @elseif($designation ?? '')
                             <span class="fas fa-address-card fa-icon-border mr-2" aria-hidden="true"></span>
                             @lang('lang.course'): <i>{{$designation}}</i>
