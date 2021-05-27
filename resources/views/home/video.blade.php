@@ -38,14 +38,14 @@
         @if (!$video->presenters()->isEmpty())
             <p class="card-text">
                 @foreach($video->presenters() as $presenter)
-                    <a href="/presenter/{{$presenter->id}}" class="badge badge-light">{{$presenter->name}}</a>
+                    <a href="/presenter/{{$presenter->username}}" class="badge badge-light">{{$presenter->name}}</a>
                 @endforeach
             </p>
         @endif
         @if (!$video->tags()->isEmpty())
             <p class="card-text" id="tags">
                 @foreach($video->tags() as $tag)
-                    <a href="/tag/{{$tag->id}}" class="badge badge-secondary">{{$tag->name}}</a>
+                    <a href="/tag/{{$tag->name}}" class="badge badge-secondary">{{$tag->name}}</a>
                 @endforeach
             </p>
         @endif
