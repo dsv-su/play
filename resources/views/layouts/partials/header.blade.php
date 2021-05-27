@@ -237,7 +237,7 @@
                                                                 @endforeach
                                                             @else
                                                                     <a class="nav-link" href="">
-                                                                        {{ __("No registered Semesters were found.") }}
+                                                                        {{ __("No presentations from your registered Semesters were found.") }}
                                                                     </a>
                                                             @endif
                                                         </li>
@@ -267,8 +267,8 @@
                                                     <ul class="main-menu-sub navbar-nav pb-4">
                                                         <li class="nav-item pl-3">
                                                             @if(count($designations)>0)
-                                                                @foreach($designations as $designation)
-                                                                    <a class="nav-link" href="{{route('designation', $designation)}}">
+                                                                @foreach($designations as $key => $designation)
+                                                                    <a class="nav-link" href="{{route('designation', $key)}}">
                                                                         <span class="d-inline-block first-letter-capitalized level-2">{{$designation}}</span>
                                                                     </a>
                                                                 @endforeach
