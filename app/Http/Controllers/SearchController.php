@@ -17,7 +17,7 @@ class SearchController extends Controller
 
         //Search
         $term = substr($semester, 0, 2);
-        $year = substr($semester, 3, 4);
+        $year = substr($semester, 2, 4);
         $videos = Video::with('video_course.course')->whereHas('video_course.course', function($query) use($term, $year){
             return $query->where('year', $year)->where('semester', $term);
         })->get();

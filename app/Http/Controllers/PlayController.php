@@ -858,18 +858,19 @@ class PlayController extends Controller
         return view('home.index', $data);
     }
 
-    public function showTagVideos($tagid)
+    public function showTagVideos($tag)
     {
-        $data['tag'] = Tag::find($tagid)->name;
-        $data['latest'] = Tag::find($tagid)->videos();
+        $data['tag'] = $tag;
+        $data['latest'] = Tag::where('name', $tag)->first()->videos();
 
         return view('home.index', $data);
     }
 
-    public function showPresenterVideos($presenterid)
+    public function showPresenterVideos($username)
     {
-        $data['presenter'] = Presenter::find($presenterid)->name;
-        $data['latest'] = Presenter::find($presenterid)->videos();
+        $presenter = Presenter::where('username', $username)->first();
+        $data['presenter'] = $presenter->name;
+        $data['latest'] = $presenter->videos();
 
         return view('home.index', $data);
     }
