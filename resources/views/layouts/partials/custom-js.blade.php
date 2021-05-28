@@ -127,13 +127,13 @@
                 ],
                 suggestion: function (data) {
                     if (data.type === 'course') {
-                        return '<li><a href="/designation/' + data.designation + '">Course: ' + data.name + ' (' + data.designation + ')</a></li>';
+                        return '<li><a class="d-block w-100" href="/designation/' + data.designation + '">Course: ' + data.name + ' (' + data.designation + ')</a></li>';
                     } else if (data.type === 'tag') {
-                        return '<li><a href="/tag/' + data.name + '">Tag: ' + data.name + '</a></li>';
+                        return '<li><a class="d-block w-100" href="/tag/' + data.name + '">Tag: ' + data.name + '</a></li>';
                     } else if (data.type === 'presenter') {
-                        return '<li><a href="/presenter/' + data.username + '">Presenter: ' + data.name + '</a></li>';
+                        return '<li><a class="d-block w-100" href="/presenter/' + data.username + '">Presenter: ' + data.name + '</a></li>';
                     } else {
-                        return '<li><a href="/player/' + data.id + '">Video: ' + data.title + '</a></li>';
+                        return '<li><a class="d-block w-100" href="/player/' + data.id + '">Video: ' + data.title + '</a></li>';
                     }
                 }
             }
