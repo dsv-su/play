@@ -33,6 +33,8 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::get('/designation/{designation}', 'SearchController@searchByDesignation')->name('designation');
     Route::get('/category/{category}', 'SearchController@searchByCategory')->name('category');
     Route::get('/student/{username}', 'SearchController@searchByUser');
+    Route::post('/search', 'SearchController@search')->name('search');
+    Route::get('/find', 'SearchController@find')->name('find');
 
     //Multiplayer
     Route::get('/player/{video}', 'MultiplayerController@player')->name('player');
@@ -103,11 +105,9 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::post('/mediasiteOtherDownload', 'PlayController@mediasiteOtherDownload')->name('mediasiteOtherDownload');
     Route::get('/upload', 'PlayController@upload');
     Route::post('/store', 'PlayController@store')->name('store');
-    Route::get('/find', 'PlayController@find')->name('find');
 
     //Testing routes --> to be removed before production
     Route::get('/test', 'TestController@test')->name('test');
-    Route::post('/search', 'TestController@search')->name('search');
     Route::get('/upload_destroy/{id}', 'AdminController@destroy_upload')->name('upload_delete');
     Route::get('/download_destroy/{id}', 'AdminController@destroy_download')->name('download_delete');
     Route::get('/dev_destroy/{id}', 'AdminController@dev_destroy');

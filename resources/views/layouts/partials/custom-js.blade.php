@@ -98,7 +98,7 @@
                 menu: 'search_autocomplete'
             },
             hint: false,
-            autoselect: true,
+            autoselect: false,
             highlight: true,
             minLength: 1
         }, {
@@ -107,11 +107,12 @@
             // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
             name: 'autocomplete-items',
             display: function (item) {
-                if (item.type == 'course') {
+                if (item.type === 'course') {
                     return 'Course: ' + item.name + ' (' + item.designation + ')';
-                } else if (item.type == 'tag') {
+                } else if (item.type === 'tag') {
+                    console.log(item);
                     return 'Tag: ' + item.name;
-                } else if (item.type == 'presenter') {
+                } else if (item.type === 'presenter') {
                     return 'Presenter: ' + item.name;
                 } else {
                     return 'Video: ' + item.title;
@@ -125,11 +126,11 @@
                     ''
                 ],
                 suggestion: function (data) {
-                    if (data.type == 'course') {
+                    if (data.type === 'course') {
                         return '<li><a href="/designation/' + data.designation + '">Course: ' + data.name + ' (' + data.designation + ')</a></li>';
-                    } else if (data.type == 'tag') {
+                    } else if (data.type === 'tag') {
                         return '<li><a href="/tag/' + data.name + '">Tag: ' + data.name + '</a></li>';
-                    } else if (data.type == 'presenter') {
+                    } else if (data.type === 'presenter') {
                         return '<li><a href="/presenter/' + data.username + '">Presenter: ' + data.name + '</a></li>';
                     } else {
                         return '<li><a href="/player/' + data.id + '">Video: ' + data.title + '</a></li>';
@@ -139,12 +140,12 @@
         }).on('keyup', function (e) {
             //$(".tt-suggestion:first-child").addClass('tt-cursor');
             let selected = $("#header-main-search-text").attr('aria-activedescendant');
-            if (e.which == 13) {
+            if (e.which === 13) {
                 if (selected) {
                     window.location.href = $("#" + selected).find('a').prop('href');
                 } else {
-                    $(".tt-suggestion:first-child").addClass('tt-cursor');
-                    window.location.href = $(".tt-suggestion:first-child").find('a').prop('href');
+              //      $(".tt-suggestion:first-child").addClass('tt-cursor');
+             //       window.location.href = $(".tt-suggestion:first-child").find('a').prop('href');
                 }
             }
         });
