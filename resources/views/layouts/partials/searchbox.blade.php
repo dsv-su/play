@@ -19,6 +19,7 @@
                id="header-main-search-text" name="q" autocomplete="off"
                aria-haspopup="true"
                placeholder="{{ __("Search") }}"
+               @if (isset($q)) value="{{$q}}" @endif
                aria-labelledby="header-main-search-form">
     </form>
 </div>
