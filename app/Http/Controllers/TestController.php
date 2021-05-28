@@ -7,7 +7,6 @@ use App\CategorySearchAspect;
 use App\Course;
 use App\CourseSearchAspect;
 use App\Presenter;
-use App\Services\Daisy\DaisyIntegration;
 use App\Services\Notify\PlayStoreNotify;
 use App\Video;
 use Illuminate\Http\Request;
@@ -96,8 +95,8 @@ class TestController extends Controller
                 return view('home.index', compact('searchResults', 'categories', 'searchCategoryRelations', 'category_videos', 'search', 'play_user'));
             }
 
+            return view('home.search', compact('searchResults', 'search'));
 
-            return view('home.index', compact('searchResults', 'categories', 'search', 'play_user'));
         } elseif ($request->input('type') == 'type-lectures') {
             dd('Sorry, PRESENTATORS search has not been implemented');
             $search = (new Search())

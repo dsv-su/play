@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use LdapRecord\Query\Collection;
 
 class PlayController extends Controller
 {
@@ -843,11 +844,12 @@ class PlayController extends Controller
     public
     function find(Request $request)
     {
-        $courses = Course::search($request->get('query'), null, true, true)->orderBy('year', 'desc')->take(3)->get();
-        $videos = Video::search($request->get('query'), null, true, true)->take(5)->get();
+        $courses = Course::search($request->get('query'), null, true, true)->groupBy('designation')->orderBy('year', 'desc')->take(2)->get();
+        $videos = Video::search($request->get('query'), null, true, true);
         $tags = Tag::search($request->get('query'), null, true, true)->take(3)->get();
         $presenters = Presenter::search($request->get('query'), null, true, true)->take(3)->get();
-        return $courses->merge($videos)->merge($tags)->merge($presenters);
+        $count = $courses->count() + $tags->count() + $presenters->count();
+        return $courses->merge($tags)->merge($presenters)->merge($videos->take(15-$count)->get());
     }
 
     public function showCourseVideos($courseid)

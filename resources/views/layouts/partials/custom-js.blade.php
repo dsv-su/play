@@ -103,14 +103,18 @@
             minLength: 1
         }, {
             source: engine.ttAdapter(),
-            limit: 10,
+            limit: 15,
             // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
             name: 'autocomplete-items',
             display: function (item) {
-                if (item.type == 'course' || item.type == 'tag' || item.type == 'presenter') {
-                    return item.name;
+                if (item.type == 'course') {
+                    return 'Course: ' + item.name + ' (' + item.designation + ')';
+                } else if (item.type == 'tag') {
+                    return 'Tag: ' + item.name;
+                } else if (item.type == 'presenter') {
+                    return 'Presenter: ' + item.name;
                 } else {
-                    return item.title;
+                    return 'Video: ' + item.title;
                 }
             },
             templates: {
@@ -122,11 +126,11 @@
                 ],
                 suggestion: function (data) {
                     if (data.type == 'course') {
-                        return '<li><a href="/course/' + data.id + '">Course: ' + data.name + ' (' + data.designation + ') ' + data.semester + data.year + '</a></li>';
+                        return '<li><a href="/designation/' + data.designation + '">Course: ' + data.name + ' (' + data.designation + ')</a></li>';
                     } else if (data.type == 'tag') {
-                        return '<li><a href="/tag/' + data.id + '">Tag: ' + data.name + '</a></li>';
+                        return '<li><a href="/tag/' + data.name + '">Tag: ' + data.name + '</a></li>';
                     } else if (data.type == 'presenter') {
-                        return '<li><a href="/presenter/' + data.id + '">Presenter: ' + data.name + '</a></li>';
+                        return '<li><a href="/presenter/' + data.username + '">Presenter: ' + data.name + '</a></li>';
                     } else {
                         return '<li><a href="/player/' + data.id + '">Video: ' + data.title + '</a></li>';
                     }
