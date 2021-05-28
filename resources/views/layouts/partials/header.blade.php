@@ -54,11 +54,13 @@
                                         <span class="fas fa-book fa-icon-border mr-2" aria-hidden="true"></span>
                                         <span class="d-inline-block first-letter-capitalized level-2">@lang('lang.category')</span>
                                     </a>
+                                    @if($category ?? '')
                                         @foreach($nav_categories as $category)
                                             <a class="nav-link" href="{{route('category', $category)}}">{{$category}}</a>
                                         @endforeach
                                     @else
                                         {{ __("No active categories found.") }}
+                                    @endif
                                 </li>
                                 @endif
                             </ul>
