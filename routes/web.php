@@ -48,6 +48,7 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::get('/course/{course}', 'PlayController@showCourseVideos')->name('course.videos');
     Route::get('/tag/{tag}', 'PlayController@showTagVideos')->name('tag.videos');
     Route::get('/presenter/{presenter}', 'PlayController@showPresenterVideos')->name('presenter.videos');
+    Route::post('/presenter/{presenter}', 'PlayController@filterPresenterVideos')->name('presenter.filter_videos');
     Route::get('/my', 'PlayController@myVideos')->name('my.videos');
     Route::post('/my/filter', 'PlayController@myVideosFilter')->name('my.filter');
     Route::get('/edit_permission/{video}', 'ManagePresentationController@SetPermission')->name('edit_permission');

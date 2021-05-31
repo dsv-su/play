@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Category;
 use App\Course;
 use App\MediasiteFolder;
 use App\MediasitePresentation;
@@ -23,7 +22,7 @@ use Exception;
 use File;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -32,7 +31,6 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
-use LdapRecord\Query\Collection;
 
 class PlayController extends Controller
 {
@@ -43,45 +41,40 @@ class PlayController extends Controller
 
     public function index()
     {
-        if(!System::find(1)) {
+        if (!System::find(1)) {
             return redirect()->action([SystemController::class, 'start']);
         }
         //For testing
-        if(in_array(app()->make('play_role'), [ 'Student1', 'Student2', 'Student3'] )) {
-            if(app()->make('play_role') == 'Student1') {
+        if (in_array(app()->make('play_role'), ['Student1', 'Student2', 'Student3'])) {
+            if (app()->make('play_role') == 'Student1') {
                 $courses = [6761, 6837, 6703, 6839, 6708, 6838, 6769];
-            }
-            elseif (app()->make('play_role') == 'Student2') {
-                $courses = [6817,6644,6737,6661,6816,6835,6780,6626,6656,6748,6604,6684,6819,6595];
-            }
-            elseif (app()->make('play_role') == 'Student3') {
-                $courses = [6798,6799,6760,6778,6828,6796,6719,6720];
+            } elseif (app()->make('play_role') == 'Student2') {
+                $courses = [6817, 6644, 6737, 6661, 6816, 6835, 6780, 6626, 6656, 6748, 6604, 6684, 6819, 6595];
+            } elseif (app()->make('play_role') == 'Student3') {
+                $courses = [6798, 6799, 6760, 6778, 6828, 6796, 6719, 6720];
             }
             $data['permissions'] = VideoPermission::all();
-            $data['latest'] = Video::with('video_course.course')->whereHas('video_course.course', function($query) use($courses){
+            $data['latest'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
                 return $query->whereIn('course_id', $courses)->take(24);
             })->get();
 
-        }
-        // end testing
-        elseif(app()->make('play_role') == 'Student') {
+        } // end testing
+        elseif (app()->make('play_role') == 'Student') {
             $data['permissions'] = VideoPermission::all();
             $daisy = new DaisyIntegration();
             $courses = $daisy->getActiveStudentCourses(app()->make('play_username'));
-            $data['latest'] = Video::with('video_course.course')->whereHas('video_course.course', function($query) use($courses){
+            $data['latest'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
                 return $query->whereIn('course_id', $courses)->take(24);
             })->get();
-        }
-        //If user is Employee
-        elseif(App::environment('production') and (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')) {
+        } //If user is Employee
+        elseif (App::environment('production') and (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')) {
             $data['permissions'] = VideoPermission::all();
             $daisy = new DaisyIntegration();
             $courses = $daisy->getActiveEmployeeCourses(app()->make('play_username'));
-            $data['latest'] = Video::with('video_course.course')->whereHas('video_course.course', function($query) use($courses){
+            $data['latest'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
                 return $query->whereIn('course_id', $courses);
             })->get();
-        }
-        else {
+        } else {
             //If user is Admin
             $data['search'] = 0;
             $data['latest'] = Video::with('category', 'video_course.course')->latest('creation')->take(24)->get();
@@ -89,28 +82,28 @@ class PlayController extends Controller
             //$data['categories'] = Category::all();
             //-> Most viewed
             $vid = DB::table('videos')
-                        ->select(['video_id', DB::raw('MAX(playback) AS playback')])
-                        ->whereNotNull('playback')
-                        ->join('video_stats','videos.id','=','video_stats.video_id')
-                        ->groupBy('video_id')
-                        ->take(5)->get();
+                ->select(['video_id', DB::raw('MAX(playback) AS playback')])
+                ->whereNotNull('playback')
+                ->join('video_stats', 'videos.id', '=', 'video_stats.video_id')
+                ->groupBy('video_id')
+                ->take(5)->get();
 
             $most_viewed = collect($vid)->map(function ($item) {
                 return $item->video_id;
             });
-            $data['most_viewed'] = Video::with('category', 'video_course.course')->whereIn('id',$most_viewed)->take(24)->get();
+            $data['most_viewed'] = Video::with('category', 'video_course.course')->whereIn('id', $most_viewed)->take(24)->get();
             //-> Most downloaded
             $vid = DB::table('videos')
                 ->select(['video_id', DB::raw('MAX(download) AS download')])
                 ->whereNotNull('download')
-                ->join('video_stats','videos.id','=','video_stats.video_id')
+                ->join('video_stats', 'videos.id', '=', 'video_stats.video_id')
                 ->groupBy('video_id')
                 ->take(5)->get();
 
             $most_down = collect($vid)->map(function ($item) {
                 return $item->video_id;
             });
-            $data['most_downloaded'] = Video::with('category', 'video_course.course')->whereIn('id',$most_down)->take(24)->get();
+            $data['most_downloaded'] = Video::with('category', 'video_course.course')->whereIn('id', $most_down)->take(24)->get();
         }
 
         //All courses (tab 2)
@@ -686,7 +679,7 @@ class PlayController extends Controller
 
     /**
      * @param Request $request
-     * @return false|Application|Factory|View
+     * @return Factory|false|Application|\Illuminate\Contracts\View\View
      */
     public
     function store(Request $request)
@@ -857,12 +850,66 @@ class PlayController extends Controller
         return view('home.index', $data);
     }
 
+    public function extractCourses($videos) {
+        $courses = array();
+        foreach ($videos as $video) {
+            foreach ($video->courses() as $course) {
+                if (!in_array($course->name, $courses)) {
+                    $courses[$course->designation] = $course->name;
+                }
+            }
+        }
+        return $courses;
+    }
+
+    public function extractTerms($videos) {
+        $terms = array();
+        foreach ($videos as $video) {
+            foreach ($video->courses() as $course) {
+                if (!in_array($course->semester.$course->year, $terms)) {
+                    $terms[] = $course->semester.$course->year;
+                }
+            }
+        }
+        return $terms;
+    }
+
+
     public function showPresenterVideos($username)
     {
         $presenter = Presenter::where('username', $username)->first();
         $data['presenter'] = $presenter->name;
         $data['latest'] = $presenter->videos();
+        $data['terms'] = $this->extractTerms($data['latest']);
+        $data['courses'] = $this->extractCourses($data['latest']);
 
         return view('home.index', $data);
+    }
+
+    public function filterPresenterVideos($username, Request $request)
+    {
+        $presenter = Presenter::where('username', $username)->first();
+        $data['presenter'] = $presenter->name;
+        $data['latest'] = $presenter->videos();
+        $designation = request('course');
+        $semester = request('semester');
+        $html = '';
+        foreach ($data['latest'] as $video) {
+            foreach ($video->courses() as $course) {
+                $found = false;
+                if ((!$semester || $semester == ($course->semester . $course->year)) && (!$designation || $designation == $course->designation)) {
+                    $found = true;
+                }
+            }
+            if ($found) {
+                $html .= '<div class="col my-3">' . view('home.video', ['video' => $video])->render() . '</div>';
+            }
+        }
+        $html .= '<div class="col"><div class="card video my-0 mx-auto"></div></div>
+                        <div class="col"><div class="card video my-0 mx-auto"></div></div>
+                        <div class="col"><div class="card video my-0 mx-auto"></div></div>';
+
+        return $html;
+
     }
 }

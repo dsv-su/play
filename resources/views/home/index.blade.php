@@ -52,6 +52,26 @@
         <div class="tab-content" id="myTabContent">
             <div id="pane-A" class="tab-pane fade show active" role="tabpanel" aria-labelledby="tab-A">
                 @if (count($latest)>0)
+                    <form class="form-inline">
+                        @if (isset($courses))
+                            <select name="course" class="form-control mx-1" style="width: 400px">
+                                <option selected value="0">Filter by course</option>
+                                @foreach($courses as $designation => $name)
+                                    <option value="{{$designation}}">{{$name}} ({{$designation}})</option>
+                                @endforeach
+                            </select>
+                        @endif
+                        @if (isset($terms))
+                            <select name="semester" class="form-control mx-1" style="width: 200px">
+                                <option selected value="0">Filter by term</option>
+                                @foreach($terms as $term)
+                                    <option value="{{$term}}">{{$term}}</option>
+                                @endforeach
+                            </select>
+                        @endif
+                        <meta name="csrf-token" content="{{ csrf_token() }}">
+                    </form>
+                    <div id="test"></div>
                     <div class="card-deck inner">
                         @foreach ($latest as $video)
                             <div class="col my-3">
@@ -59,13 +79,13 @@
                             </div>
                         @endforeach
                         <div class="col">
-                            <div class="card video my-0 mx-auto "></div>
+                            <div class="card video my-0 mx-auto"></div>
                         </div>
                         <div class="col">
-                            <div class="card video my-0 mx-auto "></div>
+                            <div class="card video my-0 mx-auto"></div>
                         </div>
                         <div class="col">
-                            <div class="card video my-0 mx-auto "></div>
+                            <div class="card video my-0 mx-auto"></div>
                         </div>
                     </div>
                 @else
@@ -84,15 +104,14 @@
                             </div>
                         @endforeach
                         <div class="col">
-                            <div class="card video my-0 mx-auto "></div>
+                            <div class="card video my-0 mx-auto"></div>
                         </div>
                         <div class="col">
-                            <div class="card video my-0 mx-auto "></div>
+                            <div class="card video my-0 mx-auto"></div>
                         </div>
                         <div class="col">
-                            <div class="card video my-0 mx-auto "></div>
+                            <div class="card video my-0 mx-auto"></div>
                         </div>
-                        s
                     </div>
                 </div>
             @endif
@@ -106,13 +125,13 @@
                             </div>
                         @endforeach
                         <div class="col">
-                            <div class="card video my-0 mx-auto "></div>
+                            <div class="card video my-0 mx-auto"></div>
                         </div>
                         <div class="col">
-                            <div class="card video my-0 mx-auto "></div>
+                            <div class="card video my-0 mx-auto"></div>
                         </div>
                         <div class="col">
-                            <div class="card video my-0 mx-auto "></div>
+                            <div class="card video my-0 mx-auto"></div>
                         </div>
                     </div>
                 </div>
@@ -125,18 +144,46 @@
                             </div>
                         @endforeach
                         <div class="col">
-                            <div class="card video my-0 mx-auto "></div>
+                            <div class="card video my-0 mx-auto"></div>
                         </div>
                         <div class="col">
-                            <div class="card video my-0 mx-auto "></div>
+                            <div class="card video my-0 mx-auto"></div>
                         </div>
                         <div class="col">
-                            <div class="card video my-0 mx-auto "></div>
+                            <div class="card video my-0 mx-auto"></div>
                         </div>
                     </div>
                 </div>
             @endif
         </div>
     </div>
+
+    <script>
+        $(document).on('change', 'select', function (e) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            let formData = new FormData();
+            formData.append("course", $('select[name="course"]').val());
+            formData.append("semester", $('select[name="semester"]').val());
+            $.ajax({
+                type: 'POST',
+                url: "/{{ Request::path()}}",
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: (data) => {
+                    $('#pane-A .card-deck').html(data);
+                },
+                error: function (data) {
+                    alert('There was an error.');
+                    console.log(data);
+                }
+            });
+        });
+    </script>
 
 @endsection
