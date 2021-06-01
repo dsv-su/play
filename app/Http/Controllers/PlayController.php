@@ -891,13 +891,13 @@ class PlayController extends Controller
         $presenter = Presenter::where('username', $username)->first();
         $data['presenter'] = $presenter->name;
         $data['latest'] = $presenter->videos();
-        $designation = request('course');
-        $semester = request('semester');
+        $designation = request('course') ? explode(',', request('course')) : null ;
+        $semester =  request('semester') ? explode(',', request('semester')) : null;
         $html = '';
         foreach ($data['latest'] as $video) {
             foreach ($video->courses() as $course) {
                 $found = false;
-                if ((!$semester || $semester == ($course->semester . $course->year)) && (!$designation || $designation == $course->designation)) {
+                if ((!$semester || in_array($course->semester . $course->year, $semester)) && (!$designation || in_array($course->designation, $designation))) {
                     $found = true;
                 }
             }

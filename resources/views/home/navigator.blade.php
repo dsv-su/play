@@ -28,8 +28,8 @@
         @if(count($videos) > 0)
             @foreach ($videos as $key => $videocourse)
                 <h3 class="col mt-4">
-                    <a class="link" data-toggle="collapse" href="#collapse{{$key}}" role="button" aria-expanded="false"
-                       aria-controls="collapse{{$key}}">
+                    <a class="link @if ($videos->first() !== $videocourse) collapsed @endif" data-toggle="collapse" href="#collapse{{$key}}" role="button" aria-expanded="false"
+                       aria-controls="collapse{{$key}}"><i class="fa mr-2"></i>
                         @if($designation ?? '') {{$designation}} @elseif($category ?? '') {{$category}} @endif {{$key}}
                         ({{count($videocourse)}} st)
                     </a>

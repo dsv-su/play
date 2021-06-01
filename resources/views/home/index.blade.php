@@ -52,18 +52,19 @@
         <div class="tab-content" id="myTabContent">
             <div id="pane-A" class="tab-pane fade show active" role="tabpanel" aria-labelledby="tab-A">
                 @if (count($latest)>0)
+                    @if (isset($courses) || isset($terms))
                     <form class="form-inline">
+                        <label class="col-form-label mr-1 font-weight-light">Filter by: </label>
                         @if (isset($courses))
-                            <select name="course" class="form-control mx-1" style="width: 400px">
-                                <option selected value="0">Filter by course</option>
+                            <select name="course" class="form-control mx-1 selectpicker" data-none-selected-text="Course" multiple style="width: 400px">
                                 @foreach($courses as $designation => $name)
                                     <option value="{{$designation}}">{{$name}} ({{$designation}})</option>
                                 @endforeach
                             </select>
                         @endif
                         @if (isset($terms))
-                            <select name="semester" class="form-control mx-1" style="width: 200px">
-                                <option selected value="0">Filter by term</option>
+                            <select name="semester" class="form-control mx-1 selectpicker" data-none-selected-text="Term" multiple
+                                    style="width: 200px">
                                 @foreach($terms as $term)
                                     <option value="{{$term}}">{{$term}}</option>
                                 @endforeach
@@ -71,7 +72,8 @@
                         @endif
                         <meta name="csrf-token" content="{{ csrf_token() }}">
                     </form>
-                    <div id="test"></div>
+                    <div id="search_badges" class="col"></div>
+                    @endif
                     <div class="card-deck inner">
                         @foreach ($latest as $video)
                             <div class="col my-3">
@@ -176,7 +178,7 @@
                 contentType: false,
                 processData: false,
                 success: (data) => {
-                    $('#pane-A .card-deck').html(data);
+                    $('#pane-A').find('.card-deck.inner').html(data);
                 },
                 error: function (data) {
                     alert('There was an error.');
