@@ -72,7 +72,6 @@
                         @endif
                         <meta name="csrf-token" content="{{ csrf_token() }}">
                     </form>
-                    <div id="search_badges" class="col"></div>
                     @endif
                     <div class="card-deck inner">
                         @foreach ($latest as $video)

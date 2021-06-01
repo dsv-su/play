@@ -8011,3 +8011,7 @@ p.card-text {
 [data-toggle="collapse"] .fa:before {
     content: "\f078";
 }
+
+.bootstrap-select.show-tick .dropdown-menu .selected span.check-mark {
+    top: 10px !important;
+}
