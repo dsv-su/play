@@ -5222,6 +5222,7 @@ p.kill-p, .kill-p p {
     top: 0;
     padding: 4px 4px 4px 4px;
     background-color: var(--light);
+    border-top-left-radius: 3px;
     color: #002f5f;
     /*opacity: 0.85;*/
     transition: var(--ease);
@@ -8001,4 +8002,12 @@ p.card-text {
 
 .main-menu .nav {
     min-width: 450px;
+}
+
+[data-toggle="collapse"].collapsed .fa:before {
+    content: "\f054";
+}
+
+[data-toggle="collapse"] .fa:before {
+    content: "\f078";
 }
