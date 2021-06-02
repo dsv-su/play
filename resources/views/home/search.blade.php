@@ -101,7 +101,37 @@
                 contentType: false,
                 processData: false,
                 success: (data) => {
-                    $('#collapseVideo').find('.d-flex').html(data);
+                    $('#collapseVideo').find('.d-flex').html(data['html']);
+                    $('select[name="tag"] option').each(function () {
+                       if (data['tags'].indexOf($(this).val()) >= 0) {
+                           $(this).prop('disabled', false);
+                       } else {
+                           $(this).prop('disabled', true);
+                       }
+                    });
+                    console.log(data['courses']);
+                    $('select[name="course"] option').each(function () {
+                        if (data['courses'][$(this).val()]) {
+                            $(this).prop('disabled', false);
+                        } else {
+                            $(this).prop('disabled', true);
+                        }
+                    });
+                    $('select[name="presenter"] option').each(function () {
+                        if (data['presenters'][$(this).val()]) {
+                            $(this).prop('disabled', false);
+                        } else {
+                            $(this).prop('disabled', true);
+                        }
+                    });
+                    $('select[name="semester"] option').each(function () {
+                        if (data['terms'].indexOf($(this).val()) >= 0) {
+                            $(this).prop('disabled', false);
+                        } else {
+                            $(this).prop('disabled', true);
+                        }
+                    });
+                    $('.selectpicker').selectpicker('refresh');
                 },
                 error: function (data) {
                     alert('There was an error.');

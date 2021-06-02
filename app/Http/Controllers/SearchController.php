@@ -89,6 +89,7 @@ class SearchController extends Controller
             ->orwhereHas('video_tag.tag', function ($query) use ($q) {
                 return $query->where('name', 'LIKE', "%$q%");
             })
+            ->orderBy('creation', 'desc')
             ->get();
 
      //   $courses = Course::search($q, null, true, true)->groupBy('designation')->orderBy('year', 'desc')->get();
@@ -99,13 +100,14 @@ class SearchController extends Controller
         $videopresenters = $this->extractPresenters($videos);
         $videoterms = $this->extractTerms($videos);
         $videotags = $this->extractTags($videos);
+
         if (request('filtered')) {
             $html = '';
             $designations = request('course') ? explode(',', request('course')) : null;
             $semesters = request('semester') ? explode(',', request('semester')) : null;
             $presenters = request('presenter') ? explode(',', request('presenter')) : null;
             $tags = request('tag') ? explode(',', request('tag')) : null;
-            foreach ($videos as $video) {
+            foreach ($videos as $key => $video) {
                 $found = false;
                 $presenterfound = false;
                 $tagfound = false;
@@ -138,6 +140,8 @@ class SearchController extends Controller
                 }
                 if ($found && $presenterfound && $tagfound) {
                     $html .= '<div class="col my-3">' . view('home.video', ['video' => $video])->render() . '</div>';
+                } else {
+                    unset($videos[$key]);
                 }
             }
             if ($html) {
@@ -147,7 +151,11 @@ class SearchController extends Controller
             } else {
                 $html .= '<h3 class="col my-3 font-weight-light">No presentations found</h3>';
             }
-            return $html;
+            $videocourses = $this->extractCourses($videos);
+            $videopresenters = $this->extractPresenters($videos);
+            $videoterms = $this->extractTerms($videos);
+            $videotags = $this->extractTags($videos);
+            return ['html' => $html, 'tags' => $videotags, 'courses' => $videocourses, 'presenters' => $videopresenters, 'terms' => $videoterms];
 
         } else {
             return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags'));
