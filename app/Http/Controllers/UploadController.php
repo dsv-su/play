@@ -44,7 +44,8 @@ class UploadController extends Controller
         $final = 0;
         $durationInSeconds = 0;
         $permissions = Permission::all();
-        return view('upload.index', $this->init_upload(), compact('final', 'durationInSeconds', 'permissions'));
+        return view('upload.new', $this->init_upload(), compact('final', 'durationInSeconds', 'permissions'));
+        //return view('upload.index', $this->init_upload(), compact('final', 'durationInSeconds', 'permissions'));
     }
 
     public function step1($id, Request $request)

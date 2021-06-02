@@ -10,6 +10,7 @@ use App\Presenter;
 use App\Services\Notify\PlayStoreNotify;
 use App\Video;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Spatie\Searchable\ModelSearchAspect;
 use Spatie\Searchable\Search;
 
@@ -18,7 +19,48 @@ class TestController extends Controller
 {
     public function test(Request $request)
     {
+        $data = array();
 
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|mimes:png,jpg,jpeg,csv,mp4,pdf|max:2048'
+        ]);
+
+        if ($validator->fails()) {
+
+            $data['success'] = 0;
+            $data['error'] = $validator->errors()->first('file');// Error response
+
+        }else{
+            if($request->file('file')) {
+
+                $file = $request->file('file');
+                $filename = time().'_'.$file->getClientOriginalName();
+
+                // File extension
+                $extension = $file->getClientOriginalExtension();
+
+                // File upload location
+                $location = 'files';
+
+                // Upload file
+                $file->move($location,$filename);
+
+                // File path
+                $filepath = url('files/'.$filename);
+
+                // Response
+                $data['success'] = 1;
+                $data['message'] = 'Uploaded Successfully!';
+                $data['filepath'] = $filepath;
+                $data['extension'] = $extension;
+            }else{
+                // Response
+                $data['success'] = 2;
+                $data['message'] = 'File not uploaded.';
+            }
+        }
+
+        return response()->json($data);
     }
 
     public function search(Request $request)
