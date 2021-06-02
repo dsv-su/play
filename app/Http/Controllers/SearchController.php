@@ -77,21 +77,38 @@ class SearchController extends Controller
     public function search(Request $request)
     {
         $q = request('q');
-        $courses = Course::search($q, null, true, true)->groupBy('designation')->orderBy('year', 'desc')->get();
-        $videos = Video::search($q, null, true, true)->orderBy('creation', 'desc')->get();
-        $tags = Tag::search($q, null, true, true)->orderBy('name')->get();
-        $presenters = Presenter::search($q, null, true, true)->get();
+
+        $videos = Video::with('video_course.course', 'video_presenter.presenter', 'video_tag.tag')
+            ->whereHas('video_presenter.presenter', function ($query) use ($q) {
+                return $query->where('username', 'LIKE', "%$q%")->orWhere('name', 'LIKE', "%$q%");
+            })
+            ->orWhereHas('video_course.course', function ($query) use ($q) {
+                return $query->where('title', 'LIKE', "%$q%")->orwhere(\DB::raw('concat(semester,year)'), 'LIKE', "%$q%");
+            })
+            ->orWhere('title', 'LIKE', "%$q%")
+            ->orwhereHas('video_tag.tag', function ($query) use ($q) {
+                return $query->where('name', 'LIKE', "%$q%");
+            })
+            ->get();
+
+     //   $courses = Course::search($q, null, true, true)->groupBy('designation')->orderBy('year', 'desc')->get();
+      //  $videos = Video::search($q, null, true, true)->orderBy('creation', 'desc')->get();
+     //   $tags = Tag::search($q, null, true, true)->orderBy('name')->get();
+     //   $presenters = Presenter::search($q, null, true, true)->get();
         $videocourses = $this->extractCourses($videos);
         $videopresenters = $this->extractPresenters($videos);
         $videoterms = $this->extractTerms($videos);
+        $videotags = $this->extractTags($videos);
         if (request('filtered')) {
             $html = '';
             $designations = request('course') ? explode(',', request('course')) : null;
             $semesters = request('semester') ? explode(',', request('semester')) : null;
             $presenters = request('presenter') ? explode(',', request('presenter')) : null;
+            $tags = request('tag') ? explode(',', request('tag')) : null;
             foreach ($videos as $video) {
                 $found = false;
                 $presenterfound = false;
+                $tagfound = false;
                 if ($designations || $semesters) {
                     foreach ($video->courses() as $course) {
                         if ((!$semesters || in_array($course->semester . $course->year, $semesters)) && (!$designations || in_array($course->designation, $designations))) {
@@ -110,17 +127,30 @@ class SearchController extends Controller
                 } else {
                     $presenterfound = true;
                 }
-                if ($found && $presenterfound) {
+                if ($tags) {
+                    foreach ($video->tags() as $tag) {
+                        if (in_array($tag->name, $tags)) {
+                            $tagfound = true;
+                        }
+                    }
+                } else {
+                    $tagfound = true;
+                }
+                if ($found && $presenterfound && $tagfound) {
                     $html .= '<div class="col my-3">' . view('home.video', ['video' => $video])->render() . '</div>';
                 }
             }
-            $html .= '<div class="col"><div class="card video my-0 mx-auto"></div></div>
+            if ($html) {
+                $html .= '<div class="col"><div class="card video my-0 mx-auto"></div></div>
                         <div class="col"><div class="card video my-0 mx-auto"></div></div>
                         <div class="col"><div class="card video my-0 mx-auto"></div></div>';
+            } else {
+                $html .= '<h3 class="col my-3 font-weight-light">No presentations found</h3>';
+            }
             return $html;
 
         } else {
-            return view('home.search', compact('courses', 'videos', 'tags', 'presenters', 'q', 'videocourses', 'videopresenters', 'videoterms'));
+            return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags'));
         }
     }
 
@@ -174,6 +204,19 @@ class SearchController extends Controller
             }
         }
         return $terms;
+    }
+
+    public function extractTags($videos)
+    {
+        $tags = array();
+        foreach ($videos as $video) {
+            foreach ($video->tags() as $tag) {
+                if (!in_array($tag->name, $tags)) {
+                    $tags[] = $tag->name;
+                }
+            }
+        }
+        return $tags;
     }
 
     public function extractPresenters($videos)
