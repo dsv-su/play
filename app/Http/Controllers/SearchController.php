@@ -81,7 +81,47 @@ class SearchController extends Controller
         $videos = Video::search($q, null, true, true)->orderBy('creation', 'desc')->get();
         $tags = Tag::search($q, null, true, true)->orderBy('name')->get();
         $presenters = Presenter::search($q, null, true, true)->get();
-        return view('home.search', compact('courses', 'videos', 'tags', 'presenters', 'q'));
+        $videocourses = $this->extractCourses($videos);
+        $videopresenters = $this->extractPresenters($videos);
+        $videoterms = $this->extractTerms($videos);
+        if (request('filtered')) {
+            $html = '';
+            $designations = request('course') ? explode(',', request('course')) : null;
+            $semesters = request('semester') ? explode(',', request('semester')) : null;
+            $presenters = request('presenter') ? explode(',', request('presenter')) : null;
+            foreach ($videos as $video) {
+                $found = false;
+                $presenterfound = false;
+                if ($designations || $semesters) {
+                    foreach ($video->courses() as $course) {
+                        if ((!$semesters || in_array($course->semester . $course->year, $semesters)) && (!$designations || in_array($course->designation, $designations))) {
+                            $found = true;
+                        }
+                    }
+                } else {
+                    $found = true;
+                }
+                if ($presenters) {
+                    foreach ($video->presenters() as $presenter) {
+                        if (in_array($presenter->username, $presenters)) {
+                            $presenterfound = true;
+                        }
+                    }
+                } else {
+                    $presenterfound = true;
+                }
+                if ($found && $presenterfound) {
+                    $html .= '<div class="col my-3">' . view('home.video', ['video' => $video])->render() . '</div>';
+                }
+            }
+            $html .= '<div class="col"><div class="card video my-0 mx-auto"></div></div>
+                        <div class="col"><div class="card video my-0 mx-auto"></div></div>
+                        <div class="col"><div class="card video my-0 mx-auto"></div></div>';
+            return $html;
+
+        } else {
+            return view('home.search', compact('courses', 'videos', 'tags', 'presenters', 'q', 'videocourses', 'videopresenters', 'videoterms'));
+        }
     }
 
     public function find(Request $request)
