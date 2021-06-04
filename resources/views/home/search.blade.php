@@ -24,38 +24,34 @@
                 @if (isset($videopresenters) || isset($videoterms) || isset($videocourses) || isset($videotags))
                     <form class="form-inline mx-3">
                         <label class="col-form-label mr-1 font-weight-light">Filter by: </label>
-                        @if (isset($videocourses))
-                            <select name="course" class="form-control mx-1 selectpicker"
-                                    data-none-selected-text="Course" multiple style="width: 400px">
-                                @foreach($videocourses as $designation => $name)
-                                    <option value="{{$designation}}">{{$name}} ({{$designation}})</option>
-                                @endforeach
-                            </select>
-                        @endif
-                        @if (isset($videoterms))
-                            <select name="semester" class="form-control mx-1 selectpicker" data-none-selected-text="Term"
-                                    multiple style="width: 200px">
-                                @foreach($videoterms as $term)
-                                    <option value="{{$term}}">{{$term}}</option>
-                                @endforeach
-                            </select>
-                        @endif
-                        @if (isset($videopresenters))
-                            <select name="presenter" class="form-control mx-1 selectpicker"
-                                    data-none-selected-text="Presenter" multiple style="width: 200px;">
-                                @foreach($videopresenters as $username => $name)
-                                    <option value="{{$username}}">{{$name}}</option>
-                                @endforeach
-                            </select>
-                        @endif
-                        @if (isset($videotags))
-                            <select name="tag" class="form-control mx-1 selectpicker"
-                                    data-none-selected-text="Tag" multiple style="width: 200px;">
-                                @foreach($videotags as $tag)
-                                    <option value="{{$tag}}">{{$tag}}</option>
-                                @endforeach
-                            </select>
-                        @endif
+                        <select name="course" @if (empty($videocourses)) disabled
+                                @endif class="form-control mx-1 selectpicker"
+                                data-none-selected-text="Course" multiple style="width: 400px">
+                            @foreach($videocourses as $designation => $name)
+                                <option value="{{$designation}}">{{$name}} ({{$designation}})</option>
+                            @endforeach
+                        </select>
+                        <select name="semester" @if (empty($videoterms)) disabled
+                                @endif class="form-control mx-1 selectpicker" data-none-selected-text="Term"
+                                multiple style="width: 200px">
+                            @foreach($videoterms as $term)
+                                <option value="{{$term}}">{{$term}}</option>
+                            @endforeach
+                        </select>
+                        <select name="presenter" @if (empty($videopresenters)) disabled
+                                @endif class="form-control mx-1 selectpicker"
+                                data-none-selected-text="Presenter" multiple style="width: 200px;">
+                            @foreach($videopresenters as $username => $name)
+                                <option value="{{$username}}">{{$name}}</option>
+                            @endforeach
+                        </select>
+                        <select name="tag" @if (empty($videotags)) disabled
+                                @endif class="form-control mx-1 selectpicker"
+                                data-none-selected-text="Tag" multiple style="width: 200px;">
+                            @foreach($videotags as $tag)
+                                <option value="{{$tag}}">{{$tag}}</option>
+                            @endforeach
+                        </select>
                         <meta name="csrf-token" content="{{ csrf_token() }}">
                     </form>
                 @endif
@@ -92,7 +88,6 @@
             formData.append("course", $('select[name="course"]').val());
             formData.append("tag", $('select[name="tag"]').val());
             formData.append("filtered", '1');
-            formData.append("q", $('#header-main-search-text').val());
             $.ajax({
                 type: 'POST',
                 url: "/{{ Request::path()}}",
@@ -103,13 +98,12 @@
                 success: (data) => {
                     $('#collapseVideo').find('.d-flex').html(data['html']);
                     $('select[name="tag"] option').each(function () {
-                       if (data['tags'].indexOf($(this).val()) >= 0) {
-                           $(this).prop('disabled', false);
-                       } else {
-                           $(this).prop('disabled', true);
-                       }
+                        if (data['tags'].indexOf($(this).val()) >= 0) {
+                            $(this).prop('disabled', false);
+                        } else {
+                            $(this).prop('disabled', true);
+                        }
                     });
-                    console.log(data['courses']);
                     $('select[name="course"] option').each(function () {
                         if (data['courses'][$(this).val()]) {
                             $(this).prop('disabled', false);

@@ -34,7 +34,8 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::post('/designation/{designation}', 'SearchController@filterOnDesignation')->name('filter_designation');
     Route::get('/category/{category}', 'SearchController@searchByCategory')->name('category');
     Route::get('/student/{username}', 'SearchController@searchByUser');
-    Route::post('/search', 'SearchController@search')->name('search');
+    Route::get('/search/{q}', 'SearchController@search')->name('search');
+    Route::post('/search/{q}', 'SearchController@filterSearch')->name('filter_search');
     Route::get('/find', 'SearchController@find')->name('find');
 
     //Multiplayer
