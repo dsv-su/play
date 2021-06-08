@@ -55,6 +55,7 @@
     "Upload files": "Ladda upp filer",
     "Add": "Lägg till",
     "Primary media": "Primärmedia",
+    "Secondary media": "Sekundärmedia",
     "A thumbnail has been generated to display the presentation on the web page.": "En miniatyr (thumb) har genererats för visning av presentationen på webbsidan.",
     "Thumbnail": "Miniatyr",
     "No image": "Ingen bild",
@@ -71,5 +72,6 @@
     "Work in progress": "Bearbetning pågår",
     "The media files are checked": "Mediafilerna kontrolleras",
     "Upload in progress": "Uppladdning pågår",
-    "Storing media on play-store": "Lagrar på play-store"
+    "Storing media on play-store": "Lagrar på play-store",
+    "The maximum number of files allowed is 4": "Det högsta tillåtna antalet filer är 4"
 }

@@ -24,7 +24,7 @@ class UploadController extends Controller
         $file = new ManualPresentation();
         $file->status = 'init';
         $file->user = app()->make('play_username');
-        $file->local = '-';
+        $file->local = Carbon::now()->toDateString('Y-m-d') . '_' . rand(1, 999);
         $file->base = '-';
         $file->title = '';
         $file->presenters = [];
@@ -44,7 +44,8 @@ class UploadController extends Controller
         $final = 0;
         $durationInSeconds = 0;
         $permissions = Permission::all();
-        return view('upload.new', $this->init_upload(), compact('final', 'durationInSeconds', 'permissions'));
+        $presentation = $this->init_upload();
+        return view('upload.new', compact('presentation', 'final', 'durationInSeconds', 'permissions'));
         //return view('upload.index', $this->init_upload(), compact('final', 'durationInSeconds', 'permissions'));
     }
 

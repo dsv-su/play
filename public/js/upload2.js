@@ -19,7 +19,7 @@ $(document).ready(function() {
         html += '<td>';
         html += '<div class="d-flex justify-content-between" id="user-search">';
         html += '<label for="user-search-text" class="sr-only">Presentatör</label>';
-        html += '<input class="form-control w-100 mx-auto" type="search" id="user-search-text-'+user+'" name="presenters[]"  autocomplete="off" aria-haspopup="true" placeholder="Namn på presentatör" aria-labelledby="user-search">';
+        html += '<input class="form-control w-100 mx-auto" type="search" id="user-search-text-'+user+'" name="presenters[]" wire:model="presenters"  autocomplete="off" aria-haspopup="true" placeholder="Namn på presentatör" aria-labelledby="user-search">';
         html += '</div>';
         html += '</td>';
         html += '<td><button type="button" name="presenterremove" class="btn btn-outline-danger btn-sm presenterremove"><i class="fas fa-user-times"></i><span class="glyphicon glyphicon-minus"></span></button></td></tr>';
@@ -170,6 +170,8 @@ $(document).ready(function() {
             html += '<input type="file" class="text-center center-block file-upload" name="filenames[]">';
             html += '<button type="button" name="mediaremove" class="btn btn-outline-danger btn-sm mediaremove"><i class="far fa-file-video"></i></button>';
             html += '</div>';
+
+
             count++;
             $('#media').append(html);
         }

@@ -110,6 +110,11 @@ Route::middleware('entitlements', 'playauth')->group(function () {
 
     //Testing routes --> to be removed before production
     Route::get('/test', 'TestController@test')->name('test');
+    Route::get('file-upload', function () {
+        return view('default');
+    });
+
+
     Route::get('/upload_destroy/{id}', 'AdminController@destroy_upload')->name('upload_delete');
     Route::get('/download_destroy/{id}', 'AdminController@destroy_download')->name('download_delete');
     Route::get('/dev_destroy/{id}', 'AdminController@dev_destroy');

@@ -14,6 +14,11 @@
     <script src="{{asset('js/popper.min.js')}}"></script>
     <script src="{{asset('bootstrap/bootstrap-4.5.3-dist/js/bootstrap.bundle.js')}}"></script>
     <script src="{{asset('js/su.js')}}"></script>
+    <!-- Laravel Livewire -->
+    @livewireStyles
+    @livewireScripts
+    <!--Alphine JS -->
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js" defer></script>
     <!-- Include Bootstrap Datepicker -->
     <link rel="stylesheet" type="text/css" href="{{asset('bootstrap/datepicker/bootstrap-datepicker.min.css')}}" />
     <script src="{{asset('bootstrap/datepicker/bootstrap-datepicker.min.js')}}"></script>
@@ -28,5 +33,6 @@
     </div>
 </main>
 @include('layouts.partials.footer')
+
 </body>
 </html>
