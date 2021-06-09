@@ -4,9 +4,6 @@ namespace App\Http\Livewire;
 
 use App\ManualPresentation;
 use App\Services\Ffmpeg\DetermineDurationVideo;
-use Carbon\Carbon;
-use GuzzleHttp\Psr7\Request;
-use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -84,8 +81,6 @@ class FileUpload extends Component
                 $this->presentation->save();
             }
 
-            //$this->presentation->sources = $this->filenames;
-            //$this->presentation->save();
             session()->flash('message', 'File successfully Uploaded.');
         }
 
@@ -124,18 +119,6 @@ class FileUpload extends Component
             'sec' => 'required',
         ]);
         $this->filethumbs[$gthumb] = $this->createThumb($this->filenames[$gthumb], $this->sec);
-
-    }
-
-    public function submit()
-    {
-        dd('Submit');
-        $this->validate([
-            'title' => 'required',
-            'created' => 'required',
-        ]);
-        //Validate file
-
 
     }
 

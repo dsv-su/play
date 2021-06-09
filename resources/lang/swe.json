@@ -49,7 +49,7 @@
     "Also make the recording searchable by entering tags.": "Gör även inspelningen sökbar genom att ange taggar.",
     "Tags": "Taggar",
     "All uploaded presentations are public unless otherwise specified": "Alla uppladdade presentationer är publika om inte annat specificeras",
-    "Playback permissions": "Uppspelningsrättigheter",
+    "Playback Permissions": "Uppspelningsrättigheter",
     "Upload media": "Ladda upp media",
     "Upload video media. Up to 4 media files can be uploaded.": "Ladda upp videomedia. Upp till 4 mediafiler är möjliga att ladda upp.",
     "Upload files": "Ladda upp filer",
@@ -74,5 +74,8 @@
     "Upload in progress": "Uppladdning pågår",
     "Storing media on play-store": "Lagrar på play-store",
     "The maximum number of files allowed is 4": "Det högsta tillåtna antalet filer är 4",
-    "The media files have different lengths and differ by more than +/- 3 sec. Check and reload!": "Mediafilerna har olika längd och skiljer åt mer än +/- 3 sek. Kontrollera och ladda upp på nytt!"
+    "The media files have different lengths and differ by more than +/- 3 sec. Check and reload!": "Mediafilerna har olika längd och skiljer åt mer än +/- 3 sek. Kontrollera och ladda upp på nytt!",
+    "Submit": "Skicka",
+    "Materials uploaded to DSVPlay may be subject to posted limitations on usage, reproduction and/or dissemination. You are responsible for adhering to such limitations if you upload materials.": "Material som laddas upp till DSVPlay kan vara föremål för publicerade begränsningar för användning, reproduktion och / eller spridning. Du är ansvarig för att följa sådana begränsningar om du laddar upp material.",
+    "I understand": "Jag förstår"
 }

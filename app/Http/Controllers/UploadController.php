@@ -39,22 +39,21 @@ class UploadController extends Controller
 
     public function upload()
     {
-        //$final = 0;
-        //$durationInSeconds = 0;
         $permissions = Permission::all();
         $presentation = $this->init_upload();
-        return view('upload.new', compact('presentation', 'permissions'));
-        //return view('upload.new', compact('presentation', 'final', 'durationInSeconds', 'permissions'));
+
+        return view('upload.index', compact('presentation', 'permissions'));
     }
 
     public function step1($id, Request $request)
     {
         if ($request->isMethod('post')) {
 
-            //First validation
+            //Second validation
             $this->validate($request, [
                 'title' => 'required',
                 'created' => 'required',
+                'disclaimer' => 'required',
             ]);
 
             //Retrived the upload

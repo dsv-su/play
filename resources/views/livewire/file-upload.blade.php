@@ -36,7 +36,7 @@
 
                                 @if($files)
                                     @if($filethumbs)
-                                        @foreach($filethumbs as $thumb)
+                                        @foreach($filethumbs as  $thumb)
 
                                             <div class="p-4 my-3 rounded-lg shadow-lg transition-all duration-500"
                                                  style="background-image: radial-gradient( circle farthest-corner at 14.2% 27.5%,  rgba(104,199,255,1) 0%, rgba(255,255,255,1) 90% );"
@@ -50,7 +50,7 @@
 
                                             </div>
                                             <div class="form-inline my-3">
-                                                <input class="col-4 form-control form-control-sm" placeholder="10" type="number" wire:model="sec">
+                                                <input class="col-2 form-control form-control-sm" placeholder="10" type="number" wire:model="sec">
                                                 <button class="btn btn-outline-primary btn-sm" wire:click="regenerate({{$loop->index}})">Regenerate</button>
                                                 @error('sec') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
@@ -103,6 +103,7 @@
     </div>
 </div>
 
+
 <script type="text/javascript">
     window.livewire.on('show', () => {
         $('#exampleModal').modal('show');
@@ -110,6 +111,5 @@
     window.livewire.on('diffs', () => {
         $('#diffModal').modal('show');
     });
-
 </script>
 
