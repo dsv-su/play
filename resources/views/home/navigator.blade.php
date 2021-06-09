@@ -27,11 +27,11 @@
     <div class="container px-0">
         @if(count($videos) > 0)
             @if (isset($presenters) || isset($terms))
-                <form class="form-inline mx-3">
+                <form class="form-inline d-sm-block mx-3">
                     <label class="col-form-label mr-1 font-weight-light">Filter by: </label>
                     @if (isset($presenters))
                         <select name="presenter" class="form-control mx-1 selectpicker"
-                                data-none-selected-text="Presenter" multiple style="width: 400px">
+                                data-none-selected-text="Presenter" multiple style="width: 400px;">
                             @foreach($presenters as $username => $name)
                                 <option value="{{$username}}">{{$name}}</option>
                             @endforeach

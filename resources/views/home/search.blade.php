@@ -20,12 +20,41 @@
 
     <div class="container px-0">
         @if(count($videos) > 0)
-            <h2 class="col mt-4"><a class="link collapsed" data-toggle="collapse" href="#collapseVideo"
-                                    role="button" aria-expanded="false"
-                                    aria-controls="collapseVideo"><i class="fa mr-2"></i>Presentations
-                    ({{count($videos)}})</a>
-            </h2>
-            <div class="collapse" id="collapseVideo">
+            <div id="collapseVideo">
+                @if (isset($videopresenters) || isset($videoterms) || isset($videocourses) || isset($videotags))
+                    <form class="form-inline mx-3">
+                        <label class="col-form-label mr-1 font-weight-light">Filter by: </label>
+                        <select name="course" @if (empty($videocourses)) disabled
+                                @endif class="form-control mx-1 selectpicker"
+                                data-none-selected-text="Course" multiple style="width: 400px">
+                            @foreach($videocourses as $designation => $name)
+                                <option value="{{$designation}}">{{$name}} ({{$designation}})</option>
+                            @endforeach
+                        </select>
+                        <select name="semester" @if (empty($videoterms)) disabled
+                                @endif class="form-control mx-1 selectpicker" data-none-selected-text="Term"
+                                multiple style="width: 200px">
+                            @foreach($videoterms as $term)
+                                <option value="{{$term}}">{{$term}}</option>
+                            @endforeach
+                        </select>
+                        <select name="presenter" @if (empty($videopresenters)) disabled
+                                @endif class="form-control mx-1 selectpicker"
+                                data-none-selected-text="Presenter" multiple style="width: 200px;">
+                            @foreach($videopresenters as $username => $name)
+                                <option value="{{$username}}">{{$name}}</option>
+                            @endforeach
+                        </select>
+                        <select name="tag" @if (empty($videotags)) disabled
+                                @endif class="form-control mx-1 selectpicker"
+                                data-none-selected-text="Tag" multiple style="width: 200px;">
+                            @foreach($videotags as $tag)
+                                <option value="{{$tag}}">{{$tag}}</option>
+                            @endforeach
+                        </select>
+                        <meta name="csrf-token" content="{{ csrf_token() }}">
+                    </form>
+                @endif
                 <div class="d-flex flex-wrap">
                     @foreach ($videos as $key => $video)
                         <div class="col my-3">
@@ -44,50 +73,66 @@
                 </div>
             </div>
         @endif
-        @if(count($courses) > 0)
-            <h2 class="col my-4"><a class="link collapsed" data-toggle="collapse" href="#collapseCourse"
-                                    role="button" aria-expanded="false"
-                                    aria-controls="collapseCourse"><i class="fa mr-2"></i>Courses ({{count($courses)}})</a>
-            </h2>
-            <div class="collapse" id="collapseCourse">
-                @foreach ($courses as $key => $course)
-                    <h3 class="col">
-                        <a class="link" href="/designation/{{$course->designation}}" role="button">
-                            {{$course->name}} ({{$course->designation}})
-                        </a>
-                    </h3>
-                @endforeach
-            </div>
-        @endif
-        @if(count($tags) > 0)
-            <h2 class="col my-4"><a class="link collapsed" data-toggle="collapse" href="#collapseTag"
-                                    role="button" aria-expanded="false"
-                                    aria-controls="collapseTag"><i class="fa mr-2"></i>Tags ({{count($tags)}})</a></h2>
-            <div class="collapse" id="collapseTag">
-                @foreach ($tags as $key => $tag)
-                    <h3 class="col">
-                        <a class="link" href="/tag/{{$tag->name}}" role="button">
-                            {{$tag->name}}
-                        </a>
-                    </h3>
-                @endforeach
-            </div>
-        @endif
-        @if(count($presenters) > 0)
-            <h2 class="col my-4"><a class="link collapsed" data-toggle="collapse" href="#collapsePresenter"
-                                    role="button" aria-expanded="false"
-                                    aria-controls="collapsePresenter"><i class="fa mr-2"></i>Presenters
-                    ({{count($presenters)}})</a></h2>
-            <div class="collapse" id="collapsePresenter">
-                @foreach ($presenters as $key => $presenter)
-                    <h3 class="col">
-                        <a class="link" href="/presenter/{{$presenter->username}}" role="button">
-                            {{$presenter->name}} ({{$presenter->username}})
-                        </a>
-                    </h3>
-                @endforeach
-            </div>
-        @endif
     </div><!-- /.container -->
+
+    <script>
+        $(document).on('change', 'select', function (e) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            let formData = new FormData();
+            formData.append("presenter", $('select[name="presenter"]').val());
+            formData.append("semester", $('select[name="semester"]').val());
+            formData.append("course", $('select[name="course"]').val());
+            formData.append("tag", $('select[name="tag"]').val());
+            formData.append("filtered", '1');
+            $.ajax({
+                type: 'POST',
+                url: "/{{ Request::path()}}",
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: (data) => {
+                    $('#collapseVideo').find('.d-flex').html(data['html']);
+                    $('select[name="tag"] option').each(function () {
+                        if (data['tags'].indexOf($(this).val()) >= 0) {
+                            $(this).prop('disabled', false);
+                        } else {
+                            $(this).prop('disabled', true);
+                        }
+                    });
+                    $('select[name="course"] option').each(function () {
+                        if (data['courses'][$(this).val()]) {
+                            $(this).prop('disabled', false);
+                        } else {
+                            $(this).prop('disabled', true);
+                        }
+                    });
+                    $('select[name="presenter"] option').each(function () {
+                        if (data['presenters'][$(this).val()]) {
+                            $(this).prop('disabled', false);
+                        } else {
+                            $(this).prop('disabled', true);
+                        }
+                    });
+                    $('select[name="semester"] option').each(function () {
+                        if (data['terms'].indexOf($(this).val()) >= 0) {
+                            $(this).prop('disabled', false);
+                        } else {
+                            $(this).prop('disabled', true);
+                        }
+                    });
+                    $('.selectpicker').selectpicker('refresh');
+                },
+                error: function (data) {
+                    alert('There was an error.');
+                    console.log(data);
+                }
+            });
+        });
+    </script>
 
 @endsection
