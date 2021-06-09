@@ -9,7 +9,7 @@ use Storage;
 class DetermineDurationVideo extends Model
 {
     protected $media, $video_path, $media_check, $media_durations, $media_duration;
-    protected $diff, $value, $collection;
+    protected $diff, $value, $collection, $file;
     private $video_name;
 
     public function __construct($dir)
@@ -44,7 +44,8 @@ class DetermineDurationVideo extends Model
     private function getDownloadedVideoFiles()
     {
         foreach(Storage::disk('public')->files($this->video_path) as $this->file) {
-            $this->video_name[] = substr($this->file, strrpos($this->file, '/') + 1);
+            $this->video_name[] = basename($this->file);
+            //$this->video_name[] = substr($this->file, strrpos($this->file, '/') + 1);
         }
 
         return $this->video_name;

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\ManualPresentation;
+use App\Services\Ffmpeg\DetermineDurationVideo;
 use Carbon\Carbon;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Http\File;
@@ -22,9 +23,9 @@ class FileUpload extends Component
     public $dirname;
     public $presentation, $permissions;
     public $title, $created;
-    public $presenters = [];
+    public $source = [];
 
-    public function mount($presentation, $permissions)
+    public function mount(ManualPresentation $presentation, $permissions)
     {
         $this->dirname = $presentation->local;
         $this->permissions = $permissions;
@@ -32,7 +33,7 @@ class FileUpload extends Component
 
     public function updatedfiles()
     {
-
+        //Real-time Validation
         $this->validate([
             'files.*' => 'mimetypes:video/mp4,video/avi,video/mpeg,video/quicktime',
             'files' => 'max:4',
@@ -41,21 +42,61 @@ class FileUpload extends Component
             'files.mimetypes' => 'The files must be of type',
             'files.max' => 'The maximum number of files allowed is 4',
         ]);
-
+        //Check if uploaded files are less than 4
         if(count($this->filenames)>3) {
             $this->emit('show');
         } else {
             //Store file
-            foreach($this->files as $item) {
-
+            $ind = count($this->filenames);
+            foreach($this->files as $key => $item) {
                 $filename = $item->store($this->dirname . '/video', 'public');
+                //Add file to file container
                 $this->filenames[] = $filename;
                 $this->filethumbs[] = $this->createThumb($filename, 10);
+
+                //Make source
+                $this->source[$ind]['video'] = 'video/'. basename($filename);
+                $base = basename($filename);
+                $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', $base);
+                $this->source[$ind]['poster'] = 'poster/'. $thumb_name.'.png';
+
+                //Store primary media duration
+                if($key == 0 and count($this->filenames) < 2 ) {
+                    //Store duration
+                    $this->presentation->duration = $this->DurationVideo($this->dirname, $filename);
+                    $primary_video_name = basename($filename);
+                    $this->presentation->thumb = 'poster/'.$primary_video_name;
+                    //Store playAudio for primary
+                    $this->source[$ind]['playAudio'] = true;
+                    $this->presentation->save();
+                }
+                //Check media diffs (+- 3 sec)
+                if(count($this->filenames) > 1){
+                    $media = new DetermineDurationVideo($this->dirname);
+                    if(!$media->check()) {
+                        $this->emit('diffs');
+                    }
+                }
+
+                //Store source
+                $this->presentation->sources = [];
+                $this->presentation->sources = $this->source;
+                $this->presentation->save();
             }
 
+            //$this->presentation->sources = $this->filenames;
+            //$this->presentation->save();
             session()->flash('message', 'File successfully Uploaded.');
         }
 
+    }
+
+    public function DurationVideo($directory, $filename)
+    {
+        $media = new DetermineDurationVideo($directory);
+        //Retrive filename
+        $primary_video_name = basename($filename);
+        return $media->duration($primary_video_name);
     }
 
     public function createThumb($media, $seconds)
@@ -88,12 +129,11 @@ class FileUpload extends Component
 
     public function submit()
     {
-
+        dd('Submit');
         $this->validate([
             'title' => 'required',
             'created' => 'required',
         ]);
-        dd('Submitted', $this->title, $this->created, $this->presenters);
         //Validate file
 
 

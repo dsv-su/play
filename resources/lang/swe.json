@@ -73,5 +73,6 @@
     "The media files are checked": "Mediafilerna kontrolleras",
     "Upload in progress": "Uppladdning pågår",
     "Storing media on play-store": "Lagrar på play-store",
-    "The maximum number of files allowed is 4": "Det högsta tillåtna antalet filer är 4"
+    "The maximum number of files allowed is 4": "Det högsta tillåtna antalet filer är 4",
+    "The media files have different lengths and differ by more than +/- 3 sec. Check and reload!": "Mediafilerna har olika längd och skiljer åt mer än +/- 3 sek. Kontrollera och ladda upp på nytt!"
 }

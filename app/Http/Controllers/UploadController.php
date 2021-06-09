@@ -5,14 +5,12 @@ namespace App\Http\Controllers;
 use App\Course;
 use App\ManualPresentation;
 use App\Permission;
-use App\Services\Ffmpeg\DetermineDurationVideo;
 use App\Services\Ldap\SukatUser;
 use App\Services\Notify\PlayStoreNotify;
 use App\Services\Store\SftpPlayStore;
 use App\VideoPermission;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 use Storage;
 
 class UploadController extends Controller
@@ -41,12 +39,12 @@ class UploadController extends Controller
 
     public function upload()
     {
-        $final = 0;
-        $durationInSeconds = 0;
+        //$final = 0;
+        //$durationInSeconds = 0;
         $permissions = Permission::all();
         $presentation = $this->init_upload();
-        return view('upload.new', compact('presentation', 'final', 'durationInSeconds', 'permissions'));
-        //return view('upload.index', $this->init_upload(), compact('final', 'durationInSeconds', 'permissions'));
+        return view('upload.new', compact('presentation', 'permissions'));
+        //return view('upload.new', compact('presentation', 'final', 'durationInSeconds', 'permissions'));
     }
 
     public function step1($id, Request $request)
@@ -57,34 +55,10 @@ class UploadController extends Controller
             $this->validate($request, [
                 'title' => 'required',
                 'created' => 'required',
-                'filenames' => 'required',
-                'filenames.*' => 'required|mimes:mp4,mov,avi,webm,mpg,mpeg,wmv,qt,avchd'
             ]);
 
             //Retrived the upload
             $manualPresentation = ManualPresentation::find($id);
-
-            //Store uploaded videofiles
-            $files = [];
-            if ($request->hasfile('filenames')) {
-                //Make unique directory
-                $dirname = Carbon::now()->toDateString('Y-m-d') . '_' . rand(1, 999);
-                Storage::disk('public')->makeDirectory($dirname . '/video');
-                //Files
-                $audio = 0;
-                foreach ($request->file('filenames') as $file) {
-                    $name = 'media' . ($audio + 1) . '.' . $file->extension();
-                    $file->move(storage_path('/app/public/' . $dirname . '/video'), $name);
-                    $files[$audio]['video'] = 'video/' . $name;
-                    $files[$audio]['poster'] = 'poster/poster_' . ($audio + 1) . '.png';
-                    if ($audio == 0) {
-                        $files[$audio]['playAudio'] = true;
-                    } else {
-                        $files[$audio]['playAudio'] = false;
-                    }
-                    $audio++;
-                }
-            }
 
             //Presenters
             //Add current user in array
@@ -110,16 +84,6 @@ class UploadController extends Controller
                 }
             } else $tags[] = '';
 
-            //Determine duration of primary media
-            $primary_video_name = substr($files[0]['video'], strrpos($files[0]['video'], '/') + 1);
-            $media = new DetermineDurationVideo($dirname);
-            $durationInSeconds = $media->duration($primary_video_name);
-
-            //Check media diffs (+- 3 sec)
-            if(!$media->check()) {
-                return back()->withInput()->with(['error' => 'Mediafilerna har olika längd och skiljer åt mer än +/- 3 sek. Kontrollera och ladda upp på nytt!']);
-            }
-
             //Set video permissions
             $video_permissions = new VideoPermission();
             if($request->permission == 'false') {
@@ -136,86 +100,18 @@ class UploadController extends Controller
 
             //Update model
             $manualPresentation->status = 'pending';
-            $manualPresentation->local = $dirname;
-            $manualPresentation->base = '/data0/incoming/' . $dirname;
+            $manualPresentation->base = '/data0/incoming/' . $manualPresentation->local;
             $manualPresentation->title = $request->title;
             $manualPresentation->presenters = $presenters;
             $manualPresentation->tags = $tags;
             $manualPresentation->courses = $courses;
-            //$manualPresentation->thumb = 'image/'.$request->thumb; //TODO
             $manualPresentation->created = strtotime($request->created);
-            $manualPresentation->duration = $durationInSeconds;
-            $manualPresentation->sources = $files;
-            $manualPresentation->thumb = $this->gen_thumb_poster($manualPresentation, $durationInSeconds/3);
             $id =$manualPresentation->save();
 
-            $final = 1;
-
-            return view('upload.index', $manualPresentation, compact('durationInSeconds', 'final'));
+            return redirect()->action([UploadController::class, 'store'], ['id' => $manualPresentation->id]);
         }
 
         return back()->withInput();
-    }
-
-    private function gen_thumb_poster(ManualPresentation $manualPresentation, $seconds)
-    {
-        //Create thumb and store in folder
-        FFMpeg::fromDisk('public')
-            ->open('/' . $manualPresentation->local . '/video/media1.mp4')
-            ->getFrameFromSeconds($seconds)
-            ->export()
-            ->toDisk('public')
-            ->save('/' . $manualPresentation->local . '/image/primary_thumb.png');
-
-        //Create posters
-        $poster = 1;
-        foreach ($manualPresentation->sources as $source) {
-            FFMpeg::fromDisk('public')
-                ->open('/' . $manualPresentation->local . '/video/media' . $poster . '.mp4')
-                ->getFrameFromSeconds($seconds)
-                ->export()
-                ->toDisk('public')
-                ->save('/' . $manualPresentation->local . '/poster/poster_' . $poster . '.png');
-            $poster++;
-        }
-
-        return 'image/primary_thumb.png';
-    }
-
-    public function thumb($id, Request $request)
-    {
-        $presentation = ManualPresentation::find($id);
-
-        //Create thumb and store in folder
-        FFMpeg::fromDisk('public')
-            ->open('/' . $presentation->local . '/video/media1.mp4')
-            ->getFrameFromSeconds($request->seconds)
-            ->export()
-            ->toDisk('public')
-            ->save('/' . $presentation->local . '/image/primary_thumb' . $id . '.png');
-        //Store thumb in model
-        $presentation->thumb = 'image/primary_thumb' . $id . '.png';
-        $presentation->save();
-        $durationInSeconds = $presentation->duration;
-        $final = 1;
-
-        return view('upload.index', $presentation, compact('durationInSeconds', 'final'));
-    }
-
-    public function poster($id, Request $request)
-    {
-        $presentation = ManualPresentation::find($id);
-        $durationInSeconds = $presentation->duration;
-
-        FFMpeg::fromDisk('public')
-            ->open('/' . $presentation->local . '/video/media' . $request->poster . '.mp4')
-            ->getFrameFromSeconds($request->seconds)
-            ->export()
-            ->toDisk('public')
-            ->save('/' . $presentation->local . '/poster/poster_' . $request->poster . '.png');
-        $final = 1;
-
-        return view('upload.index', $presentation, compact('durationInSeconds', 'final'));
     }
 
     public function store($id)
