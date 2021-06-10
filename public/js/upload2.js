@@ -130,7 +130,7 @@ $(document).ready(function() {
                 ],
                 suggestion: function (data) {
 
-                    return '<li>' + data.name + ' (' + data.designation + ')' + '</li>';
+                    return '<li>' + data.name + ' (' + data.designation + data.semester + data.year + ')' + '</li>';
 
                 }
             }
@@ -200,7 +200,7 @@ $(document).ready(function() {
                 ],
                 suggestion: function (data) {
 
-                    return '<li>' + data.name + ' (' + data.name + ')' + '</li>';
+                    return '<li>' + data.name + '</li>';
 
                 }
             }
