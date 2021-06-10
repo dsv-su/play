@@ -91,7 +91,7 @@ $(document).ready(function() {
         html += '<input type="text" name="courses[]" id="course-search-text-'+course+'" class="form-control w-100 mx-auto" autocomplete="off" aria-haspopup="true" placeholder="Kursnamn" aria-labelledby="course-search" required>';
         html += '</div>';
         html += '</td>';
-        html += '<td><button type="button" name="courseremove" class="btn btn-outline-danger btn-sm courseremove"><i class="fas fa-chalkboard"></i></button></td></tr>';
+        html += '<td><button type="button" name="courseremove" class="btn btn-outline-danger btn-sm courseremove"><i class="fas fa-minus"></i> <i class="fas fa-chalkboard"></i></button></td></tr>';
         $('#course_table').append(html);
         /* */
         /* Typeahead course name */
@@ -152,12 +152,71 @@ $(document).ready(function() {
     $(document).on('click', '.courseremove', function(){
         $(this).closest('tr').remove();
     });
+    var tag = 1;
     $(document).on('click', '.tagadd', function(){
         var html = '';
         html += '<tr>';
-        html += '<td><input type="text" name="tags[]" class="form-control form-control-sm" placeholder="Tagg" required></td>';
-        html += '<td><button type="button" name="tagremove" class="btn btn-outline-danger btn-sm tagremove"><i class="fas fa-tags"></i></button></td></tr>';
+        html += '<td>';
+        html += '<div class="d-flex justify-content-between" id="course-search">';
+        html += '<input type="text" name="tags[]" id="tag-search-text-'+tag+'" class="form-control w-100 mx-auto" autocomplete="off" aria-haspopup="true" placeholder="Tags" aria-labelledby="tag-search" required></td>';
+        html += '</div>';
+        html += '</td>';
+        html += '<td>';
+        html += '<button type="button" name="tagremove" class="btn btn-outline-danger btn-sm tagremove"><i class="fas fa-minus"></i> <i class="fas fa-tags"></i></button></td></tr>';
         $('#tag_table').append(html);
+        /* Typeahead tags */
+        // Set the Options for "Bloodhound" suggestion engine
+        var engine = new Bloodhound({
+            remote: {
+                url: '/tag_search?tag=%QUERY%',
+                wildcard: '%QUERY%'
+            },
+            datumTokenizer: Bloodhound.tokenizers.whitespace('query'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace
+        });
+
+        $("#tag-search-text-"+tag).typeahead({
+            classNames: {
+                menu: 'search_autocomplete'
+            },
+            hint: false,
+            autoselect: true,
+            highlight: true,
+            minLength: 1
+        }, {
+            source: engine.ttAdapter(),
+            limit: 10,
+            // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
+            name: 'autocomplete-items',
+            display: function (item) {
+                return item.name;
+            },
+            templates: {
+                empty: [
+                    '<div class="list-group search-results-dropdown"><div class="list-group-item">Nothing found.</div></div>'
+                ],
+                header: [
+                    '<div class="list-group search-results-dropdown">'
+                ],
+                suggestion: function (data) {
+
+                    return '<li>' + data.name + ' (' + data.name + ')' + '</li>';
+
+                }
+            }
+        }).on('keyup', function (e) {
+            $(".tt-suggestion:first-child").addClass('tt-cursor');
+            let selected = $("#tag-search-text-"+tag).attr('aria-activedescendant');
+            if (e.which == 13) {
+                if (selected) {
+
+                } else {
+                    $(".tt-suggestion:first-child").addClass('tt-cursor');
+                }
+            }
+        });
+        tag++;
+        /* end typeahead */
     });
     $(document).on('click', '.tagremove', function(){
         $(this).closest('tr').remove();

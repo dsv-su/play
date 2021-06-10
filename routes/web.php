@@ -67,6 +67,7 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::get('/upload_store/{id}', 'UploadController@store')->name('upload_store');
     Route::get('/ldap_search', 'UploadController@ldap_search')->name('ldap_search');
     Route::get('/course_search', 'UploadController@course_search')->name('course_search');
+    Route::get('/tag_search', 'UploadController@tag_search')->name('tag_search');
 
     //Download
     Route::post('/download/{video}', 'ManualDownloadController@step1')->name('download');

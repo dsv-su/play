@@ -8,6 +8,7 @@ use App\Permission;
 use App\Services\Ldap\SukatUser;
 use App\Services\Notify\PlayStoreNotify;
 use App\Services\Store\SftpPlayStore;
+use App\Tag;
 use App\VideoPermission;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -144,5 +145,9 @@ class UploadController extends Controller
     public function course_search(Request $request)
     {
         return Course::where('name', 'LIKE', $request->course.'%')->get();
+    }
+    public function tag_search(Request $request)
+    {
+        return Tag::where('name', 'LIKE', $request->tag.'%')->get();
     }
 }
