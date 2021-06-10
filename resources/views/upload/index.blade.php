@@ -1,12 +1,23 @@
 @extends('layouts.suplay_upload')
 @section('content')
+    <style>
+        .datepicker {
+            padding: 8px 15px;
+            border-radius: 5px !important;
+            margin: 5px 0px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            font-size: 18px !important;
+            font-weight: 300
+        }
+    </style>
     <div class="container px-1 py-5 mx-auto">
         <div class="w-7/12 mx-2 rounded  p-2">
             <div class="row">
                 <div class="col-sm-10"><h1>{{ __("Upload presentation") }}</h1></div>
             </div>
             <div class="row">
-                <div class="col-sm-7">
+                <div class="col-sm-8">
                     <form method="post" action="{{route('upload_step1', $presentation->id)}}">
                         <form>
                         @csrf

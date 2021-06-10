@@ -1,5 +1,5 @@
 
-                <div class="col-sm-5">
+                <div class="col-sm-4">
                     <div class="col-7">
                         <h3 class="fs-title">{{ __("Upload media") }}:</h3>
                     </div>
@@ -36,7 +36,7 @@
 
                                 @if($files)
                                     @if($filethumbs)
-                                        @foreach($filethumbs as  $thumb)
+                                        @foreach($filethumbs as $thumb)
 
                                             <div class="p-4 my-3 rounded-lg shadow-lg transition-all duration-500"
                                                  style="background-image: radial-gradient( circle farthest-corner at 14.2% 27.5%,  rgba(104,199,255,1) 0%, rgba(255,255,255,1) 90% );"
@@ -49,9 +49,14 @@
                                                 </div>
 
                                             </div>
-                                            <div class="form-inline my-3">
-                                                <input class="col-2 form-control form-control-sm" placeholder="10" type="number" wire:model="sec">
-                                                <button class="btn btn-outline-primary btn-sm" wire:click="regenerate({{$loop->index}})">Regenerate</button>
+                                            <!--<div class="form-inline my-3">-->
+                                            <div class="row justify-content-between text-left">
+                                                <div class="form-group col-sm-4 flex-column d-flex">
+                                                        <input class="form-control form-control-sm" placeholder="10" type="number" wire:model="sec">
+                                                </div>
+                                                <div class="form-group col-sm-6 flex-column d-flex">
+                                                    <button class="btn btn-outline-primary btn-sm" wire:click="regenerate({{$loop->index}})">Regenerate</button>
+                                                </div>
                                                 @error('sec') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
 
