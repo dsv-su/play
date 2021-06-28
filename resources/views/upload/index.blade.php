@@ -88,7 +88,7 @@
                             </div>
                             <label class="blue-text form-control-label px-3">{{ __("Playback Permissions") }}</label>
                             <p>
-                                {{ __("All uploaded presentations are public unless otherwise specified") }}
+                                {{ __("All uploaded presentations are accessible to DSV Students and Staff unless otherwise specified with the 'Custom' alternative") }}
                             </p>
                             <div class="row justify-content-between text-left">
                                 <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">{{ __("Playback Permissions") }}</label>
@@ -114,7 +114,7 @@
                                 {{ __("Materials uploaded to DSVPlay may be subject to posted limitations on usage, reproduction and/or dissemination. You are responsible for adhering to such limitations if you upload materials.") }}
                             </p>
                             <div class="row justify-content text-right">
-                                <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3"><input type="checkbox" name="disclaimer"> {{ __("I understand") }}</label>
+                                <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3"><input type="checkbox" name="disclaimer"> {{ __("I understand") }}<span class="text-danger"> *</span></label>
                                     <div><small class="text-danger">{{ $errors->first('disclaimer') }}</small></div>
                                 </div>
                             </div>
@@ -125,7 +125,7 @@
 
 
                         <div class="row justify-content-end">
-                            <div class="form-group col-sm-4"> <button id="submit" type="submit" class="btn-block btn btn-outline-primary">{{ __("Submit") }}</button> </div>
+                            <div class="form-group col-sm-4"> <button id="submit" type="submit" class="btn-block btn btn-outline-primary">{{ __("Upload") }}</button> </div>
                         </div>
 
 
@@ -143,9 +143,7 @@
         </div>
     </div>
 
-
 <!-- Modal spinners -->
-
 <div class="modal fade" id="loadtoserver" tabindex="-1" role="dialog" aria-labelledby="loadMeLabel">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
@@ -160,7 +158,7 @@
 </div>
 
 
-<script src="{{ asset('./js/upload2.js') }}"></script>
+<script src="{{ asset('./js/upload.js') }}"></script>
 <!-- Typeahead.js Bundle -->
 <script src="{{ asset('./js/typeahead/typeahead.bundle.js') }}"></script>
 <script>

@@ -48,7 +48,7 @@
     "Here you specify whether the recording should be associated with one or more courses. If you do not want the recording to be associated with a course or want to complete at a later time, leave the field blank.": "Här anger du om inspelningen ska associeras med en eller fler kurser. Om du inte vill att inspelningen ska associeras med en kurs eller vill komplettera vid ett senare tillfälle lämnar du fältet tomt.",
     "Also make the recording searchable by entering tags.": "Gör även inspelningen sökbar genom att ange taggar.",
     "Tags": "Taggar",
-    "All uploaded presentations are public unless otherwise specified": "Alla uppladdade presentationer är publika om inte annat specificeras",
+    "All uploaded presentations are accessible to DSV Students and Staff unless otherwise specified with the 'Custom' alternative": "Alla uppladdade presentationer är tillgängliga för DSV-studenter och personal om inte annat anges med alternativet 'Anpassad'",
     "Playback Permissions": "Uppspelningsrättigheter",
     "Upload media": "Ladda upp media",
     "Upload video media. Up to 4 media files can be uploaded.": "Ladda upp videomedia. Upp till 4 mediafiler är möjliga att ladda upp.",
@@ -65,7 +65,6 @@
     "Regenerate": "Regenerera",
     "Generate a poster for each presentation": "Generera en affisch (poster) för varje presentation",
     "A poster has been created for each uploaded presentation. The poster is used by the player.": "En affisch har skapats för varje uppladdad presentation. Affischen används av spelaren.",
-    "Upload": "Ladda upp",
     "Your presentation is ready for upload": "Din presentation är klar för uppladdning",
     "Maximum allowed videos": "Maximala tillåtna videos",
     "Maximum number of allowed streams for upload has been reached.": "Maximalt antal tillåtna strömmar för uppladdning har nåtts.",
@@ -76,6 +75,7 @@
     "The maximum number of files allowed is 4": "Det högsta tillåtna antalet filer är 4",
     "The media files have different lengths and differ by more than +/- 3 sec. Check and reload!": "Mediafilerna har olika längd och skiljer åt mer än +/- 3 sek. Kontrollera och ladda upp på nytt!",
     "Submit": "Skicka",
+    "Upload": "Ladda upp",
     "Materials uploaded to DSVPlay may be subject to posted limitations on usage, reproduction and/or dissemination. You are responsible for adhering to such limitations if you upload materials.": "Material som laddas upp till DSVPlay kan vara föremål för publicerade begränsningar för användning, reproduktion och / eller spridning. Du är ansvarig för att följa sådana begränsningar om du laddar upp material.",
     "I understand": "Jag förstår"
 }
