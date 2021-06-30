@@ -1,5 +1,8 @@
 @extends('layouts.suplay')
 @section('content')
+    <script type="text/javascript" src="{{asset('daterangepicker/moment.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('daterangepicker/daterangepicker.min.js')}}"></script>
+    <link rel="stylesheet" type="text/css" href="{{asset('daterangepicker/daterangepicker.css')}}" />
     <form action="{{ route('mediasiteCourseDownload') }}" method="POST">
         @csrf
         @method('POST')
@@ -10,6 +13,7 @@
                 <option value="{{$folder['id']}}">{{$folder['name']}}</option>
             @endforeach
         </select><br>
+        Dates: <input type="text" name="daterange" class="w-50" /><br/>
         Designation: <input type="text" class="col-3" id="designation" name="designation" placeholder="Designation">
         <br>
         <input type="submit" class="btn btn-sm btn-primary" value="Download"/><br/><br/>
@@ -23,7 +27,9 @@
             @foreach($users as $folder)
                 <option value="{{$folder['id']}}">{{$folder['name']}}</option>
             @endforeach
-        </select><br/><br/>
+        </select><br/>
+        Dates: <input type="text" name="daterange" class="w-50" /><br/>
+        <br/>
         <input type="submit" class="btn btn-sm btn-primary" value="Download"/><br/><br/>
     </form>
 
@@ -35,7 +41,9 @@
             @foreach($recordings as $folder)
                 <option value="{{$folder['id']}}">{{$folder['name']}}</option>
             @endforeach
-        </select><br/><br/>
+        </select><br/>
+        Dates: <input type="text" name="daterange" class="w-50" /><br/>
+        <br/>
         <input type="submit" class="btn btn-sm btn-primary" value="Download"/><br/><br/>
     </form>
 
@@ -47,8 +55,27 @@
             @foreach($other as $folder)
                 <option value="{{$folder['id']}}">{{$folder['name']}}</option>
             @endforeach
-        </select><br/><br/>
+        </select><br/>
+        Dates: <input type="text" name="daterange" class="w-50" /><br/>
+        <br/>
         <input type="submit" class="btn btn-sm btn-primary" value="Download"/><br/><br/>
     </form>
+
+    <script>
+        $('input[name="daterange"]').daterangepicker({
+            locale: {
+                format: 'DD/MM/YYYY',
+                daysOfWeek: [
+                    "Mo",
+                    "Tu",
+                    "We",
+                    "Th",
+                    "Fr",
+                    "Sa",
+                    "Su"
+                ]
+            }
+        });
+    </script>
 
 @endsection

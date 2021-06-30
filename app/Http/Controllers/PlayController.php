@@ -18,6 +18,7 @@ use App\VideoPermission;
 use App\VideoPresenter;
 use App\VideoStat;
 use App\VideoTag;
+use Carbon\Carbon;
 use Exception;
 use File;
 use GuzzleHttp\Client;
@@ -466,13 +467,15 @@ class PlayController extends Controller
     function mediasiteUserDownload(): RedirectResponse
     {
         $folderid = request()->user ?? null;
-
-        $this->processDownload('user', $folderid);
+        $dates = explode(' - ', request('daterange'));
+        $start = Carbon::createFromFormat('d/m/Y', $dates[0]);
+        $end = Carbon::createFromFormat('d/m/Y', $dates[1]);
+        $this->processDownload('user', $folderid, $start ?? 0, $end ?? 32472226800);
 
         $subfolders = array();
         $this->getSubFolders(MediasiteFolder::where('mediasite_id', $folderid)->firstOrFail(), MediasiteFolder::all(), $subfolders);
         foreach ($subfolders as $subfolder) {
-            $this->processDownload('user', $subfolder->mediasite_id);
+            $this->processDownload('user', $subfolder->mediasite_id, $start ?? 0, $end ?? 32472226800);
         }
 
         return redirect()->route('home');
@@ -487,7 +490,10 @@ class PlayController extends Controller
     {
         $folderid = request()->course ?? null;
         $designation = request()->designation ?? null;
-        $this->processDownload('course', $folderid, $designation);
+        $dates = explode(' - ', request('daterange'));
+        $start = Carbon::createFromFormat('d/m/Y', $dates[0]);
+        $end = Carbon::createFromFormat('d/m/Y', $dates[1]);
+        $this->processDownload('course', $folderid, $designation, $start ?? 0, $end ?? 32472226800);
 
         return redirect()->route('home');
     }
@@ -500,8 +506,11 @@ class PlayController extends Controller
     function mediasiteRecordingDownload(): RedirectResponse
     {
         $folderid = request()->recording ?? null;
+        $dates = explode(' - ', request('daterange'));
+        $start = Carbon::createFromFormat('d/m/Y', $dates[0]);
+        $end = Carbon::createFromFormat('d/m/Y', $dates[1]);
 
-        $this->processDownload('various', $folderid);
+        $this->processDownload('various', $folderid, $start ?? 0, $end ?? 32472226800);
 
         return redirect()->route('home');
     }
@@ -514,8 +523,10 @@ class PlayController extends Controller
     function mediasiteOtherDownload(): RedirectResponse
     {
         $folderid = request()->other ?? null;
-
-        $this->processDownload('other', $folderid);
+        $dates = explode(' - ', request('daterange'));
+        $start = Carbon::createFromFormat('d/m/Y', $dates[0]);
+        $end = Carbon::createFromFormat('d/m/Y', $dates[1]);
+        $this->processDownload('other', $folderid, $start ?? 0, $end ?? 32472226800);
 
         return redirect()->route('home');
     }
@@ -528,7 +539,7 @@ class PlayController extends Controller
      * @throws Exception
      */
     public
-    function processDownload($type, $folderid, $designation = null): bool
+    function processDownload($type, $folderid, $designation = null, $start = null, $end = null): bool
     {
         $system = new AuthHandler();
         $system = $system->authorize();
@@ -544,10 +555,16 @@ class PlayController extends Controller
         if ($folderid) {
             $presentations = MediasitePresentation::where('mediasite_folder_id', MediasiteFolder::where('mediasite_id', $folderid)->firstOrFail()->id)->get();
             foreach ($presentations as $presentation) {
-
                 try {
                     $presentationid = $presentation->id;
                     $mediasite_presentation = json_decode($mediasite->get($url . "/Presentations('$presentationid')?\$select=full")->getBody(), true);
+
+                    if ($start || $end) {
+                        $recorded = strtotime($mediasite_presentation['RecordDate']);
+                        if ($recorded < $start->timestamp || $recorded > $end->timestamp) {
+                            continue;
+                        }
+                    }
 
                     // Now let's create a json with all relevant metadata
                     $metadata = array(
