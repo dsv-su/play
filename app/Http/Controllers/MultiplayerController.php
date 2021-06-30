@@ -66,7 +66,6 @@ class MultiplayerController extends Controller
             'title' => 'My Playlist'
         ]);
         $playlist
-            ->makeHidden('id')
             ->makeHidden('presentation')
             ->makeHidden('notification_id')
             ->makeHidden('creation')

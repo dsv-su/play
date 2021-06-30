@@ -77,5 +77,13 @@
     "Submit": "Skicka",
     "Upload": "Ladda upp",
     "Materials uploaded to DSVPlay may be subject to posted limitations on usage, reproduction and/or dissemination. You are responsible for adhering to such limitations if you upload materials.": "Material som laddas upp till DSVPlay kan vara föremål för publicerade begränsningar för användning, reproduktion och / eller spridning. Du är ansvarig för att följa sådana begränsningar om du laddar upp material.",
-    "I understand": "Jag förstår"
+    "I understand": "Jag förstår",
+    "Edit Presentation": "Redigera presentation",
+    "Presentation": "Presentation",
+    "Title of the presentation and the date of recording.": "Presentationens titel och inspelningsdatum.",
+    "Original Recording date": "Ursprunglig inspelningsdatum",
+    "Update": "Uppdatera",
+    "Add presenters": "Lägg till presentatörer",
+    "No registered presenters": "Inga registrerade presentatörer",
+    "Associated course": "Associerad kurs"
 }

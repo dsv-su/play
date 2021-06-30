@@ -19,7 +19,7 @@
             <div class="row">
                 <div class="col-sm-8">
                     <form method="post" action="{{route('upload_step1', $presentation->id)}}">
-                        <form>
+
                         @csrf
                         <div class="rounded border shadow p-3 my-2">
 

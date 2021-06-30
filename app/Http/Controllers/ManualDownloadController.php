@@ -162,6 +162,10 @@ class ManualDownloadController extends Controller
 
     public function step3(Video $video)
     {
+        /* This method should be refactored or removed */
+
+        dd($video);
+
         if($presentation = Presentation::find($video->id)) {
 
             $final = 0;

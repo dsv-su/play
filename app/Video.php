@@ -98,7 +98,7 @@ class Video extends Model implements Searchable
         return $this->belongsToMany(Course::class, VideoCourse::class, 'video_id', 'course_id')->get();
     }*/
 
-    public function presenters(): Collection
+    public function presenters():Collection
     {
         return $this->belongsToMany(Presenter::class, 'video_presenters', 'video_id', 'presenter_id')->get();
     }
