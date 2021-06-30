@@ -13,6 +13,20 @@ class EditPresentation extends Component
     public $presenters = [];
     public $presenter, $course, $coursedetail, $course_semester, $course_year;
 
+    //Test
+    public $viralSongs = '';
+
+    public $songs = [
+        'Say So',
+        'The Box',
+        'Laxed',
+        'Savage',
+        'Dance Monkey',
+        'Viral',
+        'Hotline Billing',
+    ];
+    //end Test
+
     public function mount($video)
     {
         $this->title = $video->title;
@@ -42,6 +56,16 @@ class EditPresentation extends Component
     public function presenteradd()
     {
         $this->presenters[] = '';
+    }
+
+    public function remove_presenter($index)
+    {
+        unset($this->presenters[$index]);
+    }
+
+    public function remove_course()
+    {
+        $this->course = '';
     }
 
     public function video()

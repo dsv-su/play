@@ -1,4 +1,5 @@
 <div>
+
     <style>
         .datepicker {
             padding: 8px 15px;
@@ -46,7 +47,15 @@
                                     @else
                                         <label class="form-control-label px-3">{{ __("Presenter") }}</label>
                                         @foreach($presenters as $key => $name)
-                                            <input  type="text" wire:model="presenters.{{$key}}">
+                                            <div class="d-inline">
+                                                <input  type="text" wire:model="presenters.{{$key}}">
+                                                <a class="absolute cursor-pointer top-2 right-2 text-gray-500" wire:click="remove_presenter({{$key}})">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                </a>
+                                            </div>
+
                                         @endforeach
                                     @endif
                                 </div>
@@ -60,11 +69,29 @@
                             </div>
                             <!-- Course -->
                             <div class="row justify-content-between text-left">
-                                <div class="form-group col-sm-6 flex-column d-flex">
+                                <div class="form-group col-sm-12 flex-column d-flex">
                                     <label class="form-control-label px-3">{{ __("Associated course") }}</label>
-                                    <input  type="text" wire:model="course" placeholder="{{ $course }}"type="search" autocomplete="off" aria-haspopup="true" aria-labelledby="course">
+                                    <div class="d-inline">
+                                        <input  type="text" wire:model="course" placeholder="{{ $course }}"type="search" autocomplete="off" aria-haspopup="true" aria-labelledby="course">
+                                        <a class="absolute cursor-pointer top-2 right-2 text-gray-500" wire:click="remove_course">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
+                            <!-- Test -->
+                            <div wire:ignore>
+                                <select class="form-control" id="select2">
+                                    <option value="">Choose Song</option>
+                                    @foreach($songs as $data)
+                                        <option value="{{ $data }}">{{ $data }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- end Test -->
 
                             <!-- Save -->
                             <div class="row justify-content-end">
@@ -91,7 +118,12 @@
                                                     </td></tr>
                                 <tr><th>Recording date:</th><td>{{$date}}</td></tr>
                                 <tr><th>Duration:</th><td>{{$duration}}</td></tr>
-                                <tr><th>Associated to course:</th><td>{{$course}}</td></tr>
+                                <tr><th>@if(empty($course))
+                                            Not associated to a course
+                                        @else
+                                        Associated to course:
+                                        @endif
+                                    </th><td>{{$course}}</td></tr>
                             </table>
                         </div>
                     </div>
@@ -111,5 +143,15 @@
             weekStart: 1,
             todayHighlight: true
         });
+
+        $('#select2').select2();
+        $('#select2').on('change', function (e) {
+            var item = $('#select2').select2("val");
+        @this.set('viralSongs', item);
+        });
+
+
     });
+
+
 </script>
