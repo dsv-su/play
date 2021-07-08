@@ -28,7 +28,7 @@ class ManagePresentationController extends Controller
 
         } elseif (app()->make('play_role') == 'Administrator') {
             //If user is Administrator
-            $videos = Cache::remember('videos', $seconds = 3600, function () {
+            $videos = Cache::remember('videos', $seconds = 180, function () {
                 return Video::with('category', 'video_course.course')->latest('creation')->get();
             });
         } else {

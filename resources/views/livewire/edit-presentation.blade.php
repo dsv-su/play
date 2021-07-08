@@ -139,6 +139,18 @@
                             </table>
                         </div>
                     </div>
+                    {{--}}
+                    <div class="rounded border shadow p-3 my-2">
+                        @if($editt)
+                        <div class="flex justify-center">
+                            <img src="{{$editt->temporaryUrl}}?{{ rand() }}" width="90%">
+                        </div>
+                        @endif
+                        <small>Upload new thumb</small>
+                        <input type="file" class="form-control form-control-sm" wire:model="editt">
+                            @error('editt') <span class="error">{{ $message }}</span> @enderror
+                    </div>
+                    {{--}}
                 </div>
 
 
@@ -149,17 +161,18 @@
         <div class="col-sm-4">
             <div class="rounded border shadow p-3 my-2">
                 <div class="flex justify-center" >
+
                     <small>
                         <div class="custom-control custom-switch custom-switch-sm d-inline">
-                            <input type="checkbox" name="audio[]" class="custom-control-input"  @if($source->playAudio == true) checked @endif >
+                            <input type="checkbox" name="audio[]" class="custom-control-input"  @if($playAudio[$key] == true) checked @endif >
                             <label class="custom-control-label" for="customSwitch1">Audio &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Video {{$loop->index + 1}}]</label>
                         </div>
                     </small>
 
 
-                    <img src="{{$source->poster}}?{{ rand() }}" width="100%">
+                    <img src="{{$poster[$key]}}?{{ rand() }}" width="100%">
                     {{--}}<input class="form-control form-control-sm" type="file" wire:model="editfile.{{$key}}">{{--}}
-                    @error('photo') <span class="error">{{ $message }}</span> @enderror
+                    @error('editfile.*') <span class="error">{{ $message }}</span> @enderror
 
                 </div>
             </div>
@@ -169,6 +182,11 @@
     </div>
 
 
+<div class="container px-1 py-5 mx-auto">
+    <div class="row justify-content-end">
+        <div class="form-group col-sm-4"> <button type="submit" class="btn-block btn btn-outline-primary">{{ __("Update") }}</button> </div>
+    </div>
+</div>
 
 </div>
 

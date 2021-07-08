@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire;
 
-use App\Services\Ldap\SukatUser;
 use App\VideoCourse;
 use Carbon\Carbon;
 use Livewire\Component;
@@ -20,9 +19,7 @@ class EditPresentation extends Component
     public $sukatusers = [];
     public $courseEdit;
     public $permissions, $presentationpermissonId, $presentationpermissonScope;
-    public $sources = [];
-    //public $editfile = [];
-
+    public $sources = [], $playAudio = [], $poster = [];
 
 
     public function mount($video, $courses, $permissions)
@@ -56,9 +53,13 @@ class EditPresentation extends Component
             $this->presentationpermissonId = $p->id;
             $this->presentationpermissonScope = $p->scope;
         }
-        //dd($this->permission);
-    }
 
+        foreach($this->sources as $source) {
+            $this->playAudio[] = $source->playAudio;
+            $this->poster[] = $source->poster;
+        }
+
+    }
 
     public function getDateAttribute($date)
     {
@@ -74,20 +75,6 @@ class EditPresentation extends Component
         $this->dispatchBrowserEvent('contentChanged');
     }
 
-    /*public function updatedpresenters($name, $value)
-    {
-        //dd($value);
-        //dd(SukatUser::whereStartsWith('cn', $name)->get());
-        /*foreach(SukatUser::whereStartsWith('cn', $name)->get() as $user) {
-            $this->sukatusers[] = $user->displayname;
-        }*/
-        /*$this->sukatusers[] = SukatUser::whereStartsWith('cn', $name)->get();
-    }*/
-
-    /*public function input($item){
-        dd($item);
-    }*/
-
     public function remove_presenter($index)
     {
         unset($this->presenters[$index]);
@@ -96,27 +83,6 @@ class EditPresentation extends Component
     public function remove_course()
     {
         $this->course = '';
-    }
-
-    public function video()
-    {
-        if(empty($this->presenters)) {
-            dd('No presenter');
-        }
-        else {
-            foreach($this->presenters as $this->presenter) {
-            }
-        }
-        //Update course association
-        if(!$this->courseEdit == null) {
-            $videocourse = VideoCourse::updateOrCreate(
-                ['video_id' => $this->video->id],
-                ['course_id' => $this->courseEdit]
-            );
-
-        }
-        dd($this->title, $this->date, $this->presenters, $this->course);
-
     }
 
     public function render()

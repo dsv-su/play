@@ -19,7 +19,7 @@ class TestController extends Controller
 {
     public function test(Request $request)
     {
-        
+
     }
 
     public function search(Request $request)
