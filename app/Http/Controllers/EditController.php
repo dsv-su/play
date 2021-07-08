@@ -13,6 +13,7 @@ use App\VideoPermission;
 use App\VideoPresenter;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class EditController extends Controller
 {
@@ -96,6 +97,8 @@ class EditController extends Controller
             }
 
         }
+        Cache::flush();
+
         return redirect()->route('manage')->with('success','Presentation successfully updated');
 
 
