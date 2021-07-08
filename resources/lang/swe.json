@@ -85,5 +85,12 @@
     "Update": "Uppdatera",
     "Add presenters": "Lägg till presentatörer",
     "No registered presenters": "Inga registrerade presentatörer",
-    "Associated course": "Associerad kurs"
+    "Associated course": "Associerad kurs",
+    "Presentation successfully updated": "Presentationen har uppdaterats",
+    "Origin": "Ursprung",
+    "Duration": "Längd",
+    "Migrated from Mediasite": "Migrerad från Mediasite",
+    "Recorded at DSV": "Inspelad på DSV",
+    "Not associated to a course": "Inte associerad med en kurs",
+    "Associated to course": "Associerad med kurs"
 }

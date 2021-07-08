@@ -2,6 +2,9 @@
 @section('content')
 
     <div class="container banner-inner">
+        <div class="col-md-7 offset-3 mt-4">
+            @include('layouts.partials.flash-message')
+        </div>
         <div class="row no-gutters w-100">
             <!-- -->
 

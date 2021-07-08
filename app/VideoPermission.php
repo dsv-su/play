@@ -13,6 +13,11 @@ class VideoPermission extends Model
     /**
      * Get the permission that owns the video.
      */
+    public function video()
+    {
+        return $this->belongsTo(Video::class);
+    }
+
     public function permission()
     {
         return $this->belongsTo(Permission::class);

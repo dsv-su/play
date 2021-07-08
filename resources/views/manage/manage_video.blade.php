@@ -30,14 +30,11 @@
                         class="badge badge-secondary">{{$tag->name}}</a> @endforeach</p>
 
             <p class="card-text">
-
                 <a href="{{route('edit_permission', $video->id)}}" type="button" class="btn btn-outline-primary btn-sm float-right" data-toggle="tooltip" data-placement="top" title="{{ __("Change rights for presentation") }}"><i class="far fa-hand-paper"></i></a>
                 <a href="{{route('presentation_edit', $video->id)}}" type="button" class="btn btn-outline-primary btn-sm float-right" data-toggle="tooltip" data-placement="top" title="Redigera presentation"><i class="far fa-edit"></i></a>
 
             <div class="d-inline-flex">
-                <button class="delete btn btn-danger btn-sm" type="submit" data-toggle="tooltip" data-placement="top"
-                        title="{{ __("Delete presentation") }}"><i class="far fa-trash-alt"></i></button>
-
+                <button class="btn btn-outline-danger btn-sm" type="submit" data-toggle="tooltip" data-placement="top" title="{{ __("Delete presentation") }}"><i class="far fa-trash-alt"></i></button>
 
                 <div class="dropdown" data-toggle="tooltip" data-placement="top"
                      title="{{ __("Download presentation") }}">

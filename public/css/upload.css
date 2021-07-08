@@ -9,7 +9,7 @@
 
 #user-search .twitter-typeahead {
     margin: auto;
-    width: 75%;
+    width: 100%;
 }
 
 #user-search .search_autocomplete {
@@ -326,6 +326,26 @@ textarea,
 button {
     padding: 8px 15px;
     border-radius: 5px !important;
+    margin: 5px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    font-size: 18px !important;
+    font-weight: 300
+}
+
+.datepicker {
+    padding: 8px 15px;
+    border-radius: 5px !important;
+    margin: 5px 0px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    font-size: 18px !important;
+    font-weight: 300
+}
+
+.select2 {
+    padding: 8px 15px;
+    border-radius: 5px !important;
     margin: 5px 0px;
     box-sizing: border-box;
     border: 1px solid #ccc;
@@ -351,6 +371,7 @@ textarea:focus {
     font-size: 18px !important;
     font-weight: 300
 }
+
 .btn-block {
     text-transform: uppercase;
     font-size: 15px !important;

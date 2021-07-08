@@ -121,6 +121,11 @@ class Video extends Model implements Searchable
         return null;
     }
 
+    public function permissions():Collection
+    {
+        return $this->belongsToMany(Permission::class, 'video_permissions', 'video_id', 'permission_id')->get();
+    }
+
     public function getSearchResult(): SearchResult
     {
         // TODO: Implement getSearchResult() method.
