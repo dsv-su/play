@@ -7,18 +7,16 @@ use App\CategorySearchAspect;
 use App\Course;
 use App\CourseSearchAspect;
 use App\Presenter;
-use App\Services\Daisy\DaisyIntegration;
 use App\Services\Notify\PlayStoreNotify;
 use App\Video;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Spatie\Searchable\ModelSearchAspect;
 use Spatie\Searchable\Search;
 
 
 class TestController extends Controller
 {
-    public function test(Request $request)
+    public function test()
     {
 
     }
