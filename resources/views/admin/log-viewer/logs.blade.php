@@ -20,6 +20,11 @@
                                 Reload
                             </a>
                         </div>
+                        <div class="btn btn-outline-primary float-right" style="font-size: 120%">Courses 2018-2021
+                            <a href="{{route('playboot')}}" role="button" class="btn btn-outline-danger float-right">
+                                Reload
+                            </a>
+                        </div>
 
                 @else
                     <button type="button" class="btn btn-outline-primary">

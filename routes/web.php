@@ -95,7 +95,7 @@ Route::middleware('entitlements', 'playauth')->group(function () {
             Route::get('/{date}/{level}/search', 'LogViewerController@search')->name('search');
         });
     });
-    Route::get('/start', 'SystemController@start');
+    Route::get('/start', 'SystemController@start')->name('playboot');
     Route::get('/manual_admin_erase/{id}', 'AdminController@admin_erase')->name('manual_admin_erase');
     Route::get('/manual_admin_notify/{id}', 'AdminController@admin_upload_notify_fail')->name('manual_admin_notify_fail');
     Route::get('/manual_admin_unregister/{id}', 'AdminController@admin_unregister')->name('manual_admin_unregister');

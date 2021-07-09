@@ -45,8 +45,8 @@ class SystemController extends Controller
             return redirect()->action([SystemController::class, 'start']);
         } else {
             //Preload courses from Daisy
-            //$daisy = new DaisyIntegration();
-            //$daisy->init();
+            $daisy = new DaisyIntegration();
+            $daisy->init();
             return redirect('/')->with(['message' => 'Play has initiated successfully!', 'alert' => 'alert-success']);
         }
     }
