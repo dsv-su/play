@@ -29,7 +29,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -46,41 +45,39 @@ class PlayController extends Controller
             return redirect()->action([SystemController::class, 'start']);
         }
         //For testing
+        $daisy = new DaisyIntegration();
         if (in_array(app()->make('play_role'), ['Student1', 'Student2', 'Student3'])) {
             if (app()->make('play_role') == 'Student1') {
-                $courses = [6761, 6837, 6703, 6839, 6708, 6838, 6769];
+                $courses = [6442, 6841, 6761, 6837, 6703, 6839, 6708, 6838, 6769];
             } elseif (app()->make('play_role') == 'Student2') {
                 $courses = [6817, 6644, 6737, 6661, 6816, 6835, 6780, 6626, 6656, 6748, 6604, 6684, 6819, 6595];
             } elseif (app()->make('play_role') == 'Student3') {
                 $courses = [6798, 6799, 6760, 6778, 6828, 6796, 6719, 6720];
             }
             $data['permissions'] = VideoPermission::all();
-            $data['latest'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
+            $data['my'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
                 return $query->whereIn('course_id', $courses)->take(24);
             })->get();
 
         } // end testing
         elseif (app()->make('play_role') == 'Student') {
             $data['permissions'] = VideoPermission::all();
-            $daisy = new DaisyIntegration();
             $courses = $daisy->getActiveStudentCourses(app()->make('play_username'));
-            $data['latest'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
+            $data['my'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
                 return $query->whereIn('course_id', $courses)->take(24);
             })->get();
         } //If user is Employee
         elseif (App::environment('production') and (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')) {
             $data['permissions'] = VideoPermission::all();
-            $daisy = new DaisyIntegration();
             $courses = $daisy->getActiveEmployeeCourses(app()->make('play_username'));
-            $data['latest'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
+            $data['my'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
                 return $query->whereIn('course_id', $courses);
             })->get();
         } else {
             //If user is Admin
             $data['search'] = 0;
-            $data['latest'] = Video::with('category', 'video_course.course')->latest('creation')->take(24)->get();
+            /*
             $data['permissions'] = VideoPermission::all();
-            //$data['categories'] = Category::all();
             //-> Most viewed
             $vid = DB::table('videos')
                 ->select(['video_id', DB::raw('MAX(playback) AS playback')])
@@ -105,10 +102,14 @@ class PlayController extends Controller
                 return $item->video_id;
             });
             $data['most_downloaded'] = Video::with('category', 'video_course.course')->whereIn('id', $most_down)->take(24)->get();
+            */
         }
 
-        //All courses (tab 2)
-        $data['all'] = Video::with('category', 'video_course.course')->latest('creation')->take(24)->get();
+        //All courses (tab 3)
+        $data['active'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($daisy) {
+            return $query->whereIn('course_id', $daisy->getActiveCourses());
+        })->get();
+        $data['latest'] = Video::with('category', 'video_course.course')->latest('creation')->take(24)->get();
 
         return view('home.index', $data);
     }

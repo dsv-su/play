@@ -4,6 +4,7 @@ namespace App\Services\Daisy;
 
 use App\Course;
 use App\System;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,11 +20,12 @@ class DaisyIntegration extends Model
         $this->system = System::find(1);
     }
 
-    public function getResource($endpoint)
+    public function getResource($endpoint, $type = 'xml')
     {
         $this->client = new Client();
         return $this->client->request('GET', $this->system->daisy_url.$endpoint, [
-            'auth' => [$this->system->daisy_username, $this->system->daisy_password]
+            'auth' => [$this->system->daisy_username, $this->system->daisy_password],
+            'headers' => ['Accept' => "application/$type"]
         ]);
 
     }
@@ -128,6 +130,19 @@ class DaisyIntegration extends Model
             return $this->courses;
         }
     }
+
+    //Method for retrieving current active courses from Daisy
+    public function getActiveCourses()
+    {
+        $date = Carbon::now()->format('Y-m-d\TH:i:s');
+        $this->course_result = $this->getResource("courseSegment?startDateBefore=$date&endDateAfter=$date", 'json');
+        $this->courses = json_decode($this->course_result->getBody()->getContents(), TRUE);
+        foreach ($this->courses as $this->courselist) {
+            $this->list[] = $this->courselist['id'];
+        }
+        return $this->list;
+    }
+
     //Method for retrieving Students active courses from Daisy with UserID
     public function getActiveStudentCourses($username)
     {
