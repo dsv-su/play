@@ -72,7 +72,8 @@ class VideoApiController extends Controller
                     $tags->tags();
                 } catch (\Exception $e) {
                     DB::rollback(); // Something went wrong
-                    return response()->json(['error' => 'Something went wrong while creating'], 400);
+                    report($e);
+                    return response()->json(['error' => 'Something went wrong while creating', 'message' => $e->getMessage()], 400);
                 }
             } else {
                 try {
@@ -93,7 +94,8 @@ class VideoApiController extends Controller
                     $tags->tags();
                 } catch (\Exception $e) {
                     DB::rollback(); // Something went wrong
-                    return response()->json(['error' => 'Something went wrong while updating'], 400);
+                    report($e);
+                    return response()->json(['error' => 'Something went wrong while updating', 'message' => $e->getMessage()], 400);
                 }
 
                 DB::commit();   // Successfully stored
