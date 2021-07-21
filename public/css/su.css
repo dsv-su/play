@@ -790,7 +790,7 @@ input::-ms-clear {
 }
 
 #header-main-search-text {
-    font-size: 150%;
+    font-size: 150% !important;
 }
 
 #header-main-search-form .form-control-main-search {
@@ -8019,4 +8019,16 @@ p.card-text {
 .filter-option-inner-inner {
     text-overflow: ellipsis;
     max-width: 200px;
+}
+
+#myTab li {
+    max-width: 300px;
+}
+
+#myTab li:first-child {
+    margin-left: auto;
+}
+
+#myTab li:last-child {
+    margin-right: auto;
 }

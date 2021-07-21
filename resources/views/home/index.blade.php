@@ -9,8 +9,8 @@
                     <span class="su-theme-anchor"></span>
                     <h3 class="su-theme-header mb-4">
                         <span class="far fa-clock fa-icon-border mr-2" aria-hidden="true"></span>
-                        {{ __("Last added") }}
-                        @if (in_array(app()->make('play_role'), [ 'Student','Student1', 'Student2', 'Student3']) && count($latest)>0)
+                        {{ __("Last added presentations") }}
+                        @if (in_array(app()->make('play_role'), [ 'Student','Student1', 'Student2', 'Student3']) && isset($my) && $my->count())
                             {{ __("from your ongoing courses") }}
                         @endif
                         @if (isset($course))
@@ -25,7 +25,7 @@
     </div>
 
     <div class="container">
-        @if (isset($active) || isset($my) || isset($latest))
+        @if (isset($active) || isset($my))
             <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
                 @if (isset($my) && !$my->isEmpty())
                     <li class="nav-item pb-0">

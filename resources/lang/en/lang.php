@@ -25,7 +25,6 @@ return [
     'my_courses' => 'My courses',
     'active_courses' => 'Active courses',
     'latest' => 'All presentations',
-    'my' => 'My courses',
     'viewed' => 'Most viewed',
     'downloaded' => 'Most downloaded',
 ];

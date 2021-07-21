@@ -20,12 +20,12 @@ class DaisyIntegration extends Model
         $this->system = System::find(1);
     }
 
-    public function getResource($endpoint, $type = 'xml')
+    public function getResource($endpoint, $type = null)
     {
         $this->client = new Client();
         return $this->client->request('GET', $this->system->daisy_url.$endpoint, [
             'auth' => [$this->system->daisy_username, $this->system->daisy_password],
-            'headers' => ['Accept' => "application/$type"]
+            'headers' => ['Accept' => $type ? "application/$type" : '' ]
         ]);
 
     }
