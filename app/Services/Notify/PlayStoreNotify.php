@@ -26,8 +26,7 @@ class PlayStoreNotify extends Model
             ->makeHidden('permission')
             ->makeHidden('entitlement')
             ->makeHidden('created_at')
-            ->makeHidden('updated_at')
-            ->makeHidden('slides');
+            ->makeHidden('updated_at');
 
         if ($type == 'update') {
             $this->presentation->makeHidden('resolution');
@@ -73,6 +72,8 @@ class PlayStoreNotify extends Model
                 return $this->response = $e->getResponse()->getBody();
             }
         }
+        //Drop slides property since it's no longer needed to save
+        unset($this->presentation->slides);
 
         if ($this->response->getBody() == 'OK') {
             //Change manualupdate status
