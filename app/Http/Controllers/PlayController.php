@@ -29,6 +29,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -640,15 +641,23 @@ class PlayController extends Controller
 
                     $slides = array();
                     try {
-                        $slides = json_decode($mediasite->get($presentation['SlideContent@odata.navigationLinkUrl'])->getBody(), true)['value'];
+                        $slides = json_decode($mediasite->get($mediasite_presentation['SlideContent@odata.navigationLinkUrl'])->getBody(), true)['value'];
                     } catch (GuzzleException $e) {
                         report($e);
                     }
-                    if ($slides) {
-                        for ($i = 1; $i < $slides['Length'] + 1; $i++) {
-                            $filename = "slide_0" . $i . ".jpg";
-                            $slideurl = "https://play2.dsv.su.se/FileServer/" . $slides['ContentServerId'] . "/Presentation/" . $slides['ParentResourceId'] . "/" . $filename;
-                            $metadata['slides'][] = $slideurl;
+
+                    foreach ($slides as $slide) {
+                        if (!$slide['IsGeneratedFromVideoStream']) {
+                            $mediasiteid = substr(substr_replace(substr_replace(substr_replace(substr_replace($slide['Id'], '-', 20, 0), '-', 16, 0), '-', 12, 0), '-', 8, 0), 0, -2);
+                            $blobs = DB::connection('notmediasite')->select("select * from Timecodes where id = '$mediasiteid'")[0]->datablob;
+                            $xml = simplexml_load_string($blobs);
+                            $json = json_encode($xml);
+                            $array = json_decode($json,TRUE);
+                            for ($i = 1; $i < $slide['Length'] + 1; $i++) {
+                                $filename = "slide_" . str_pad($i, 4, "0", STR_PAD_LEFT) . ".jpg";
+                                $slideurl = "https://play2.dsv.su.se/FileServer/" . $slide['ContentServerId'] . "/Presentation/" . $slide['ParentResourceId'] . "/" . $filename;
+                                $metadata['slides'][] = ['url' => $slideurl, 'time' => isset($array['Slides']['SlideEntry'][$i-1]) ? $array['Slides']['SlideEntry'][$i-1]['Time'] : $array['Slides']['SlideEntry']['Time']];
+                            }
                         }
                     }
 
@@ -666,6 +675,9 @@ class PlayController extends Controller
                     $presentation->created = strtotime($metadata['recorded']);
                     $presentation->duration = $metadata['duration'];
                     $presentation->sources = $metadata['sources'];
+                    if (isset($metadata['slides'])) {
+                        $presentation->slides = $metadata['slides'];
+                    }
 
                     $semester = $year = '';
                     if ($type == 'course') {
@@ -680,10 +692,10 @@ class PlayController extends Controller
                         }
                     }
 
-                    //dd($p);
+                   // dd($presentation);
 
-                    $notify = new PlayStoreNotify($presentation);
-                    $notify->sendSuccess('mediasite');
+                     $notify = new PlayStoreNotify($presentation);
+                     $notify->sendSuccess('mediasite');
 
                     //return true;
                 } catch (GuzzleException $e) {
