@@ -2,7 +2,6 @@
 
 <div class="col my-3">
     <!--<style>.btn-sm { height: 3vh; width: 5vh; }</style>-->
-    <p style="font-size: 75%; color: blue">{{$video->id}}</p>
     <div class="card video m-auto" id="{{$video->id}}">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <a href="{{ route('player', ['video' => $video]) }}">
@@ -18,9 +17,6 @@
                     <a href="/designation/{{\App\Course::find($vc->course_id)->designation}}"
                        class="badge badge-primary">{{\App\Course::find($vc->course_id)->designation}}</a> @endforeach
             </p>
-            <p class="card-text" id="category">
-                <span class="badge badge-light">{{$video->category->category_name}}</span>
-            </p>
             <p class="card-text">
                 @foreach($video->presenters() as $presenter)
                     <a href="/presenter/{{$presenter->username}}" class="badge badge-light">{{$presenter->name}}</a>
@@ -29,16 +25,16 @@
                         href="/tag/{{$tag->name}}"
                         class="badge badge-secondary">{{$tag->name}}</a> @endforeach</p>
 
-            <p class="card-text">
-                <a href="{{route('edit_permission', $video->id)}}" type="button" class="btn btn-outline-primary btn-sm float-right" data-toggle="tooltip" data-placement="top" title="{{ __("Change rights for presentation") }}"><i class="far fa-hand-paper"></i></a>
-                <a href="{{route('presentation_edit', $video->id)}}" type="button" class="btn btn-outline-primary btn-sm float-right" data-toggle="tooltip" data-placement="top" title="Redigera presentation"><i class="far fa-edit"></i></a>
-
-            <div class="d-inline-flex">
-                <button class="btn btn-outline-danger btn-sm" type="submit" data-toggle="tooltip" data-placement="top" title="{{ __("Delete presentation") }}"><i class="far fa-trash-alt"></i></button>
-
-                <div class="dropdown" data-toggle="tooltip" data-placement="top"
+            <div class="d-inline">
+                <a href="{{route('presentation_edit', $video->id)}}" data-toggle="tooltip"
+                   title="Redigera presentation" class="btn btn-outline-primary btn-sm mb-1"><i
+                            class="far fa-edit"></i></a>
+                <a href="{{route('edit_permission', $video->id)}}" data-toggle="tooltip"
+                   title="{{ __("Change rights for presentation") }}" class="btn btn-outline-secondary btn-sm mb-1"><i
+                            class="far fa-hand-paper"></i></a>
+                <div class="dropdown d-inline" data-toggle="tooltip" data-placement="top"
                      title="{{ __("Download presentation") }}">
-                    <a class="btn btn-outline-primary btn-sm float-right" href="#" role="button" data-toggle="dropdown"
+                    <a class="btn btn-outline-info btn-sm mb-1" href="#" role="button" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-download"></i>
                     </a>
@@ -57,15 +53,16 @@
                                     <button class="dropdown-item btn btn-outline-primary btn-sm" name="res" value="999">
                                         <i class="fas fa-download"></i> 720p
                                     </button>
-
                                 @endif
                             @endforeach
                         </form>
                     </div>
                 </div>
+                <a href="#" data-toggle="tooltip" title="{{ __("Delete presentation") }}"
+                   class="btn btn-outline-danger btn-sm ml-1 mb-1 float-right"><i
+                            class="far fa-trash-alt"></i></a>
             </div>
-            </p>
-
+            <p class="m-0"><small>{{$video->id}}</small></p>
         </div>
     </div>
     <!-- The Modal -->

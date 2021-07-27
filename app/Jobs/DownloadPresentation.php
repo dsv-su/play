@@ -114,8 +114,6 @@ class DownloadPresentation implements ShouldQueue
                 }
             }
 
-
-
             $streams = array();
             try {
                 $streams = json_decode($mediasite->get($url . "/Presentations('$presentationid')/OnDemandContent")->getBody(), true)['value'];
@@ -155,6 +153,28 @@ class DownloadPresentation implements ShouldQueue
                 return false;
             }
 
+            $slides = array();
+            try {
+                $slides = json_decode($mediasite->get($presentation['SlideContent@odata.navigationLinkUrl'])->getBody(), true)['value'];
+            } catch (GuzzleException $e) {
+                report($e);
+            }
+            if ($slides) {
+                for ($i = 1; $i < $slides['Length'] + 1; $i++) {
+                    $filename = "slide_0" . $i . ".jpg";
+                    $slideurl = "https://play2.dsv.su.se/FileServer/" . $slides['ContentServerId'] . "/Presentation/" . $slides['ParentResourceId'] . "/" . $filename;
+                    $client = new Client();
+                    if (!file_exists($this->path . $title . '/slides/' . $filename)) {
+                        // download only if it hasn't been done before
+                        if (!is_dir($this->path . $title . '/slides')) {
+                            mkdir($this->path . $title . '/slides');
+                        }
+                        $client->request('GET', $slideurl, ['sink' => $this->path . '/' . $title . '/slides/' . $filename]);
+                    }
+                    $metadata['slides'][] = "./storage/mediasite/$this->type/$this->foldername/$title/slides/$filename";
+                }
+            }
+
             // Save metadata json
             file_put_contents($this->path . '/' . $title . '/data.json', json_encode($metadata, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 
@@ -175,8 +195,8 @@ class DownloadPresentation implements ShouldQueue
                 $re = '/([V|H|S]T)(19|20)\d{2}/';
                 preg_match($re, $title, $term, 0, 0);
                 if ($term && $term[0]) {
-                  //  $semester = substr($term[0], 0, 2);
-                  //  $year = substr($term[0], 2, 4);
+                    //  $semester = substr($term[0], 0, 2);
+                    //  $year = substr($term[0], 2, 4);
                     Tag::firstOrCreate(array('name' => $term[0]));
                 }
 

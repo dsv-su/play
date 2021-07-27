@@ -627,16 +627,29 @@ class PlayController extends Controller
                             $thumb = array_filter($thumbs, function ($t) use ($stream) {
                                 return $t['StreamType'] == $stream['StreamType'];
                             });
-                            $client = new Client();
                             $metadata['sources'][] = array(
                                 'video' => $streamurl,
                                 'poster' => array_pop($thumb)['ThumbnailUrl'],
-                                'playAudio' => $key ? false : true
+                                'playAudio' => !$key
                             );
                         }
                     }
                     if ($emptystreams) {
                         return false;
+                    }
+
+                    $slides = array();
+                    try {
+                        $slides = json_decode($mediasite->get($presentation['SlideContent@odata.navigationLinkUrl'])->getBody(), true)['value'];
+                    } catch (GuzzleException $e) {
+                        report($e);
+                    }
+                    if ($slides) {
+                        for ($i = 1; $i < $slides['Length'] + 1; $i++) {
+                            $filename = "slide_0" . $i . ".jpg";
+                            $slideurl = "https://play2.dsv.su.se/FileServer/" . $slides['ContentServerId'] . "/Presentation/" . $slides['ParentResourceId'] . "/" . $filename;
+                            $metadata['slides'][] = $slideurl;
+                        }
                     }
 
                     //$p = MediasitePresentation::where('mediasite_id', $presentationid)->first();

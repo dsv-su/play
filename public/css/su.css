@@ -80,7 +80,7 @@ input[type=search]::-ms-reveal {
 }
 
 small, .small {
-    font-size: .875rem;
+    font-size: 70%;
     font-weight: 400
 }
 
@@ -5206,7 +5206,7 @@ p.kill-p, .kill-p p {
 
 .video:hover {
     transform: scale(1.03);
-    opacity: 0.9;
+    /*opacity: 0.9;*/
 }
 
 .video .card-header {

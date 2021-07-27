@@ -24,24 +24,25 @@ class CourseStore extends Model
     public function course()
     {
         //If there is no course association
-        if(!count($this->courses)>0) {
+        if (!count($this->courses) > 0) {
+            /* Do not save course association when there's no course
             VideoCourse::updateOrCreate([
                 'video_id' => $this->video->id,
                 'course_id' => 1,
             ]);
+            */
         }
 
-        foreach ($this->courses as $key => $this->item)
-        {
-            if($this->item) {
+        foreach ($this->courses as $key => $this->item) {
+            if ($this->item) {
                 //Check if course exists
 
-                if(! $this->db_course = Course::where('designation', $this->item)->where('semester', $this->convertSemester($this->timestamp))->where('year', $this->convertYear($this->timestamp))->first()) {
+                if (!$this->db_course = Course::where('designation', $this->item)->where('semester', $this->convertSemester($this->timestamp))->where('year', $this->convertYear($this->timestamp))->first()) {
                     //Retrive course information from Daisy
                     $this->daisy = new DaisyIntegration();
-                    $this->retrieved_course = $this->daisy->getCourse($this->item, $this->convertYear($this->timestamp).$this->convertDaisySemester($this->timestamp));
+                    $this->retrieved_course = $this->daisy->getCourse($this->item, $this->convertYear($this->timestamp) . $this->convertDaisySemester($this->timestamp));
                     $this->course = Course::create([
-                        'id' =>  $this->retrieved_course['id'],
+                        'id' => $this->retrieved_course['id'],
                         'name' => $this->retrieved_course['name'],
                         'designation' => $this->retrieved_course['designation'],
                         'semester' => $this->convertSemester($this->timestamp),
@@ -52,10 +53,9 @@ class CourseStore extends Model
                         'video_id' => $this->video->id,
                         'course_id' => $this->course->id,
                     ]);
-                }
-                else{
+                } else {
                     //The course exists
-                    if($key == 0) {
+                    if ($key == 0) {
                         //Remove any old associations
                         VideoCourse::where('video_id', $this->video->id)->delete();
                     }
@@ -82,10 +82,9 @@ class CourseStore extends Model
     public function convertSemester($timestamp)
     {
         $this->creation = Carbon::createFromTimestamp($timestamp)->toObject();
-        if(in_array($this->creation->month,[1,2,3,4,5,6])) {
+        if (in_array($this->creation->month, [1, 2, 3, 4, 5, 6])) {
             return 'VT';
-        }
-        else {
+        } else {
             return 'HT';
         }
     }
@@ -93,10 +92,9 @@ class CourseStore extends Model
     public function convertDaisySemester($timestamp)
     {
         $this->creation = Carbon::createFromTimestamp($timestamp)->toObject();
-        if(in_array($this->creation->month,[1,2,3,4,5,6])) {
+        if (in_array($this->creation->month, [1, 2, 3, 4, 5, 6])) {
             return '1';
-        }
-        else {
+        } else {
             return '2';
         }
     }
