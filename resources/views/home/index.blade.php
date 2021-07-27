@@ -23,7 +23,7 @@
             </div> <!-- col-12 -->
         </div> <!-- row no-gutters -->
     </div>
-    <img style="width: 1392px; height: 783px; left: 0px; top: 0px;" src="https://play2.dsv.su.se/FileServer/e97723bde393468782350d2ec7656b8529/Presentation/fcf6de06e9c741949b3231707220701b1d/slide_0408.jpg">
+
     <div class="container">
         @if (isset($active) || isset($my))
             <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">

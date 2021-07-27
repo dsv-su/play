@@ -26,7 +26,8 @@ class PlayStoreNotify extends Model
             ->makeHidden('permission')
             ->makeHidden('entitlement')
             ->makeHidden('created_at')
-            ->makeHidden('updated_at');
+            ->makeHidden('updated_at')
+            ->makeHidden('slides');
 
         if ($type == 'update') {
             $this->presentation->makeHidden('resolution');
@@ -73,13 +74,12 @@ class PlayStoreNotify extends Model
             }
         }
 
-        if($this->response->getBody() == 'OK') {
+        if ($this->response->getBody() == 'OK') {
             //Change manualupdate status
             $this->presentation->status = 'sent';
             $this->presentation->save();
             return redirect('/')->with(['message' => 'Presentationen har redigerats och laddats upp!']);
-        }
-        else {
+        } else {
             //Change manualupdate status
             $this->presentation->status = 'failed';
             $this->presentation->save();
@@ -151,13 +151,12 @@ class PlayStoreNotify extends Model
             }
         }
 
-        if($this->response->getBody() == 'OK') {
+        if ($this->response->getBody() == 'OK') {
             //Change manualupdate status
             $this->presentation->status = 'notified';
             $this->presentation->save();
             return back()->withInput();
-        }
-        else {
+        } else {
             //Change manualupdate status
             $this->presentation->status = 'failed';
             $this->presentation->save();
@@ -175,7 +174,7 @@ class PlayStoreNotify extends Model
             'Accept' => 'application/json',
         ];
         try {
-            $this->response = $this->client->request('DELETE', $this->base_uri().'/'.$this->presentation->id, [
+            $this->response = $this->client->request('DELETE', $this->base_uri() . '/' . $this->presentation->id, [
                 'headers' => $this->headers
             ]);
         } catch (\Exception $e) {
@@ -187,10 +186,9 @@ class PlayStoreNotify extends Model
             }
         }
 
-        if($this->response->getBody()) {
+        if ($this->response->getBody()) {
             return true;
-        }
-        else {
+        } else {
             //TODO Error handling
             return $this->response->getBody();
         }
@@ -198,9 +196,9 @@ class PlayStoreNotify extends Model
 
     private function base_uri()
     {
-        $this->file = base_path().'/systemconfig/play.ini';
+        $this->file = base_path() . '/systemconfig/play.ini';
         if (!file_exists($this->file)) {
-            $this->file = base_path().'/systemconfig/play.ini.example';
+            $this->file = base_path() . '/systemconfig/play.ini.example';
         }
         $this->system_config = parse_ini_file($this->file, true);
 
@@ -209,9 +207,9 @@ class PlayStoreNotify extends Model
 
     private function uri()
     {
-        $this->file = base_path().'/systemconfig/play.ini';
+        $this->file = base_path() . '/systemconfig/play.ini';
         if (!file_exists($this->file)) {
-            $this->file = base_path().'/systemconfig/play.ini.example';
+            $this->file = base_path() . '/systemconfig/play.ini.example';
         }
         $this->system_config = parse_ini_file($this->file, true);
 
