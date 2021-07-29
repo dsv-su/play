@@ -141,6 +141,9 @@ class SearchController extends Controller
                         $found = true;
                     }
                 }
+                if (in_array('nocourse', $designations) && $video->courses()->isEmpty()) {
+                    $found = true;
+                }
             } else {
                 $found = true;
             }
@@ -210,7 +213,8 @@ class SearchController extends Controller
 
     public function extractCourses($videos)
     {
-        $courses = array();
+        $courses = array('nocourse' => 'No course association');
+
         foreach ($videos as $video) {
             foreach ($video->courses() as $course) {
                 if (!in_array($course->name, $courses)) {

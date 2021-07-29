@@ -28,13 +28,15 @@
                         <label class="col-form-label mr-1 font-weight-light">Filter by: </label>
                         <select name="course" @if (empty($videocourses)) disabled
                                 @endif class="form-control mx-1 selectpicker"
-                                data-none-selected-text="Course" multiple style="width: 400px">
+                                data-none-selected-text="Course" data-live-search="true" multiple style="width: 400px">
                             @foreach($videocourses as $designation => $name)
-                                <option value="{{$designation}}">{{$name}} ({{$designation}})</option>
+                                <option value="{{$designation}}">{{$name}} @if ($designation != 'nocourse')
+                                        ({{$designation}})@endif</option>
                             @endforeach
                         </select>
                         <select name="semester" @if (empty($videoterms)) disabled
                                 @endif class="form-control mx-1 selectpicker" data-none-selected-text="Term"
+                                data-live-search="true"
                                 multiple style="width: 200px">
                             @foreach($videoterms as $term)
                                 <option value="{{$term}}">{{$term}}</option>
@@ -42,14 +44,15 @@
                         </select>
                         <select name="presenter" @if (empty($videopresenters)) disabled
                                 @endif class="form-control mx-1 selectpicker"
-                                data-none-selected-text="Presenter" multiple style="width: 200px;">
+                                data-none-selected-text="Presenter" data-live-search="true" multiple
+                                style="width: 200px;">
                             @foreach($videopresenters as $username => $name)
                                 <option value="{{$username}}">{{$name}}</option>
                             @endforeach
                         </select>
                         <select name="tag" @if (empty($videotags)) disabled
                                 @endif class="form-control mx-1 selectpicker"
-                                data-none-selected-text="Tag" multiple style="width: 200px;">
+                                data-none-selected-text="Tag" data-live-search="true" multiple style="width: 200px;">
                             @foreach($videotags as $tag)
                                 <option value="{{$tag}}">{{$tag}}</option>
                             @endforeach
