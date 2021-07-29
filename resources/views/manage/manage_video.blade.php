@@ -1,5 +1,5 @@
 <!-- ManageVideo - child view - will inherit all data available in the parent view-->
-
+<!-- Not used anymore -->
 <div class="col my-3">
     <!--<style>.btn-sm { height: 3vh; width: 5vh; }</style>-->
     <div class="card video m-auto" id="{{$video->id}}">
@@ -63,66 +63,6 @@
                             class="far fa-trash-alt"></i></a>
             </div>
             <p class="m-0"><small>{{$video->id}}</small></p>
-        </div>
-    </div>
-    <!-- The Modal -->
-    <div class="modal fade" id="modal-{{$video->id}}" tabindex="-1" role="dialog"
-         aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <!-- Modal content -->
-            <div class="modal-content">
-                <form>
-                    <meta name="csrf-token" content="{{ csrf_token() }}">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">{{$video->title}}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-row">
-                            <label class="col-form-label" for="video_category_{{$video->id}}">@lang('lang.category')
-                                :</label>
-                            <select class="col form-control" name="video_category[]" id="video_category_{{$video->id}}"
-                                    required>
-                                @foreach($categories as $category)
-                                    <option value="{{$category->id}}"
-                                            @if ($category->id == $video->category_id) selected @endif>{{$category->category_name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-row">
-                            <label class="col-form-label" for="video_course_{{$video->id}}">@lang('lang.course')
-                                :</label>
-                            <select class="selectpicker col" multiple data-live-search="true" name="video_course[]"
-                                    id="video_course_{{$video->id}}" required>
-                            <!--<select name="video_course[]" id="video_course_{{$video->id}}" required>-->
-                                @foreach($allcourses as $course)
-                                    <option value="{{$course->id}}"
-                                            @if ($video->has_course($course->id)) selected @endif>{{$course->designation}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-row">
-                            <label class="col-form-label" for="video_tag_{{$video->id}}">@lang('lang.tag'):</label>
-                            <select class="selectpicker col" multiple data-live-search="true" name="video_tags[]"
-                                    id="video_tag_{{$video->id}}" required>
-                                @foreach($alltags as $tag)
-                                    <option value="{{$tag->id}}"
-                                            @if ($video->has_tag($tag->id)) selected @endif>{{$tag->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __("Close") }}
-                        </button>
-                        <button type="button" class="btn btn-primary save" id="{{$video->id}}">
-                            {{ __("Save changes") }}
-                        </button>
-                    </div>
-                </form>
-            </div>
         </div>
     </div>
 </div>

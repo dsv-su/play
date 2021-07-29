@@ -43,7 +43,8 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::get('/playlist/{id}', 'MultiplayerController@playlist');
 
     //Manage
-    Route::get('/manage', 'ManagePresentationController@manage')->name('manage');
+    Route::get('/manage', 'SearchController@search')->name('manage');
+    Route::post('/manage', 'SearchController@filterSearch')->name('filter_manage');
     Route::get('/edit/{video}', 'EditController@show')->name('presentation_edit');
     Route::post('/edit/{video}', 'EditController@edit')->name('editpresentation');
 

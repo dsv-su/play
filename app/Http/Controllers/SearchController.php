@@ -8,7 +8,9 @@ use App\Services\Daisy\DaisyIntegration;
 use App\Tag;
 use App\Video;
 use App\VideoPermission;
+use App\VideoPresenter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class SearchController extends Controller
 {
@@ -76,33 +78,51 @@ class SearchController extends Controller
 
     public function getVideos($q)
     {
-        return Video::with('video_course.course', 'video_presenter.presenter', 'video_tag.tag')
-            ->whereHas('video_presenter.presenter', function ($query) use ($q) {
-                return $query->where('username', 'LIKE', "%$q%")->orWhere('name', 'LIKE', "%$q%");
-            })
-            ->orWhereHas('video_course.course', function ($query) use ($q) {
-                return $query->where('title', 'LIKE', "%$q%")->orwhere(\DB::raw('concat(semester,year)'), 'LIKE', "%$q%");
-            })
-            ->orWhere('title', 'LIKE', "%$q%")
-            ->orwhereHas('video_tag.tag', function ($query) use ($q) {
-                return $query->where('name', 'LIKE', "%$q%");
-            })
-            ->orderBy('creation', 'desc')
-            ->get();
+        if ($q) {
+            return Video::with('video_course.course', 'video_presenter.presenter', 'video_tag.tag')
+                ->whereHas('video_presenter.presenter', function ($query) use ($q) {
+                    return $query->where('username', 'LIKE', "%$q%")->orWhere('name', 'LIKE', "%$q%");
+                })
+                ->orWhereHas('video_course.course', function ($query) use ($q) {
+                    return $query->where('title', 'LIKE', "%$q%")->orwhere(\DB::raw('concat(semester,year)'), 'LIKE', "%$q%");
+                })
+                ->orWhere('title', 'LIKE', "%$q%")
+                ->orwhereHas('video_tag.tag', function ($query) use ($q) {
+                    return $query->where('name', 'LIKE', "%$q%");
+                })
+                ->orderBy('creation', 'desc')
+                ->get();
+        } else {
+            if(app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
+                //If user is uploader or staff
+                $user = Presenter::where('username', app()->make('play_username'))->first();
+                $user_videos = VideoPresenter::where('presenter_id', $user->id ?? 0)->pluck('video_id');
+                return Video::whereIn('id', $user_videos)->with('category', 'video_course.course')->latest('creation')->get();
+
+            } elseif (app()->make('play_role') == 'Administrator') {
+                //If user is Administrator
+                return Cache::remember('videos', $seconds = 180, function () {
+                    return Video::with('category', 'video_course.course')->latest('creation')->get();
+                });
+            }
+        }
     }
 
-    public function search($q, Request $request = null)
+    public function search($q = null, Request $request = null)
     {
+
         $videos = $this->getVideos($q);
         $videocourses = $this->extractCourses($videos);
         $videopresenters = $this->extractPresenters($videos);
         $videoterms = $this->extractTerms($videos);
         $videotags = $this->extractTags($videos);
 
-        return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags'));
+        $manage = \Request::is('manage');
+
+        return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage'));
     }
 
-    public function filterSearch($q, Request $request)
+    public function filterSearch($q = null, Request $request)
     {
         $html = '';
         $videos = $this->getVideos($q);
@@ -110,6 +130,7 @@ class SearchController extends Controller
         $semesters = request('semester') ? explode(',', request('semester')) : null;
         $presenters = request('presenter') ? explode(',', request('presenter')) : null;
         $tags = request('tag') ? explode(',', request('tag')) : null;
+        $manage = \Request::is('manage');
         foreach ($videos as $key => $video) {
             $found = false;
             $presenterfound = false;
@@ -142,7 +163,7 @@ class SearchController extends Controller
                 $tagfound = true;
             }
             if ($found && $presenterfound && $tagfound) {
-                $html .= '<div class="col my-3">' . view('home.video', ['video' => $video])->render() . '</div>';
+                $html .= '<div class="col my-3">' . view('home.video', ['video' => $video, 'manage' => $manage])->render() . '</div>';
             } else {
                 unset($videos[$key]);
             }

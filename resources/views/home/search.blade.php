@@ -1,7 +1,9 @@
 @extends('layouts.suplay')
 @section('content')
 
-    @include('layouts.partials.searchbox')
+    @if (!$manage)
+        @include('layouts.partials.searchbox')
+    @endif
 
     <!-- Header message section -->
     <div class="container banner-inner">
@@ -11,7 +13,7 @@
                     <span class="su-theme-anchor"></span>
                     <h3 class="su-theme-header mb-4">
                         <span class="far fa-clock fa-icon-border mr-2" aria-hidden="true"></span>
-                        Search results
+                        @if ($manage) Manage presentations @else Search results @endif
                     </h3>
                 </div>
             </div> <!-- col-12 -->
