@@ -93,12 +93,12 @@
         <!-- Content tab Active -->
             <div id="pane-C" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-C">
                 @if (isset($latest) && $latest->count())
-                    @if (isset($courses) || isset($terms))
+                    @if (isset($courses) || isset($terms) || isset($presenters) || isset($tags))
                         <form class="form-inline">
                             <label class="col-form-label mr-1 font-weight-light">Filter by: </label>
                             @if (isset($courses))
                                 <select name="course" class="form-control mx-1 selectpicker"
-                                        data-none-selected-text="Course" multiple style="width: 400px">
+                                        data-none-selected-text="Course" data-live-search="true" multiple style="width: 400px">
                                     @foreach($courses as $designation => $name)
                                         <option value="{{$designation}}">{{$name}} ({{$designation}})</option>
                                     @endforeach
@@ -106,10 +106,28 @@
                             @endif
                             @if (isset($terms))
                                 <select name="semester" class="form-control mx-1 selectpicker"
-                                        data-none-selected-text="Term" multiple
+                                        data-none-selected-text="Term" data-live-search="true" multiple
                                         style="width: 200px">
                                     @foreach($terms as $term)
                                         <option value="{{$term}}">{{$term}}</option>
+                                    @endforeach
+                                </select>
+                            @endif
+                            @if (isset($presenters))
+                                <select name="presenter" class="form-control mx-1 selectpicker"
+                                        data-none-selected-text="Presenter" data-live-search="true" multiple
+                                        style="width: 200px">
+                                    @foreach($presenters as $username => $name)
+                                        <option value="{{$username}}">{{$name}}</option>
+                                    @endforeach
+                                </select>
+                            @endif
+                            @if (isset($tags))
+                                <select name="tag" @if (empty($tags)) disabled
+                                        @endif class="form-control mx-1 selectpicker"
+                                        data-none-selected-text="Tag" data-live-search="true" multiple style="width: 200px;">
+                                    @foreach($tags as $tag)
+                                        <option value="{{$tag}}">{{$tag}}</option>
                                     @endforeach
                                 </select>
                             @endif
@@ -157,6 +175,8 @@
             let formData = new FormData();
             formData.append("course", $('select[name="course"]').val());
             formData.append("semester", $('select[name="semester"]').val());
+            formData.append("presenter", $('select[name="presenter"]').val());
+            formData.append("tag", $('select[name="tag"]').val());
             $.ajax({
                 type: 'POST',
                 url: "/{{ Request::path()}}",
@@ -165,7 +185,39 @@
                 contentType: false,
                 processData: false,
                 success: (data) => {
-                    $('#pane-A').find('.card-deck.inner').html(data);
+                    $('#pane-C').find('.card-deck.inner').html(data['html']);
+                    $('select[name="tag"] option').each(function () {
+                        console.log(data['tags']);
+                        if (data['tags'].indexOf($(this).val()) >= 0) {
+                            $(this).prop('disabled', false);
+                        } else {
+                            $(this).prop('disabled', true);
+                        }
+                    });
+                    $('select[name="course"] option').each(function () {
+                        console.log($(this).val());
+                        console.log(data['courses']);
+                        if (data['courses'][$(this).val()]) {
+                            $(this).prop('disabled', false);
+                        } else {
+                            $(this).prop('disabled', true);
+                        }
+                    });
+                    $('select[name="presenter"] option').each(function () {
+                        if (data['presenters'][$(this).val()]) {
+                            $(this).prop('disabled', false);
+                        } else {
+                            $(this).prop('disabled', true);
+                        }
+                    });
+                    $('select[name="semester"] option').each(function () {
+                        if (data['terms'].indexOf($(this).val()) >= 0) {
+                            $(this).prop('disabled', false);
+                        } else {
+                            $(this).prop('disabled', true);
+                        }
+                    });
+                    $('.selectpicker').selectpicker('refresh');
                 },
                 error: function (data) {
                     alert('There was an error.');

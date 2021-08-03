@@ -30,8 +30,9 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::get('lang/{lang}', 'LocalizationController@index');
     //Search
     Route::get('/semester/{semester}', 'SearchController@searchBySemester')->name('semester');
+    Route::post('/semester/{semester}', 'SearchController@filterBySemester')->name('filter_semester');
     Route::get('/designation/{designation}', 'SearchController@searchByDesignation')->name('designation');
-    Route::post('/designation/{designation}', 'SearchController@filterOnDesignation')->name('filter_designation');
+    Route::post('/designation/{designation}', 'SearchController@filterByDesignation')->name('filter_designation');
     Route::get('/category/{category}', 'SearchController@searchByCategory')->name('category');
     Route::get('/student/{username}', 'SearchController@searchByUser');
     Route::get('/search/{q}', 'SearchController@search')->name('search');
@@ -52,6 +53,7 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::post('/manage/editAjax', 'PlayController@editVideoAjax')->name('manage.editVideo');
     Route::get('/course/{course}', 'SearchController@showCourseVideos')->name('course.videos');
     Route::get('/tag/{tag}', 'SearchController@showTagVideos')->name('tag.videos');
+    Route::post('/tag/{tag}', 'SearchController@FilterTagVideos')->name('tag.filter_videos');
     Route::get('/presenter/{presenter}', 'SearchController@showPresenterVideos')->name('presenter.videos');
     Route::post('/presenter/{presenter}', 'SearchController@filterPresenterVideos')->name('presenter.filter_videos');
     Route::get('/my', 'PlayController@myVideos')->name('my.videos');

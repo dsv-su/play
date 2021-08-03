@@ -25,12 +25,15 @@ class SearchController extends Controller
         $videos = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($term, $year) {
             return $query->where('year', $year)->where('semester', $term);
         })->get();
+        $courses = $this->extractCourses($videos);
+        $presenters = $this->extractPresenters($videos);
+        $tags = $this->extractTags($videos);
         $videos = $videos->groupBy(function ($item, $key) {
             $item['belongs_to_course'] = $item->video_course[0]->course['name'];
             return $item->video_course[0]->course['name'] ?? '9999';
         });
 
-        return view('home.navigator', compact('term', 'year', 'videos', 'permissions'));
+        return view('home.navigator', compact('term', 'year', 'videos', 'courses', 'presenters', 'tags', 'permissions'));
     }
 
     public function searchByDesignation($designation)
@@ -42,11 +45,12 @@ class SearchController extends Controller
         })->orderBy('creation', 'desc')->get();
         $terms = $this->extractTerms($videos);
         $presenters = $this->extractPresenters($videos);
+        $tags = $this->extractTags($videos);
         $videos = $videos->groupBy(function ($item, $key) {
             return $item->video_course[0]->course['semester'] . $item->video_course[0]->course['year'] ?? 'UU9999';
         });
 
-        return view('home.navigator', compact('designation', 'videos', 'permissions', 'terms', 'presenters'));
+        return view('home.navigator', compact('designation', 'videos', 'permissions', 'terms', 'presenters', 'tags'));
     }
 
     public function searchByCategory($category)
@@ -93,7 +97,7 @@ class SearchController extends Controller
                 ->orderBy('creation', 'desc')
                 ->get();
         } else {
-            if(app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
+            if (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
                 //If user is uploader or staff
                 $user = Presenter::where('username', app()->make('play_username'))->first();
                 $user_videos = VideoPresenter::where('presenter_id', $user->id ?? 0)->pluck('video_id');
@@ -110,13 +114,11 @@ class SearchController extends Controller
 
     public function search($q = null, Request $request = null)
     {
-
         $videos = $this->getVideos($q);
         $videocourses = $this->extractCourses($videos);
         $videopresenters = $this->extractPresenters($videos);
         $videoterms = $this->extractTerms($videos);
         $videotags = $this->extractTags($videos);
-
         $manage = \Request::is('manage');
 
         return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage'));
@@ -131,58 +133,10 @@ class SearchController extends Controller
         $presenters = request('presenter') ? explode(',', request('presenter')) : null;
         $tags = request('tag') ? explode(',', request('tag')) : null;
         $manage = \Request::is('manage');
-        foreach ($videos as $key => $video) {
-            $found = false;
-            $presenterfound = false;
-            $tagfound = false;
-            if ($designations || $semesters) {
-                foreach ($video->courses() as $course) {
-                    if ((!$semesters || in_array($course->semester . $course->year, $semesters)) && (!$designations || in_array($course->designation, $designations))) {
-                        $found = true;
-                    }
-                }
-                if (in_array('nocourse', $designations) && $video->courses()->isEmpty()) {
-                    $found = true;
-                }
-            } else {
-                $found = true;
-            }
-            if ($presenters) {
-                foreach ($video->presenters() as $presenter) {
-                    if (in_array($presenter->username, $presenters)) {
-                        $presenterfound = true;
-                    }
-                }
-            } else {
-                $presenterfound = true;
-            }
-            if ($tags) {
-                foreach ($video->tags() as $tag) {
-                    if (in_array($tag->name, $tags)) {
-                        $tagfound = true;
-                    }
-                }
-            } else {
-                $tagfound = true;
-            }
-            if ($found && $presenterfound && $tagfound) {
-                $html .= '<div class="col my-3">' . view('home.video', ['video' => $video, 'manage' => $manage])->render() . '</div>';
-            } else {
-                unset($videos[$key]);
-            }
-        }
-        if ($html) {
-            $html .= '<div class="col"><div class="card video my-0 mx-auto"></div></div>
-                        <div class="col"><div class="card video my-0 mx-auto"></div></div>
-                        <div class="col"><div class="card video my-0 mx-auto"></div></div>';
-        } else {
-            $html .= '<h3 class="col my-3 font-weight-light">No presentations found</h3>';
-        }
-        $videocourses = $this->extractCourses($videos);
-        $videopresenters = $this->extractPresenters($videos);
-        $videoterms = $this->extractTerms($videos);
-        $videotags = $this->extractTags($videos);
-        return ['html' => $html, 'tags' => $videotags, 'courses' => $videocourses, 'presenters' => $videopresenters, 'terms' => $videoterms];
+        list ($html, $videocourses, $videoterms, $videopresenters, $videotags) = $this->performFiltering(
+            $videos, $designations, $semesters, $tags, $presenters, $manage
+        );
+        return ['html' => $html, 'courses' => $videocourses, 'presenters' => $videopresenters, 'terms' => $videoterms, 'tags' => $videotags];
     }
 
     public function find(Request $request)
@@ -207,6 +161,21 @@ class SearchController extends Controller
     {
         $data['tag'] = $tag;
         $data['latest'] = Tag::where('name', $tag)->first()->videos();
+        $data['terms'] = $this->extractTerms($data['latest']);
+        $data['courses'] = $this->extractCourses($data['latest']);
+        $data['presenters'] = $this->extractPresenters($data['latest']);
+
+        return view('home.index', $data);
+    }
+
+    public function showPresenterVideos($username)
+    {
+        $presenter = Presenter::where('username', $username)->first();
+        $data['presenter'] = $presenter->name;
+        $data['latest'] = $presenter->videos();
+        $data['terms'] = $this->extractTerms($data['latest']);
+        $data['courses'] = $this->extractCourses($data['latest']);
+        $data['tags'] = $this->extractTags($data['latest']);
 
         return view('home.index', $data);
     }
@@ -214,7 +183,6 @@ class SearchController extends Controller
     public function extractCourses($videos)
     {
         $courses = array('nocourse' => 'No course association');
-
         foreach ($videos as $video) {
             foreach ($video->courses() as $course) {
                 if (!in_array($course->name, $courses)) {
@@ -264,15 +232,17 @@ class SearchController extends Controller
         return $presenters;
     }
 
-    public function showPresenterVideos($username)
+    public function filterTagVideos($tag, Request $request)
     {
-        $presenter = Presenter::where('username', $username)->first();
-        $data['presenter'] = $presenter->name;
-        $data['latest'] = $presenter->videos();
-        $data['terms'] = $this->extractTerms($data['latest']);
-        $data['courses'] = $this->extractCourses($data['latest']);
-
-        return view('home.index', $data);
+        $data['tag'] = $tag;
+        $data['latest'] = Tag::where('name', $tag)->first()->videos();
+        $designations = request('course') ? explode(',', request('course')) : null;
+        $semesters = request('semester') ? explode(',', request('semester')) : null;
+        $presenters = request('presenter') ? explode(',', request('presenter')) : null;
+        list ($html, $videocourses, $videoterms, $videopresenters, $videotags) = $this->performFiltering(
+            $data['latest'], $designations, $semesters, null, $presenters
+        );
+        return ['html' => $html, 'courses' => $videocourses, 'presenters' => $videopresenters, 'terms' => $videoterms];
     }
 
     public function filterPresenterVideos($username, Request $request)
@@ -282,37 +252,41 @@ class SearchController extends Controller
         $data['latest'] = $presenter->videos();
         $designations = request('course') ? explode(',', request('course')) : null;
         $semesters = request('semester') ? explode(',', request('semester')) : null;
-        $html = '';
-        foreach ($data['latest'] as $video) {
-            foreach ($video->courses() as $course) {
-                $found = false;
-                if ((!$semesters || in_array($course->semester . $course->year, $semesters)) && (!$designations || in_array($course->designation, $designations))) {
-                    $found = true;
-                }
-            }
-            if ($found) {
-                $html .= '<div class="col my-3">' . view('home.video', ['video' => $video])->render() . '</div>';
-            }
-        }
-        $html .= '<div class="col"><div class="card video my-0 mx-auto"></div></div>
-                        <div class="col"><div class="card video my-0 mx-auto"></div></div>
-                        <div class="col"><div class="card video my-0 mx-auto"></div></div>';
-
-        return $html;
+        $tags = request('tag') ? explode(',', request('tag')) : null;
+        list ($html, $videocourses, $videoterms, $videopresenters, $videotags) = $this->performFiltering(
+            $data['latest'], $designations, $semesters, $tags, null
+        );
+        return ['html' => $html, 'courses' => $videocourses, 'tags' => $videotags, 'terms' => $videoterms];
     }
 
-    public function filterOnDesignation($designation, Request $request)
+    public function performFiltering($videos, $designations = null, $semesters = null, $tags = null, $presenters = null, $manage = false)
     {
-        //Permissionslabel
-        $permissions = VideoPermission::all();
-        $presenters = request('presenter') ? explode(',', request('presenter')) : null;
-        $semesters = request('semester') ? explode(',', request('semester')) : null;
-        $videos = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($designation) {
-            return $query->where('designation', $designation);
-        })->orderBy('creation', 'desc')->get();
+        $html = '';
         foreach ($videos as $key => $video) {
+            $found = false;
+            $tagfound = true;
             $presenterfound = false;
-            $semesterfound = false;
+            if ($designations || $semesters) {
+                foreach ($video->courses() as $course) {
+                    if ((!$semesters || in_array($course->semester . $course->year, $semesters)) && (!$designations || in_array($course->designation, $designations))) {
+                        $found = true;
+                    }
+                }
+                if ($designations && in_array('nocourse', $designations) && $video->courses()->isEmpty()) {
+                    $found = true;
+                }
+            } else {
+                $found = true;
+            }
+            if ($tags) {
+                foreach ($tags as $tag) {
+                    if (!in_array($tag, array_map(function ($t) {
+                        return $t['name'];
+                    }, $video->tags()->toArray()))) {
+                        $tagfound = false;
+                    }
+                }
+            }
             if ($presenters) {
                 foreach ($video->presenters() as $presenter) {
                     if (in_array($presenter->username, $presenters)) {
@@ -322,28 +296,82 @@ class SearchController extends Controller
             } else {
                 $presenterfound = true;
             }
-            if ($semesters) {
-                foreach ($video->courses() as $course) {
-                    if (in_array($course->semester . $course->year, $semesters)) {
-                        $semesterfound = true;
-                    }
-                }
+            if ($found && $tagfound && $presenterfound) {
+                $html .= '<div class="col my-3">' . view('home.video', ['video' => $video, 'manage' => $manage])->render() . '</div>';
             } else {
-                $semesterfound = true;
-            }
-            if (!$presenterfound || !$semesterfound) {
                 unset($videos[$key]);
             }
         }
-        $videos = $videos->groupBy(function ($item, $key) {
+        if ($html) {
+            $html .= '<div class="col"><div class="card video my-0 mx-auto"></div></div>
+                        <div class="col"><div class="card video my-0 mx-auto"></div></div>
+                        <div class="col"><div class="card video my-0 mx-auto"></div></div>';
+        } else {
+            $html .= '<h4 class="col my-3 font-weight-light">No presentations found</h4>';
+        }
+        $videocourses = $this->extractCourses($videos);
+        $videoterms = $this->extractTerms($videos);
+        $videotags = $this->extractTags($videos);
+        $videopresenters = $this->extractPresenters($videos);
+        return array($html, $videocourses, $videoterms, $videopresenters, $videotags, $videos);
+    }
+
+    public function filterByDesignation($designation, Request $request)
+    {
+        //Permissionslabel
+        $permissions = VideoPermission::all();
+        $presenters = request('presenter') ? explode(',', request('presenter')) : null;
+        $semesters = request('semester') ? explode(',', request('semester')) : null;
+        $tags = request('tag') ? explode(',', request('tag')) : null;
+        $videos = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($designation) {
+            return $query->where('designation', $designation);
+        })->orderBy('creation', 'desc')->get();
+
+        list ($html, $videocourses, $videoterms, $videopresenters, $videotags, $filteredvideos) = $this->performFiltering(
+            $videos, null, $semesters, $tags, $presenters
+        );
+
+        $groupedvideos = $filteredvideos->groupBy(function ($item, $key) {
             return $item->video_course[0]->course['semester'] . $item->video_course[0]->course['year'] ?? 'UU9999';
         });
 
+        // Rewrite html here because it doesn't fit our categorization view
         $html = '';
-        foreach ($videos as $key => $videocourse) {
-            $html .= view('home.filtered_course', compact('videos', 'videocourse', 'key', 'designation', 'permissions'))->render();
+        foreach ($groupedvideos as $key => $coursevideos) {
+            $html .= view('home.filtered_course', compact('coursevideos', 'key', 'designation', 'permissions'))->render();
         }
 
-        return $html;
+        return $html ? $html : '<h4 class="col my-3 font-weight-light">No presentations found</h4>';
+    }
+
+    public function filterBySemester($semester, Request $request)
+    {
+        //Permissionslabel
+        $permissions = VideoPermission::all();
+        $term = substr($semester, 0, 2);
+        $year = substr($semester, 2, 4);
+        $videos = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($term, $year) {
+            return $query->where('year', $year)->where('semester', $term);
+        })->get();
+        $presenters = request('presenter') ? explode(',', request('presenter')) : null;
+        $designations = request('course') ? explode(',', request('course')) : null;
+        $tags = request('tag') ? explode(',', request('tag')) : null;
+
+        list ($html, $videocourses, $videoterms, $videopresenters, $videotags, $filteredvideos) = $this->performFiltering(
+            $videos, $designations, null, $tags, $presenters
+        );
+
+        $groupedvideos = $filteredvideos->groupBy(function ($item, $key) {
+            $item['belongs_to_course'] = $item->video_course[0]->course['name'];
+            return $item->video_course[0]->course['name'] ?? '9999';
+        });
+
+        // Rewrite html here because it doesn't fit our categorization view
+        $html = '';
+        foreach ($groupedvideos as $key => $coursevideos) {
+            $html .= view('home.filtered_course', compact('coursevideos', 'key', 'permissions'))->render();
+        }
+
+        return $html ? $html : '<h4 class="col my-3 font-weight-light">No presentations found</h4>';
     }
 }
