@@ -4,7 +4,7 @@
             $('.selectpicker').selectpicker();
         });
 
-        $('button.delete').on('click', function (e) {
+        $('a.delete').on('click', function (e) {
             e.preventDefault();
             $.ajaxSetup({
                 headers: {

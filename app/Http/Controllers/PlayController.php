@@ -9,6 +9,8 @@ use App\Presenter;
 use App\Services\AuthHandler;
 use App\Services\Daisy\DaisyIntegration;
 use App\Services\Notify\PlayStoreNotify;
+use App\Stream;
+use App\StreamResolution;
 use App\System;
 use App\Tag;
 use App\UploadHandler;
@@ -652,11 +654,11 @@ class PlayController extends Controller
                             $blobs = DB::connection('notmediasite')->select("select * from Timecodes where id = '$mediasiteid'")[0]->datablob;
                             $xml = simplexml_load_string($blobs);
                             $json = json_encode($xml);
-                            $array = json_decode($json,TRUE);
+                            $array = json_decode($json, TRUE);
                             for ($i = 1; $i < $slide['Length'] + 1; $i++) {
                                 $filename = "slide_" . str_pad($i, 4, "0", STR_PAD_LEFT) . ".jpg";
                                 $slideurl = "https://play2.dsv.su.se/FileServer/" . $slide['ContentServerId'] . "/Presentation/" . $slide['ParentResourceId'] . "/" . $filename;
-                                $metadata['slides'][] = ['url' => $slideurl, 'time' => isset($array['Slides']['SlideEntry'][$i-1]) ? $array['Slides']['SlideEntry'][$i-1]['Time'] : $array['Slides']['SlideEntry']['Time']];
+                                $metadata['slides'][] = ['url' => $slideurl, 'time' => isset($array['Slides']['SlideEntry'][$i - 1]) ? $array['Slides']['SlideEntry'][$i - 1]['Time'] : $array['Slides']['SlideEntry']['Time']];
                             }
                         }
                     }
@@ -692,10 +694,10 @@ class PlayController extends Controller
                         }
                     }
 
-                   // dd($presentation);
+                    // dd($presentation);
 
-                     $notify = new PlayStoreNotify($presentation);
-                     $notify->sendSuccess('mediasite');
+                    $notify = new PlayStoreNotify($presentation);
+                    $notify->sendSuccess('mediasite');
 
                     //return true;
                 } catch (GuzzleException $e) {
@@ -768,61 +770,43 @@ class PlayController extends Controller
          ***/
 
         $video = Video::find($request->video_id);
-        $folder = dirname($video->source1);
-        if (is_dir($folder)) {
-            $files = glob($folder . '/*');
-            // Loop through the file list
-            foreach ($files as $file) {
-                // Check for file
-                if (is_file($file)) {
-                    // Use unlink function to delete the file.
-                    unlink($file);
-                }
-            }
-            rmdir($folder);
-        }
 
-        /*if ($video->mediasite_presentation) {
-            $video->mediasite_presentation->video_id = null;
-            $video->mediasite_presentation->status = null;
-            $video->mediasite_presentation->save();
-        }*/
-        foreach ($video->video_course as $vc) {
-            VideoCourse::findOrFail($vc->id)->delete();
-        }
-
-        foreach ($video->video_tag as $vt) {
-            VideoTag::findOrFail($vt->id)->delete();
-        }
-
-
-        foreach ($video->video_presenter as $vp) {
-            VideoPresenter::findOrFail($vp->id)->delete();
-        }
-        foreach ($video->video_stat as $vp) {
-            VideoStat::where('video_id', $request->video_id)->firstOrFail()->delete();
-        }
-
-        //Remove permissions for video
-        VideoPermission::where('video_id', $request->video_id)->firstOrFail()->delete();
-        //Remove stats for video
-        VideoStat::where('video_id', $request->video_id)->firstOrFail()->delete();
+        //Start transaction
+        DB::beginTransaction();
 
         try {
+            if ($video->origin == 'mediasite') {
+                $video->mediasite_presentation->video_id = null;
+                $video->mediasite_presentation->status = null;
+                $video->mediasite_presentation->save();
+            }
+            VideoCourse::where('video_id', $video->id)->delete();
+            VideoTag::where('video_id', $video->id)->delete();
+            VideoPresenter::where('video_id', $video->id)->delete();
+            VideoPermission::where('video_id', $request->video_id)->delete();
+            VideoStat::where('video_id', $request->video_id)->delete();
+            $streams = Stream::where('video_id', $video->id);
+            foreach ($streams as $stream) {
+                StreamResolution::where('stream_id', $stream->id)->delete();
+                $stream->delete();
+            }
             $video->delete();
         } catch (Exception $e) {
             report($e);
+            DB::rollback(); // Something went wrong
             return Response()->json([
-                'message' => 'Error',
+                'message' => $e->getMessage(),
             ]);
         }
 
-        //Send Delete notification -> when this is active
-        /*$notify = new PlayStoreNotify($video);
-        $notify->sendDelete();
-        return back()->with(['message' => 'Presentationen har raderats']);*/
+        DB::commit();   // Successfully removed
 
-        return Response()->json(['message' => 'Video deleted']);
+        //Send Delete notification -> when this is active
+        $notify = new PlayStoreNotify($video);
+        $notify->sendDelete();
+        return Response()->json(['message' => 'Presentationen har raderats']);
+
+        //return Response()->json(['message' => 'Video deleted']);
     }
 
     public

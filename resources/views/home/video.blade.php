@@ -1,5 +1,5 @@
 <!-- Video - child view - will inherit all data available in the parent view-->
-<div class="card video m-auto">
+<div class="card video m-auto"  @if (isset($manage) && $manage) id="{{$video->id}}" @endif>
     <a href="{{ route('player', ['video' => $video]) }}">
         <div class="card-header position-relative"
              style="background-image: url({{ asset($video->thumb)}}); height:200px;">
@@ -83,9 +83,12 @@
                         </form>
                     </div>
                 </div>
-                <a href="#" data-toggle="tooltip" title="{{ __("Delete presentation") }}"
-                   class="btn btn-outline-danger btn-sm ml-1 mb-1 float-right"><i
-                            class="far fa-trash-alt"></i></a>
+                <form>
+                    <meta name="csrf-token" content="{{ csrf_token() }}">
+                    <a href="#" data-toggle="tooltip" title="{{ __("Delete presentation") }}"
+                       class="btn btn-outline-danger btn-sm ml-1 mb-1 float-right delete"><i
+                                class="far fa-trash-alt"></i></a>
+                </form>
             </div>
             <p class="m-0"><small>{{$video->id}}</small></p>
         @endif
