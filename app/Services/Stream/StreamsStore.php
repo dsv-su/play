@@ -23,12 +23,12 @@ class StreamsStore extends Model
                 if ($source) {
                     $stream = Stream::firstOrNew([
                         'video_id' => $this->video->id,
-                        'name' => $source->name ?? $key,
-                        'poster' => $source->poster,
-                        'audio' => $source->playAudio
+                        'name' => $source['name'] ?? $key,
+                        'poster' => $source['poster'],
+                        'audio' => $source['playAudio']
                     ]);
                     $stream->save();
-                    foreach ($source->video as $resolution => $url) {
+                    foreach ($source['video'] as $resolution => $url) {
                         $streamresolution = StreamResolution::firstOrNew([
                             'stream_id' => $stream->id,
                             'resolution' => $resolution,

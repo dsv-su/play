@@ -30,6 +30,7 @@ class PresentationRequest extends FormRequest
             'duration' => 'required',
             'presenters' => 'array',
             'courses' => 'array',
+            'streams' => 'array'
         ];
     }
 }

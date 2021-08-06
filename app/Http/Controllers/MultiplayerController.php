@@ -43,19 +43,23 @@ class MultiplayerController extends Controller
         $ticket = new TicketHandler($video);
         $token = $ticket->issue();
 
+        // Construct Presentation json from DB
         $presentation = array();
-        $presentation['sources'] = json_decode($video->sources, true);
-        $presentation['id'] = $video->id;
-        $presentation['title'] = $video->title;
-        foreach ($presentation['sources'] as $key => $source) {
-            $stream = Stream::firstOrNew(['video_id' => $video->id, 'name' => $source['name'] ?? $key, 'poster' => $source['poster'], 'audio' => $source['playAudio']]);
-            $stream->save();
-            foreach ($source['video'] as $resolution => $url) {
-                $streamresolution = StreamResolution::firstOrNew(['stream_id' => $stream->id, 'resolution' => $resolution, 'filename' => $url]);
-                $streamresolution->save();
-                $presentation['sources'][$key]['video'][$resolution] = 'https://play-store.dsv.su.se/presentation/' . $presentation['id'] . '/' . $url;
+        $streams = Stream::where('video_id', $video->id)->get();
+        foreach ($streams as $key => $stream) {
+            $presentation['sources'][] = [
+                'poster' => 'https://play-store.dsv.su.se/presentation/' . $video->id . '/' .$stream->poster,
+                'playAudio' => (bool) $stream->audio,
+                'name' => $stream->name
+             ];
+            $resolutions = StreamResolution::where('stream_id', $stream->id)->get();
+            foreach ($resolutions as $resolution) {
+                $presentation['sources'][$key]['video'][$resolution->resolution] = 'https://play-store.dsv.su.se/presentation/' . $video->id . '/' . $resolution->filename;
             }
         }
+
+        $presentation['id'] = $video->id;
+        $presentation['title'] = $video->title;
         $presentation['thumb'] = 'https://play-store.dsv.su.se/presentation/' . $presentation['id'] . '/' . $video->thumb;
         //Add valid token
         $presentation['token'] = $token;
