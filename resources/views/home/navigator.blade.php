@@ -29,14 +29,16 @@
             @if (isset($presenters) || isset($terms) || isset($tags) || isset($courses))
                 <form class="form-inline mx-3">
                     <label class="col-form-label mr-1 font-weight-light">Filter by: </label>
-                    <select name="course" @if (empty($courses)) disabled
-                            @endif class="form-control mx-1 selectpicker"
-                            data-none-selected-text="Course" data-live-search="true" multiple style="width: 400px">
-                        @foreach($courses as $designation => $name)
-                            <option value="{{$designation}}">{{$name}} @if ($designation != 'nocourse')
-                                    ({{$designation}})@endif</option>
-                        @endforeach
-                    </select>
+                    @if ( isset($courses))
+                        <select name="course" @if (empty($courses)) disabled
+                                @endif class="form-control mx-1 selectpicker"
+                                data-none-selected-text="Course" data-live-search="true" multiple style="width: 400px">
+                            @foreach($courses as $designation => $name)
+                                <option value="{{$designation}}">{{$name}} @if ($designation != 'nocourse')
+                                        ({{$designation}})@endif</option>
+                            @endforeach
+                        </select>
+                    @endif
                     @if (isset($presenters))
                         <select name="presenter" class="form-control mx-1 selectpicker"
                                 data-none-selected-text="Presenter" data-live-search="true" multiple
