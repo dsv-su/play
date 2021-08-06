@@ -1,8 +1,8 @@
 <!-- Video - child view - will inherit all data available in the parent view-->
-<div class="card video m-auto"  @if (isset($manage) && $manage) id="{{$video->id}}" @endif>
+<div class="card video m-auto" @if (isset($manage) && $manage) id="{{$video->id}}" @endif>
     <a href="{{ route('player', ['video' => $video]) }}">
         <div class="card-header position-relative"
-             style="background-image: url({{ asset($video->thumb)}}); height:200px;">
+             style="background-image: url({{ asset('https://play-store.dsv.su.se/presentation/' . $video->id . '/'.$video->thumb)}}); height:200px;">
             <div class="title">{{ $video->title }}</div>
             <!-- For testing permission handling -->
 
