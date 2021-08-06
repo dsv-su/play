@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Services\TicketHandler;
+use App\Stream;
+use App\StreamResolution;
 use App\Video;
 use App\VideoCourse;
 use App\VideoStat;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Redirect;
 
@@ -15,7 +16,7 @@ class MultiplayerController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['entitlements', 'playauth'])->except([ 'presentation', 'playlist']);
+        $this->middleware(['entitlements', 'playauth'])->except(['presentation', 'playlist']);
     }
 
     /**
@@ -27,10 +28,10 @@ class MultiplayerController extends Controller
 
         if (!$playlist = VideoCourse::where('video_id', $video->id)->first()) {
             //No playlist
-            return Redirect::to('multiplayer?p='.$video->id);
+            return Redirect::to('multiplayer?p=' . $video->id);
         } else {
             // Production
-            return Redirect::to('multiplayer?p='.$video->id.'&l='.$playlist->course_id);
+            return Redirect::to('multiplayer?p=' . $video->id . '&l=' . $playlist->course_id);
         }
     }
 
@@ -42,8 +43,20 @@ class MultiplayerController extends Controller
         $ticket = new TicketHandler($video);
         $token = $ticket->issue();
 
-        $presentation = json_decode($video->presentation, true);
-
+        $presentation = array();
+        $presentation['sources'] = json_decode($video->sources, true);
+        $presentation['id'] = $video->id;
+        $presentation['title'] = $video->title;
+        foreach ($presentation['sources'] as $key => $source) {
+            $stream = Stream::firstOrNew(['video_id' => $video->id, 'name' => $source['name'] ?? $key, 'poster' => $source['poster'], 'audio' => $source['playAudio']]);
+            $stream->save();
+            foreach ($source['video'] as $resolution => $url) {
+                $streamresolution = StreamResolution::firstOrNew(['stream_id' => $stream->id, 'resolution' => $resolution, 'filename' => $url]);
+                $streamresolution->save();
+                $presentation['sources'][$key]['video'][$resolution] = 'https://play-store.dsv.su.se/presentation/' . $presentation['id'] . '/' . $url;
+            }
+        }
+        $presentation['thumb'] = 'https://play-store.dsv.su.se/presentation/' . $presentation['id'] . '/' . $video->thumb;
         //Add valid token
         $presentation['token'] = $token;
 

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Services\Course\CourseStore;
 use App\Services\PermissionHandler\PermissionHandler;
 use App\Services\Presenter\PresenterStore;
+use App\Services\Stream\StreamsStore;
 use App\Services\Tag\TagsStore;
 use App\Services\Video\VideoStore;
 use App\Services\Video\VideoUpdate;
@@ -25,7 +26,7 @@ class ReLoadPlayStore extends Model
 
     public function reloadpresentation($id)
     {
-        return $this->getPresentation('presentation/'.$id);
+        return $this->getPresentation('presentation/' . $id);
     }
 
     public function reloadstore(Request $request)
@@ -34,7 +35,7 @@ class ReLoadPlayStore extends Model
         DB::beginTransaction();
 
         //Check if video exist
-        if(!$presentation = Video::find($request->id)) {
+        if (!$presentation = Video::find($request->id)) {
             try {
                 //Store video
                 $video = new VideoStore($request);
@@ -51,20 +52,22 @@ class ReLoadPlayStore extends Model
                 //Store tags
                 $tags = new TagsStore($request, $video);
                 $tags->tags();
+                //Store streams
+                $streams = new StreamsStore($request, $video);
+                $streams->streams();
 
             } catch (\Exception $e) {
                 DB::rollback(); // Something went wrong
                 report($e);
                 return response()->json(['error' => 'Something went wrong while creating', 'message' => $e->getMessage()], 400);
             }
-        }
-        else {
+        } else {
             try {
                 //Update existing video
                 $video = new VideoUpdate($presentation, $request);
                 $video = $video->presentation_update();
                 //Set video permissions
-                $permission = new PermissionHandler($request,$video);
+                $permission = new PermissionHandler($request, $video);
                 $permission->setPermission();
                 //Store presenter
                 $presenter = new PresenterStore($request, $video);
@@ -75,6 +78,9 @@ class ReLoadPlayStore extends Model
                 //Store tags
                 $tags = new TagsStore($request, $video);
                 $tags->tags();
+                //Store streams
+                $streams = new StreamsStore($request, $video);
+                $streams->streams();
 
             } catch (\Exception $e) {
                 DB::rollback(); // Something went wrong

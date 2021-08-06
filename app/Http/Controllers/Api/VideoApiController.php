@@ -8,6 +8,7 @@ use App\Http\Resources\Presentation\PresentationResource;
 use App\Services\Course\CourseStore;
 use App\Services\PermissionHandler\PermissionHandler;
 use App\Services\Presenter\PresenterStore;
+use App\Services\Stream\StreamsStore;
 use App\Services\Tag\TagsStore;
 use App\Services\Video\VideoStore;
 use App\Services\Video\VideoUpdate;
@@ -70,6 +71,9 @@ class VideoApiController extends Controller
                     //Store tags
                     $tags = new TagsStore($request, $video);
                     $tags->tags();
+                    //Store streams
+                    $streams = new StreamsStore($request, $video);
+                    $streams->streams();
                 } catch (\Exception $e) {
                     DB::rollback(); // Something went wrong
                     report($e);
@@ -92,6 +96,9 @@ class VideoApiController extends Controller
                     //Store tags
                     $tags = new TagsStore($request, $video);
                     $tags->tags();
+                    //Store streams
+                    $streams = new StreamsStore($request, $video);
+                    $streams->streams();
                 } catch (\Exception $e) {
                     DB::rollback(); // Something went wrong
                     report($e);
