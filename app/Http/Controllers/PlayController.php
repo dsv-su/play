@@ -776,9 +776,11 @@ class PlayController extends Controller
 
         try {
             if ($video->origin == 'mediasite') {
-                $video->mediasite_presentation->video_id = null;
-                $video->mediasite_presentation->status = null;
-                $video->mediasite_presentation->save();
+                foreach (MediasitePresentation::where('video_id', $video->id)->get() as $mp) {
+                    $mp->status = null;
+                    $mp->video_id = null;
+                    $mp->save();
+                }
             }
             VideoCourse::where('video_id', $video->id)->delete();
             VideoTag::where('video_id', $video->id)->delete();
