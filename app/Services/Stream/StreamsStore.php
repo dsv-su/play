@@ -40,7 +40,7 @@ class StreamsStore extends Model
             } // end foreach
         } else {
             //Remove any old associations
-            $streams = Stream::where('video_id', $this->video->id);
+            $streams = Stream::where('video_id', $this->video->id)->get();
             foreach ($streams as $stream) {
                 StreamResolution::where('stream_id', $stream->id)->delete();
                 $stream->delete();

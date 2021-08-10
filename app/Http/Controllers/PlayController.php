@@ -787,7 +787,7 @@ class PlayController extends Controller
             VideoPresenter::where('video_id', $video->id)->delete();
             VideoPermission::where('video_id', $request->video_id)->delete();
             VideoStat::where('video_id', $request->video_id)->delete();
-            $streams = Stream::where('video_id', $video->id);
+            $streams = Stream::where('video_id', $video->id)->get();
             foreach ($streams as $stream) {
                 StreamResolution::where('stream_id', $stream->id)->delete();
                 $stream->delete();

@@ -1,4 +1,32 @@
 <script>
+    $(document).ajaxStop(function() {
+        $('a.delete').on('click', function (e) {
+            e.preventDefault();
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            let formData = new FormData();
+            let video_id = $(this).closest('div.video').attr('id');
+            formData.append("video_id", video_id);
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('manage.deleteVideo') }}",
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: () => {
+                    alert('The video has been deleted');
+                    $("#" + video_id).closest('.col').hide();
+                },
+                error: function () {
+                    alert('There was an error in deleting the video. Please check the logs for more info.');
+                }
+            });
+        });
+    });
     $(document).ready(function () {
         $(document).ready(function () {
             $('.selectpicker').selectpicker();
@@ -29,46 +57,6 @@
                     alert('There was an error in deleting the video. Please check the logs for more info.');
                 }
             });
-        });
-
-        $('button.save').on('click', function (e) {
-            e.preventDefault();
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            let formData = new FormData();
-            let video_id = $(this).attr('id');
-            formData.append("video_id", video_id);
-            formData.append('category_id', $(this).closest('form').find('#video_category_'+video_id).val());
-            formData.append('course_ids', JSON.stringify($(this).closest('form').find('#video_course_'+video_id).val()));
-            formData.append('tag_ids', JSON.stringify($(this).closest('form').find('#video_tag_'+video_id).val()));
-
-            $.ajax({
-                type: 'POST',
-                url: "{{ route('manage.editVideo') }}",
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: (data) => {
-                    alert(data.message);
-                    $("#" + video_id).find('#courses').html(data.courses);
-                    $("#" + video_id).find('#tags').html(data.tags);
-                    $("#" + video_id).find('#category').html(data.category);
-                    $(this).closest('div.modal').modal('hide');
-                },
-                error: function () {
-                    alert('There was an error in editing the video.');
-                }
-            });
-        });
-        $("#filter_category").change(function () {
-            filter_search('category', this.value)
-        });
-        $("#filter_course").change(function () {
-            filter_search('course', this.value);
         });
     });
 
