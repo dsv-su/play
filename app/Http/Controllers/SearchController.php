@@ -182,7 +182,7 @@ class SearchController extends Controller
 
     public function extractCourses($videos)
     {
-        $courses = array('nocourse' => 'No course association');
+        $courses = array('nocourse' => __('No course association'));
         foreach ($videos as $video) {
             foreach ($video->courses() as $course) {
                 if (!in_array($course->name, $courses)) {
