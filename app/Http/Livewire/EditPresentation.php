@@ -26,7 +26,7 @@ class EditPresentation extends Component
     {
         $this->video = $video;
         $this->title = $video->title;
-        $this->thumb = $this->base_uri() . '/' . $video->thumb;
+        $this->thumb = $this->base_uri() . '/' . $video->id . '/' . $video->thumb;
         $this->origin = $video->origin;
         $this->duration = $video->duration;
         $this->created = $this->getDateAttribute($video->creation);
@@ -56,7 +56,7 @@ class EditPresentation extends Component
 
         foreach($this->sources as $source) {
             $this->playAudio[] = $source->playAudio;
-            $this->poster[] = $this->base_uri() . '/' . $source->poster;
+            $this->poster[] = $this->base_uri() . '/' .$video->id. '/' . $source->poster;
         }
 
     }

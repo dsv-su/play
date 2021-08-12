@@ -60,13 +60,13 @@ class MultiplayerController extends Controller
         $streams = Stream::where('video_id', $video->id)->get();
         foreach ($streams as $key => $stream) {
             $presentation['sources'][] = [
-                'poster' => 'https://play-store.dsv.su.se/presentation/' . $video->id . '/' .$stream->poster,
+                'poster' => $this->base_uri() . $video->id . '/' .$stream->poster,
                 'playAudio' => (bool) $stream->audio,
                 'name' => $stream->name
              ];
             $resolutions = StreamResolution::where('stream_id', $stream->id)->get();
             foreach ($resolutions as $resolution) {
-                $presentation['sources'][$key]['video'][$resolution->resolution] = 'https://play-store.dsv.su.se/presentation/' . $video->id . '/' . $resolution->filename;
+                $presentation['sources'][$key]['video'][$resolution->resolution] = $this->base_uri() . $video->id . '/' . $resolution->filename;
             }
         }
 
