@@ -26,7 +26,7 @@ class EditPresentation extends Component
     {
         $this->video = $video;
         $this->title = $video->title;
-        $this->thumb = $video->thumb;
+        $this->thumb = $this->base_uri() . '/' . $video->thumb;
         $this->origin = $video->origin;
         $this->duration = $video->duration;
         $this->created = $this->getDateAttribute($video->creation);
@@ -56,9 +56,20 @@ class EditPresentation extends Component
 
         foreach($this->sources as $source) {
             $this->playAudio[] = $source->playAudio;
-            $this->poster[] = $source->poster;
+            $this->poster[] = $this->base_uri() . '/' . $source->poster;
         }
 
+    }
+
+    public function base_uri()
+    {
+        $this->file = base_path() . '/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            $this->file = base_path() . '/systemconfig/play.ini.example';
+        }
+        $this->system_config = parse_ini_file($this->file, true);
+
+        return $this->system_config['store']['list_uri'];
     }
 
     public function getDateAttribute($date)

@@ -8,6 +8,7 @@ use App\StreamResolution;
 use App\Video;
 use App\VideoCourse;
 use App\VideoStat;
+use hisorange\BrowserDetect\Facade as Browser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Redirect;
@@ -23,6 +24,17 @@ class MultiplayerController extends Controller
      * @param Video $video
      * @return RedirectResponse
      */
+    private function base_uri()
+    {
+        $this->file = base_path() . '/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            $this->file = base_path() . '/systemconfig/play.ini.example';
+        }
+        $this->system_config = parse_ini_file($this->file, true);
+
+        return $this->system_config['store']['list_uri'];
+    }
+
     public function player(Video $video): RedirectResponse
     {
 
@@ -60,7 +72,7 @@ class MultiplayerController extends Controller
 
         $presentation['id'] = $video->id;
         $presentation['title'] = $video->title;
-        $presentation['thumb'] = 'https://play-store.dsv.su.se/presentation/' . $presentation['id'] . '/' . $video->thumb;
+        $presentation['thumb'] = $this->base_uri(). '/' . $presentation['id'] . '/' . $video->thumb;
         //Add valid token
         $presentation['token'] = $token;
 
@@ -102,6 +114,9 @@ class MultiplayerController extends Controller
 
     public function multiplayer()
     {
+        //Device detection
+        abort_if(Browser::isMac() && Browser::isMobile(), 412, 'Sorry, no support for IOS Devices');
+
         return view('player.index');
     }
 }

@@ -6,7 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <a href="{{ route('player', ['video' => $video]) }}">
             <div class="card-header position-relative"
-                 style="background-image: url({{ asset($video->thumb)}}); height:200px;">
+                 style="background-image: url({{ $base_uri . asset($video->thumb)}}); height:200px;">
                 <div class="title">{{ $video->title }}</div>
                 <p class="p-1"> {{$video->duration}} </p>
             </div>
