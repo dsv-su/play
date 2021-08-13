@@ -54,8 +54,8 @@ class EditPresentation extends Component
             $this->presentationpermissonScope = $p->scope;
         }
 
-        foreach($this->sources as $source) {
-            $this->playAudio[] = $source->playAudio;
+        foreach($video->streams as $source) {
+            $this->playAudio[] = $source->audio;
             $this->poster[] = $this->base_uri() . '/' .$video->id. '/' . $source->poster;
         }
 

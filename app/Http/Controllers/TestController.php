@@ -19,14 +19,7 @@ class TestController extends Controller
 
     public function test()
     {
-        if (Browser::isAndroid()) {
-            $response .= '<h1>Android App!</h1>';
-        } elseif (Browser::isMac() && Browser::isMobile()) {
-            $response .= '<h1>iOS App!</h1>';
-        }
-        else $response = Browser::detect();
-
-        return $response;
+       
     }
 
     public function search(Request $request)
