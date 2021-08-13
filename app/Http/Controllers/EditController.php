@@ -42,17 +42,19 @@ class EditController extends Controller
             VideoPresenter::where('video_id', $video->id)->delete();
 
             //Linked Presenter attributes
-            foreach($request->presenters as $presenter) {
-                $username = preg_filter("/[^(]*\(([^)]+)\)[^()]*/", "$1", $presenter);
-                $name = trim(preg_replace("/\([^)]+\)/","", $presenter));
-                $presenter = Presenter::firstOrCreate([
-                    'username' => $username,
-                    'name' => $name
-                ]);
-                $videoPresenter = VideoPresenter::create([
-                    'video_id' => $video->id,
-                    'presenter_id' => $presenter->id
-                ]);
+            if($request->presenters){
+                foreach($request->presenters as $presenter) {
+                    $username = preg_filter("/[^(]*\(([^)]+)\)[^()]*/", "$1", $presenter);
+                    $name = trim(preg_replace("/\([^)]+\)/","", $presenter));
+                    $presenter = Presenter::firstOrCreate([
+                        'username' => $username,
+                        'name' => $name
+                    ]);
+                    $videoPresenter = VideoPresenter::create([
+                        'video_id' => $video->id,
+                        'presenter_id' => $presenter->id
+                    ]);
+                }
             }
             //Update permission for presentation
             if($videoPermission = VideoPermission::where('video_id', $video->id)->first()) {
