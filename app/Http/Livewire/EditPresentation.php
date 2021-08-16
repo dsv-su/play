@@ -26,7 +26,7 @@ class EditPresentation extends Component
     {
         $this->video = $video;
         $this->title = $video->title;
-        $this->thumb = $this->base_uri() . '/' . $video->id . '/' . $video->thumb;
+        $this->thumb = $video->thumb;
         $this->origin = $video->origin;
         $this->duration = $video->duration;
         $this->created = $this->getDateAttribute($video->creation);

@@ -10,6 +10,7 @@ use App\Presenter;
 use App\Services\Notify\PlayStoreNotify;
 use App\Video;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Searchable\ModelSearchAspect;
 use Spatie\Searchable\Search;
 use hisorange\BrowserDetect\Facade as Browser;

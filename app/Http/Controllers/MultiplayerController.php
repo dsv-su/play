@@ -72,7 +72,7 @@ class MultiplayerController extends Controller
 
         $presentation['id'] = $video->id;
         $presentation['title'] = $video->title;
-        $presentation['thumb'] = $this->base_uri(). '/' . $presentation['id'] . '/' . $video->thumb;
+        $presentation['thumb'] = $video->thumb;
         //Add valid token
         $presentation['token'] = $token;
 
@@ -107,7 +107,9 @@ class MultiplayerController extends Controller
             ->makeHidden('category_id')
             ->makeHidden('created_at')
             ->makeHidden('updated_at');
+
         $json['items'] = $playlist->toArray();
+
 
         return $json->toJson(JSON_PRETTY_PRINT);
     }
