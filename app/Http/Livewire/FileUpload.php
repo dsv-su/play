@@ -24,6 +24,7 @@ class FileUpload extends Component
     public $source = [];
     public $uploaded_files;
 
+
     public function mount(ManualPresentation $presentation, $permissions)
     {
         $this->dirname = $presentation->local;
@@ -157,11 +158,19 @@ class FileUpload extends Component
 
     public function remove($index)
     {
-        //dd($this->filethumbsname[$index]);
         Storage::disk('public')->delete($this->filethumbsname[$index]);
         Storage::disk('public')->delete($this->filenames[$index]);
         array_splice($this->filenames, $index, 1);
         array_splice($this->filethumbs, $index, 1);
+        array_splice($this->source, $index, 1);
+        //If primary video is deleted update playaudio
+        if($index == 0) {
+            $this->source[0]['playAudio'] = true;
+        }
+        //Update source
+        $this->presentation->sources = [];
+        $this->presentation->sources = $this->source;
+        $this->presentation->save();
     }
 
     public function render()
