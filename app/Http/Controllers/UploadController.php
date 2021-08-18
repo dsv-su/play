@@ -120,7 +120,7 @@ class UploadController extends Controller
 
         $upload = new SftpPlayStore($presentation);
         $upload->sftpVideo();
-        $upload->sftpImage();
+        //$upload->sftpImage(); -> disabled
         $upload->sftpPoster();
 
         //Remove temp storage
