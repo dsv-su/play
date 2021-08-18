@@ -18,7 +18,7 @@ class TagsStore extends Model
 
     public function tags()
     {
-        if(count($this->tags)>0) {
+        if($this->tags) {
 
             foreach ($this->tags as $key => $this->item) {
                 if ($this->item) {

@@ -15,13 +15,13 @@
                         <button type="button" class="btn btn-outline-primary">
                             <i class="fas fa-plug"></i> <span class="badge badge-success">Play-store</span>
                         </button>
-                        <div class="btn btn-outline-primary float-right" style="font-size: 120%">Presentations:<span class="badge badge-light">{{app()->make('total_videos')}}</span>
-                            <a href="{{route('reload')}}" role="button" class="btn btn-outline-danger float-right">
+                        <div class="btn btn-outline-primary float-right" style="font-size: 140%">Presentations:<span class="badge badge-light">{{app()->make('total_videos')}}</span>
+                            {{--}}<a href="{{route('reload')}}" role="button" class="btn btn-outline-danger float-right">
                                 Reload
-                            </a>
+                            </a>{{--}}
                         </div>
                         <div class="btn btn-outline-primary float-right" style="font-size: 120%">Courses 2018-2021
-                            <a href="{{route('playboot')}}" role="button" class="btn btn-outline-danger float-right">
+                            <a href="{{route('playboot')}}" role="button" class="btn btn-outline-danger float-right" >
                                 Reload
                             </a>
                         </div>

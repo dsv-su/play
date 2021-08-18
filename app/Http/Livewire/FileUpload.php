@@ -16,7 +16,8 @@ class FileUpload extends Component
     public $filenames = [];
     public $filethumbs = [];
     public $filethumbsname = [];
-    public $sec;
+    public $custom;
+    public $sec, $genthumb;
     public $dirname;
     public $presentation, $permissions;
     public $title, $created;
@@ -28,9 +29,19 @@ class FileUpload extends Component
         $this->permissions = $permissions;
     }
 
+    public function updatedcustom()
+    {
+        //Store custom thumb i image folder
+        $customthumb = $this->custom->store($this->dirname.'/poster','public');
+        //Change thumb name to custom thumb name
+
+        $this->filethumbs[0] = $customthumb;
+    }
+
     public function updatedfiles()
     {
         //Real-time Validation
+
         $this->validate([
             'files.*' => 'mimetypes:video/mp4, video/avi, video/mpeg, video/quicktime, video/x-ms-wmv',
             'files' => 'max:4',
@@ -39,6 +50,7 @@ class FileUpload extends Component
             'files.mimetypes' => 'The files must be of type',
             'files.max' => 'The maximum number of files allowed is 4',
         ]);
+
         //Check if uploaded files are less than 4
         if(count($this->filenames)>3) {
             $this->emit('show');
@@ -49,7 +61,7 @@ class FileUpload extends Component
                 $filename = $item->store($this->dirname . '/video', 'public');
                 //Add file to file container
                 $this->filenames[] = $filename;
-                $this->filethumbs[] = $this->createThumb($filename, 10);
+
 
                 //Make source
                 $this->source[$ind]['video'] = 'video/'. basename($filename);
@@ -62,11 +74,21 @@ class FileUpload extends Component
                     //Store duration
                     $this->presentation->duration = $this->DurationVideo($this->dirname, $filename);
                     $primary_video_name = basename($filename);
+
+                    //Create and store generated thumb
+                    $this->filethumbs[] = $this->createThumb($filename, ($this->presentation->duration/3));
+                    $this->genthumb = ceil($this->presentation->duration/3);
                     $this->presentation->thumb = 'poster/'.$primary_video_name;
                     //Store playAudio for primary
                     $this->source[$ind]['playAudio'] = true;
                     $this->presentation->save();
+                } else {
+                    //posters
+                    $this->filethumbs[] = $this->createThumb($filename, ($this->presentation->duration/3));
                 }
+
+
+
                 //Check media diffs (+- 3 sec)
                 if(count($this->filenames) > 1){
                     $media = new DetermineDurationVideo($this->dirname);
@@ -119,7 +141,7 @@ class FileUpload extends Component
             'sec' => 'required',
         ]);
         $this->filethumbs[$gthumb] = $this->createThumb($this->filenames[$gthumb], $this->sec);
-
+        $this->genthumb = $this->sec;
     }
 
     public function remove($index)

@@ -101,5 +101,9 @@
     "Filter by": "Filtrera",
     "Term": "Termin",
     "Presenter": "Presentatör",
-    "No course association": "Ingen kurstillhörighet"
+    "No course association": "Ingen kurstillhörighet",
+    "Upload Custom Thumb": "Ladda upp en egen miniatyr",
+    "Thumb generated after": "Miniatyr skapad efter",
+    "Stream Duration": "Längd på video",
+    "Custom uploaded thumb": "Uppladad miniatyr"
 }
