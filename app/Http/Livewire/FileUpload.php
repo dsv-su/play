@@ -33,9 +33,15 @@ class FileUpload extends Component
     {
         //Store custom thumb i image folder
         $customthumb = $this->custom->store($this->dirname.'/poster','public');
-        //Change thumb name to custom thumb name
 
+        //Change thumb name to custom thumb name
         $this->filethumbs[0] = $customthumb;
+
+        //Update source
+        $this->source[0]['poster'] = 'poster/' . basename($customthumb);
+        $this->presentation->sources = [];
+        $this->presentation->sources = $this->source;
+        $this->presentation->save();
     }
 
     public function updatedfiles()
@@ -78,7 +84,8 @@ class FileUpload extends Component
                     //Create and store generated thumb
                     $this->filethumbs[] = $this->createThumb($filename, ($this->presentation->duration/3));
                     $this->genthumb = ceil($this->presentation->duration/3);
-                    $this->presentation->thumb = 'poster/'.$primary_video_name;
+                    $this->presentation->thumb = 'poster/'. basename($this->filethumbs[0]);
+
                     //Store playAudio for primary
                     $this->source[$ind]['playAudio'] = true;
                     $this->presentation->save();
