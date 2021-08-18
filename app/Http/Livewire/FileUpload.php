@@ -37,7 +37,7 @@ class FileUpload extends Component
         $customthumb = $this->custom->store($this->dirname.'/poster','public');
 
         //Change thumb name to custom thumb name
-        $this->filethumbs[0] = url($customthumb);
+        $this->filethumbs[0] = url('/storage/'. $customthumb);
 
         //Update source
         $this->presentation->thumb = 'poster/'. basename($customthumb);
