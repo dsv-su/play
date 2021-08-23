@@ -405,11 +405,22 @@ class PlayController extends Controller
                 $folderid = $folder->mediasite_id;
                 $presentations = json_decode($mediasite->get($url . "/Folders('$folderid')/Presentations?\$top=100000")->getBody(), true)['value'];
                 foreach ($presentations as $presentation) {
-                    MediasitePresentation::firstOrCreate([
-                        'title' => $presentation['Title'],
-                        'id' => $presentation['Id'],
-                        'mediasite_folder_id' => $folder->id
-                    ]);
+                    if ($presentation['Status'] == 'Viewable') {
+                        $mp = MediasitePresentation::find($presentation['Id']);
+                        if (!$mp) {
+                            MediasitePresentation::create([
+                                'title' => $presentation['Title'],
+                                'id' => $presentation['Id'],
+                                'mediasite_folder_id' => $folder->id
+                            ]);
+                        } else {
+                            $mp->title = $presentation['Title'];
+                            $mp->mediasite_folder_id = $folder->id;
+                            $mp->save();
+                        }
+                    } else {
+                        MediasitePresentation::where(['id' => $presentation['Id']])->delete();
+                    }
                 }
             } catch (GuzzleException $e) {
                 abort(503);
