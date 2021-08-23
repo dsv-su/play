@@ -34,7 +34,7 @@ class ManagePresentationController extends Controller
         } else {
             return redirect('home');
         }
-        return view('manage.manage', ['videos' => $videos, 'allcourses' => Course::all(), 'categories' => Category::all(), 'alltags' => Tag::all()]);
+        return view('manage.manage', ['videos' => $videos, 'allcourses' => Course::all(), 'categories' => Category::all(), 'alltags' => Tag::all(), 'base_uri' => $this->base_uri()]);
     }
 
     public function setPermission(Video $video)
@@ -70,5 +70,16 @@ class ManagePresentationController extends Controller
         }
 
         return redirect()->route('home');
+    }
+
+    private function base_uri()
+    {
+        $this->file = base_path() . '/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            $this->file = base_path() . '/systemconfig/play.ini.example';
+        }
+        $this->system_config = parse_ini_file($this->file, true);
+
+        return $this->system_config['store']['list_uri'];
     }
 }

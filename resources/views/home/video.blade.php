@@ -2,7 +2,7 @@
 <div class="card video m-auto" @if (isset($manage) && $manage) id="{{$video->id}}" @endif>
     <a href="{{ route('player', ['video' => $video]) }}">
         <div class="card-header position-relative"
-             style="background-image: url({{ asset('https://play-store.dsv.su.se/presentation/' . $video->id . '/'.$video->thumb)}}); height:200px;">
+             style="background-image: url({{ asset($video->thumb)}}); height:200px;">
             <div class="title">{{ $video->title }}</div>
             <!-- For testing permission handling -->
 
@@ -52,7 +52,7 @@
         @if (isset($manage) && $manage)
             <div class="d-inline">
                 <a href="{{route('presentation_edit', $video->id)}}" data-toggle="tooltip"
-                   title="Redigera presentation" class="btn btn-outline-primary btn-sm mb-1"><i
+                   title="{{ __('Edit Presentation') }}" class="btn btn-outline-primary btn-sm mb-1"><i
                             class="far fa-edit"></i></a>
                 <a href="{{route('edit_permission', $video->id)}}" data-toggle="tooltip"
                    title="{{ __("Change rights for presentation") }}" class="btn btn-outline-secondary btn-sm mb-1"><i

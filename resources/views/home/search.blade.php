@@ -13,7 +13,7 @@
                     <span class="su-theme-anchor"></span>
                     <h3 class="su-theme-header mb-4">
                         <span class="far fa-clock fa-icon-border mr-2" aria-hidden="true"></span>
-                        @if ($manage) Manage presentations @else Search results @endif
+                        @if ($manage) {{__('Manage presentations')}} @else {{__('Search results')}} @endif
                     </h3>
                 </div>
             </div> <!-- col-12 -->
@@ -25,17 +25,17 @@
             <div id="collapseVideo">
                 @if (isset($videopresenters) || isset($videoterms) || isset($videocourses) || isset($videotags))
                     <form class="form-inline mx-3">
-                        <label class="col-form-label mr-1 font-weight-light">Filter by: </label>
+                        <label class="col-form-label mr-1 font-weight-light">{{__('Filter by')}}: </label>
                         <select name="course" @if (empty($videocourses)) disabled
                                 @endif class="form-control mx-1 selectpicker"
-                                data-none-selected-text="Course" data-live-search="true" multiple style="width: 400px">
+                                data-none-selected-text="{{ __('Course') }}" data-live-search="true" multiple style="width: 400px">
                             @foreach($videocourses as $designation => $name)
                                 <option value="{{$designation}}">{{$name}} @if ($designation != 'nocourse')
                                         ({{$designation}})@endif</option>
                             @endforeach
                         </select>
                         <select name="semester" @if (empty($videoterms)) disabled
-                                @endif class="form-control mx-1 selectpicker" data-none-selected-text="Term"
+                                @endif class="form-control mx-1 selectpicker" data-none-selected-text="{{ __('Term')}}"
                                 data-live-search="true"
                                 multiple style="width: 200px">
                             @foreach($videoterms as $term)
@@ -44,7 +44,7 @@
                         </select>
                         <select name="presenter" @if (empty($videopresenters)) disabled
                                 @endif class="form-control mx-1 selectpicker"
-                                data-none-selected-text="Presenter" data-live-search="true" multiple
+                                data-none-selected-text="{{ __('Presenter') }}" data-live-search="true" multiple
                                 style="width: 200px;">
                             @foreach($videopresenters as $username => $name)
                                 <option value="{{$username}}">{{$name}}</option>
@@ -52,7 +52,7 @@
                         </select>
                         <select name="tag" @if (empty($videotags)) disabled
                                 @endif class="form-control mx-1 selectpicker"
-                                data-none-selected-text="Tag" data-live-search="true" multiple style="width: 200px;">
+                                data-none-selected-text="{{ __('Tag') }}" data-live-search="true" multiple style="width: 200px;">
                             @foreach($videotags as $tag)
                                 <option value="{{$tag}}">{{$tag}}</option>
                             @endforeach

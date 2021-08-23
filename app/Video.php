@@ -43,6 +43,11 @@ class Video extends Model implements Searchable
         return $this->attributes['link'] = URL::to('/') . '/player/' . $this->id;
     }
 
+    public function getThumbAttribute(): string
+    {
+        return  $this->base_uri() . '/' . $this->id . '/' . $this->attributes['thumb'];
+    }
+
     public function getTypeAttribute(): string
     {
         return 'video';
@@ -134,5 +139,16 @@ class Video extends Model implements Searchable
     public function getSearchResult(): SearchResult
     {
         // TODO: Implement getSearchResult() method.
+    }
+
+    private function base_uri()
+    {
+        $this->file = base_path() . '/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            $this->file = base_path() . '/systemconfig/play.ini.example';
+        }
+        $this->system_config = parse_ini_file($this->file, true);
+
+        return $this->system_config['store']['list_uri'];
     }
 }

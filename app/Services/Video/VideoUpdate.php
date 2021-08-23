@@ -18,6 +18,7 @@ class VideoUpdate extends Model
 
     public function presentation_update()
     {
+        //Disabled from play-store
         $this->video->origin = $this->request->origin;
         $this->video->notification_id = $this->request->notification_id;
         $this->video->creation = $this->request->creation;
@@ -27,7 +28,7 @@ class VideoUpdate extends Model
         $this->video->subtitles = $this->request->subtitles;
         $this->video->sources = json_encode($this->request->sources, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         $this->video->presentation = json_encode($this->request->all(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-        //$this->video->category_id = $this->request->category_id ?? 1;
+        $this->video->category_id = $this->request->category_id ?? 1;
         $this->video->save();
 
         //Update mediasite video link

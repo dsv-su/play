@@ -19,24 +19,31 @@
                                     </div>
                                 @endif
                             </div>
-
+                            {{-- Disable loading bar}}
                             <div x-data="{ isUploading: false, progress: 0 }"
                                 x-on:livewire-upload-start="isUploading = true"
                                 x-on:livewire-upload-finish="isUploading = false"
                                 x-on:livewire-upload-error="isUploading = false"
                                 x-on:livewire-upload-progress="progress = $event.detail.progress">
+                            {{--}}
                                 <input type="file" class="form-control" wire:model="files" multiple>
                                 @error('files.*') <span class="text-danger">{{ $message }}</span> @enderror
                                 @error('files') <span class="text-danger">{{ $message }}</span> @enderror
                             <!-- Progress Bar -->
+                            {{-- Disable loading bar}}
                                 <div x-show="isUploading">
                                     <progress max="100" x-bind:value="progress"></progress>
                                 </div>
+                            {{--}}
                             </div>
 
                                 @if($files)
                                     @if($filethumbs)
-                                        @foreach($filethumbs as $thumb)
+                                        <!-- Upload Custom thumb -->
+                                            <h4>{{ __("Upload Custom Thumb") }}</h4>
+                                        <input type="file" class="form-control" wire:model="custom">
+                                        @error('custom') <span class="text-danger">{{ $message }}</span> @enderror
+                                            @foreach($filethumbs as $key => $thumb)
 
                                             <div class="p-4 my-3 rounded-lg shadow-lg transition-all duration-500"
                                                  style="background-image: radial-gradient( circle farthest-corner at 14.2% 27.5%,  rgba(104,199,255,1) 0%, rgba(255,255,255,1) 90% );"
@@ -45,9 +52,19 @@
                                                    wire:click="remove({{$loop->index}})"></i>
                                                 <!-- Thumb -->
                                                 <div class="flex justify-center">
-                                                    <img src="{{$thumb}}?{{ rand() }}" width="90%">
+                                                    <img src="{{$thumb}}?{{ rand() }}" width="90%" style="width: 250px; height: 150px;">
                                                 </div>
-
+                                                <div style="font-family: 'Source Sans Pro', 'Arial', sans-serif; width: 90%;">
+                                                    <small>
+                                                        {{ __('Stream Duration') }}: {{$presentation->duration}} sec.
+                                                        <br>
+                                                        @if(!$custom or $key > 0)
+                                                        {{ __('Thumb generated after') }}: {{$genthumb}} sec.
+                                                        @else
+                                                         {{ __('Custom uploaded thumb') }}
+                                                        @endif
+                                                    </small>
+                                                </div>
                                             </div>
                                             <!--<div class="form-inline my-3">-->
                                             <div class="row justify-content-between text-left">

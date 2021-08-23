@@ -7,6 +7,7 @@ use App\Permission;
 use App\Presentation;
 use App\Presenter;
 use App\Services\Ldap\SukatUser;
+use App\Stream;
 use App\Video;
 use App\VideoCourse;
 use App\VideoPermission;
@@ -42,17 +43,19 @@ class EditController extends Controller
             VideoPresenter::where('video_id', $video->id)->delete();
 
             //Linked Presenter attributes
-            foreach($request->presenters as $presenter) {
-                $username = preg_filter("/[^(]*\(([^)]+)\)[^()]*/", "$1", $presenter);
-                $name = trim(preg_replace("/\([^)]+\)/","", $presenter));
-                $presenter = Presenter::firstOrCreate([
-                    'username' => $username,
-                    'name' => $name
-                ]);
-                $videoPresenter = VideoPresenter::create([
-                    'video_id' => $video->id,
-                    'presenter_id' => $presenter->id
-                ]);
+            if($request->presenters){
+                foreach($request->presenters as $presenter) {
+                    $username = preg_filter("/[^(]*\(([^)]+)\)[^()]*/", "$1", $presenter);
+                    $name = trim(preg_replace("/\([^)]+\)/","", $presenter));
+                    $presenter = Presenter::firstOrCreate([
+                        'username' => $username,
+                        'name' => $name
+                    ]);
+                    $videoPresenter = VideoPresenter::create([
+                        'video_id' => $video->id,
+                        'presenter_id' => $presenter->id
+                    ]);
+                }
             }
             //Update permission for presentation
             if($videoPermission = VideoPermission::where('video_id', $video->id)->first()) {
@@ -95,6 +98,18 @@ class EditController extends Controller
                     ['course_id' => $request->courseEdit]
                 );
             }
+
+            //Update Audio feed
+            $streams = Stream::where('video_id', $video->id)->get();
+            foreach($streams as $key => $stream) {
+                $stream->audio = 0;
+                $stream->save();
+                if($request->audio == $key) {
+                    $stream->audio = 1;
+                    $stream->save();
+                }
+            }
+
 
         }
         Cache::flush();

@@ -54,11 +54,22 @@ class EditPresentation extends Component
             $this->presentationpermissonScope = $p->scope;
         }
 
-        foreach($this->sources as $source) {
-            $this->playAudio[] = $source->playAudio;
-            $this->poster[] = $source->poster;
+        foreach($video->streams as $source) {
+            $this->playAudio[] = $source->audio;
+            $this->poster[] = $this->base_uri() . '/' .$video->id. '/' . $source->poster;
         }
 
+    }
+
+    public function base_uri()
+    {
+        $this->file = base_path() . '/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            $this->file = base_path() . '/systemconfig/play.ini.example';
+        }
+        $this->system_config = parse_ini_file($this->file, true);
+
+        return $this->system_config['store']['list_uri'];
     }
 
     public function getDateAttribute($date)
