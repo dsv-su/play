@@ -57,6 +57,8 @@
                                 <option value="{{$tag}}">{{$tag}}</option>
                             @endforeach
                         </select>
+                        <button type="button" class="mb-2 btn btn-outline-secondary" onclick="$('.selectpicker').selectpicker('deselectAll'); $('.selectpicker').selectpicker('refresh');">Clear selection
+                        </button>
                         <meta name="csrf-token" content="{{ csrf_token() }}">
                     </form>
                 @endif
