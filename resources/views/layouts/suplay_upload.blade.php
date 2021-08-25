@@ -17,8 +17,6 @@
     <!-- Laravel Livewire -->
     @livewireStyles
     @livewireScripts
-    <!--Alphine JS -->
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js" defer></script>
     <!-- Select2 -->
     <link href="{{asset('./css/select2/css/select2.min.css')}}" rel="stylesheet" />
     <script src="{{asset('./css/select2/js/select2.min.js')}}"></script>

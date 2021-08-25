@@ -1,11 +1,30 @@
 
                 <div class="col-sm-4">
-                    <div class="col-7">
-                        <h3 class="fs-title">{{ __("Upload media") }}:</h3>
+                    <h3 class="fs-title">{{ __("Upload media") }}:</h3>
+
+                    <div class="row text-center">
+                        <div class="col">
+                            <div class="counter">
+                                <i class="far fa-file-video fa-2x"></i>
+                                <h2 class="timer count-title count-number" data-to="100" data-speed="1500">{{$uploaded_files}}</h2>
+                                <p class="count-text ">{{ __("Uploaded media files") }}</p>
+                            </div>
+                        </div>
                     </div>
-                    <p class="description">
-                        {{ __("Upload video media. Up to 4 media files can be uploaded.") }}
-                    </p>
+
+                    <div class="rounded border shadow p-3 my-2">
+                        <ul>
+                            <li>
+                                <span>{{ __("Up to 4 media files can be uploaded.") }}</span>
+                            </li>
+                            <li>
+                                <span>{{ __("Each uploaded file should be the same length as the primary file") }}</span>
+                            </li>
+                            <li>
+                                <span>{{ __("When uploading, a default thumbnail is generated") }}</span>
+                            </li>
+                        </ul>
+                    </div>
 
                     <div class="rounded border shadow p-3 my-2">
                         <h4>{{ __("Media") }}</h4>
@@ -19,24 +38,10 @@
                                     </div>
                                 @endif
                             </div>
-                            {{-- Disable loading bar}}
-                            <div x-data="{ isUploading: false, progress: 0 }"
-                                x-on:livewire-upload-start="isUploading = true"
-                                x-on:livewire-upload-finish="isUploading = false"
-                                x-on:livewire-upload-error="isUploading = false"
-                                x-on:livewire-upload-progress="progress = $event.detail.progress">
-                            {{--}}
                                 <input type="file" class="form-control" wire:model="files" multiple>
                                 @error('files.*') <span class="text-danger">{{ $message }}</span> @enderror
                                 @error('files') <span class="text-danger">{{ $message }}</span> @enderror
-                            <!-- Progress Bar -->
-                            {{-- Disable loading bar}}
-                                <div x-show="isUploading">
-                                    <progress max="100" x-bind:value="progress"></progress>
-                                </div>
-                            {{--}}
                             </div>
-
                                 @if($files)
                                     @if($filethumbs)
                                         <!-- Upload Custom thumb -->

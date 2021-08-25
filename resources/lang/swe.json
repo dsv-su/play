@@ -56,7 +56,7 @@
     "All uploaded presentations are accessible to DSV Students and Staff unless otherwise specified with the 'Custom' alternative": "Alla uppladdade presentationer är tillgängliga för DSV-studenter och personal om inte annat anges med alternativet 'Anpassad'",
     "Playback Permissions": "Uppspelningsrättigheter",
     "Upload media": "Ladda upp media",
-    "Upload video media. Up to 4 media files can be uploaded.": "Ladda upp videomedia. Upp till 4 mediafiler är möjliga att ladda upp.",
+    "Up to 4 media files can be uploaded.": "Upp till 4 mediafiler är möjliga att ladda upp.",
     "Upload files": "Ladda upp filer",
     "Add": "Lägg till",
     "Primary media": "Primärmedia",
@@ -105,5 +105,9 @@
     "Upload Custom Thumb": "Ladda upp en egen miniatyr",
     "Thumb generated after": "Miniatyr skapad efter",
     "Stream Duration": "Längd på video",
-    "Custom uploaded thumb": "Uppladad miniatyr"
+    "Custom uploaded thumb": "Uppladad miniatyr",
+    "Uploaded media files": "Uppladdade video filer",
+    "Each uploaded file should be the same length as the primary file": "Varje uppladad fil bör ha samma längd som primärfilen",
+    "When uploading, a default thumbnail is generated": "Vid uppladdning genereras en standardminiatyr"
+
 }

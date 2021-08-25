@@ -104,8 +104,6 @@ class FileUpload extends Component
                     }
                 }
 
-
-
                 //Uploaded files
                 $this->uploaded_files++;
 
