@@ -169,6 +169,9 @@ class FileUpload extends Component
         $this->presentation->sources = [];
         $this->presentation->sources = $this->source;
         $this->presentation->save();
+
+        //Update uploaded files
+        $this->uploaded_files--;
     }
 
     public function render()

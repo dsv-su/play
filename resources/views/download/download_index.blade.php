@@ -3,9 +3,9 @@
     <div class="container">
         <div class="row">
             @if(app()->make('play_role') == 'Administrator')
-                <h1 class="word-wrap_xs-only" id="sub-entry-page-header" lang="en">Downloading presentation</h1>
+                <h1 class="word-wrap_xs-only" id="sub-entry-page-header" lang="en">Presentation</h1>
             @else
-                <h1 class="word-wrap_xs-only" id="sub-entry-page-header" lang="sv">Laddar ner presentation</h1>
+                <h1 class="word-wrap_xs-only" id="sub-entry-page-header" lang="sv">Presentation</h1>
             @endif
         </div>
         <div class="row">

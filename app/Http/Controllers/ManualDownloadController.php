@@ -9,6 +9,7 @@ use App\Services\DownloadZip;
 use App\Services\Ffmpeg\DetermineDurationVideo;
 use App\Services\Notify\PlayStoreNotify;
 use App\Services\Store\DownloadResource;
+use App\Services\Store\DownloadStreamResolution;
 use App\Services\Store\SftpPlayStore;
 use App\Services\TicketHandler;
 use App\Services\Video\VideoResolution;
@@ -110,8 +111,7 @@ class ManualDownloadController extends Controller
 
     public function download(Video $video)
     {
-        $presentation = Presentation::latest()->first();
-
+        $presentation = Presentation::find($video->id);
         //Download directories to use
         $dir_thumb = $presentation->local.'/image/';
         $dir_video = $presentation->local.'/video/';
@@ -127,7 +127,9 @@ class ManualDownloadController extends Controller
         $file = new DownloadResource($video, new TicketHandler($video));
         $file->getFile($dir_thumb.$thumb_name,$thumb_url);
 
+        /*
         //Video and poster files
+
         foreach (json_decode($video->sources, true) as $source) {
             // Support videos that havent been converted in multiple resolutions
             if($presentation->resolution == '999') {
@@ -153,11 +155,32 @@ class ManualDownloadController extends Controller
 
             $file->getFile($dir_poster.$poster_name, $source['poster']);
 
+        }*/
+
+        //Get video and poster names
+        $download = new DownloadStreamResolution($video);
+        $video_names = $download->videonames($presentation->resolution);
+        $poster_names = $download->posternames();
+
+        //Create local storage directories
+        \Storage::disk('public')->makeDirectory($dir_video);
+        \Storage::disk('public')->makeDirectory($dir_poster);
+
+        //Download video file
+        foreach($video_names as $video_name) {
+            $file->getFile($dir_video.$video_name, $this->base_uri() . '/' . $video->id . '/' . $video_name);
+        }
+
+        //Download posters
+        foreach($poster_names as $poster_name) {
+            $file->getFile($dir_poster.$poster_name, $this->base_uri() . '/' . $video->id . '/' . $poster_name);
         }
 
         //Make zipfolder of presentation
         $file = new DownloadZip($video, $presentation->local);
         $file->makezip();
+
+        return true;
     }
 
     public function step3(Video $video)
@@ -518,5 +541,16 @@ class ManualDownloadController extends Controller
     private function setDownloaddir()
     {
         return Carbon::now()->toDateString('Y-m-d') . '_' . rand(1, 999);
+    }
+
+    private function base_uri()
+    {
+        $this->file = base_path() . '/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            $this->file = base_path() . '/systemconfig/play.ini.example';
+        }
+        $this->system_config = parse_ini_file($this->file, true);
+
+        return $this->system_config['store']['list_uri'];
     }
 }
