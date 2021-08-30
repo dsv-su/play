@@ -8,6 +8,7 @@ use App\MediasiteFolder;
 use App\MediasitePresentation;
 use App\Permission;
 use App\Presentation;
+use App\Services\Cattura\CheckCatturaRecorderStatus;
 use App\Services\Notify\PlayStoreNotify;
 use App\Video;
 use App\VideoPermission;
@@ -22,17 +23,42 @@ class AdminController extends Controller
     public function __construct()
     {
         $this->middleware('play-admin')->except('emulateUser');
+        //New admin2
+        $this->middleware('playauth:api');
+        $this->middleware('play-store-status:api');
+        $this->middleware('daisy-status:api');
+        $this->middleware('play-admin');
+
     }
 
     public function admin()
     {
         $data['manual_presentations'] = ManualPresentation::all();
         $data['presentations'] = Presentation::all();
+        $data['uploads'] = Presentation::all()->count();
         $data['mediasite_presentations'] = MediasitePresentation::all()->where('status', '<>' ,null);
         $data['mediasite_folders'] = MediasiteFolder::all();
         $data['videos'] = Video::all();
         $data['owners'] = Video::with('video_presenter.presenter')->get();
         $data['permissions'] = VideoPermission::with('permission')->get();
+
+        // Cattura
+        $store = new CheckCatturaRecorderStatus();
+
+        $file = base_path() . '/systemconfig/play.ini';
+        if (!file_exists($file)) {
+            $file = base_path() . '/systemconfig/play.ini.example';
+        }
+        $system_config = parse_ini_file($file, true);
+
+        foreach($system_config['recorders'] as $key => $system) {
+            $check = $store->call($system,'api/1/status?since=');
+            $data['cattura'][] = [
+                'recorder' => $key,
+                'status' => $check['capture']['state'],
+                'url' => $system
+            ];
+        }
 
         return view('admin.admin', $data);
     }
@@ -40,7 +66,6 @@ class AdminController extends Controller
     public function emulateUser(Request $request)
     {
         if(!$request->server('REMOTE_USER')) {
-
             //No Shib_Session_ID
             if($request->role == 'Administrator'){
                 AdminHandler::updateOrCreate(['Shib_Session_ID' => '9999'],['override' => false]);

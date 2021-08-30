@@ -33,7 +33,7 @@ class DaisyIntegration extends Model
     //Method for retrieving DaisyId with UserID
     public function getDaisyPersonId($username)
     {
-        $this->array_resource = json_decode($this->getResource('/person/username/' . $username . '@su.se', 'json')->getBody()->getContents(), TRUE);
+        $this->array_resource = json_decode($this->getResource('person/username/' . $username . '@su.se', 'json')->getBody()->getContents(), TRUE);
         return $this->array_resource['id'];
     }
 
@@ -89,18 +89,25 @@ class DaisyIntegration extends Model
     public function getActiveCourses()
     {
         $date = Carbon::now()->format('Y-m-d\TH:i:s');
+        //return $date;
         $this->course_result = $this->getResource("courseSegment?startDateBefore=$date&endDateAfter=$date", 'json');
         $this->courses = json_decode($this->course_result->getBody()->getContents(), TRUE);
-        foreach ($this->courses as $this->courselist) {
-            $this->list[] = $this->courselist['id'];
+        //Check if there exist active courses
+        if($this->courses) {
+            foreach ($this->courses as $this->courselist) {
+                $this->list[] = $this->courselist['id'];
+            }
+        } else {
+            $this->list[] = 0;
         }
+
         return $this->list;
     }
 
     //Method for retrieving Students active courses from Daisy with UserID
     public function getActiveStudentCourses($username)
     {
-        $this->array_resource = json_decode($this->getResource('/person/username/' . $username . '@su.se', 'json')->getBody()->getContents(), TRUE);
+        $this->array_resource = json_decode($this->getResource('person/username/' . $username . '@su.se', 'json')->getBody()->getContents(), TRUE);
         $this->courses = json_decode($this->getResource('/person/' . $this->array_resource['id'] . '/courseSegmentInstances', 'json')->getBody()->getContents(), TRUE);
         foreach ($this->courses as $this->courselist) {
             $this->list[] = $this->courselist['id'];
@@ -111,7 +118,7 @@ class DaisyIntegration extends Model
     //Method for retrieving Students active course designations from Daisy with UserID
     public function getActiveStudentDesignations($username)
     {
-        $this->array_resource = json_decode($this->getResource('/person/username/' . $username . '@su.se', 'json')->getBody()->getContents(), TRUE);
+        $this->array_resource = json_decode($this->getResource('person/username/' . $username . '@su.se', 'json')->getBody()->getContents(), TRUE);
         $this->course_json = json_decode($this->getResource('/person/' . $this->array_resource['id'] . '/courseSegmentInstances', 'json')->getBody()->getContents(), 'TRUE');
         foreach ($this->course_json as $this->courselist) {
             if (substr($this->courselist['semester'], 4) == '1') {
@@ -127,6 +134,7 @@ class DaisyIntegration extends Model
     public function init()
     {
         $this->endpoints = array(
+            'courseSegment?semester=20212',
             'courseSegment?semester=20211',
             'courseSegment?semester=20201',
             'courseSegment?semester=20202',

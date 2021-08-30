@@ -127,35 +127,6 @@ class ManualDownloadController extends Controller
         $file = new DownloadResource($video, new TicketHandler($video));
         $file->getFile($dir_thumb.$thumb_name,$thumb_url);
 
-        /*
-        //Video and poster files
-
-        foreach (json_decode($video->sources, true) as $source) {
-            // Support videos that havent been converted in multiple resolutions
-            if($presentation->resolution == '999') {
-                $video_name = substr($source['video'], strrpos($source['video'], '/') + 1);
-            } else {
-                $video_name = substr($source['video'][$presentation->resolution], strrpos($source['video'][$presentation->resolution], '/') + 1);
-            }
-
-            $poster_name = substr($source['poster'], strrpos($source['poster'], '/') + 1);
-
-            // Download video
-            \Storage::disk('public')->makeDirectory($dir_video);
-
-            // Support videos that havent been converted in multiple resolutions
-            if($presentation->resolution == '999') {
-                $file->getFile($dir_video.$video_name, $source['video']);
-            } else {
-                $file->getFile($dir_video.$video_name, $source['video'][$presentation->resolution]);
-            }
-
-            // Download posters
-            \Storage::disk('public')->makeDirectory($dir_poster);
-
-            $file->getFile($dir_poster.$poster_name, $source['poster']);
-
-        }*/
 
         //Get video and poster names
         $download = new DownloadStreamResolution($video);
@@ -175,6 +146,10 @@ class ManualDownloadController extends Controller
         foreach($poster_names as $poster_name) {
             $file->getFile($dir_poster.$poster_name, $this->base_uri() . '/' . $video->id . '/' . $poster_name);
         }
+
+        //Change status
+        $presentation->status = 'stored';
+        $presentation->save();
 
         //Make zipfolder of presentation
         $file = new DownloadZip($video, $presentation->local);

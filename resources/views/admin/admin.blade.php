@@ -158,11 +158,11 @@
                                             <td>{{$presentation->id}}</td>
                                             <td>{{$presentation->updated_at}}</td>
                                             <td>{{$presentation->title}}</td>
-                                            @if($presentation->status == 'request download')
+                                            @if($presentation->status == 'request download' or $presentation->status == 'stored')
                                                 <td><a role="button" class="btn btn-danger btn-sm"
                                                        href="{{route('download_delete', $presentation->id)}}">Erase</a>
                                                 </td>
-                                            @elseif($presentation->status == 'failed' or $presentation->status == 'stored')
+                                            @elseif($presentation->status == 'failed' or $presentation->status == 'updated')
                                                 <td><a role="button" class="btn btn-danger btn-sm"
                                                        href="{{route('download_delete', $presentation->id)}}">Erase</a>
                                                 </td>
