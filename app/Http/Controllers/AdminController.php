@@ -27,7 +27,6 @@ class AdminController extends Controller
         $this->middleware('playauth:api');
         $this->middleware('play-store-status:api');
         $this->middleware('daisy-status:api');
-        $this->middleware('play-admin');
 
     }
 
