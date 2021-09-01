@@ -67,14 +67,14 @@ class PlayController extends Controller
             $data['permissions'] = VideoPermission::all();
             $courses = $daisy->getActiveStudentCourses(app()->make('play_username'));
             $data['my'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
-                return $query->whereIn('course_id', $courses)->take(24);
+                return $courses ? $query->whereIn('course_id', $courses)->take(24) : false;
             })->get();
         } //If user is Employee
         elseif (App::environment('production') and (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')) {
             $data['permissions'] = VideoPermission::all();
             $courses = $daisy->getActiveEmployeeCourses(app()->make('play_username'));
             $data['my'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
-                return $query->whereIn('course_id', $courses);
+                return $courses ? $query->whereIn('course_id', $courses) : false;
             })->get();
         } else {
             //If user is Admin
