@@ -67,16 +67,20 @@ class PlayController extends Controller
         elseif (app()->make('play_role') == 'Student') {
             //$data['permissions'] = VideoPermission::all();
             $courses = $daisy->getActiveStudentCourses(app()->make('play_username'));
-            $data['my'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
-                return $query->whereIn('course_id', $courses)->take(24);
-            })->get();
+            if ($courses) {
+                $data['my'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
+                    return $query->whereIn('course_id', $courses)->take(24);
+                })->get();
+            }
         } //If user is Employee
         elseif (App::environment('production') and (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')) {
             //$data['permissions'] = VideoPermission::all();
             $courses = $daisy->getActiveEmployeeCourses(app()->make('play_username'));
-            $data['my'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
-                return $query->whereIn('course_id', $courses);
-            })->get();
+            if ($courses) {
+                $data['my'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
+                    return $query->whereIn('course_id', $courses);
+                })->get();
+            }
         } else {
             //If user is Admin
             $data['search'] = 0;
