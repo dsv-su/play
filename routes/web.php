@@ -89,6 +89,11 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::prefix('admin/')->group(function () {
         Route::get('/', 'AdminController@admin')->name('admin');
         Route::post('/emulate', 'AdminController@emulateUser')->name('emulateUser');
+        Route::get('/flush_admin', 'AdminController@flush')->name('admin_flush');
+        Route::get('/uploads', 'AdminController@uploads')->name('uploads');
+        Route::get('/downloads', 'AdminController@downloads')->name('downloads');
+        Route::get('/mediasite_admin', 'AdminController@mediasite')->name('mediasite_admin');
+        Route::get('/videopermissions', 'AdminController@videopermission')->name('videopermission');
         Route::prefix('logs')->name('log-viewer::logs.')->group(function () {
             Route::get('/', 'LogViewerController@listLogs')->name('list');
             Route::delete('/delete', 'LogViewerController@delete')->name('delete');

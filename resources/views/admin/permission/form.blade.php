@@ -2,6 +2,12 @@
 @section('content')
     <div class="container">
     <h2>Permissons</h2>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{route('admin')}}">Admin</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Permissions</li>
+            </ol>
+        </nav>
         @if (count($errors) > 0)
             <div class="alert alert-danger">
                 Hey Admin!<br><br>

@@ -46,9 +46,6 @@ class LogViewerController extends Controller
     {
         $this->logViewer = $logViewer;
         $this->perPage = config('log-viewer.per-page', $this->perPage);
-        $this->middleware('playauth:api');
-        $this->middleware('play-store-status:api');
-        $this->middleware('daisy-status:api');
         $this->middleware('play-admin');
     }
 
@@ -84,25 +81,7 @@ class LogViewerController extends Controller
         $headers = $stats->header();
         $rows    = $this->paginate($stats->rows(), $request);
 
-        // Cattura
-        $store = new CheckCatturaRecorderStatus();
-
-        $file = base_path() . '/systemconfig/play.ini';
-        if (!file_exists($file)) {
-            $file = base_path() . '/systemconfig/play.ini.example';
-        }
-        $system_config = parse_ini_file($file, true);
-
-        foreach($system_config['recorders'] as $key => $system) {
-            $check = $store->call($system,'api/1/status?since=');
-            $cattura[] = [
-                'recorder' => $key,
-                'status' => $check['capture']['state'],
-                'url' => $system
-            ];
-        }
-
-        return $this->view('logs', compact('headers', 'rows', 'cattura'));
+        return $this->view('logs', compact('headers', 'rows'));
     }
 
     /**

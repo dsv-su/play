@@ -1,257 +1,287 @@
 @extends('layouts.suplay')
 @section('content')
     <div class="container">
-        <h3>Admin</h3>
-        <div class="row">
-            <div class="col-md-2 mb-3">
-                <ul class="nav nav-pills flex-column" id="admin" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" id="video-tab" data-toggle="tab" href="#video" role="tab"
-                           aria-controls="video" aria-selected="true">Owner info</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="permission-tab" data-toggle="tab" href="#permission" role="tab"
-                           aria-controls="permission" aria-selected="false">VideoPermissions</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="permission-tab" href="{{route('add_permission')}}" role="tab"
-                           aria-controls="permission" aria-selected="false">Permissions</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="upload-tab" data-toggle="tab" href="#upload" role="tab"
-                           aria-controls="upload" aria-selected="false">Upload</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="download-tab" data-toggle="tab" href="#download" role="tab"
-                           aria-controls="download" aria-selected="false">Download</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="mediasite-tab" data-toggle="tab" href="#mediasite" role="tab"
-                           aria-controls="mediasite" aria-selected="false">Mediasite</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="mediasite-folders-tab" data-toggle="tab" href="#mediasite-folders"
-                           role="tab"
-                           aria-controls="mediasite-folders" aria-selected="false">Mediasite Folders</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.col-md-4 -->
-            <div class="col-md-10">
+        <!-- Page Wrapper -->
+        <div id="wrapper">
 
-                <div class="tab-content" id="adminContent">
-                    <div class="tab-pane fade show active" id="video" role="tabpanel" aria-labelledby="video-tab">
+            <!-- Content Wrapper -->
+            <div id="content-wrapper" class="d-flex flex-column">
 
-                        <h2>Video</h2>
-                        <div class="container px-0">
-                            <div class="d-flex mb-3 flex-wrap">
-                                @foreach ($owners as $video)
-                                    <div class="col my-3">
-                                        @include('home.video')
-                                    </div>
-                                @endforeach
+                <!-- Main Content -->
+                <div id="content">
+
+                    <!-- Statusbar -->
+                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    @if(app()->make('store_status') == 'on')
+
+                            <button type="button" class="btn btn-outline-primary">
+                                <i class="fas fa-plug"></i> <span class="badge badge-success">Play-store</span>
+                            </button>
+                    @else
+                            <button type="button" class="btn btn-outline-primary">
+                                Offline <span class="badge badge-danger">Play-store</span>
+                            </button>
+                    @endif
+
+                    @if(app()->make('daisy_db_status') == 'on')
+                            <button type="button" class="btn btn-outline-primary">
+                                <i class="fas fa-plug"></i> <span class="badge badge-success">Daisy DB</span>
+                            </button>
+                    @else
+                            <button type="button" class="btn btn-outline-primary">
+                                Offline <span class="badge badge-danger">Daisy DB</span>
+                            </button>
+                    @endif
+
+                    @if(app()->make('daisy_ok_status') == 'on')
+                            <button type="button" class="btn btn-outline-primary">
+                                <i class="fas fa-plug"></i> <span class="badge badge-success">Daisy OK</span>
+                            </button>
+                        @else
+                            <button type="button" class="btn btn-outline-primary">
+                                Offline <span class="badge badge-danger">Daisy OK</span>
+                            </button>
+                    @endif
+
+                   @foreach($cattura as $recorder)
+                            <a href="{{$recorder['url']}}">
+                                <button type="button" class="btn btn-outline-primary">
+                                    @if(!$recorder['status'] == 'IDLE')
+                                        <i class="fas fa-video"></i>
+                                    @else
+                                        <i class="fas fa-video-slash"></i>
+                                    @endif
+                                    {{$recorder['recorder']}} <span
+                                        @if($recorder['status'] == 'ERROR') class="badge badge-danger"
+                                        @elseif($recorder['status'] == 'IDLE') class="badge badge-warning"
+                                        @else class="badge badge-success"
+                            @endif >{{$recorder['status']}}</span>
+                                </button>
+                            </a>
+                    @endforeach
+                        <!-- Statusbar -->
+                    </nav>
+                    <!-- End of Statusbar -->
+
+                    <!-- Begin Page Content -->
+                    <div class="container-fluid">
+
+                        <!-- Page Heading -->
+                        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                            <h1 class="h3 mb-0 text-gray-800">Stats are cached</h1>
+                            <a role="button" class="btn btn-outline-primary" href="{{route('admin_flush')}}"><i class="fas fa-redo"></i> Refresh</a>
+                        </div>
+
+                        <!-- Content Row -->
+                        <div class="row">
+                            <div class=" col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <a href="{{route('uploads')}}">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                        Uploads</div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800"><small>Init:</small>{{$init_uploads}} <small>Pending:</small>{{$pending_uploads}} <small>Stored:</small>{{$stored_uploads}}</div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <i class="fas fa-upload fa-2x text-color-grey"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
                             </div>
 
+                            <div class=" col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-success shadow h-100 py-2">
+                                    <a href="{{route('downloads')}}">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                    Downloads</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><small>Requested:</small>{{$requested_downloads}} <small>Stored:</small>{{$stored_downloads}}</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-download fa-2x text-gray-300"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="tab-pane fade" id="permission" role="tabpanel" aria-labelledby="permission-tab">
-                        <h2>Video Permissons</h2>
                         <div class="row">
-                            <table class="table table-bordered">
-                                <thead>
-                                <tr>
-                                    <th scope="col">PresentationId</th>
-                                    <th scope="col">Permission</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($permissions as $permission)
-                                    <tr>
-                                        <td>{{$permission->video_id}}</td>
-                                        <td>{{$permission->permission->scope}}</td>
-                                        <td><a role="button" class="btn btn-primary btn-sm"
-                                               href="/set_permission/{{$permission->video_id}}">Modify</a></td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
+                            <div class=" col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-info shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Cattura
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><small>Origin:</small>{{$stats_cattura}}</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-video fa-2x text-color-grey"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class=" col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-info shadow h-100 py-2">
+                                    <a href="{{route('mediasite_admin')}}">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Mediasite
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><small>Origin:</small>{{$stats_mediasite}} <small>Folders:</small>{{$stats_mediasite_folders}}</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-video fa-2x text-color-grey"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class=" col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-info shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Manual
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{$stats_manual}}</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-video fa-2x text-color-grey"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class=" col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-warning shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                    Presentations</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{app()->make('total_videos')}}</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-play fa-2x text-gray-300"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="tab-pane fade" id="upload" role="tabpanel" aria-labelledby="upload-tab">
-                        <h2>Upload</h2>
+
+                        <!-- Content Row -->
+
                         <div class="row">
-                            <table class="table table-bordered">
-                                <thead>
-                                <tr>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Id</th>
-                                    <th scope="col">Created</th>
 
-                                    <th scope="col">Title</th>
-                                    <th scope="col">Local</th>
-                                    <th scope="col">Uploader</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                                </thead>
-                                @foreach($manual_presentations as $manual_presentation)
-                                    <tbody>
-                                    @if($manual_presentation->status == 'pending')
-                                        <tr class="table-warning">
-                                    @elseif($manual_presentation->status == 'failed' or $manual_presentation->status == 'stored')
-                                        <tr class="table-danger">
-                                            @endif
-                                            <td>{{$manual_presentation->status}}</td>
-                                            <td>{{$manual_presentation->id}}</td>
-                                            <td>{{$manual_presentation->created_at}}</td>
-                                            <td>{{$manual_presentation->title}}</td>
-                                            <td>{{$manual_presentation->local}}</td>
-                                            <td>{{$manual_presentation->user}}</td>
-                                            @if($manual_presentation->status == 'failed' or $manual_presentation->status == 'stored')
-                                                <td><a role="button" class="btn btn-danger btn-sm"
-                                                       href="{{route('manual_admin_notify_fail', $manual_presentation->id)}}">Notify
-                                                        fail</a></td>
-                                            @elseif($manual_presentation->status == 'pending')
-                                                <td><a role="button" class="btn btn-warning btn-sm"
-                                                       href="{{route('manual_admin_erase', $manual_presentation->id)}}">Erase</a>
-                                                </td>
-                                            @elseif($manual_presentation->status == 'notified')
-                                                <td><a role="button" class="btn btn-info btn-sm"
-                                                       href="{{route('manual_admin_unregister', $manual_presentation->id)}}">Unregister</a>
-                                                </td>
-                                            @elseif($manual_presentation->status == 'sent' or $manual_presentation->status == 'init')
-                                                <td><a role="button" class="btn btn-primary btn-sm"
-                                                       href="{{route('manual_admin_unregister', $manual_presentation->id)}}">Unregister</a>
-                                                </td>
-                                            @endif
-                                        </tr>
-                                    </tbody>
+                            <!-- Permissions -->
+                            <div class="col-xl-8 col-lg-7">
+                                <div class="card shadow mb-4">
+                                    <!-- Card Header - Dropdown -->
+                                    <div
+                                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                        <h6 class="m-0 font-weight-bold text-primary">Permission management</h6>
+                                        <div class="dropdown no-arrow">
+                                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                                 aria-labelledby="dropdownMenuLink">
+                                                <div class="dropdown-header">Permissions:</div>
+                                                <a class="dropdown-item" href="{{route('videopermission')}}">Modify presentation</a>
+                                                <a class="dropdown-item" href="{{route('add_permission')}}">Modify or Add permission</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Card Body -->
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                    Permissions</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><small>Set Permissions: </small>{{$stats_permissions}}| <small>Students and Staff (DSV): </small>{{$stats_permissions_dsv}}| <small>Staff (DSV): </small>{{$stats_permissions_staff}}| <small>Public: </small>{{$stats_permissions_public}}| <small>Private: </small>{{$stats_permissions_private}}</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-hand-point-right fa-2x text-gray-300"></i>
+                                            </div>
+                                        </div>
 
-                                @endforeach
-                            </table>
+                                    </div>
+                                </div>
+                            </div>
 
+                            <!-- Course stats -->
+                            <div class="col-xl-4 col-lg-5">
+                                <div class="card shadow mb-4">
+                                    <!-- Card Header - Dropdown -->
+                                    <div
+                                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                        <h6 class="m-0 font-weight-bold text-primary">Courses</h6>
+                                        <div class="dropdown no-arrow">
+                                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                                 aria-labelledby="dropdownMenuLink">
+                                                <div class="dropdown-header">Reload courses</div>
+                                                <a class="dropdown-item" href="{{route('playboot')}}">2018-2021</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Card Body -->
+                                    <div class="card-body">
+                                        <div class="mt-4 text-center small">
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-secondary"></i> 2018
+                                        </span>
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-success"></i> 2019
+                                        </span>
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-info"></i> 2020
+                                        </span>
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-primary"></i> 2021
+                                        </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
+                    <!-- /.container-fluid -->
 
-                    <div class="tab-pane fade" id="download" role="tabpanel" aria-labelledby="download-tab">
-                        <h2>Download</h2>
-                        <div class="row">
-                            <table class="table table-bordered">
-                                <thead>
-                                <tr>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Id</th>
-                                    <th scope="col">Updated</th>
-                                    <th scope="col">Title</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                                </thead>
-                                @foreach($presentations as $presentation)
-                                    <tbody>
-                                    @if($presentation->status == 'pending')
-                                        <tr class="table-warning">
-                                    @elseif($presentation->status == 'failed' or $presentation->status == 'stored')
-                                        <tr class="table-danger">
-                                            @endif
-                                            <td>{{$presentation->status}}</td>
-                                            <td>{{$presentation->id}}</td>
-                                            <td>{{$presentation->updated_at}}</td>
-                                            <td>{{$presentation->title}}</td>
-                                            @if($presentation->status == 'request download' or $presentation->status == 'stored')
-                                                <td><a role="button" class="btn btn-danger btn-sm"
-                                                       href="{{route('download_delete', $presentation->id)}}">Erase</a>
-                                                </td>
-                                            @elseif($presentation->status == 'failed' or $presentation->status == 'updated')
-                                                <td><a role="button" class="btn btn-danger btn-sm"
-                                                       href="{{route('download_delete', $presentation->id)}}">Erase</a>
-                                                </td>
-                                                <td><a role="button" class="btn btn-danger btn-sm"
-                                                       href="{{route('admin_download_notify_resend', $presentation->id)}}">Resend
-                                                        Notify</a></td>
-                                            @elseif($presentation->status == 'update' or $presentation->status == 'newmedia')
-                                                <td><a role="button" class="btn btn-warning btn-sm"
-                                                       href="{{route('download_delete', $presentation->id)}}">Erase</a>
-                                                </td>
-                                            @elseif($presentation->status == 'sent')
-                                                <td><a role="button" class="btn btn-primary btn-sm"
-                                                       href="{{route('download_delete', $presentation->id)}}">Unregister</a>
-                                                    <a role="button" class="btn btn-warning btn-sm"
-                                                       href="{{route('admin_download_notify_resend', $presentation->id)}}">Resend
-                                                        Notify</a></td>
-                                            @endif
-                                        </tr>
-                                    </tbody>
-
-                                @endforeach
-                            </table>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="mediasite" role="tabpanel" aria-labelledby="mediasite-tab">
-                        <h2>Mediasite</h2>
-                        <div class="row">
-                            <table class="table table-bordered">
-                                <thead>
-                                <tr>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Id</th>
-                                    <th scope="col">Updated</th>
-                                    <th scope="col">Title</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                                </thead>
-                                @foreach($mediasite_presentations as $presentation)
-                                    <tbody>
-                                    <tr>
-                                        <td>{{$presentation->status}}</td>
-                                        <td>{{$presentation->id}}</td>
-                                        <td>{{$presentation->updated_at}}</td>
-                                        <td>{{$presentation->title}}</td>
-                                        @if($presentation->status == 'sent')
-                                            <td><a role="button" class="btn btn-primary btn-sm" href="#">Unregister</a>
-                                                <a role="button" class="btn btn-warning btn-sm" href="#">Resend
-                                                    Notify</a></td>
-                                        @endif
-                                    </tr>
-                                    </tbody>
-                                @endforeach
-                            </table>
-
-                        </div>
-                    <!-- /.col-md-8 -->
                 </div>
-                    <div class="tab-pane fade" id="mediasite-folders" role="tabpanel"
-                         aria-labelledby="mediasite-folders-tab">
-                        <h2>Mediasite Folders</h2>
-                        <div class="row">
-                            <table class="table table-bordered">
-                                <thead>
-                                <tr>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Id</th>
-                                    <th scope="col">Updated</th>
-                                    <th scope="col">Title</th>
-                                </tr>
-                                </thead>
-                                @foreach($mediasite_folders as $folder)
-                                    <tbody>
-                                    <tr class="@if ($folder->completed() == 1) table-success @elseif ($folder->completed() == 2) table-warning @elseif ($folder->completed() == 3) table-info @endif">
-                                        <td>@if ($folder->completed() == 1) completed @elseif ($folder->completed() == 2) partially completed @elseif ($folder->completed() == 3) empty @endif</td>
-                                        <td>{{$folder->id}}</td>
-                                        <td>{{$folder->updated_at}}</td>
-                                        <td>{{$folder->name}}</td>
-                                    </tr>
-                                    </tbody>
-
-                                @endforeach
-                            </table>
-
-                        </div>
-                    </div>
-                </div>
+                <!-- End of Main Content -->
 
             </div>
-            <!-- /.container -->
+            <!-- End of Content Wrapper -->
 
+        </div>
+        <!-- End of Page Wrapper -->
+
+        <!-- Scroll to Top Button-->
+        <a class="scroll-to-top rounded" href="#top-spacer">
+            <i class="fas fa-angle-up"></i>
+        </a>
+
+    </div>
 
 @endsection

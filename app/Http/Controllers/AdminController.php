@@ -16,6 +16,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Storage;
 
 class AdminController extends Controller
@@ -30,16 +31,72 @@ class AdminController extends Controller
 
     }
 
+    public function flush()
+    {
+        Cache::flush();
+        return redirect()->action([AdminController::class, 'admin']);
+    }
+
     public function admin()
     {
-        $data['manual_presentations'] = ManualPresentation::all();
-        $data['presentations'] = Presentation::all();
-        $data['uploads'] = Presentation::all()->count();
-        $data['mediasite_presentations'] = MediasitePresentation::all()->where('status', '<>' ,null);
-        $data['mediasite_folders'] = MediasiteFolder::all();
-        $data['videos'] = Video::all();
-        $data['owners'] = Video::with('video_presenter.presenter')->get();
-        $data['permissions'] = VideoPermission::with('permission')->get();
+        //Cache store
+        $seconds = 180;
+        //Uploads
+        $data['init_uploads'] = Cache::remember('init_uploads', $seconds, function () {
+            return ManualPresentation::where('status', 'init')->count();
+        });
+        $data['pending_uploads'] = Cache::remember('pending_uploads', $seconds, function () {
+            return ManualPresentation::where('status', 'pending')->count();
+        });
+        $data['stored_uploads'] = Cache::remember('stored_uploads', $seconds, function () {
+            return ManualPresentation::where('status', 'stored')->count();
+        });
+
+        //Downloads
+        $data['requested_downloads'] = Cache::remember('requested_downloads', $seconds, function () {
+            return Presentation::where('status', 'request download')->count();
+        });
+        $data['stored_downloads'] = Cache::remember('stored_downloads', $seconds, function () {
+            return Presentation::where('status', 'stored')->count();
+        });
+
+        //Mediasite
+        $data['stats_mediasite'] = Cache::remember('stats_mediasite', $seconds, function () {
+            return Video::where('origin', 'mediasite')->count();
+        });
+        $data['stats_mediasite_folders'] = Cache::remember('stats_mediasite_folders', $seconds, function () {
+            return MediasiteFolder::count();
+        });
+
+        //Cattura
+        $data['stats_cattura'] = Cache::remember('stats_cattura', $seconds, function () {
+            return Video::where('origin', 'cattura')->count();
+        });
+
+        //Manually uploaded
+        $data['stats_manual'] = Cache::remember('stats_manual', $seconds, function () {
+            return Video::where('origin', 'manual')->count();
+        });
+
+        //Permissions
+        $data['stats_permissions'] = Cache::remember('stats_permissions', $seconds, function () {
+            return Permission::count();
+        });
+        $data['stats_permissions_dsv'] = Cache::remember('stats_permissions_dsv', $seconds, function () {
+            return VideoPermission::with('permission')->where('permission_id', 1)->count();
+        });
+        $data['stats_permissions_staff'] = Cache::remember('stats_permissions_staff', $seconds, function () {
+            return VideoPermission::with('permission')->where('permission_id', 2)->count();
+        });
+        $data['stats_permissions_private'] = Cache::remember('stats_permissions_private', $seconds, function () {
+            return VideoPermission::with('permission')->where('permission_id', 3)->count();
+        });
+        $data['stats_permissions_public'] = Cache::remember('stats_permissions_public', $seconds, function () {
+            return VideoPermission::with('permission')->where('permission_id', 4)->count();
+        });
+
+
+
 
         // Cattura
         $store = new CheckCatturaRecorderStatus();
@@ -60,6 +117,31 @@ class AdminController extends Controller
         }
 
         return view('admin.admin', $data);
+    }
+
+    public function uploads()
+    {
+        $data['manual_presentations'] = ManualPresentation::all();
+        return view('admin.partials.uploads', $data);
+    }
+
+    public function downloads()
+    {
+        $data['presentations'] = Presentation::all();
+        return view('admin.partials.downloads', $data);
+    }
+
+    public function mediasite()
+    {
+        $data['mediasite_presentations'] = MediasitePresentation::all()->where('status', '<>' ,null);
+        $data['mediasite_folders'] = MediasiteFolder::all();
+        return view('admin.partials.mediasite', $data);
+    }
+
+    public function videopermission()
+    {
+        $data['permissions'] = VideoPermission::with('permission')->get();
+        return view('admin.partials.videopermissions', $data);
     }
 
     public function emulateUser(Request $request)

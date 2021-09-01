@@ -49,6 +49,7 @@ class PlayController extends Controller
         }
         //For testing
         $daisy = new DaisyIntegration();
+        $data['permissions'] = VideoPermission::all();
         if (in_array(app()->make('play_role'), ['Student1', 'Student2', 'Student3'])) {
             if (app()->make('play_role') == 'Student1') {
                 $courses = [6442, 6841, 6761, 6837, 6703, 6839, 6708, 6838, 6769];
@@ -57,21 +58,21 @@ class PlayController extends Controller
             } elseif (app()->make('play_role') == 'Student3') {
                 $courses = [6798, 6799, 6760, 6778, 6828, 6796, 6719, 6720];
             }
-            $data['permissions'] = VideoPermission::all();
+            //$data['permissions'] = VideoPermission::all();
             $data['my'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
                 return $query->whereIn('course_id', $courses)->take(24);
             })->get();
 
         } // end testing
         elseif (app()->make('play_role') == 'Student') {
-            $data['permissions'] = VideoPermission::all();
+            //$data['permissions'] = VideoPermission::all();
             $courses = $daisy->getActiveStudentCourses(app()->make('play_username'));
             $data['my'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
                 return $query->whereIn('course_id', $courses)->take(24);
             })->get();
         } //If user is Employee
         elseif (App::environment('production') and (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')) {
-            $data['permissions'] = VideoPermission::all();
+            //$data['permissions'] = VideoPermission::all();
             $courses = $daisy->getActiveEmployeeCourses(app()->make('play_username'));
             $data['my'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
                 return $query->whereIn('course_id', $courses);

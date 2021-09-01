@@ -1,8 +1,16 @@
 <!-- Role Emulate for Admins - child view - will inherit all data available in the parent view-->
+<style>
+    .custom-select{
+        background: none !important;
+        color: #FFFFFF;
+        background-color: #002f5f;
+        -webkit-appearance: button;
+    }
+</style>
 <form id="roleform" class="form-inline" method="post" action="{{route('emulateUser')}}">
     @csrf
     <label class="my-1 mr-2" for="role">{{app()->make('play_user') ?? 'Not logged in'}}</label>
-    <select class="custom-select my-1 mr-sm-2" id="role" name="role">
+    <select class="custom-select my-1 mr-sm-2" id="role" name="role" data-toggle="dropdown">
         <option @if(app()->make('play_role') == 'Administrator') selected @endif value="Administrator">Administrator</option>
         <option @if(app()->make('play_role') == 'Uploader') selected @endif value="Uploader">Uploader</option>
         <option @if(app()->make('play_role') == 'Staff') selected @endif value="Staff">Staff</option>
