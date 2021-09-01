@@ -268,12 +268,16 @@
                                                 <div id="accordionSubMenu_Utbildning">
                                                     <ul class="main-menu-sub navbar-nav pb-4">
                                                         <li class="nav-item pl-3">
-                                                            @if($designations && count($designations)>0)
-                                                                @foreach($designations as $key => $designation)
-                                                                    <a class="nav-link" href="{{route('designation', $key)}}">
-                                                                        <span class="d-inline-block first-letter-capitalized level-2">{{$designation}}</span>
-                                                                    </a>
-                                                                @endforeach
+                                                            @if($designations)
+                                                                @if(count($designations)>0)
+                                                                    @foreach($designations as $key => $designation)
+                                                                        <a class="nav-link" href="{{route('designation', $key)}}">
+                                                                            <span class="d-inline-block first-letter-capitalized level-2">{{$designation}}</span>
+                                                                        </a>
+                                                                    @endforeach
+                                                                @else
+                                                                    {{ __("No active courses found.") }}
+                                                                @endif
                                                             @else
                                                                     {{ __("No active courses found.") }}
                                                             @endif
