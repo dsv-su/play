@@ -130,7 +130,7 @@ class CourseNav extends Model
     {
         return Cache::remember('employee_designation', $seconds = 180, function () use($username) {
             $daisy = new DaisyIntegration();
-            return $daisy->getActiveEmployeeDesignations($username);
+            return $daisy->getActiveEmployeeDesignations($username) ?? '';
             //return array_slice($daisy->getActiveEmployeeDesignations($username), 0, 6);
         });
     }
