@@ -95,6 +95,9 @@ class FileUpload extends Component
                     //posters
                     $this->filethumbs[] = $this->createThumb($filename, ($this->presentation->duration/3));
                 }
+                if(count($this->filenames) > 1 ) {
+                    $this->source[count($this->filenames)-1]['playAudio'] = false;
+                }
 
                 //Check media diffs (+- 3 sec)
                 if(count($this->filenames) > 1){
