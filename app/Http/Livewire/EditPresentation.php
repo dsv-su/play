@@ -32,8 +32,7 @@ class EditPresentation extends Component
         $this->created = $this->getDateAttribute($video->creation);
         $this->persmissions = $permissions;
         $this->category = $video->category->category_name;
-        //dd($this->sources = json_decode($video->sources));
-        $this->sources = json_decode($video->sources);
+        $this->sources = $video->streams;
 
         foreach($video->presenters() as $this->presenter) {
             $this->presenters[] = $this->presenter->name. ' ('.$this->presenter->username.')';

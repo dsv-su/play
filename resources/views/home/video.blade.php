@@ -54,9 +54,11 @@
                 <a href="{{route('presentation_edit', $video->id)}}" data-toggle="tooltip"
                    title="{{ __('Edit Presentation') }}" class="btn btn-outline-primary btn-sm mb-1"><i
                             class="far fa-edit"></i></a>
+                {{--}}
                 <a href="{{route('edit_permission', $video->id)}}" data-toggle="tooltip"
                    title="{{ __("Change rights for presentation") }}" class="btn btn-outline-secondary btn-sm mb-1"><i
                             class="far fa-hand-paper"></i></a>
+                {{--}}
                 <div class="dropdown d-inline" data-toggle="tooltip" data-placement="top"
                      title="{{ __("Download presentation") }}">
                     <a class="btn btn-outline-info btn-sm mb-1" href="#" role="button" data-toggle="dropdown"

@@ -164,7 +164,7 @@
 
                     <small>
                         <div class="custom-control custom-switch custom-switch-sm d-inline">
-                            <input type="checkbox" name="audio" id="audioSwitch{{$loop->index + 1}}" value={{$loop->index}} class="custom-control-input"  @if($playAudio[$key] == true) checked @endif >
+                            <input type="checkbox" name="audio" id="audioSwitch{{$loop->index + 1}}" value="{{$loop->index}}" class="custom-control-input"  @if($playAudio[$key] == true) checked @endif >
                             <label class="custom-control-label" for="audioSwitch{{$loop->index + 1}}">Audio &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Video {{$loop->index + 1}}]</label>
                         </div>
                     </small>
