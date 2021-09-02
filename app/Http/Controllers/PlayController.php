@@ -50,6 +50,8 @@ class PlayController extends Controller
         //For testing
         $daisy = new DaisyIntegration();
         $data['permissions'] = VideoPermission::all();
+
+        //Fake students
         if (in_array(app()->make('play_role'), ['Student1', 'Student2', 'Student3'])) {
             if (app()->make('play_role') == 'Student1') {
                 $courses = [6442, 6841, 6761, 6837, 6703, 6839, 6708, 6838, 6769];
@@ -63,7 +65,9 @@ class PlayController extends Controller
             })->get();
 
         } // end testing
-        elseif (app()->make('play_role') == 'Student') {
+
+        //User is Student
+        elseif (App::environment('production') and app()->make('play_role') == 'Student') {
             $courses = $daisy->getActiveStudentCourses(app()->make('play_username'));
             if ($courses) {
                 $data['my'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {

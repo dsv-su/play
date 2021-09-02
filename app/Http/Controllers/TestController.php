@@ -21,6 +21,25 @@ class TestController extends Controller
     public function test()
     {
 
+        $daisy = new DaisyIntegration();
+        $data['permissions'] = VideoPermission::all();
+        $courses = $daisy->getActiveEmployeeCourses('');
+        //dd($courses);
+        if ($courses) {
+            $data['my'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
+                return $query->whereIn('course_id', $courses);
+            })->get();
+        }
+        //dd($courses, $data['my']);
+        $data['active'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($daisy) {
+            return $query->whereIn('course_id', $daisy->getActiveCourses());
+        })->get();
+        //dd($courses, $data['active']);
+        $data['latest'] = Video::with('category', 'video_course.course')->latest('creation')->take(24)->get();
+
+        //dd($courses, $data['active'], $data['latest']);
+        //dd($data);
+        return view('home.index', $data);
     }
 
     public function search(Request $request)

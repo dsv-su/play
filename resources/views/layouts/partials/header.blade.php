@@ -40,10 +40,14 @@
                                         <span class="fas fa-address-card fa-icon-border mr-2" aria-hidden="true"></span>
                                         <span class="d-inline-block first-letter-capitalized level-2">@lang('lang.course')</span>
                                     </a>
-                                    @if($designations && count($designations)>0)
-                                        @foreach($designations as $key => $designation)
-                                            <a class="nav-link" href="{{route('designation', $key)}}">{{$designation}}</a>
-                                        @endforeach
+                                    @if($designations)
+                                        @if(count($designations)>0)
+                                            @foreach($designations as $key => $designation)
+                                                <a class="nav-link" href="{{route('designation', $key)}}">{{$designation}}</a>
+                                            @endforeach
+                                        @else
+                                            {{ __("No active courses found.") }}
+                                        @endif
                                     @else
                                         {{ __("No active courses found.") }}
                                     @endif

@@ -61,7 +61,7 @@ class DaisyIntegration extends Model
     public function getActiveEmployeeSemesters($username)
     {
         //Filters courses from ht2019-vt2021
-        $this->array_resource = json_decode($this->getResource('/employee/username/' . $username . '@su.se', 'json')->getBody()->getContents(), TRUE);
+        $this->array_resource = json_decode($this->getResource('employee/username/' . $username . '@su.se', 'json')->getBody()->getContents(), TRUE);
         $this->courses = json_decode($this->getResource('/employee/' . $this->array_resource['person']['id'] . '/contributions?fromSemesterId=20192&toSemesterId=20211', 'json')->getBody()->getContents(), TRUE);
         foreach ($this->courses as $this->instance) {
             $this->list[$this->instance['courseSegmentInstance']['id']] = $this->instance['courseSegmentInstance']['semesterId'];
@@ -73,7 +73,7 @@ class DaisyIntegration extends Model
     public function getActiveEmployeeDesignations($username)
     {
         //Filters designations from vt2019-vt2021
-        $this->array_resource = json_decode($this->getResource('/employee/username/' . $username . '@su.se', 'json')->getBody()->getContents(), TRUE);
+        $this->array_resource = json_decode($this->getResource('employee/username/' . $username . '@su.se', 'json')->getBody()->getContents(), TRUE);
         $this->courses = json_decode($this->getResource('/employee/' . $this->array_resource['person']['id'] . '/contributions?fromSemesterId=20191&toSemesterId=20211', 'json')->getBody()->getContents(), TRUE);
         foreach ($this->courses as $this->instance) {
             if (substr($this->instance['courseSegmentInstance']['semesterId'], 4) == '1') {
