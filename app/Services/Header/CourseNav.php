@@ -108,7 +108,7 @@ class CourseNav extends Model
     {
         return Cache::remember('student_designation', $seconds = 180, function () use($username) {
             $daisy = new DaisyIntegration();
-            return $daisy->getActiveStudentDesignations($username);
+            return $daisy->getActiveStudentDesignations($username) ?? '';
         });
     }
 
