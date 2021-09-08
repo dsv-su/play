@@ -101,7 +101,7 @@
                                             <div class="col mr-2">
                                                 <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                     Downloads</div>
-                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><small>Requested:</small>{{$requested_downloads}} <small>Stored:</small>{{$stored_downloads}}</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><small>Requested: </small>{{$requested_downloads}}| <small>Stored: </small>{{$stored_downloads}}</div>
                                             </div>
                                             <div class="col-auto">
                                                 <i class="fas fa-download fa-2x text-gray-300"></i>
@@ -120,7 +120,7 @@
                                             <div class="col mr-2">
                                                 <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Cattura
                                                 </div>
-                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><small>Origin:</small>{{$stats_cattura}}</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><small>Origin: </small>{{$stats_cattura}}</div>
                                             </div>
                                             <div class="col-auto">
                                                 <i class="fas fa-video fa-2x text-color-grey"></i>
@@ -138,7 +138,7 @@
                                             <div class="col mr-2">
                                                 <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Mediasite
                                                 </div>
-                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><small>Origin:</small>{{$stats_mediasite}} <small>Folders:</small>{{$stats_mediasite_folders}}</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><small>Origin: </small>{{$stats_mediasite}}| <small>Folders: </small>{{$stats_mediasite_folders}}|</div>
                                             </div>
                                             <div class="col-auto">
                                                 <i class="fas fa-video fa-2x text-color-grey"></i>
@@ -156,7 +156,7 @@
                                             <div class="col mr-2">
                                                 <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Manual
                                                 </div>
-                                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{$stats_manual}}</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><small>Origin: </small>{{$stats_manual}}</div>
                                             </div>
                                             <div class="col-auto">
                                                 <i class="fas fa-video fa-2x text-color-grey"></i>
@@ -173,7 +173,7 @@
                                             <div class="col mr-2">
                                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     Presentations</div>
-                                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{app()->make('total_videos')}}</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><small>Total: </small>{{app()->make('total_videos')}}</div>
                                             </div>
                                             <div class="col-auto">
                                                 <i class="fas fa-play fa-2x text-gray-300"></i>
@@ -214,7 +214,7 @@
                                             <div class="col mr-2">
                                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     Permissions</div>
-                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><small>Set Permissions: </small>{{$stats_permissions}}| <small>Students and Staff (DSV): </small>{{$stats_permissions_dsv}}| <small>Staff (DSV): </small>{{$stats_permissions_staff}}| <small>Public: </small>{{$stats_permissions_public}}| <small>Private: </small>{{$stats_permissions_private}}</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><small>Set Permissions: </small>{{$stats_permissions}}| <small>Students and Staff (DSV): </small>{{$stats_permissions_dsv}}| <small>Staff (DSV): </small>{{$stats_permissions_staff}}| <small>Public: </small>{{$stats_permissions_public}}| <small>Private: </small>{{$stats_permissions_private}}|</div>
                                             </div>
                                             <div class="col-auto">
                                                 <i class="fas fa-hand-point-right fa-2x text-gray-300"></i>

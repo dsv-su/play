@@ -120,8 +120,9 @@ class SearchController extends Controller
         $videoterms = $this->extractTerms($videos);
         $videotags = $this->extractTags($videos);
         $manage = \Request::is('manage');
+        $permissions = VideoPermission::all();
 
-        return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage'));
+        return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'permissions'));
     }
 
     public function filterSearch($q = null, Request $request)

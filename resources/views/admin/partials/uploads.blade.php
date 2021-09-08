@@ -4,7 +4,7 @@
         <h2>Upload</h2>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{route('admin')}}">Admin</a></li>
+                <li class="breadcrumb-item"><a href="{{route('admin_flush')}}">Admin</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Uploads</li>
             </ol>
         </nav>
@@ -36,9 +36,13 @@
                             <td>{{$manual_presentation->local}}</td>
                             <td>{{$manual_presentation->user}}</td>
                             @if($manual_presentation->status == 'failed' or $manual_presentation->status == 'stored')
-                                <td><a role="button" class="btn btn-danger btn-sm"
+                                <td>
+                                    <a role="button" class="btn btn-danger btn-sm"
                                        href="{{route('manual_admin_notify_fail', $manual_presentation->id)}}">Notify
-                                        fail</a></td>
+                                        fail</a>
+                                    <a role="button" class="btn btn-warning btn-sm"
+                                                   href="{{route('manual_admin_erase', $manual_presentation->id)}}">Erase</a>
+                                </td>
                             @elseif($manual_presentation->status == 'pending')
                                 <td><a role="button" class="btn btn-warning btn-sm"
                                        href="{{route('manual_admin_erase', $manual_presentation->id)}}">Erase</a>

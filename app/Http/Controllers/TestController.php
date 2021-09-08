@@ -7,6 +7,7 @@ use App\CategorySearchAspect;
 use App\Course;
 use App\CourseSearchAspect;
 use App\Presenter;
+use App\Services\DownloadZip;
 use App\Services\Notify\PlayStoreNotify;
 use App\Video;
 use Illuminate\Http\Request;
@@ -18,7 +19,10 @@ class TestController extends Controller
 
     public function test()
     {
-
+        //Make zipfolder of presentation
+        $video = Video::find('d02a567f-735d-47df-8118-cace07a52fe5');
+        $file = new DownloadZip($video, '2021-09-07_512');
+        return $file->makezip();
     }
 
     public function search(Request $request)

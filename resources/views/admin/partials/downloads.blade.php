@@ -4,7 +4,7 @@
         <h2>Downloads</h2>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{route('admin')}}">Admin</a></li>
+                <li class="breadcrumb-item"><a href="{{route('admin_flush')}}">Admin</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Downloads</li>
             </ol>
         </nav>

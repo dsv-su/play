@@ -285,7 +285,7 @@ class AdminController extends Controller
         $data['manual_presentations'] = ManualPresentation::all();
         $data['presentations'] = Presentation::all();
         $data['videos'] = Video::all();
-        return redirect()->route('admin');
+        return redirect()->back();
     }
 
     public function destroy_download($id)
@@ -301,8 +301,7 @@ class AdminController extends Controller
         $data['manual_presentations'] = ManualPresentation::all();
         $data['presentations'] = Presentation::all();
         $data['videos'] = Video::all();
-
-        return redirect()->route('admin');
+        return redirect()->back();
     }
 
     public function dev_destroy($id)
