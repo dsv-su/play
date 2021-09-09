@@ -96,11 +96,11 @@
                                         @endforeach
                                     </select>
                                 </div>
-
+                            <!-- Permissions -->
                                 <div wire:ignore class="form-group col-sm-6 flex-column d-flex">
-                                    <label class="form-control-label px-3">{{ __("Playback Permissions") }}</label>
+                                    <label class="form-control-label px-3">{{ __("Playback Group Permissions") }}</label>
 
-                                    <!--Video permission settings-->
+                                    <!--Video group permission settings-->
                                     <div id="video_perm">
                                         <select class="form-control" name="video_permission">
                                             @foreach($permissions as $perm)
@@ -109,6 +109,15 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div wire:ignore class="form-group col-sm-6 flex-column d-flex"></div>
+                                <div wire:ignore class="form-group col-sm-6 flex-column d-flex">
+                                    <label class="form-control-label px-3">{{ __("Playback Individual Permissions") }}</label>
+                                    <!--Video individual permission settings-->
+                                    <button type="button" wire:click.prevent="add_individual_perm" class="btn btn-outline-primary btn-sm presenteradd">{{$ipermissions}} {{ __("Set") }} </button>
+                                </div>
+
+
+
                             </div>
 
                         </div>
@@ -158,27 +167,32 @@
     </div>
     <div class="row">
         @foreach($sources as $key => $source)
-        <div class="col-sm-4">
-            <div class="rounded border shadow p-3 my-2">
-                <div class="flex justify-center" >
+        <div class=" col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">[Video {{$loop->index + 1}}]: {{$source->name}}</div>
+                                <small>
+                                    <div class="custom-control custom-switch custom-switch-sm d-inline">
+                                        <input type="checkbox" name="audio" id="audioSwitch{{$loop->index + 1}}" value="{{$loop->index}}" class="custom-control-input"  @if($playAudio[$key] == true) checked @endif >
+                                        <label class="custom-control-label" for="audioSwitch{{$loop->index + 1}}">Audio</label>
+                                    </div>
+                                </small>
 
-                    <small>
-                        <div class="custom-control custom-switch custom-switch-sm d-inline">
-                            <input type="checkbox" name="audio" id="audioSwitch{{$loop->index + 1}}" value="{{$loop->index}}" class="custom-control-input"  @if($playAudio[$key] == true) checked @endif >
-                            <label class="custom-control-label" for="audioSwitch{{$loop->index + 1}}">Audio &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Video {{$loop->index + 1}}]</label>
+
+
+                            <img src="{{$poster[$key]}}?{{ rand() }}" width="100%" >
+                            {{--}}<input class="form-control form-control-sm" type="file" wire:model="editfile.{{$key}}">{{--}}
+                            @error('editfile.*') <span class="error">{{ $message }}</span> @enderror
                         </div>
-                    </small>
-
-
-                    <img src="{{$poster[$key]}}?{{ rand() }}" width="100%">
-                    {{--}}<input class="form-control form-control-sm" type="file" wire:model="editfile.{{$key}}">{{--}}
-                    @error('editfile.*') <span class="error">{{ $message }}</span> @enderror
-
+                        <div class="col-auto">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         @endforeach
-
     </div>
 
 

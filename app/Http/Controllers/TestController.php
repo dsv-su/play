@@ -19,10 +19,7 @@ class TestController extends Controller
 
     public function test()
     {
-        //Make zipfolder of presentation
-        $video = Video::find('d02a567f-735d-47df-8118-cace07a52fe5');
-        $file = new DownloadZip($video, '2021-09-07_512');
-        return $file->makezip();
+
     }
 
     public function search(Request $request)

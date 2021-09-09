@@ -20,9 +20,10 @@ class EditPresentation extends Component
     public $courseEdit;
     public $permissions, $presentationpermissonId, $presentationpermissonScope;
     public $sources = [], $playAudio = [], $poster = [];
+    public $ipermissions;
 
 
-    public function mount($video, $courses, $permissions)
+    public function mount($video, $courses, $permissions, $individual_permissions)
     {
         $this->video = $video;
         $this->title = $video->title;
@@ -33,6 +34,7 @@ class EditPresentation extends Component
         $this->persmissions = $permissions;
         $this->category = $video->category->category_name;
         $this->sources = $video->streams;
+        $this->ipermissions = $individual_permissions->count();
 
         foreach($video->presenters() as $this->presenter) {
             $this->presenters[] = $this->presenter->name. ' ('.$this->presenter->username.')';
@@ -69,6 +71,11 @@ class EditPresentation extends Component
         $this->system_config = parse_ini_file($this->file, true);
 
         return $this->system_config['store']['list_uri'];
+    }
+
+    public function add_individual_perm()
+    {
+
     }
 
     public function getDateAttribute($date)

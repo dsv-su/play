@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Course;
+use App\IndividualPermission;
 use App\Permission;
 use App\Presentation;
 use App\Presenter;
@@ -23,8 +24,9 @@ class EditController extends Controller
         $permissions = Permission::all();
         $courses = Course::all();
         $presenters = $video->presenters();
+        $individual_permissions = IndividualPermission::where('video_id', $video->id)->get();
 
-        return view('manage.edit', compact('video', 'permissions', 'courses', 'presenters'));
+        return view('manage.edit', compact('video', 'permissions', 'courses', 'presenters', 'individual_permissions'));
     }
 
     public function edit(Video $video, Request $request)
