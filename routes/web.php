@@ -120,8 +120,10 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::post('/mediasiteRecordingDownload', 'PlayController@mediasiteRecordingDownload')->name('mediasiteRecordingDownload');
     Route::post('/mediasiteUserDownload', 'PlayController@mediasiteUserDownload')->name('mediasiteUserDownload');
     Route::post('/mediasiteOtherDownload', 'PlayController@mediasiteOtherDownload')->name('mediasiteOtherDownload');
+    /*
     Route::get('/upload', 'PlayController@upload');
     Route::post('/store', 'PlayController@store')->name('store');
+   */
 
     //Testing routes --> to be removed before production
     Route::get('/test', 'TestController@test')->name('test');

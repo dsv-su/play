@@ -21,6 +21,7 @@ class EditPresentation extends Component
     public $permissions, $presentationpermissonId, $presentationpermissonScope;
     public $sources = [], $playAudio = [], $poster = [];
     public $ipermissions;
+    public $i = 0;
 
 
     public function mount($video, $courses, $permissions, $individual_permissions)
@@ -85,10 +86,10 @@ class EditPresentation extends Component
         return $this->date;
     }
 
-    public function newpresenter()
+    public function newpresenter($i)
     {
-        $this->presenters[] = '';
-        $this->presenters_uid[] = '';
+        array_push($this->presenters , '');
+        array_push($this->presenters_uid , '');
         $this->dispatchBrowserEvent('contentChanged');
     }
 

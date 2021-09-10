@@ -54,10 +54,11 @@
                                                 <div class="d-inline">
                                                     <div wire:ignore class="d-flex justify-content-between" id="user-search">
 
-                                                        <input class="form-control w-100 mx-auto edit" id="user-search-text-{{$key}}" type="search" wire:model="presenters.{{$key}}" name="presenters[]"  placeholder="Name of presenter" aria-haspopup="true" autocomplete="off" aria-labelledby="user-search">
-                                                        <input type="hidden" name="uid[]" value={{$presenters_uid[$key]}}>
+                                                       <input class="form-control w-100 mx-auto edit" id="user-search-text-{{$key}}" type="search" wire:model.debounce.100s="presenters.{{$key}}" name="presenters[]"  placeholder="Name of presenter" aria-haspopup="true" autocomplete="off" aria-labelledby="user-search">
+                                                       <input type="hidden" name="uid[]" value={{$presenters_uid[$key]}}>
 
                                                     </div>
+
                                                 </div>
                                         </div>
                                         <div class="form-group col-sm-6 flex-column d-flex">
@@ -73,11 +74,10 @@
                                     </div>
                                     @endif
 
-
                             <!-- Add new Presenters -->
                             <div class="row justify-content-between text-left">
                                 <div class="form-group col-sm-6 flex-column d-flex"><label class="form-control-label px-3">{{ __("Add presenters") }}</label>
-                                    <button type="button" wire:click.prevent="newpresenter" class="btn btn-outline-primary btn-sm presenteradd">{{ __("Presenter") }} <i class="fas fa-user-plus"></i></button>
+                                    <button type="button" wire:click.prevent="newpresenter({{$i}})" class="btn btn-outline-primary btn-sm presenteradd">{{ __("Presenter") }} <i class="fas fa-user-plus"></i></button>
                                 </div>
                                 <div class="form-group col-sm-6 flex-column d-flex"><label class="form-control-label px-3">{{ __("Category") }}</label>
                                     <input  wire:model="category"  name="category" type="text" disabled>
@@ -248,7 +248,6 @@
     window.addEventListener('contentChanged', event => {
         $(sukat);
     });
-
     function sukat($) {
     /* Typeahead SUKAT user */
     // Set the Options for "Bloodhound" suggestion engine
