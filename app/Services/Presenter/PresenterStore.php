@@ -30,10 +30,13 @@ class PresenterStore extends Model
                             $this->presenter = Presenter::create([
                                 'username' => $this->item,
                                 'name' => $this->name->getFirstAttribute('cn'),
+                                'description' => 'sukat',
                             ]);
                         } else {
                             $this->presenter = Presenter::create([
-                                'username' => $this->item,
+                                'name' => $this->item,
+                                //'username' => $this->item,
+                                'description' => 'external',
                             ]);
                         }
 
