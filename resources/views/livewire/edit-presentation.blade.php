@@ -49,26 +49,31 @@
                                     </div>
                                     <div class="row justify-content-between text-left">
                                         @foreach($presenters as $key => $name)
-                                        <div class="form-group col-sm-6 flex-column d-flex">
 
-                                                <div class="d-inline">
-                                                    <div wire:ignore class="d-flex justify-content-between" id="user-search">
+                                            <div class="form-group col-sm-6 flex-column d-flex">
 
-                                                       <input class="form-control w-100 mx-auto edit" id="user-search-text-{{$key}}" type="search" wire:model.debounce.100s="presenters.{{$key}}" name="presenters[]"  placeholder="Name of presenter" aria-haspopup="true" autocomplete="off" aria-labelledby="user-search">
-                                                       <input type="hidden" name="uid[]" value={{$presenters_uid[$key]}}>
 
+                                                    <div class="d-inline">
+                                                        <div wire:ignore class="d-flex justify-content-between" id="user-search">
+
+                                                           <input @if($key == 0) style="border-color: blue;" @endif class="form-control w-100 mx-auto edit" id="user-search-text-{{$key}}" type="search" wire:model.debounce.100s="presenters.{{$key}}" name="presenters[]"  placeholder="Name of presenter" aria-haspopup="true" autocomplete="off" aria-labelledby="user-search">
+                                                            <input type="hidden" name="uid[]" value={{$presenters_uid[$key]}}>
+                                                        </div>
+                                                        @if($key == 0)
+                                                        <div class="d-flex justify-content-between">
+                                                            <small class="form-text text-muted">{{ __("User with permissions to edit this presentation") }}</small>
+                                                        </div>
+                                                        @endif
                                                     </div>
+                                            </div>
+                                            <div class="form-group col-sm-6 flex-column d-flex">
+                                                    <a class="absolute cursor-pointer  top-2 right-2 text-gray-500" wire:click="remove_presenter({{$key}})">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                        </svg>
+                                                    </a>
 
-                                                </div>
-                                        </div>
-                                        <div class="form-group col-sm-6 flex-column d-flex">
-                                                <a class="absolute cursor-pointer  top-2 right-2 text-gray-500" wire:click="remove_presenter({{$key}})">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                    </svg>
-                                                </a>
-
-                                        </div>
+                                            </div>
 
                                             @endforeach
                                     </div>
@@ -172,7 +177,7 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">[Video {{$loop->index + 1}}]: {{$source->name}}</div>
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Stream: {{$loop->index + 1}} ( {{$source->name}} )</div>
                                 <small>
                                     <div class="custom-control custom-switch custom-switch-sm d-inline">
                                         <input type="checkbox" name="audio" id="audioSwitch{{$loop->index + 1}}" value="{{$loop->index}}" class="custom-control-input"  @if($playAudio[$key] == true) checked @endif >

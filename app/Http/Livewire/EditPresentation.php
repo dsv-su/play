@@ -95,7 +95,7 @@ class EditPresentation extends Component
 
     public function remove_presenter($index)
     {
-        unset($this->presenters[$index]);
+        array_splice($this->presenters, $index, 1);
     }
 
     public function remove_course()
