@@ -47,12 +47,24 @@ class EditController extends Controller
             //Linked Presenter attributes
             if($request->presenters){
                 foreach($request->presenters as $presenter) {
+
                     $username = preg_filter("/[^(]*\(([^)]+)\)[^()]*/", "$1", $presenter);
                     $name = trim(preg_replace("/\([^)]+\)/","", $presenter));
-                    $presenter = Presenter::firstOrCreate([
-                        'username' => $username,
-                        'name' => $name
-                    ]);
+                    if($username == null) {
+                        $presenter = Presenter::firstOrCreate([
+                            'username' => $username,
+                            'name' => $name,
+                            'description' => 'external'
+                        ]);
+                    }
+                    else {
+                        $presenter = Presenter::firstOrCreate([
+                            'username' => $username,
+                            'name' => $name,
+                            'description' => 'sukat'
+                        ]);
+                    }
+
                     $videoPresenter = VideoPresenter::create([
                         'video_id' => $video->id,
                         'presenter_id' => $presenter->id

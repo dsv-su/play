@@ -31,14 +31,19 @@ class EditPresentation extends Component
         $this->thumb = $video->thumb;
         $this->origin = $video->origin;
         $this->duration = $video->duration;
-        $this->created = $this->getDateAttribute($video->creation);
-        $this->persmissions = $permissions;
+        $this->date = $this->getDateAttribute($video->creation);
+        $this->permissions = $permissions;
         $this->category = $video->category->category_name;
         $this->sources = $video->streams;
         $this->ipermissions = $individual_permissions->count();
 
         foreach($video->presenters() as $this->presenter) {
-            $this->presenters[] = $this->presenter->name. ' ('.$this->presenter->username.')';
+            if(!$this->presenter->username == null) {
+                $this->presenters[] = $this->presenter->name. ' ('.$this->presenter->username.')';
+            } else{
+                $this->presenters[] = $this->presenter->name;
+            }
+
             $this->presenters_uid[] = $this->presenter->username;
         }
         foreach($video->courses() as $this->coursedetail) {
@@ -76,7 +81,7 @@ class EditPresentation extends Component
 
     public function add_individual_perm()
     {
-
+        //Todo
     }
 
     public function getDateAttribute($date)

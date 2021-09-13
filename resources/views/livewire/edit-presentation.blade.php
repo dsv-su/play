@@ -57,7 +57,7 @@
                                                         <div wire:ignore class="d-flex justify-content-between" id="user-search">
 
                                                            <input @if($key == 0) style="border-color: blue;" @endif class="form-control w-100 mx-auto edit" id="user-search-text-{{$key}}" type="search" wire:model.debounce.100s="presenters.{{$key}}" name="presenters[]"  placeholder="Name of presenter" aria-haspopup="true" autocomplete="off" aria-labelledby="user-search">
-                                                            <input type="hidden" name="uid[]" value={{$presenters_uid[$key]}}>
+
                                                         </div>
                                                         @if($key == 0)
                                                         <div class="d-flex justify-content-between">
@@ -289,7 +289,6 @@
                 '<div class="list-group search-results-dropdown">'
             ],
             suggestion: function (data) {
-
                 return '<li>' + data.displayname + ' (' + data.uid + ')' + '</li>';
 
             }
