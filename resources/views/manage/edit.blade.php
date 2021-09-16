@@ -9,5 +9,4 @@
         'individual_permissions' => $individual_permissions
         ])
     </form>
-
 @endsection

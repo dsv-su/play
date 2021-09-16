@@ -36,6 +36,7 @@ class EditController extends Controller
 
 
         if ($request->isMethod('post')) {
+
             //Video attributes
             $video->title = $request->title;
             $video->creation = strtotime($request->date);
@@ -71,7 +72,7 @@ class EditController extends Controller
                     ]);
                 }
             }
-            //Update permission for presentation
+            //Update group permission for presentation
             if($videoPermission = VideoPermission::where('video_id', $video->id)->first()) {
                 //Exist
                 if($request->video_permission == 1) {
@@ -104,6 +105,28 @@ class EditController extends Controller
                 }
             }
 
+            //Update individual permissions
+
+            //Remove all individual permissions linked to video
+            IndividualPermission::where('video_id', $video->id)->delete();
+            if($request->individual_permissions) {
+                foreach($request->individual_permissions as $key => $ind) {
+                    $username = preg_filter("/[^(]*\(([^)]+)\)[^()]*/", "$1", $ind);
+                    $name = trim(preg_replace("/\([^)]+\)/","", $ind));
+                    if($username) {
+                        $iperm = IndividualPermission::updateOrCreate([
+                            'video_id' => $video->id,
+                            'username' => $username
+                        ],[
+                            'name' => $name,
+                            'permission' => $request->individual_perm_type[$key]
+                        ]);
+                    }
+
+
+                }
+            }
+
 
             //Update course
             if(!$request->courseEdit == null) {
@@ -112,6 +135,7 @@ class EditController extends Controller
                     ['course_id' => $request->courseEdit]
                 );
             }
+
 
             //Update Audio feed
             $streams = Stream::where('video_id', $video->id)->get();

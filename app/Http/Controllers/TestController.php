@@ -18,7 +18,8 @@ class TestController extends Controller
 
     public function test()
     {
-
+        $video = Video::find('d02a567f-735d-47df-8118-cace07a52fe5');
+        dd($video->ipermissions);
     }
 
     public function search(Request $request)

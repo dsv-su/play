@@ -110,6 +110,7 @@
     "Uploaded media files": "Uppladdade video filer",
     "Each uploaded file should be the same length as the primary file": "Varje uppladad fil bör ha samma längd som primärfilen",
     "When uploading, a default thumbnail is generated": "Vid uppladdning genereras en standardminiatyr",
-    "User with permissions to edit this presentation": "Användare med behörighet att revidera denna presentation"
+    "User with permissions to edit this presentation": "Användare med behörighet att revidera denna presentation",
+    "Individual Permissions": "Individuella behörigheter"
 
 }

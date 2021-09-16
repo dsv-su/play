@@ -2,8 +2,8 @@
 
 namespace App\Http\Livewire;
 
-use App\VideoCourse;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -20,8 +20,10 @@ class EditPresentation extends Component
     public $courseEdit;
     public $permissions, $presentationpermissonId, $presentationpermissonScope;
     public $sources = [], $playAudio = [], $poster = [];
-    public $ipermissions;
+    public $ipermissions, $ip;
+    public $individuals = [], $individuals_permission = [];
     public $i = 0;
+    public $suser;
 
 
     public function mount($video, $courses, $permissions, $individual_permissions)
@@ -52,20 +54,28 @@ class EditPresentation extends Component
             $this->course_semester = $this->coursedetail->semester;
             $this->course_year = $this->coursedetail->year;
         }
+
         foreach($courses as $data) {
             $this->courseselect[$data->id] = $data->name. ' '. $data->semester. ' '. $data->year;
         }
 
+        //Group Permissions
         foreach($video->permissions() as $p) {
             $this->presentationpermissonId = $p->id;
             $this->presentationpermissonScope = $p->scope;
         }
 
+        //Individual Permissions
+        foreach($video->ipermissions as $this->ip) {
+            $this->individuals[] = $this->ip->name .' ('. $this->ip->username . ')';
+            $this->individuals_permission[] = $this->ip->permission;
+        }
+
+        //Streams
         foreach($video->streams as $source) {
             $this->playAudio[] = $source->audio;
             $this->poster[] = $this->base_uri() . '/' .$video->id. '/' . $source->poster;
         }
-
     }
 
     public function base_uri()
@@ -79,9 +89,19 @@ class EditPresentation extends Component
         return $this->system_config['store']['list_uri'];
     }
 
+    public function updatedIndividuals($value)
+    {
+        //Checks if input is a valid sukat user
+        //Not implemented
+        $this->suser = preg_filter("/[^(]*\(([^)]+)\)[^()]*/", "$1", $value);
+    }
+
     public function add_individual_perm()
     {
-        //Todo
+        array_push($this->individuals , '');
+        array_push($this->individuals_permission , '');
+        $this->ipermissions++;
+        $this->dispatchBrowserEvent('permissionChanged');
     }
 
     public function getDateAttribute($date)
@@ -101,6 +121,12 @@ class EditPresentation extends Component
     public function remove_presenter($index)
     {
         array_splice($this->presenters, $index, 1);
+    }
+
+    public function remove_user($index)
+    {
+        array_splice($this->individuals, $index, 1);
+        $this->ipermissions = $this->ipermissions - 1;
     }
 
     public function remove_course()

@@ -1,4 +1,4 @@
-#user-search {
+#user-search, #perm-search{
     position: relative
 }
 
@@ -6,8 +6,17 @@
     background-color: #fff;
 
 }
+#perm-search .form-control-main-search {
+    background-color: #fff;
+
+}
 
 #user-search .twitter-typeahead {
+    margin: auto;
+    width: 100%;
+}
+
+#perm-search .twitter-typeahead {
     margin: auto;
     width: 100%;
 }
@@ -26,7 +35,26 @@
     color: #002f5f
 }
 
+#perm-search .search_autocomplete {
+    -webkit-box-shadow: 0 0 6px 0 rgba(76, 76, 76, 0.2);
+    box-shadow: 0 0 6px 0 rgba(76, 76, 76, 0.2);
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #dadada;
+    width: 100%;
+    z-index: 99999;
+    color: #002f5f
+}
+
 #user-search .search_autocomplete ul, #user-search .autoc-autocomplete-items {
+    padding: 1.4rem 0;
+    margin: 0
+}
+
+#perm-search .search_autocomplete ul, #user-search .autoc-autocomplete-items {
     padding: 1.4rem 0;
     margin: 0
 }
@@ -39,22 +67,54 @@
     width: 100%
 }
 
+#perm-search .search_autocomplete li {
+    border-bottom: 0;
+    padding: .3rem 0 .3rem 1.8rem;
+    cursor: pointer;
+    display: block;
+    width: 100%
+}
+
 #user-search .search_autocomplete li.active,
 #user-search .search_autocomplete li.tt-cursor {
     background: #eef9fa;
 }
+
+#perm-search .search_autocomplete li.active,
+#perm-search .search_autocomplete li.tt-cursor {
+    background: #eef9fa;
+}
+
 #user-search .search_autocomplete li.active a,
 #user-search .search_autocomplete li:hover a,
 #user-search .search_autocomplete li.tt-cursor a {
     color: inherit;
     text-decoration: none;
 }
+
+#perm-search .search_autocomplete li.active a,
+#perm-search .search_autocomplete li:hover a,
+#perm-search .search_autocomplete li.tt-cursor a {
+    color: inherit;
+    text-decoration: none;
+}
+
 #user-search .search_autocomplete li:last-child {
     border-bottom: 0
 }
+
+#perm-search .search_autocomplete li:last-child {
+    border-bottom: 0
+}
+
 #user-search .search_autocomplete .autocomplete-separator {
     border-bottom: #dadada
 }
+
+#perm-search .search_autocomplete .autocomplete-separator {
+    border-bottom: #dadada
+}
+
 #user-search-text {
 
 }
