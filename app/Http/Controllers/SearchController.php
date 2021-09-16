@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Course;
+use App\IndividualPermission;
 use App\Presenter;
 use App\Services\Daisy\DaisyIntegration;
 use App\Tag;
@@ -101,7 +102,9 @@ class SearchController extends Controller
                 //If user is uploader or staff
                 $user = Presenter::where('username', app()->make('play_username'))->first();
                 $user_videos = VideoPresenter::where('presenter_id', $user->id ?? 0)->pluck('video_id');
-                return Video::whereIn('id', $user_videos)->with('category', 'video_course.course')->latest('creation')->get();
+                //Check for individual permissions
+                $individual_videos = IndividualPermission::where('username', app()->make('play_username'))->where('permission', 'edit')->orWhere('permission', 'delete')->pluck('video_id');
+                return Video::whereIn('id', $user_videos)->orWhereIn('id', $individual_videos)->with('category', 'video_course.course')->latest('creation')->get();
 
             } elseif (app()->make('play_role') == 'Administrator') {
                 //If user is Administrator
