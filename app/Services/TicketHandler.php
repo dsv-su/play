@@ -48,7 +48,6 @@ class TicketHandler extends Model
             return true;
         }
         else {
-            return false;
             //Check group permissions
             //Get all permissions for the video
             $this->permissions = VideoPermission::where('video_id', $video->id)->pluck('permission_id');
@@ -92,7 +91,7 @@ class TicketHandler extends Model
             if($this->individuals = $this->video->ipermissions) {
                 foreach($this->individuals as $this->iper) {
                     //Check if user is listed
-                    if($this->iper->username ==  $_SERVER['eppn']) {
+                    if($this->iper->username . '@su.se' == $_SERVER['eppn']) {
                         //Check if user has set permissions
                         if(in_array($this->iper->permission, ['read', 'edit', 'delete'])) {
                             return true;
