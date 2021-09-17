@@ -86,7 +86,7 @@ class UploadController extends Controller
 
             //Set video permissions
             $video_permissions = new VideoPermission();
-            if($request->permission == 'false') {
+            if ($request->permission == 'false') {
                 $video_permissions->notification_id = $manualPresentation->id;
                 $video_permissions->permission_id = $request->video_permission;
                 $video_permissions->type = 'public';
@@ -106,7 +106,7 @@ class UploadController extends Controller
             $manualPresentation->tags = $tags;
             $manualPresentation->courses = $courses;
             $manualPresentation->created = strtotime($request->created);
-            $id =$manualPresentation->save();
+            $id = $manualPresentation->save();
 
             return redirect()->action([UploadController::class, 'store'], ['id' => $manualPresentation->id]);
         }
@@ -144,10 +144,11 @@ class UploadController extends Controller
 
     public function course_search(Request $request)
     {
-        return Course::where('name', 'LIKE', $request->course.'%')->get();
+        return Course::where('name', 'LIKE', '%' . $request->course . '%')->orWhere('designation', 'LIKE', '%' . $request->course . '%')->get();
     }
+
     public function tag_search(Request $request)
     {
-        return Tag::where('name', 'LIKE', $request->tag.'%')->get();
+        return Tag::where('name', 'LIKE', $request->tag . '%')->get();
     }
 }
