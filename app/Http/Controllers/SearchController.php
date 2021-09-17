@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Course;
+use App\IndividualPermission;
 use App\Presenter;
 use App\Services\Daisy\DaisyIntegration;
 use App\Tag;
@@ -101,7 +102,9 @@ class SearchController extends Controller
                 //If user is uploader or staff
                 $user = Presenter::where('username', app()->make('play_username'))->first();
                 $user_videos = VideoPresenter::where('presenter_id', $user->id ?? 0)->pluck('video_id');
-                return Video::whereIn('id', $user_videos)->with('category', 'video_course.course')->latest('creation')->get();
+                //Check for individual permissions
+                $individual_videos = IndividualPermission::where('username', app()->make('play_username'))->where('permission', 'edit')->orWhere('permission', 'delete')->pluck('video_id');
+                return Video::whereIn('id', $user_videos)->orWhereIn('id', $individual_videos)->with('category', 'video_course.course')->latest('creation')->get();
 
             } elseif (app()->make('play_role') == 'Administrator') {
                 //If user is Administrator
@@ -120,8 +123,9 @@ class SearchController extends Controller
         $videoterms = $this->extractTerms($videos);
         $videotags = $this->extractTags($videos);
         $manage = \Request::is('manage');
+        $permissions = VideoPermission::all();
 
-        return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage'));
+        return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'permissions'));
     }
 
     public function filterSearch($q = null, Request $request)

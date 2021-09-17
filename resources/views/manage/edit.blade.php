@@ -5,8 +5,8 @@
         @livewire('edit-presentation', [
         'video' => $video,
         'permissions' => $permissions,
-        'courses' => $courses
+        'courses' => $courses,
+        'individual_permissions' => $individual_permissions
         ])
     </form>
-
 @endsection

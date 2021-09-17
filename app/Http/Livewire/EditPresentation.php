@@ -2,8 +2,8 @@
 
 namespace App\Http\Livewire;
 
-use App\VideoCourse;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -20,22 +20,32 @@ class EditPresentation extends Component
     public $courseEdit;
     public $permissions, $presentationpermissonId, $presentationpermissonScope;
     public $sources = [], $playAudio = [], $poster = [];
+    public $ipermissions, $ip;
+    public $individuals = [], $individuals_permission = [];
+    public $i = 0;
+    public $suser;
 
 
-    public function mount($video, $courses, $permissions)
+    public function mount($video, $courses, $permissions, $individual_permissions)
     {
         $this->video = $video;
         $this->title = $video->title;
         $this->thumb = $video->thumb;
         $this->origin = $video->origin;
         $this->duration = $video->duration;
-        $this->created = $this->getDateAttribute($video->creation);
-        $this->persmissions = $permissions;
+        $this->date = $this->getDateAttribute($video->creation);
+        $this->permissions = $permissions;
         $this->category = $video->category->category_name;
         $this->sources = $video->streams;
+        $this->ipermissions = $individual_permissions->count();
 
         foreach($video->presenters() as $this->presenter) {
-            $this->presenters[] = $this->presenter->name. ' ('.$this->presenter->username.')';
+            if(!$this->presenter->username == null) {
+                $this->presenters[] = $this->presenter->name. ' ('.$this->presenter->username.')';
+            } else{
+                $this->presenters[] = $this->presenter->name;
+            }
+
             $this->presenters_uid[] = $this->presenter->username;
         }
         foreach($video->courses() as $this->coursedetail) {
@@ -44,20 +54,28 @@ class EditPresentation extends Component
             $this->course_semester = $this->coursedetail->semester;
             $this->course_year = $this->coursedetail->year;
         }
+
         foreach($courses as $data) {
             $this->courseselect[$data->id] = $data->name. ' '. $data->semester. ' '. $data->year;
         }
 
+        //Group Permissions
         foreach($video->permissions() as $p) {
             $this->presentationpermissonId = $p->id;
             $this->presentationpermissonScope = $p->scope;
         }
 
+        //Individual Permissions
+        foreach($video->ipermissions as $this->ip) {
+            $this->individuals[] = $this->ip->name .' ('. $this->ip->username . ')';
+            $this->individuals_permission[] = $this->ip->permission;
+        }
+
+        //Streams
         foreach($video->streams as $source) {
             $this->playAudio[] = $source->audio;
             $this->poster[] = $this->base_uri() . '/' .$video->id. '/' . $source->poster;
         }
-
     }
 
     public function base_uri()
@@ -71,6 +89,21 @@ class EditPresentation extends Component
         return $this->system_config['store']['list_uri'];
     }
 
+    public function updatedIndividuals($value)
+    {
+        //Checks if input is a valid sukat user
+        //Not implemented
+        $this->suser = preg_filter("/[^(]*\(([^)]+)\)[^()]*/", "$1", $value);
+    }
+
+    public function add_individual_perm()
+    {
+        array_push($this->individuals , '');
+        array_push($this->individuals_permission , '');
+        $this->ipermissions++;
+        $this->dispatchBrowserEvent('permissionChanged');
+    }
+
     public function getDateAttribute($date)
     {
         $this->date = Carbon::createFromTimestamp($date)->format('Y-m-d');
@@ -78,16 +111,22 @@ class EditPresentation extends Component
         return $this->date;
     }
 
-    public function newpresenter()
+    public function newpresenter($i)
     {
-        $this->presenters[] = '';
-        $this->presenters_uid[] = '';
+        array_push($this->presenters , '');
+        array_push($this->presenters_uid , '');
         $this->dispatchBrowserEvent('contentChanged');
     }
 
     public function remove_presenter($index)
     {
-        unset($this->presenters[$index]);
+        array_splice($this->presenters, $index, 1);
+    }
+
+    public function remove_user($index)
+    {
+        array_splice($this->individuals, $index, 1);
+        $this->ipermissions = $this->ipermissions - 1;
     }
 
     public function remove_course()

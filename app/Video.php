@@ -136,6 +136,11 @@ class Video extends Model implements Searchable
         return $this->hasMany(Stream::class);
     }
 
+    public function ipermissions(): HasMany
+    {
+        return $this->hasMany(IndividualPermission::class);
+    }
+
     public function getSearchResult(): SearchResult
     {
         // TODO: Implement getSearchResult() method.

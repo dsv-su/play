@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Video;
 use Illuminate\Database\Eloquent\Model;
-use ZanySoft\Zip\Zip;
 
 class DownloadZip extends Model
 {
@@ -20,16 +19,28 @@ class DownloadZip extends Model
     public function makezip()
     {
         //Create zip file of downloaded files and folders
-        $this->destination = public_path().'/storage/'.$this->path.'/';
+        $this->destination = storage_path('app/public/'.$this->path.'/');
         $this->zipFileName = $this->destination.$this->video->id.'.zip';
         //Directory of unzipped files
         $this->public_dir = public_path().'/storage/'.$this->path;
 
         //Creates a zip file of the entire raw folder
-        $this->zip = Zip::create( $this->zipFileName);
-        $this->zip->add($this->public_dir, true); //Zip only contents of file
-        $this->zip->add($this->public_dir . $this->zipFileName);
-        $this->zip->close();
+        $zip = new \ZipArchive();
+        $zip->open($this->zipFileName, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+        $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->destination));
+        foreach ($files as $key => $file)
+        {
+            // Skipping subfolders
+            if (!$file->isDir()) {
+                $filePath = $file->getRealPath();
+
+                // extracting filename with substr/strlen
+                $relativePath = $this->video->title.'/' . substr($filePath, strlen($this->destination) + 1);
+
+                $zip->addFile($filePath, $relativePath);
+            }
+        }
+        $zip->close();
 
         return true;
 

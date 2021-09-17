@@ -54,7 +54,8 @@
     "Tag": "Tagg",
     "Tags": "Taggar",
     "All uploaded presentations are accessible to DSV Students and Staff unless otherwise specified with the 'Custom' alternative": "Alla uppladdade presentationer är tillgängliga för DSV-studenter och personal om inte annat anges med alternativet 'Anpassad'",
-    "Playback Permissions": "Uppspelningsrättigheter",
+    "Playback Group Permissions": "Uppspelningsrättigheter Grupp",
+    "Playback Individual Permissions": "Uppspelningsrättigheter Enskild",
     "Upload media": "Ladda upp media",
     "Up to 4 media files can be uploaded.": "Upp till 4 mediafiler är möjliga att ladda upp.",
     "Upload files": "Ladda upp filer",
@@ -108,6 +109,8 @@
     "Custom uploaded thumb": "Uppladad miniatyr",
     "Uploaded media files": "Uppladdade video filer",
     "Each uploaded file should be the same length as the primary file": "Varje uppladad fil bör ha samma längd som primärfilen",
-    "When uploading, a default thumbnail is generated": "Vid uppladdning genereras en standardminiatyr"
+    "When uploading, a default thumbnail is generated": "Vid uppladdning genereras en standardminiatyr",
+    "User with permissions to edit this presentation": "Användare med behörighet att revidera denna presentation",
+    "Individual Permissions": "Individuella behörigheter"
 
 }

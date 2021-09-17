@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use App\Course;
+use App\IndividualPermission;
 use App\Permission;
 use App\Presenter;
 use App\Services\Video\VideoResolution;
@@ -24,7 +25,8 @@ class ManagePresentationController extends Controller
             //If user is uploader or staff
             $user = Presenter::where('username', app()->make('play_username'))->first();
             $user_videos = VideoPresenter::where('presenter_id', $user->id ?? 0)->pluck('video_id');
-            $videos = Video::whereIn('id', $user_videos)->with('category', 'video_course.course')->latest('creation')->get();
+            $individual_videos = IndividualPermission::where('username', app()->make('play_username'))->where('permission', 'edit')->pluck('video_id');
+            $videos = Video::whereIn('id', $user_videos)->orWhereIn('id', $individual_videos)->with('category', 'video_course.course')->latest('creation')->get();
 
         } elseif (app()->make('play_role') == 'Administrator') {
             //If user is Administrator

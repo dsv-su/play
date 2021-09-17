@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Course;
+use App\IndividualPermission;
 use App\Permission;
 use App\Presentation;
 use App\Presenter;
@@ -23,8 +24,9 @@ class EditController extends Controller
         $permissions = Permission::all();
         $courses = Course::all();
         $presenters = $video->presenters();
+        $individual_permissions = IndividualPermission::where('video_id', $video->id)->get();
 
-        return view('manage.edit', compact('video', 'permissions', 'courses', 'presenters'));
+        return view('manage.edit', compact('video', 'permissions', 'courses', 'presenters', 'individual_permissions'));
     }
 
     public function edit(Video $video, Request $request)
@@ -34,6 +36,7 @@ class EditController extends Controller
 
 
         if ($request->isMethod('post')) {
+
             //Video attributes
             $video->title = $request->title;
             $video->creation = strtotime($request->date);
@@ -45,19 +48,31 @@ class EditController extends Controller
             //Linked Presenter attributes
             if($request->presenters){
                 foreach($request->presenters as $presenter) {
+
                     $username = preg_filter("/[^(]*\(([^)]+)\)[^()]*/", "$1", $presenter);
                     $name = trim(preg_replace("/\([^)]+\)/","", $presenter));
-                    $presenter = Presenter::firstOrCreate([
-                        'username' => $username,
-                        'name' => $name
-                    ]);
+                    if($username == null) {
+                        $presenter = Presenter::firstOrCreate([
+                            'username' => $username,
+                            'name' => $name,
+                            'description' => 'external'
+                        ]);
+                    }
+                    else {
+                        $presenter = Presenter::firstOrCreate([
+                            'username' => $username,
+                            'name' => $name,
+                            'description' => 'sukat'
+                        ]);
+                    }
+
                     $videoPresenter = VideoPresenter::create([
                         'video_id' => $video->id,
                         'presenter_id' => $presenter->id
                     ]);
                 }
             }
-            //Update permission for presentation
+            //Update group permission for presentation
             if($videoPermission = VideoPermission::where('video_id', $video->id)->first()) {
                 //Exist
                 if($request->video_permission == 1) {
@@ -90,6 +105,28 @@ class EditController extends Controller
                 }
             }
 
+            //Update individual permissions
+
+            //Remove all individual permissions linked to video
+            IndividualPermission::where('video_id', $video->id)->delete();
+            if($request->individual_permissions) {
+                foreach($request->individual_permissions as $key => $ind) {
+                    $username = preg_filter("/[^(]*\(([^)]+)\)[^()]*/", "$1", $ind);
+                    $name = trim(preg_replace("/\([^)]+\)/","", $ind));
+                    if($username) {
+                        $iperm = IndividualPermission::updateOrCreate([
+                            'video_id' => $video->id,
+                            'username' => $username
+                        ],[
+                            'name' => $name,
+                            'permission' => $request->individual_perm_type[$key]
+                        ]);
+                    }
+
+
+                }
+            }
+
 
             //Update course
             if(!$request->courseEdit == null) {
@@ -98,6 +135,7 @@ class EditController extends Controller
                     ['course_id' => $request->courseEdit]
                 );
             }
+
 
             //Update Audio feed
             $streams = Stream::where('video_id', $video->id)->get();

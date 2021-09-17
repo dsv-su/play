@@ -139,7 +139,7 @@ class UploadController extends Controller
 
     public function ldap_search(Request $request)
     {
-        return SukatUser::whereStartsWith('cn', $request->q)->get();
+        return SukatUser::whereStartsWith('cn', $request->q)->limit(5)->get();
     }
 
     public function course_search(Request $request)
