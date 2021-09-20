@@ -130,6 +130,31 @@ class DaisyIntegration extends Model
         return $this->list;
     }
 
+    //Responible courseadministrators (as an array) for a Courssegment
+    public function getDaisyCourseResponsible($id)
+    {
+        $this->array_resource = json_decode($this->getResource('courseSegment/' . $id, 'json')->getBody()->getContents(), TRUE);
+        if($this->array_resource['contributors']) {
+            foreach($this->array_resource['contributors'] as $contributor) {
+                if($contributor['responsible'] == true) {
+                    //Return responisble teachers details
+                    $responsible_contributor[] = json_decode($this->getResource('/person/' . $contributor['personId'], 'json')->getBody()->getContents(), 'TRUE');
+                }
+            }
+            return $responsible_contributor;
+        }
+
+        return [];
+    }
+
+    //Method for retriving the username
+    public function getDaisyUsername($id)
+    {
+        $this->array_resource = json_decode($this->getResource('person/' . $id . '/usernames', 'json')->getBody()->getContents(), TRUE);
+        return $this->array_resource;
+    }
+
+
     //Method for initiating play and preloading courses from Daisy
     public function init()
     {

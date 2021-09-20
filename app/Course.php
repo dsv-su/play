@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Services\Daisy\DaisyIntegration;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -42,6 +43,12 @@ class Course extends Model implements Searchable
     public function videos(): Collection
     {
         return $this->hasManyThrough(Video::class, VideoCourse::class, 'course_id', 'id', 'id', 'video_id')->get();
+    }
+
+    public function responsible()
+    {
+        $daisy = new DaisyIntegration();
+        return $daisy->getDaisyCourseResponsible($this->id);
     }
 
     public function userVideos($user): Collection

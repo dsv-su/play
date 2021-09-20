@@ -9,6 +9,21 @@
             font-size: 18px !important;
             font-weight: 300
         }
+        .ed {
+            padding: 8px 15px;
+            border-radius: 5px !important;
+            margin: 5px 0px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            font-size: 18px !important;
+            font-weight: 300
+        }
+        .group {
+            padding: 8px 15px;
+            box-sizing: border-box;
+            font-size: 18px !important;
+            font-weight: 300
+        }
     </style>
     <div class="container px-1 py-5 mx-auto">
         <div class="w-7/12 mx-2 rounded  p-2">
@@ -154,7 +169,7 @@
 
                             <!--Video group permission settings-->
                             <div id="video_perm">
-                                <select class="form-control p-2" name="video_permission">
+                                <select  class="group form-control" name="video_permission">
                                     @foreach($permissions as $perm)
                                         <option value="{{$perm->id}}" @if($presentationpermissonId == $perm->id) selected @endif >{{$perm->id}}: {{$perm->scope}}</option>
                                     @endforeach
@@ -165,12 +180,20 @@
 
 
                     <div class="row justify-content-between text-left">
-                        <div class="form-group col-sm-6 flex-column d-flex"></div>
+                        <div class="form-group col-sm-6 flex-column d-flex">
+                            <label class="form-control-label px-3">{{ __("Course Administrator") }}</label>
+                            @foreach($course_responsible as $responsible)
+                            <div class="ed">
+                                {{$responsible['firstName']}} {{$responsible['lastName']}}
+                            </div>
+                            @endforeach
+
+                        </div>
 
                         <div class="form-group col-sm-6 flex-column d-flex">
                             <label class="form-control-label px-3">{{ __("Playback Individual Permissions") }}</label>
                             <!--Video individual permission settings-->
-                            <button type="button" wire:click.prevent="add_individual_perm" class="btn btn-outline-primary btn-sm">{{$ipermissions}} {{ __("Set") }} <i class="fas fa-user-plus"></i></button>
+                            <button type="button" wire:click.prevent="add_individual_perm" class="btn btn-outline-primary p-2 btn-sm">{{$ipermissions}} {{ __("Set") }} <i class="fas fa-user-plus"></i></button>
                         </div>
                     </div>
                         <!-- Individual permissions -->

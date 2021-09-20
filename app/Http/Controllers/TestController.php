@@ -21,6 +21,13 @@ class TestController extends Controller
 
     }
 
+    public function roles()
+    {
+        //Check role status
+        dd('Play auth: '.app()->make('play_auth'), 'Play role: '. app()->make('play_role'), 'Play username: '.app()->make('play_username'));
+
+    }
+
     public function search(Request $request)
     {
         /*****************************

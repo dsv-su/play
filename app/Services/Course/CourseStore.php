@@ -3,6 +3,7 @@
 namespace App\Services\Course;
 
 use App\Course;
+use App\CourseadminPermission;
 use App\Services\Daisy\DaisyIntegration;
 use App\VideoCourse;
 use Carbon\Carbon;
@@ -11,8 +12,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class CourseStore extends Model
 {
-    protected $creation, $timestamp;
+    protected $courses, $creation, $timestamp;
     protected $daisy;
+    protected $cid, $firstnames, $lastnames;
 
     public function __construct($request, $video)
     {
@@ -23,17 +25,6 @@ class CourseStore extends Model
 
     public function course()
     {
-        //If there is no course association
-        /*
-        if (!count($this->courses) > 0) {
-             Do not save course association when there's no course
-            VideoCourse::updateOrCreate([
-                'video_id' => $this->video->id,
-                'course_id' => 1,
-            ]);
-
-        }
-        */
         if ($this->courses) {
             foreach ($this->courses as $key => $this->item) {
                 if ($this->item) {
@@ -55,6 +46,8 @@ class CourseStore extends Model
                             'video_id' => $this->video->id,
                             'course_id' => $this->course->id,
                         ]);
+
+                        $this->cid = $this->course->id;
                     } else {
                         //The course exists
                         if ($key == 0) {
@@ -66,8 +59,50 @@ class CourseStore extends Model
                             'video_id' => $this->video->id,
                             'course_id' => $this->db_course->id,
                         ]);
+                        $this->cid = $this->db_course->id;
                     }
-                } else {
+
+                    //Store course administrator permissions
+                    if($this->cid) {
+                        if($this->daisy) {
+                            $this->course_responsible = $this->daisy->getDaisyCourseResponsible($this->cid);
+                        } else {
+                            $this->daisy = new DaisyIntegration();
+                            $this->course_responsible = $this->daisy->getDaisyCourseResponsible($this->cid);
+                        }
+
+                        //This is for retriving the username -> until the endpoint in daisy has been revised
+                        foreach($this->course_responsible as $resonsible) {
+                            $usernames = $this->daisy->getDaisyUsername($resonsible['id']);
+                            foreach($usernames as $username) {
+                                if($username['realm'] == 'SU.SE') {
+                                    $course_resp_username[] = $username['username'];
+                                }
+                            }
+                            $this->firstnames[] = $resonsible['firstName'];
+                            $this->lastnames[] = $resonsible['lastName'];
+                        }
+
+                        //Update coursePermissions
+
+                        //First delete old courseadmins
+                        CourseadminPermission::where('video_id', $this->video->id)->delete();
+
+                        //Update CourseadminPersmission with new courseadmins
+                        foreach($course_resp_username as $key => $usrn) {
+                            CourseadminPermission::updateOrCreate([
+                                'video_id' => $this->video->id,
+                                'username' => $usrn
+                            ],[
+                                'name' => $this->firstnames[$key].' '.$this->lastnames[$key],
+                                'permission' => 'delete'
+                            ]);
+                        }
+                    }
+
+
+                }
+                else {
                     //Remove any old associations
                     VideoCourse::where('video_id', $this->video->id)->delete();
                 }

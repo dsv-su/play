@@ -2,8 +2,9 @@
 
 namespace App\Http\Livewire;
 
+use App\CourseadminPermission;
+use App\Services\Daisy\DaisyIntegration;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -24,6 +25,8 @@ class EditPresentation extends Component
     public $individuals = [], $individuals_permission = [];
     public $i = 0;
     public $suser;
+    public $course_responsible = [];
+    public $course_resp_username;
 
 
     public function mount($video, $courses, $permissions, $individual_permissions)
@@ -53,6 +56,9 @@ class EditPresentation extends Component
             $this->courseId = $this->coursedetail->id;
             $this->course_semester = $this->coursedetail->semester;
             $this->course_year = $this->coursedetail->year;
+            foreach ($this->coursedetail->responsible() as $person) {
+                $this->course_responsible[] = $person;
+            }
         }
 
         foreach($courses as $data) {
@@ -76,6 +82,8 @@ class EditPresentation extends Component
             $this->playAudio[] = $source->audio;
             $this->poster[] = $this->base_uri() . '/' .$video->id. '/' . $source->poster;
         }
+
+
     }
 
     public function base_uri()
@@ -87,6 +95,41 @@ class EditPresentation extends Component
         $this->system_config = parse_ini_file($this->file, true);
 
         return $this->system_config['store']['list_uri'];
+    }
+
+    public function updatedCourseEdit($value)
+    {
+        $daisy = new DaisyIntegration();
+        $this->course_responsible = $daisy->getDaisyCourseResponsible($value);
+
+        //This is for retriving the username -> until the endpoint in daisy has been revised
+        foreach($this->course_responsible as $key => $resonsible) {
+            $usernames = $daisy->getDaisyUsername($resonsible['id']);
+            foreach($usernames as $username) {
+                if($username['realm'] == 'SU.SE') {
+                    $course_resp_username[] = $username['username'];
+                }
+            }
+            $firstnames[] = $resonsible['firstName'];
+            $lastnames[] = $resonsible['lastName'];
+        }
+
+        //Update coursePermissions
+
+        //First delete old courseadmins
+        CourseadminPermission::where('video_id', $this->video->id)->delete();
+
+        //Update CourseadminPersmission with new courseadmins
+        foreach($course_resp_username as $key => $usrn) {
+            $cperm = CourseadminPermission::updateOrCreate([
+                'video_id' => $this->video->id,
+                'username' => $usrn
+            ],[
+                'name' => $firstnames[$key].' '.$lastnames[$key],
+                'permission' => 'delete'
+            ]);
+        }
+
     }
 
     public function updatedIndividuals($value)
