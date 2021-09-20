@@ -154,7 +154,7 @@
                         <input type="hidden" name="course" value="{{$courseId}}">
                         <div class="form-group col-sm-6 flex-column d-flex">
                             <label class="form-control-label px-3">{{ __("Associated course") }}</label>
-                            <select  wire:model="courseEdit" name="courseEdit" id="select2">
+                            <select  wire:model.debounce.100s="courseEdit" name="courseEdit" id="select2">
                                 <option value="">{{$course}}</option>
                                 @foreach($courseselect as $key => $data)
                                     <option value="{{ $key }}">{{$key}} - {{ $data }}</option>
