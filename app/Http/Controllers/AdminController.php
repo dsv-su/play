@@ -95,9 +95,35 @@ class AdminController extends Controller
             return VideoPermission::with('permission')->where('permission_id', 4)->count();
         });
 
+        //->
+        /*
+                    $data['permissions'] = VideoPermission::all();
+                    //-> Most viewed
+                    $vid = DB::table('videos')
+                        ->select(['video_id', DB::raw('MAX(playback) AS playback')])
+                        ->whereNotNull('playback')
+                        ->join('video_stats', 'videos.id', '=', 'video_stats.video_id')
+                        ->groupBy('video_id')
+                        ->take(5)->get();
 
+                    $most_viewed = collect($vid)->map(function ($item) {
+                        return $item->video_id;
+                    });
+                    $data['most_viewed'] = Video::with('category', 'video_course.course')->whereIn('id', $most_viewed)->take(24)->get();
+                    //-> Most downloaded
+                    $vid = DB::table('videos')
+                        ->select(['video_id', DB::raw('MAX(download) AS download')])
+                        ->whereNotNull('download')
+                        ->join('video_stats', 'videos.id', '=', 'video_stats.video_id')
+                        ->groupBy('video_id')
+                        ->take(5)->get();
 
-
+                    $most_down = collect($vid)->map(function ($item) {
+                        return $item->video_id;
+                    });
+                    $data['most_downloaded'] = Video::with('category', 'video_course.course')->whereIn('id', $most_down)->take(24)->get();
+                    */
+        //<-
         // Cattura
         $store = new CheckCatturaRecorderStatus();
 

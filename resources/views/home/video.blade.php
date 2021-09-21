@@ -4,8 +4,7 @@
         <div class="card-header position-relative"
              style="background-image: url({{ asset($video->thumb)}}); height:200px;">
             <div class="title">{{ $video->title }}</div>
-            <!-- For testing permission handling -->
-
+            <!-- Group Permissions -->
             @if($permissions ?? '')
                 @foreach($permissions as $permission)
                     @if($video->id == $permission->video_id && $permission->type == 'private')
@@ -13,10 +12,15 @@
                     @endif
                     @if($video->id == $permission->video_id && $permission->type == 'external')
                         <div class="permission"><i class="fas fa-globe"></i></div>
-                @endif
-            @endforeach
-        @endif
-        <!-- end permission handling -->
+                    @endif
+                @endforeach
+            @endif
+            <!-- end Group Permission -->
+            <!-- Visability -->
+            @if($video->visability == false)
+                <div class="visability"><i class="far fa-eye-slash"></i></div>
+            @endif
+
             <p class="p-1"> {{$video->duration}} </p>
         </div>
     </a>

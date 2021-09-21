@@ -38,8 +38,9 @@ use Illuminate\View\View;
 class PlayController extends Controller
 {
     /**
-     *  For testing purposes. Should be refactored before production.
-     *
+     *  Home Page
+     *  Generated Presentations for the Home Page.
+     *  The "Fake" students emulation should be removed prior to launch.
      */
 
     public function index()
@@ -60,9 +61,15 @@ class PlayController extends Controller
             } elseif (app()->make('play_role') == 'Student3') {
                 $courses = [6798, 6799, 6760, 6778, 6828, 6796, 6719, 6720];
             }
-            $data['my'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
+            $data['my'] = Video::with('video_course.course')->where('visability', true)->whereHas('video_course.course', function ($query) use ($courses) {
                 return $query->whereIn('course_id', $courses)->take(24);
             })->get();
+
+            //All courses (tab 3)
+            $data['active'] = Video::with('video_course.course')->where('visability', true)->whereHas('video_course.course', function ($query) use ($daisy) {
+                return $query->whereIn('course_id', $daisy->getActiveCourses());
+            })->get();
+            $data['latest'] = Video::with('category', 'video_course.course')->where('visability', true)->latest('creation')->get();
 
         } // end testing
 
@@ -70,55 +77,43 @@ class PlayController extends Controller
         elseif (App::environment('production') and app()->make('play_role') == 'Student') {
             $courses = $daisy->getActiveStudentCourses(app()->make('play_username'));
             if ($courses) {
-                $data['my'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
+                $data['my'] = Video::with('video_course.course')->where('visability', true)->whereHas('video_course.course', function ($query) use ($courses) {
                     return $query->whereIn('course_id', $courses)->take(24);
                 })->get();
             }
+
+            //All courses (tab 3)
+            $data['active'] = Video::with('video_course.course')->where('visability', true)->whereHas('video_course.course', function ($query) use ($daisy) {
+                return $query->whereIn('course_id', $daisy->getActiveCourses());
+            })->get();
+            $data['latest'] = Video::with('category', 'video_course.course')->where('visability', true)->latest('creation')->get();
+
         } //If user is Employee
         elseif (App::environment('production') and (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')) {
             $courses = $daisy->getActiveEmployeeCourses(app()->make('play_username'));
             if ($courses) {
-                $data['my'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
+                $data['my'] = Video::with('video_course.course')->where('visability', true)->whereHas('video_course.course', function ($query) use ($courses) {
                     return $query->whereIn('course_id', $courses);
                 })->get();
             }
+
+            //All courses (tab 3)
+            $data['active'] = Video::with('video_course.course')->where('visability', true)->whereHas('video_course.course', function ($query) use ($daisy) {
+                return $query->whereIn('course_id', $daisy->getActiveCourses());
+            })->get();
+            $data['latest'] = Video::with('category', 'video_course.course')->where('visability', true)->latest('creation')->get();
+
         } else {
             //If user is Admin
             $data['search'] = 0;
-            /*
-            $data['permissions'] = VideoPermission::all();
-            //-> Most viewed
-            $vid = DB::table('videos')
-                ->select(['video_id', DB::raw('MAX(playback) AS playback')])
-                ->whereNotNull('playback')
-                ->join('video_stats', 'videos.id', '=', 'video_stats.video_id')
-                ->groupBy('video_id')
-                ->take(5)->get();
 
-            $most_viewed = collect($vid)->map(function ($item) {
-                return $item->video_id;
-            });
-            $data['most_viewed'] = Video::with('category', 'video_course.course')->whereIn('id', $most_viewed)->take(24)->get();
-            //-> Most downloaded
-            $vid = DB::table('videos')
-                ->select(['video_id', DB::raw('MAX(download) AS download')])
-                ->whereNotNull('download')
-                ->join('video_stats', 'videos.id', '=', 'video_stats.video_id')
-                ->groupBy('video_id')
-                ->take(5)->get();
-
-            $most_down = collect($vid)->map(function ($item) {
-                return $item->video_id;
-            });
-            $data['most_downloaded'] = Video::with('category', 'video_course.course')->whereIn('id', $most_down)->take(24)->get();
-            */
+            //All courses (tab 3)
+            $data['active'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($daisy) {
+                return $query->whereIn('course_id', $daisy->getActiveCourses());
+            })->get();
+            $data['latest'] = Video::with('category', 'video_course.course')->latest('creation')->get();
         }
 
-        //All courses (tab 3)
-        $data['active'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($daisy) {
-            return $query->whereIn('course_id', $daisy->getActiveCourses());
-        })->get();
-        $data['latest'] = Video::with('category', 'video_course.course')->latest('creation')->take(24)->get();
 
         return view('home.index', $data);
     }

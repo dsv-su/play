@@ -9,21 +9,6 @@
             font-size: 18px !important;
             font-weight: 300
         }
-        .ed {
-            padding: 8px 15px;
-            border-radius: 5px !important;
-            margin: 5px 0px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            font-size: 18px !important;
-            font-weight: 300
-        }
-        .group {
-            padding: 8px 15px;
-            box-sizing: border-box;
-            font-size: 18px !important;
-            font-weight: 300
-        }
     </style>
     <div class="container px-1 py-5 mx-auto">
         <div class="w-7/12 mx-2 rounded  p-2">
@@ -37,7 +22,8 @@
                     <div class="row justify-content-between text-left">
                         <div class="form-group col-sm-4 flex-column d-flex">
                             <div class="flex justify-center">
-                                <img src="{{$thumb}}?{{ rand() }}" width="300px" >
+                                <img id="presentation" src="{{$thumb}}?{{ rand() }}" width="300px">
+                                <div id="presentation_hidden">{{ __("Presentation hidden") }}</div>
                                 {{--}}
                                 <div class="rounded border shadow p-3 my-2">
                                 @if($editt)
@@ -52,6 +38,18 @@
                                 {{--}}
                             </div>
                         </div>
+                        <div class="form-group col-sm-2 flex-column d-flex">
+                            <div class="flex justify-center">
+
+                                    <div class="text-center p-2">
+                                        <!-- Custom switch -->
+                                        <p class="custom-control custom-switch custom-switch-lg">
+                                            <input class="custom-control-input" id="visabilitySwitch" name="visability" type="checkbox" @if($video->visability == true) checked @endif>
+                                            <label class="custom-control-label" for="visabilitySwitch">{{ __("Visability") }}</label>
+                                        </p>
+                                    </div>
+                            </div>
+                        </div>
 
 
                         <div class="form-group col-sm-6 flex-column d-flex">
@@ -59,7 +57,7 @@
                                 <table>
                                     <tr><th>{{ __("Origin") }}:</th><td>@if($origin == 'mediasite') {{ __("Migrated from Mediasite") }}
                                             @elseif($origin == 'cattura') {{ __("Recorded at DSV") }}
-                                            @elseif($origin == 'manual') Uploaded by user
+                                            @elseif($origin == 'manual') {{ __("Uploaded by user") }}
                                             @endif
                                         </td></tr>
                                     <tr><th>{{ __("Recording date") }}:</th><td>{{$date}}</td></tr>
@@ -154,7 +152,7 @@
                         <input type="hidden" name="course" value="{{$courseId}}">
                         <div class="form-group col-sm-6 flex-column d-flex">
                             <label class="form-control-label px-3">{{ __("Associated course") }}</label>
-                            <select  wire:model.debounce.100s="courseEdit" name="courseEdit" id="select2">
+                            <select  wire:model.debounce.500s="courseEdit" name="courseEdit" id="select2">
                                 <option value="">{{$course}}</option>
                                 @foreach($courseselect as $key => $data)
                                     <option value="{{ $key }}">{{$key}} - {{ $data }}</option>
@@ -272,6 +270,15 @@
 
 <script>
     $(document).ready(function() {
+
+        if($("#visabilitySwitch").is(":checked") ){
+            $("#presentation_hidden" ).hide();
+            $( "#presentation" ).show();
+        } else {
+            $( "#presentation" ).hide();
+            $( "#presentation_hidden" ).show();
+        }
+
         $('.datepicker').datepicker({
             language: 'sv',
             weekStart: 1,
@@ -288,8 +295,15 @@
 
     });
 </script>
+
 <script>
-    // the selector will match all input controls of type :checkbox
+    //VisabilitySwitch for toggling the visability of the presentation
+    $( "#visabilitySwitch" ).click(function() {
+        $( "#presentation" ).toggle( "slow", function() {
+            $( "#presentation_hidden" ).toggle();
+        });
+    });
+    // AudioSwitch the selector will match all input controls of type :checkbox
     // and attach a click event handler
     $("input:checkbox").on('click', function() {
         // in the handler, 'this' refers to the box clicked on
@@ -305,6 +319,7 @@
         } else {
             $box.prop("checked", false);
         }
+
     });
 </script>
 <!-- Typeahead.js Bundle -->

@@ -19,6 +19,7 @@
     "Manage presentations": "Hantera presentationer",
     "Here you can edit, download, change rights or delete a presentation you have uploaded.": "Här kan du redigera, ladda ner, ändra rättigheter eller ta bort en presentation du har laddat upp.",
     "Manage all presentations": "Hantera alla presentationer",
+    "Category": "Kategori",
     "Choose category": "Välj kategori",
     "Choose course": "Välj kurs",
     "Change rights for presentation": "Ändra rättigheter för presentation",
@@ -96,12 +97,12 @@
     "Origin": "Ursprung",
     "Duration": "Längd",
     "Migrated from Mediasite": "Migrerad från Mediasite",
+    "Uploaded by user": "Manuellt uppladdad",
     "Recorded at DSV": "Inspelad på DSV",
     "Not associated to a course": "Inte associerad med en kurs",
     "Associated to course": "Associerad med kurs",
     "Filter by": "Filtrera",
     "Term": "Termin",
-    "Presenter": "Presentatör",
     "No course association": "Ingen kurstillhörighet",
     "Upload Custom Thumb": "Ladda upp en egen miniatyr",
     "Thumb generated after": "Miniatyr skapad efter",
@@ -111,6 +112,9 @@
     "Each uploaded file should be the same length as the primary file": "Varje uppladad fil bör ha samma längd som primärfilen",
     "When uploading, a default thumbnail is generated": "Vid uppladdning genereras en standardminiatyr",
     "User with permissions to edit this presentation": "Användare med behörighet att revidera denna presentation",
-    "Individual Permissions": "Individuella behörigheter"
+    "Individual Permissions": "Individuella behörigheter",
+    "Course Administrator": "Kursansvarig",
+    "Visability": "Synlighet",
+    "Presentation hidden": "Presentation gömd"
 
 }

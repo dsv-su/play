@@ -425,7 +425,7 @@ textarea:focus {
 .datepicker, .presenteradd, .courseadd, .tagadd, .permission{
     padding: 8px 15px;
     border-radius: 5px !important;
-    margin: 5px 0px;
+    margin: 5px 0;
     box-sizing: border-box;
     border: 1px solid #ccc;
     font-size: 18px !important;
@@ -482,4 +482,19 @@ button:focus {
     float: none;
     display: table;
     color: blue;
+}
+.ed {
+    padding: 8px 15px;
+    border-radius: 5px !important;
+    margin: 5px 0px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    font-size: 18px !important;
+    font-weight: 300
+}
+.group {
+    padding: 8px 15px;
+    box-sizing: border-box;
+    font-size: 18px !important;
+    font-weight: 300
 }

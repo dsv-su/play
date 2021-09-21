@@ -147,7 +147,15 @@ class EditController extends Controller
                     $stream->save();
                 }
             }
-
+        //Update visability
+            if($request->visability) {
+                $video->visability = true;
+                $video->save();
+            }
+            else {
+                $video->visability = false;
+                $video->save();
+            }
 
         }
         Cache::flush();

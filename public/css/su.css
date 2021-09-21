@@ -5232,7 +5232,6 @@ p.kill-p, .kill-p p {
     font-size: 0.8em;
 }
 
-/* For testing purpose */
 .video .card-header .permission {
     position: absolute;
     font-family: "TheSansC5-SemiBoldWeb";
@@ -5244,7 +5243,22 @@ p.kill-p, .kill-p p {
     opacity: 0.85;
     transition: var(--ease);
 }
-/* --> end For testing purpose */
+.video .card-header .visability {
+    position: absolute;
+    font-family: "TheSansC5-SemiBoldWeb";
+    right: 36px;
+    top: 0;
+    padding: 4px 4px 4px 4px;
+    border-radius: 5px !important;
+    margin: 5px 0;
+    background-color: var(--light);
+    color: var(--red);
+    opacity: 0.85;
+    font-size: 18px !important;
+    font-weight: 400;
+    transition: var(--ease);
+}
+
 .video .card-header {
     /*border-bottom: 0px;*/
 }
