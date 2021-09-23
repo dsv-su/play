@@ -52,7 +52,7 @@ class EditPresentation extends Component
             $this->presenters_uid[] = $this->presenter->username;
         }
         foreach($video->courses() as $this->coursedetail) {
-            $this->course = $this->coursedetail->name.' '.$this->coursedetail->semester.' '.$this->coursedetail->year;
+            $this->course = $this->coursedetail->name.' '.$this->coursedetail->semester.''.$this->coursedetail->year;
             $this->courseId = $this->coursedetail->id;
             $this->course_semester = $this->coursedetail->semester;
             $this->course_year = $this->coursedetail->year;

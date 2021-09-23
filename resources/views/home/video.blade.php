@@ -2,7 +2,7 @@
 <div class="card video m-auto" @if (isset($manage) && $manage) id="{{$video->id}}" @endif>
     <a href="{{ route('player', ['video' => $video]) }}">
         <div class="card-header position-relative"
-             style="background-image: url({{ asset($video->thumb)}}); height:200px;">
+             style="background-image: @if ($video->visability == false) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); height:200px;">
             <div class="title">{{ $video->title }}</div>
             <!-- Group Permissions -->
             @if($permissions ?? '')
@@ -19,8 +19,8 @@
             <!-- Visability -->
             @if($video->visability == false)
                 <div class="visability"><i class="far fa-eye-slash"></i></div>
-            @endif
-
+                <div class="d-flex justify-content-center h-100"><div class="d-inline alert alert-secondary m-auto" role="alert">{{ __("Presentation hidden") }}</div></div>
+                    @endif
             <p class="p-1"> {{$video->duration}} </p>
         </div>
     </a>

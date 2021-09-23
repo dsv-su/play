@@ -5222,7 +5222,7 @@ p.kill-p, .kill-p p {
     top: 0;
     padding: 4px 4px 4px 4px;
     background-color: var(--light);
-    border-top-left-radius: 3px;
+    border-top-left-radius: 2px;
     color: #002f5f;
     /*opacity: 0.85;*/
     transition: var(--ease);
@@ -5246,17 +5246,20 @@ p.kill-p, .kill-p p {
 .video .card-header .visability {
     position: absolute;
     font-family: "TheSansC5-SemiBoldWeb";
-    right: 36px;
+    right: 0;
     top: 0;
     padding: 4px 4px 4px 4px;
-    border-radius: 5px !important;
-    margin: 5px 0;
+    border-top-right-radius: 2px !important;
     background-color: var(--light);
     color: var(--red);
     opacity: 0.85;
-    font-size: 18px !important;
+    font-size: 16px !important;
     font-weight: 400;
     transition: var(--ease);
+}
+
+.video a:hover {
+    text-decoration: none;
 }
 
 .video .card-header {
@@ -8045,4 +8048,16 @@ p.card-text {
 
 #myTab li:last-child {
     margin-right: auto;
+}
+
+.select2-container .select2-selection--single .select2-selection__rendered {
+    padding: 0 !important;
+}
+
+.select2 {
+    width:100%!important;
+}
+
+.font-1em {
+    font-size: 1rem !important;
 }
