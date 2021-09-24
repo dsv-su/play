@@ -5209,15 +5209,18 @@ p.kill-p, .kill-p p {
     /*opacity: 0.9;*/
 }
 
+.video .card-body {
+    padding-bottom: 5px !important;
+}
+
 .video .card-header {
     background: #002f5f url("../images/eld_footer.png") no-repeat center;
     background-size: cover;
+    font-size: 1rem;
 }
 
 .video .card-header .title {
     position: absolute;
-    font-family: "TheSansC5-SemiBoldWeb", serif;
-    font-size: 1rem;
     left: 0;
     top: 0;
     padding: 4px 4px 4px 4px;
@@ -5226,36 +5229,34 @@ p.kill-p, .kill-p p {
     color: #002f5f;
     /*opacity: 0.85;*/
     transition: var(--ease);
+    font-family: "TheSansC5-SemiBoldWeb", serif;
 }
 
 .video .card-text {
     font-size: 0.8em;
 }
 
-.video .card-header .permission {
+.video .card-header .icons {
     position: absolute;
-    font-family: "TheSansC5-SemiBoldWeb";
-    right: 0;
     top: 0;
-    padding: 4px 4px 4px 4px;
+    right: 0;
     background-color: var(--light);
     color: var(--red);
-    opacity: 0.85;
     transition: var(--ease);
-}
-.video .card-header .visability {
-    position: absolute;
-    font-family: "TheSansC5-SemiBoldWeb";
-    right: 0;
-    top: 0;
-    padding: 4px 4px 4px 4px;
     border-top-right-radius: 2px !important;
-    background-color: var(--light);
-    color: var(--red);
-    opacity: 0.85;
-    font-size: 16px !important;
-    font-weight: 400;
-    transition: var(--ease);
+    font-family: "TheSansC5-SemiBoldWeb", serif;
+}
+
+.video .card-header .permission {
+    display: inline-block;
+    padding: 4px;
+    border: none;
+    margin: 0;
+}
+
+.video .card-header .visability {
+    padding: 4px 4px 4px 4px;
+    display: inline-block;
 }
 
 .video a:hover {
