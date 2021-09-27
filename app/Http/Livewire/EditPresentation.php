@@ -101,11 +101,14 @@ class EditPresentation extends Component
 
     public function updatedCourseEdit($value)
     {
-
         $daisy = new DaisyIntegration();
+        // Remove current responsibles before pushing new ones:
+        $this->course_responsible = [];
+
         foreach ($value as $v) {
             $this->course_responsible[] = $daisy->getDaisyCourseResponsible($v);
         }
+
         //This is for retriving the username -> until the endpoint in daisy has been revised
         foreach ($this->course_responsible as $courseid => $course_responsible) {
             foreach ($course_responsible as $key => $responsible) {
@@ -121,7 +124,6 @@ class EditPresentation extends Component
         }
 
         //Update coursePermissions
-
         //First delete old courseadmins
         CourseadminPermission::where('video_id', $this->video->id)->delete();
 

@@ -118,7 +118,7 @@
                                 @endforeach
                                 </select>
 -->
-                            <select wire:model.debounce.500s="courseEdit" name="courseEdit[]"
+                            <select wire:model.debounce.100s="courseEdit" name="courseEdit[]"
                                     class="form-control mx-1 selectpicker w-100" data-dropup-auto="false"
                                     data-none-selected-text="{{ __('No course association')}}"
                                     data-live-search="true" multiple>
@@ -127,15 +127,11 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div wire:ignore class="form-group col-12 col-md-6 flex-column d-flex">
-                            <label class="form-control-label px-1">{{ __("Course manager") }}</label>
-                            @foreach($course_responsible as $id)
-                                @foreach($id as $responsible)
-                                    <div class="ed mb-1">
-                                        {{$responsible['firstName']}} {{$responsible['lastName']}}
-                                    </div>
-                                @endforeach
-                            @endforeach
+                        <div class="form-group col-12 col-md-6 flex-column d-flex">
+                            <label class="form-control-label px-1">{{ __("Course manager(s)") }}</label>
+                            <div class="m-1 my-2 font-1rem">
+                                @foreach($course_responsible as $i=>$id) @foreach($id as $k=>$responsible) <span class="m-1 badge badge-pill badge-light font-1rem">{{$responsible['firstName']}} {{$responsible['lastName']}}</span> @endforeach @endforeach
+                            </div>
                         </div>
 
                         <div class="form-group col-12 col-md-6 flex-column d-flex">
@@ -192,7 +188,6 @@
                                 @foreach($individuals as $key => $name)
                                     <div class="d-inline">
                                         <div wire:ignore class="d-flex justify-content-between" id="perm-search">
-
                                             <input class="form-control mx-auto perm" id="perm-search-text-{{$key}}"
                                                    type="search" wire:model.debounce.100s="individuals.{{$key}}"
                                                    name="individual_permissions[]"
