@@ -63,7 +63,7 @@
                             </div>
                             <div class="row"><label class="col-4 col-lg-3 mb-0">{{__('Course')}}
                                 </label>
-                                <div class="col">@if (empty($course)) {{ __("Not associated to a course") }} @else {{$course}} @endif</div>
+                                <div class="col">@if (empty($course)) {{ __("Not associated to a course") }} @else {{implode(', ', $course)}} @endif</div>
                             </div>
                             <div class="row"><label for="visabilitySwitch"
                                                     class="col-4 col-lg-3 mb-0">{{__('Visibility')}}</label>
@@ -100,7 +100,7 @@
                                         class="text-danger"> *</span></label>
                             <input id="creationdate" class="datepicker" wire:model="date" name="date" type="text"
                                    autocomplete="off" data-provide="datepicker" data-date-autoclose="true"
-                                   data-date-today-highlight="true">
+                                   data-date-today-highlight="true" style="max-width: 115px;">
                             <div><small class="text-danger">{{ $errors->first('created') }}</small></div>
                         </div>
                     </div>
@@ -108,19 +108,29 @@
                     <!-- Course and Presenters -->
                     <div class="row justify-content-between text-left">
                         <div wire:ignore class="form-group col-12 col-md-6 flex-column d-flex">
-                            <input type="hidden" name="course" value="{{$courseId}}">
+                            <input type="hidden" name="course" value="{{$courseId[0]}}">
                             <label class="form-control-label px-1">{{ __("Associated course") }}</label>
+                        <!--
                             <select wire:model.debounce.500s="courseEdit" name="courseEdit" id="select2">
-                                <option value="">{{$course}}</option>
+                                <option value="">@if ($course) {{$course[0]}} @else No course association @endif</option>
                                 @foreach($courseselect as $key => $data)
-                                    <option value="{{ $key }}">{{$key}} - {{ $data }}</option>
+                            <option value="{{ $key }}">{{$key}} - {{ $data[0] }}</option>
+                                @endforeach
+                                </select>
+-->
+                            <select wire:model.debounce.500s="courseEdit" name="courseEdit[]"
+                                    class="form-control mx-1 selectpicker w-100" data-dropup-auto="false"
+                                    data-none-selected-text="{{ __('No course association')}}"
+                                    data-live-search="true" multiple>
+                                @foreach($courseselect as $key => $data)
+                                    <option value={{ $key }}>{{ $data[0] }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div wire:ignore class="form-group col-12 col-md-6 flex-column d-flex">
                             <label class="form-control-label px-1">{{ __("Course manager") }}</label>
                             @foreach($course_responsible as $responsible)
-                                <div class="ed">
+                                <div class="ed mb-1">
                                     {{$responsible['firstName']}} {{$responsible['lastName']}}
                                 </div>
                             @endforeach
@@ -140,7 +150,7 @@
                                                    @endif class="form-control w-100 mx-auto edit"
                                                    id="user-search-text-{{$key}}" type="search"
                                                    wire:model.debounce.100s="presenters.{{$key}}" name="presenters[]"
-                                                   placeholder="Name of presenter" aria-haspopup="true"
+                                                   placeholder="Start typing name or username" aria-haspopup="true"
                                                    autocomplete="off" aria-labelledby="user-search">
                                             <a class="absolute cursor-pointer p-2 top-2 right-2 text-gray-500"
                                                wire:click="remove_presenter({{$key}})">
@@ -159,7 +169,7 @@
                     <div class="row justify-content-between text-left">
                         <!--Video group permission settings-->
                         <div wire:ignore class="form-group col-12 col-md-6 flex-column d-flex">
-                            <label class="form-control-label px-1">{{ __("Playback Group Permissions") }}</label>
+                            <label class="form-control-label px-1">{{ __("Playback group permissions") }}</label>
                             <div id="video_perm">
                                 <select class="form-group form-control" name="video_permission">
                                     @foreach($permissions as $perm)
@@ -172,7 +182,7 @@
                         </div>
                         <!-- Individual permissions -->
                         <div class="form-group col-12 col-md-6 flex-column d-flex">
-                            <label class="form-control-label px-1">{{ __("Playback Individual Permissions") }}
+                            <label class="form-control-label px-1">{{ __("Playback individual permissions") }}
                                 <span type="button" wire:click.prevent="add_individual_perm"
                                       class="badge badge-primary">{{$ipermissions}} {{ __("Set") }} <i
                                             class="fas fa-user-plus"></i></span></label>
@@ -183,12 +193,13 @@
 
                                             <input class="form-control mx-auto perm" id="perm-search-text-{{$key}}"
                                                    type="search" wire:model.debounce.100s="individuals.{{$key}}"
-                                                   name="individual_permissions[]" placeholder="Name of user"
+                                                   name="individual_permissions[]"
+                                                   placeholder="Start typing name or username"
                                                    aria-haspopup="true" autocomplete="off"
                                                    aria-labelledby="perm-search">
                                             @error('individuals.*') <span class="error">{{ $message }}</span> @enderror
 
-                                            <div class="p-2 col-auto">
+                                            <div class="p-1 col-auto">
                                                 <select name="individual_perm_type[]" class="form-control">
                                                     <option value="read"
                                                             @if($individuals_permission[$key] == 'read') selected @endif>
@@ -205,14 +216,9 @@
                                                 </select>
                                             </div>
 
-                                            <a class="absolute cursor-pointer p-2 top-2 right-2 text-gray-500"
+                                            <a class="absolute cursor-pointer p-2 top-2 right-2 text-gray-500 my-auto"
                                                wire:click="remove_user({{$key}})">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" fill="none"
-                                                     viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                          stroke-width="2"
-                                                          d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                                </svg>
+                                                <i class="fas fa-user-minus align-content-center"></i>
                                             </a>
                                         </div>
                                     </div>
@@ -233,27 +239,26 @@
                             <div class="card border-left-info rounded border shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
+                                        <div class="col mr-2 text-center">
                                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                                Stream: {{$loop->index + 1}} ( {{$source->name}} )
+                                                <!-- probably need to switch that logic on renaming a primary stream -->
+                                                Stream {{$loop->index + 1}}
+                                                : @if ($origin == 'cattura' && !in_array($source->name, ['right', 'left', 'main']))
+                                                    Camera @else {{$source->name}} @endif
                                             </div>
-                                            <small>
-                                                <div class="custom-control custom-switch custom-switch-sm d-inline">
-                                                    <input type="checkbox" name="audio"
-                                                           id="audioSwitch{{$loop->index + 1}}"
-                                                           value="{{$loop->index}}" class="custom-control-input"
-                                                           @if($playAudio[$key] == true) checked @endif >
-                                                    <label class="custom-control-label"
-                                                           for="audioSwitch{{$loop->index + 1}}">Audio</label>
-                                                </div>
-                                            </small>
-
-
                                             <img src="{{$poster[$key]}}?{{ rand() }}" width="100%">
                                             {{--}}<input class="form-control form-control-sm" type="file" wire:model="editfile.{{$key}}">{{--}}
                                             @error('editfile.*') <span class="error">{{ $message }}</span> @enderror
                                         </div>
-                                        <div class="col-auto">
+                                    </div>
+                                    <div class="row m-2 d-flex justify-content-center font-1rem line-15rem font-weight-light">
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" name="audio"
+                                                   id="audioSwitch{{$loop->index + 1}}"
+                                                   value="{{$loop->index}}" class="custom-control-input"
+                                                   @if($playAudio[$key] == true) checked @endif >
+                                            <span class="custom-control-label"
+                                                  for="audioSwitch{{$loop->index + 1}}">Audio</span>
                                         </div>
                                     </div>
                                 </div>
@@ -264,7 +269,8 @@
             </div>
 
             <div class="col-sm-12">
-                <button type="submit" class="btn btn-outline-primary mx-auto d-flex">{{ __("Update") }}</button>
+                <button type="submit"
+                        class="btn btn-outline-primary mx-auto d-flex font-125rem m-3">{{ __("Update") }}</button>
             </div>
 
         </div>
@@ -272,6 +278,7 @@
 
     <script>
         $(document).ready(function () {
+            $('.selectpicker').selectpicker('val', {{$courseids}}.map(String));
             if ($("#visabilitySwitch").is(":checked")) {
                 $("#presentation_hidden").hide();
                 $("#presentation").show();
@@ -286,13 +293,15 @@
                 todayHighlight: true
             });
 
+            /*
             $('#select2').select2({
                 theme: "bootstrap",
                 width: "resolve",
             });
-            $('#select2').on('change', function (e) {
-                var item = $('#select2').select2("val");
-            @this.set('courseEdit', item);
+            */
+            $('select[name="courseEdit"]').on('change', function (e) {
+                var item = $(this).val();
+                @this.set('courseEdit', item);
             });
 
         });

@@ -17,6 +17,9 @@
     <!-- Laravel Livewire -->
     @livewireStyles
     @livewireScripts
+    <!-- Bootstrap select -->
+    <script src="{{ asset('bootstrap/select/bootstrap-select.min.js')}}"></script>
+    <link rel="stylesheet" href="{{asset('bootstrap/select/bootstrap-select.min.css')}}" />
     <!-- Select2 -->
     <link href="{{asset('./css/select2/css/select2.min.css')}}" rel="stylesheet" />
     <script src="{{asset('./css/select2/js/select2.min.js')}}"></script>

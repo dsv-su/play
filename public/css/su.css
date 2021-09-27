@@ -5209,10 +5209,6 @@ p.kill-p, .kill-p p {
     /*opacity: 0.9;*/
 }
 
-.video .card-body {
-    padding-bottom: 5px !important;
-}
-
 .video .card-header {
     background: #002f5f url("../images/eld_footer.png") no-repeat center;
     background-size: cover;
@@ -8039,6 +8035,10 @@ p.card-text {
     max-width: 200px;
 }
 
+.w-100 .filter-option-inner-inner {
+    max-width: 100%;
+}
+
 #myTab li {
     max-width: 300px;
 }
@@ -8059,6 +8059,15 @@ p.card-text {
     width:100%!important;
 }
 
-.font-1em {
+.font-1rem {
     font-size: 1rem !important;
+}
+
+.font-125rem {
+    font-size: 1.25rem !important;
+}
+
+.line-15rem {
+    line-height: 1.5rem !important;
+    height: 1.5rem !important;
 }

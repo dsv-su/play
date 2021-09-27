@@ -9,17 +9,17 @@
                 @if($permissions ?? '')
                     @foreach($permissions as $permission)
                         @if($video->id == $permission->video_id && $permission->type == 'private')
-                            <div class="permission"><i class="fas fa-user-lock"></i></div>
+                            <div class="permission" data-toggle="tooltip" title="{{__('Viewing permissions modified')}}"><i class="fas fa-user-lock"></i></div>
                         @endif
                         @if($video->id == $permission->video_id && $permission->type == 'external')
-                            <div class="permission"><i class="fas fa-globe"></i></div>
+                            <div class="permission" data-toggle="tooltip" title="{{__('External access enabled')}}"><i class="fas fa-globe"></i></div>
                         @endif
                     @endforeach
                 @endif
             <!-- end Group Permission -->
                 <!-- Visability -->
                 @if($video->visability == false)
-                    <div class="visability"><i class="far fa-eye-slash"></i></div>
+                    <div class="visability" data-toggle="tooltip" title="{{__('Presentation is hidden')}}"><i class="far fa-eye-slash"></i></div>
                 @endif
             </div>
             @if ($video->visability == false)
@@ -31,7 +31,7 @@
             <p class="p-1"> {{$video->duration}} </p>
         </div>
     </a>
-    <div class="card-body p-1">
+    <div class="card-body p-1 overflow-hidden">
         @if (!$video->video_course->isEmpty())
             <p class="card-text">
                 @foreach($video->video_course as $vc)
@@ -63,7 +63,7 @@
         <div class="d-flex float-right clearfix">
             <div class="dropdown ml-1" data-toggle="tooltip" data-placement="top"
                  title="{{ __("Download presentation") }}">
-                <a class="btn btn-outline-info btn-sm mb-1" href="#" role="button" data-toggle="dropdown"
+                <a class="btn btn-outline-info btn-sm" href="#" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-download"></i>
                 </a>
@@ -90,19 +90,19 @@
             @if (isset($manage) && $manage)
                 <div class="ml-1">
                 <a href="{{route('presentation_edit', $video->id)}}" data-toggle="tooltip"
-                   title="{{ __('Edit Presentation') }}" class="btn btn-outline-primary btn-sm mb-1"><i
+                   title="{{ __('Edit Presentation') }}" class="btn btn-outline-primary btn-sm"><i
                             class="far fa-edit"></i></a>
                 </div>
                 {{--}}
                 <a href="{{route('edit_permission', $video->id)}}" data-toggle="tooltip"
-                   title="{{ __("Change rights for presentation") }}" class="btn btn-outline-secondary btn-sm mb-1"><i
+                   title="{{ __("Change rights for presentation") }}" class="btn btn-outline-secondary btn-sm"><i
                             class="far fa-hand-paper"></i></a>
                 {{--}}
                 <div class="ml-1">
                 <form>
                     <meta name="csrf-token" content="{{ csrf_token() }}">
                     <a href="#" data-toggle="tooltip" title="{{ __("Delete presentation") }}"
-                       class="btn btn-outline-danger btn-sm float-right delete"><i
+                       class="btn btn-outline-danger btn-sm delete"><i
                                 class="far fa-trash-alt"></i></a>
                 </form>
                 </div>
