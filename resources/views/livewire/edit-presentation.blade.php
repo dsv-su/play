@@ -108,7 +108,7 @@
                     <!-- Course and Presenters -->
                     <div class="row justify-content-between text-left">
                         <div wire:ignore class="form-group col-12 col-md-6 flex-column d-flex">
-                            <input type="hidden" name="course" value="{{$courseids}}">
+                            <input type="hidden" name="course" value="{{implode(',',$courseId)}}">
                             <label class="form-control-label px-1">{{ __("Associated course") }}</label>
                         <!--
                             <select wire:model.debounce.500s="courseEdit" name="courseEdit" id="select2">
@@ -129,10 +129,12 @@
                         </div>
                         <div wire:ignore class="form-group col-12 col-md-6 flex-column d-flex">
                             <label class="form-control-label px-1">{{ __("Course manager") }}</label>
-                            @foreach($course_responsible as $responsible)
-                                <div class="ed mb-1">
-                                    {{$responsible['firstName']}} {{$responsible['lastName']}}
-                                </div>
+                            @foreach($course_responsible as $id)
+                                @foreach($id as $responsible)
+                                    <div class="ed mb-1">
+                                        {{$responsible['firstName']}} {{$responsible['lastName']}}
+                                    </div>
+                                @endforeach
                             @endforeach
                         </div>
 
@@ -299,9 +301,9 @@
                 width: "resolve",
             });
             */
-            $('select[name="courseEdit"]').on('change', function (e) {
+            $('select[name="courseEdit[]"]').on('change', function (e) {
                 var item = $(this).val();
-                @this.set('courseEdit', item);
+            @this.set('courseEdit', item);
             });
 
         });

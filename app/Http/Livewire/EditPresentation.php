@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\CourseadminPermission;
 use App\Services\Daisy\DaisyIntegration;
 use Carbon\Carbon;
 use Livewire\Component;
@@ -57,7 +58,7 @@ class EditPresentation extends Component
             $this->course_semester[] = $this->coursedetail->semester;
             $this->course_year[] = $this->coursedetail->year;
             foreach ($this->coursedetail->responsible() as $person) {
-                $this->course_responsible[] = $person;
+                $this->course_responsible[$this->coursedetail->id][] = $person;
             }
         }
 
@@ -100,19 +101,23 @@ class EditPresentation extends Component
 
     public function updatedCourseEdit($value)
     {
-        return true;
+
         $daisy = new DaisyIntegration();
-        $this->course_responsible = $daisy->getDaisyCourseResponsible($value);
+        foreach ($value as $v) {
+            $this->course_responsible[] = $daisy->getDaisyCourseResponsible($v);
+        }
         //This is for retriving the username -> until the endpoint in daisy has been revised
-        foreach ($this->course_responsible as $key => $responsible) {
-            $usernames = $daisy->getDaisyUsername($responsible['id']);
-            foreach ($usernames as $username) {
-                if ($username['realm'] == 'SU.SE') {
-                    $course_resp_username[] = $username['username'];
+        foreach ($this->course_responsible as $courseid => $course_responsible) {
+            foreach ($course_responsible as $key => $responsible) {
+                $usernames = $daisy->getDaisyUsername($responsible['id']);
+                foreach ($usernames as $username) {
+                    if ($username['realm'] == 'SU.SE') {
+                        $course_resp_username[] = $username['username'];
+                    }
                 }
+                $firstnames[] = $responsible['firstName'];
+                $lastnames[] = $responsible['lastName'];
             }
-            $firstnames[] = $responsible['firstName'];
-            $lastnames[] = $responsible['lastName'];
         }
 
         //Update coursePermissions
