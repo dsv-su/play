@@ -108,7 +108,7 @@
                     <!-- Course and Presenters -->
                     <div class="row justify-content-between text-left">
                         <div wire:ignore class="form-group col-12 col-md-6 flex-column d-flex">
-                            <input type="hidden" name="course" value="{{$courseId[0]}}">
+                            <input type="hidden" name="course" value="{{$courseids}}">
                             <label class="form-control-label px-1">{{ __("Associated course") }}</label>
                         <!--
                             <select wire:model.debounce.500s="courseEdit" name="courseEdit" id="select2">
