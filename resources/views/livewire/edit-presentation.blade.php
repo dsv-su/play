@@ -254,8 +254,8 @@
                                                    id="audioSwitch{{$loop->index + 1}}"
                                                    value="{{$loop->index}}" class="custom-control-input"
                                                    @if($playAudio[$key] == true) checked @endif >
-                                            <span class="custom-control-label"
-                                                  for="audioSwitch{{$loop->index + 1}}">Audio</span>
+                                            <label class="custom-control-label"
+                                                  for="audioSwitch{{$loop->index + 1}}">Audio</label>
                                         </div>
                                     </div>
                                 </div>
@@ -326,7 +326,6 @@
             } else {
                 $box.prop("checked", false);
             }
-
         });
     </script>
     <!-- Typeahead.js Bundle -->
