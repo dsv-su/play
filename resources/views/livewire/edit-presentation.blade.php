@@ -10,6 +10,7 @@
             font-weight: 300
         }
     </style>
+
     <div class="container px-1 py-1 mx-auto">
         <div class="w-7/12 mx-2 rounded p-2">
             <div class="row">
@@ -108,7 +109,7 @@
                         </div>
                     </div>
 
-                    <!-- Course and Presenters -->
+                    <!-- Course -->
                     <div class="row justify-content-between text-left">
                         <div wire:ignore class="form-group col-12 col-md-6 flex-column d-flex">
                             <input type="hidden" name="course" value="{{implode(',',$courseId)}}">
@@ -132,11 +133,19 @@
                         </div>
                         <div class="form-group col-12 col-md-6 flex-column d-flex">
                             <label class="form-control-label px-1">{{ __("Course manager(s)") }}</label>
-                            <div class="m-1 my-2 font-1rem">
-                                @foreach($course_responsible as $i=>$id) @foreach($id as $k=>$responsible) <span class="m-1 badge badge-pill badge-light font-1rem">{{$responsible['firstName']}} {{$responsible['lastName']}}</span> @endforeach @endforeach
+                            <div class="mx-1 my-2 font-1rem">
+                                @if (empty($course_responsible))
+                                    {{__('No course manager added')}}
+                                @else
+                                    @foreach($course_responsible as $i=>$id) @foreach($id as $k=>$responsible) <span
+                                            class="m-1 badge badge-pill badge-light font-1rem">{{$responsible['firstName']}} {{$responsible['lastName']}}</span> @endforeach @endforeach
+                                @endif
                             </div>
                         </div>
+                    </div>
 
+                    <!-- Presenters and Tags -->
+                    <div class="row justify-content-between text-left">
                         <div class="form-group col-12 col-md-6 flex-column d-flex">
                             <label class="form-control-label px-1">{{ __("Presenters") }}
                                 <span type="button" wire:click.prevent="newpresenter({{$i}})"
@@ -161,8 +170,19 @@
                                     </div>
                                 @endforeach
                             @else
-                                <div class="m-1">{{ __("No registered presenters") }}</div>
+                                <div class="mx-1 my-2 font-1rem">{{ __("No registered presenters") }}</div>
                             @endif
+                        </div>
+                        <div class="form-group col-12 col-md-6 flex-column d-flex">
+                            <label class="form-control-label px-1">{{ __("Tags") }}</label>
+                            <select wire:model.debounce.100s="courseEdit" name="tags[]"
+                                    class="form-control mx-1 selectpicker w-100" data-dropup-auto="false"
+                                    data-none-selected-text="{{ __('No tags')}}"
+                                    data-live-search="true" multiple>
+                                @foreach($tags as $tag)
+                                    <option value={{ $tag->id }}>{{ $tag->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
 
@@ -224,7 +244,7 @@
                                     </div>
                                 @endforeach
                             @else
-                                <div class="m-1 font-1rem">{{ __("No individual permissions added") }}</div>
+                                <div class="mx-1 my-2 font-1rem">{{ __("No individual permissions added") }}</div>
                             @endif
                         </div>
                         <!-- end Individual permissions -->
@@ -235,7 +255,7 @@
             <div class="col-sm-12">
                 <div class="row">
                     @foreach($sources as $key => $source)
-                        <div class="col-xl-3 col-md-6 my-2">
+                        <div class="col-xl-3 col-sm-6 my-2">
                             <div class="card border-left-info rounded border shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
@@ -258,7 +278,7 @@
                                                    value="{{$loop->index}}" class="custom-control-input"
                                                    @if($playAudio[$key] == true) checked @endif >
                                             <label class="custom-control-label"
-                                                  for="audioSwitch{{$loop->index + 1}}">Audio</label>
+                                                   for="audioSwitch{{$loop->index + 1}}">Audio</label>
                                         </div>
                                     </div>
                                 </div>
@@ -278,7 +298,9 @@
 
     <script>
         $(document).ready(function () {
-            $('.selectpicker').selectpicker('val', {{$courseids}}.map(String));
+            $('.selectpicker[name="courseEdit[]"]').selectpicker('val', {{$courseids}}.map(String));
+            $('.selectpicker[name="tags[]"]').selectpicker('val', {{$tagids}}.map(String));
+
             $('.datepicker').datepicker({
                 language: 'sv',
                 weekStart: 1,

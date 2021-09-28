@@ -20,6 +20,7 @@ class EditPresentation extends Component
     public $courseselect = [];
     public $sukatusers = [];
     public $courseEdit = [];
+    public $tags, $tagids = [];
     public $permissions, $presentationpermissonId, $presentationpermissonScope;
     public $sources = [], $playAudio = [], $poster = [];
     public $ipermissions, $ip;
@@ -64,6 +65,12 @@ class EditPresentation extends Component
         }
 
         $this->courseids = json_encode($this->courseId, JSON_HEX_QUOT);
+
+        foreach ($video->tags() as $tag) {
+            $this->tagids[] = $tag->id;
+        }
+        $this->tagids = json_encode($this->tagids, JSON_HEX_QUOT);
+
         foreach ($courses as $data) {
             $this->courseselect[$data->id] = [$data->designation . ' ' . $data->semester . '' . $data->year . ' (' . $data->name . ')', $data->designation . ' ' . $data->semester . $data->year];
         }

@@ -6,6 +6,7 @@
         'video' => $video,
         'permissions' => $permissions,
         'courses' => $courses,
+        'tags' => $tags,
         'individual_permissions' => $individual_permissions
         ])
     </form>
