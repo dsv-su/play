@@ -27,7 +27,7 @@ class EditPresentation extends Component
     public $i = 0;
     public $suser;
     public $course_responsible = [];
-    public $course_resp_username;
+    public $visability;
 
 
     public function mount($video, $courses, $permissions, $individual_permissions)
@@ -42,6 +42,7 @@ class EditPresentation extends Component
         $this->category = $video->category->category_name;
         $this->sources = $video->streams;
         $this->ipermissions = $individual_permissions->count();
+        $this->visability = (bool) $video->visability;
 
         foreach ($video->presenters() as $this->presenter) {
             if (!$this->presenter->username == null) {
@@ -99,6 +100,12 @@ class EditPresentation extends Component
         return $this->system_config['store']['list_uri'];
     }
 
+    public function visability()
+    {
+        //Toggles the img and presentation_hidden text
+        $this->visability = !$this->visability;
+    }
+
     public function updatedCourseEdit($value)
     {
         $daisy = new DaisyIntegration();
@@ -128,10 +135,12 @@ class EditPresentation extends Component
         CourseadminPermission::where('video_id', $this->video->id)->delete();
 
         //Update CourseadminPersmission with new courseadmins
-        foreach ($course_resp_username as $key => $usrn) {
-            $cperm = CourseadminPermission::updateOrCreate(['video_id' => $this->video->id,
-                'username' => $usrn], ['name' => $firstnames[$key] . ' ' . $lastnames[$key],
-                'permission' => 'delete']);
+        if($course_resp_username ?? '') {
+            foreach ($course_resp_username as $key => $usrn) {
+                $cperm = CourseadminPermission::updateOrCreate(['video_id' => $this->video->id,
+                    'username' => $usrn], ['name' => $firstnames[$key] . ' ' . $lastnames[$key],
+                    'permission' => 'delete']);
+            }
         }
 
     }
