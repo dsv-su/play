@@ -22,13 +22,16 @@
                 <div class="rounded border shadow p-3 my-2">
                     <div class="row justify-content-between text-left">
                         <div class="form-group col-md-6 col-lg-4 mx-auto text-center">
+                            @if($visability)
                             <img id="presentation" src="{{$thumb}}?{{ rand() }}" style="max-width: 300px;"
                                  class="mx-auto w-100">
+                            @endif
                             <div class="d-flex justify-content-center h-100">
+                                @if(!$visability)
                                 <div id="presentation_hidden" class="alert alert-secondary m-auto"
                                      role="alert">{{ __("Presentation hidden") }}</div>
+                                @endif
                             </div>
-
                             {{--}}
                             <div class="rounded border shadow p-3 my-2">
                             @if($editt)
@@ -70,8 +73,8 @@
                                                     class="col-4 col-lg-3 mb-0">{{__('Visibility')}}</label>
                                 <div class="col">
                                        <span class="custom-control custom-switch custom-switch-lg">
-                                        <input class="custom-control-input" id="visabilitySwitch" name="visability"
-                                               type="checkbox" @if($video->visability == true) checked @endif>
+                                        <input wire:click="visability" class="custom-control-input" id="visabilitySwitch" name="visability"
+                                               type="checkbox" @if($visability == true) checked @endif>
                                         <label class="custom-control-label" style="margin-top: 3px;"
                                                for="visabilitySwitch"></label>
                                     </span>
@@ -298,14 +301,6 @@
             $('.selectpicker[name="courseEdit[]"]').selectpicker('val', {{$courseids}}.map(String));
             $('.selectpicker[name="tags[]"]').selectpicker('val', {{$tagids}}.map(String));
 
-            if ($("#visabilitySwitch").is(":checked")) {
-                $("#presentation_hidden").hide();
-                $("#presentation").show();
-            } else {
-                $("#presentation").hide();
-                $("#presentation_hidden").show();
-            }
-
             $('.datepicker').datepicker({
                 language: 'sv',
                 weekStart: 1,
@@ -327,11 +322,6 @@
     </script>
 
     <script>
-        //VisabilitySwitch for toggling the visability of the presentation
-        $("#visabilitySwitch").click(function () {
-            $("#presentation_hidden").toggle();
-            $("#presentation").toggle("slow");
-        });
         // AudioSwitch the selector will match all input controls of type :checkbox
         // and attach a click event handler
         $("input:checkbox").on('click', function () {
