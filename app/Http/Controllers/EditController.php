@@ -67,18 +67,23 @@ class EditController extends Controller
                 }
             }
             //Update group permission for presentation
-            if ($videoPermission = VideoPermission::where('video_id', $video->id)->first()) {
+            if($videoPermission = VideoPermission::where('video_id', $video->id)->first()) {
+                //Exist
                 $videoPermission->permission_id = $request->video_permission;
-                if ($request->video_permission == 1) {
+                if($request->video_permission == 1) {
                     $videoPermission->type = 'public';
-                } else {
+                }
+                elseif($request->video_permission == 4) {
+                    $videoPermission->type = 'external';
+                }
+                else {
                     $videoPermission->type = 'private';
                 }
                 $videoPermission->save();
-
-            } else {
-                //Doesn't exist
-                if ($request->video_permission == 1) {
+            }
+            else {
+                //Doesnt exist
+                if($request->video_permission == 1) {
                     VideoPermission::create([
                         'video_id' => $video->id,
                         'permission_id' => $request->video_permission,
