@@ -173,9 +173,9 @@
                                 <div class="mx-1 my-2 font-1rem">{{ __("No registered presenters") }}</div>
                             @endif
                         </div>
-                        <div class="form-group col-12 col-md-6 flex-column d-flex">
+                        <div wire:ignore class="form-group col-12 col-md-6 flex-column d-flex">
                             <label class="form-control-label px-1">{{ __("Tags") }}</label>
-                            <select wire:model.debounce.100s="courseEdit" name="tags[]"
+                            <select name="tags[]"
                                     class="form-control mx-1 selectpicker w-100" data-dropup-auto="false"
                                     data-none-selected-text="{{ __('No tags')}}"
                                     data-live-search="true" multiple>
