@@ -76,16 +76,16 @@ class EditController extends Controller
             if($videoPermission = VideoPermission::where('video_id', $video->id)->first()) {
                 //Exist
                 if($request->video_permission == 1) {
-                    $videoPermission->permission_id = $request->video_permission;
                     $videoPermission->type = 'public';
-                    $videoPermission->save();
+                }
+                elseif($request->video_permission == 4) {
+                    $videoPermission->type = 'external';
                 }
                 else {
-                    $videoPermission->permission_id = $request->video_permission;
                     $videoPermission->type = 'private';
-                    $videoPermission->save();
                 }
-
+                $videoPermission->permission_id = $request->video_permission;
+                $videoPermission->save();
             }
             else {
                 //Doesnt exist
