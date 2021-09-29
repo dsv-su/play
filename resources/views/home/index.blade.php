@@ -53,7 +53,7 @@
                 <div id="pane-A" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-A">
                     <div class="card-deck inner">
                         @foreach ($my as $video)
-                            <div class="col my-3">
+                            <div class="col my-3 w">
                                 @include('home.video')
                             </div>
                         @endforeach

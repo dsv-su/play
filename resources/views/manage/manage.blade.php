@@ -6,9 +6,6 @@
             @include('layouts.partials.flash-message')
         </div>
         <div class="row no-gutters w-100">
-            <!-- -->
-
-            <!-- -->
             <div class="col-12">
                 @if(app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')
                     <div>
@@ -27,18 +24,18 @@
         <div class="form-row">
             <div class="col-md-4 mb-3">
                 @if(app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')
-                <label for="filter_category">@lang('lang.category'):</label>
+                    <label for="filter_category">@lang('lang.category'):</label>
                 @else
-                <label for="filter_category">@lang('lang.category'):</label>
-                @endif
-                <!-- Filtering -->
+                    <label for="filter_category">@lang('lang.category'):</label>
+            @endif
+            <!-- Filtering -->
                 <select class="custom-select" name="filter_category" id="filter_category">
                     <option value="0" @if(!app('request')->input('category')) selected @endif
                     @if(app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')
                         >{{ __("Choose category") }}
-                    @else
-                        >{{ __("Choose category") }}
-                    @endif
+                        @else
+                            >{{ __("Choose category") }}
+                        @endif
                     </option>
                     @foreach($categories as $category)
                         <option value="{{$category->id}}"
@@ -48,18 +45,18 @@
             </div>
             <div class="col-md-4 mb-3">
                 @if(app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')
-                <label for="filter_course">@lang('lang.course'):</label>
+                    <label for="filter_course">@lang('lang.course'):</label>
                 @else
-                <label for="filter_course">@lang('lang.course'):</label>
-                @endif
-                <!-- Filtering -->
+                    <label for="filter_course">@lang('lang.course'):</label>
+            @endif
+            <!-- Filtering -->
                 <select class="custom-select" name="filter_course" id="filter_course">
                     <option value="0" @if(!app('request')->input('course')) selected @endif
                     @if(app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')
-                    >{{ __("Choose course") }}
-                    @else
-                    >{{ __("Choose course") }}
-                    @endif
+                        >{{ __("Choose course") }}
+                        @else
+                            >{{ __("Choose course") }}
+                        @endif
                     </option>
                     @foreach($allcourses as $course)
                         <option value="{{$course->id}}"
@@ -79,7 +76,7 @@
                 @if(app('request')->input('category') && $video->category_id != app('request')->input('category'))
                     @continue
                 @endif
-                    @include('manage.manage_video')
+                @include('manage.manage_video')
             @endforeach
             <div class="col">
                 <div class="card video my-0 mx-auto border-0"></div>

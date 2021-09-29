@@ -85,7 +85,7 @@ class SearchController extends Controller
     public function getVideos($q)
     {
         if ($q) {
-            return Video::with('video_course.course', 'video_presenter.presenter', 'video_tag.tag')
+            $videos = Video::with('video_course.course', 'video_presenter.presenter', 'video_tag.tag')
                 ->whereHas('video_presenter.presenter', function ($query) use ($q) {
                     return $query->where('username', 'LIKE', "%$q%")->orWhere('name', 'LIKE', "%$q%");
                 })
@@ -98,6 +98,9 @@ class SearchController extends Controller
                 })
                 ->orderBy('creation', 'desc')
                 ->get();
+            return $videos->filter(function ($video) {
+                return $video->visible() == true;
+            });
         } else {
             if (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
                 //If user is uploader or staff
@@ -109,7 +112,6 @@ class SearchController extends Controller
                 $individual_videos = IndividualPermission::where('username', app()->make('play_username'))->where('permission', 'edit')->orWhere('permission', 'delete')->pluck('video_id');
 
                 return Video::whereIn('id', $user_videos)->orWhereIn('id', $individual_videos)->orWhereIn('id', $courseadministrator)->with('category', 'video_course.course')->latest('creation')->get();
-
             } elseif (app()->make('play_role') == 'Administrator') {
                 //If user is Administrator
                 return Cache::remember('videos', $seconds = 180, function () {
@@ -160,7 +162,9 @@ class SearchController extends Controller
     public function showCourseVideos($courseid)
     {
         $data['course'] = Course::find($courseid);
-        $data['latest'] = Course::find($courseid)->videos();
+        $data['latest'] = Course::find($courseid)->videos()->filter(function ($video) {
+            return $video->visible();
+        });
 
         return view('home.index', $data);
     }
@@ -168,7 +172,9 @@ class SearchController extends Controller
     public function showTagVideos($tag)
     {
         $data['tag'] = $tag;
-        $data['latest'] = Tag::where('name', $tag)->first()->videos();
+        $data['latest'] = Tag::where('name', $tag)->first()->videos()->filter(function ($video) {
+            return $video->visible();
+        });
         $data['terms'] = $this->extractTerms($data['latest']);
         $data['courses'] = $this->extractCourses($data['latest']);
         $data['presenters'] = $this->extractPresenters($data['latest']);
@@ -180,7 +186,9 @@ class SearchController extends Controller
     {
         $presenter = Presenter::where('username', $username)->first();
         $data['presenter'] = $presenter->name;
-        $data['latest'] = $presenter->videos();
+        $data['latest'] = $presenter->videos()->filter(function ($video) {
+            return $video->visible();
+        });
         $data['terms'] = $this->extractTerms($data['latest']);
         $data['courses'] = $this->extractCourses($data['latest']);
         $data['tags'] = $this->extractTags($data['latest']);

@@ -161,4 +161,25 @@ class Video extends Model implements Searchable
 
         return $this->system_config['store']['list_uri'];
     }
+
+    public function editable() {
+        if (app()->make('play_role') == 'Administrator') {
+            return true;
+        }
+        foreach ($this->coursepermissions() as $coursepermission) {
+            if ($coursepermission->username == app()->make('play_username')) {
+                return true;
+            }
+        }
+        foreach ($this->ipermissions() as $ipermission) {
+            if ($ipermission->username == app()->make('play_username') &&
+                in_array($ipermission->permission, ['delete', 'edit'])) {
+                return true;
+            }
+        }
+    }
+
+    public function visible() {
+        return $this->visability || $this->editable();
+    }
 }

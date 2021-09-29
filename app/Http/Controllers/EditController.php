@@ -49,16 +49,17 @@ class EditController extends Controller
                     if ($username == null) {
                         $presenter = Presenter::firstOrCreate([
                             'username' => $username,
-                            'name' => $name,
                             'description' => 'external'
                         ]);
                     } else {
                         $presenter = Presenter::firstOrCreate([
                             'username' => $username,
-                            'name' => $name,
                             'description' => 'sukat'
                         ]);
                     }
+                    // People sometimes change names and we don't want duplicate presenters
+                    $presenter->name = $name;
+                    $presenter->save();
 
                     $videoPresenter = VideoPresenter::create([
                         'video_id' => $video->id,
