@@ -118,7 +118,8 @@ class MultiplayerController extends Controller
     public function multiplayer()
     {
         //Device detection
-        abort_if(Browser::isMac() && Browser::isMobile(), 412, 'Sorry, no support for IOS Devices');
+        //Uncomment to restrict access to ios devices
+        //abort_if(Browser::isMac() && Browser::isMobile(), 412, 'Sorry, no support for IOS Devices');
 
         return view('player.index');
     }
