@@ -134,20 +134,19 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="staticLink">{{__('Presentation permalink')}}</label>
-                    <input type="text" readonly class="form-control" id="staticLink"
-                           value="{{ route('player', ['video' => $video]) }}">
-                    <small id="staticLinkHelp" class="form-text text-muted">Direct link to this video</small>
+                    <label for="staticLink">{{__('Direct link')}}</label>
+                    <textarea readonly class="form-control" id="staticLink"
+                              value="">{{ route('player', ['video' => $video]) }}</textarea>
+                    <small id="staticLinkHelp" class="form-text text-muted">Permalink to this video</small>
                 </div>
                 <div class="form-group">
                     <label for="embedCode">{{__('Embed code')}}</label>
-                    <textarea readonly class="form-control text-muted" rows="3" id="embedCode"><iframe width="560" height="315" src="{{ route('player', ['video' => $video]) }}" frameborder="0" allowfullscreen></iframe></textarea>
+                    <textarea readonly class="form-control text-muted" rows="4" id="embedCode"><iframe width="560" height="315" src="{{ route('player', ['video' => $video]) }}" frameborder="0" allowfullscreen></iframe></textarea>
                     <small id="embbedCodeHelp" class="form-text text-muted">Use this embed code to insert the video in e.g. iLearn</small>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
             </div>
         </div>
     </div>

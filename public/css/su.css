@@ -8071,3 +8071,7 @@ p.card-text {
     line-height: 1.5rem !important;
     height: 1.5rem !important;
 }
+
+textarea#embedCode, textarea#staticLink {
+    resize: none;
+}
