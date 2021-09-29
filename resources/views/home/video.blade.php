@@ -1,6 +1,6 @@
 <!-- Video - child view - will inherit all data available in the parent view-->
 <div class="card video m-auto" @if (isset($manage) && $manage) id="{{$video->id}}" @endif>
-    <a href="{{ route('player', ['video' => $video]) }}">
+    @if ($video->visability) <a href="{{ route('player', ['video' => $video]) }}"> @endif
         <div class="card-header position-relative"
              style="background-image: @if ($video->visability == false) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); height:200px;">
             <div class="title">{{ $video->title }}</div>
@@ -9,17 +9,20 @@
                 @if($permissions ?? '')
                     @foreach($permissions as $permission)
                         @if($video->id == $permission->video_id && $permission->type == 'private')
-                            <div class="permission" data-toggle="tooltip" title="{{__('Viewing permissions modified')}}"><i class="fas fa-user-lock"></i></div>
+                            <div class="permission" data-toggle="tooltip"
+                                 title="{{__('Viewing permissions modified')}}"><i class="fas fa-user-lock"></i></div>
                         @endif
                         @if($video->id == $permission->video_id && $permission->type == 'external')
-                            <div class="permission" data-toggle="tooltip" title="{{__('External access enabled')}}"><i class="fas fa-globe"></i></div>
+                            <div class="permission" data-toggle="tooltip" title="{{__('External access enabled')}}"><i
+                                        class="fas fa-globe"></i></div>
                         @endif
                     @endforeach
                 @endif
             <!-- end Group Permission -->
                 <!-- Visability -->
                 @if($video->visability == false)
-                    <div class="visability" data-toggle="tooltip" title="{{__('Presentation is hidden')}}"><i class="far fa-eye-slash"></i></div>
+                    <div class="visability" data-toggle="tooltip" title="{{__('Presentation is hidden')}}"><i
+                                class="far fa-eye-slash"></i></div>
                 @endif
             </div>
             @if ($video->visability == false)
@@ -30,7 +33,7 @@
             @endif
             <p class="p-1"> {{$video->duration}} </p>
         </div>
-    </a>
+        @if ($video->visability)  </a> @endif
     <div class="card-body p-1 overflow-hidden">
         @if (!$video->video_course->isEmpty())
             <p class="card-text">
@@ -40,12 +43,14 @@
                 @endforeach
             </p>
         @endif
-        @if(!$video->category->category_name == 'Okategoriserad') <!-- For now hide category -->
+    <!-- We don't need categories
+        @if(!$video->category->category_name == 'Okategoriserad')
         <button id="presenter_btn" class="transparent_btn presenter_btn"><i class="far fa-user"></i></button>
         <p class="card-text">
             <span class="badge badge-light">{{$video->category->category_name}}</span>
         </p>
         @endif
+            -->
         @if (!$video->presenters()->isEmpty())
             <p class="card-text">
                 @foreach($video->presenters() as $presenter)
@@ -61,9 +66,14 @@
             </p>
         @endif
         <div class="d-flex float-right clearfix">
+            <div class="ml-1" data-toggle="tooltip" title="{{__('Share presentation')}}">
+                <a href="#" data-toggle="modal" data-target="#shareModal{{$video->id}}"
+                   title="{{ __('Share presentation') }}" class="btn btn-outline-secondary btn-sm"><i
+                            class="fas fa-external-link-alt"></i></a>
+            </div>
             <div class="dropdown ml-1" data-toggle="tooltip" data-placement="top"
                  title="{{ __("Download presentation") }}">
-                <a class="btn btn-outline-info btn-sm" href="#" role="button" data-toggle="dropdown"
+                <a class="btn btn-outline-success btn-sm" href="#" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-download"></i>
                 </a>
@@ -89,9 +99,9 @@
             </div>
             @if (isset($manage) && $manage)
                 <div class="ml-1">
-                <a href="{{route('presentation_edit', $video->id)}}" data-toggle="tooltip"
-                   title="{{ __('Edit Presentation') }}" class="btn btn-outline-primary btn-sm"><i
-                            class="far fa-edit"></i></a>
+                    <a href="{{route('presentation_edit', $video->id)}}" data-toggle="tooltip"
+                       title="{{ __('Edit presentation') }}" class="btn btn-outline-info btn-sm"><i
+                                class="far fa-edit"></i></a>
                 </div>
                 {{--}}
                 <a href="{{route('edit_permission', $video->id)}}" data-toggle="tooltip"
@@ -99,15 +109,46 @@
                             class="far fa-hand-paper"></i></a>
                 {{--}}
                 <div class="ml-1">
-                <form>
-                    <meta name="csrf-token" content="{{ csrf_token() }}">
-                    <a href="#" data-toggle="tooltip" title="{{ __("Delete presentation") }}"
-                       class="btn btn-outline-danger btn-sm delete"><i
-                                class="far fa-trash-alt"></i></a>
-                </form>
+                    <form>
+                        <meta name="csrf-token" content="{{ csrf_token() }}">
+                        <a href="#" data-toggle="tooltip" title="{{ __("Delete presentation") }}"
+                           class="btn btn-outline-danger btn-sm delete"><i
+                                    class="far fa-trash-alt"></i></a>
+                    </form>
                 </div>
             @endif
         </div>
         <p class="m-0"><small>{{$video->id}}</small></p>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="shareModal{{$video->id}}" tabindex="-1" role="dialog" aria-labelledby="shareModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="shareModalLabel">{{__("Share a presentation")}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="staticLink">{{__('Presentation permalink')}}</label>
+                    <input type="text" readonly class="form-control" id="staticLink"
+                           value="{{ route('player', ['video' => $video]) }}">
+                    <small id="staticLinkHelp" class="form-text text-muted">Direct link to this video</small>
+                </div>
+                <div class="form-group">
+                    <label for="embedCode">{{__('Embed code')}}</label>
+                    <textarea readonly class="form-control text-muted" rows="3" id="embedCode"><iframe width="560" height="315" src="{{ route('player', ['video' => $video]) }}" frameborder="0" allowfullscreen></iframe></textarea>
+                    <small id="embbedCodeHelp" class="form-text text-muted">Use this embed code to insert the video in e.g. iLearn</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
     </div>
 </div>

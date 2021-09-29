@@ -452,7 +452,7 @@ button:focus {
 }
 
 .modal {
-    background-image: linear-gradient(rgba(104,199,255,1) 0%, rgba(255,255,255,1) 90%)
+   /* background-image: linear-gradient(rgba(104,199,255,1) 0%, rgba(255,255,255,1) 90%) */
 }
 
 .counter {
