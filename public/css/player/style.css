@@ -338,6 +338,16 @@ body {
     overflow-y: hidden;
 }
 
+/** ios fix **/
+
+::-webkit-media-controls {
+    display:none !important;
+}
+
+video::-webkit-media-controls-enclosure {
+    display: none !important;
+}
+
 /** element showing **/
 
 #about.expand {
