@@ -339,13 +339,13 @@ body {
 }
 
 /** ios fix **/
-video::-webkit-media-controls {
+
+::-webkit-media-controls {
     display:none !important;
 }
 
-*::-webkit-media-controls {
-    display: none!important;
-    -webkit-appearance: none;
+video::-webkit-media-controls-enclosure {
+    display: none !important;
 }
 
 /** element showing **/
