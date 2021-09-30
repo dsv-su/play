@@ -90,7 +90,7 @@
                     <label class="blue-text form-control-label px-1">{{ __("Presentation") }}</label>
                     <p>{{ __("Title of the presentation and the date of recording.") }}</p>
                 -->
-                    <!-- Title and Date-->
+                    <!-- Title -->
                     <div class="row justify-content-between text-left">
                         <div class="form-group col-12 col-md-6 flex-column d-flex"><label
                                     class="form-control-label px-1">{{ __("Title") }}<span class="text-danger"> *</span></label>
@@ -106,6 +106,14 @@
                                    autocomplete="off" data-provide="datepicker" data-date-autoclose="true"
                                    data-date-today-highlight="true" style="max-width: 115px;">
                             <div><small class="text-danger">{{ $errors->first('created') }}</small></div>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="row justify-content-between text-left">
+                        <div class="form-group col-12 col-md-6 flex-column d-flex"><label
+                                    class="form-control-label px-1">{{ __("Description") }}</label>
+                            <textarea id="description" wire:model="description" name="description"></textarea>
                         </div>
                     </div>
 
@@ -299,6 +307,7 @@
     <script>
         $(document).ready(function () {
             $('.selectpicker[name="courseEdit[]"]').selectpicker('val', {{$courseids}}.map(String));
+            @this.set('courseEdit', {{$courseids}}.map(String));
             $('.selectpicker[name="tags[]"]').selectpicker('val', {{$tagids}}.map(String));
 
             $('.datepicker').datepicker({

@@ -109,7 +109,10 @@
                 @endif
             @endif
         </div>
-        <p class="m-0"><small>{{$video->id}}</small></p>
+        @if ($video->description)
+            <p class="m-1 line-1rem text-shrink"><small>{{$video->description}}</small></p>
+        @endif
+        <!-- <p class="m-0"><small>{{$video->id}}</small></p> -->
     </div>
 </div>
 <!-- Modal -->

@@ -5209,6 +5209,12 @@ p.kill-p, .kill-p p {
     /*opacity: 0.9;*/
 }
 
+.video:hover p {
+    overflow: auto;
+    text-overflow: initial;
+    display: block;
+}
+
 .video .card-header {
     background: #002f5f url("../images/eld_footer.png") no-repeat center;
     background-size: cover;
@@ -8070,6 +8076,19 @@ p.card-text {
 .line-15rem {
     line-height: 1.5rem !important;
     height: 1.5rem !important;
+}
+
+.line-1rem {
+    line-height: 1rem !important;
+}
+
+.text-shrink {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* number of lines to show */
+    -webkit-box-orient: vertical;
+    white-space: pre-wrap;
 }
 
 textarea#embedCode, textarea#staticLink {

@@ -21,7 +21,7 @@ class Video extends Model implements Searchable
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected $fillable = ['presentation_id', 'title', 'thumb','creation','origin','notification_id', 'presenter', 'duration', 'thumb', 'category_id'];
+    protected $fillable = ['presentation_id', 'title', 'thumb','creation','origin','notification_id', 'presenter', 'duration', 'thumb', 'category_id', 'description'];
     protected $table = 'videos';
 
     //

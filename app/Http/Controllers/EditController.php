@@ -34,6 +34,7 @@ class EditController extends Controller
         if ($request->isMethod('post')) {
             //Video attributes
             $video->title = $request->title;
+            $video->description = $request->description;
             $video->creation = strtotime($request->date);
             $video->save();
 
@@ -122,6 +123,7 @@ class EditController extends Controller
 
             //Update course
             VideoCourse::where(['video_id' => $video->id])->delete();
+           // dd($request->courseEdit);
             if (!$request->courseEdit == null) {
                 foreach ($request->courseEdit as $courseid) {
                     VideoCourse::updateOrCreate(['video_id' => $video->id, 'course_id' => $courseid]);

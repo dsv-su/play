@@ -12,7 +12,7 @@ class EditPresentation extends Component
     //use WithFileUploads;
 
     public $video;
-    public $title, $thumb, $created, $date, $origin, $duration, $category;
+    public $title, $thumb, $created, $date, $origin, $duration, $category, $description;
     public $presenters = [], $presenters_uid = [];
     public $course = [], $coursedetail = [], $course_semester = [], $course_year = [], $courseId = [];
     public $courseids;
@@ -38,6 +38,7 @@ class EditPresentation extends Component
         $this->thumb = $video->thumb;
         $this->origin = $video->origin;
         $this->duration = $video->duration;
+        $this->description = $video->description;
         $this->date = $this->getDateAttribute($video->creation);
         $this->permissions = $permissions;
         $this->category = $video->category->category_name;
