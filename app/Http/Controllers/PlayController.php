@@ -102,7 +102,6 @@ class PlayController extends Controller
                 return $query->whereIn('course_id', $daisy->getActiveCourses());
             })->get();
             $data['latest'] = Video::with('category', 'video_course.course')->where('visability', true)->latest('creation')->get();
-
         } else {
             //If user is Admin
             $data['search'] = 0;
@@ -112,6 +111,11 @@ class PlayController extends Controller
                 return $query->whereIn('course_id', $daisy->getActiveCourses());
             })->get();
             $data['latest'] = Video::with('category', 'video_course.course')->latest('creation')->get();
+
+            if (app()->make('play_role') != 'Administrator') {
+                $data['active'] = $data['active']->filter(function ($video) {return $video->visability;});
+                $data['latest'] = $data['latest']->filter(function ($video) {return $video->visability;});
+            }
         }
 
 

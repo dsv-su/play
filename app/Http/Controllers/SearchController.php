@@ -110,8 +110,7 @@ class SearchController extends Controller
                 $courseadministrator = CourseadminPermission::where('username', app()->make('play_username'))->where('permission', 'delete')->pluck('video_id');
                 //Check for individual permissions settings
                 $individual_videos = IndividualPermission::where('username', app()->make('play_username'))->where('permission', 'edit')->orWhere('permission', 'delete')->pluck('video_id');
-
-                return Video::whereIn('id', $user_videos)->orWhereIn('id', $individual_videos)->orWhereIn('id', $courseadministrator)->with('category', 'video_course.course')->latest('creation')->get();
+                return Video::whereIn('id', $user_videos)->orWhereIn('id', $individual_videos)->orWhereIn('id', $courseadministrator)->latest('creation')->get();
             } elseif (app()->make('play_role') == 'Administrator') {
                 //If user is Administrator
                 return Cache::remember('videos', $seconds = 180, function () {

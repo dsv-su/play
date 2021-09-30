@@ -43,14 +43,6 @@
                 @endforeach
             </p>
         @endif
-    <!-- We don't need categories
-        @if(!$video->category->category_name == 'Okategoriserad')
-        <button id="presenter_btn" class="transparent_btn presenter_btn"><i class="far fa-user"></i></button>
-        <p class="card-text">
-            <span class="badge badge-light">{{$video->category->category_name}}</span>
-        </p>
-        @endif
-            -->
         @if (!$video->presenters()->isEmpty())
             <p class="card-text">
                 @foreach($video->presenters() as $presenter)
@@ -98,24 +90,23 @@
                 </div>
             </div>
             @if (isset($manage) && $manage)
-                <div class="ml-1">
-                    <a href="{{route('presentation_edit', $video->id)}}" data-toggle="tooltip"
-                       title="{{ __('Edit presentation') }}" class="btn btn-outline-info btn-sm"><i
-                                class="far fa-edit"></i></a>
-                </div>
-                {{--}}
-                <a href="{{route('edit_permission', $video->id)}}" data-toggle="tooltip"
-                   title="{{ __("Change rights for presentation") }}" class="btn btn-outline-secondary btn-sm"><i
-                            class="far fa-hand-paper"></i></a>
-                {{--}}
-                <div class="ml-1">
-                    <form>
-                        <meta name="csrf-token" content="{{ csrf_token() }}">
-                        <a href="#" data-toggle="tooltip" title="{{ __("Delete presentation") }}"
-                           class="btn btn-outline-danger btn-sm delete"><i
-                                    class="far fa-trash-alt"></i></a>
-                    </form>
-                </div>
+                @if ($video->editable())
+                    <div class="ml-1">
+                        <a href="{{route('presentation_edit', $video->id)}}" data-toggle="tooltip"
+                           title="{{ __('Edit presentation') }}" class="btn btn-outline-info btn-sm"><i
+                                    class="far fa-edit"></i></a>
+                    </div>
+                @endif
+                @if ($video->deletable())
+                    <div class="ml-1">
+                        <form>
+                            <meta name="csrf-token" content="{{ csrf_token() }}">
+                            <a href="#" data-toggle="tooltip" title="{{ __("Delete presentation") }}"
+                               class="btn btn-outline-danger btn-sm delete"><i
+                                        class="far fa-trash-alt"></i></a>
+                        </form>
+                    </div>
+                @endif
             @endif
         </div>
         <p class="m-0"><small>{{$video->id}}</small></p>
@@ -142,7 +133,8 @@
                 <div class="form-group">
                     <label for="embedCode">{{__('Embed code')}}</label>
                     <textarea readonly class="form-control text-muted" rows="4" id="embedCode"><iframe width="560" height="315" src="{{ route('player', ['video' => $video]) }}" frameborder="0" allowfullscreen></iframe></textarea>
-                    <small id="embbedCodeHelp" class="form-text text-muted">Use this embed code to insert the video in e.g. iLearn</small>
+                    <small id="embbedCodeHelp" class="form-text text-muted">Use this embed code to insert the video in
+                        e.g. iLearn</small>
                 </div>
             </div>
             <div class="modal-footer">

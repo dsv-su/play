@@ -163,20 +163,15 @@ class Video extends Model implements Searchable
     }
 
     public function editable() {
-        if (app()->make('play_role') == 'Administrator') {
-            return true;
-        }
-        foreach ($this->coursepermissions() as $coursepermission) {
-            if ($coursepermission->username == app()->make('play_username')) {
-                return true;
-            }
-        }
-        foreach ($this->ipermissions() as $ipermission) {
-            if ($ipermission->username == app()->make('play_username') &&
-                in_array($ipermission->permission, ['delete', 'edit'])) {
-                return true;
-            }
-        }
+        return app()->make('play_role') == 'Administrator' ||
+            CourseadminPermission::where('username', app()->make('play_username'))->where('video_id', $this->id)->exists() ||
+            IndividualPermission::where('username', app()->make('play_username'))->where('permission', 'edit')->exists();
+    }
+
+    public function deletable() {
+        return app()->make('play_role') == 'Administrator' ||
+            CourseadminPermission::where('username', app()->make('play_username'))->where('video_id', $this->id)->exists() ||
+            IndividualPermission::where('username', app()->make('play_username'))->where('permission', 'delete')->exists();
     }
 
     public function visible() {
