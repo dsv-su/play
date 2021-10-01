@@ -9,11 +9,11 @@
                 @if($permissions ?? '')
                     @foreach($permissions as $permission)
                         @if($video->id == $permission->video_id && $permission->type == 'private')
-                            <div class="permission" data-toggle="tooltip"
+                            <div class="permission mx-1" data-toggle="tooltip"
                                  title="{{__('Viewing permissions modified')}}"><i class="fas fa-user-lock"></i></div>
                         @endif
                         @if($video->id == $permission->video_id && $permission->type == 'external')
-                            <div class="permission" data-toggle="tooltip" title="{{__('External access enabled')}}"><i
+                            <div class="permission mx-1" data-toggle="tooltip" title="{{__('External access enabled')}}"><i
                                         class="fas fa-globe"></i></div>
                         @endif
                     @endforeach
@@ -21,7 +21,7 @@
             <!-- end Group Permission -->
                 <!-- Visability -->
                 @if($video->visability == false)
-                    <div class="visability" data-toggle="tooltip" title="{{__('Presentation is hidden')}}"><i
+                    <div class="visability mx-1" data-toggle="tooltip" title="{{__('Presentation is hidden')}}"><i
                                 class="far fa-eye-slash"></i></div>
                 @endif
             </div>
@@ -35,6 +35,7 @@
         </div>
         @if ($video->visability)  </a> @endif
     <div class="card-body p-1 overflow-hidden">
+    <!-- While testing we need id -->
         @if (!$video->video_course->isEmpty())
             <p class="card-text">
                 @foreach($video->video_course as $vc)
@@ -112,7 +113,9 @@
         @if ($video->description)
             <p class="m-1 line-1rem text-shrink"><small>{{$video->description}}</small></p>
         @endif
-        <!-- <p class="m-0"><small>{{$video->id}}</small></p> -->
+        @if (!App::environment('production'))
+            <p class="mx-1 my-0"><small>id: {{$video->id}}</small></p>
+        @endif
     </div>
 </div>
 <!-- Modal -->

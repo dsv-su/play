@@ -5229,7 +5229,7 @@ p.kill-p, .kill-p p {
     background-color: var(--light);
     border-top-left-radius: 2px;
     color: #002f5f;
-    /*opacity: 0.85;*/
+    opacity: 0.75;
     transition: var(--ease);
     font-family: "TheSansC5-SemiBoldWeb", serif;
 }
@@ -5239,13 +5239,14 @@ p.kill-p, .kill-p p {
 }
 
 .video .card-header .icons {
+    margin-bottom: -1px;
     position: absolute;
-    top: 0;
+    bottom: 0;
     right: 0;
     background-color: var(--light);
     color: var(--red);
     transition: var(--ease);
-    border-top-right-radius: 2px !important;
+   /* border-bottom-right-radius: 2px !important;*/
     font-family: "TheSansC5-SemiBoldWeb", serif;
 }
 
@@ -5263,10 +5264,6 @@ p.kill-p, .kill-p p {
 
 .video a:hover {
     text-decoration: none;
-}
-
-.video .card-header {
-    /*border-bottom: 0px;*/
 }
 
 .video .card-header p {
