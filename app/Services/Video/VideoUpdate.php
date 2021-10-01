@@ -23,6 +23,7 @@ class VideoUpdate extends Model
         $this->video->notification_id = $this->request->notification_id;
         $this->video->creation = $this->request->creation;
         $this->video->title = $this->request->title;
+        $this->video->description = $this->request->description;
         $this->video->thumb = $this->request->thumb;
         $this->video->duration = Carbon::parse($this->request->duration);
         $this->video->subtitles = $this->request->subtitles;
