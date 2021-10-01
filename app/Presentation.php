@@ -12,7 +12,7 @@ class Presentation extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected $fillable = ['presentation_id', 'local','base','status', 'resolution', 'title','creation', 'presenters', 'courses', 'tags', 'thumb','permission', 'entitlement', 'sources'];
+    protected $fillable = ['presentation_id', 'local','base','status', 'resolution', 'title','creation', 'presenters', 'courses', 'tags', 'thumb','permission', 'entitlement', 'sources', 'description'];
 
     protected $casts = [
         'presenters' => 'array',

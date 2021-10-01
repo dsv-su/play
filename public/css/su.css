@@ -5229,7 +5229,7 @@ p.kill-p, .kill-p p {
     background-color: var(--light);
     border-top-left-radius: 2px;
     color: #002f5f;
-    opacity: 0.75;
+    opacity: 0.85;
     transition: var(--ease);
     font-family: "TheSansC5-SemiBoldWeb", serif;
 }

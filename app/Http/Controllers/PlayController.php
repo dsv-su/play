@@ -553,10 +553,11 @@ class PlayController extends Controller
 
     /**
      * @param $type
-     * @param $foldername
      * @param $folderid
+     * @param null $designation
+     * @param null $start
+     * @param null $end
      * @return bool
-     * @throws Exception
      */
     public
     function processDownload($type, $folderid, $designation = null, $start = null, $end = null): bool
@@ -682,6 +683,7 @@ class PlayController extends Controller
                     //$p = MediasitePresentation::where('mediasite_id', $presentationid)->first();
                     $presentation->status = 'request download';
                     $presentation->title = $metadata['title'];
+                    $presentation->description = $metadata['description'];
                     $presentation->presenters = $metadata['presenters'] ?? [];
                     $presentation->tags = $metadata['tags'] ?? [];
                     //$p->description = $metadata['description'];
@@ -710,12 +712,8 @@ class PlayController extends Controller
                         }
                     }
 
-                    // dd($presentation);
-
                     $notify = new PlayStoreNotify($presentation);
                     $notify->sendSuccess('mediasite');
-
-                    //return true;
                 } catch (GuzzleException $e) {
                     report($e);
                 }

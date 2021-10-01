@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ManualPresentation extends Model
 {
     use HasFactory;
-    protected $fillable = ['status', 'user','base','title','creation', 'presenters', 'courses', 'tags', 'thumb','permission', 'entitlement', 'sources'];
+    protected $fillable = ['status', 'user','base','title','creation', 'presenters', 'courses', 'tags', 'thumb','permission', 'entitlement', 'sources', 'description'];
 
     protected $casts = [
         'presenters' => 'array',

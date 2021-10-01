@@ -150,7 +150,6 @@ function loadStreams(presentation, mainstream, defaultres) {
     }
     mainstream.muted = !main.playAudio
     mainstream.poster = main.poster
-    mainstream.setAttribute('playsinline', '1')
     mainstream.load()
     mainstream.preload = 'auto'
     for (var i = 1; i < streamlist.length; i++) {
@@ -167,7 +166,6 @@ function loadStreams(presentation, mainstream, defaultres) {
         }
         video.muted = !streamlist[i].playAudio
         video.poster = streamlist[i].poster
-        video.setAttribute('playsinline', '1')
         video.load()
         video.preload = 'auto'
         mainparent.parentNode.insertBefore(newstream, mainparent.nextSibling)
