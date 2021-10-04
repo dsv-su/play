@@ -5,7 +5,6 @@
     <meta name="viewport" content="initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" href="{{ asset('./css/player/favicon.ico') }}">
-    <link rel="stylesheet" href="{{ asset('./css/player/range-style.css?a') }}">
     <link rel="stylesheet" href="{{ asset('./css/player/style.css?a')}}">
     <title></title>
     <script src="{{asset('./js/player.js')}}" defer></script>
@@ -13,7 +12,7 @@
 <body>
 <div id="wrapper">
     <div class="stream main">
-        <video></video>
+        <video playsinline="1" preload="auto"></video>
         <svg class="fade">
             <use href="#play-icon"></use>
             <use href="#pause-icon" class="hidden"></use>
@@ -125,7 +124,7 @@
 </div>
 <template id="stream-template">
     <div class="stream secondary">
-        <video></video>
+        <video playsinline="1" preload="auto"></video>
         <svg class="fade">
             <use href="#switch-icon"></use>
         </svg>

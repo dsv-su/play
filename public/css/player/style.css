@@ -1,6 +1,8 @@
 
 /* global settings */
 
+@import 'range-style.css';
+
 :root {
     --background: black;
     --background-other: #1c1c1c;
@@ -336,16 +338,6 @@ body {
 .nocursor #about {
     max-height: 0;
     overflow-y: hidden;
-}
-
-/** ios fix **/
-
-::-webkit-media-controls {
-    display:none !important;
-}
-
-video::-webkit-media-controls-enclosure {
-    display: none !important;
 }
 
 /** element showing **/

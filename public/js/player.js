@@ -151,7 +151,6 @@ function loadStreams(presentation, mainstream, defaultres) {
     mainstream.muted = !main.playAudio
     mainstream.poster = main.poster
     mainstream.load()
-    mainstream.preload = 'auto'
     for (var i = 1; i < streamlist.length; i++) {
         var newstream = template.content.cloneNode(true)
         var video = newstream.querySelector('video')
@@ -167,7 +166,6 @@ function loadStreams(presentation, mainstream, defaultres) {
         video.muted = !streamlist[i].playAudio
         video.poster = streamlist[i].poster
         video.load()
-        video.preload = 'auto'
         mainparent.parentNode.insertBefore(newstream, mainparent.nextSibling)
     }
 }

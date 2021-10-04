@@ -1,10 +1,4 @@
 :root {
-    /* repeat necessary settings from main style */
-    --foreground: white;
-    --highlight: #9BB2CE;
-    --fade-other: #ababab;
-    --gap: 3px;
-
     /* define some local ones */
     --range-size: calc(var(--gap) * 2);
     --range-corner: var(--gap);
