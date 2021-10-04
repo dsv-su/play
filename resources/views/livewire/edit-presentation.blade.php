@@ -157,12 +157,11 @@
                         <div class="form-group col-12 col-md-6 flex-column d-flex">
                             <label class="form-control-label px-1">{{ __("Presenters") }}
                                 <span type="button" wire:click.prevent="newpresenter({{$i}})"
-                                      class="badge badge-primary">{{__('Add')}}<i
+                                      class="btn btn-primary px-1 py-0">{{__('Add')}}<i
                                             class="fas fa-user-plus ml-1"></i></span>
                             </label>
                             @if(count($presenters) > 0)
                                 @foreach($presenters as $key => $name)
-                                    <div class="d-inline">
                                         <div wire:ignore class="d-flex justify-content-between" id="user-search">
                                             <input @if($key == 0) style="border-color: blue;"
                                                    @endif class="form-control w-100 mx-auto edit"
@@ -175,7 +174,6 @@
                                                 <i class="fas fa-user-minus"></i>
                                             </a>
                                         </div>
-                                    </div>
                                 @endforeach
                             @else
                                 <div class="mx-1 my-2 font-1rem">{{ __("No registered presenters") }}</div>
@@ -213,7 +211,7 @@
                         <div class="form-group col-12 col-md-6 flex-column d-flex">
                             <label class="form-control-label px-1">{{ __("Playback individual permissions") }}
                                 <span type="button" wire:click.prevent="add_individual_perm"
-                                      class="badge badge-primary">{{$ipermissions}} {{ __("Set") }} <i
+                                      class="btn btn-primary px-1 py-0">{{$ipermissions}} {{ __("Set") }} <i
                                             class="fas fa-user-plus"></i></span></label>
                             @if (count($individuals)>0)
                                 @foreach($individuals as $key => $name)

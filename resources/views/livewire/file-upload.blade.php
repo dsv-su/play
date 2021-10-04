@@ -1,4 +1,4 @@
-<div class="col-sm-4 my-2">
+<div class="col-md-4 my-2">
 <!-- <label>{{ __("Source files") }}</label>-->
 
     <div class="row text-center">

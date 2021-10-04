@@ -15,14 +15,10 @@ $(document).ready(function() {
     var user = 1;
     $(document).on('click', '.presenteradd', function(){
         var html = '';
-        html += '<tr>';
-        html += '<td>';
         html += '<div class="d-flex justify-content-between" id="user-search">';
-        html += '<label for="user-search-text" class="sr-only">Presentatör</label>';
-        html += '<input class="form-control w-100 mx-auto" type="search" id="user-search-text-'+user+'" name="presenters[]" autocomplete="off" aria-haspopup="true" placeholder="Namn på presentatör" aria-labelledby="user-search">';
+        html += '<input class="form-control w-100 mx-auto" type="search" id="user-search-text-'+user+'" name="presenters[]" autocomplete="off" aria-haspopup="true" placeholder="Name or username" aria-labelledby="user-search">';
+        html += '<a type="button" name="presenterremove" class="absolute cursor-pointer p-2 top-2 right-2 text-gray-500 presenterremove"><i class="fas fa-user-minus"></i></a>';
         html += '</div>';
-        html += '</td>';
-        html += '<td><button type="button" name="presenterremove" class="btn btn-outline-danger btn-sm presenterremove"><i class="fas fa-user-times"></i><span class="glyphicon glyphicon-minus"></span></button></td></tr>';
         $('#presenter_table').append(html);
         /* Typeahead SUKAT user */
         // Set the Options for "Bloodhound" suggestion engine
@@ -79,7 +75,7 @@ $(document).ready(function() {
         /* end typeahead */
     });
     $(document).on('click', '.presenterremove', function(){
-        $(this).closest('tr').remove();
+        $(this).closest('div').remove();
     });
     var course = 1;
     $(document).on('click', '.courseadd', function(){

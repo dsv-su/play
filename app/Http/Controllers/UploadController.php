@@ -42,8 +42,10 @@ class UploadController extends Controller
     {
         $permissions = Permission::all();
         $presentation = $this->init_upload();
+        $courses = Course::all();
+        $tags = Tag::all();
 
-        return view('upload.index', compact('presentation', 'permissions'));
+        return view('upload.index', compact('presentation', 'permissions', 'courses', 'tags'));
     }
 
     public function step1($id, Request $request)

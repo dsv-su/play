@@ -9,13 +9,11 @@
     <div class="container banner-inner">
         <div class="row no-gutters w-100">
             <div class="col-12">
-                <div>
-                    <span class="su-theme-anchor"></span>
-                    <h3 class="su-theme-header mb-4">
-                        <span class="far fa-clock fa-icon-border mr-2" aria-hidden="true"></span>
-                        @if ($manage) {{__('Manage presentations')}} @else {{__('Search results')}} @endif
-                    </h3>
-                </div>
+                <span class="su-theme-anchor"></span>
+                <h3 class="su-theme-header mb-4">
+                    @if ($manage) <i class="fas fa-edit fa-icon-border mr-2"></i> {{__('Manage presentations')}} @else
+                        <i class="fas fa-search fa-icon-border mr-2"></i>  {{__('Search results')}} @endif
+                </h3>
             </div> <!-- col-12 -->
         </div> <!-- row no-gutters -->
     </div>
@@ -28,7 +26,8 @@
                         <label class="col-form-label mr-1 font-weight-light">{{__('Filter by')}}: </label>
                         <select name="course" @if (empty($videocourses)) disabled
                                 @endif class="form-control mx-1 selectpicker"
-                                data-none-selected-text="{{ __('Course') }}" data-live-search="true" multiple style="width: 400px">
+                                data-none-selected-text="{{ __('Course') }}" data-live-search="true" multiple
+                                style="width: 400px">
                             @foreach($videocourses as $designation => $name)
                                 <option value="{{$designation}}">{{$name}} @if ($designation != 'nocourse')
                                         ({{$designation}})@endif</option>
@@ -52,12 +51,15 @@
                         </select>
                         <select name="tag" @if (empty($videotags)) disabled
                                 @endif class="form-control mx-1 selectpicker"
-                                data-none-selected-text="{{ __('Tag') }}" data-live-search="true" multiple style="width: 200px;">
+                                data-none-selected-text="{{ __('Tag') }}" data-live-search="true" multiple
+                                style="width: 200px;">
                             @foreach($videotags as $tag)
                                 <option value="{{$tag}}">{{$tag}}</option>
                             @endforeach
                         </select>
-                        <button type="button" class="mb-2 btn btn-outline-secondary" onclick="$('.selectpicker').selectpicker('deselectAll'); $('.selectpicker').selectpicker('refresh');">Clear selection
+                        <button type="button" class="mb-2 btn btn-outline-secondary"
+                                onclick="$('.selectpicker').selectpicker('deselectAll'); $('.selectpicker').selectpicker('refresh');">
+                            Clear selection
                         </button>
                         <meta name="csrf-token" content="{{ csrf_token() }}">
                     </form>
