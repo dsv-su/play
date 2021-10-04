@@ -173,8 +173,7 @@ class EditPresentation extends Component
     public
     function getDateAttribute($date)
     {
-        $this->date = Carbon::createFromTimestamp($date)->format('Y-m-d');
-
+        $this->date = Carbon::createFromTimestamp($date)->format('d/m/Y');
         return $this->date;
     }
 

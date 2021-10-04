@@ -13,6 +13,7 @@ use App\VideoCourse;
 use App\VideoPermission;
 use App\VideoPresenter;
 use App\VideoTag;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -35,7 +36,7 @@ class EditController extends Controller
             //Video attributes
             $video->title = $request->title;
             $video->description = $request->description;
-            $video->creation = strtotime($request->date);
+            $video->creation = Carbon::createFromFormat('d/m/Y', $request->date)->timestamp;
             $video->save();
 
             //Remove all presenters linked to video

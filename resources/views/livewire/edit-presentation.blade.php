@@ -84,7 +84,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-12 font-16">
+            <div class="col-sm-12">
                 <div class="rounded border shadow p-3 my-2">
                 <!--
                     <label class="blue-text form-control-label px-1">{{ __("Presentation") }}</label>
@@ -310,8 +310,8 @@
             @this.set('courseEdit', {{$courseids}}.map(String));
             $('.selectpicker[name="tags[]"]').selectpicker('val', {{$tagids}}.map(String));
 
-            $('.datepicker').datepicker({
-                language: 'sv',
+            $(".datepicker").datepicker({
+                format: "dd/mm/yyyy",
                 weekStart: 1,
                 todayHighlight: true
             });

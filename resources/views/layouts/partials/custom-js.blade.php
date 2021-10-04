@@ -32,6 +32,12 @@
             $('.selectpicker').selectpicker();
         });
 
+        $(".datepicker").datepicker({
+            format: "dd/mm/yyyy",
+            weekStart: 1,
+            todayHighlight: true
+        });
+
         $('a.delete').on('click', function (e) {
             e.preventDefault();
             $.ajaxSetup({
