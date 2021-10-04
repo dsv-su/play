@@ -102,6 +102,7 @@ class UploadController extends Controller
             $manualPresentation->status = 'pending';
             $manualPresentation->base = '/data0/incoming/' . $manualPresentation->local;
             $manualPresentation->title = $request->title;
+            $manualPresentation->description = $request->description ?? '';
             $manualPresentation->presenters = $presenters;
             $manualPresentation->tags = $tags;
             $manualPresentation->courses = $courses;

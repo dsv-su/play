@@ -41,6 +41,13 @@
                                     </div>
                                 </div>
 
+                            <!-- Description -->
+                            <div class="row justify-content-between text-left">
+                                <div class="form-group col-12 flex-column d-flex"><label
+                                            class="form-control-label px-1">{{ __("Description") }}</label>
+                                    <textarea id="description" name="description" placeholder="Add a presentation's description here"></textarea>
+                                </div>
+                            </div>
 
                             <!-- Presenters -->
                             <div class="row justify-content-between text-left">
