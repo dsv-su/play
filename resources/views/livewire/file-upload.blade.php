@@ -56,10 +56,10 @@
                         </div>
                         <div style="font-family: 'Source Sans Pro', 'Arial', sans-serif; width: 90%;">
                             <small>
-                                {{ __('Stream Duration') }}: {{$presentation->duration}} sec.
+                                {{ __('Stream Duration') }}: {{$filesduration[$loop->index]}} sec.
                                 <br>
                                 @if(!$custom or $key > 0)
-                                    {{ __('Thumb generated after') }}: {{$genthumb}} sec.
+                                    {{ __('Thumb generated after') }}: {{$genthumb[$loop->index]}} sec.
                                 @else
                                     {{ __('Custom uploaded thumb') }}
                                 @endif

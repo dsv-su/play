@@ -16,8 +16,10 @@ class FileUpload extends Component
     public $filenames = [];
     public $filethumbs = [];
     public $filethumbsname = [];
+    public $filesduration = [];
+    public $genthumb = [];
     public $custom;
-    public $sec, $genthumb;
+    public $sec;
     public $dirname;
     public $presentation, $permissions;
     public $title, $created;
@@ -81,19 +83,25 @@ class FileUpload extends Component
                 if($key == 0 and count($this->filenames) < 2 ) {
                     //Store duration
                     $this->presentation->duration = $this->DurationVideo($this->dirname, $filename);
+                    $this->filesduration[] = $this->presentation->duration;
                     $primary_video_name = basename($filename);
 
                     //Create and store generated thumb
                     $this->filethumbs[] = $this->createThumb($filename, ($this->presentation->duration/3));
-                    $this->genthumb = ceil($this->presentation->duration/3);
+                    $this->genthumb[] = ceil($this->presentation->duration/3);
                     $this->presentation->thumb = 'poster/'. basename($this->filethumbs[0]);
 
                     //Store playAudio for primary
                     $this->source[0]['playAudio'] = true;
                     $this->presentation->save();
                 } else {
+                    //Stream duration
+                    $streamduration = $this->DurationVideo($this->dirname, $filename);
+                    $this->filesduration [] = $streamduration;
+                    $this->genthumb[] = ceil($streamduration/3);
                     //posters
-                    $this->filethumbs[] = $this->createThumb($filename, ($this->presentation->duration/3));
+                    $this->filethumbs[] = $this->createThumb($filename, ($streamduration/3));
+
                 }
                 if(count($this->filenames) > 1 ) {
                     $this->source[count($this->filenames)-1]['playAudio'] = false;
@@ -154,7 +162,7 @@ class FileUpload extends Component
             'sec' => 'required',
         ]);
         $this->filethumbs[$gthumb] = $this->createThumb($this->filenames[$gthumb], $this->sec);
-        $this->genthumb = $this->sec;
+        $this->genthumb[$gthumb]= $this->sec;
     }
 
     public function remove($index)
