@@ -11,25 +11,32 @@
         }
     </style>
 
-    <div class="container px-1 py-1 mx-auto">
-        <div class="w-7/12 mx-2 rounded p-2">
-            <div class="row">
-                <div class="col-sm-10"><h1>{{ __("Edit Presentation") }}</h1></div>
-            </div>
-        </div>
+    <!-- Header message section -->
+    <div class="container banner-inner">
+        <div class="row no-gutters w-100">
+            <div class="col-12">
+                <span class="su-theme-anchor"></span>
+                <h3 class="su-theme-header mb-4">
+                    <i class="fas fa-edit fa-icon-border mr-2"></i>{{ __("Edit presentation") }}
+                </h3>
+            </div> <!-- col-12 -->
+        </div> <!-- row no-gutters -->
+    </div>
+
+    <div class="container px-3 px-sm-0">
         <div class="row">
             <div class="col-sm-12">
                 <div class="rounded border shadow p-3 my-2">
                     <div class="row justify-content-between text-left">
                         <div class="form-group col-md-6 col-lg-4 mx-auto text-center">
                             @if($visability)
-                            <img id="presentation" src="{{$thumb}}?{{ rand() }}" style="max-width: 300px;"
-                                 class="mx-auto w-100">
+                                <img id="presentation" src="{{$thumb}}?{{ rand() }}" style="max-width: 300px;"
+                                     class="mx-auto w-100">
                             @endif
                             <div class="d-flex justify-content-center h-100">
                                 @if(!$visability)
-                                <div id="presentation_hidden" class="alert alert-secondary m-auto"
-                                     role="alert">{{ __("Presentation hidden") }}</div>
+                                    <div id="presentation_hidden" class="alert alert-secondary m-auto"
+                                         role="alert">{{ __("Presentation hidden") }}</div>
                                 @endif
                             </div>
                             {{--}}
@@ -73,7 +80,8 @@
                                                     class="col-4 col-lg-3 mb-0">{{__('Visibility')}}</label>
                                 <div class="col">
                                        <span class="custom-control custom-switch custom-switch-lg">
-                                        <input wire:click="visability" class="custom-control-input" id="visabilitySwitch" name="visability"
+                                        <input wire:click="visability" class="custom-control-input"
+                                               id="visabilitySwitch" name="visability"
                                                type="checkbox" @if($visability == true) checked @endif>
                                         <label class="custom-control-label" style="margin-top: 3px;"
                                                for="visabilitySwitch"></label>
@@ -162,18 +170,18 @@
                             </label>
                             @if(count($presenters) > 0)
                                 @foreach($presenters as $key => $name)
-                                        <div wire:ignore class="d-flex justify-content-between" id="user-search">
-                                            <input @if($key == 0) style="border-color: blue;"
-                                                   @endif class="form-control w-100 mx-auto edit"
-                                                   id="user-search-text-{{$key}}" type="search"
-                                                   wire:model.debounce.100s="presenters.{{$key}}" name="presenters[]"
-                                                   placeholder="Start typing name or username" aria-haspopup="true"
-                                                   autocomplete="off" aria-labelledby="user-search">
-                                            <a class="absolute cursor-pointer p-2 top-2 right-2 text-gray-500"
-                                               wire:click="remove_presenter({{$key}})">
-                                                <i class="fas fa-user-minus"></i>
-                                            </a>
-                                        </div>
+                                    <div wire:ignore class="d-flex justify-content-between" id="user-search">
+                                        <input @if($key == 0) style="border-color: blue;"
+                                               @endif class="form-control w-100 mx-auto edit"
+                                               id="user-search-text-{{$key}}" type="search"
+                                               wire:model.debounce.100s="presenters.{{$key}}" name="presenters[]"
+                                               placeholder="Start typing name or username" aria-haspopup="true"
+                                               autocomplete="off" aria-labelledby="user-search">
+                                        <a class="absolute cursor-pointer p-2 top-2 right-2 text-gray-500"
+                                           wire:click="remove_presenter({{$key}})">
+                                            <i class="fas fa-user-minus"></i>
+                                        </a>
+                                    </div>
                                 @endforeach
                             @else
                                 <div class="mx-1 my-2 font-1rem">{{ __("No registered presenters") }}</div>
@@ -305,7 +313,7 @@
     <script>
         $(document).ready(function () {
             $('.selectpicker[name="courseEdit[]"]').selectpicker('val', {{$courseids}}.map(String));
-            @this.set('courseEdit', {{$courseids}}.map(String));
+        @this.set('courseEdit', {{$courseids}}.map(String));
             $('.selectpicker[name="tags[]"]').selectpicker('val', {{$tagids}}.map(String));
 
             $(".datepicker").datepicker({
