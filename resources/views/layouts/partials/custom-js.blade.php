@@ -28,6 +28,10 @@
         });
     });
     $(document).ready(function () {
+        $('.preventdefault').on('click', function(e) {
+            e.preventDefault();
+        });
+
         $(document).ready(function () {
             $('.selectpicker').selectpicker();
         });

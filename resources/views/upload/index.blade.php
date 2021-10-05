@@ -76,7 +76,7 @@
                                         data-none-selected-text="{{ __('No course association')}}"
                                         data-live-search="true" multiple>
                                     @foreach($courses as $course)
-                                        <option value={{ $course->designation }}>{{ $course->name }}</option>
+                                        <option value={{ $course->designation }}>{{ $course->name . ' (' . $course->designation .')' }}</option>
                                     @endforeach
                                 </select>
                             </div>
