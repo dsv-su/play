@@ -76,7 +76,7 @@
                                         data-none-selected-text="{{ __('No course association')}}"
                                         data-live-search="true" multiple>
                                     @foreach($courses as $course)
-                                        <option value={{ $course->id }}>{{ $course->designation . ' ' . $course->semester.$course->year.' ('.$course->name . ')'}}</option>
+                                        <option value={{ $course->designation }}>{{ $course->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -109,7 +109,7 @@
                                         data-none-selected-text="{{ __('No tags selected')}}"
                                         data-live-search="true" multiple>
                                     @foreach($tags as $tag)
-                                        <option value={{ $tag->id }}>{{ $tag->name }}</option>
+                                        <option value={{ $tag->name }}>{{ $tag->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -195,6 +195,7 @@
     <script>
         $(".datepicker").datepicker("setDate", new Date());
         $("#submit").click(function () {
+            $('form').submit();
             $("#loadtoserver").modal({
                 backdrop: "static", //remove ability to close modal with click
                 keyboard: false, //remove option to close with keyboard
