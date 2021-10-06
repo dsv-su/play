@@ -23,7 +23,7 @@ class SftpPlayStore extends Model
 
         //Make remote directory
         $this->makeRemoteFolder($this->video_remote_dir);
-        $this->makeRemoteFolder($this->image_remote_dir);
+        //$this->makeRemoteFolder($this->image_remote_dir); //Disabled
         $this->makeRemoteFolder($this->poster_remote_dir);
     }
 
@@ -34,12 +34,12 @@ class SftpPlayStore extends Model
 
         //Temporary directories
         $this->video_directory =  $this->presentation->local . '/video';
-        $this->image_directory = $this->presentation->local . '/image';
+        //$this->image_directory = $this->presentation->local . '/image'; //Disabled
         $this->poster_directory =  $this->presentation->local . '/poster';
 
         //Remote directories
         $this->video_remote_dir = $this->presentation->local . '/video';
-        $this->image_remote_dir = $this->presentation->local . '/image';
+        //$this->image_remote_dir = $this->presentation->local . '/image'; //Disabled
         $this->poster_remote_dir = $this->presentation->local . '/poster';
     }
 
