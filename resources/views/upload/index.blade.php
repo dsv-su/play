@@ -39,7 +39,7 @@
                             <div class="form-group col-sm-6 flex-column d-flex"><label
                                         class="form-control-label px-1">{{ __("Enter title") }}<span
                                             class="text-danger"> *</span></label>
-                                <input id="title" name="title" type="text" placeholder="Title"
+                                <input id="title" name="title" type="text" placeholder="{{ __("Title") }}"
                                        value="{{ old('title') ? old('title'): $title ?? '' }}">
                                 <div><small class="text-danger">{{ $errors->first('title') }}</small></div>
                             </div>
@@ -106,7 +106,7 @@
                                 </p>
                                 <select name="tags[]"
                                         class="form-control mx-1 selectpicker w-100" data-dropup-auto="false"
-                                        data-none-selected-text="{{ __('No tags selected')}}"
+                                        data-none-selected-text="{{ __("No tags selected")}}"
                                         data-live-search="true" multiple>
                                     @foreach($tags as $tag)
                                         <option value={{ $tag->name }}>{{ $tag->name }}</option>
@@ -166,12 +166,14 @@
             'permissions' => $permissions
             ])
         </div>
+        {{--}}
         <div class="row justify-content-center">
             <div class="form-group col-sm-4">
                 <button id="submit" type="submit"
                         class="btn-block btn btn-outline-primary">{{ __("Upload") }}</button>
             </div>
         </div>
+        {{--}}
     </div>
 
     <!-- Modal spinners -->

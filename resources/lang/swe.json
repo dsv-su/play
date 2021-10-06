@@ -88,6 +88,7 @@
     "Edit Presentation": "Redigera presentation",
     "Presentation": "Presentation",
     "Title of the presentation and the date of recording.": "Presentationens titel och inspelningsdatum.",
+    "Enter the title of the presentation and the date of recording. If the recording date is unknown, you can enter today's date. Description is optional.": "Ange titeln på presentationen och inspelningsdatumet. Om inspelningsdatumet är okänt kan du ange dagens datum. Beskrivning är valfri.",
     "Original Recording date": "Ursprunglig inspelningsdatum",
     "Update": "Uppdatera",
     "Add presenters": "Lägg till presentatörer",
@@ -115,6 +116,14 @@
     "Individual Permissions": "Individuella behörigheter",
     "Course Administrator": "Kursansvarig",
     "Visability": "Synlighet",
-    "Presentation hidden": "Presentation gömd"
+    "Presentation hidden": "Presentation gömd",
+    "The value in seconds is beyond the scope of the stream": "Det angivna värdet i sekunder är utanför filmens omfattning",
+    "Description": "Beskrivning",
+    "Add a presentation's description here (if needed)": "Lägg till en presentationsbeskrivning här (om det behövs)",
+    "Presenters": "Presentatörer",
+    "No tags selected": "Inga taggar valda",
+    "Playback Permissions": "Uppspelningsrättigheter",
+    "All uploaded presentations are accessible to DSV Students and Staff unless otherwise specified with the 'Custom' alternative.": "Alla uppladdade presentationer är tillgängliga för DSV -studenter och personal om inte annat anges explicit",
+    "DSV Disclaimer": "DSV Ansvarsförsäkring"
 
 }

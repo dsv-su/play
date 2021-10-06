@@ -19,12 +19,13 @@ class FileUpload extends Component
     public $filesduration = [];
     public $genthumb = [];
     public $custom;
-    public $sec;
+    public $sec = [];
     public $dirname;
     public $presentation, $permissions;
     public $title, $created;
     public $source = [];
     public $uploaded_files;
+    public $isDisabled = false;
 
 
     public function mount(ManualPresentation $presentation, $permissions)
@@ -53,9 +54,9 @@ class FileUpload extends Component
     public function updatedfiles()
     {
         //Real-time Validation
-
+        $this->isDisabled = false;
         $this->validate([
-            'files.*' => 'mimetypes:video/mp4, video/avi, video/mpeg, video/quicktime, video/x-ms-wmv',
+            'files.*' => 'required|mimetypes:video/mp4,video/webm,video/avi,video/mpeg,video/quicktime,video/x-ms-wmv',
             'files' => 'max:4',
         ],
         [
@@ -97,7 +98,7 @@ class FileUpload extends Component
                 } else {
                     //Stream duration
                     $streamduration = $this->DurationVideo($this->dirname, $filename);
-                    $this->filesduration [] = $streamduration;
+                    $this->filesduration[] = $streamduration;
                     $this->genthumb[] = ceil($streamduration/3);
                     //posters
                     $this->filethumbs[] = $this->createThumb($filename, ($streamduration/3));
@@ -123,10 +124,17 @@ class FileUpload extends Component
                 $this->presentation->sources = $this->source;
                 $this->presentation->save();
             }
-
+            $this->isDisabled = true;
             session()->flash('message', 'File successfully Uploaded.');
         }
 
+    }
+
+    public function updatedSec($name, $value)
+    {
+        if($name > $this->filesduration[$value] or $name < 0) {
+            $this->emit('outofrange');
+        }
     }
 
     public function DurationVideo($directory, $filename)
@@ -161,8 +169,8 @@ class FileUpload extends Component
         $this->validate([
             'sec' => 'required',
         ]);
-        $this->filethumbs[$gthumb] = $this->createThumb($this->filenames[$gthumb], $this->sec);
-        $this->genthumb[$gthumb]= $this->sec;
+        $this->filethumbs[$gthumb] = $this->createThumb($this->filenames[$gthumb], $this->sec[$gthumb]);
+        $this->genthumb[$gthumb]= $this->sec[$gthumb];
     }
 
     public function remove($index)
