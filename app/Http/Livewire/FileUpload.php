@@ -25,6 +25,7 @@ class FileUpload extends Component
     public $title, $created;
     public $source = [];
     public $uploaded_files;
+    public $isDisabled = false;
 
 
     public function mount(ManualPresentation $presentation, $permissions)
@@ -53,7 +54,7 @@ class FileUpload extends Component
     public function updatedfiles()
     {
         //Real-time Validation
-
+        $this->isDisabled = false;
         $this->validate([
             'files.*' => 'mimetypes:video/mp4, video/avi, video/mpeg, video/quicktime, video/x-ms-wmv',
             'files' => 'max:4',
@@ -123,7 +124,7 @@ class FileUpload extends Component
                 $this->presentation->sources = $this->source;
                 $this->presentation->save();
             }
-
+            $this->isDisabled = true;
             session()->flash('message', 'File successfully Uploaded.');
         }
 

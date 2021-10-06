@@ -166,12 +166,14 @@
             'permissions' => $permissions
             ])
         </div>
+        {{--}}
         <div class="row justify-content-center">
             <div class="form-group col-sm-4">
                 <button id="submit" type="submit"
                         class="btn-block btn btn-outline-primary">{{ __("Upload") }}</button>
             </div>
         </div>
+        {{--}}
     </div>
 
     <!-- Modal spinners -->

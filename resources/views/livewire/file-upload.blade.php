@@ -86,7 +86,18 @@
     <!-- Loading Message for Images -->
         <div wire:loading wire:target="files">Uploading Media...</div>
     </div>
-</div>
+
+    <div class="row justify-content-center">
+        <div class="form-group col-sm-4">
+            <button id="submit" type="submit"
+                    class="btn-block btn btn-outline-primary"
+            {{ $isDisabled ? '': 'disabled' }}
+            >{{ __("Upload") }}</button>
+        </div>
+    </div>
+
+
+
 </div>
 <!-- end right -->
 
