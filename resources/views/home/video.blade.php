@@ -6,18 +6,17 @@
             <div class="title">{{ $video->title }}</div>
             <!-- Group Permissions -->
             <div class="icons">
-                @if($permissions ?? '')
-                    @foreach($permissions as $permission)
-                        @if($video->id == $permission->video_id && $permission->type == 'private')
-                            <div class="permission mx-1" data-toggle="tooltip"
-                                 title="{{__('Viewing permissions modified')}}"><i class="fas fa-user-lock"></i></div>
-                        @endif
-                        @if($video->id == $permission->video_id && $permission->type == 'external')
-                            <div class="permission mx-1" data-toggle="tooltip" title="{{__('External access enabled')}}"><i
-                                        class="fas fa-globe"></i></div>
-                        @endif
-                    @endforeach
-                @endif
+
+                @foreach($video->permissions() as $permission)
+                    @if($permission->type == 'private')
+                        <div class="permission mx-1" data-toggle="tooltip"
+                             title="{{__('Viewing permissions modified')}}"><i class="fas fa-user-lock"></i></div>
+                    @endif
+                    @if($permission->type == 'external')
+                        <div class="permission mx-1" data-toggle="tooltip" title="{{__('External access enabled')}}"><i
+                                    class="fas fa-globe"></i></div>
+                    @endif
+                @endforeach
             <!-- end Group Permission -->
                 <!-- Visability -->
                 @if($video->visability == false)
@@ -35,7 +34,7 @@
         </div>
         @if ($video->visability)  </a> @endif
     <div class="card-body p-1 overflow-hidden">
-    <!-- While testing we need id -->
+        <!-- While testing we need id -->
         @if (!$video->video_course->isEmpty())
             <p class="card-text">
                 @foreach($video->video_course as $vc)
@@ -59,37 +58,39 @@
             </p>
         @endif
         <div class="d-flex float-right clearfix">
-            <div class="ml-1" data-toggle="tooltip" title="{{__('Share presentation')}}">
-                <a href="#" data-toggle="modal" data-target="#shareModal{{$video->id}}"
-                   title="{{ __('Share presentation') }}" class="btn btn-outline-secondary btn-sm"><i
-                            class="fas fa-external-link-alt"></i></a>
-            </div>
-            <div class="dropdown ml-1" data-toggle="tooltip" data-placement="top"
-                 title="{{ __("Download presentation") }}">
-                <a class="btn btn-outline-success btn-sm" href="#" role="button" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-download"></i>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                    <form method="post" action="{{route('download', $video->id)}}">
-                        @csrf
-                        @foreach(json_decode($video->sources, true) as $source)
-                            @if(is_array($source['video']) && $loop->first)
-                                @foreach($source['video'] as $key => $source)
-                                    <button class="dropdown-item btn btn-outline-primary btn-sm" name="res"
-                                            value="{{$key}}"><i class="fas fa-download"></i>
-                                        {{$key}}p
-                                    </button>
-                                @endforeach
-                            @elseif($loop->first)
-                                <button class="dropdown-item btn btn-outline-primary btn-sm" name="res" value="999">
-                                    <i class="fas fa-download"></i> 720p
-                                </button>
-                            @endif
-                        @endforeach
-                    </form>
+            @if ($video->visability)
+                <div class="ml-1" data-toggle="tooltip" title="{{__('Share presentation')}}">
+                    <a href="#" data-toggle="modal" data-target="#shareModal{{$video->id}}"
+                       title="{{ __('Share presentation') }}" class="btn btn-outline-secondary btn-sm"><i
+                                class="fas fa-external-link-alt"></i></a>
                 </div>
-            </div>
+                <div class="dropdown ml-1" data-toggle="tooltip" data-placement="top"
+                     title="{{ __("Download presentation") }}">
+                    <a class="btn btn-outline-success btn-sm" href="#" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-download"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                        <form method="post" action="{{route('download', $video->id)}}">
+                            @csrf
+                            @foreach(json_decode($video->sources, true) as $source)
+                                @if(is_array($source['video']) && $loop->first)
+                                    @foreach($source['video'] as $key => $source)
+                                        <button class="dropdown-item btn btn-outline-primary btn-sm" name="res"
+                                                value="{{$key}}"><i class="fas fa-download"></i>
+                                            {{$key}}p
+                                        </button>
+                                    @endforeach
+                                @elseif($loop->first)
+                                    <button class="dropdown-item btn btn-outline-primary btn-sm" name="res" value="999">
+                                        <i class="fas fa-download"></i> 720p
+                                    </button>
+                                @endif
+                            @endforeach
+                        </form>
+                    </div>
+                </div>
+            @endif
             @if (isset($manage) && $manage)
                 @if ($video->editable())
                     <div class="ml-1">
@@ -114,7 +115,7 @@
             <p class="m-1 line-1rem text-shrink"><small>{{$video->description}}</small></p>
         @endif
         @if (!App::environment('production'))
-            <p class="mx-1 my-0"><small>id: {{$video->id}}</small></p>
+            <p class="mx-1 my-0 d-inline-block"><small>id: {{$video->id}}</small></p>
         @endif
     </div>
 </div>
@@ -141,6 +142,27 @@
                     <textarea readonly class="form-control text-muted" rows="4" id="embedCode"><iframe width="560" height="315" src="{{ route('player', ['video' => $video]) }}" frameborder="0" allowfullscreen></iframe></textarea>
                     <small id="embbedCodeHelp" class="form-text text-muted">Use this embed code to insert the video in
                         e.g. iLearn</small>
+                </div>
+                <div class="form-group">
+                    <label for="permissions">{{__('Permissions')}}
+                        @if ($video->editable())
+                                <a href="{{route('presentation_edit', $video->id)}}" data-toggle="tooltip"
+                                   title="{{ __('Edit presentation') }}" class="btn btn-info btn-sm">{{__('Edit')}} <i
+                                            class="far fa-edit"></i></a>
+                        @endif</label>
+                    <p class="font-1rem">
+                        @foreach ($video->permissions() as $permission)
+                            <span class="d-block">{{$permission->scope}}</span>
+                        @endforeach
+                    </p>
+                    <p class="font-1rem">
+                        @foreach($video->coursepermissions as $cpermission)
+                            <span class="d-block">{{$cpermission->name}} ({{$cpermission->username}}): <span class="text-capitalize badge badge-light">{{__('Manager')}}</span></span>
+                        @endforeach
+                        @foreach ($video->ipermissions as $ipermission)
+                            <span class="d-block">{{$ipermission->name}} ({{$ipermission->username}}): <span class="text-capitalize badge badge-light">{{$ipermission->permission}}</span></span>
+                        @endforeach
+                    </p>
                 </div>
             </div>
             <div class="modal-footer">
