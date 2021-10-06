@@ -115,6 +115,7 @@
     "Individual Permissions": "Individuella behörigheter",
     "Course Administrator": "Kursansvarig",
     "Visability": "Synlighet",
-    "Presentation hidden": "Presentation gömd"
+    "Presentation hidden": "Presentation gömd",
+    "The value in seconds is beyond the scope of the stream": "Det angivna värdet i sekunder är utanför filmens omfattning"
 
 }

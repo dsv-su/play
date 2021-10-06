@@ -19,7 +19,7 @@ class FileUpload extends Component
     public $filesduration = [];
     public $genthumb = [];
     public $custom;
-    public $sec;
+    public $sec = [];
     public $dirname;
     public $presentation, $permissions;
     public $title, $created;
@@ -97,7 +97,7 @@ class FileUpload extends Component
                 } else {
                     //Stream duration
                     $streamduration = $this->DurationVideo($this->dirname, $filename);
-                    $this->filesduration [] = $streamduration;
+                    $this->filesduration[] = $streamduration;
                     $this->genthumb[] = ceil($streamduration/3);
                     //posters
                     $this->filethumbs[] = $this->createThumb($filename, ($streamduration/3));
@@ -127,6 +127,13 @@ class FileUpload extends Component
             session()->flash('message', 'File successfully Uploaded.');
         }
 
+    }
+
+    public function updatedSec($name, $value)
+    {
+        if($name > $this->filesduration[$value] or $name < 0) {
+            $this->emit('outofrange');
+        }
     }
 
     public function DurationVideo($directory, $filename)
@@ -161,8 +168,8 @@ class FileUpload extends Component
         $this->validate([
             'sec' => 'required',
         ]);
-        $this->filethumbs[$gthumb] = $this->createThumb($this->filenames[$gthumb], $this->sec);
-        $this->genthumb[$gthumb]= $this->sec;
+        $this->filethumbs[$gthumb] = $this->createThumb($this->filenames[$gthumb], $this->sec[$gthumb]);
+        $this->genthumb[$gthumb]= $this->sec[$gthumb];
     }
 
     public function remove($index)

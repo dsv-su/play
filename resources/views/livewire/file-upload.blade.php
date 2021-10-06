@@ -69,7 +69,7 @@
                     <!--<div class="form-inline my-3">-->
                     <div class="row justify-content-between text-left">
                         <div class="form-group col-sm-4 flex-column d-flex">
-                            <input class="form-control form-control-sm" placeholder="10" type="number" wire:model="sec">
+                            <input class="form-control form-control-sm" placeholder="10" type="number" wire:model="sec.{{$key}}">
                         </div>
                         <div class="form-group col-sm-6 flex-column d-flex">
                             <button class="btn btn-outline-primary btn-sm" wire:click="regenerate({{$loop->index}})">
@@ -128,7 +128,25 @@
         </div>
     </div>
 </div>
-
+<!-- Modal for out of range upload-->
+<div wire:ignore.self class="modal fade" id="outofrangeModal" tabindex="-1" role="dialog" aria-labelledby="outofrangeModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true close-btn">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {{ __("The value in seconds is beyond the scope of the stream") }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __("Close") }}</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
     window.livewire.on('show', () => {
@@ -136,6 +154,9 @@
     });
     window.livewire.on('diffs', () => {
         $('#diffModal').modal('show');
+    });
+    window.livewire.on('outofrange', () => {
+        $('#outofrangeModal').modal('show');
     });
 </script>
 
