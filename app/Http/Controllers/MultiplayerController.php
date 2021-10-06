@@ -58,7 +58,7 @@ class MultiplayerController extends Controller
 
         // Construct Presentation json from DB
         $presentation = array();
-        $streams = Stream::where('video_id', $video->id)->get();
+        $streams = Stream::where('video_id', $video->id)->where('hidden', 0)->get();
         foreach ($streams as $key => $stream) {
             $presentation['sources'][] = [
                 'poster' => $this->base_uri() .'/' . $video->id . '/' .$stream->poster,

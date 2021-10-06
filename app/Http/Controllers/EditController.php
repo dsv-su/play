@@ -124,7 +124,6 @@ class EditController extends Controller
 
             //Update course
             VideoCourse::where(['video_id' => $video->id])->delete();
-           // dd($request->courseEdit);
             if (!$request->courseEdit == null) {
                 foreach ($request->courseEdit as $courseid) {
                     VideoCourse::updateOrCreate(['video_id' => $video->id, 'course_id' => $courseid]);
@@ -139,16 +138,15 @@ class EditController extends Controller
                 }
             }
 
-            //Update Audio feed
+            //Update streams
             $streams = Stream::where('video_id', $video->id)->get();
+           // dump($request->hidden);
             foreach ($streams as $key => $stream) {
-                $stream->audio = 0;
+                $stream->audio = ($request->audio == $key);
+                $stream->hidden = (isset($request->hidden)) ? in_array($key, $request->hidden) : 0;
                 $stream->save();
-                if ($request->audio == $key) {
-                    $stream->audio = 1;
-                    $stream->save();
-                }
             }
+
             //Update visability
             if ($request->visability) {
                 $video->visability = true;

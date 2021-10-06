@@ -22,7 +22,7 @@ class EditPresentation extends Component
     public $courseEdit = [];
     public $tags, $tagids = [];
     public $permissions, $presentationpermissonId, $presentationpermissonScope;
-    public $sources = [], $playAudio = [], $poster = [];
+    public $sources = [], $playAudio = [], $poster = [], $hidden = [];
     public $ipermissions, $ip;
     public $individuals = [], $individuals_permission = [];
     public $i = 0;
@@ -91,6 +91,7 @@ class EditPresentation extends Component
         //Streams
         foreach ($video->streams as $source) {
             $this->playAudio[] = $source->audio;
+            $this->hidden[] = $source->hidden;
             $this->poster[] = $this->base_uri() . '/' . $video->id . '/' . $source->poster;
         }
 
