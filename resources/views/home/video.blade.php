@@ -59,7 +59,7 @@
         @endif
         <div class="d-flex float-right clearfix">
             @if ($video->visability)
-                <div class="ml-1" data-toggle="tooltip" title="{{__('Share presentation')}}">
+                <div class="ml-1" data-toggle="tooltip" title="{{__("Share presentation")}}">
                     <a href="#" data-toggle="modal" data-target="#shareModal{{$video->id}}"
                        title="{{ __('Share presentation') }}" class="btn btn-outline-secondary btn-sm"><i
                                 class="fas fa-external-link-alt"></i></a>
@@ -132,19 +132,18 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="staticLink">{{__('Direct link')}}</label>
+                    <label for="staticLink">{{__("Direct link")}}</label>
                     <textarea readonly class="form-control" id="staticLink"
                               value="">{{ route('player', ['video' => $video]) }}</textarea>
-                    <small id="staticLinkHelp" class="form-text text-muted">Permalink to this video</small>
+                    <small id="staticLinkHelp" class="form-text text-muted">{{ __("Permalink to this presentation") }}</small>
                 </div>
                 <div class="form-group">
-                    <label for="embedCode">{{__('Embed code')}}</label>
+                    <label for="embedCode">{{__("Embed code")}}</label>
                     <textarea readonly class="form-control text-muted" rows="4" id="embedCode"><iframe width="560" height="315" src="{{ route('player', ['video' => $video]) }}" frameborder="0" allowfullscreen></iframe></textarea>
-                    <small id="embbedCodeHelp" class="form-text text-muted">Use this embed code to insert the video in
-                        e.g. iLearn</small>
+                    <small id="embbedCodeHelp" class="form-text text-muted">{{ __("Use this embed code to insert the video in e.g. iLearn") }}</small>
                 </div>
                 <div class="form-group">
-                    <label for="permissions">{{__('Permissions')}}
+                    <label for="permissions">{{__("Permissions")}}
                         @if ($video->editable())
                                 <a href="{{route('presentation_edit', $video->id)}}" data-toggle="tooltip"
                                    title="{{ __('Edit presentation') }}" class="btn btn-info btn-sm">{{__('Edit')}} <i

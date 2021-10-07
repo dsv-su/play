@@ -137,6 +137,15 @@
     "Camera": "Kamera",
     "Stream hidden": "Video gömd",
     "Audio": "Ljud",
-    "Hidden": "Gömd"
+    "Hidden": "Gömd",
+    "Clear Selection": "Rensa urval",
+    "Add the presenters for this video. The uploader is listed as presenter by default.": "Lägg till presentatörerna för den här videon. Uppladdaren läggs till som presentatör.",
+    "Share presentation": "Dela presentation",
+    "Share a presentation": "Dela en presentation",
+    "Direct link": "Direktlänk",
+    "Permalink to this presentation": "Permalänk till den här presentationen",
+    "Embed code": "Bädda in länken",
+    "Permissions": "Behörigheter",
+    "Use this embed code to insert the video in e.g. iLearn": "Använd den här inbäddningskoden för att infoga videon i t.ex. iLearn"
 
 }
