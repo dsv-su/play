@@ -277,22 +277,36 @@
                                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                                 <!-- probably need to switch that logic on renaming a primary stream -->
                                                 Stream {{$loop->index + 1}}
-                                                : @if ($origin == 'cattura' && !in_array($source->name, ['right', 'left', 'main']))
-                                                    Camera @else {{$source->name}} @endif
+                                                @if (!is_numeric($source->name)): @if ($origin == 'cattura' && !in_array($source->name, ['right', 'left', 'main']))
+                                                    Camera @else {{$source->name}} @endif @endif
                                             </div>
-                                            <img src="{{$poster[$key]}}?{{ rand() }}" width="100%">
+                                            <div class="position-relative">
+                                            <img class=@if ($hidden[$key]) "opacity-1" @else "opacity-5" @endif src="{{$poster[$key]}}?{{ rand() }}" width="100%">
+                                                <div class="d-flex justify-content-center h-100">
+                                                        <div id="stream_hidden" class="alert alert-secondary m-auto" @if (!$hidden[$key]) style="display: none;" @endif
+                                                             role="alert">{{ __("Stream hidden") }}</div>
+                                                </div>
+                                            </div>
                                             {{--}}<input class="form-control form-control-sm" type="file" wire:model="editfile.{{$key}}">{{--}}
                                             @error('editfile.*') <span class="error">{{ $message }}</span> @enderror
                                         </div>
                                     </div>
                                     <div class="row m-2 d-flex justify-content-center font-1rem line-15rem font-weight-light">
-                                        <div class="custom-control custom-switch">
+                                        <div class="custom-control custom-switch mx-1">
                                             <input type="checkbox" name="audio"
                                                    id="audioSwitch{{$loop->index + 1}}"
                                                    value="{{$loop->index}}" class="custom-control-input"
                                                    @if($playAudio[$key] == true) checked @endif >
                                             <label class="custom-control-label"
                                                    for="audioSwitch{{$loop->index + 1}}">Audio</label>
+                                        </div>
+                                        <div class="custom-control custom-switch mx-1">
+                                            <input type="checkbox" name="hidden[]"
+                                                   id="hiddenSwitch{{$loop->index + 1}}"
+                                                   value="{{$loop->index}}" class="custom-control-input"
+                                                   @if($hidden[$key] == true) checked @endif >
+                                            <label class="custom-control-label"
+                                                   for="hiddenSwitch{{$loop->index + 1}}">Hidden</label>
                                         </div>
                                     </div>
                                 </div>
@@ -313,7 +327,7 @@
     <script>
         $(document).ready(function () {
             $('.selectpicker[name="courseEdit[]"]').selectpicker('val', {{$courseids}}.map(String));
-        @this.set('courseEdit', {{$courseids}}.map(String));
+            @this.set('courseEdit', {{$courseids}}.map(String));
             $('.selectpicker[name="tags[]"]').selectpicker('val', {{$tagids}}.map(String));
 
             $(".datepicker").datepicker({
@@ -322,24 +336,17 @@
                 todayHighlight: true
             });
 
-            /*
-            $('#select2').select2({
-                theme: "bootstrap",
-                width: "resolve",
-            });
-            */
             $('select[name="courseEdit[]"]').on('change', function (e) {
                 var item = $(this).val();
-            @this.set('courseEdit', item);
+                @this.set('courseEdit', item);
             });
-
         });
     </script>
 
     <script>
         // AudioSwitch the selector will match all input controls of type :checkbox
         // and attach a click event handler
-        $("input:checkbox").on('click', function () {
+        $("input:checkbox[name='audio']").on('click', function () {
             // in the handler, 'this' refers to the box clicked on
             var $box = $(this);
             if ($box.is(":checked")) {
@@ -353,6 +360,11 @@
             } else {
                 $box.prop("checked", false);
             }
+        });
+        // Hidden checkboxes
+        $("input:checkbox[name='hidden[]']").on('click', function () {
+            $(this).closest('.card-body').find('img').toggleClass('opacity-5 opacity-2');
+            $(this).closest('.card-body').find('#stream_hidden').toggle();
         });
     </script>
     <!-- Typeahead.js Bundle -->
