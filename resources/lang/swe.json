@@ -101,6 +101,7 @@
     "Uploaded by user": "Manuellt uppladdad",
     "Recorded at DSV": "Inspelad på DSV",
     "Not associated to a course": "Inte associerad med en kurs",
+    "Stream": "Video",
     "Associated to course": "Associerad med kurs",
     "Filter by": "Filtrera",
     "Term": "Termin",
@@ -124,6 +125,18 @@
     "No tags selected": "Inga taggar valda",
     "Playback Permissions": "Uppspelningsrättigheter",
     "All uploaded presentations are accessible to DSV Students and Staff unless otherwise specified with the 'Custom' alternative.": "Alla uppladdade presentationer är tillgängliga för DSV -studenter och personal om inte annat anges explicit",
-    "DSV Disclaimer": "DSV Ansvarsförsäkring"
+    "DSV Disclaimer": "DSV Ansvarsförsäkring",
+    "Edit presentation": "Redigera presentation",
+    "Visibility": "Synlighet",
+    "Course manager(s)": "Kursansvariga",
+    "No course manager added": "Ingen kursansvarig har lagts till",
+    "No tags": "Inga taggar",
+    "Playback group permissions": "Uppspelningsgruppsbehörigheter",
+    "Playback individual permissions": "Individuella behörigheter",
+    "No individual permissions added": "Inga individuella behörigheter har lagts till",
+    "Camera": "Kamera",
+    "Stream hidden": "Video gömd",
+    "Audio": "Ljud",
+    "Hidden": "Gömd"
 
 }

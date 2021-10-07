@@ -62,7 +62,7 @@
                                 <label class="col-4 col-lg-3 mb-0">{{ __("Origin") }}</label>
                                 <div class="col">@if($origin == 'mediasite') {{ __("Migrated from Mediasite") }}
                                     @elseif($origin == 'cattura') {{ __("Recorded at DSV") }}
-                                    @elseif($origin == 'manual') Uploaded by user
+                                    @elseif($origin == 'manual') {{ __("Uploaded by user") }}
                                     @endif
                                 </div>
                             </div>
@@ -72,12 +72,12 @@
                             <div class="row"><label class="col-4 col-lg-3 mb-0">{{ __("Duration") }}</label>
                                 <div class="col">{{$duration}}</div>
                             </div>
-                            <div class="row"><label class="col-4 col-lg-3 mb-0">{{__('Course')}}
+                            <div class="row"><label class="col-4 col-lg-3 mb-0">{{__("Course")}}
                                 </label>
                                 <div class="col">@if (empty($course)) {{ __("Not associated to a course") }} @else {{implode(', ', $course)}} @endif</div>
                             </div>
                             <div class="row"><label for="visabilitySwitch"
-                                                    class="col-4 col-lg-3 mb-0">{{__('Visibility')}}</label>
+                                                    class="col-4 col-lg-3 mb-0">{{__("Visibility")}}</label>
                                 <div class="col">
                                        <span class="custom-control custom-switch custom-switch-lg">
                                         <input wire:click="visability" class="custom-control-input"
@@ -151,7 +151,7 @@
                             <label class="form-control-label px-1">{{ __("Course manager(s)") }}</label>
                             <div class="mx-1 my-2 font-1rem">
                                 @if (empty($course_responsible))
-                                    {{__('No course manager added')}}
+                                    {{__("No course manager added")}}
                                 @else
                                     @foreach($course_responsible as $i=>$id) @foreach($id as $k=>$responsible) <span
                                             class="m-1 badge badge-pill badge-light font-1rem">{{$responsible['firstName']}} {{$responsible['lastName']}}</span> @endforeach @endforeach
@@ -191,7 +191,7 @@
                             <label class="form-control-label px-1">{{ __("Tags") }}</label>
                             <select name="tags[]"
                                     class="form-control mx-1 selectpicker w-100" data-dropup-auto="false"
-                                    data-none-selected-text="{{ __('No tags')}}"
+                                    data-none-selected-text="{{ __("No tags")}}"
                                     data-live-search="true" multiple>
                                 @foreach($tags as $tag)
                                     <option value={{ $tag->id }}>{{ $tag->name }}</option>
@@ -276,9 +276,9 @@
                                         <div class="col mr-2 text-center">
                                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                                 <!-- probably need to switch that logic on renaming a primary stream -->
-                                                Stream {{$loop->index + 1}}
+                                                {{ __("Stream") }} {{$loop->index + 1}}
                                                 @if (!is_numeric($source->name)): @if ($origin == 'cattura' && !in_array($source->name, ['right', 'left', 'main']))
-                                                    Camera @else {{$source->name}} @endif @endif
+                                                    {{ __("Camera") }} @else {{$source->name}} @endif @endif
                                             </div>
                                             <div class="position-relative">
                                             <img class=@if ($hidden[$key]) "opacity-1" @else "opacity-5" @endif src="{{$poster[$key]}}?{{ rand() }}" width="100%">
@@ -298,7 +298,7 @@
                                                    value="{{$loop->index}}" class="custom-control-input"
                                                    @if($playAudio[$key] == true) checked @endif >
                                             <label class="custom-control-label"
-                                                   for="audioSwitch{{$loop->index + 1}}">Audio</label>
+                                                   for="audioSwitch{{$loop->index + 1}}">{{ __("Audio") }}</label>
                                         </div>
                                         <div class="custom-control custom-switch mx-1">
                                             <input type="checkbox" name="hidden[]"
@@ -306,7 +306,7 @@
                                                    value="{{$loop->index}}" class="custom-control-input"
                                                    @if($hidden[$key] == true) checked @endif >
                                             <label class="custom-control-label"
-                                                   for="hiddenSwitch{{$loop->index + 1}}">Hidden</label>
+                                                   for="hiddenSwitch{{$loop->index + 1}}">{{ __("Hidden") }}</label>
                                         </div>
                                     </div>
                                 </div>

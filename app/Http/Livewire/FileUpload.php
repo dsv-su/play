@@ -160,7 +160,7 @@ class FileUpload extends Component
                 ->save($this->dirname.'/poster/'.$thumb_name.'.png');
             $seconds++;
             if($seconds > $streamduration) {
-                break; //Stops the loop 
+                break; //Stops the loop -> TODO we should add a message to say that the thumb will be generated on play-store instead
             }
         }
         while (!Storage::disk('public')->exists($this->dirname.'/poster/'.$thumb_name.'.png'));
