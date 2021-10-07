@@ -88,7 +88,7 @@ class FileUpload extends Component
                     $primary_video_name = basename($filename);
 
                     //Create and store generated thumb
-                    $this->filethumbs[] = $this->createThumb($filename, ($this->presentation->duration/3));
+                    $this->filethumbs[] = $this->createThumb($filename, ($this->presentation->duration/3), $this->presentation->duration);
                     $this->genthumb[] = ceil($this->presentation->duration/3);
                     $this->presentation->thumb = 'poster/'. basename($this->filethumbs[0]);
 
@@ -101,7 +101,7 @@ class FileUpload extends Component
                     $this->filesduration[] = $streamduration;
                     $this->genthumb[] = ceil($streamduration/3);
                     //posters
-                    $this->filethumbs[] = $this->createThumb($filename, ($streamduration/3));
+                    $this->filethumbs[] = $this->createThumb($filename, ($streamduration/3), $streamduration);
 
                 }
                 if(count($this->filenames) > 1 ) {
@@ -145,7 +145,7 @@ class FileUpload extends Component
         return $media->duration($stream);
     }
 
-    public function createThumb($media, $seconds)
+    public function createThumb($media, $seconds, $streamduration)
     {
         $base = basename($media);
         $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', $base);
@@ -159,6 +159,9 @@ class FileUpload extends Component
                 ->toDisk('public')
                 ->save($this->dirname.'/poster/'.$thumb_name.'.png');
             $seconds++;
+            if($seconds > $streamduration) {
+                break; //Stops the loop 
+            }
         }
         while (!Storage::disk('public')->exists($this->dirname.'/poster/'.$thumb_name.'.png'));
 
@@ -174,7 +177,7 @@ class FileUpload extends Component
         $this->validate([
             'sec' => 'required',
         ]);
-        $this->filethumbs[$gthumb] = $this->createThumb($this->filenames[$gthumb], $this->sec[$gthumb]);
+        $this->filethumbs[$gthumb] = $this->createThumb($this->filenames[$gthumb], $this->sec[$gthumb], $this->filesduration[$gthumb]);
         $this->genthumb[$gthumb]= $this->sec[$gthumb];
     }
 
