@@ -141,28 +141,33 @@ class FileUpload extends Component
     {
         $media = new DetermineDurationVideo($directory);
         //Retrive filename
-        $primary_video_name = basename($filename);
-        return $media->duration($primary_video_name);
+        $stream = basename($filename);
+        return $media->duration($stream);
     }
 
     public function createThumb($media, $seconds)
     {
         $base = basename($media);
         $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', $base);
-        //$thumb = substr($withoutExt, strpos($withoutExt, '/', 1));
         //Generate thumb
         //Create thumb and store in folder
-        FFMpeg::fromDisk('public')
-            ->open($media)
-            ->getFrameFromSeconds($seconds)
-            ->export()
-            ->toDisk('public')
-            ->save($this->dirname.'/poster/'.$thumb_name.'.png');
+        do {
+            FFMpeg::fromDisk('public')
+                ->open($media)
+                ->getFrameFromSeconds($seconds)
+                ->export()
+                ->toDisk('public')
+                ->save($this->dirname.'/poster/'.$thumb_name.'.png');
+            $seconds++;
+        }
+        while (!Storage::disk('public')->exists($this->dirname.'/poster/'.$thumb_name.'.png'));
+
         //Store thumb path
         $this->filethumbsname[] = $this->dirname.'/poster/'.$thumb_name.'.png';
 
         return Storage::disk('public')->url($this->dirname.'/poster/'.$thumb_name.'.png');
     }
+
 
     public function regenerate($gthumb)
     {
