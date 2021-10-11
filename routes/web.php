@@ -120,6 +120,7 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::post('/mediasiteRecordingDownload', 'PlayController@mediasiteRecordingDownload')->name('mediasiteRecordingDownload');
     Route::post('/mediasiteUserDownload', 'PlayController@mediasiteUserDownload')->name('mediasiteUserDownload');
     Route::post('/mediasiteOtherDownload', 'PlayController@mediasiteOtherDownload')->name('mediasiteOtherDownload');
+    Route::post('/mediasite/prefetchCourse', 'PlayController@prefetchCourseDownload')->name('mediasite.prefetchCourseDownload');
     /*
     Route::get('/upload', 'PlayController@upload');
     Route::post('/store', 'PlayController@store')->name('store');

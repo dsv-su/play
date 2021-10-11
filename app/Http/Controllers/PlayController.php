@@ -113,8 +113,12 @@ class PlayController extends Controller
             $data['latest'] = Video::with('category', 'video_course.course')->latest('creation')->get();
 
             if (app()->make('play_role') != 'Administrator') {
-                $data['active'] = $data['active']->filter(function ($video) {return $video->visability;});
-                $data['latest'] = $data['latest']->filter(function ($video) {return $video->visability;});
+                $data['active'] = $data['active']->filter(function ($video) {
+                    return $video->visability;
+                });
+                $data['latest'] = $data['latest']->filter(function ($video) {
+                    return $video->visability;
+                });
             }
         }
 
@@ -551,6 +555,40 @@ class PlayController extends Controller
         return redirect()->route('home');
     }
 
+    public function prefetchCourseDownload(): JsonResponse
+    {
+        $folderid = request()->course ?? null;
+        $dates = explode(' - ', request('daterange'));
+        $start = Carbon::createFromFormat('d/m/Y', $dates[0]);
+        $end = Carbon::createFromFormat('d/m/Y', $dates[1]);
+        $system = new AuthHandler();
+        $system = $system->authorize();
+        $mediasite = new Client([
+            'headers' => [
+                'Accept' => 'application/json',
+                'sfapikey' => $system->mediasite->sfapikey,
+            ],
+            'auth' => [$system->mediasite->username, $system->mediasite->password]
+        ]);
+        $url = $system->mediasite->url;
+
+        $presentations = MediasitePresentation::where('mediasite_folder_id', MediasiteFolder::where('mediasite_id', $folderid)->firstOrFail()->id)->get();
+        $todownload = [];
+        foreach ($presentations as $presentation) {
+            $presentationid = $presentation->id;
+            $mediasite_presentation = json_decode($mediasite->get($url . "/Presentations('$presentationid')?\$select=full")->getBody(), true);
+
+            if ($start || $end) {
+                $recorded = strtotime($mediasite_presentation['RecordDate']);
+                if ($recorded < $start->timestamp || $recorded > $end->timestamp + 3600) {
+                    continue;
+                }
+            }
+            $todownload[] = ['name' => $mediasite_presentation['Title'], 'id' => $mediasite_presentation['Id']];
+        }
+        return Response()->json(['presentations' => json_encode($todownload)]);
+    }
+
     /**
      * @param $type
      * @param $folderid
@@ -582,7 +620,7 @@ class PlayController extends Controller
 
                     if ($start || $end) {
                         $recorded = strtotime($mediasite_presentation['RecordDate']);
-                        if ($recorded < $start->timestamp || $recorded > $end->timestamp) {
+                        if ($recorded < $start->timestamp || $recorded > $end->timestamp + 3600) {
                             continue;
                         }
                     }
@@ -675,7 +713,7 @@ class PlayController extends Controller
                             for ($i = 1; $i < $slide['Length'] + 1; $i++) {
                                 $filename = "slide_" . str_pad($i, 4, "0", STR_PAD_LEFT) . ".jpg";
                                 $slideurl = "https://play2.dsv.su.se/FileServer/" . $slide['ContentServerId'] . "/Presentation/" . $slide['ParentResourceId'] . "/" . $filename;
-                                $metadata['slides'][] = ['url' => $slideurl, 'time' => isset($array['Slides']['SlideEntry'][$i - 1]) ? $array['Slides']['SlideEntry'][$i - 1]['Time'] : $array['Slides']['SlideEntry']['Time']];
+                                $metadata['slides'][] = ['url' => $slideurl, 'duration' => isset($array['Slides']['SlideEntry'][$i - 1]) ? $array['Slides']['SlideEntry'][$i - 1]['Time'] : $array['Slides']['SlideEntry']['Time']];
                             }
                         }
                     }

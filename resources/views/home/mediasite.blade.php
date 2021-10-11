@@ -14,8 +14,8 @@
             @endforeach
         </select><br>
         Dates: <input type="text" name="daterange" class="w-50" /><br/>
-        Designation: <input type="text" class="col-3" id="designation" name="designation" placeholder="Designation">
-        <br>
+        Designation: <input type="text" class="col-3" id="designation" name="designation" placeholder="Designation" required>
+        <div id="todownload" class="alert alert-info w-50 font-1rem" role="alert">No presentations to fetch</div>
         <input type="submit" class="btn btn-sm btn-primary" value="Download"/><br/><br/>
     </form>
 
@@ -75,6 +75,28 @@
                     "Su"
                 ]
             }
+        });
+        $('form').on('change', function (e) {
+            e.preventDefault();
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                type: 'post',
+                url: '{{route('mediasite.prefetchCourseDownload')}}',
+                data: $(this).serialize(),
+                success: function (data) {
+                    var html = 'Presentations to be downloaded: <br>';
+                    console.log(JSON.parse(data.presentations));
+                    $.each(JSON.parse(data.presentations), function (i, p) {
+                        console.log(p);
+                       html += p.name + ' (id' + p.id + ')</br>';
+                    });
+                   $('#todownload').html(html);
+                }
+            });
         });
     </script>
 
