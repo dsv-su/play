@@ -492,8 +492,8 @@ class PlayController extends Controller
     {
         $folderid = request()->user ?? null;
         $dates = explode(' - ', request('daterange'));
-        $start = Carbon::createFromFormat('d/m/Y', $dates[0]);
-        $end = Carbon::createFromFormat('d/m/Y', $dates[1]);
+        $start = Carbon::createFromFormat('d/m/Y', $dates[0])->startOfDay();
+        $end = Carbon::createFromFormat('d/m/Y', $dates[1])->endOfDay();
         $this->processDownload('user', $folderid, $start ?? 0, $end ?? 32472226800);
 
         $subfolders = array();
@@ -515,8 +515,8 @@ class PlayController extends Controller
         $folderid = request()->course ?? null;
         $designation = request()->designation ?? null;
         $dates = explode(' - ', request('daterange'));
-        $start = Carbon::createFromFormat('d/m/Y', $dates[0]);
-        $end = Carbon::createFromFormat('d/m/Y', $dates[1]);
+        $start = Carbon::createFromFormat('d/m/Y', $dates[0])->startOfDay();
+        $end = Carbon::createFromFormat('d/m/Y', $dates[1])->endOfDay();
         $this->processDownload('course', $folderid, $designation, $start ?? 0, $end ?? 32472226800);
 
         return redirect()->route('home');
@@ -531,8 +531,8 @@ class PlayController extends Controller
     {
         $folderid = request()->recording ?? null;
         $dates = explode(' - ', request('daterange'));
-        $start = Carbon::createFromFormat('d/m/Y', $dates[0]);
-        $end = Carbon::createFromFormat('d/m/Y', $dates[1]);
+        $start = Carbon::createFromFormat('d/m/Y', $dates[0])->startOfDay();
+        $end = Carbon::createFromFormat('d/m/Y', $dates[1])->endOfDay();
 
         $this->processDownload('various', $folderid, $start ?? 0, $end ?? 32472226800);
 
@@ -548,8 +548,8 @@ class PlayController extends Controller
     {
         $folderid = request()->other ?? null;
         $dates = explode(' - ', request('daterange'));
-        $start = Carbon::createFromFormat('d/m/Y', $dates[0]);
-        $end = Carbon::createFromFormat('d/m/Y', $dates[1]);
+        $start = Carbon::createFromFormat('d/m/Y', $dates[0])->startOfDay();
+        $end = Carbon::createFromFormat('d/m/Y', $dates[1])->endOfDay();
         $this->processDownload('other', $folderid, $start ?? 0, $end ?? 32472226800);
 
         return redirect()->route('home');
@@ -559,8 +559,8 @@ class PlayController extends Controller
     {
         $folderid = request()->course ?? null;
         $dates = explode(' - ', request('daterange'));
-        $start = Carbon::createFromFormat('d/m/Y', $dates[0]);
-        $end = Carbon::createFromFormat('d/m/Y', $dates[1]);
+        $start = Carbon::createFromFormat('d/m/Y', $dates[0])->startOfDay();
+        $end = Carbon::createFromFormat('d/m/Y', $dates[1])->endOfDay();
         $system = new AuthHandler();
         $system = $system->authorize();
         $mediasite = new Client([
@@ -580,11 +580,11 @@ class PlayController extends Controller
 
             if ($start || $end) {
                 $recorded = strtotime($mediasite_presentation['RecordDate']);
-                if ($recorded < $start->timestamp || $recorded > $end->timestamp + 3600) {
+                if ($recorded < $start->timestamp || $recorded > $end->timestamp) {
                     continue;
                 }
             }
-            $todownload[] = ['name' => $mediasite_presentation['Title'], 'id' => $mediasite_presentation['Id']];
+            $todownload[] = ['name' => $mediasite_presentation['Title'], 'id' => $mediasite_presentation['Id'], 'recorded' => $recorded, 'start' => $start->timestamp, 'end' => $end->timestamp];
         }
         return Response()->json(['presentations' => json_encode($todownload)]);
     }
@@ -620,7 +620,7 @@ class PlayController extends Controller
 
                     if ($start || $end) {
                         $recorded = strtotime($mediasite_presentation['RecordDate']);
-                        if ($recorded < $start->timestamp || $recorded > $end->timestamp + 3600) {
+                        if ($recorded < $start->timestamp || $recorded > $end->timestamp) {
                             continue;
                         }
                     }
