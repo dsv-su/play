@@ -68,6 +68,7 @@ class Kernel extends HttpKernel
         'daisy-status' => \App\Http\Middleware\StatusDaisy::class,
         'video-permission' => \App\Http\Middleware\CheckVideoPermission::class,
         'presentation-permission' => \App\Http\Middleware\CheckPresentationPermission::class,
+        'edit-permission' => \App\Http\Middleware\CheckEditPermission::class,
         'play-admin' => \App\Http\Middleware\PlayAdmin::class,
         'auth.basic.once' => \App\Http\Middleware\AuthenticateOnceWithBasicAuth::class,
     ];

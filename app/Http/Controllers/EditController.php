@@ -19,6 +19,11 @@ use Illuminate\Support\Facades\Cache;
 
 class EditController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('edit-permission');
+    }
+
     public function show(Video $video)
     {
         $permissions = Permission::all();
