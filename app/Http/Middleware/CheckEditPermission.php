@@ -22,7 +22,7 @@ class CheckEditPermission
         $system = $system->authorize();
         if(!$request->server('REMOTE_USER'))
         {
-            if($system->global->app_env == 'local') {
+            if($system->global->app_env == 'local' or app()->make('play_auth') == 'Administrator') {
                 return $next($request);
             } else {
                 return redirect()->guest(route('sulogin'));
