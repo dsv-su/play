@@ -131,6 +131,12 @@ class Video extends Model implements Searchable
         return $this->belongsToMany(Permission::class, 'video_permissions', 'video_id', 'permission_id')->get();
     }
 
+    //Overall group permissions
+    public function status(): HasMany
+    {
+        return $this->hasMany(VideoPermission::class);
+    }
+
     public function streams(): HasMany
     {
         return $this->hasMany(Stream::class);

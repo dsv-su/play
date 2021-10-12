@@ -6,8 +6,8 @@
             <div class="title">{{ $video->title }}</div>
             <!-- Group Permissions -->
             <div class="icons">
+                @foreach($video->status as $permission)
 
-                @foreach($video->permissions() as $permission)
                     @if($permission->type == 'private')
                         <div class="permission mx-1" data-toggle="tooltip"
                              title="{{__('Viewing permissions modified')}}"><i class="fas fa-user-lock"></i></div>

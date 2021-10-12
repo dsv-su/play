@@ -8,7 +8,6 @@ use App\Course;
 use App\CourseSearchAspect;
 use App\Presenter;
 use App\Services\Notify\PlayStoreNotify;
-use App\Video;
 use Illuminate\Http\Request;
 use Spatie\Searchable\ModelSearchAspect;
 use Spatie\Searchable\Search;
