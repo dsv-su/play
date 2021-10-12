@@ -32,10 +32,11 @@ class CheckEditPermission
             $video = Video::find(basename($request->getUri()));
 
             //If user is Admin
-            if(app()->make('play_auth') == 'Administrator') {
+            // This should be changed to 'play_auth' for production
+            if(app()->make('play_role') == 'Administrator') {
                 return $next($request);
             }
-            
+
             //Check if user is courseadmin
             if($courseadmins = $video->coursepermissions ?? false) {
                 foreach($courseadmins as $cper) {
