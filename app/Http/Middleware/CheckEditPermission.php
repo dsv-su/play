@@ -22,7 +22,7 @@ class CheckEditPermission
         $system = $system->authorize();
         if(!$request->server('REMOTE_USER'))
         {
-            if($system->global->app_env == 'local' or app()->make('play_auth') == 'Administrator') {
+            if($system->global->app_env == 'local') {
                 return $next($request);
             } else {
                 return redirect()->guest(route('sulogin'));
@@ -31,6 +31,11 @@ class CheckEditPermission
         else {
             $video = Video::find(basename($request->getUri()));
 
+            //If user is Admin
+            if(app()->make('play_auth') == 'Administrator') {
+                return $next($request);
+            }
+            
             //Check if user is courseadmin
             if($courseadmins = $video->coursepermissions ?? false) {
                 foreach($courseadmins as $cper) {
