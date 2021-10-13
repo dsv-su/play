@@ -71,6 +71,7 @@ class Kernel extends HttpKernel
         'edit-permission' => \App\Http\Middleware\CheckEditPermission::class,
         'play-admin' => \App\Http\Middleware\PlayAdmin::class,
         'admin-stats' => \App\Http\Middleware\AdminStats::class,
+        'playback' => \App\Http\Middleware\Playback::class,
         'auth.basic.once' => \App\Http\Middleware\AuthenticateOnceWithBasicAuth::class,
     ];
 }

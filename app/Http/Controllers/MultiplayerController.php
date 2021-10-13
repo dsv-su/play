@@ -18,7 +18,7 @@ class MultiplayerController extends Controller
     public function __construct()
     {
         //Exceptions for 'Multiplayer', 'Presentation' and 'Playlist' for external permission setting
-        $this->middleware(['entitlements', 'playauth'])->except(['multiplayer', 'presentation', 'playlist']);
+        $this->middleware(['entitlements', 'playauth', 'playback'])->except(['multiplayer', 'presentation', 'playlist']);
     }
 
     /**

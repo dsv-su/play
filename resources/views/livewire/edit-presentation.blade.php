@@ -203,10 +203,10 @@
                     <!-- Permissions -->
                     <div class="row justify-content-between text-left">
                         <!--Video group permission settings-->
-                        <div wire:ignore class="form-group col-12 col-md-6 flex-column d-flex">
+                        <div class="form-group col-12 col-md-6 flex-column d-flex">
                             <label class="form-control-label px-1">{{ __("Playback group permissions") }}</label>
                             <div id="video_perm">
-                                <select class="form-group form-control" name="video_permission">
+                                <select class="form-group form-control" name="video_permission" @if(!$visability) style="background: #dddddd" @endif>
                                     @foreach($permissions as $perm)
                                         <option value="{{$perm->id}}"
                                                 @if($presentationpermissonId == $perm->id) selected @endif >{{$perm->id}}
@@ -262,6 +262,17 @@
                             @endif
                         </div>
                         <!-- end Individual permissions -->
+                        <!-- Alert warning -->
+                        @if(!$visability)
+                        <div class="form-group col-12 col-md-6 flex-column d-flex">
+                            <div class="col alert alert-warning" role="alert">
+                                <p class="px-1 font-1rem">
+                                    {{ __("The presentation is hidden and locked for playback. Accessible only by individual users with editing permissions") }}
+                                </p>
+                            </div>
+                        </div>
+                        @endif
+                        <!-- -->
                     </div>
                 </div>
             </div>
