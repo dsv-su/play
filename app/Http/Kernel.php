@@ -70,6 +70,7 @@ class Kernel extends HttpKernel
         'presentation-permission' => \App\Http\Middleware\CheckPresentationPermission::class,
         'edit-permission' => \App\Http\Middleware\CheckEditPermission::class,
         'play-admin' => \App\Http\Middleware\PlayAdmin::class,
+        'admin-stats' => \App\Http\Middleware\AdminStats::class,
         'auth.basic.once' => \App\Http\Middleware\AuthenticateOnceWithBasicAuth::class,
     ];
 }
