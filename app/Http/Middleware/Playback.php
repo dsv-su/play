@@ -23,20 +23,25 @@ class Playback
          */
         $system = new AuthHandler();
         $system = $system->authorize();
+        if($video = Video::find(basename($request->getUri()))) {
+
+        }
+        else {
+            $video = Video::find($request->p);
+        }
+
+        //Check if user is through SU SSO
         if(!$request->server('REMOTE_USER'))
         {
+            //Local dev enviroment
             if($system->global->app_env == 'local') {
-                return $next($request);
-            } else {
-                return redirect()->guest(route('sulogin'));
+                //return $next($request);
             }
         }
         else {
-            $video = Video::find(basename($request->getUri()));
-
             //If user is Admin
             // This should be changed to 'play_auth' for production
-            if(app()->make('play_role') == 'Administrator') {
+            if(app()->make('play_role')  == 'Administrator' )  {
                 return $next($request);
             }
 
@@ -66,11 +71,13 @@ class Playback
 
                 }
             }
-            //Check if video is hidden
-            if($video->visability == true) {
-                return $next($request);
-            }
         }
+
+        //Check if video is hidden
+        if($video->visability == true) {
+            return $next($request);
+        }
+
 
         return redirect()->route('home');
 
