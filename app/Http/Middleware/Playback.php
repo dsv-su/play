@@ -35,15 +35,15 @@ class Playback
         {
             //Local dev enviroment
             if($system->global->app_env == 'local') {
-                //return $next($request);
+                return $next($request);
             }
         }
         else {
             //If user is Admin
             // This should be changed to 'play_auth' for production
-            if(app()->make('play_role')  == 'Administrator' )  {
+            /*if(app()->make('play_role')  == 'Administrator' )  {
                 return $next($request);
-            }
+            }*/
 
             //Check if user is courseadmin
             if($courseadmins = $video->coursepermissions ?? false) {
