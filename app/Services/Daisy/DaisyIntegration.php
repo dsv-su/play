@@ -6,6 +6,7 @@ use App\Course;
 use App\System;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Database\Eloquent\Model;
 
 class DaisyIntegration extends Model
@@ -23,11 +24,15 @@ class DaisyIntegration extends Model
     public function getResource($endpoint, $type = null)
     {
         $this->client = new Client();
-        return $this->client->request('GET', $this->system->daisy_url . $endpoint, [
-            'auth' => [$this->system->daisy_username, $this->system->daisy_password],
-            'headers' => ['Accept' => $type ? "application/$type" : '']
-        ]);
-
+        try {
+            return $this->client->request('GET', $this->system->daisy_url . $endpoint, [
+                'auth' => [$this->system->daisy_username, $this->system->daisy_password],
+                'headers' => ['Accept' => $type ? "application/$type" : '']
+            ]);
+        } catch (ClientException $e) {
+            abort(503);
+        }
+        return 0;
     }
 
     //Method for retrieving DaisyId with UserID

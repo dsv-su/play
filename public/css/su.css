@@ -2798,16 +2798,16 @@ div.ck-framed-section__blue::after {
 }
 
 .tab-list .nav-tabs .nav-link, .tab-list__light-blue .nav-tabs .nav-link {
-    border-color: transparent
+    border-color: transparent;
 }
 
 .tab-list__light-blue {
-    background: #eef9fa;
-    border-top: 4px solid #acdee6
+    background-color: #eef9fa;
+    border-top: 4px solid #acdee6;
 }
 
 .tab-list__light-blue .nav-link.active, .tab-list__light-blue .nav-item.show .nav-link {
-    background-color: #acdee6
+    background-color: #acdee6;
 }
 
 .tab-list__light-blue .nav-link:hover, .tab-list__light-blue .nav-link:focus {
@@ -2817,7 +2817,7 @@ div.ck-framed-section__blue::after {
 }
 
 .cursor-pointer {
-    cursor: pointer
+    cursor: pointer;
 }
 
 .text-decoration-none {

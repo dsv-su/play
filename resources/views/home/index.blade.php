@@ -42,7 +42,7 @@
                 @if (isset($latest) && $latest->count())
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#pane-C" data-toggle="tab"
-                           title="@lang('lang.latest')">@lang('lang.latest')</a>
+                           title="@lang('lang.latest')">@lang('lang.latest') ({{$latest->count()}})</a>
                     </li>
                 @endif
             </ul>
@@ -222,7 +222,7 @@
                     $('.selectpicker').selectpicker('refresh');
                 },
                 error: function (data) {
-                    /*alert('There was an error.');*/
+                    alert('There was an error.');
                     console.log(data);
                 }
             });

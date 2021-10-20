@@ -40,10 +40,7 @@ class Playback
         }
         else {
             //If user is Admin
-            // This should be changed to 'play_auth' for production
-            /*if(app()->make('play_role')  == 'Administrator' )  {
-                return $next($request);
-            }*/
+           //TODO
 
             //Check if user is courseadmin
             if($courseadmins = $video->coursepermissions ?? false) {
@@ -74,10 +71,11 @@ class Playback
         }
 
         //Check if video is hidden
-        if($video->visability == true) {
-            return $next($request);
+        if($video ?? false) {
+            if($video->visability == true) {
+                return $next($request);
+            }
         }
-
 
         return redirect()->route('home');
 
