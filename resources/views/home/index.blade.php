@@ -23,20 +23,23 @@
             </div> <!-- col-12 -->
         </div> <!-- row no-gutters -->
     </div>
+ <style>
 
+
+ </style>
     <div class="container">
         @if (isset($active) || isset($my))
             <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
                 @if (isset($my) && !$my->isEmpty())
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#pane-A" data-toggle="tab"
-                           title="@lang('lang.my_courses')">@lang('lang.my_courses')</a>
+                           title="@lang('lang.my_courses')">@lang('lang.my_courses') ({{$my->count()}})</a>
                     </li>
                 @endif
                 @if (isset($active) && !$active->isEmpty())
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#pane-B" data-toggle="tab"
-                           title="@lang('lang.active_courses')">@lang('lang.active_courses')</a>
+                           title="@lang('lang.active_courses')">@lang('lang.active_courses') ({{$active->count()}})</a>
                     </li>
                 @endif
                 @if (isset($latest) && $latest->count())

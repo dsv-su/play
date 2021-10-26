@@ -8,6 +8,7 @@ use App\Course;
 use App\CourseSearchAspect;
 use App\Presenter;
 use App\Services\Notify\PlayStoreNotify;
+use App\Video;
 use Illuminate\Http\Request;
 use Spatie\Searchable\ModelSearchAspect;
 use Spatie\Searchable\Search;
@@ -27,35 +28,34 @@ class TestController extends Controller
 
     }
 
+    public function courseSet()
+    {
+        dd('CourseSettings');
+    }
+
     public function search(Request $request)
     {
-        /*****************************
-         * In working progress --> This is all for testing - will be rewritten!!
-         */
-
-        /**************************
-         * Check if searchstring is empty
-         */
+        /*
 
         if ($request->input('query')) {
             $searchString = $request->input('query');
         } else $searchString = 'Inget angivet';
 
-        /*********************************
-         * Get all categories for nav-menu
-         */
+
+       //Get all categories for nav-menu
+
 
         $categories = Category::all();
 
-        /*********************************
-         * Fulltext search
-         */
+
+         //Fulltext search
+
 
         $search = 1;
         if ($request->input('type') == null) {
-            /*****************************
-             * Search model Video
-             */
+
+             //Search model Video
+
             $searchResults = (new Search())
                 ->registerModel(Video::class, function (ModelSearchAspect $modelSearchAspect) {
                     $modelSearchAspect
@@ -63,9 +63,9 @@ class TestController extends Controller
                 })
                 ->perform($searchString);
 
-            /*****************************
-             * Search Video in relation to Category
-             */
+
+             //Search Video in relation to Category
+
             $cat = 0;
             $searchCategoryRelations = (new Search())
                 ->registerAspect(CategorySearchAspect::class)
@@ -79,9 +79,9 @@ class TestController extends Controller
                 //return view('home.index', compact('searchResults','searchCategoryRelations','data', 'search', 'play_user'));
             } else $cat = 1;
 
-            /******************************
-             * Search Video in relation to Course
-             */
+
+             //Search Video in relation to Course
+
             $searchCourseRelations = (new Search())
                 ->registerAspect(CourseSearchAspect::class)
                 ->perform($searchString);
@@ -168,11 +168,9 @@ class TestController extends Controller
         } elseif ($request->input('type') == 'type-latest') {
             dd('Sorry, LATEST search has not been implemented');
         }
-
+*/
     }
 
-    /*************************************************************************************
-     */
 
     public function del(Video $video)
     {

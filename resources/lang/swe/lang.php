@@ -9,6 +9,7 @@ return [
     'tag' => 'Tagg',
     'manage'    => 'Hantera',
     'manage_recording' => 'Hantera inspelning',
+    'manage_course' => 'Hantera kurs',
     'manual_upload' => 'Manuell uppladdning',
     'admin'     =>  'Admin',
     'su' => 'Stockholms universitet, DSV',

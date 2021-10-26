@@ -106,6 +106,10 @@
                                                     class="fas fa-video fa-icon-border mr-2"
                                                     aria-hidden="true"></span>@lang('lang.manage_recording')</a>
                                         <a class="nav-link level-2 d-flex align-content-center"
+                                           href="{{ route('manage_course') }}"><span
+                                                class="fas fa-address-card fa-icon-border mr-2"
+                                                aria-hidden="true"></span>@lang('lang.manage_course')</a>
+                                        <a class="nav-link level-2 d-flex align-content-center"
                                            href="{{ route('user_upload') }}"><span
                                                     class="fas fa-upload fa-icon-border mr-2"
                                                     aria-hidden="true"></span>@lang('lang.manual_upload')</a>
