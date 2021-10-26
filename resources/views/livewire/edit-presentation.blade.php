@@ -22,6 +22,11 @@
             </div> <!-- col-12 -->
         </div> <!-- row no-gutters -->
     </div>
+    <div class="container banner-inner">
+        <div class="alert alert-info text-center">
+            {{__('Changes are saved upon clicking Update button at the bottom of the page.')}}
+        </div>
+    </div>
 
     <div class="container px-3 px-sm-0">
         <div class="row">
@@ -85,6 +90,18 @@
                                                type="checkbox" @if($visability == true) checked @endif>
                                         <label class="custom-control-label" style="margin-top: 3px;"
                                                for="visabilitySwitch"></label>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row"><label for="downloadSwitch"
+                                                    class="col-4 col-lg-3 mb-0">{{__("Downloadable")}}</label>
+                                <div class="col">
+                                       <span class="custom-control custom-switch custom-switch-lg">
+                                        <input class="custom-control-input"
+                                               id="downloadSwitch" name="download"
+                                               type="checkbox" @if($download == true) checked @endif>
+                                        <label class="custom-control-label" style="margin-top: 3px;"
+                                               for="downloadSwitch"></label>
                                     </span>
                                 </div>
                             </div>
@@ -206,7 +223,8 @@
                         <div class="form-group col-12 col-md-6 flex-column d-flex">
                             <label class="form-control-label px-1">{{ __("Playback group permissions") }}</label>
                             <div id="video_perm">
-                                <select class="form-group form-control" name="video_permission" @if(!$visability) style="background: #dddddd" @endif>
+                                <select class="form-group form-control" name="video_permission"
+                                        @if(!$visability) style="background: #dddddd" @endif>
                                     @foreach($permissions as $perm)
                                         <option value="{{$perm->id}}"
                                                 @if($presentationpermissonId == $perm->id) selected @endif >{{$perm->id}}
@@ -264,15 +282,15 @@
                         <!-- end Individual permissions -->
                         <!-- Alert warning -->
                         @if(!$visability)
-                        <div class="form-group col-12 col-md-6 flex-column d-flex">
-                            <div class="col alert alert-warning" role="alert">
-                                <p class="px-1 font-1rem">
-                                    {{ __("The presentation is hidden and locked for playback. Accessible only by individual users with editing permissions") }}
-                                </p>
+                            <div class="form-group col-12 col-md-6 flex-column d-flex">
+                                <div class="col alert alert-warning" role="alert">
+                                    <p class="px-1 font-1rem">
+                                        {{ __("The presentation is hidden and locked for playback. Accessible only by individual users with editing permissions") }}
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                        @endif
-                        <!-- -->
+                    @endif
+                    <!-- -->
                     </div>
                 </div>
             </div>
@@ -288,14 +306,17 @@
                                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                                 <!-- probably need to switch that logic on renaming a primary stream -->
                                                 {{ __("Stream") }} {{$loop->index + 1}}
-                                                @if (!is_numeric($source->name)): @if ($origin == 'cattura' && !in_array($source->name, ['right', 'left', 'main']))
-                                                    {{ __("Camera") }} @else {{$source->name}} @endif @endif
+                                                @if (!is_numeric($source->name))
+                                                    : @if ($origin == 'cattura' && !in_array($source->name, ['right', 'left', 'main']))
+                                                        {{ __("Camera") }} @else {{$source->name}} @endif @endif
                                             </div>
                                             <div class="position-relative">
-                                            <img class=@if ($hidden[$key]) "opacity-1" @else "opacity-5" @endif src="{{$poster[$key]}}?{{ rand() }}" width="100%">
+                                                <img class=@if ($hidden[$key]) "opacity-1" @else "opacity-5" @endif
+                                                src="{{$poster[$key]}}?{{ rand() }}" width="100%">
                                                 <div class="d-flex justify-content-center h-100">
-                                                        <div id="stream_hidden" class="alert alert-secondary m-auto" @if (!$hidden[$key]) style="display: none;" @endif
-                                                             role="alert">{{ __("Stream hidden") }}</div>
+                                                    <div id="stream_hidden" class="alert alert-secondary m-auto"
+                                                         @if (!$hidden[$key]) style="display: none;" @endif
+                                                         role="alert">{{ __("Stream hidden") }}</div>
                                                 </div>
                                             </div>
                                             {{--}}<input class="form-control form-control-sm" type="file" wire:model="editfile.{{$key}}">{{--}}
@@ -338,7 +359,7 @@
     <script>
         $(document).ready(function () {
             $('.selectpicker[name="courseEdit[]"]').selectpicker('val', {{$courseids}}.map(String));
-            @this.set('courseEdit', {{$courseids}}.map(String));
+        @this.set('courseEdit', {{$courseids}}.map(String));
             $('.selectpicker[name="tags[]"]').selectpicker('val', {{$tagids}}.map(String));
 
             $(".datepicker").datepicker({
@@ -349,7 +370,7 @@
 
             $('select[name="courseEdit[]"]').on('change', function (e) {
                 var item = $(this).val();
-                @this.set('courseEdit', item);
+            @this.set('courseEdit', item);
             });
         });
     </script>

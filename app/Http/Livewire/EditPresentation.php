@@ -29,7 +29,7 @@ class EditPresentation extends Component
     public $suser;
     public $course_responsible = [];
     public $visability;
-
+    public $download;
 
     public function mount($video, $courses, $permissions, $individual_permissions)
     {
@@ -45,6 +45,7 @@ class EditPresentation extends Component
         $this->sources = $video->streams;
         $this->ipermissions = $individual_permissions->count();
         $this->visability = (bool) $video->visability;
+        $this->download = (bool) $video->download;
 
         foreach ($video->presenters() as $this->presenter) {
             if (!$this->presenter->username == null) {
