@@ -158,6 +158,14 @@ class EditController extends Controller
             } else {
                 $video->visability = false;
             }
+
+            //Update visability
+            if ($request->download) {
+                $video->download = true;
+            } else {
+                $video->download = false;
+            }
+
             $video->save();
         }
 
