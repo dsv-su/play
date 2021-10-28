@@ -37,20 +37,14 @@ return [
     'connections' => [
 
         'default' => [
-            //'hosts' => [env('LDAP_HOST', '127.0.0.1')],
             'hosts' => [$system_config['sukat']['host']],
-            //'username' => env('LDAP_USERNAME', 'cn=user,dc=local,dc=com'),
             'username' => $system_config['sukat']['username'],
-            //'password' => env('LDAP_PASSWORD', 'secret'),
             'password' => $system_config['sukat']['password'],
-            //'port' => env('LDAP_PORT', 389),
             'port' => $system_config['sukat']['port'],
-            //'base_dn' => env('LDAP_BASE_DN', 'dc=local,dc=com'),
             'base_dn' => $system_config['sukat']['base_dn'],
-            //'timeout' => env('LDAP_TIMEOUT', 5),
             'timeout' => $system_config['sukat']['timeout'],
-            'use_ssl' => env('LDAP_SSL', false),
-            'use_tls' => env('LDAP_TLS', false),
+            'use_ssl' => true,
+            'version' => $system_config['sukat']['version'],
 
         ],
 

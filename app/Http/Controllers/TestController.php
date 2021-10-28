@@ -7,6 +7,7 @@ use App\CategorySearchAspect;
 use App\Course;
 use App\CourseSearchAspect;
 use App\Presenter;
+use App\Services\DaisyAPI;
 use App\Services\Notify\PlayStoreNotify;
 use App\Video;
 use Illuminate\Http\Request;
