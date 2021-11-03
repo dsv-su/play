@@ -7,7 +7,7 @@ use App\CategorySearchAspect;
 use App\Course;
 use App\CourseSearchAspect;
 use App\Presenter;
-use App\Services\DaisyAPI;
+use App\Services\Daisy\DaisyAPI;
 use App\Services\Notify\PlayStoreNotify;
 use App\Video;
 use Illuminate\Http\Request;
@@ -19,6 +19,17 @@ class TestController extends Controller
 
     public function test()
     {
+        $daisy = new DaisyAPI();
+
+        //Get user DaisyID
+        $daisyID = $daisy->getDaisyPersonId('');
+
+        //Get
+
+        $courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyID);
+
+        dd($courses);
+        dd($responisble = $daisy->getDaisyCourseResponsible(6938));
 
     }
 
@@ -177,7 +188,8 @@ class TestController extends Controller
     {
         //Send Delete notification
         $notify = new PlayStoreNotify($video);
-        $notify->sendDelete();
+        dd($message = $notify->sendDelete());
+
         return back()->with(['message' => 'Presentationen har raderats']);
     }
 

@@ -170,7 +170,7 @@ class PlayStoreNotify extends Model
     {
         $this->client = new Client(['base_uri' => $this->base_uri()]);
         $this->headers = [
-            //'Authorization' => 'Bearer ' . $this->token(),
+            //'auth' => $this->storeauth(),
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ];
@@ -215,5 +215,16 @@ class PlayStoreNotify extends Model
         $this->system_config = parse_ini_file($this->file, true);
 
         return $this->system_config['store']['notify_uri'];
+    }
+
+    private function storeauth()
+    {
+        $this->file = base_path() . '/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            $this->file = base_path() . '/systemconfig/play.ini.example';
+        }
+        $this->system_config = parse_ini_file($this->file, true);
+
+        return $this->system_config['store']['notify_auth'];
     }
 }
