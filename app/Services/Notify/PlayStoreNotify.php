@@ -170,13 +170,17 @@ class PlayStoreNotify extends Model
     {
         $this->client = new Client(['base_uri' => $this->base_uri()]);
         $this->headers = [
-            //'auth' => $this->storeauth(),
             'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
+            'Accept' => 'application/json'
         ];
+        $auth = [
+            'auth' => $this->storeauth(),
+        ];
+
         try {
             $this->response = $this->client->request('DELETE', $this->base_uri() . '/' . $this->presentation->id, [
-                'headers' => $this->headers
+                'headers' => $this->headers,
+                'body' => json_encode($auth)
             ]);
         } catch (\Exception $e) {
             /**
@@ -191,7 +195,7 @@ class PlayStoreNotify extends Model
             return true;
         } else {
             //TODO Error handling
-            return $this->response->getBody();
+            return json_decode($this->response->getBody(), true);
         }
     }
 

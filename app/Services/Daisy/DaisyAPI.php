@@ -3,6 +3,7 @@
 namespace App\Services\Daisy;
 
 use App\Services\Daisy\DaisyIntegration;
+use Illuminate\Support\Arr;
 
 class DaisyAPI extends DaisyIntegration
 {
@@ -14,19 +15,31 @@ class DaisyAPI extends DaisyIntegration
     //All courses where user is Responible courseadministrator
     public function getDaisyEmployeeResponsibleCourses($id)
     {
-        $this->array_resource = json_decode($this->getResource('employee/' . $id . '/contributions?fromSemesterId=20191&toSemesterId=20211', 'json')->getBody()->getContents(), TRUE);
-        return $this->array_resource;
-        /*if($this->array_resource['contributors']) {
-            foreach($this->array_resource['contributors'] as $contributor) {
-                if($contributor['responsible'] == true) {
-                    //Return responisble teachers details
-                    $responsible_contributor[] = json_decode($this->getResource('/person/' . $contributor['personId'], 'json')->getBody()->getContents(), 'TRUE');
-                }
-            }
-            return $responsible_contributor;
-        }
+        if($this->array_resources = json_decode($this->getResource('employee/' . $id . '/contributions?fromSemesterId=20191&toSemesterId=20211', 'json')->getBody()->getContents(), TRUE)) {
+            //If user is courseadmin
+            //Sort the result after year
 
-        return [];
-        */
+            $this->resources = collect($this->array_resources)->sortBy(function($course, $key) {
+                return $course['courseSegmentInstance']['semesterId'];
+            });
+
+            foreach ($this->resources->reverse() as $course) {
+                $courselist[] = Arr::flatten($course);
+            }
+        }
+        else {
+            return false;
+        }
+        /*
+         * Returns an array
+                   * [0] Coursename swedish
+                   * [1] Coursename english
+                   * [2] CourseID
+                   * [3] Semester in format year XXXX and term 1 spring(VT) 2 fall(HT) - e.g. 20212
+                   * [4] Designation
+                   * [5] Courseadmin true/false
+                   */
+        return $courselist;
+
     }
 }

@@ -45,7 +45,8 @@ Route::middleware('entitlements', 'playauth')->group(function () {
 
     //Manage
     Route::get('/manage', 'SearchController@search')->name('manage');
-    Route::get('/manage_course', 'TestController@courseSet')->name('manage_course');
+    Route::get('/manage_course', 'ManageCourseSettingsController@index')->name('manage_course');
+    Route::get('/course_edit/{courseid}', 'ManageCourseSettingsController@edit')->name('course_edit');
     Route::post('/manage', 'SearchController@filterSearch')->name('filter_manage');
     Route::get('/edit/{video}', 'EditController@show')->name('presentation_edit');
     Route::post('/edit/{video}', 'EditController@edit')->name('editpresentation');
