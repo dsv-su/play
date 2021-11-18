@@ -72,4 +72,15 @@ class Course extends Model implements Searchable
             $this->id
         );
     }
+
+    public function permissions():Collection
+    {
+        return $this->belongsToMany(Permission::class, 'course_permissions', 'course_id', 'permission_id')->get();
+    }
+
+    public function userpermissions(): HasMany
+    {
+        return $this->hasMany(CoursesettingsUsers::class);
+    }
+
 }

@@ -22,6 +22,9 @@ class DaisyAPI extends DaisyIntegration
             $this->resources = collect($this->array_resources)->sortBy(function($course, $key) {
                 return $course['courseSegmentInstance']['semesterId'];
             });
+            $this->resources = collect($this->resources)->sortBy(function($course, $key) {
+                return $course['courseSegmentInstance']['id'];
+            });
 
             foreach ($this->resources->reverse() as $course) {
                 $courselist[] = Arr::flatten($course);
@@ -39,6 +42,7 @@ class DaisyAPI extends DaisyIntegration
                    * [4] Designation
                    * [5] Courseadmin true/false
                    */
+
         return $courselist;
 
     }

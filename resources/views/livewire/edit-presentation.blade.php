@@ -24,7 +24,7 @@
     </div>
     <div class="container banner-inner">
         <div class="alert alert-info text-center">
-            {{__('Changes are saved upon clicking Update button at the bottom of the page.')}}
+            {{__("Changes are saved upon clicking Update button at the bottom of the page.")}}
         </div>
     </div>
 
@@ -111,10 +111,6 @@
             </div>
             <div class="col-sm-12">
                 <div class="rounded border shadow p-3 my-2">
-                <!--
-                    <label class="blue-text form-control-label px-1">{{ __("Presentation") }}</label>
-                    <p>{{ __("Title of the presentation and the date of recording.") }}</p>
-                -->
                     <!-- Title -->
                     <div class="row justify-content-between text-left">
                         <div class="form-group col-12 col-md-6 flex-column d-flex"><label

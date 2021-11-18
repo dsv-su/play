@@ -87,7 +87,6 @@
     "I understand": "Jag förstår",
     "Edit Presentation": "Redigera presentation",
     "Presentation": "Presentation",
-    "Title of the presentation and the date of recording.": "Presentationens titel och inspelningsdatum.",
     "Enter the title of the presentation and the date of recording. If the recording date is unknown, you can enter today's date. Description is optional.": "Ange titeln på presentationen och inspelningsdatumet. Om inspelningsdatumet är okänt kan du ange dagens datum. Beskrivning är valfri.",
     "Original Recording date": "Ursprunglig inspelningsdatum",
     "Update": "Uppdatera",
@@ -148,6 +147,19 @@
     "Permissions": "Behörigheter",
     "Use this embed code to insert the video in e.g. iLearn": "Använd den här inbäddningskoden för att infoga videon i t.ex. iLearn",
     "Editing permissions": "Redigeringsbehörigheter",
-    "Viewing permissions": "Visningsbehörigheter"
+    "Viewing permissions": "Visningsbehörigheter",
+    "Changes are saved upon clicking Update button at the bottom of the page.": "Ändringar sparas när du klickar på knappen Uppdatera längst ner på sidan.",
+    "Downloadable": "Nedladdningsbar",
+    "Individual User Permissions": "Enskilda användarbehörigheter",
+    "No Individual User Permissions added": "Inga individuella användarbehörigheter har lagts till",
+    "Set": "Inställda",
+    "Edit": "Redigera",
+    "The presentation is hidden and locked for playback. Accessible only by individual users with editing permissions": "Presentationen är dold och låst för uppspelning. Endast tillgänglig för enskilda användare med redigeringsbehörighet",
+    "All presentations are hidden and locked for playback. Accessible only by individual users with editing permissions": "Alla presentationer är dolda och låsta för uppspelning. Endast tillgängliga för enskilda användare med redigeringsbehörighet",
+    "Custom": "Anpassad",
+    "Staff": "Personal",
+    "DSV Staff": "DSV Personal",
+    "Students/Staff": "Studenter/personal",
+    "Public": "Publik"
 
 }

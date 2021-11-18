@@ -173,14 +173,16 @@ class PlayStoreNotify extends Model
             'Content-Type' => 'application/json',
             'Accept' => 'application/json'
         ];
-        $auth = [
-            'auth' => $this->storeauth(),
-        ];
+
+       $this->auth = Collection::make([
+            'auth' => $this->storeauth()
+        ]);
+        $this->auth = $this->auth->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
         try {
             $this->response = $this->client->request('DELETE', $this->base_uri() . '/' . $this->presentation->id, [
                 'headers' => $this->headers,
-                'body' => json_encode($auth)
+                'body' => $this->auth
             ]);
         } catch (\Exception $e) {
             /**
