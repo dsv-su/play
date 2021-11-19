@@ -127,6 +127,10 @@ class PlayAuthenticate
             $role_uploader = $system->global->uploader;
             $role_staff = $system->global->staff;
 
+            $daisy = new DaisyAPI();
+            //Get user DaisyID
+            $daisyPersonID = $daisy->getDaisyPersonId(substr($_SERVER['eppn'], 0, strpos($_SERVER['eppn'], "@")));
+
             // Assign role to user
             //If user is system administrator
             if(in_array($role_admin, $server)) {
@@ -206,10 +210,7 @@ class PlayAuthenticate
             //If user is not system administrator -> check role
 
             //User is Course Admin
-            $daisy = new DaisyAPI();
-            //Get user DaisyID
-            $daisyPersonID = $daisy->getDaisyPersonId(substr($_SERVER['eppn'], 0, strpos($_SERVER['eppn'], "@")));
-            if($daisy->checkCourseAdmin($daisyPersonID)) {
+            elseif($daisy->checkCourseAdmin($daisyPersonID)) {
                 app()->bind('play_auth', function () {
                     return 'Courseadmin';
                 });
@@ -217,7 +218,7 @@ class PlayAuthenticate
                     return 'Courseadmin';
                 });
             }
-
+            
             //User is Uploader
             elseif (in_array($role_uploader, $server)) {
                 app()->bind('play_auth', function () {
@@ -247,6 +248,7 @@ class PlayAuthenticate
                     return 'Student';
                 });
             }
+
 
             return $next($request);
         }
