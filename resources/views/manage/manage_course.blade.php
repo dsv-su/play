@@ -112,7 +112,7 @@
                                                     @endif
                                                 @else
                                                     <span style="color: green;">
-                                                        <i class="fas fa-check fa-3x"></i>
+                                                        <i class="fas fa-times fa-3x"></i>
                                                     </span>
                                                 @endif
                                                 <p class="count-text">{{ __("Downloadable") }}</p>

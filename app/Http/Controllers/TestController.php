@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\CoursePermissions;
-use App\Permission;
-use App\Services\Daisy\DaisyAPI;
 use App\Services\Notify\PlayStoreNotify;
 use App\Video;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 
 class TestController extends Controller
 {

@@ -218,7 +218,7 @@ class PlayAuthenticate
                     return 'Courseadmin';
                 });
             }
-            
+
             //User is Uploader
             elseif (in_array($role_uploader, $server)) {
                 app()->bind('play_auth', function () {
