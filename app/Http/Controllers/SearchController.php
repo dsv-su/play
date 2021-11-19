@@ -102,8 +102,8 @@ class SearchController extends Controller
                 return $video->visible() == true;
             });
         } else {
-            if (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
-                //If user is uploader or staff
+            if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
+                //If user is courseadmin, uploader or staff
                 $user = Presenter::where('username', app()->make('play_username'))->first();
                 $user_videos = VideoPresenter::where('presenter_id', $user->id ?? 0)->pluck('video_id');
                 //Check if user is course administrator

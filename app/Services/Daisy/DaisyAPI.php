@@ -12,6 +12,18 @@ class DaisyAPI extends DaisyIntegration
     {
        //Loader
     }
+
+    public function checkCourseAdmin($id)
+    {
+        if(json_decode($this->getResource('employee/' . $id . '/contributions?fromSemesterId=20191&toSemesterId=20211', 'json')->getBody()->getContents(), TRUE)) {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     //All courses where user is Responible courseadministrator
     public function getDaisyEmployeeResponsibleCourses($id)
     {

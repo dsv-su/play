@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\CoursePermissions;
+use App\Permission;
+use App\Services\Daisy\DaisyAPI;
 use App\Services\Notify\PlayStoreNotify;
 use App\Video;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 class TestController extends Controller
 {
@@ -17,7 +21,7 @@ class TestController extends Controller
     public function roles()
     {
         //Check role status
-        dd('Play auth: '.app()->make('play_auth'), 'Play role: '. app()->make('play_role'), 'Play username: '.app()->make('play_username'));
+        dd('play_auth: '.app()->make('play_auth'), 'play_role: '. app()->make('play_role'), 'play_user: '.app()->make('play_user'),'play_username: '.app()->make('play_username'));
 
     }
 

@@ -84,7 +84,7 @@
                         </div>
                     </li>
                 @endif
-                @if(app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Administrator')
+                @if(app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Administrator')
                     <li class="nav-item mega-menu-item" style="">
                         <div class="position-relative">
                             <a class="text-uppercase nav-link mega-menu-link level-1 preventdefault"
@@ -105,10 +105,12 @@
                                            href="{{ route('manage') }}"><span
                                                     class="fas fa-video fa-icon-border mr-2"
                                                     aria-hidden="true"></span>@lang('lang.manage_recording')</a>
+                                        @if(app()->make('play_role') == 'Courseadmin')
                                         <a class="nav-link level-2 d-flex align-content-center"
                                            href="{{ route('manage_course') }}"><span
                                                 class="fas fa-address-card fa-icon-border mr-2"
                                                 aria-hidden="true"></span>@lang('lang.manage_course')</a>
+                                        @endif
                                         <a class="nav-link level-2 d-flex align-content-center"
                                            href="{{ route('user_upload') }}"><span
                                                     class="fas fa-upload fa-icon-border mr-2"

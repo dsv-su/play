@@ -12,6 +12,7 @@
     <label class="my-1 mr-2" for="role">{{app()->make('play_user') ?? 'Not logged in'}}</label>
     <select class="custom-select my-1 mr-sm-2" id="role" name="role" data-toggle="dropdown">
         <option @if(app()->make('play_role') == 'Administrator') selected @endif value="Administrator">Administrator</option>
+        <option @if(app()->make('play_role') == 'Courseadmin') selected @endif value="Courseadmin">CourseAdmin</option>
         <option @if(app()->make('play_role') == 'Uploader') selected @endif value="Uploader">Uploader</option>
         <option @if(app()->make('play_role') == 'Staff') selected @endif value="Staff">Staff</option>
         <option @if(app()->make('play_role') == 'Student1') selected @endif value="Student1">Student 1</option>

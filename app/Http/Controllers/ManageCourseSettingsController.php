@@ -13,14 +13,20 @@ use Illuminate\Support\Facades\App;
 
 class ManageCourseSettingsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('course-admin');
+    }
+
     public function index()
     {
         $coursesetlist = [];
         $individual_permissions = [];
         $playback_permissions = [];
+
         $daisy = new DaisyAPI();
         //Get user DaisyID
-        $daisyPersonID = $daisy->getDaisyPersonId('gwett');
+        $daisyPersonID = $daisy->getDaisyPersonId(app()->make('play_username'));
 
         //Get all courses where user is courseadmin
         if($courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID)) {
