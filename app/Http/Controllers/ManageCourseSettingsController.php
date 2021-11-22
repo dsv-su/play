@@ -8,6 +8,7 @@ use App\CoursesettingsPermissions;
 use App\CoursesettingsUsers;
 use App\Permission;
 use App\Services\Daisy\DaisyAPI;
+use App\VideoCourse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 
@@ -23,6 +24,7 @@ class ManageCourseSettingsController extends Controller
         $coursesetlist = [];
         $individual_permissions = [];
         $playback_permissions = [];
+        $presentations = [];
 
         $daisy = new DaisyAPI();
         //Get user DaisyID
@@ -72,6 +74,9 @@ class ManageCourseSettingsController extends Controller
                         //Group permissions
                         $gpermission = CoursePermissions::where('course_id', $course[2])->first();
                         $playback_permissions[$course[2]] = $gpermission;
+                        //Presentations
+                        $number_presentations = VideoCourse::where('course_id', $course[2])->count();
+                        $presentations[$course[2]] = $number_presentations;
                     }
 
 
@@ -109,6 +114,9 @@ class ManageCourseSettingsController extends Controller
                         //Group permissions
                         $gpermission = CoursePermissions::where('course_id', $course[2])->first();
                         $playback_permissions[$course[2]] = $gpermission;
+                        //Presentations
+                        $number_presentations = VideoCourse::where('course_id', $course[2])->count();
+                        $presentations[$course[2]] = $number_presentations;
                     }
 
                 }
@@ -119,7 +127,7 @@ class ManageCourseSettingsController extends Controller
             return 'Not a courseadmin';
         }
 
-        return view('manage.manage_course', compact('courselist', 'coursesetlist', 'individual_permissions', 'playback_permissions'));
+        return view('manage.manage_course', compact('courselist', 'coursesetlist', 'individual_permissions', 'playback_permissions','presentations'));
 
     }
 

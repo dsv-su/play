@@ -49,6 +49,12 @@
                                 <li class="list-inline-item">
                                     <div class="row text-center">
                                         <div class="col">
+                                            <div class="courseset" style="color: blue;">
+                                                <h2 class="timer count-title count-number">@if($presentations[$courseId] ?? 0)<span style="font-weight: bold;">{{$presentations[$courseId]}}</span> @else 0 @endif</h2>
+                                                <p class="count-text">{{ __("Presentations")  }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col">
                                             <div class="courseset">
                                                 <h2 class="timer count-title count-number">@if($individual_permissions[$courseId] ?? 0){{$individual_permissions[$courseId]}}@else 0 @endif</h2>
                                                 <p class="count-text">{{ __("Editing permissions")  }}</p>
@@ -59,7 +65,9 @@
                                                     @if($playback_permissions[$courseId] ?? 0)
                                                         @switch($playback_permissions[$courseId]->permission_id)
                                                             @case(1)
-                                                                <h2 class="timer count-title count-number">{{ __("DSV") }}</h2>
+                                                                <span style="color:green;">
+                                                                    <h2 class="timer count-title count-number">{{ __("DSV") }}</h2>
+                                                                </span>
                                                             @break
                                                             @case(2)
                                                                 <h2 class="timer count-title count-number">{{ __("Staff") }}</h2>
@@ -70,12 +78,12 @@
                                                                 </span>
                                                             @break
                                                             @default
-                                                                <span style="color: blue;">
-                                                                    <i class="fas fa-user-lock fa-3x"></i>
-                                                                </span>
+                                                                <i class="fas fa-user-lock fa-3x"></i>
                                                         @endswitch
                                                     @else
+                                                        <span style="color:green;">
                                                         <h2 class="timer count-title count-number">{{ __("DSV") }}</h2>
+                                                        </span>
                                                     @endif
                                                 <p class="count-text">
                                                     @if($playback_permissions[$courseId] ?? 0)
