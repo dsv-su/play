@@ -108,6 +108,8 @@ class MultiplayerController extends Controller
             ->makeHidden('duration')
             ->makeHidden('tags')
             ->makeHidden('category_id')
+            ->makeHidden('visability')
+            ->makeHidden('download')
             ->makeHidden('created_at')
             ->makeHidden('updated_at');
 
