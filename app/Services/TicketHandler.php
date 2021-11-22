@@ -90,10 +90,19 @@ class TicketHandler extends Model
 
         foreach($video->courses() as $course) {
             $coursepersmission = CoursePermissions::where('course_id', $course->id)->pluck('permission_id');
-            if(in_array(4, $this->permissions->toArray()) or $coursepersmission[0] == 4) {
-                //If the external permission setting is set (overriding shibboleth SSO)
-                return true;
+            if(count($coursepersmission)>0) {
+                if(in_array(4, $this->permissions->toArray()) or $coursepersmission[0] == 4) {
+                    //If the external permission setting is set (overriding shibboleth SSO)
+                    return true;
+                }
+            } else {
+                if(in_array(4, $this->permissions->toArray())) {
+                    //If the external permission setting is set (overriding shibboleth SSO)
+                    return true;
+                }
             }
+
+
         }
 
         if($this->cperm($video)) {
