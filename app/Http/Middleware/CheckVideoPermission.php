@@ -22,23 +22,32 @@ class CheckVideoPermission
     {
         $system = new AuthHandler();
         $system = $system->authorize();
+        //Presentation setting
         $permission = VideoPermission::where('video_id', $request->p)->firstOrFail();
         //Public Course setting
-        /*$presentation = Video::find($request->p);
-        foreach($presentation->courses() as $course) {
-            $coursepersmission = CoursePermissions::where('course_id', $course->id)->pluck('permission_id');
-            dd($course->id);
-        }*/
-        //<-
-        if(!$request->server('REMOTE_USER')) {
-            if($permission->permission_id != 4) {
+        $presentation = Video::find($request->p);
 
+        if(!$request->server('REMOTE_USER')) {
+            //Coursesetting
+            foreach($presentation->courses() as $course) {
+                $coursepersmission = CoursePermissions::where('course_id', $course->id)->pluck('permission_id');
+                if($coursepersmission[0] == 4 and ($permission->permission_id == 2 or $permission->permission_id == 3 or $permission->permission_id > 4)) {
+                    if($system->global->app_env == 'local') {
+                        return $next($request);
+                    } else {
+                        return redirect()->guest(route('sulogin'));
+                    }
+                }
+            }
+            //Presentationsetting
+            /*if($permission->permission_id != 4) {
                 if($system->global->app_env == 'local') {
                     return $next($request);
                 } else {
                     return redirect()->guest(route('sulogin'));
                 }
-            }
+            }*/
+
         }
 
         return $next($request);
