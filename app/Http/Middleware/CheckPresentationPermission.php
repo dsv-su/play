@@ -2,7 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\CoursePermissions;
 use App\Services\AuthHandler;
+use App\Video;
 use App\VideoPermission;
 use Closure;
 use Illuminate\Http\Request;
@@ -23,14 +25,26 @@ class CheckPresentationPermission
         if ($request->is('presentation/*')) {
             $id = substr($request->path(), strrpos($request->path(), '/') + 1);
             $permission = VideoPermission::where('video_id', $id)->firstOrFail();
+            $presentation = Video::find($id);
+
             if(!$request->server('REMOTE_USER')) {
-                if($permission->permission_id != 4) {
+                foreach($presentation->courses() as $course) {
+                    $coursepersmission = CoursePermissions::where('course_id', $course->id)->pluck('permission_id');
+                    if($coursepersmission[0] == 4 and ($permission->permission_id == 2 or $permission->permission_id == 3 or $permission->permission_id > 4)) {
+                        if($system->global->app_env == 'local') {
+                            return $next($request);
+                        } else {
+                            return redirect()->guest(route('sulogin'));
+                        }
+                    }
+                }
+                /*if($permission->permission_id != 4) {
                     if($system->global->app_env == 'local') {
                         return $next($request);
                     } else {
                         return redirect()->guest(route('sulogin'));
                     }
-                }
+                }*/
             }
         }
         else {
