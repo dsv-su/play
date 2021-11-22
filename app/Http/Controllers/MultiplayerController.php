@@ -20,7 +20,7 @@ class MultiplayerController extends Controller
         //Exceptions for 'Multiplayer', 'Presentation' and 'Playlist' for external permission setting
         $this->middleware(['entitlements', 'playauth'])->except(['multiplayer', 'presentation', 'playlist']);
         //Playback middleware checks hidden presentations
-        $this->middleware('playback');
+        $this->middleware('playback')->except('playlist');
     }
 
     /**
