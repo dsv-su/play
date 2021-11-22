@@ -136,8 +136,11 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label for="staticLink">{{__("Direct link")}}</label>
+                    {{--}}<textarea readonly class="form-control" id="staticLink"
+                              value="">{{ route('player', ['video' => $video]) }}</textarea>{{--}}
+                    <!-- Enables public access for links -->
                     <textarea readonly class="form-control" id="staticLink"
-                              value="">{{ route('player', ['video' => $video]) }}</textarea>
+                              value="">{{url("/multiplayer?p={$video->id}")}} </textarea>
                     <small id="staticLinkHelp"
                            class="form-text text-muted">{{ __("Permalink to this presentation") }}</small>
                 </div>
