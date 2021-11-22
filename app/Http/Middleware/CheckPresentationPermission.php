@@ -30,7 +30,7 @@ class CheckPresentationPermission
             if(!$request->server('REMOTE_USER')) {
                 foreach($presentation->courses() as $course) {
                     $coursepersmission = CoursePermissions::where('course_id', $course->id)->pluck('permission_id');
-                    if(count($coursepersmission)>0) {
+                    if(count($coursepersmission) == 1) {
                         if($coursepersmission[0] == 4 and ($permission->permission_id == 2 or $permission->permission_id == 3 or $permission->permission_id > 4)) {
                             if($system->global->app_env == 'local') {
                                 return $next($request);
