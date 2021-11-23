@@ -83,4 +83,9 @@ class Course extends Model implements Searchable
         return $this->hasMany(CoursesettingsUsers::class);
     }
 
+    public function coursesettings(): HasMany
+    {
+        return $this->hasMany(CoursesettingsPermissions::class);
+    }
+
 }

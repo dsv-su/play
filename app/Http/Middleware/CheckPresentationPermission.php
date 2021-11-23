@@ -48,14 +48,6 @@ class CheckPresentationPermission
                     }
 
                 }
-                /*if($permission->permission_id != 4) {
-                    if($system->global->app_env == 'local') {
-                        return $next($request);
-                    } else {
-                        return redirect()->guest(route('sulogin'));
-                    }
-                }*/
-
             }
         }
         else {
