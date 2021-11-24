@@ -225,7 +225,7 @@
                     $('.selectpicker').selectpicker('refresh');
                 },
                 error: function (data) {
-                    alert('There was an error.');
+                    //alert('There was an error');
                     console.log(data);
                 }
             });

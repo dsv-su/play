@@ -70,6 +70,7 @@ class PlayController extends Controller
             $my_videos = Video::with('video_course.course')->where('visability', true)->whereHas('video_course.course', function ($query) use ($courses) {
                 return $query->whereIn('course_id', $courses)->take(24);
             })->get();
+
             $data['my'] = $course_setting->checkVisability($my_videos);
 
             //Active courses (tab 2)
@@ -78,6 +79,7 @@ class PlayController extends Controller
             })->get();
             $data['active'] = $course_setting->checkVisability($active_videos);
             //All courses (tab 3)
+
             $latest_videos = Video::with('category', 'video_course.course')->where('visability', true)->latest('creation')->get();
             $data['latest'] = $course_setting->checkVisability($latest_videos);
 

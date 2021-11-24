@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\CoursesettingsUsers;
 use App\Services\AuthHandler;
 use App\Video;
 use Closure;
@@ -43,18 +44,19 @@ class CheckEditPermission
                 return $next($request);
             }
 
-            /*if($courseadmins = $video->coursepermissions ?? false) {
-                foreach($courseadmins as $cper) {
-                    //Check if user is listed
-                    if($cper->username . '@su.se' == $_SERVER['eppn']) {
-                        //Check if user has set permissions
-                        if(in_array($cper->permission, ['edit', 'delete'])) {
-                            return $next($request);
+            //Check if user is in Coursesetting users list
+            foreach($video->courses() as $course) {
+                if(count($course_user_admins = CoursesettingsUsers::where('course_id', $course->id)->get()) >= 1) {
+                    foreach($course_user_admins as $course_user_admin) {
+                        if($course_user_admin->username . '@su.se' == $_SERVER['eppn']) {
+                            //Check if user correct permissions
+                            if(in_array($course_user_admin->permission, ['edit', 'delete'])) {
+                                return $next($request);
+                            }
                         }
                     }
-
                 }
-            }*/
+            }
 
             //Check if individual permissions has been set for presentation
             if($individuals = $video->ipermissions ?? false) {
