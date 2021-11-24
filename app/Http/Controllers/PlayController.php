@@ -65,6 +65,7 @@ class PlayController extends Controller
                 $courses = [6798, 6799, 6760, 6778, 6828, 6796, 6719, 6720];
             }
 
+            //Test students
             //My courses (tab 1)
             $my_videos = Video::with('video_course.course')->where('visability', true)->whereHas('video_course.course', function ($query) use ($courses) {
                 return $query->whereIn('course_id', $courses)->take(24);
@@ -82,6 +83,7 @@ class PlayController extends Controller
 
         } // end testing
 
+        //Production server
         //User is Student
         elseif (App::environment('production') and app()->make('play_role') == 'Student') {
             $courses = $daisy->getActiveStudentCourses(app()->make('play_username'));
@@ -124,11 +126,9 @@ class PlayController extends Controller
             $latest_videos = Video::with('category', 'video_course.course')->where('visability', true)->latest('creation')->get();
             $data['latest'] = $course_setting->checkVisability($latest_videos);
 
-
-
         } else {
             //If user is Admin
-            $data['search'] = 0;
+            //$data['search'] = 0;
 
             //Active courses (tab 2)
             $data['active'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($daisy) {

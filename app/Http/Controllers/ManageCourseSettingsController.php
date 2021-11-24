@@ -149,6 +149,7 @@ class ManageCourseSettingsController extends Controller
     public function store($course_id, Request $request)
     {
         if ($request->isMethod('post')) {
+            //dd($request->all());
             $coursesettings_permissions = CoursesettingsPermissions::firstOrNew(['course_id' => $course_id]);
             //Store
             $coursesettings_permissions->course_id = $course_id;

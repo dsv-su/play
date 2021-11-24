@@ -1,7 +1,6 @@
 <!-- Role Emulate for Admins - child view - will inherit all data available in the parent view-->
 <style>
     .custom-select{
-        background: none !important;
         color: #FFFFFF;
         background-color: #002f5f;
         -webkit-appearance: button;
