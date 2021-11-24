@@ -38,7 +38,12 @@ class CheckEditPermission
             }
 
             //Check if user is courseadmin
-            if($courseadmins = $video->coursepermissions ?? false) {
+            // This should be changed to 'play_auth' for production
+            if(app()->make('play_role') == 'Courseadmin') {
+                return $next($request);
+            }
+
+            /*if($courseadmins = $video->coursepermissions ?? false) {
                 foreach($courseadmins as $cper) {
                     //Check if user is listed
                     if($cper->username . '@su.se' == $_SERVER['eppn']) {
@@ -49,7 +54,8 @@ class CheckEditPermission
                     }
 
                 }
-            }
+            }*/
+
             //Check if individual permissions has been set for presentation
             if($individuals = $video->ipermissions ?? false) {
                 foreach($individuals as $iper) {

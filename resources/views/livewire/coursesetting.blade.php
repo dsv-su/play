@@ -117,8 +117,6 @@
                             <label class="form-control-label px-1">{{ __("Playback group permissions") }}</label>
                             <div id="video_perm">
                                 <select class="form-group form-control" name="course_permission">
-
-                                        {{--}}@if(!$visibility) style="background: #dddddd" @endif>{{--}}
                                     @foreach($permissions as $perm)
                                         <option value="{{$perm->id}}"
                                                 @if($permissonId == $perm->id) selected @endif >{{$perm->id}}
