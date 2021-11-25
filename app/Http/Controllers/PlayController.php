@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Course;
+use App\CourseadminPermission;
+use App\IndividualPermission;
 use App\MediasiteFolder;
 use App\MediasitePresentation;
 use App\Presenter;
@@ -859,6 +861,9 @@ class PlayController extends Controller
             VideoPresenter::where('video_id', $video->id)->delete();
             VideoPermission::where('video_id', $request->video_id)->delete();
             VideoStat::where('video_id', $request->video_id)->delete();
+            CourseadminPermission::where('video_id', $request->video_id)->delete();
+            IndividualPermission::where('video_id', $request->video_id)->delete();
+
             $streams = Stream::where('video_id', $video->id)->get();
             foreach ($streams as $stream) {
                 StreamResolution::where('stream_id', $stream->id)->delete();
@@ -877,10 +882,12 @@ class PlayController extends Controller
 
         //Send Delete notification -> when this is active
         $notify = new PlayStoreNotify($video);
-        $notify->sendDelete();
-        return Response()->json(['message' => 'Presentationen har raderats']);
-
-        //return Response()->json(['message' => 'Video deleted']);
+        if($notify->sendDelete()) {
+            return Response()->json(['message' => 'Presentationen har raderats']);
+        } else {
+            return Response()->json(['message' => 'Play-Store error']);
+        }
+        
     }
 
     public
