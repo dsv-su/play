@@ -45,9 +45,9 @@ class Playback
 
             //Check if user is courseadmin
             // This should be changed to 'play_auth' for production
-            if(app()->make('play_role') == 'Courseadmin') {
+            /*if(app()->make('play_role') == 'Courseadmin') {
                 return $next($request);
-            }
+            }*/
 
             //Check if user is in Coursesetting users list
             foreach($video->courses() as $course) {
