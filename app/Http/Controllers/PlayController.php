@@ -887,7 +887,7 @@ class PlayController extends Controller
         } else {
             return Response()->json(['message' => 'Play-Store error']);
         }
-        
+
     }
 
     public
