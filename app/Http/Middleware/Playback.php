@@ -48,7 +48,7 @@ class Playback
             foreach($video->courses() as $course) {
                 if(count($course_user_admins = CoursesettingsUsers::where('course_id', $course->id)->get()) >= 1) {
                     foreach($course_user_admins as $course_user_admin) {
-                        if($course_user_admin . '@su.se' == $_SERVER['eppn']) {
+                        if($course_user_admin->username . '@su.se' == $_SERVER['eppn']) {
                             //Check if user correct permissions
                             if(in_array($course_user_admin->permission, ['read', 'edit', 'delete'])) {
                                 return $next($request);
