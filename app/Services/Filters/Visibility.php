@@ -21,6 +21,7 @@ class Visibility extends Model
                             return $video->setAttribute('visibility_setting', true);
                         }
                         else {
+
                             //Check individual course setting
                             if(count($course_user_admins = CoursesettingsUsers::where('course_id', $course->id)->get()) >= 1) {
                                 foreach($course_user_admins as $course_user_admin) {
@@ -32,18 +33,20 @@ class Visibility extends Model
                                     }
                                 }
                             }
-                        }
-                        //Check presentation individual setting
-                        if(count($ipermissions = IndividualPermission::where('video_id', $video->id)->get()) >= 1) {
-                            foreach($ipermissions as $ipermission) {
-                                if($ipermission->username == app()->make('play_username')) {
-                                    //Check if user correct permissions
-                                    if(in_array($ipermission->permission, ['read', 'edit', 'delete'])) {
-                                        return $video->setAttribute('visibility_setting', false);
+                            //Check presentation individual setting
+                            if(count($ipermissions = IndividualPermission::where('video_id', $video->id)->get()) >= 1) {
+                                foreach($ipermissions as $ipermission) {
+                                    if($ipermission->username == app()->make('play_username')) {
+                                        //Check if user correct permissions
+                                        if(in_array($ipermission->permission, ['read', 'edit', 'delete'])) {
+                                            return $video->setAttribute('visibility_setting', false);
+                                        }
                                     }
                                 }
                             }
-
+                            if(app()->make('play_role') == 'Administrator') {
+                                return $video->setAttribute('visibility_setting', false);
+                            }
                         }
 
                     }

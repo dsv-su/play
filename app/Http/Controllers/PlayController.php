@@ -138,6 +138,7 @@ class PlayController extends Controller
             })->get();
 
             $data['latest'] = Video::with('category', 'video_course.course')->latest('creation')->get();
+            $data['latest'] = $visibility->check($data['latest']);
 
             if (app()->make('play_role') != 'Administrator') {
                 $data['active'] = $visibility->check($data['active']);
