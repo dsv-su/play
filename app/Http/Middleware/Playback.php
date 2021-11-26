@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\CoursesettingsPermissions;
 use App\CoursesettingsUsers;
 use App\Services\AuthHandler;
 use App\Video;
@@ -43,12 +44,6 @@ class Playback
             //If user is Admin
            //TODO
 
-            //Check if user is courseadmin
-            // This should be changed to 'play_auth' for production
-            /*if(app()->make('play_role') == 'Courseadmin') {
-                return $next($request);
-            }*/
-
             //Check if user is in Coursesetting users list
             foreach($video->courses() as $course) {
                 if(count($course_user_admins = CoursesettingsUsers::where('course_id', $course->id)->get()) >= 1) {
@@ -62,8 +57,8 @@ class Playback
                     }
                 }
             }
-
-            /*if($courseadmins = $video->coursepermissions ?? false) {
+            //Check if user is in CourseAdmin list
+            if($courseadmins = $video->coursepermissions ?? false) {
                 foreach($courseadmins as $cper) {
                     //Check if user is listed
                     if($cper->username . '@su.se' == $_SERVER['eppn']) {
@@ -74,9 +69,7 @@ class Playback
                     }
 
                 }
-            }*/
-
-
+            }
 
             //Check if individual permissions has been set for presentation
             if($individuals = $video->ipermissions ?? false) {
@@ -96,6 +89,16 @@ class Playback
         //Check if video is hidden
         if($video ?? false) {
             if($video->visability == true) {
+                foreach($video->courses() as $course) {
+                    if($coursesetting = CoursesettingsPermissions::where('course_id', $course->id)->first()) {
+                        if($coursesetting->visibility == true) {
+                            return $next($request);
+                        } else {
+                            return redirect()->route('home');
+                        }
+                    }
+                }
+
                 return $next($request);
             }
         }

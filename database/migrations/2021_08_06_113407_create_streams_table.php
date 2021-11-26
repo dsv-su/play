@@ -38,7 +38,7 @@ class CreateStreamsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('streams');
         Schema::dropIfExists('stream_resolutions');
+        Schema::dropIfExists('streams');
     }
 }

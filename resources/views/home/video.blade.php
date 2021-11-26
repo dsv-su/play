@@ -1,8 +1,13 @@
 <!-- Video - child view - will inherit all data available in the parent view-->
 <div class="card video m-auto" @if (isset($manage) && $manage) id="{{$video->id}}" @endif>
-    @if ($video->visability) <a href="{{ route('player', ['video' => $video]) }}"> @endif
+    @if ($video->visability)
+        <a href="{{ route('player', ['video' => $video]) }}">
+    @endif
+
+        <!--   Visibility: Individual presentation setting -> $video->visability, Course (bulk) settings -> $video->visibility_setting -->
+
         <div class="card-header position-relative"
-             style="background-image: @if ($video->visability == false) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); height:200px;">
+             style="background-image: @if ($video->visability == false or $video->visibility_setting == false) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); height:200px;">
             <div class="title">{{ $video->title }}</div>
             <!-- Group Permissions -->
             <div class="icons">
@@ -18,13 +23,14 @@
                     @endif
                 @endforeach
             <!-- end Group Permission -->
+
                 <!-- Visability -->
-                @if($video->visability == false)
+                @if($video->visability == false or $video->visibility_setting == false)
                     <div class="visability mx-1" data-toggle="tooltip" title="{{__('Presentation is hidden')}}"><i
                                 class="far fa-eye-slash"></i></div>
                 @endif
             </div>
-            @if ($video->visability == false)
+            @if ($video->visability == false or $video->visibility_setting == false)
                 <div class="d-flex justify-content-center h-100">
                     <div class="d-inline alert alert-secondary m-auto"
                          role="alert">{{ __("Presentation hidden") }}</div>
@@ -32,7 +38,9 @@
             @endif
             <p class="p-1"> {{$video->duration}} </p>
         </div>
-        @if ($video->visability)  </a> @endif
+    @if ($video->visability)
+        </a>
+    @endif
     <div class="card-body p-1 overflow-hidden">
         <!-- While testing we need id -->
         @if (!$video->video_course->isEmpty())

@@ -55,7 +55,7 @@
             @if (isset($my) && !$my->isEmpty())
                 <div id="pane-A" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-A">
                     <div class="card-deck inner">
-                        @foreach ($my as $video)
+                        @foreach ($my as $key => $video)
                             <div class="col my-3 w">
                                 @include('home.video')
                             </div>
@@ -76,7 +76,7 @@
             @if (isset($active) && !$active->isEmpty())
                 <div id="pane-B" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-B">
                     <div class="card-deck inner">
-                        @foreach ($active as $video)
+                        @foreach ($active as $key => $video)
                             <div class="col my-3">
                                 @include('home.video')
                             </div>
@@ -140,7 +140,7 @@
                         </form>
                     @endif
                     <div class="card-deck inner">
-                        @foreach ($latest as $video)
+                        @foreach ($latest as $key => $video)
                             <div class="col my-3">
                                 @include('home.video')
                             </div>

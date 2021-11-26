@@ -2,6 +2,7 @@
 
 namespace App\Services\Filters;
 
+use App\CoursesettingsPermissions;
 use App\CoursesettingsUsers;
 use App\IndividualPermission;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +18,7 @@ class Visibility extends Model
                 foreach($video->courses() as $course) {
                     if($setting = $course->coursesettings->toArray()) {
                         if($setting[0]['visibility'] == true) {
-                            return $video;
+                            return $video->setAttribute('visibility_setting', true);
                         }
                         else {
                             //Check individual course setting
@@ -26,7 +27,7 @@ class Visibility extends Model
                                     if($course_user_admin->username == app()->make('play_username')) {
                                         //Check if user correct permissions
                                         if(in_array($course_user_admin->permission, ['read', 'edit', 'delete'])) {
-                                            return $video;
+                                            return $video->setAttribute('visibility_setting', false);
                                         }
                                     }
                                 }
@@ -38,7 +39,7 @@ class Visibility extends Model
                                 if($ipermission->username == app()->make('play_username')) {
                                     //Check if user correct permissions
                                     if(in_array($ipermission->permission, ['read', 'edit', 'delete'])) {
-                                        return $video;
+                                        return $video->setAttribute('visibility_setting', false);
                                     }
                                 }
                             }
@@ -48,6 +49,7 @@ class Visibility extends Model
                     }
                     //There is no explicit course setting
                     else {
+                        $video->setAttribute('visibility_setting', true);
                         return $video->visability;
                     }
 
@@ -55,6 +57,7 @@ class Visibility extends Model
             }
             //The video is not associated to a course
             else {
+                $video->setAttribute('visibility_setting', true);
                 return $video->visability;
             }
 
