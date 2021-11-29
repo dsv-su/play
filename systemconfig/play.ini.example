@@ -39,9 +39,9 @@ password =
 sfapikey =
 
 [Daisy]                                 ; Daisy API
-url =
-username =
-password =
+daisy_url =
+daisy_username =
+daisy_password =
 
 [sftp]                                  ; DSV Storage server credentials
 host=

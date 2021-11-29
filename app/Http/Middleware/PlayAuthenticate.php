@@ -112,6 +112,11 @@ class PlayAuthenticate
         }
         //Settings for SU Shibboleth SSO
         else {
+            if (!System::find(1)) {
+                //Initiate system
+                app()->make('init')->check_system();
+            }
+
             app()->bind('play_user', function() {
                 return $_SERVER['displayName'];
             });
