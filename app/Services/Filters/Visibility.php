@@ -2,14 +2,25 @@
 
 namespace App\Services\Filters;
 
-use App\CoursesettingsPermissions;
 use App\CoursesettingsUsers;
 use App\IndividualPermission;
 use Illuminate\Database\Eloquent\Model;
 
 class Visibility extends Model
 {
+    /***
+     * @param $videos
+     * @return mixed
+     * This class is a wrapper for a collection of videos to create a new collection instance from the array casting attributes at runtime
+     * for course_setting_visibility and course_setting_download
+     */
+
     public function check($videos)
+    {
+        return $this->check_download($this->check_visibility($videos));
+    }
+
+    private function check_visibility($videos)
     {
         //Filter videos visibility
         return $videos->filter(function ($video, $key) {
@@ -21,7 +32,6 @@ class Visibility extends Model
                             return $video->setAttribute('visibility_setting', true);
                         }
                         else {
-
                             //Check individual course setting
                             if(count($course_user_admins = CoursesettingsUsers::where('course_id', $course->id)->get()) >= 1) {
                                 foreach($course_user_admins as $course_user_admin) {
@@ -48,23 +58,47 @@ class Visibility extends Model
                                 return $video->setAttribute('visibility_setting', false);
                             }
                         }
-
                     }
                     //There is no explicit course setting
                     else {
-                        $video->setAttribute('visibility_setting', true);
-                        return $video->visability;
+                        if($video->visability == false and (app()->make('play_role') == 'Administrator'))  {
+                            return $video->setAttribute('visibility_setting', false);
+                        } else {
+                            $video->setAttribute('visibility_setting', true);
+                            return $video->visability;
+                        }
                     }
-
                 }
             }
             //The video is not associated to a course
             else {
-                $video->setAttribute('visibility_setting', true);
-                return $video->visability;
+                if($video->visability == false and (app()->make('play_role') == 'Administrator'))  {
+                    return $video->setAttribute('visibility_setting', false);
+                } else {
+                    $video->setAttribute('visibility_setting', true);
+                    return $video->visability;
+                }
             }
 
             return false;
+        });
+    }
+
+    private function check_download($videos)
+    {
+        //Filter videos visibility
+        return $videos->filter(function ($video, $key) {
+            //Check course group setting
+            if(count($video->courses())>=1) {
+                foreach($video->courses() as $course) {
+                    if($setting = $course->coursesettings->toArray()) {
+                        if($setting[0]['downloadable'] == true) {
+                            return $video->setAttribute('download_setting', true);
+                        }
+                    }
+                }
+            }
+            return $video;
         });
     }
 }

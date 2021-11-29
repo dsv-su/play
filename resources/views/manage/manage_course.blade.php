@@ -29,7 +29,7 @@
     </style>
     <div class="container">
         @foreach($courselist as $year => $list)
-            <h3 class="su-theme-header mb-4">{{$year}}</h3>
+            <h3 class="su-theme-header mb-4"><span style="color: blue;">{{$year}}</span></h3>
             @foreach($list as $courseId => $course)
             <div class="card mt-5 border-5 pt-2 active pb-0 px-3" style="background-color: #DADADA">
                 <div class="card-body">

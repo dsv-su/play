@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Services\Notify\PlayStoreNotify;
 use App\Video;
 
-
 class TestController extends Controller
 {
 

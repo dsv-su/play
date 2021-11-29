@@ -7,6 +7,8 @@ use App\CourseadminPermission;
 use App\IndividualPermission;
 use App\Presenter;
 use App\Services\Daisy\DaisyIntegration;
+use App\Services\Filters\SortByCourseAdmin;
+use App\Services\Filters\Visibility;
 use App\Tag;
 use App\Video;
 use App\VideoPermission;
@@ -84,6 +86,8 @@ class SearchController extends Controller
 
     public function getVideos($q)
     {
+        $visibility = new Visibility();
+
         if ($q) {
             $videos = Video::with('video_course.course', 'video_presenter.presenter', 'video_tag.tag')
                 ->whereHas('video_presenter.presenter', function ($query) use ($q) {
@@ -98,23 +102,28 @@ class SearchController extends Controller
                 })
                 ->orderBy('creation', 'desc')
                 ->get();
-            return $videos->filter(function ($video) {
-                return $video->visible() == true;
-            });
+
+            return $visibility->check($videos);
+
         } else {
             if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
                 //If user is courseadmin, uploader or staff
                 $user = Presenter::where('username', app()->make('play_username'))->first();
                 $user_videos = VideoPresenter::where('presenter_id', $user->id ?? 0)->pluck('video_id');
+
                 //Check if user is course administrator
                 $courseadministrator = CourseadminPermission::where('username', app()->make('play_username'))->where('permission', 'delete')->pluck('video_id');
+
                 //Check for individual permissions settings
                 $individual_videos = IndividualPermission::where('username', app()->make('play_username'))->where('permission', 'edit')->orWhere('permission', 'delete')->pluck('video_id');
-                return Video::whereIn('id', $user_videos)->orWhereIn('id', $individual_videos)->orWhereIn('id', $courseadministrator)->latest('creation')->get();
-            } elseif (app()->make('play_role') == 'Administrator') {
-                //If user is Administrator
-                return Cache::remember('videos', $seconds = 180, function () {
-                    return Video::with('category', 'video_course.course')->latest('creation')->get();
+
+                return $visibility->check(Video::whereIn('id', $user_videos)->orWhereIn('id', $individual_videos)->orWhereIn('id', $courseadministrator)->latest('creation')->get());
+
+            }
+            elseif (app()->make('play_role') == 'Administrator') {
+                //If user is Administrator results are cached
+                return Cache::remember('videos', $seconds = 180, function () use($visibility) {
+                    return $visibility->check(Video::with('category', 'video_course.course')->latest('creation')->get());
                 });
             }
         }
@@ -130,6 +139,13 @@ class SearchController extends Controller
         $manage = \Request::is('manage');
         $permissions = VideoPermission::all();
 
+        //If user is CourseAdmin
+        if(app()->make('play_role') == 'Courseadmin') {
+            $sort = new SortByCourseAdmin();
+            $courselist = $sort->course_after_year(app()->make('play_username'));
+            return view('manage.manage_courseadmin', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'permissions', 'courselist'));
+        }
+        //Else
         return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'permissions'));
     }
 

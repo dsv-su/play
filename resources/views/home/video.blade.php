@@ -72,7 +72,7 @@
                        title="{{ __('Share presentation') }}" class="btn btn-outline-secondary btn-sm"><i
                                 class="fas fa-external-link-alt"></i></a>
                 </div>
-                @if ($video->download)
+                @if ($video->download or $video->download_setting)
                     <div class="dropdown ml-1" data-toggle="tooltip" data-placement="top"
                          title="{{ __("Download presentation") }}">
                         <a class="btn btn-outline-success btn-sm" href="#" role="button" data-toggle="dropdown"
