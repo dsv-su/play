@@ -168,6 +168,7 @@ class Video extends Model implements Searchable
         return $this->system_config['store']['list_uri'];
     }
 
+    //These flags should be refactored in the future as it would speed up by casting instead
     public function editable() {
         return app()->make('play_role') == 'Administrator' ||
             CourseadminPermission::where('username', app()->make('play_username'))->where('video_id', $this->id)->exists() ||

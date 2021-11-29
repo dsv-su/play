@@ -103,14 +103,14 @@
                 @endif
             @endif
             @if (isset($manage) && $manage)
-                @if ($video->editable())
+                @if ($video->editable() or $video->edit_setting)
                     <div class="ml-1">
                         <a href="{{route('presentation_edit', $video->id)}}" data-toggle="tooltip"
                            title="{{ __('Edit presentation') }}" class="btn btn-outline-info btn-sm"><i
                                     class="far fa-edit"></i></a>
                     </div>
                 @endif
-                @if ($video->deletable())
+                @if ($video->deletable() or $video->delete_setting)
                     <div class="ml-1">
                         <form>
                             <meta name="csrf-token" content="{{ csrf_token() }}">

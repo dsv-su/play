@@ -38,6 +38,12 @@ class Visibility extends Model
                                     if($course_user_admin->username == app()->make('play_username')) {
                                         //Check if user correct permissions
                                         if(in_array($course_user_admin->permission, ['read', 'edit', 'delete'])) {
+                                            if(in_array($course_user_admin->permission, ['edit'])) {
+                                                $video->setAttribute('edit_setting', true);
+                                            }
+                                            if(in_array($course_user_admin->permission, ['delete'])) {
+                                                $video->setAttribute('delete_setting', true);
+                                            }
                                             return $video->setAttribute('visibility_setting', false);
                                         }
                                     }

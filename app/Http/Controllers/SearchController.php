@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Course;
 use App\CourseadminPermission;
+use App\CoursesettingsUsers;
 use App\IndividualPermission;
 use App\Presenter;
 use App\Services\Daisy\DaisyIntegration;
@@ -11,6 +12,7 @@ use App\Services\Filters\SortByCourseAdmin;
 use App\Services\Filters\Visibility;
 use App\Tag;
 use App\Video;
+use App\VideoCourse;
 use App\VideoPermission;
 use App\VideoPresenter;
 use Illuminate\Http\Request;
@@ -107,7 +109,10 @@ class SearchController extends Controller
 
         } else {
             if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
+
                 //If user is courseadmin, uploader or staff
+                $videos_id = [];
+                $video_course_ids = [];
                 $user = Presenter::where('username', app()->make('play_username'))->first();
                 $user_videos = VideoPresenter::where('presenter_id', $user->id ?? 0)->pluck('video_id');
 
@@ -117,7 +122,15 @@ class SearchController extends Controller
                 //Check for individual permissions settings
                 $individual_videos = IndividualPermission::where('username', app()->make('play_username'))->where('permission', 'edit')->orWhere('permission', 'delete')->pluck('video_id');
 
-                return $visibility->check(Video::whereIn('id', $user_videos)->orWhereIn('id', $individual_videos)->orWhereIn('id', $courseadministrator)->latest('creation')->get());
+                //Check for course individual settings
+                if(count($course_user_admins = CoursesettingsUsers::where('username', app()->make('play_username'))->whereIn('permission',['edit', 'delete'])->get()) >= 1) {
+                    foreach($course_user_admins as $course_user_admin) {
+                        $videos_id[] = VideoCourse::where('course_id', $course_user_admin->course_id)->pluck('video_id');
+                    }
+                }
+                $video_course_ids = collect($videos_id)->flatten(1)->toArray();
+
+                return $visibility->check(Video::whereIn('id', $user_videos)->orWhereIn('id', $individual_videos)->orWhereIn('id', $courseadministrator)->orWhereIn('id', $video_course_ids)->latest('creation')->get());
 
             }
             elseif (app()->make('play_role') == 'Administrator') {
