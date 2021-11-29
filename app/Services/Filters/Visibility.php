@@ -42,6 +42,7 @@ class Visibility extends Model
                                                 $video->setAttribute('edit_setting', true);
                                             }
                                             if(in_array($course_user_admin->permission, ['delete'])) {
+                                                $video->setAttribute('edit_setting', true);
                                                 $video->setAttribute('delete_setting', true);
                                             }
                                             return $video->setAttribute('visibility_setting', false);
