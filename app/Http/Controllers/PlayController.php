@@ -142,7 +142,7 @@ class PlayController extends Controller
 
             if (app()->make('play_role') != 'Administrator') {
                 $data['active'] = $visibility->check($data['active']);
-                $data['latest'] = $visibility->check($data['latest']);
+                //$data['latest'] = $visibility->check($data['latest']);
             }
         }
 

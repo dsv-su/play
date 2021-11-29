@@ -57,6 +57,9 @@ class Visibility extends Model
                             if(app()->make('play_role') == 'Administrator') {
                                 return $video->setAttribute('visibility_setting', false);
                             }
+                            elseif(app()->make('play_role') == 'Courseadmin') {
+                                return $video->setAttribute('visibility_setting', false);
+                            }
                         }
                     }
                     //There is no explicit course setting
