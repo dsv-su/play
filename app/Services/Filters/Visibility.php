@@ -2,6 +2,7 @@
 
 namespace App\Services\Filters;
 
+use App\CoursePermissions;
 use App\CoursesettingsUsers;
 use App\IndividualPermission;
 use Illuminate\Database\Eloquent\Model;
@@ -29,6 +30,15 @@ class Visibility extends Model
                 foreach($video->courses() as $course) {
                     if($setting = $course->coursesettings->toArray()) {
                         if($setting[0]['visibility'] == true) {
+                            //Set flags to visualize private/external permission
+                            if($course_permission = CoursePermissions::where('course_id', $course->id)->first()) {
+                                if(in_array($course_permission->permission_id, [2,3]) or $course_permission->permission_id > 4) {
+                                    $video->setAttribute('private_setting', true);
+                                }
+                                if($course_permission->permission_id == 4) {
+                                    $video->setAttribute('external_setting', true);
+                                }
+                            }
                             //Set flags to enable edit/delete
                             if(count($course_user_admins = CoursesettingsUsers::where('course_id', $course->id)->get()) >= 1) {
                                 foreach($course_user_admins as $course_user_admin) {

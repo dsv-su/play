@@ -13,11 +13,11 @@
             <div class="icons">
                 @foreach($video->status as $permission)
 
-                    @if($permission->type == 'private')
+                    @if($permission->type == 'private' or $video->private_setting)
                         <div class="permission mx-1" data-toggle="tooltip"
                              title="{{__('Viewing permissions modified')}}"><i class="fas fa-user-lock"></i></div>
                     @endif
-                    @if($permission->type == 'external')
+                    @if($permission->type == 'external' or $video->external_setting)
                         <div class="permission mx-1" data-toggle="tooltip" title="{{__('External access enabled')}}"><i
                                     class="fas fa-globe"></i></div>
                     @endif
