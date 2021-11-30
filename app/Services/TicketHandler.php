@@ -57,7 +57,7 @@ class TicketHandler extends Model
                 if((in_array(4, $this->coursepermission->toArray()) or app()->environment('local')) and ($video->permissions()->toArray()[0]['id'] == 1 or $video->permissions()->toArray()[0]['id'] == 4)) {
                     return true;
                 }
-                //Check individual permissions
+                //Check individual course permissions
                 elseif ($this->course_iperm($course_id)) {
                     return true;
                 }
@@ -93,6 +93,10 @@ class TicketHandler extends Model
             if(count($coursepersmission) == 1) {
                 if(in_array(4, $this->permissions->toArray()) or $coursepersmission[0] == 4) {
                     //If the external permission setting is set (overriding shibboleth SSO)
+                    return true;
+                }
+                //Check individual course permissions
+                elseif ($this->course_iperm($course->id)) {
                     return true;
                 }
             } else {
