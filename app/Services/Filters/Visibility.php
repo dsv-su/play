@@ -29,6 +29,23 @@ class Visibility extends Model
                 foreach($video->courses() as $course) {
                     if($setting = $course->coursesettings->toArray()) {
                         if($setting[0]['visibility'] == true) {
+                            //Set flags to enable edit/delete
+                            if(count($course_user_admins = CoursesettingsUsers::where('course_id', $course->id)->get()) >= 1) {
+                                foreach($course_user_admins as $course_user_admin) {
+                                    if($course_user_admin->username == app()->make('play_username')) {
+                                        //Check if user correct permissions
+                                        if(in_array($course_user_admin->permission, ['read', 'edit', 'delete'])) {
+                                            if(in_array($course_user_admin->permission, ['edit'])) {
+                                                $video->setAttribute('edit_setting', true);
+                                            }
+                                            if(in_array($course_user_admin->permission, ['delete'])) {
+                                                $video->setAttribute('edit_setting', true);
+                                                $video->setAttribute('delete_setting', true);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                             return $video->setAttribute('visibility_setting', true);
                         }
                         else {
