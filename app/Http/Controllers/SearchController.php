@@ -22,6 +22,7 @@ class SearchController extends Controller
 {
     public function searchBySemester($semester)
     {
+        $visibility = new Visibility();
         //Permissionslabel
         $permissions = VideoPermission::all();
 
@@ -31,6 +32,10 @@ class SearchController extends Controller
         $videos = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($term, $year) {
             return $query->where('year', $year)->where('semester', $term);
         })->get();
+
+        //Visibility
+        $videos = $visibility->check($videos);
+
         $courses = $this->extractCourses($videos);
         $presenters = $this->extractPresenters($videos);
         $tags = $this->extractTags($videos);
@@ -44,6 +49,7 @@ class SearchController extends Controller
 
     public function searchByDesignation($designation)
     {
+        $visibility = new Visibility();
         //Permissionslabel
         $permissions = VideoPermission::all();
         $videos = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($designation) {
@@ -52,20 +58,30 @@ class SearchController extends Controller
         $terms = $this->extractTerms($videos);
         $presenters = $this->extractPresenters($videos);
         $tags = $this->extractTags($videos);
+
+        //Visibility
+        $videos = $visibility->check($videos);
+
         $videos = $videos->groupBy(function ($item, $key) {
             return $item->video_course[0]->course['semester'] . $item->video_course[0]->course['year'] ?? 'UU9999';
         });
+
 
         return view('home.navigator', compact('designation', 'videos', 'permissions', 'terms', 'presenters', 'tags'));
     }
 
     public function searchByCategory($category)
     {
+        $visibility = new Visibility();
         //Permissionslabel
         $permissions = VideoPermission::all();
         $videos = Video::with('category', 'video_course.course')->whereHas('category', function ($query) use ($category) {
             return $query->where('category_name', $category);
         })->get();
+
+        //Visibility
+        $videos = $visibility->check($videos);
+
         $videos = $videos->groupBy(function ($item, $key) {
             return $item->video_course[0]->course['year'] ?? '9999';
         });
@@ -75,6 +91,7 @@ class SearchController extends Controller
 
     public function searchByUser($username)
     {
+        $visibility = new Visibility();
         $daisy = new DaisyIntegration();
         $courses = $daisy->getActiveStudentCourses($username);
         $videos = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
@@ -82,7 +99,7 @@ class SearchController extends Controller
         })->get();
 
         $data['permissions'] = VideoPermission::all();
-        $data['latest'] = $videos;
+        $data['latest'] = $visibility->check($videos);
         return view('home.index', $data);
     }
 
@@ -189,20 +206,23 @@ class SearchController extends Controller
 
     public function showCourseVideos($courseid)
     {
+        $visibility = new Visibility();
         $data['course'] = Course::find($courseid);
         $data['latest'] = Course::find($courseid)->videos()->filter(function ($video) {
-            return $video->visible();
+            return $video;
         });
-
+        $data['latest'] = $visibility->check($data['latest']);
         return view('home.index', $data);
     }
 
     public function showTagVideos($tag)
     {
+        $visibility = new Visibility();
         $data['tag'] = $tag;
         $data['latest'] = Tag::where('name', $tag)->first()->videos()->filter(function ($video) {
-            return $video->visible();
+            return $video;
         });
+        $data['latest'] = $visibility->check($data['latest']);
         $data['terms'] = $this->extractTerms($data['latest']);
         $data['courses'] = $this->extractCourses($data['latest']);
         $data['presenters'] = $this->extractPresenters($data['latest']);
@@ -212,11 +232,13 @@ class SearchController extends Controller
 
     public function showPresenterVideos($username)
     {
+        $visibility = new Visibility();
         $presenter = Presenter::where('username', $username)->first();
         $data['presenter'] = $presenter->name;
         $data['latest'] = $presenter->videos()->filter(function ($video) {
-            return $video->visible();
+            return $video;
         });
+        $data['latest'] =  $visibility->check($data['latest']);
         $data['terms'] = $this->extractTerms($data['latest']);
         $data['courses'] = $this->extractCourses($data['latest']);
         $data['tags'] = $this->extractTags($data['latest']);
@@ -305,6 +327,8 @@ class SearchController extends Controller
 
     public function performFiltering($videos, $designations = null, $semesters = null, $tags = null, $presenters = null, $manage = false)
     {
+        $visibility = new Visibility();
+        $videos = $visibility->check($videos);
         $html = '';
         foreach ($videos as $key => $video) {
             $found = false;
@@ -362,6 +386,7 @@ class SearchController extends Controller
 
     public function filterByDesignation($designation, Request $request)
     {
+        $visibility = new Visibility();
         //Permissionslabel
         $permissions = VideoPermission::all();
         $presenters = request('presenter') ? explode(',', request('presenter')) : null;
@@ -370,6 +395,7 @@ class SearchController extends Controller
         $videos = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($designation) {
             return $query->where('designation', $designation);
         })->orderBy('creation', 'desc')->get();
+        $videos = $visibility->check($videos);
 
         list ($html, $videocourses, $videoterms, $videopresenters, $videotags, $filteredvideos) = $this->performFiltering(
             $videos, null, $semesters, $tags, $presenters
@@ -390,6 +416,7 @@ class SearchController extends Controller
 
     public function filterBySemester($semester, Request $request)
     {
+        $visibility = new Visibility();
         //Permissionslabel
         $permissions = VideoPermission::all();
         $term = substr($semester, 0, 2);
@@ -397,6 +424,7 @@ class SearchController extends Controller
         $videos = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($term, $year) {
             return $query->where('year', $year)->where('semester', $term);
         })->get();
+        $videos = $visibility->check($videos);
         $presenters = request('presenter') ? explode(',', request('presenter')) : null;
         $designations = request('course') ? explode(',', request('course')) : null;
         $tags = request('tag') ? explode(',', request('tag')) : null;
