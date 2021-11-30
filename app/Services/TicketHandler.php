@@ -54,7 +54,7 @@ class TicketHandler extends Model
             $course_id = $belongs_to_course[0]['id'];
             if(count($this->coursepermission = CoursePermissions::where('course_id', $course_id)->pluck('permission_id')) == 1){
                 //If the external permission setting is set (overriding shibboleth SSO)
-                if(in_array(4, $this->coursepermission->toArray()) or app()->environment('local')) {
+                if((in_array(4, $this->coursepermission->toArray()) or app()->environment('local')) and ($video->permissions()->toArray()[0]['id'] == 1 or $video->permissions()->toArray()[0]['id'] == 4)) {
                     return true;
                 }
                 //Check individual permissions

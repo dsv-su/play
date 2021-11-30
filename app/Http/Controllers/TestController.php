@@ -22,6 +22,7 @@ class TestController extends Controller
 
     public function del(Video $video)
     {
+        //Testdelete (this method should be removed before production)
         //Send Delete notification
         $notify = new PlayStoreNotify($video);
         return $message = $notify->sendDelete();
