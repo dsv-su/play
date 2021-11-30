@@ -676,7 +676,7 @@ class PlayController extends Controller
 
                     foreach ($presenters as $presenter) {
                         $array = array_filter($users, function ($user) use ($presenter) {
-                            return $user['DisplayName'] == $presenter['DisplayName'];
+                            return ($user['DisplayName'] == $presenter['DisplayName']) || ($user['Email'] == $presenter['Email']);
                         });
                         $found = array_pop($array);
                         if ($found) {
