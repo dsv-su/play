@@ -102,7 +102,7 @@
                     </div>
                 @endif
             @endif
-            @if (isset($manage) && $manage or app()->make('play_role') == 'Administrator')
+            @if (isset($manage) && $manage or (isset($manage) && $manage and app()->make('play_role') == 'Administrator'))
                 @if ($video->editable() or $video->edit_setting)
                     <div class="ml-1">
                         <a href="{{route('presentation_edit', $video->id)}}" data-toggle="tooltip"

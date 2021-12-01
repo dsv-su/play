@@ -26,7 +26,6 @@ class VideoApiController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api', ['except' => ['permission']]);
-        //$this->middleware('auth.basic.once', ['except' => ['permission']]);
     }
 
     /**
