@@ -40,6 +40,9 @@ class ManualDownloadController extends Controller
 
     public function initDownload(Video $video, $resolution)
     {
+        //Check and set download status in coursesetting
+        $video = $this->check_download_status($video);
+
         //Initiates and starts the download/edit process
         //if(!$presentation = Presentation::find($video->id)) {
         if (!Presentation::where('id', $video->id)->where('resolution', $resolution)->first() && ($video->download or $video->download_setting)) {
@@ -505,6 +508,21 @@ class ManualDownloadController extends Controller
     private function setDownloaddir()
     {
         return Carbon::now()->toDateString('Y-m-d') . '_' . rand(1, 999);
+    }
+
+    private function check_download_status($video)
+    {
+        //Checks download flags status for a given object
+        if(count($video->courses())>=1) {
+            foreach($video->courses() as $course) {
+                if($setting = $course->coursesettings->toArray()) {
+                    if($setting[0]['downloadable'] == true) {
+                        return $video->setAttribute('download_setting', true);
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private function base_uri()

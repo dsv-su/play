@@ -26,7 +26,7 @@
                 <div class="float-right">
                     <!-- For now disable edit -->
                     {{--}}<a href="{{route('download_step3', $video->id)}}" role="button" class="btn btn-primary btn-sm">Edit</a>{{--}}
-                    <a href="{{route('manage')}}" role="button" class="btn btn-warning btn-sm">{{__("Back")}}</a>
+                    <a href="{{route('home')}}" role="button" class="btn btn-warning btn-sm">{{__("Back")}}</a>
                 </div>
         </div>
     </div>

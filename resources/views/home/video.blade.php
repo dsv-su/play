@@ -183,7 +183,7 @@
                     <label for="staticLink">{{__("Choose a resolution")}}</label>
                 {{--}}<div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">{{--}}
                     <div class="dropdown">
-                        <form method="post" action="{{route('download', $video->id)}}">
+                        <form method="post" action="{{route('download', $video)}}">
                             @csrf
                             @foreach(json_decode($video->sources, true) as $source)
                                 @if(is_array($source['video']) && $loop->first)
