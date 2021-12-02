@@ -133,10 +133,12 @@ class PlayController extends Controller
             //If user is Admin
 
             //Active courses (tab 2)
+
             $data['active'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($daisy) {
                 return $query->whereIn('course_id', $daisy->getActiveCourses());
             })->get();
             $data['active'] = $visibility->check($data['active']);
+
             $data['latest'] = Video::with('category', 'video_course.course')->latest('creation')->get();
             $data['latest'] = $visibility->check($data['latest']);
 

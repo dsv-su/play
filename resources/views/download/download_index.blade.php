@@ -2,11 +2,7 @@
 @section('content')
     <div class="container">
         <div class="row">
-            @if(app()->make('play_role') == 'Administrator')
-                <h1 class="word-wrap_xs-only" id="sub-entry-page-header" lang="en">Presentation</h1>
-            @else
-                <h1 class="word-wrap_xs-only" id="sub-entry-page-header" lang="sv">Presentation</h1>
-            @endif
+            <h1 class="word-wrap_xs-only" id="sub-entry-page-header">{{__("The Presentation has been downloaded.")}}</h1>
         </div>
         <div class="row">
             <div class="col-md-4">
@@ -27,17 +23,11 @@
             </div>
         <br>
         <div id="fin">
-            @if(app()->make('play_role') == 'Administrator')
                 <div class="float-right">
-                    <a href="{{route('download_step3', $video->id)}}" role="button" class="btn btn-primary btn-sm">Edit</a>
-                    <a href="{{route('manage')}}" role="button" class="btn btn-warning btn-sm">Back</a>
+                    <!-- For now disable edit -->
+                    {{--}}<a href="{{route('download_step3', $video->id)}}" role="button" class="btn btn-primary btn-sm">Edit</a>{{--}}
+                    <a href="{{route('manage')}}" role="button" class="btn btn-warning btn-sm">{{__("Back")}}</a>
                 </div>
-            @else
-                <div class="float-right">
-                    <a href="{{route('download_step3', $video->id)}}" role="button" class="btn btn-primary btn-sm">Redigera</a>
-                    <a href="{{route('manage')}}" role="button" class="btn btn-warning btn-sm">Tillbaka</a>
-                </div>
-            @endif
         </div>
     </div>
     <!-- Modal -->
@@ -47,7 +37,7 @@
                     <div class="modal-body text-center">
                         <div class="loader"></div>
                         <div class="loader-txt">
-                            <p>Nerladdning pågår<br></p>
+                            <p>{{__("Download in Progress")}}<br></p>
                         </div>
                     </div>
                 </div>

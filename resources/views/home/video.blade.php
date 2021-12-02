@@ -75,30 +75,8 @@
                 @if ($video->download or $video->download_setting)
                     <div class="dropdown ml-1" data-toggle="tooltip" data-placement="top"
                          title="{{ __("Download presentation") }}">
-                        <a class="btn btn-outline-success btn-sm" href="#" role="button" data-toggle="dropdown"
-                           aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-download"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                            <form method="post" action="{{route('download', $video->id)}}">
-                                @csrf
-                                @foreach(json_decode($video->sources, true) as $source)
-                                    @if(is_array($source['video']) && $loop->first)
-                                        @foreach($source['video'] as $key => $source)
-                                            <button class="dropdown-item btn btn-outline-primary btn-sm" name="res"
-                                                    value="{{$key}}"><i class="fas fa-download"></i>
-                                                {{$key}}p
-                                            </button>
-                                        @endforeach
-                                    @elseif($loop->first)
-                                        <button class="dropdown-item btn btn-outline-primary btn-sm" name="res"
-                                                value="999">
-                                            <i class="fas fa-download"></i> 720p
-                                        </button>
-                                    @endif
-                                @endforeach
-                            </form>
-                        </div>
+                        <a href="#" data-toggle="modal" data-target="#downloadModal{{$video->id}}"
+                           title="{{ __('Download presentation') }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-download"></i></a>
                     </div>
                 @endif
             @endif
@@ -185,6 +163,49 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- -->
+<div class="modal fade" id="downloadModal{{$video->id}}" tabindex="-1" role="dialog" aria-labelledby="downloadModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="shareModalLabel">{{__("Download presentation")}} <strong>{{$video->title}}</strong></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="staticLink">{{__("Choose a resolution")}}</label>
+                {{--}}<div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">{{--}}
+                    <div class="dropdown">
+                        <form method="post" action="{{route('download', $video->id)}}">
+                            @csrf
+                            @foreach(json_decode($video->sources, true) as $source)
+                                @if(is_array($source['video']) && $loop->first)
+                                    @foreach($source['video'] as $key => $source)
+                                        <button class="btn btn-outline-primary btn-sm" name="res"
+                                                value="{{$key}}"><i class="fas fa-download"></i>
+                                            {{$key}}p
+                                        </button>
+                                    @endforeach
+                                @elseif($loop->first)
+                                    <button class="btn btn-outline-primary btn-sm" name="res"
+                                            value="999">
+                                        <i class="fas fa-download"></i> 720p
+                                    </button>
+                                @endif
+                            @endforeach
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__("Close")}}</button>
             </div>
         </div>
     </div>

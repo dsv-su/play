@@ -42,7 +42,7 @@ class ManualDownloadController extends Controller
     {
         //Initiates and starts the download/edit process
         //if(!$presentation = Presentation::find($video->id)) {
-        if (!Presentation::where('id', $video->id)->where('resolution', $resolution)->first() && $video->download) {
+        if (!Presentation::where('id', $video->id)->where('resolution', $resolution)->first() && ($video->download or $video->download_setting)) {
             if (!$presentation = Presentation::find($video->id)) {
                 $presentation = new Presentation();
             }
@@ -72,6 +72,7 @@ class ManualDownloadController extends Controller
 
     public function step1(Video $video, Request $request)
     {
+        //dd($video, $request->res);
         if ($this->initDownload($video, $request->res)) {
             if ($this->checkDownload($video)) {
                 return redirect()->action([ManualDownloadController::class, 'step2'], ['video' => $video]);

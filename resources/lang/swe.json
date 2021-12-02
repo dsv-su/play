@@ -161,6 +161,10 @@
     "DSV Staff": "DSV Personal",
     "Students/Staff": "Studenter/personal",
     "Public": "Publik",
-    "Course Setting": "Kurs inställning"
+    "Course Setting": "Kurs inställning",
+    "Choose a resolution": "Välj en upplösning",
+    "Download in Progress": "Nerladdning pågår",
+    "The Presentation has been downloaded.": "Presentationen har laddats ner.",
+    "Back": "Tillbaka"
 
 }
