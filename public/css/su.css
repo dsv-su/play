@@ -101,19 +101,31 @@ tbody.collapse.show {
 .popover {
     font-family: "TheSansB2-Plain", Verdana, sans-serif;
     line-height: 1.625;
-    background-color: #002f5f;
+    background-color: #fff;
     background-clip: padding-box;
-    border: 1px solid #002f5f;
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: 0.3rem;
 }
 
 .popover-header {
-    background-color: #002750;
-    border-bottom: 1px solid #001b36;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0;
+    font-size: 1rem;
+    color: inherit;
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #ebebeb;
+    border-top-left-radius: calc(.3rem - 1px);
+    border-top-right-radius: calc(0.3rem - 1px);
 }
 
 .popover-body {
-    padding: .5rem 1rem;
-    color: #fff
+    padding: 0.5rem 0.75rem;
+    color: #212529;
+}
+
+#showmore .popover {
+    background-color: #ffffff;
+    color: inherit;
 }
 
 .form-control {
@@ -5205,7 +5217,7 @@ p.kill-p, .kill-p p {
 }
 
 .video:hover {
-    transform: scale(1.03);
+    /* gunnar didn't want to transform; transform: scale(1.03); */
     /*opacity: 0.9;*/
 }
 
@@ -5242,23 +5254,47 @@ p.kill-p, .kill-p p {
     margin-bottom: -1px;
     position: absolute;
     bottom: 0;
-    right: 0;
-    background-color: var(--light);
-    color: var(--red);
+    left: 0;
+    background-color: var(--dark);
+    color: #ffffff;
+    font-size: 0.9em !important;
+    /*color: var(--red);*/
     transition: var(--ease);
    /* border-bottom-right-radius: 2px !important;*/
     font-family: "TheSansC5-SemiBoldWeb", serif;
 }
 
+.video #action-icons {
+    position: absolute;
+    display: none;
+    top: 0;
+    right: 0;
+    color: #ffffff;
+    font-size: 0.9em !important;
+    /* color: var(--red); */
+    transition: var(--ease);
+    /* border-bottom-right-radius: 2px !important; */
+    font-family: "TheSansC5-SemiBoldWeb", serif;
+    z-index: 9999;
+}
+
+.video #action-icons .btn,
+.video #action-icons .btn-sm {
+    border-radius: 0 !important;
+}
+
+.video:hover #action-icons {
+    display: flex;
+}
+
+
 .video .card-header .permission {
     display: inline-block;
-    padding: 4px;
     border: none;
     margin: 0;
 }
 
 .video .card-header .visability {
-    padding: 4px 4px 4px 4px;
     display: inline-block;
 }
 
@@ -5269,12 +5305,13 @@ p.kill-p, .kill-p p {
 .video .card-header p {
     margin-bottom: -1px;
     margin-left: 0;
-    background-color: var(--light);
-    color: #002f5f;
+    background-color: var(--dark);
+    color: #ffffff;
+    /*color: #002f5f;*/
     position: absolute;
-    left: 0;
+    right: 0;
     bottom: 0;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-family: "TheSansC5-SemiBoldWeb", serif;
     font-weight: 400;
 }
