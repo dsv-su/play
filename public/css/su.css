@@ -5218,6 +5218,7 @@ p.kill-p, .kill-p p {
 
 .video:hover  {
     /* gunnar didn't want to transform; transform: scale(1.03); */
+    opacity: 0.9;
 }
 
 .faded {

@@ -2,11 +2,13 @@
 <div class="card video m-auto @if (!$video->visability || !$video->visibility_setting)faded @endif" @if (isset($manage) && $manage) id="{{$video->id}}" @endif>
     <div id="action-icons" class="flex-column m-1">
         @if ($video->visability)
+            @if ($video->editable())
             <div class="mb-1" data-placement="left" data-toggle="tooltip" title="{{__("Share presentation")}}">
                 <a href="#" data-toggle="modal" data-target="#shareModal{{$video->id}}"
                    title="{{ __('Share presentation') }}" class="btn btn-dark btn-sm"><i
                             class="fas fa-external-link-alt fa-fw"></i></a>
             </div>
+            @endif
             @if ($video->download or $video->download_setting)
                 <div class="dropdown mb-1" data-placement="left" data-toggle="tooltip"
                      title="{{ __("Download presentation") }}">
