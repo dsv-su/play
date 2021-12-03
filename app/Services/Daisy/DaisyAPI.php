@@ -58,4 +58,24 @@ class DaisyAPI extends DaisyIntegration
         return $courselist;
 
     }
+
+    //All courses from Daisy
+    public function getDaisyCourses()
+    {
+        //Working progress -> to retrive all courses from Daisy 2018-today
+        if($this->array_resources = json_decode($this->getResource('courseSegment', 'json')->getBody()->getContents(), TRUE)) {
+
+            dd($this->array_resources);
+
+            foreach ($this->resources->reverse() as $course) {
+                $courselist[] = Arr::flatten($course);
+            }
+        }
+        else {
+            return false;
+        }
+
+        return $courselist;
+
+    }
 }

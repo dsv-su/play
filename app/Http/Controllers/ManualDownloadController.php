@@ -11,10 +11,13 @@ use App\Services\Store\DownloadResource;
 use App\Services\Store\DownloadStreamResolution;
 use App\Services\Store\SftpPlayStore;
 use App\Services\TicketHandler;
+use App\Stream;
+use App\StreamResolution;
 use App\Video;
 use App\VideoStat;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 use Storage;
 
@@ -60,7 +63,7 @@ class ManualDownloadController extends Controller
             $presentation->presenters = '[]';
             $presentation->tags = '[]';
             $presentation->courses = '[]';
-            $presentation->thumb = '';//$video->thumb;
+            $presentation->thumb = 'image/thumb.jpg';//$video->thumb;
             $presentation->created = $video->creation;
             $presentation->duration = $video->duration;
             $presentation->sources = json_decode($video->sources, true);
@@ -76,6 +79,7 @@ class ManualDownloadController extends Controller
     public function step1(Video $video, Request $request)
     {
         //dd($video, $request->res);
+        //Check if request has been initiated
         if ($this->initDownload($video, $request->res)) {
             if ($this->checkDownload($video)) {
                 return redirect()->action([ManualDownloadController::class, 'step2'], ['video' => $video]);
@@ -112,9 +116,12 @@ class ManualDownloadController extends Controller
     {
         $presentation = Presentation::find($video->id);
         //Download directories to use
-        $dir_thumb = $presentation->local . '/image/';
+        /*$dir_thumb = $presentation->local . '/image/';
         $dir_video = $presentation->local . '/video/';
-        $dir_poster = $presentation->local . '/poster/';
+        $dir_poster = $presentation->local . '/poster/';*/
+        $dir_thumb = $presentation->local . '/multiplayer/image/';
+        $dir_video = $presentation->local . '/multiplayer/videos/';
+        $dir_poster = $presentation->local . '/multiplayer/posters/';
 
         //Download Files
 
@@ -144,6 +151,9 @@ class ManualDownloadController extends Controller
         foreach ($poster_names as $poster_name) {
             $file->getFile($dir_poster . $poster_name, $this->base_uri() . '/' . $video->id . '/' . $poster_name);
         }
+
+        //Create json package
+        $this->package($presentation);
 
         //Change status
         $presentation->status = 'stored';
@@ -402,6 +412,44 @@ class ManualDownloadController extends Controller
         return view('download.index', $presentation, compact('durationInSeconds', 'final'));
     }
 
+    private function package($presentation)
+    {
+        $video = Video::find($presentation->id);
+        // Construct Presentation json from DB
+        $package = array();
+        $package['id'] = $video->id;
+        $package['title'] = $video->title;
+        $package['thumb'] = $presentation->thumb;
+        $package['duration'] = $video->duration;
+
+        $streams = Stream::where('video_id', $video->id)->where('hidden', 0)->get();
+        foreach ($streams as $key => $stream) {
+            $package['sources'][] = [
+                'poster' => 'posters/' .$stream->poster,
+                'playAudio' => (bool) $stream->audio,
+                'name' => $stream->name
+            ];
+            $resolutions = StreamResolution::where('stream_id', $stream->id)->get();
+            foreach ($resolutions as $resolution) {
+                $package['sources'][$key]['video'][$resolution->resolution] = 'videos/'. $resolution->filename;
+            }
+        }
+
+        //Prepare multiplayer
+        $this->prepare_multiplayer($presentation);
+
+        $package = collect($package)->toJson(JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+        return Storage::disk('public')->put($presentation->local .'/multiplayer/package.json', $package);
+    }
+
+    private function prepare_multiplayer($presentation)
+    {
+        foreach($this->getMultiPlayerFiles() as $playerfile) {
+            Storage::copy('multiplayer/'.$playerfile, 'public/'.$presentation->local.'/multiplayer/'.$playerfile);
+        }
+    }
+
     private function gen_default_thumb_posters(Presentation $presentation, $seconds)
     {
         $this->files = $this->getDownloadedVideoFiles($presentation->local);
@@ -503,6 +551,15 @@ class ManualDownloadController extends Controller
             return $this->video_name[] = substr($this->file, strrpos($this->file, '/') + 1);
         }
         return 0;
+    }
+
+    private function getMultiPlayerFiles()
+    {
+        foreach (Storage::disk('local')->files('multiplayer') as $this->file) {
+            $this->file_name[] = substr($this->file, strrpos($this->file, '/') + 1);
+        }
+
+        return $this->file_name;
     }
 
     private function setDownloaddir()
