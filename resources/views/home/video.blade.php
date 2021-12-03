@@ -1,85 +1,85 @@
 <!-- Video - child view - will inherit all data available in the parent view-->
-<div class="card video m-auto" @if (isset($manage) && $manage) id="{{$video->id}}" @endif>
-    @if ($video->visability)
-        <div id="action-icons" class="flex-column m-1">
-            @if ($video->visability)
-                <div class="mb-1" data-placement="left" data-toggle="tooltip" title="{{__("Share presentation")}}">
-                    <a href="#" data-toggle="modal" data-target="#shareModal{{$video->id}}"
-                       title="{{ __('Share presentation') }}" class="btn btn-dark btn-sm"><i
-                                class="fas fa-external-link-alt"></i></a>
+<div class="card video m-auto @if (!$video->visability || !$video->visibility_setting)faded @endif" @if (isset($manage) && $manage) id="{{$video->id}}" @endif>
+    <div id="action-icons" class="flex-column m-1">
+        @if ($video->visability)
+            <div class="mb-1" data-placement="left" data-toggle="tooltip" title="{{__("Share presentation")}}">
+                <a href="#" data-toggle="modal" data-target="#shareModal{{$video->id}}"
+                   title="{{ __('Share presentation') }}" class="btn btn-dark btn-sm"><i
+                            class="fas fa-external-link-alt fa-fw"></i></a>
+            </div>
+            @if ($video->download or $video->download_setting)
+                <div class="dropdown mb-1" data-placement="left" data-toggle="tooltip"
+                     title="{{ __("Download presentation") }}">
+                    <a href="#" data-toggle="modal" data-target="#downloadModal{{$video->id}}"
+                       title="{{ __('Download presentation') }}" class="btn btn-dark btn-sm"><i
+                                class="fas fa-download fa-fw"></i></a>
                 </div>
-                @if ($video->download or $video->download_setting)
-                    <div class="dropdown mb-1" data-placement="left" data-toggle="tooltip"
-                         title="{{ __("Download presentation") }}">
-                        <a href="#" data-toggle="modal" data-target="#downloadModal{{$video->id}}"
-                           title="{{ __('Download presentation') }}" class="btn btn-dark btn-sm"><i
-                                    class="fas fa-download"></i></a>
-                    </div>
-                @endif
             @endif
-            @if (true || isset($manage) && $manage or (isset($manage) && $manage and app()->make('play_role') == 'Administrator'))
-                @if ($video->editable() or $video->edit_setting)
-                    <div class="mb-1">
-                        <a href="{{route('presentation_edit', $video->id)}}" data-toggle="tooltip" data-placement="left"
-                           title="{{ __('Edit presentation') }}" class="btn btn-dark btn-sm"><i
-                                    class="far fa-edit"></i></a>
-                    </div>
-                @endif
-                @if ($video->deletable() or $video->delete_setting)
-                    <div class="mb-1">
-                        <form>
-                            <meta name="csrf-token" content="{{ csrf_token() }}">
-                            <a href="#" data-toggle="tooltip" data-placement="left"
-                               title="{{ __("Delete presentation") }}"
-                               class="btn btn-dark btn-sm delete"><i
-                                        class="far fa-trash-alt"></i></a>
-                        </form>
-                    </div>
-                @endif
-            @endif
-        </div>
-        <a href="{{ route('player', ['video' => $video]) }}">
         @endif
+        @if (true || isset($manage) && $manage or (isset($manage) && $manage and app()->make('play_role') == 'Administrator'))
+            @if ($video->editable() or $video->edit_setting)
+                <div class="mb-1">
+                    <a href="{{route('presentation_edit', $video->id)}}" data-toggle="tooltip" data-placement="left"
+                       title="{{ __('Edit presentation') }}" class="btn btn-dark btn-sm"><i
+                                class="far fa-edit fa-fw"></i></a>
+                </div>
+            @endif
+            @if ($video->deletable() or $video->delete_setting)
+                <div class="mb-1">
+                    <form>
+                        <meta name="csrf-token" content="{{ csrf_token() }}">
+                        <a href="#" data-toggle="tooltip" data-placement="left"
+                           title="{{ __("Delete presentation") }}"
+                           class="btn btn-dark btn-sm delete"><i
+                                    class="far fa-trash-alt fa-fw"></i></a>
+                    </form>
+                </div>
+            @endif
+        @endif
+    </div>
+    <a href="{{ route('player', ['video' => $video]) }}">
 
         <!--   Visibility: Individual presentation setting -> $video->visability, Course (bulk) settings -> $video->visibility_setting -->
 
-            <div class="card-header position-relative"
-                 style="background-image: @if ($video->visability == false or $video->visibility_setting == false) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); height:200px;">
-                <!-- Group Permissions -->
-                <div class="icons m-1">
-                    @foreach($video->status as $permission)
-                        @if($permission->type == 'private' or $video->private_setting)
-                            <div class="permission mx-1" data-toggle="tooltip"
-                                 title="{{__('Viewing permissions modified')}}"><i class="fas fa-user-lock"></i></div>
-                        @endif
-                        @if($permission->type == 'external' or $video->external_setting)
-                            <div class="permission mx-1" data-toggle="tooltip"
-                                 title="{{__('External access enabled')}}"><i
-                                        class="fas fa-globe"></i></div>
-                        @endif
-                    @endforeach
-                <!-- end Group Permission -->
-
-                    <!-- Visability -->
-                    @if($video->visability == false or $video->visibility_setting == false)
-                        <div class="visability mx-1" data-toggle="tooltip" title="{{__('Presentation is hidden')}}"><i
-                                    class="fas fa-eye-slash"></i></div>
+        <div class="card-header position-relative"
+             style="background-image: @if ($video->visability == false or $video->visibility_setting == false) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); height:200px;">
+            <!-- Group Permissions -->
+            <div class="icons m-1">
+                @foreach($video->status as $permission)
+                    @if($permission->type == 'private' or $video->private_setting)
+                        <div class="permission mx-1" data-toggle="tooltip"
+                             title="{{__('Viewing permissions modified')}}"><i class="fas fa-user-lock"></i></div>
                     @endif
-                </div>
-                @if ($video->visability == false or $video->visibility_setting == false)
-                    <div class="d-flex justify-content-center h-100">
-                        <div class="d-inline alert alert-secondary m-auto"
-                             role="alert">{{ __("Presentation hidden") }}</div>
-                    </div>
+                    @if($permission->type == 'external' or $video->external_setting)
+                        <div class="permission mx-1" data-toggle="tooltip"
+                             title="{{__('External access enabled')}}"><i
+                                    class="fas fa-globe"></i></div>
+                    @endif
+                @endforeach
+            <!-- end Group Permission -->
+
+                <!-- Visability -->
+                @if($video->visability == false or $video->visibility_setting == false)
+                    <div class="visability mx-1" data-toggle="tooltip" title="{{__('Presentation is hidden')}}"><i
+                                class="fas fa-eye-slash"></i></div>
                 @endif
-                <p class="m-1 px-1"> {{$video->duration}} </p>
             </div>
-            @if ($video->visability)
-        </a>
+            @if ($video->visability == false or $video->visibility_setting == false)
+                <div class="d-flex justify-content-center h-100">
+                    <div class="d-inline alert alert-secondary m-auto"
+                         role="alert">{{ __("Presentation hidden") }}</div>
+                </div>
+            @endif
+            <p class="m-1 px-1"> {{$video->duration}} </p>
+        </div>
+        @if ($video->visability)
+    </a>
     @endif
     <div class="card-body p-1 overflow-hidden">
         <div class="d-flex align-items-start">
-            <div class=""><h4 class="card-text font-1rem font-weight-bold px-1 py-2">{{ $video->title }}</h4></div>
+            <div class=""><h4 class="card-text font-1rem font-weight-bold px-1 py-2"><a
+                            href="{{ route('player', ['video' => $video]) }}" class="link">{{ $video->title }}</a></h4>
+            </div>
             @if ($video->description)
                 <div class="ml-auto" id="showmore">
                     <a tabindex="0" class="btn btn-sm" role="button" data-toggle="popover"
