@@ -5254,7 +5254,7 @@ p.kill-p, .kill-p p {
     margin-bottom: -1px;
     position: absolute;
     bottom: 0;
-    right: 0;
+    left: 0;
     background-color: var(--dark);
     color: #ffffff;
     font-size: 0.9em !important;
@@ -5263,6 +5263,30 @@ p.kill-p, .kill-p p {
    /* border-bottom-right-radius: 2px !important;*/
     font-family: "TheSansC5-SemiBoldWeb", serif;
 }
+
+.video #action-icons {
+    position: absolute;
+    display: none;
+    top: 0;
+    right: 0;
+    color: #ffffff;
+    font-size: 0.9em !important;
+    /* color: var(--red); */
+    transition: var(--ease);
+    /* border-bottom-right-radius: 2px !important; */
+    font-family: "TheSansC5-SemiBoldWeb", serif;
+    z-index: 9999;
+}
+
+.video #action-icons .btn,
+.video #action-icons .btn-sm {
+    border-radius: 0 !important;
+}
+
+.video:hover #action-icons {
+    display: flex;
+}
+
 
 .video .card-header .permission {
     display: inline-block;
@@ -5285,7 +5309,7 @@ p.kill-p, .kill-p p {
     color: #ffffff;
     /*color: #002f5f;*/
     position: absolute;
-    left: 0;
+    right: 0;
     bottom: 0;
     font-size: 0.9rem;
     font-family: "TheSansC5-SemiBoldWeb", serif;

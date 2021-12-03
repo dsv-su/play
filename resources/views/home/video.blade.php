@@ -1,6 +1,43 @@
 <!-- Video - child view - will inherit all data available in the parent view-->
 <div class="card video m-auto" @if (isset($manage) && $manage) id="{{$video->id}}" @endif>
     @if ($video->visability)
+        <div id="action-icons" class="flex-column m-1">
+            @if ($video->visability)
+                <div class="mb-1" data-placement="left" data-toggle="tooltip" title="{{__("Share presentation")}}">
+                    <a href="#" data-toggle="modal" data-target="#shareModal{{$video->id}}"
+                       title="{{ __('Share presentation') }}" class="btn btn-dark btn-sm"><i
+                                class="fas fa-external-link-alt"></i></a>
+                </div>
+                @if ($video->download or $video->download_setting)
+                    <div class="dropdown mb-1" data-placement="left" data-toggle="tooltip"
+                         title="{{ __("Download presentation") }}">
+                        <a href="#" data-toggle="modal" data-target="#downloadModal{{$video->id}}"
+                           title="{{ __('Download presentation') }}" class="btn btn-dark btn-sm"><i
+                                    class="fas fa-download"></i></a>
+                    </div>
+                @endif
+            @endif
+            @if (true || isset($manage) && $manage or (isset($manage) && $manage and app()->make('play_role') == 'Administrator'))
+                @if ($video->editable() or $video->edit_setting)
+                    <div class="mb-1">
+                        <a href="{{route('presentation_edit', $video->id)}}" data-toggle="tooltip" data-placement="left"
+                           title="{{ __('Edit presentation') }}" class="btn btn-dark btn-sm"><i
+                                    class="far fa-edit"></i></a>
+                    </div>
+                @endif
+                @if ($video->deletable() or $video->delete_setting)
+                    <div class="mb-1">
+                        <form>
+                            <meta name="csrf-token" content="{{ csrf_token() }}">
+                            <a href="#" data-toggle="tooltip" data-placement="left"
+                               title="{{ __("Delete presentation") }}"
+                               class="btn btn-dark btn-sm delete"><i
+                                        class="far fa-trash-alt"></i></a>
+                        </form>
+                    </div>
+                @endif
+            @endif
+        </div>
         <a href="{{ route('player', ['video' => $video]) }}">
         @endif
 
@@ -11,7 +48,6 @@
                 <!-- Group Permissions -->
                 <div class="icons m-1">
                     @foreach($video->status as $permission)
-
                         @if($permission->type == 'private' or $video->private_setting)
                             <div class="permission mx-1" data-toggle="tooltip"
                                  title="{{__('Viewing permissions modified')}}"><i class="fas fa-user-lock"></i></div>
@@ -79,42 +115,7 @@
                 @endforeach
             @endif
         </p>
-        <div class="d-flex float-right clearfix">
-            @if ($video->visability)
-                <div class="ml-1" data-toggle="tooltip" title="{{__("Share presentation")}}">
-                    <a href="#" data-toggle="modal" data-target="#shareModal{{$video->id}}"
-                       title="{{ __('Share presentation') }}" class="btn btn-outline-secondary btn-sm"><i
-                                class="fas fa-external-link-alt"></i></a>
-                </div>
-                @if ($video->download or $video->download_setting)
-                    <div class="dropdown ml-1" data-toggle="tooltip" data-placement="top"
-                         title="{{ __("Download presentation") }}">
-                        <a href="#" data-toggle="modal" data-target="#downloadModal{{$video->id}}"
-                           title="{{ __('Download presentation') }}" class="btn btn-outline-primary btn-sm"><i
-                                    class="fas fa-download"></i></a>
-                    </div>
-                @endif
-            @endif
-            @if (isset($manage) && $manage or (isset($manage) && $manage and app()->make('play_role') == 'Administrator'))
-                @if ($video->editable() or $video->edit_setting)
-                    <div class="ml-1">
-                        <a href="{{route('presentation_edit', $video->id)}}" data-toggle="tooltip"
-                           title="{{ __('Edit presentation') }}" class="btn btn-outline-info btn-sm"><i
-                                    class="far fa-edit"></i></a>
-                    </div>
-                @endif
-                @if ($video->deletable() or $video->delete_setting)
-                    <div class="ml-1">
-                        <form>
-                            <meta name="csrf-token" content="{{ csrf_token() }}">
-                            <a href="#" data-toggle="tooltip" title="{{ __("Delete presentation") }}"
-                               class="btn btn-outline-danger btn-sm delete"><i
-                                        class="far fa-trash-alt"></i></a>
-                        </form>
-                    </div>
-                @endif
-            @endif
-        </div>
+
     <!-- Remove description for now
         @if ($video->description)
         <p class="m-1 line-1rem text-shrink"><small>{{$video->description}}</small></p>
