@@ -35,7 +35,7 @@ class DownloadZip extends Model
                 $filePath = $file->getRealPath();
 
                 // extracting filename with substr/strlen
-                $relativePath = $this->video->title.'/' . substr($filePath, strlen($this->destination)-1);
+                $relativePath = $this->video->title.'/' . substr($filePath, strlen($this->destination)-2);
 
                 $zip->addFile($filePath, $relativePath);
             }
