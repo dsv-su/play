@@ -5216,21 +5216,26 @@ p.kill-p, .kill-p p {
     transition: var(--ease);*/
 }
 
-.video:hover {
+.video:hover  {
     /* gunnar didn't want to transform; transform: scale(1.03); */
-    /*opacity: 0.9;*/
+    opacity: 0.9;
 }
 
-.video:hover p {
-    overflow: auto;
-    text-overflow: initial;
-    display: block;
+.faded {
+    opacity: 0.7;
+}
+
+.video .link {
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
 }
 
 .video .card-header {
     background: #002f5f url("../images/eld_footer.png") no-repeat center;
     background-size: cover;
     font-size: 1rem;
+    border-bottom: none;
 }
 
 .video .card-header .title {
@@ -5287,6 +5292,10 @@ p.kill-p, .kill-p p {
     display: flex;
 }
 
+.video .fa-fw {
+    width: 1em !important;
+    opacity: 1 !important;
+}
 
 .video .card-header .permission {
     display: inline-block;
