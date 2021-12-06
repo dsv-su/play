@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Jobs\JobDevNotification;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -27,6 +28,30 @@ class Handler extends ExceptionHandler
     ];
 
     /**
+     * Register the exception handling callbacks for the application.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->reportable(function (Throwable $e) {
+            // Create Notification Data
+            $exception = [
+                "name" => get_class($e),
+                "message" => $e->getMessage(),
+                "file" => $e->getFile(),
+                "line" => $e->getLine(),
+            ];
+
+            // Create a Job for Notification which will run after 5 seconds.
+            $job = (new JobDevNotification($exception))->delay(5);
+
+            // Dispatch Job and continue
+            dispatch($job);
+        });
+    }
+
+    /*
      * Report or log an exception.
      *
      * @param  \Throwable  $exception
@@ -34,12 +59,12 @@ class Handler extends ExceptionHandler
      *
      * @throws \Exception
      */
-    public function report(Throwable $exception)
+    /*public function report(Throwable $exception)
     {
         parent::report($exception);
-    }
+    }*/
 
-    /**
+    /*
      * Render an exception into an HTTP response.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -48,8 +73,8 @@ class Handler extends ExceptionHandler
      *
      * @throws \Throwable
      */
-    public function render($request, Throwable $exception)
+    /*public function render($request, Throwable $exception)
     {
         return parent::render($request, $exception);
-    }
+    }*/
 }

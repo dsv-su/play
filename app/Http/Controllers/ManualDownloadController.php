@@ -116,12 +116,9 @@ class ManualDownloadController extends Controller
     {
         $presentation = Presentation::find($video->id);
         //Download directories to use
-        /*$dir_thumb = $presentation->local . '/image/';
-        $dir_video = $presentation->local . '/video/';
-        $dir_poster = $presentation->local . '/poster/';*/
-        $dir_thumb = $presentation->local . '/multiplayer/image/';
-        $dir_video = $presentation->local . '/multiplayer/videos/';
-        $dir_poster = $presentation->local . '/multiplayer/posters/';
+        $dir_thumb = $presentation->local . '/image/';
+        $dir_video = $presentation->local . '/videos/';
+        $dir_poster = $presentation->local . '/posters/';
 
         //Download Files
 
@@ -440,14 +437,15 @@ class ManualDownloadController extends Controller
 
         $package = collect($package)->toJson(JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
-        return Storage::disk('public')->put($presentation->local .'/multiplayer/package.json', $package);
+        return Storage::disk('public')->put($presentation->local .'/package.json', $package);
     }
 
     private function prepare_multiplayer($presentation)
     {
-        foreach($this->getMultiPlayerFiles() as $playerfile) {
+        /*foreach($this->getMultiPlayerFiles() as $playerfile) {
             Storage::copy('multiplayer/'.$playerfile, 'public/'.$presentation->local.'/multiplayer/'.$playerfile);
-        }
+        }*/
+        Storage::copy('multiplayer/dlplayer.html', 'public/'.$presentation->local.'/player.html');
     }
 
     private function gen_default_thumb_posters(Presentation $presentation, $seconds)
