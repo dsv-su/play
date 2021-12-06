@@ -123,8 +123,8 @@
         <p class="m-1 line-1rem text-shrink"><small>{{$video->description}}</small></p>
         @endif
             -->
-        @if (App::environment('production'))
-            <p class="mx-1 my-0 d-inline-block"><small>id: {{$video->id}}</small></p>
+        @if (!App::environment('production'))
+            <!--<p class="mx-1 my-0 d-inline-block"><small>id: {{$video->id}}</small></p>-->
         @endif
     </div>
 </div>
