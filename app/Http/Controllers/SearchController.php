@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Course;
 use App\CourseadminPermission;
+use App\CoursePermissions;
+use App\CoursesettingsPermissions;
 use App\CoursesettingsUsers;
 use App\IndividualPermission;
 use App\Presenter;
@@ -63,7 +65,7 @@ class SearchController extends Controller
         $videos = $visibility->check($videos);
 
         $videos = $videos->groupBy(function ($item, $key) {
-            return $item->video_course[0]->course['semester'] . $item->video_course[0]->course['year'] ?? 'UU9999';
+            return $item->video_course[0]->course['id'] ?? 'UU9999';
         });
 
 
@@ -140,8 +142,8 @@ class SearchController extends Controller
                 $individual_videos = IndividualPermission::where('username', app()->make('play_username'))->where('permission', 'edit')->orWhere('permission', 'delete')->pluck('video_id');
 
                 //Check for course individual settings
-                if(count($course_user_admins = CoursesettingsUsers::where('username', app()->make('play_username'))->whereIn('permission',['edit', 'delete'])->get()) >= 1) {
-                    foreach($course_user_admins as $course_user_admin) {
+                if (count($course_user_admins = CoursesettingsUsers::where('username', app()->make('play_username'))->whereIn('permission', ['edit', 'delete'])->get()) >= 1) {
+                    foreach ($course_user_admins as $course_user_admin) {
                         $videos_id[] = VideoCourse::where('course_id', $course_user_admin->course_id)->pluck('video_id');
                     }
                 }
@@ -149,10 +151,9 @@ class SearchController extends Controller
 
                 return $visibility->check(Video::whereIn('id', $user_videos)->orWhereIn('id', $individual_videos)->orWhereIn('id', $courseadministrator)->orWhereIn('id', $video_course_ids)->latest('creation')->get());
 
-            }
-            elseif (app()->make('play_role') == 'Administrator') {
+            } elseif (app()->make('play_role') == 'Administrator') {
                 //If user is Administrator results are cached
-                return Cache::remember('videos', $seconds = 180, function () use($visibility) {
+                return Cache::remember('videos', $seconds = 180, function () use ($visibility) {
                     return $visibility->check(Video::with('category', 'video_course.course')->latest('creation')->get());
                 });
             }
@@ -169,14 +170,44 @@ class SearchController extends Controller
         $manage = \Request::is('manage');
         $permissions = VideoPermission::all();
 
-        //If user is CourseAdmin
-        if(app()->make('play_role') == 'Courseadmin') {
+        // Group videos by course
+        $videos = $videos->groupBy(function ($item, $key) {
+            if (isset($item->video_course[0])) {
+                $course = $item->video_course[0]->course;
+                return $course['id'] ?? '0';
+            }
+        });
+
+        /*
+        if (app()->make('play_role') == 'Courseadmin') {
+            // We need to add courses that have no videos
             $sort = new SortByCourseAdmin();
             $courselist = $sort->course_after_year(app()->make('play_username'));
             return view('manage.manage_courseadmin', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'permissions', 'courselist'));
         }
+        */
         //Else
-        return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'permissions'));
+
+        $coursesetlist = $individual_permissions = $playback_permissions = [];
+        if ($manage) {
+            foreach ($videos as $courseid => $videolist) {
+                if ($courseSettings = CoursesettingsPermissions::where('course_id', $courseid)->first()) {
+                    //Visibility
+                    $coursesetlist[$courseid]['visibility'] = $courseSettings->visibility;
+                    //Downloadable
+                    $coursesetlist[$courseid]['downloadable'] = $courseSettings->downloadable;
+                    //Individual users
+                    if ($ipermissions = CoursesettingsUsers::where('course_id', $courseid)->count()) {
+                        $individual_permissions[$courseid] = $ipermissions;
+                    }
+                    //Group permissions
+                    $gpermission = CoursePermissions::where('course_id', $courseid)->first();
+                    $playback_permissions[$courseid] = $gpermission;
+                }
+            }
+        }
+
+        return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'permissions', 'coursesetlist', 'playback_permissions', 'individual_permissions'));
     }
 
     public function filterSearch($q = null, Request $request)
@@ -238,7 +269,7 @@ class SearchController extends Controller
         $data['latest'] = $presenter->videos()->filter(function ($video) {
             return $video;
         });
-        $data['latest'] =  $visibility->check($data['latest']);
+        $data['latest'] = $visibility->check($data['latest']);
         $data['terms'] = $this->extractTerms($data['latest']);
         $data['courses'] = $this->extractCourses($data['latest']);
         $data['tags'] = $this->extractTags($data['latest']);
@@ -381,6 +412,17 @@ class SearchController extends Controller
         $videoterms = $this->extractTerms($videos);
         $videotags = $this->extractTags($videos);
         $videopresenters = $this->extractPresenters($videos);
+
+        // Group videos by course
+        $videos = $videos->groupBy(function ($item, $key) {
+            if (isset($item->video_course[0])) {
+                $course = $item->video_course[0]->course;
+                return $course['id'] ?? '0';
+            }
+        });
+
+        $html = view('home.courselist', compact('videos', 'manage'))->render();
+
         return array($html, $videocourses, $videoterms, $videopresenters, $videotags, $videos);
     }
 

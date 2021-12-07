@@ -72,36 +72,7 @@
                 </form>
             @endif
             <div id="navigator_content">
-                @foreach ($videos as $key => $videocourse)
-                    <h3 class="col mt-4">
-                        <a class="link @if ($videos->first() !== $videocourse) collapsed @endif" data-toggle="collapse"
-                           href="#collapse{{str_replace(' ', '', $key)}}" role="button" aria-expanded="false"
-                           aria-controls="collapse{{str_replace(' ', '', $key)}}"><i class="fa mr-2"></i>
-                            @if($designation ?? '') {{$designation}} @elseif($category ?? '') {{$category}} @endif {{$key}}
-                            ({{count($videocourse)}} st)
-                        </a>
-                    </h3>
-
-                    <div class="collapse @if ($videos->first() == $videocourse) show @endif"
-                         id="collapse{{str_replace(' ', '', $key)}}">
-                        <div class="d-flex flex-wrap">
-                            @foreach ($videocourse as $video)
-                                <div class="col my-3">
-                                    @include('home.video')
-                                </div>
-                            @endforeach
-                            <div class="col">
-                                <div class="card video my-0 mx-auto border-0"></div>
-                            </div>
-                            <div class="col">
-                                <div class="card video my-0 mx-auto border-0"></div>
-                            </div>
-                            <div class="col">
-                                <div class="card video my-0 mx-auto border-0"></div>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
+                @include('home.courselist')
             </div>
         @else
             <h3 class="col mt-4">{{ __("No presentations") }}</h3>

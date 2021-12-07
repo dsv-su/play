@@ -61,30 +61,30 @@
                                 onclick="$('.selectpicker').selectpicker('deselectAll'); $('.selectpicker').selectpicker('refresh');">
                             {{ __("Clear Selection") }}
                         </button>
+                        <button type="button" class="mb-2 ml-1 btn btn-outline-secondary expanded" id="toggle">
+                            {{ __("Collapse all") }}
+                        </button>
                         <meta name="csrf-token" content="{{ csrf_token() }}">
                     </form>
                 @endif
-                <div class="d-flex flex-wrap">
-                    @foreach ($videos as $key => $video)
-                        <div class="col my-3">
-                            @include('home.video')
-                        </div>
-                    @endforeach
-                    <div class="col">
-                        <div class="card video my-0 mx-auto border-0"></div>
-                    </div>
-                    <div class="col">
-                        <div class="card video my-0 mx-auto border-0"></div>
-                    </div>
-                    <div class="col">
-                        <div class="card video my-0 mx-auto border-0"></div>
-                    </div>
+                <div id="navigator_content">
+                    @include('home.courselist')
                 </div>
             </div>
         @endif
     </div><!-- /.container -->
 
     <script>
+        $(document).on('click', '#toggle', function (e) {
+            if ($(this).hasClass('expanded')) {
+                $('#navigator_content').find('div.collapse').collapse('hide');
+                $(this).text("{{ __('Expand all')}}");
+            } else {
+                $('#navigator_content').find('div.collapse').collapse('show');
+                $(this).text("{{ __('Collapse all')}}");
+            }
+            $(this).toggleClass('expanded collapsed');
+        });
         $(document).on('change', 'select', function (e) {
             $.ajaxSetup({
                 headers: {
@@ -105,7 +105,7 @@
                 contentType: false,
                 processData: false,
                 success: (data) => {
-                    $('#collapseVideo').find('.d-flex').html(data['html']);
+                    $('#collapseVideo').find('#navigator_content').html(data['html']);
                     $('select[name="tag"] option').each(function () {
                         if (data['tags'].indexOf($(this).val()) >= 0) {
                             $(this).prop('disabled', false);
