@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PresentationRequest;
 use App\Http\Resources\Presentation\PresentationResource;
+use App\Jobs\JobUploadSuccessNotification;
+use App\ManualPresentation;
 use App\Services\Course\CourseStore;
 use App\Services\PermissionHandler\PermissionHandler;
 use App\Services\Presenter\PresenterStore;
@@ -104,11 +106,21 @@ class VideoApiController extends Controller
                     return response()->json(['error' => 'Something went wrong while updating', 'message' => $e->getMessage()], 400);
                 }
 
-                DB::commit();   // Successfully stored
+                DB::commit();   // Successfully updated
                 return response()->json('Presentation has been updated', Response::HTTP_CREATED);
             }
 
             DB::commit();   // Successfully stored
+
+            //If manual upload - Send email to uploader
+            if($video->origin == 'manual') {
+                //Retrive upload
+                $presentation = ManualPresentation::find($video->notification_id);
+                //Send email to uploader
+                $job = (new JobUploadSuccessNotification($video, $presentation));
+                // Dispatch Job and continue
+                dispatch($job);
+            }
             return response()->json('Presentation has been created', Response::HTTP_CREATED);
         } else {
             return response()->json(['error' => 'Unauthorized'], 401);

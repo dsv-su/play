@@ -33,6 +33,9 @@ class PlayAuthenticate
                 return 'Administrator';
             });
 
+            app()->bind('play_email', function() {
+                return 'developer@dsv.su.se';
+            });
             //Enable role emulation
             if($adminhandler = AdminHandler::where('Shib_Session_ID', '9999')->first()) {
                 if($adminhandler->override == true) {
@@ -123,7 +126,9 @@ class PlayAuthenticate
             app()->bind('play_username', function() {
                 return substr($_SERVER['eppn'], 0, strpos($_SERVER['eppn'], "@"));
             });
-
+            app()->bind('play_email', function() {
+                return $_SERVER['mail'];
+            });
             // Get Shibboleth entitlements
             $server = explode(";", $_SERVER['entitlement']);
 

@@ -141,6 +141,8 @@
                         </div>
 
                         <!-- Policy -->
+                        <!-- Disabled until PO agree on a suitable text -->
+                        {{--}}
                         <div class="col alert alert-warning" role="alert">
                             <label class="form-control-label px-1">{{ __("DSV Disclaimer") }}</label>
                             <p class="px-1 font-1rem">
@@ -156,6 +158,7 @@
                                 </div>
                             </div>
                         </div>
+                        {{--}}
                     </div>
                 </form>
             </div>
