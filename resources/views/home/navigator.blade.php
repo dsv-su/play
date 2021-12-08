@@ -68,6 +68,9 @@
                     @endif
                     <button type="button" class="mb-2 btn btn-outline-secondary" onclick="$('.selectpicker').selectpicker('deselectAll'); $('.selectpicker').selectpicker('refresh');">Clear selection
                     </button>
+                    <button type="button" class="mb-2 ml-1 btn btn-outline-secondary expanded" id="toggle">
+                        {{ __("Collapse all") }}
+                    </button>
                     <meta name="csrf-token" content="{{ csrf_token() }}">
                 </form>
             @endif
@@ -80,6 +83,16 @@
     </div><!-- /.container -->
 
     <script>
+        $(document).on('click', '#toggle', function (e) {
+            if ($(this).hasClass('expanded')) {
+                $('#navigator_content').find('div.collapse').collapse('hide');
+                $(this).text("{{ __('Expand all')}}");
+            } else {
+                $('#navigator_content').find('div.collapse').collapse('show');
+                $(this).text("{{ __('Collapse all')}}");
+            }
+            $(this).toggleClass('expanded collapsed');
+        });
         $(document).on('change', 'select', function (e) {
             $.ajaxSetup({
                 headers: {

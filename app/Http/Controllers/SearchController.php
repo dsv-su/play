@@ -10,7 +10,6 @@ use App\CoursesettingsUsers;
 use App\IndividualPermission;
 use App\Presenter;
 use App\Services\Daisy\DaisyIntegration;
-use App\Services\Filters\SortByCourseAdmin;
 use App\Services\Filters\Visibility;
 use App\Tag;
 use App\Video;
@@ -178,36 +177,30 @@ class SearchController extends Controller
             }
         });
 
-        /*
-        if (app()->make('play_role') == 'Courseadmin') {
-            // We need to add courses that have no videos
-            $sort = new SortByCourseAdmin();
-            $courselist = $sort->course_after_year(app()->make('play_username'));
-            return view('manage.manage_courseadmin', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'permissions', 'courselist'));
-        }
-        */
-        //Else
-
         $coursesetlist = $individual_permissions = $playback_permissions = [];
         if ($manage) {
-            foreach ($videos as $courseid => $videolist) {
-                if ($courseSettings = CoursesettingsPermissions::where('course_id', $courseid)->first()) {
-                    //Visibility
-                    $coursesetlist[$courseid]['visibility'] = $courseSettings->visibility;
-                    //Downloadable
-                    $coursesetlist[$courseid]['downloadable'] = $courseSettings->downloadable;
-                    //Individual users
-                    if ($ipermissions = CoursesettingsUsers::where('course_id', $courseid)->count()) {
-                        $individual_permissions[$courseid] = $ipermissions;
-                    }
-                    //Group permissions
-                    $gpermission = CoursePermissions::where('course_id', $courseid)->first();
-                    $playback_permissions[$courseid] = $gpermission;
-                }
-            }
+            list($coursesetlist, $individual_permissions, $playback_permissions) = $this->extractSettings($videos);
         }
 
         return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'permissions', 'coursesetlist', 'playback_permissions', 'individual_permissions'));
+    }
+
+    public function extractSettings($videos)
+    {
+        $coursesetlist = $individual_permissions = $playback_permissions = [];
+        foreach ($videos as $courseid => $videolist) {
+            if ($courseSettings = CoursesettingsPermissions::where('course_id', $courseid)->first()) {
+                //Visibility
+                $coursesetlist[$courseid]['visibility'] = $courseSettings->visibility;
+                //Downloadable
+                $coursesetlist[$courseid]['downloadable'] = $courseSettings->downloadable;
+            }
+            //Individual users
+            $individual_permissions[$courseid] = CoursesettingsUsers::where('course_id', $courseid)->count();
+            //Group permissions
+            $playback_permissions[$courseid] = CoursePermissions::where('course_id', $courseid)->first();
+        }
+        return array($coursesetlist, $individual_permissions, $playback_permissions);
     }
 
     public function filterSearch($q = null, Request $request)
@@ -421,7 +414,12 @@ class SearchController extends Controller
             }
         });
 
-        $html = view('home.courselist', compact('videos', 'manage'))->render();
+        $coursesetlist = $individual_permissions = $playback_permissions = [];
+        if ($manage) {
+            list($coursesetlist, $individual_permissions, $playback_permissions) = $this->extractSettings($videos);
+        }
+
+        $html = view('home.courselist', compact('videos', 'manage', 'coursesetlist', 'individual_permissions', 'playback_permissions'))->render();
 
         return array($html, $videocourses, $videoterms, $videopresenters, $videotags, $videos);
     }
@@ -443,13 +441,9 @@ class SearchController extends Controller
             $videos, null, $semesters, $tags, $presenters
         );
 
-        $groupedvideos = $filteredvideos->groupBy(function ($item, $key) {
-            return $item->video_course[0]->course['semester'] . $item->video_course[0]->course['year'] ?? 'UU9999';
-        });
-
         // Rewrite html here because it doesn't fit our categorization view
         $html = '';
-        foreach ($groupedvideos as $key => $coursevideos) {
+        foreach ($filteredvideos as $key => $coursevideos) {
             $html .= view('home.filtered_course', compact('coursevideos', 'key', 'designation', 'permissions'))->render();
         }
 
