@@ -15,7 +15,7 @@ class SortByCourseAdmin extends model
         $daisyPersonID = $daisy->getDaisyPersonId($username);
 
         //Get all courses where user is courseadmin
-        if($courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID)) {
+        if ($courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID)) {
             /*
              * [0] Coursename swedish
              * [1] Coursename english
@@ -25,51 +25,45 @@ class SortByCourseAdmin extends model
              * [5] Courseadmin true/false
              */
             //Group after year
-            if(App::currentLocale() == 'swe') {
+            $start = 0;
+            if (App::currentLocale() == 'swe') {
                 //Courselist in Swedish
-                $start = 0;
                 foreach ($courses as $course) {
-                    if($start == 0) {
+                    if ($start == 0) {
                         $year = substr($course[3], 0, 4);
                     }
                     if ($year == substr($course[3], 0, 4)) {
-                        if(substr($course[3], 4) == '1') {
+                        if (substr($course[3], 4) == '1') {
                             $courselist[$year][$course[2]] = 'VT' . substr($course[3], 0, 4) . ' ' . $course[4] . ' - ' . $course[0] . ' (' . 'KursID: ' . ' ' . $course[2] . ')';
                         } else {
-                            $courselist[$year][$course[2]] = 'HT' . substr($course[3], 0, 4) . ' ' . $course[4] . ' - ' . $course[0] . ' (' . 'KursID: '. ' '. $course[2] . ')';
+                            $courselist[$year][$course[2]] = 'HT' . substr($course[3], 0, 4) . ' ' . $course[4] . ' - ' . $course[0] . ' (' . 'KursID: ' . ' ' . $course[2] . ')';
                         }
                         $start++;
-                    }
-                    else {
+                    } else {
                         $start = 0;
                     }
                 }
-            }
-            else {
+            } else {
                 //Courselist in english
-                $start = 0;
                 foreach ($courses as $course) {
-                    if($start == 0) {
+                    if ($start == 0) {
                         $year = substr($course[3], 0, 4);
                     }
                     if ($year == substr($course[3], 0, 4)) {
-                        if(substr($course[3], 4) == '1') {
+                        if (substr($course[3], 4) == '1') {
                             $courselist[$year][$course[2]] = 'VT' . substr($course[3], 0, 4) . ' ' . $course[4] . ' - ' . $course[1] . ' (' . 'CourseID:' . ' ' . $course[2] . ')';
-                        }
-                        else {
+                        } else {
                             $courselist[$year][$course[2]] = 'HT' . substr($course[3], 0, 4) . ' ' . $course[4] . ' - ' . $course[1] . ' (' . 'CourseID:' . ' ' . $course[2] . ')';
                         }
                         $start++;
-                    }
-                    else {
+                    } else {
                         $start = 0;
                     }
 
                 }
             }
 
-        }
-        else {
+        } else {
             return false;
         }
         return $courselist;

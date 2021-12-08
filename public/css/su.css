@@ -8164,3 +8164,13 @@ textarea#embedCode, textarea#staticLink {
 .opacity-5 {
     opacity:1!important;
 }
+
+.badge-primary {
+    background-color: #002f5f !important;
+}
+
+
+a.badge-primary:hover {
+    background-color: #597898 !important;
+
+}

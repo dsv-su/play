@@ -31,7 +31,7 @@ class ManageCourseSettingsController extends Controller
         $daisyPersonID = $daisy->getDaisyPersonId(app()->make('play_username'));
 
         //Get all courses where user is courseadmin
-        if($courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID)) {
+        if ($courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID)) {
             //dd($courses);
             /*
              * [0] Coursename swedish
@@ -43,32 +43,31 @@ class ManageCourseSettingsController extends Controller
              */
 
             //Group after year
-            if(App::currentLocale() == 'swe') {
+            if (App::currentLocale() == 'swe') {
                 //Courselist in Swedish
                 $start = 0;
                 foreach ($courses as $course) {
-                    if($start == 0) {
+                    if ($start == 0) {
                         $year = substr($course[3], 0, 4);
                     }
                     if ($year == substr($course[3], 0, 4)) {
-                        if(substr($course[3], 4) == '1') {
+                        if (substr($course[3], 4) == '1') {
                             $courselist[$year][$course[2]] = 'VT' . substr($course[3], 0, 4) . ' ' . $course[4] . ' - ' . $course[0] . ' (' . 'KursID: ' . ' ' . $course[2] . ')';
                         } else {
-                            $courselist[$year][$course[2]] = 'HT' . substr($course[3], 0, 4) . ' ' . $course[4] . ' - ' . $course[0] . ' (' . 'KursID: '. ' '. $course[2] . ')';
+                            $courselist[$year][$course[2]] = 'HT' . substr($course[3], 0, 4) . ' ' . $course[4] . ' - ' . $course[0] . ' (' . 'KursID: ' . ' ' . $course[2] . ')';
                         }
                         $start++;
-                    }
-                    else {
+                    } else {
                         $start = 0;
                     }
                     //Check settings for course
-                    if($courseSettings = CoursesettingsPermissions::where('course_id', $course[2])->first()) {
+                    if ($courseSettings = CoursesettingsPermissions::where('course_id', $course[2])->first()) {
                         //Visibility
                         $coursesetlist[$course[2]]['visibility'] = $courseSettings->visibility;
                         //Downloadable
                         $coursesetlist[$course[2]]['downloadable'] = $courseSettings->downloadable;
                         //Individual users
-                        if($ipermissions = CoursesettingsUsers::where('course_id', $course[2])->count()){
+                        if ($ipermissions = CoursesettingsUsers::where('course_id', $course[2])->count()) {
                             $individual_permissions[$course[2]] = $ipermissions;
                         }
                         //Group permissions
@@ -81,34 +80,31 @@ class ManageCourseSettingsController extends Controller
 
 
                 }
-            }
-            else {
+            } else {
                 //Courselist in english
                 $start = 0;
                 foreach ($courses as $course) {
-                    if($start == 0) {
+                    if ($start == 0) {
                         $year = substr($course[3], 0, 4);
                     }
                     if ($year == substr($course[3], 0, 4)) {
-                        if(substr($course[3], 4) == '1') {
+                        if (substr($course[3], 4) == '1') {
                             $courselist[$year][$course[2]] = 'VT' . substr($course[3], 0, 4) . ' ' . $course[4] . ' - ' . $course[1] . ' (' . 'CourseID:' . ' ' . $course[2] . ')';
-                        }
-                        else {
+                        } else {
                             $courselist[$year][$course[2]] = 'HT' . substr($course[3], 0, 4) . ' ' . $course[4] . ' - ' . $course[1] . ' (' . 'CourseID:' . ' ' . $course[2] . ')';
                         }
                         $start++;
-                    }
-                    else {
+                    } else {
                         $start = 0;
                     }
                     //Check settings for course
-                    if($courseSettings = CoursesettingsPermissions::where('course_id', $course[2])->first()) {
+                    if ($courseSettings = CoursesettingsPermissions::where('course_id', $course[2])->first()) {
                         //Visibility
                         $coursesetlist[$course[2]]['visibility'] = $courseSettings->visibility;
                         //Downloadable
                         $coursesetlist[$course[2]]['downloadable'] = $courseSettings->downloadable;
                         //Individual users
-                        if($ipermissions = CoursesettingsUsers::where('course_id', $course[2])->count()){
+                        if ($ipermissions = CoursesettingsUsers::where('course_id', $course[2])->count()) {
                             $individual_permissions[$course[2]] = $ipermissions;
                         }
                         //Group permissions
@@ -122,12 +118,11 @@ class ManageCourseSettingsController extends Controller
                 }
             }
 
-        }
-        else {
+        } else {
             return 'Not a courseadmin';
         }
 
-        return view('manage.manage_course', compact('courselist', 'coursesetlist', 'individual_permissions', 'playback_permissions','presentations'));
+        return view('manage.manage_course', compact('courselist', 'coursesetlist', 'individual_permissions', 'playback_permissions', 'presentations'));
 
     }
 
@@ -137,7 +132,7 @@ class ManageCourseSettingsController extends Controller
         $individual_permissions = [];
         $coursesettings_permissions = CoursesettingsPermissions::where('course_id', $courseid)->first();
         //Individual user settings
-        if($ipermissions = CoursesettingsUsers::where('course_id', $courseid)->get()){
+        if ($ipermissions = CoursesettingsUsers::where('course_id', $courseid)->get()) {
             $individual_permissions = $ipermissions;
         }
         //Group permissions
@@ -153,38 +148,33 @@ class ManageCourseSettingsController extends Controller
             //Store
             $coursesettings_permissions->course_id = $course_id;
             //Visibility
-            if($request->visibility) {
+            if ($request->visibility) {
                 $coursesettings_permissions->visibility = true;
-            }
-            else {
+            } else {
                 $coursesettings_permissions->visibility = false;
             }
             //Downloadable
-            if($request->downloadable) {
+            if ($request->downloadable) {
                 $coursesettings_permissions->downloadable = true;
-            }
-            else {
+            } else {
                 $coursesettings_permissions->downloadable = false;
             }
 
             //Update group permission for presentation
-            if($coursePermission = CoursePermissions::where('course_id', $course_id)->first()) {
+            if ($coursePermission = CoursePermissions::where('course_id', $course_id)->first()) {
                 //Exist
                 $coursePermission->permission_id = $request->course_permission;
-                if($request->course_permission == 1) {
+                if ($request->course_permission == 1) {
                     $coursePermission->type = 'public';
-                }
-                elseif($request->course_permission == 4) {
+                } elseif ($request->course_permission == 4) {
                     $coursePermission->type = 'external';
-                }
-                else {
+                } else {
                     $coursePermission->type = 'private';
                 }
                 $coursePermission->save();
-            }
-            else {
+            } else {
                 //Doesnt exist
-                if($request->course_permission == 1) {
+                if ($request->course_permission == 1) {
                     CoursePermissions::create([
                         'course_id' => $course_id,
                         'permission_id' => $request->course_permission,
@@ -216,7 +206,6 @@ class ManageCourseSettingsController extends Controller
                     }
                 }
             }
-
 
             $coursesettings_permissions->save();
         }
