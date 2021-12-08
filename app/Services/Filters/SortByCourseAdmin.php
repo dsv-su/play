@@ -3,7 +3,6 @@
 namespace App\Services\Filters;
 
 use App\Services\Daisy\DaisyAPI;
-use Illuminate\Support\Facades\App;
 use LdapRecord\Models\Model;
 
 class SortByCourseAdmin extends model
@@ -26,43 +25,22 @@ class SortByCourseAdmin extends model
              */
             //Group after year
             $start = 0;
-            if (App::currentLocale() == 'swe') {
-                //Courselist in Swedish
-                foreach ($courses as $course) {
-                    if ($start == 0) {
-                        $year = substr($course[3], 0, 4);
-                    }
-                    if ($year == substr($course[3], 0, 4)) {
-                        if (substr($course[3], 4) == '1') {
-                            $courselist[$year][$course[2]] = 'VT' . substr($course[3], 0, 4) . ' ' . $course[4] . ' - ' . $course[0] . ' (' . 'KursID: ' . ' ' . $course[2] . ')';
-                        } else {
-                            $courselist[$year][$course[2]] = 'HT' . substr($course[3], 0, 4) . ' ' . $course[4] . ' - ' . $course[0] . ' (' . 'KursID: ' . ' ' . $course[2] . ')';
-                        }
-                        $start++;
-                    } else {
-                        $start = 0;
-                    }
-                }
-            } else {
-                //Courselist in english
-                foreach ($courses as $course) {
-                    if ($start == 0) {
-                        $year = substr($course[3], 0, 4);
-                    }
-                    if ($year == substr($course[3], 0, 4)) {
-                        if (substr($course[3], 4) == '1') {
-                            $courselist[$year][$course[2]] = 'VT' . substr($course[3], 0, 4) . ' ' . $course[4] . ' - ' . $course[1] . ' (' . 'CourseID:' . ' ' . $course[2] . ')';
-                        } else {
-                            $courselist[$year][$course[2]] = 'HT' . substr($course[3], 0, 4) . ' ' . $course[4] . ' - ' . $course[1] . ' (' . 'CourseID:' . ' ' . $course[2] . ')';
-                        }
-                        $start++;
-                    } else {
-                        $start = 0;
-                    }
 
+            foreach ($courses as $course) {
+                if ($start == 0) {
+                    $year = substr($course[3], 0, 4);
+                }
+                if ($year == substr($course[3], 0, 4)) {
+                    if (substr($course[3], 4) == '1') {
+                        $courselist[$year][$course[2]] = 'VT' . substr($course[3], 0, 4) . ' ' . $course[4] . ' - ' . $course[0] . ' (' . __('Course id') . ' ' . $course[2] . ')';
+                    } else {
+                        $courselist[$year][$course[2]] = 'HT' . substr($course[3], 0, 4) . ' ' . $course[4] . ' - ' . $course[0] . ' (' . __('Course id') . ' ' . $course[2] . ')';
+                    }
+                    $start++;
+                } else {
+                    $start = 0;
                 }
             }
-
         } else {
             return false;
         }

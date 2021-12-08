@@ -23,26 +23,25 @@
         @if (isset($manage) && $manage && $key)
             <h5 class="col">
                 @if ($individual_permissions[$key])
-                    <span class="badge badge-secondary mb-2">{{$individual_permissions[$key]}} {{ __("individual permissions")  }}</span>
+                    <span class="badge badge-secondary mb-2">{{$individual_permissions[$key]}} {{__("individual permissions")}}</span>
                 @endif
-                    @if ($playback_permissions[$key])
-                        @switch($playback_permissions[$key]->permission_id)
-                            @case(1)
-                            <span class="badge badge-success mb-2">{{ __("DSV students & staff") }}</span>
-                            @break
-                            @case(2)
-                            <span class="badge badge-secondary mb-2">{{ __("DSV staff only") }}</span>
-                            @break
-                            @case(4)
-                            <span class="badge badge-warning mb-2">{{ __("Public") }}</span>
-                            @break
-                            @default
-                            <span class="badge badge-info mb-2">{{ __("Custom") }}</span>
-                        @endswitch
-                    @else
-                        <span class="badge badge-success mb-2">{{__("DSV students & staff")}}</span>
-                    @endif
-                   </span>
+                @if ($playback_permissions[$key])
+                    @switch($playback_permissions[$key]->permission_id)
+                        @case(1)
+                        <span class="badge badge-success mb-2">{{ __("DSV students & staff") }}</span>
+                        @break
+                        @case(2)
+                        <span class="badge badge-secondary mb-2">{{ __("DSV staff only") }}</span>
+                        @break
+                        @case(4)
+                        <span class="badge badge-warning mb-2">{{ __("Public") }}</span>
+                        @break
+                        @default
+                        <span class="badge badge-info mb-2">{{ __("Custom") }}</span>
+                    @endswitch
+                @else
+                    <span class="badge badge-success mb-2">{{__("DSV students & staff")}}</span>
+                @endif
                 @if(!key_exists($key, $coursesetlist) || $coursesetlist[$key]['downloadable'] == true)
                     <span class="badge badge-success mb-2">{{__("Downloadable")}}</span>
                 @else
