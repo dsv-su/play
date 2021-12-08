@@ -16,7 +16,7 @@ class CourseAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if(app()->make('play_role') != 'Courseadmin') {
+        if( ! in_array(app()->make('play_role'),['Courseadmin', 'Administrator'])) {
             return redirect('/');
         }
         return $next($request);

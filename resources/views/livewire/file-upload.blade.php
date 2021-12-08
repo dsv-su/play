@@ -6,7 +6,7 @@
             <div class="counter">
                 <i class="far fa-file-video fa-2x"></i>
                 <h2 class="timer count-title count-number" data-to="100" data-speed="1500">{{$uploaded_files}}</h2>
-                <p class="count-text ">{{ __("Uploaded media files") }}</p>
+                <p class="count-text ">{{ __("Mediafiles to be uploaded") }}</p>
             </div>
         </div>
     </div>
@@ -22,7 +22,7 @@
     </div>
 
     <div class="rounded border shadow p-3 my-2">
-        <h4>{{ __("Upload media") }}</h4>
+        <h4>{{ __("Files to upload") }}</h4>
 
         <!-- Right -->
         <div class="card-body">
@@ -92,7 +92,7 @@
             <button id="submit" type="submit"
                     class="btn-block btn btn-outline-primary"
             {{ $isDisabled ? '': 'disabled' }}
-            >{{ __("Upload") }}</button>
+            >{{ __("Save") }}</button>
         </div>
     </div>
 

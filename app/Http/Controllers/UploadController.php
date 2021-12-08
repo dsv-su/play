@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Course;
+use App\Jobs\JobUploadProgressNotification;
 use App\ManualPresentation;
 use App\Permission;
 use App\Services\Ldap\SukatUser;
@@ -23,6 +24,7 @@ class UploadController extends Controller
         $file = new ManualPresentation();
         $file->status = 'init';
         $file->user = app()->make('play_username');
+        $file->user_email = app()->make('play_email');
         $file->local = Carbon::now()->toDateString('Y-m-d') . '_' . rand(1, 999);
         $file->base = '-';
         $file->title = '';
@@ -56,7 +58,8 @@ class UploadController extends Controller
             $this->validate($request, [
                 'title' => 'required',
                 'created' => 'required',
-                'disclaimer' => 'required',
+                //Disabled for now
+                //'disclaimer' => 'required',
             ]);
 
             //Retrived the upload
@@ -120,6 +123,12 @@ class UploadController extends Controller
     public function store($id)
     {
         $presentation = ManualPresentation::find($id);
+
+        //Send email to uploader
+        $job = (new JobUploadProgressNotification($presentation));
+
+        // Dispatch Job and continue
+        dispatch($job);
 
         $upload = new SftpPlayStore($presentation);
         $upload->sftpVideo();
