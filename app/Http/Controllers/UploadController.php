@@ -13,6 +13,7 @@ use App\Tag;
 use App\VideoPermission;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Storage;
 
 class UploadController extends Controller
@@ -146,7 +147,15 @@ class UploadController extends Controller
         $notify = new PlayStoreNotify($presentation);
         $notify->sendSuccess('manual');
 
-        return redirect('/')->with(['message' => 'Presentationen har laddats upp!']);
+        if (App::isLocale('en')) {
+            $upload_message = 'The Presentationen is processing!';
+        }
+        if (App::isLocale('swe')) {
+            $upload_message = 'Presentationen bearbetas!';
+        }
+
+
+        return redirect('/')->with(['message' => $upload_message]);
     }
 
     public function ldap_search(Request $request)

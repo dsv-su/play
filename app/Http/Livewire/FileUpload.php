@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\ManualPresentation;
 use App\Services\Ffmpeg\DetermineDurationVideo;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -125,7 +126,13 @@ class FileUpload extends Component
                 $this->presentation->save();
             }
             $this->isDisabled = true;
-            session()->flash('message', 'File successfully Uploaded.');
+            if (App::isLocale('en')) {
+                $message = 'File successfully prepared for Upload.';
+            }
+            if (App::isLocale('swe')) {
+                $message = 'Filen(a) har förberetts för uppladdning.';
+            }
+            session()->flash('message', $message);
         }
 
     }
