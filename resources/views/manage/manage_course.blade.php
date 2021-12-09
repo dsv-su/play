@@ -84,7 +84,7 @@
                                                         @break
                                                         @default
                                                         <span class="video-icon"><i
-                                                                    class="video-icon fas fa-user-lock text-info"></i></span>
+                                                                    class="fas fa-user-lock text-info"></i></span>
                                                     @endswitch
                                                 @else
                                                     <span class="video-icon text-success">{{ __("DSV") }}</span>
