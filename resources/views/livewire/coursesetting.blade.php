@@ -21,17 +21,17 @@
             <div class="col-sm-12">
                 <div class="rounded border shadow p-3 my-2">
                     <div class="row justify-content-between text-left">
-                        <div class="form-group col-md-6 col-lg-4 mx-auto text-center">
-                            <i class="far fa-file-alt fa-5x"></i>
+                        <div class="form-group col-md-6 col-lg-4 text-center m-auto py-3">
+                            <i class="far fa-file-alt fa-4x"></i>
                         </div>
 
-                        <div class="form-group col-md-6 col-lg-8 px-md-3">
+                        <div class="form-group col-md-6 col-lg-8 px-md-3 my-auto">
                             <div class="row">
-                                <label class="col-4 col-lg-3 mb-0">{{__("CourseId")}}</label>
+                                <label class="col-4 col-lg-3 mb-0">{{__("Course id")}}</label>
                                 <div class="col"><strong>{{$course->id}}</strong></div>
                             </div>
                             <div class="row">
-                                <label class="col-4 col-lg-3 mb-0">{{ __("Course Name") }}</label>
+                                <label class="col-4 col-lg-3 mb-0">{{ __("Course name") }}</label>
                                 <div class="col">{{$course->name}}
                                 </div>
                             </div>
@@ -49,49 +49,49 @@
                     </div>
                 </div>
             </div>
-                <div class="col-sm-12">
-                    <div class="rounded border shadow p-3 my-2">
-                        <div class="row justify-content-between text-left">
-                            <div class="form-group col-md-6 col-lg-4 mx-auto text-center">
-                                @if($visibility == true)
-                                    <i class="far fa-eye fa-5x"></i>
-                                @else
-                                    <i class="far fa-eye-slash fa-5x"></i>
-                                @endif
-                            </div>
-                        <div class="form-group col-md-6 col-lg-8 px-md-3">
+            <div class="col-sm-12">
+                <div class="rounded border shadow p-3 my-2">
+                    <div class="row justify-content-between text-left">
+                        <div class="form-group col-md-12 col-lg-4 m-auto text-center py-3">
+                            @if($visibility == true)
+                                <i class="far fa-eye fa-4x"></i>
+                            @else
+                                <i class="far fa-eye-slash fa-4x"></i>
+                            @endif
+                        </div>
+                        <div class="form-group col-auto col-lg-8 px-md-3 m-auto">
                             <div class="row">
-                                <label for="visabilitySwitch" class="col-4 col-lg-3 mb-0">{{__("Visibility")}}</label>
+                                <label for="visabilitySwitch"
+                                       class="col-lg-3 px-0 col-auto mb-0">{{__("Visibility")}}</label>
                                 <div class="col">
                                        <span class="custom-control custom-switch custom-switch-lg">
-
                                         <input wire:click="visibility" class="custom-control-input"
                                                id="visibilitySwitch" name="visibility"
                                                type="checkbox" @if($visibility == true) checked @endif>
                                         <label class="custom-control-label" style="margin-top: 3px;"
                                                for="visibilitySwitch"></label>
-
                                     </span>
                                 </div>
                             </div>
                         </div>
-                        </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="col-sm-12">
-                    <div class="rounded border shadow p-3 my-2">
-                        <div class="row justify-content-between text-left">
-                                <div class="form-group col-md-6 col-lg-4 mx-auto text-center">
-                                    @if($downloadable == true)
-                                        <i class="fas fa-download fa-5x"></i>
-                                    @else
-                                        <i class="fas fa-times fa-5x"></i>
-                                    @endif
-                                </div>
-                                <div class="form-group col-md-6 col-lg-8 px-md-3">
+            <div class="col-sm-12">
+                <div class="rounded border shadow p-3 my-2">
+                    <div class="row justify-content-between text-left">
+                        <div class="form-group col-md-12 col-lg-4 m-auto text-center py-3">
+                            @if($downloadable == true)
+                                <i class="fas fa-download fa-4x"></i>
+                            @else
+                                <i class="fas fa-times fa-4x"></i>
+                            @endif
+                        </div>
+                        <div class="form-group col-auto col-lg-8 px-md-3 m-auto">
                             <div class="row">
-                                <label for="downloadSwitch" class="col-4 col-lg-3 mb-0">{{__("Downloadable")}}</label>
+                                <label for="downloadSwitch"
+                                       class="col-lg-3 col-auto px-0 b-0">{{__("Downloadable")}}</label>
                                 <div class="col">
                                        <span class="custom-control custom-switch custom-switch-lg">
                                         <input wire:click="downloadable" class="custom-control-input"
@@ -99,7 +99,6 @@
                                                type="checkbox" @if($downloadable == true) checked @endif>
                                         <label class="custom-control-label" style="margin-top: 3px;"
                                                for="downloadSwitch"></label>
-
                                     </span>
                                 </div>
                             </div>
@@ -132,7 +131,7 @@
 
                                 <span type="button" wire:click.prevent="add_individual_perm"
                                       class="btn btn-primary px-1 py-0">{{$ipermissions}} {{ __("Set") }} <i
-                                        class="fas fa-user-plus"></i></span>
+                                            class="fas fa-user-plus"></i></span>
 
                             </label>
 
@@ -173,28 +172,25 @@
                                     </div>
                                 @endforeach
                             @else
-                                <div class="mx-1 my-2 font-1rem">{{ __("No Individual User Permissions added") }}</div>
+                                <div class="mx-1 my-2 font-1rem">{{ __("No individual user permissions added") }}</div>
                             @endif
 
                         </div>
                         <!-- end Individual permissions -->
-                        <!-- Alert warning -->
-
-                        @if(!$visibility)
-                            <div class="form-group col-12 col-md-6 flex-column d-flex">
-                                <div class="col alert alert-warning" role="alert">
-                                    <p class="px-1 font-1rem">
-                                        {{ __("All presentations are hidden and locked for playback. Accessible only by individual users with editing permissions") }}
-                                    </p>
-                                </div>
-                            </div>
-                    @endif
-
-                    <!-- -->
+                        <!-- -->
                     </div>
                 </div>
             </div>
 
+            @if(!$visibility)
+                <div class="col">
+                    <div class="alert alert-warning mt-3" role="alert">
+                    <span class="font-1rem">
+                        {{ __("All presentations are hidden and locked for playback. Accessible only by individual users with editing permissions") }}
+                    </span>
+                    </div>
+                </div>
+            @endif
 
             <div class="col-sm-12">
                 <button type="submit"

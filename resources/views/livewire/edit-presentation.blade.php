@@ -231,7 +231,7 @@
                         </div>
                         <!-- Individual permissions -->
                         <div class="form-group col-12 col-md-6 flex-column d-flex">
-                            <label class="form-control-label px-1">{{ __("Playback individual permissions") }}
+                            <label class="form-control-label px-1">{{ __("Individual permissions") }}
                                 <span type="button" wire:click.prevent="add_individual_perm"
                                       class="btn btn-primary px-1 py-0">{{$ipermissions}} {{ __("Set") }} <i
                                             class="fas fa-user-plus"></i></span></label>

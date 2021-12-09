@@ -32,12 +32,12 @@
     </div>
     <!-- Modal -->
         <div class="modal fade" id="load" tabindex="-1" role="dialog" aria-labelledby="loadMeLabel">
-            <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body text-center">
                         <div class="loader"></div>
                         <div class="loader-txt">
-                            <p>{{__("Download in Progress")}}<br></p>
+                            <p>{{__("Download in progress")}}<br></p>
                         </div>
                     </div>
                 </div>
