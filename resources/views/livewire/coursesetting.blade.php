@@ -21,11 +21,11 @@
             <div class="col-sm-12">
                 <div class="rounded border shadow p-3 my-2">
                     <div class="row justify-content-between text-left">
-                        <div class="form-group col-md-6 col-lg-4 text-center m-auto py-3">
+                        <div class="form-group col-sm-12 col-md-4 text-center m-auto py-3">
                             <i class="far fa-file-alt fa-4x"></i>
                         </div>
 
-                        <div class="form-group col-md-6 col-lg-8 px-md-3 my-auto">
+                        <div class="form-group col col-auto col-md-8 px-sm-3 px-md-0 my-auto">
                             <div class="row">
                                 <label class="col-4 col-lg-3 mb-0">{{__("Course id")}}</label>
                                 <div class="col"><strong>{{$course->id}}</strong></div>
@@ -52,14 +52,14 @@
             <div class="col-sm-12">
                 <div class="rounded border shadow p-3 my-2">
                     <div class="row justify-content-between text-left">
-                        <div class="form-group col-md-12 col-lg-4 m-auto text-center py-3">
+                        <div class="form-group col-sm-12 col-md-4 m-auto text-center py-3">
                             @if($visibility == true)
                                 <i class="far fa-eye fa-4x"></i>
                             @else
                                 <i class="far fa-eye-slash fa-4x"></i>
                             @endif
                         </div>
-                        <div class="form-group col-auto col-lg-8 px-md-3 m-auto">
+                        <div class="form-group col col-auto col-md-8 m-auto">
                             <div class="row">
                                 <label for="visabilitySwitch"
                                        class="col-lg-3 px-0 col-auto mb-0">{{__("Visibility")}}</label>
@@ -81,14 +81,14 @@
             <div class="col-sm-12">
                 <div class="rounded border shadow p-3 my-2">
                     <div class="row justify-content-between text-left">
-                        <div class="form-group col-md-12 col-lg-4 m-auto text-center py-3">
+                        <div class="form-group col-sm-12 col-md-4 m-auto text-center py-3">
                             @if($downloadable == true)
                                 <i class="fas fa-download fa-4x"></i>
                             @else
                                 <i class="fas fa-times fa-4x"></i>
                             @endif
                         </div>
-                        <div class="form-group col-auto col-lg-8 px-md-3 m-auto">
+                        <div class="form-group col col-auto col-md-8 m-auto">
                             <div class="row">
                                 <label for="downloadSwitch"
                                        class="col-lg-3 col-auto px-0 b-0">{{__("Downloadable")}}</label>
@@ -115,7 +115,7 @@
                         <div class="form-group col-12 col-md-6 flex-column d-flex">
                             <label class="form-control-label px-1">{{ __("Playback group permissions") }}</label>
                             <div id="video_perm">
-                                <select class="form-group form-control" name="course_permission">
+                                <select class="form-group form-control" name="course_permission" style="margin: 5px 0px;">
                                     @foreach($permissions as $perm)
                                         <option value="{{$perm->id}}"
                                                 @if($permissonId == $perm->id) selected @endif >{{$perm->id}}
@@ -303,7 +303,6 @@
                 ],
                 suggestion: function (data) {
                     return '<li>' + data.displayname + ' (' + data.uid + ')' + '</li>';
-
                 }
             }
         }).on('keyup', function (e) {
@@ -311,7 +310,6 @@
             let selected = $("#perm-search-text").attr('aria-activedescendant');
             if (e.which == 13) {
                 if (selected) {
-
                 } else {
                     $(".tt-suggestion:first-child").addClass('tt-cursor');
                 }

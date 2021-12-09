@@ -53,25 +53,27 @@ class EditController extends Controller
 
                     $username = preg_filter("/[^(]*\(([^)]+)\)[^()]*/", "$1", $presenter);
                     $name = trim(preg_replace("/\([^)]+\)/", "", $presenter));
-                    if ($username == null) {
+                    if ($username == null && $name) {
                         $presenter = Presenter::firstOrCreate([
                             'username' => $username,
                             'description' => 'external'
                         ]);
-                    } else {
+                    } elseif ($username) {
                         $presenter = Presenter::firstOrCreate([
                             'username' => $username,
                             'description' => 'sukat'
                         ]);
                     }
                     // People sometimes change names and we don't want duplicate presenters
-                    $presenter->name = $name;
-                    $presenter->save();
+                    if ($presenter) {
+                        $presenter->name = $name;
+                        $presenter->save();
 
-                    $videoPresenter = VideoPresenter::create([
-                        'video_id' => $video->id,
-                        'presenter_id' => $presenter->id
-                    ]);
+                        $videoPresenter = VideoPresenter::create([
+                            'video_id' => $video->id,
+                            'presenter_id' => $presenter->id
+                        ]);
+                    }
                 }
             }
             //Update group permission for presentation
