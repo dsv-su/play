@@ -62,21 +62,24 @@ class ManageCourseSettingsController extends Controller
                     $coursesetlist[$course[2]]['visibility'] = $courseSettings->visibility;
                     //Downloadable
                     $coursesetlist[$course[2]]['downloadable'] = $courseSettings->downloadable;
-                    //Individual users
-                    if ($ipermissions = CoursesettingsUsers::where('course_id', $course[2])->count()) {
-                        $individual_permissions[$course[2]] = $ipermissions;
-                    }
-                    //Group permissions
+                }
+                //Individual users
+                if ($ipermissions = CoursesettingsUsers::where('course_id', $course[2])->count()) {
+                    $individual_permissions[$course[2]] = $ipermissions;
+                }
+                //Group permissions
+                if ($gpermission = CoursePermissions::where('course_id', $course[2])) {
                     $gpermission = CoursePermissions::where('course_id', $course[2])->first();
                     $playback_permissions[$course[2]] = $gpermission;
-                    //Presentations
-                    $number_presentations = VideoCourse::where('course_id', $course[2])->count();
-                    $presentations[$course[2]] = $number_presentations;
                 }
+                //Presentations
+                $number_presentations = VideoCourse::where('course_id', $course[2])->count();
+                $presentations[$course[2]] = $number_presentations;
             }
         } else {
             return 'Not a courseadmin';
         }
+
 
         return view('manage.manage_course', compact('courselist', 'coursesetlist', 'individual_permissions', 'playback_permissions', 'presentations'));
     }
