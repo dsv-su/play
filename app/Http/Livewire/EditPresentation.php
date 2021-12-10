@@ -16,7 +16,6 @@ class EditPresentation extends Component
     public $presenters = [], $presenters_uid = [];
     public $course = [], $coursedetail = [], $course_semester = [], $course_year = [], $courseId = [];
     public $courseids;
-    public $presenter;
     public $courseselect = [];
     public $sukatusers = [];
     public $courseEdit = [];
@@ -44,18 +43,18 @@ class EditPresentation extends Component
         $this->category = $video->category->category_name;
         $this->sources = $video->streams;
         $this->ipermissions = $individual_permissions->count();
-        $this->visability = (bool) $video->visability;
-        $this->download = (bool) $video->download;
+        $this->visability = (bool)$video->visability;
+        $this->download = (bool)$video->download;
 
-        foreach ($video->presenters() as $this->presenter) {
-            if (!$this->presenter->username == null) {
-                $this->presenters[] = $this->presenter->name . ' (' . $this->presenter->username . ')';
+        foreach ($video->presenters() as $presenter) {
+            if (!$presenter->username == null) {
+                $this->presenters[] = $presenter->name . ' (' . $presenter->username . ')';
             } else {
-                $this->presenters[] = $this->presenter->name;
+                $this->presenters[] = $presenter->name;
             }
-
-            $this->presenters_uid[] = $this->presenter->username;
+            $this->presenters_uid[] = $presenter->username;
         }
+
         foreach ($video->courses() as $this->coursedetail) {
             $this->course[] = $this->coursedetail->name . ' ' . $this->coursedetail->semester . '' . $this->coursedetail->year;
             $this->courseId[] = $this->coursedetail->id;
@@ -95,8 +94,6 @@ class EditPresentation extends Component
             $this->hidden[] = $source->hidden;
             $this->poster[] = $this->base_uri() . '/' . $video->id . '/' . $source->poster;
         }
-
-
     }
 
     public function base_uri()
@@ -145,7 +142,7 @@ class EditPresentation extends Component
         CourseadminPermission::where('video_id', $this->video->id)->delete();
 
         //Update CourseadminPersmission with new courseadmins
-        if($course_resp_username ?? '') {
+        if ($course_resp_username ?? '') {
             foreach ($course_resp_username as $key => $usrn) {
                 $cperm = CourseadminPermission::updateOrCreate(['video_id' => $this->video->id,
                     'username' => $usrn], ['name' => $firstnames[$key] . ' ' . $lastnames[$key],
@@ -180,7 +177,7 @@ class EditPresentation extends Component
     }
 
     public
-    function newpresenter($i)
+    function newpresenter()
     {
         array_push($this->presenters, '');
         array_push($this->presenters_uid, '');

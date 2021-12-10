@@ -177,23 +177,25 @@
                     <div class="row justify-content-between text-left">
                         <div class="form-group col-12 col-md-6 flex-column d-flex">
                             <label class="form-control-label px-1">{{ __("Presenters") }}
-                                <span type="button" wire:click.prevent="newpresenter({{$i}})"
+                                <span type="button" wire:click.prevent="newpresenter"
                                       class="btn btn-primary px-1 py-0">{{__('Add')}}<i
                                             class="fas fa-user-plus ml-1"></i></span>
                             </label>
                             @if(count($presenters) > 0)
                                 @foreach($presenters as $key => $name)
-                                    <div wire:ignore class="d-flex justify-content-between" id="user-search">
-                                        <input @if($key == 0) style="border-color: blue;"
-                                               @endif class="form-control w-100 mx-auto edit"
-                                               id="user-search-text-{{$key}}" type="search"
-                                               wire:model.debounce.100s="presenters.{{$key}}" name="presenters[]"
-                                               placeholder="Start typing name or username" aria-haspopup="true"
-                                               autocomplete="off" aria-labelledby="user-search">
-                                        <a class="absolute cursor-pointer p-2 top-2 right-2 text-gray-500"
-                                           wire:click="remove_presenter({{$key}})">
-                                            <i class="fas fa-user-minus"></i>
-                                        </a>
+                                    <div class="d-inline">
+                                        <div wire:ignore class="d-flex justify-content-between" id="user-search">
+                                            <input @if($key == 0) style="border-color: blue;"
+                                                   @endif class="form-control w-100 mx-auto edit"
+                                                   id="user-search-text-{{$key}}" type="search"
+                                                   wire:model="presenters.{{$key}}" name="presenters[]"
+                                                   placeholder="Start typing name or username" aria-haspopup="true"
+                                                   autocomplete="off" aria-labelledby="user-search">
+                                            <a class="absolute cursor-pointer p-2 top-2 right-2 text-gray-500"
+                                               wire:click="remove_presenter({{$key}})">
+                                                <i class="fas fa-user-minus"></i>
+                                            </a>
+                                        </div>
                                     </div>
                                 @endforeach
                             @else
@@ -240,7 +242,7 @@
                                     <div class="d-inline">
                                         <div wire:ignore class="d-flex justify-content-between" id="perm-search">
                                             <input class="form-control mx-auto perm" id="perm-search-text-{{$key}}"
-                                                   type="search" wire:model.debounce.100s="individuals.{{$key}}"
+                                                   type="search" wire:model="individuals.{{$key}}"
                                                    name="individual_permissions[]"
                                                    placeholder="Start typing name or username"
                                                    aria-haspopup="true" autocomplete="off"
@@ -353,166 +355,166 @@
     </div>
 </div>
 
-    <script>
-        $(document).ready(function () {
-            $('.selectpicker[name="courseEdit[]"]').selectpicker('val', {{$courseids}}.map(String));
-        @this.set('courseEdit', {{$courseids}}.map(String));
-            $('.selectpicker[name="tags[]"]').selectpicker('val', {{$tagids}}.map(String));
+<script>
+    $(document).ready(function () {
+        $('.selectpicker[name="courseEdit[]"]').selectpicker('val', {{$courseids}}.map(String));
+    @this.set('courseEdit', {{$courseids}}.map(String));
+        $('.selectpicker[name="tags[]"]').selectpicker('val', {{$tagids}}.map(String));
 
-            $(".datepicker").datepicker({
-                format: "dd/mm/yyyy",
-                weekStart: 1,
-                todayHighlight: true
-            });
-
-            $('select[name="courseEdit[]"]').on('change', function (e) {
-                var item = $(this).val();
-            @this.set('courseEdit', item);
-            });
+        $(".datepicker").datepicker({
+            format: "dd/mm/yyyy",
+            weekStart: 1,
+            todayHighlight: true
         });
-    </script>
 
-    <script>
-        // AudioSwitch the selector will match all input controls of type :checkbox
-        // and attach a click event handler
-        $("input:checkbox[name='audio']").on('click', function () {
-            // in the handler, 'this' refers to the box clicked on
-            var $box = $(this);
-            if ($box.is(":checked")) {
-                // the name of the box is retrieved using the .attr() method
-                // as it is assumed and expected to be immutable
-                var group = "input:checkbox[name='" + $box.attr("name") + "']";
-                // the checked state of the group/box on the other hand will change
-                // and the current value is retrieved using .prop() method
-                $(group).prop("checked", false);
-                $box.prop("checked", true);
-            } else {
-                $box.prop("checked", false);
+        $('select[name="courseEdit[]"]').on('change', function (e) {
+            var item = $(this).val();
+        @this.set('courseEdit', item);
+        });
+    });
+</script>
+
+<script>
+    // AudioSwitch the selector will match all input controls of type :checkbox
+    // and attach a click event handler
+    $("input:checkbox[name='audio']").on('click', function () {
+        // in the handler, 'this' refers to the box clicked on
+        var $box = $(this);
+        if ($box.is(":checked")) {
+            // the name of the box is retrieved using the .attr() method
+            // as it is assumed and expected to be immutable
+            var group = "input:checkbox[name='" + $box.attr("name") + "']";
+            // the checked state of the group/box on the other hand will change
+            // and the current value is retrieved using .prop() method
+            $(group).prop("checked", false);
+            $box.prop("checked", true);
+        } else {
+            $box.prop("checked", false);
+        }
+    });
+    // Hidden checkboxes
+    $("input:checkbox[name='hidden[]']").on('click', function () {
+        $(this).closest('.card-body').find('img').toggleClass('opacity-5 opacity-2');
+        $(this).closest('.card-body').find('#stream_hidden').toggle();
+    });
+</script>
+<!-- Typeahead.js Bundle -->
+<script src="{{ asset('./js/typeahead/typeahead.bundle.js') }}"></script>
+<script>
+    $(document).ready(sukat);
+    $(document).ready(sukatuser);
+    window.addEventListener('contentChanged', event => {
+        $(sukat);
+    });
+    window.addEventListener('permissionChanged', event => {
+        $(sukatuser);
+    });
+
+    function sukat($) {
+        /* Typeahead SUKAT user */
+        // Set the Options for "Bloodhound" suggestion engine
+        var engine = new Bloodhound({
+            remote: {
+                url: '/ldap_search?q=%QUERY%',
+                wildcard: '%QUERY%'
+            },
+            datumTokenizer: Bloodhound.tokenizers.whitespace('query'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace
+        });
+
+        $('.edit:first-child').typeahead({
+            classNames: {
+                menu: 'search_autocomplete'
+            },
+            hint: false,
+            autoselect: true,
+            highlight: true,
+            minLength: 1
+        }, {
+            source: engine.ttAdapter(),
+            limit: 10,
+            // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
+            name: 'autocomplete-items',
+            display: function (item) {
+                return item.displayname + ' (' + item.uid + ')';
+            },
+            templates: {
+                empty: [
+                    '<div class="list-group search-results-dropdown"><div class="list-group-item">Nothing found.</div></div>'
+                ],
+                header: [
+                    '<div class="list-group search-results-dropdown">'
+                ],
+                suggestion: function (data) {
+                    return '<li>' + data.displayname + ' (' + data.uid + ')' + '</li>';
+
+                }
+            }
+        }).on('keyup', function (e) {
+            $(".tt-suggestion:first-child").addClass('tt-cursor');
+            let selected = $("#user-search-text").attr('aria-activedescendant');
+            if (e.which == 13) {
+                if (selected) {
+
+                } else {
+                    $(".tt-suggestion:first-child").addClass('tt-cursor');
+                }
             }
         });
-        // Hidden checkboxes
-        $("input:checkbox[name='hidden[]']").on('click', function () {
-            $(this).closest('.card-body').find('img').toggleClass('opacity-5 opacity-2');
-            $(this).closest('.card-body').find('#stream_hidden').toggle();
-        });
-    </script>
-    <!-- Typeahead.js Bundle -->
-    <script src="{{ asset('./js/typeahead/typeahead.bundle.js') }}"></script>
-    <script>
-        $(document).ready(sukat);
-        $(document).ready(sukatuser);
-        window.addEventListener('contentChanged', event => {
-            $(sukat);
-        });
-        window.addEventListener('permissionChanged', event => {
-            $(sukatuser);
+        /* end typeahead */
+    }
+
+    function sukatuser($) {
+        /* Typeahead SUKAT user */
+        // Set the Options for "Bloodhound" suggestion engine
+        var engine = new Bloodhound({
+            remote: {
+                url: '/ldap_search?q=%QUERY%',
+                wildcard: '%QUERY%'
+            },
+            datumTokenizer: Bloodhound.tokenizers.whitespace('query'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace
         });
 
-        function sukat($) {
-            /* Typeahead SUKAT user */
-            // Set the Options for "Bloodhound" suggestion engine
-            var engine = new Bloodhound({
-                remote: {
-                    url: '/ldap_search?q=%QUERY%',
-                    wildcard: '%QUERY%'
-                },
-                datumTokenizer: Bloodhound.tokenizers.whitespace('query'),
-                queryTokenizer: Bloodhound.tokenizers.whitespace
-            });
+        $('.perm:first-child').typeahead({
+            classNames: {
+                menu: 'search_autocomplete'
+            },
+            hint: false,
+            autoselect: true,
+            highlight: true,
+            minLength: 1
+        }, {
+            source: engine.ttAdapter(),
+            limit: 10,
+            // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
+            name: 'autocomplete-items',
+            display: function (item) {
+                return item.displayname + ' (' + item.uid + ')';
+            },
+            templates: {
+                empty: [
+                    '<div class="list-group search-results-dropdown"><div class="list-group-item">Nothing found.</div></div>'
+                ],
+                header: [
+                    '<div class="list-group search-results-dropdown">'
+                ],
+                suggestion: function (data) {
+                    return '<li>' + data.displayname + ' (' + data.uid + ')' + '</li>';
 
-            $('.edit:first-child').typeahead({
-                classNames: {
-                    menu: 'search_autocomplete'
-                },
-                hint: false,
-                autoselect: true,
-                highlight: true,
-                minLength: 1
-            }, {
-                source: engine.ttAdapter(),
-                limit: 10,
-                // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
-                name: 'autocomplete-items',
-                display: function (item) {
-                    return item.displayname + ' (' + item.uid + ')';
-                },
-                templates: {
-                    empty: [
-                        '<div class="list-group search-results-dropdown"><div class="list-group-item">Nothing found.</div></div>'
-                    ],
-                    header: [
-                        '<div class="list-group search-results-dropdown">'
-                    ],
-                    suggestion: function (data) {
-                        return '<li>' + data.displayname + ' (' + data.uid + ')' + '</li>';
-
-                    }
                 }
-            }).on('keyup', function (e) {
-                $(".tt-suggestion:first-child").addClass('tt-cursor');
-                let selected = $("#user-search-text").attr('aria-activedescendant');
-                if (e.which == 13) {
-                    if (selected) {
+            }
+        }).on('keyup', function (e) {
+            $(".tt-suggestion:first-child").addClass('tt-cursor');
+            let selected = $("#perm-search-text").attr('aria-activedescendant');
+            if (e.which == 13) {
+                if (selected) {
 
-                    } else {
-                        $(".tt-suggestion:first-child").addClass('tt-cursor');
-                    }
+                } else {
+                    $(".tt-suggestion:first-child").addClass('tt-cursor');
                 }
-            });
-            /* end typeahead */
-        }
-
-        function sukatuser($) {
-            /* Typeahead SUKAT user */
-            // Set the Options for "Bloodhound" suggestion engine
-            var engine = new Bloodhound({
-                remote: {
-                    url: '/ldap_search?q=%QUERY%',
-                    wildcard: '%QUERY%'
-                },
-                datumTokenizer: Bloodhound.tokenizers.whitespace('query'),
-                queryTokenizer: Bloodhound.tokenizers.whitespace
-            });
-
-            $('.perm:first-child').typeahead({
-                classNames: {
-                    menu: 'search_autocomplete'
-                },
-                hint: false,
-                autoselect: true,
-                highlight: true,
-                minLength: 1
-            }, {
-                source: engine.ttAdapter(),
-                limit: 10,
-                // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
-                name: 'autocomplete-items',
-                display: function (item) {
-                    return item.displayname + ' (' + item.uid + ')';
-                },
-                templates: {
-                    empty: [
-                        '<div class="list-group search-results-dropdown"><div class="list-group-item">Nothing found.</div></div>'
-                    ],
-                    header: [
-                        '<div class="list-group search-results-dropdown">'
-                    ],
-                    suggestion: function (data) {
-                        return '<li>' + data.displayname + ' (' + data.uid + ')' + '</li>';
-
-                    }
-                }
-            }).on('keyup', function (e) {
-                $(".tt-suggestion:first-child").addClass('tt-cursor');
-                let selected = $("#perm-search-text").attr('aria-activedescendant');
-                if (e.which == 13) {
-                    if (selected) {
-
-                    } else {
-                        $(".tt-suggestion:first-child").addClass('tt-cursor');
-                    }
-                }
-            });
-            /* end typeahead */
-        }
-    </script>
+            }
+        });
+        /* end typeahead */
+    }
+</script>
