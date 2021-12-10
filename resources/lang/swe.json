@@ -166,6 +166,9 @@
     "Download in progress": "Nerladdning pågår",
     "The Presentation has been downloaded.": "Presentationen har laddats ner.",
     "Back": "Tillbaka",
-    "Save": "Spara"
+    "Save": "Spara",
+    "Presentation is hidden": "Presentationen är dold",
+    "Viewing permissions modified": "Visningsbehörigheter har ändrats",
+    "External access enabled": "Extern åtkomst aktiverad"
 
 }

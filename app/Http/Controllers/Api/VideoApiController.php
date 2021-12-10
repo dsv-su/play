@@ -7,6 +7,7 @@ use App\Http\Requests\PresentationRequest;
 use App\Http\Resources\Presentation\PresentationResource;
 use App\IndividualPermission;
 use App\Jobs\JobUploadSuccessNotification;
+use App\Mail\ErrorAlert;
 use App\ManualPresentation;
 use App\Services\Course\CourseStore;
 use App\Services\PermissionHandler\PermissionHandler;
@@ -20,6 +21,7 @@ use App\Video;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
