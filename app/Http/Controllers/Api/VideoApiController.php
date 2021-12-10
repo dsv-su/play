@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PresentationRequest;
 use App\Http\Resources\Presentation\PresentationResource;
+use App\IndividualPermission;
 use App\Jobs\JobUploadSuccessNotification;
 use App\ManualPresentation;
 use App\Services\Course\CourseStore;
@@ -116,6 +117,15 @@ class VideoApiController extends Controller
             if($video->origin == 'manual') {
                 //Retrive upload
                 $presentation = ManualPresentation::find($video->notification_id);
+
+                //Set edit/delete individual permission for uploader
+                IndividualPermission::updateOrCreate([
+                    'video_id' => $video->id,
+                    'username' => $presentation->user,
+                    'name' => 'Uploader', //This can later look up SUKAT for displayname
+                    'permission' => 'delete'
+                ]);
+
                 //Send email to uploader
                 $job = (new JobUploadSuccessNotification($video, $presentation));
                 // Dispatch Job and continue
