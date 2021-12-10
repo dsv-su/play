@@ -219,7 +219,7 @@
                         <div class="form-group col-12 col-md-6 flex-column d-flex">
                             <label class="form-control-label px-1">{{ __("Playback group permissions") }}</label>
                             <div id="video_perm">
-                                <select class="form-group form-control" name="video_permission"
+                                <select class="form-group form-control" name="video_permission" style="margin: 5px 0px;"
                                         @if(!$visability) style="background: #dddddd" @endif>
                                     @foreach($permissions as $perm)
                                         <option value="{{$perm->id}}"
@@ -231,7 +231,7 @@
                         </div>
                         <!-- Individual permissions -->
                         <div class="form-group col-12 col-md-6 flex-column d-flex">
-                            <label class="form-control-label px-1">{{ __("Playback individual permissions") }}
+                            <label class="form-control-label px-1">{{ __("Individual permissions") }}
                                 <span type="button" wire:click.prevent="add_individual_perm"
                                       class="btn btn-primary px-1 py-0">{{$ipermissions}} {{ __("Set") }} <i
                                             class="fas fa-user-plus"></i></span></label>
@@ -351,6 +351,7 @@
 
         </div>
     </div>
+</div>
 
     <script>
         $(document).ready(function () {

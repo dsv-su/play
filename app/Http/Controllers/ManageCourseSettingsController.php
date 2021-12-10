@@ -47,6 +47,7 @@ class ManageCourseSettingsController extends Controller
                     //Visibility
                     $coursesetlist[$course['id']]['visibility'] = $courseSettings->visibility;
                     //Downloadable
+
                     $coursesetlist[$course['id']]['downloadable'] = $courseSettings->downloadable;
                     //Individual users
                     if ($ipermissions = CoursesettingsUsers::where('course_id', $course['id'])->count()) {
@@ -115,6 +116,7 @@ class ManageCourseSettingsController extends Controller
                 return 'Not a courseadmin';
             }
         }
+
 
 
         return view('manage.manage_course', compact('courselist', 'coursesetlist', 'individual_permissions', 'playback_permissions', 'presentations'));

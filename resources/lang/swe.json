@@ -126,7 +126,7 @@
     "All uploaded presentations are accessible to DSV Students and Staff unless otherwise specified with the 'Custom' alternative.": "Alla uppladdade presentationer är tillgängliga för DSV -studenter och personal om inte annat anges explicit",
     "DSV Disclaimer": "DSV Ansvarsförsäkring",
     "Edit presentation": "Redigera presentation",
-    "Visibility": "Synlighet",
+    "Viewable": "Synlighet",
     "Course manager(s)": "Kursansvariga",
     "No course manager added": "Ingen kursansvarig har lagts till",
     "No tags": "Inga taggar",
@@ -163,7 +163,7 @@
     "Public": "Publik",
     "Course Setting": "Kurs inställning",
     "Choose a resolution": "Välj en upplösning",
-    "Download in Progress": "Nerladdning pågår",
+    "Download in progress": "Nerladdning pågår",
     "The Presentation has been downloaded.": "Presentationen har laddats ner.",
     "Back": "Tillbaka",
     "Save": "Spara"

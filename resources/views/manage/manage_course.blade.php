@@ -7,7 +7,16 @@
 
         .col {
             flex: 1;
-            padding: 1em;
+            padding: 0.5em;
+        }
+
+        .col p {
+            margin: 0.5rem
+        }
+
+        .video-icon, .badge {
+            font-size: 40px;
+            font-family: "TheSansC5-SemiBoldWeb", Verdana, sans-serif;
         }
 
     </style>
@@ -31,118 +40,134 @@
                 <div class="card video mt-5 border-5 pt-2 active pb-0 px-3 bg-light">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-12 px-1">
                                 <h3 class="card-title"><b>{{$course}}</b></h3>
                             </div>
                             <div class="col">
-                                        <div class="row text-center">
-                                            <div class="col">
-                                                <div class="alert alert-secondary">
-                                                    <span class="count-title">@if($presentations[$courseId] ?? 0)
-                                                            {{$presentations[$courseId]}} @else 0 @endif</span>
-                                                    <p class="count-text">{{ __("Presentations")  }}</p>
-                                                </div>
+                                <div class="row text-center">
+                                    <div class="col">
+                                        <div class="alert alert-secondary h-100 d-flex align-content-center">
+                                            <div class="my-auto align-middle mx-auto">
+                                                    <span class="video-icon">@if($presentations[$courseId] ?? 0)
+                                                            <a class="badge badge-primary" role="button"
+                                                               href="{{ route('course.videos', $courseId) }}">{{$presentations[$courseId]}}</a> @else
+                                                            0 @endif</span>
+                                                <p>{{ __("Presentations")  }}</p>
                                             </div>
-                                            <div class="col">
-                                                <div class="alert alert-secondary">
-                                                    <span class="count-title">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="alert alert-secondary h-100 d-flex align-content-center">
+                                            <div class="my-auto align-middle mx-auto">
+                                                    <span class="video-icon">
                                                            @if($individual_permissions[$courseId] ?? 0){{$individual_permissions[$courseId]}} @else
                                                             0 @endif
                                                         </span>
-                                                    <p class="count-text">{{ __("Editing permissions")  }}</p>
-                                                </div>
+                                                <p>{{ __("Permissions")  }}</p>
                                             </div>
-                                            <div class="col">
-                                                <div class="alert alert-secondary">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="alert alert-secondary h-100 d-flex align-content-center">
+                                            <div class="my-auto align-middle mx-auto">
+                                                @if($playback_permissions[$courseId] ?? 0)
+                                                    @switch($playback_permissions[$courseId]->permission_id)
+                                                        @case(1)
+                                                        <span class="video-icon text-success">{{ __("DSV") }}</span>
+                                                        @break
+                                                        @case(2)
+                                                        <span class="video-icon text-secondary">{{ __("Staff") }}</span>
+                                                        @break
+                                                        @case(4)
+                                                        <span class="video-icon"><i
+                                                                    class="fas fa-globe text-warning"></i></span>
+                                                        @break
+                                                        @default
+                                                        <span class="video-icon"><i
+                                                                    class="fas fa-user-lock text-info"></i></span>
+                                                    @endswitch
+                                                @else
+                                                    <span class="video-icon text-success">{{ __("DSV") }}</span>
+                                                @endif
+                                                <p>
                                                     @if($playback_permissions[$courseId] ?? 0)
                                                         @switch($playback_permissions[$courseId]->permission_id)
                                                             @case(1)
-                                                            <h2 class="timer count-title count-number">{{ __("DSV") }}</h2>
+                                                            {{ __("Students/Staff") }}
                                                             @break
                                                             @case(2)
-                                                            <h2 class="timer count-title count-number">{{ __("Staff") }}</h2>
+                                                            {{ __("DSV Staff") }}
                                                             @break
                                                             @case(4)
-                                                            <i class="fas fa-globe fa-3x"></i>
+                                                            {{ __("Public") }}
                                                             @break
                                                             @default
-                                                            <i class="fas fa-user-lock fa-3x"></i>
+                                                            {{ __("Custom") }}
                                                         @endswitch
                                                     @else
-                                                        <h2 class="timer count-title count-number">{{ __("DSV") }}</h2>
+                                                        {{ __("Students/Staff") }}
                                                     @endif
-                                                    <p class="count-text">
-                                                        @if($playback_permissions[$courseId] ?? 0)
-                                                            @switch($playback_permissions[$courseId]->permission_id)
-                                                                @case(1)
-                                                                {{ __("Students/Staff") }}
-                                                                @break
-                                                                @case(2)
-                                                                {{ __("DSV Staff") }}
-                                                                @break
-                                                                @case(4)
-                                                                {{ __("Public") }}
-                                                                @break
-                                                                @default
-                                                                {{ __("Custom") }}
-                                                            @endswitch
-                                                        @else
-                                                            {{ __("Students/Staff") }}
-                                                        @endif
-                                                    </p>
-                                                </div>
+                                                </p>
                                             </div>
-                                            <div class="col">
-                                                <div class="alert alert-secondary">
-                                                    @if($coursesetlist[$courseId] ?? 0)
-                                                        @if($coursesetlist[$courseId]['downloadable'] == false)
-                                                            <span style="color: red;" class="count-title">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="alert alert-secondary h-100 d-flex align-content-center">
+                                            <div class="my-auto align-middle mx-auto">
+                                                @if($coursesetlist[$courseId] ?? 0)
+                                                    @if($coursesetlist[$courseId]['downloadable'] == false)
+                                                        <span class="text-danger video-icon">
                                                             <i class="fas fa-times"></i>
                                                         </span>
-                                                        @else
-                                                            <span style="color: green;" class="count-title">
+                                                    @else
+                                                        <span class="text-success video-icon">
                                                             <i class="fas fa-check"></i>
                                                         </span>
-                                                        @endif
-                                                    @else
-                                                        <span style="color: green;" class="count-title">
+                                                    @endif
+                                                @else
+                                                    <span class="text-danger video-icon">
                                                         <i class="fas fa-times"></i>
                                                     </span>
-                                                    @endif
-                                                    <p class="count-text">{{ __("Downloadable") }}</p>
-                                                </div>
+                                                @endif
+                                                <p>{{ __("Downloadable") }}</p>
                                             </div>
-                                            <div class="col">
-                                                <div class="alert alert-secondary">
-                                                    @if($coursesetlist[$courseId] ?? 0)
-                                                        @if($coursesetlist[$courseId]['visibility'] == false)
-                                                            <span style="color: red;" class="count-title">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="alert alert-secondary h-100 d-flex align-content-center">
+                                            <div class="my-auto align-middle mx-auto">
+                                                @if($coursesetlist[$courseId] ?? 0)
+                                                    @if($coursesetlist[$courseId]['visibility'] == false)
+                                                        <span class="text-danger video-icon">
                                                             <i class="fas fa-times"></i>
                                                         </span>
-                                                        @else
-                                                            <span style="color: green;" class="count-title">
+                                                    @else
+                                                        <span class="text-success video-icon">
                                                             <i class="fas fa-check"></i>
                                                         </span>
-                                                        @endif
-                                                    @else
-                                                        <span style="color: green;" class="count-title">
+                                                    @endif
+                                                @else
+                                                    <span class="text-success video-icon">
                                                         <i class="fas fa-check"></i>
                                                     </span>
-                                                    @endif
-                                                    <p class="count-text">{{ __("Visibility") }}</p>
-                                                </div>
+                                                @endif
+                                                <p>{{ __("Visibility") }}</p>
                                             </div>
-
-                                            <div class="col">
-                                                <div class="alert alert-secondary">
-                                                    <a class="badge badge-primary count-title" role="button"
-                                                       href="{{ route('course_edit', $courseId) }}"><span class=""><i
-                                                                    class="fas fa-cog "></i></span></a>
-                                                    <p class="count-text ">{{ __("Edit") }}</p>
-                                                </div>
-                                            </div>
-
                                         </div>
+                                    </div>
+
+                                    <div class="col">
+                                        <div class="alert alert-secondary h-100 d-flex align-content-center">
+                                            <div class="my-auto align-middle mx-auto">
+                                                <a class="badge badge-primary video-icon" role="button"
+                                                   href="{{ route('course_edit', $courseId) }}"><span class=""><i
+                                                                class="fas fa-cog "></i></span></a>
+                                                <p>{{ __("Edit") }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
                     </div>
