@@ -32,75 +32,77 @@ Requirements are best determined using Server Requirements page of corresponding
 
 * Make sure that composer is installed globally or install it in place
 
-* Clone the repository
+  * Clone the repository
 
-  * Move into the directory. Move into the `/systemconfig` folder.
+    * Move into the directory. Move into the `/systemconfig` folder.
 
-    * Make sure that `/systemconfig/play.ini` file is present and configured with the configuration details for your requirements and for the server (copy play.ini.example to .ini and fill in with your data)
+      * Make sure that `/systemconfig/play.ini` file is present and configured with the configuration details for your requirements and for the server (copy play.ini.example to .ini and fill in with your data)
 
-            [global]
-            app_env=local                           ; Make sure this is set to local NOTE! For production enviroment the settings should be set to: app_env=production and app_debug=false.
-            app_debug=true                          ; Make sure this is set to true
-            app_url=http://localhost                ; Set this to localhost or your domain
-            authorization_parameter=entitlement     ; The authorization parameter NOTE! Not used for dev enviroments
-            authorization=                          ; Authorization entitlements NOTE! Not used for dev enviroments
-            login_route=/login                      ; The SSO login route for your application (The production server should be set ut with this route) 
-            default_presentation_permission='false' ; If the presentation should be public or respect the entitlents setting
-            default_presentation_entitlement='entitlemnts xxxx;xxxxx'
+              [global]
+              app_env=local                           ; Make sure this is set to local NOTE! For production enviroment the settings should be set to: app_env=production and app_debug=false.
+              app_debug=true                          ; Make sure this is set to true
+              app_url=http://localhost                ; Set this to localhost or your domain
+              authorization_parameter=entitlement     ; The authorization parameter NOTE! Not used for dev enviroments
+              authorization=                          ; Authorization entitlements NOTE! Not used for dev enviroments
+              login_route=/login                      ; The SSO login route for your application (The production server should be set ut with this route) 
+              default_presentation_permission='false' ; If the presentation should be public or respect the entitlents setting
+              default_presentation_entitlement='entitlemnts xxxx;xxxxx'
         
-            [database]
-            db=mysql                                ; Here you can specify which database you use: mysql, sqlite, pgsql, sqlsrv or redis 
-            db_host=127.0.0.1                       ; DB host address
-            db_port=3306                            ; DB port
-            db_database=                            ; Database used     
-            db_username=                            ; DB user
-            db_password=                            ; secret
+              [database]
+              db=mysql                                ; Here you can specify which database you use: mysql, sqlite, pgsql, sqlsrv or redis 
+              db_host=127.0.0.1                       ; DB host address
+              db_port=3306                            ; DB port
+              db_database=                            ; Database used     
+              db_username=                            ; DB user
+              db_password=                            ; secret
         
-            [jwt]
-            jwt_secret=                             ; used to sign your token
-            jwt_public_key=                         ; A path or resource to your public key. E.g. 'file://path/to/public/key'
-            jwt_private_key=                        ; A path or resource to your private key. E.g. 'file://path/to/private/key'
-            jwt_passphrase=                         ; The passphrase for your private key. Can be null if none set.
+              [jwt]
+              jwt_secret=                             ; used to sign your token
+              jwt_public_key=                         ; A path or resource to your public key. E.g. 'file://path/to/public/key'
+              jwt_private_key=                        ; A path or resource to your private key. E.g. 'file://path/to/private/key'
+              jwt_passphrase=                         ; The passphrase for your private key. Can be null if none set.
         
-            [ticket]                                ; Tickethandler credentials
-            email=
-            password=
+              [ticket]                                ; Tickethandler credentials
+              email=
+              password=
   
-            [mediasite]                             ; Mediasite API
-            url =
-            username =
-            password =
-            sfapikey =
+              [mediasite]                             ; Mediasite API
+              url =
+              username =
+              password =
+              sfapikey =
         
-            [Daisy]                                 ; Daisy API
-            url =
-            username =
-            password =
+              [Daisy]                                 ; Daisy API
+              url =
+              username =
+              password =
+              from_year=2019                          ; Starting year to load courses
+              to_year=2022                            ; Until year to load courses
         
-            [sftp]                                  ; sFTP settings storage server
-            host=
-            username=
-            privateKey=
-            pk-password=
+              [sftp]                                  ; sFTP settings storage server
+              host=
+              username=
+              privateKey=
+              pk-password=
 
-            [store]
-            base_uri=                               ; Base-Uri storage server
-            notify_uri=                             ; Notify Uri storage server
-            list_uri=                               ; Presentations listings and delete uri storage server
-            notify_auth=                            ; Password
+              [store]
+              base_uri=                               ; Base-Uri storage server
+              notify_uri=                             ; Notify Uri storage server
+              list_uri=                               ; Presentations listings and delete uri storage server
+              notify_auth=                            ; Password
 
-            [sukat]                                 ; SUKAT OpenLDAP account credentials
-            host=
-            username=
-            password=
-            port=636
-            base_dn=
-            timeout=5
-            version=3
+              [sukat]                                 ; SUKAT OpenLDAP account credentials
+              host=
+              username=
+              password=
+              port=636
+              base_dn=
+              timeout=5
+              version=3
 
-            [recorders]                             ; Cattura Recorders
-            FriendlyName = recorder.dns.name
-            OtherRecorder = other.name
+              [recorders]                             ; Cattura Recorders
+              FriendlyName = recorder.dns.name
+              OtherRecorder = other.name
         
 * Once the global settings are entered you can install the dependencies. `composer install`
 

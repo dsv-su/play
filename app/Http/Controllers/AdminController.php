@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\AdminHandler;
+use App\Course;
 use App\ManualPresentation;
 use App\MediasiteFolder;
 use App\MediasitePresentation;
@@ -142,6 +143,15 @@ class AdminController extends Controller
                 'url' => $system
             ];
         }
+        //Courses
+        $data['courses_2015'] = Course::where('year', 2015)->count();
+        $data['courses_2016'] = Course::where('year', 2016)->count();
+        $data['courses_2017'] = Course::where('year', 2017)->count();
+        $data['courses_2018'] = Course::where('year', 2018)->count();
+        $data['courses_2019'] = Course::where('year', 2019)->count();
+        $data['courses_2020'] = Course::where('year', 2020)->count();
+        $data['courses_2021'] = Course::where('year', 2021)->count();
+        $data['courses_2022'] = Course::where('year', 2022)->count();
 
         return view('admin.admin', $data);
     }

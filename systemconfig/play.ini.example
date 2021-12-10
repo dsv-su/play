@@ -42,6 +42,8 @@ sfapikey =
 daisy_url =
 daisy_username =
 daisy_password =
+from_year=2019                          ; Starting year to load courses
+to_year=2022                            ; Until year to load courses
 
 [sftp]                                  ; DSV Storage server credentials
 host=

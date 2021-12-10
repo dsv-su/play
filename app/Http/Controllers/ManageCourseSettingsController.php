@@ -26,57 +26,96 @@ class ManageCourseSettingsController extends Controller
         $presentations = [];
 
         $daisy = new DaisyAPI();
-        //Get user DaisyID
-        $daisyPersonID = $daisy->getDaisyPersonId(app()->make('play_username'));
-
-        //Get all courses where user is courseadmin
-        if ($courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID)) {
-            //dd($courses);
-            /*
-             * [0] Coursename swedish
-             * [1] Coursename english
-             * [2] CourseID
-             * [3] Semester in format year XXXX and term 1 spring(VT) 2 fall(HT) - e.g. 20212
-             * [4] Designation
-             * [5] Courseadmin true/false
-             */
-
+        if(app()->make('play_role') == 'Administrator') {
+            //Play-Administrator
+            $courses = $daisy->getDaisyCourses();
             //Group after year
-
-
             $start = 0;
             foreach ($courses as $course) {
                 if ($start == 0) {
-                    $year = substr($course[3], 0, 4);
+                    $year = substr($course['semester'], 0, 4);
                 }
-                if ($year == substr($course[3], 0, 4)) {
-                    $term = (substr($course[3], 4) == '1') ? 'VT' : 'HT';
-                    $courselist[$year][$course[2]] = $course[4] . ' ' . $term . substr($course[3], 0, 4) . ' — ' . $course[0] . ' (' . __('id') . ' ' . $course[2] . ')';
+                if ($year == substr($course['semester'], 0, 4)) {
+                    $term = (substr($course['semester'], 4) == '1') ? 'VT' : 'HT';
+                    $courselist[$year][$course['id']] = $course['designation'] . ' ' . $term . substr($course['semester'], 0, 4) . ' — ' . $course['name'] . ' (' . __('id') . ' ' . $course['id'] . ')';
                     $start++;
                 } else {
                     $start = 0;
                 }
                 //Check settings for course
-                if ($courseSettings = CoursesettingsPermissions::where('course_id', $course[2])->first()) {
+                if ($courseSettings = CoursesettingsPermissions::where('course_id', $course['id'])->first()) {
                     //Visibility
-                    $coursesetlist[$course[2]]['visibility'] = $courseSettings->visibility;
+                    $coursesetlist[$course['id']]['visibility'] = $courseSettings->visibility;
                     //Downloadable
-                    $coursesetlist[$course[2]]['downloadable'] = $courseSettings->downloadable;
+                    $coursesetlist[$course['id']]['downloadable'] = $courseSettings->downloadable;
                     //Individual users
-                    if ($ipermissions = CoursesettingsUsers::where('course_id', $course[2])->count()) {
-                        $individual_permissions[$course[2]] = $ipermissions;
+                    if ($ipermissions = CoursesettingsUsers::where('course_id', $course['id'])->count()) {
+                        $individual_permissions[$course['id']] = $ipermissions;
                     }
                     //Group permissions
-                    $gpermission = CoursePermissions::where('course_id', $course[2])->first();
-                    $playback_permissions[$course[2]] = $gpermission;
+                    $gpermission = CoursePermissions::where('course_id', $course['id'])->first();
+                    $playback_permissions[$course['id']] = $gpermission;
                     //Presentations
-                    $number_presentations = VideoCourse::where('course_id', $course[2])->count();
-                    $presentations[$course[2]] = $number_presentations;
+                    $number_presentations = VideoCourse::where('course_id', $course['id'])->count();
+                    $presentations[$course['id']] = $number_presentations;
                 }
             }
-        } else {
-            return 'Not a courseadmin';
         }
+        else {
+           //Courseadmin
+            //Get user DaisyID
+            $daisyPersonID = $daisy->getDaisyPersonId(app()->make('play_username'));
+
+            //Get all courses where user is courseadmin
+            if ($courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID)) {
+                //dd($courses);
+                /*
+                 * [0] Coursename swedish
+                 * [1] Coursename english
+                 * [2] CourseID
+                 * [3] Semester in format year XXXX and term 1 spring(VT) 2 fall(HT) - e.g. 20212
+                 * [4] Designation
+                 * [5] Courseadmin true/false
+                 */
+
+                //Group after year
+
+
+                $start = 0;
+                foreach ($courses as $course) {
+                    if ($start == 0) {
+                        $year = substr($course[3], 0, 4);
+                    }
+                    if ($year == substr($course[3], 0, 4)) {
+                        $term = (substr($course[3], 4) == '1') ? 'VT' : 'HT';
+                        $courselist[$year][$course[2]] = $course[4] . ' ' . $term . substr($course[3], 0, 4) . ' — ' . $course[0] . ' (' . __('id') . ' ' . $course[2] . ')';
+                        $start++;
+                    } else {
+                        $start = 0;
+                    }
+                    //Check settings for course
+                    if ($courseSettings = CoursesettingsPermissions::where('course_id', $course[2])->first()) {
+                        //Visibility
+                        $coursesetlist[$course[2]]['visibility'] = $courseSettings->visibility;
+                        //Downloadable
+                        $coursesetlist[$course[2]]['downloadable'] = $courseSettings->downloadable;
+                        //Individual users
+                        if ($ipermissions = CoursesettingsUsers::where('course_id', $course[2])->count()) {
+                            $individual_permissions[$course[2]] = $ipermissions;
+                        }
+                        //Group permissions
+                        $gpermission = CoursePermissions::where('course_id', $course[2])->first();
+                        $playback_permissions[$course[2]] = $gpermission;
+                        //Presentations
+                        $number_presentations = VideoCourse::where('course_id', $course[2])->count();
+                        $presentations[$course[2]] = $number_presentations;
+                    }
+                }
+            } else {
+                return 'Not a courseadmin';
+            }
+        }
+
 
         return view('manage.manage_course', compact('courselist', 'coursesetlist', 'individual_permissions', 'playback_permissions', 'presentations'));
     }

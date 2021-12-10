@@ -240,7 +240,7 @@
                                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                                  aria-labelledby="dropdownMenuLink">
                                                 <div class="dropdown-header">Reload courses</div>
-                                                <a class="dropdown-item" href="{{route('playboot')}}">2018-2021</a>
+                                                <a class="dropdown-item" href="{{route('playboot')}}">2018-2022</a>
                                             </div>
                                         </div>
                                     </div>
@@ -248,16 +248,28 @@
                                     <div class="card-body">
                                         <div class="mt-4 text-center small">
                                         <span class="mr-2">
-                                            <i class="fas fa-circle text-secondary"></i> 2018
+                                            <i class="fas fa-circle text-secondary"></i> {{$courses_2015}}(2015)
                                         </span>
                                         <span class="mr-2">
-                                            <i class="fas fa-circle text-success"></i> 2019
+                                            <i class="fas fa-circle text-secondary"></i> {{$courses_2016}}(2016)
                                         </span>
                                         <span class="mr-2">
-                                            <i class="fas fa-circle text-info"></i> 2020
+                                            <i class="fas fa-circle text-secondary"></i> {{$courses_2017}}(2017)
                                         </span>
                                         <span class="mr-2">
-                                            <i class="fas fa-circle text-primary"></i> 2021
+                                            <i class="fas fa-circle text-secondary"></i> {{$courses_2018}}(2018)
+                                        </span>
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-secondary"></i> {{$courses_2019}}(2019)
+                                        </span>
+                                            <span class="mr-2">
+                                            <i class="fas fa-circle text-secondary"></i> {{$courses_2020}}(2020)
+                                        </span>
+                                            <span class="mr-2">
+                                            <i class="fas fa-circle text-secondary"></i> {{$courses_2021}}(2021)
+                                        </span>
+                                            <span class="mr-2">
+                                            <i class="fas fa-circle text-secondary"></i> {{$courses_2022}}(2022)
                                         </span>
                                         </div>
                                     </div>

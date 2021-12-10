@@ -62,20 +62,54 @@ class DaisyAPI extends DaisyIntegration
     //All courses from Daisy
     public function getDaisyCourses()
     {
-        //Working progress -> to retrive all courses from Daisy 2018-today
-        if($this->array_resources = json_decode($this->getResource('courseSegment', 'json')->getBody()->getContents(), TRUE)) {
+        //Retrive all courses from Daisy from_year -- to_year
+        $intervall = $this->to_year() - $this->from_year();
+        for($i=0; $i<=$intervall;$i++){
+            $years[] = $this->to_year() - $i;
 
-            dd($this->array_resources);
+        }
 
-            foreach ($this->resources->reverse() as $course) {
-                $courselist[] = Arr::flatten($course);
+        foreach($years as $year) {
+            for($i=1;$i<=2;$i++) {
+                $this->array_resources = json_decode($this->getResource('courseSegment?semester='.$year.$i, 'json')->getBody()->getContents(), TRUE);
+
+                $this->resources = collect($this->array_resources)->sortBy(function($course, $key) {
+                    return $course['semester'];
+                });
+                $this->resources = collect($this->resources)->sortBy(function($course, $key) {
+                    return $course['id'];
+                });
+                //return $this->resources;
+                foreach ($this->resources->reverse() as $course) {
+                    $courselist[] = $course;
+                }
             }
         }
-        else {
-            return false;
-        }
+
+
 
         return $courselist;
 
+    }
+    private function from_year()
+    {
+        $this->file = base_path() . '/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            $this->file = base_path() . '/systemconfig/play.ini.example';
+        }
+        $this->system_config = parse_ini_file($this->file, true);
+
+        return $this->system_config['Daisy']['from_year'];
+    }
+
+    private function to_year()
+    {
+        $this->file = base_path() . '/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            $this->file = base_path() . '/systemconfig/play.ini.example';
+        }
+        $this->system_config = parse_ini_file($this->file, true);
+
+        return $this->system_config['Daisy']['to_year'];
     }
 }

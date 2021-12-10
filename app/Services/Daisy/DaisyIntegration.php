@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class DaisyIntegration extends Model
 {
@@ -161,9 +162,11 @@ class DaisyIntegration extends Model
 
 
     //Method for initiating play and preloading courses from Daisy
-    public function init()
+    public function init($start_date=null)
     {
         $this->endpoints = array(
+            //'courseSegment?semester=20222',
+            'courseSegment?semester=20221',
             'courseSegment?semester=20212',
             'courseSegment?semester=20211',
             'courseSegment?semester=20201',
@@ -191,7 +194,28 @@ class DaisyIntegration extends Model
         );
 
 
-        //$daisy = new DaisyIntegration($this->system);
+        /*
+         * This is an alternative solution with a setting in the ini-file -> waiting for Daisy to prepare the endpoint
+         *
+        $this->array = json_decode($this->getResource('courseSegment?startDateAfter='.$start_date, 'json')->getBody()->getContents(), TRUE);
+        dd(count($this->array));
+        //Store id db table
+        foreach ($this->array as $this->item) {
+            if (substr($this->item['semester'], 4) == '1') {
+                Course::updateOrCreate(
+                    ['id' => $this->item['id'], 'designation' => $this->item['designation'], 'semester' => 'VT', 'year' => substr($this->item['semester'], 0, 4)],
+                    ['name' => $this->item['name']]
+                );
+            } else {
+                Course::updateOrCreate(
+                    ['id' => $this->item['id'], 'designation' => $this->item['designation'], 'semester' => 'HT', 'year' => substr($this->item['semester'], 0, 4)],
+                    ['name' => $this->item['name']]
+                );
+            }
+        }
+
+        */
+
         foreach ($this->endpoints as $this->endp) {
             $this->array = json_decode($this->getResource($this->endp, 'json')->getBody()->getContents(), TRUE);
 
@@ -209,6 +233,33 @@ class DaisyIntegration extends Model
                     );
                 }
             }
+
+
+
         }
+
+
+
+    }
+
+    public function refreshCourses()
+    {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('courses')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        $this->init($this->start_date());
+
+    }
+
+    private function start_date()
+    {
+        $this->file = base_path() . '/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            $this->file = base_path() . '/systemconfig/play.ini.example';
+        }
+        $this->system_config = parse_ini_file($this->file, true);
+
+        return $this->system_config['Daisy']['start_date'];
     }
 }
