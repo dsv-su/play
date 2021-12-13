@@ -46,7 +46,7 @@ class CourseNav extends Model
                 $view->with('semesters', $this->getStudentSemesters(app()->make('play_username')));
             }
             //If user is Employee
-            elseif(App::environment('production') and (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')) {
+            elseif(App::environment('production') and (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Staff')) {
                 $view->with('designations', $this->getEmployeeDesignation(app()->make('play_username')));
                 $view->with('semesters', $this->getEmployeeSemesters(app()->make('play_username')));
             }
