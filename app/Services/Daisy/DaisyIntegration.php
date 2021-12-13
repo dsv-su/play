@@ -15,7 +15,7 @@ class DaisyIntegration extends Model
     protected $system, $res, $client;
     protected $endpoints, $endp, $xml, $json, $array, $item, $course;
     protected $resource, $array_resource;
-    protected $courses, $courselist, $course_json, $course_result, $list;
+    protected $courses, $courselist, $course_json, $course_result, $list, $designation_header;
 
     public function __construct()
     {
@@ -56,7 +56,7 @@ class DaisyIntegration extends Model
     {
         //Filters courses from ht2019-vt2021
         $this->array_resource = json_decode($this->getResource('/employee/username/' . $username . '@su.se', 'json')->getBody()->getContents(), TRUE);
-        $this->courses = json_decode($this->getResource('/employee/' . $this->array_resource['person']['id'] . '/contributions?fromSemesterId=20192&toSemesterId=20222', 'json')->getBody()->getContents(), TRUE);
+        $this->courses = json_decode($this->getResource('/employee/' . $this->array_resource['person']['id'] . '/contributions?fromSemesterId='.$this->from_year().'1&toSemesterId='.$this->to_year().'2', 'json')->getBody()->getContents(), TRUE);
         foreach ($this->courses as $this->instance) {
             $this->list[] = $this->instance['courseSegmentInstance']['id'];
         }
@@ -68,7 +68,7 @@ class DaisyIntegration extends Model
     {
         //Filters courses from ht2019-vt2021
         $this->array_resource = json_decode($this->getResource('employee/username/' . $username . '@su.se', 'json')->getBody()->getContents(), TRUE);
-        $this->courses = json_decode($this->getResource('/employee/' . $this->array_resource['person']['id'] . '/contributions?fromSemesterId=20192&toSemesterId=20222', 'json')->getBody()->getContents(), TRUE);
+        $this->courses = json_decode($this->getResource('/employee/' . $this->array_resource['person']['id'] . '/contributions?fromSemesterId='.$this->from_year().'1&toSemesterId='.$this->to_year().'2', 'json')->getBody()->getContents(), TRUE);
         foreach ($this->courses as $this->instance) {
             $this->list[$this->instance['courseSegmentInstance']['id']] = $this->instance['courseSegmentInstance']['semesterId'];
         }
@@ -78,14 +78,20 @@ class DaisyIntegration extends Model
     //Method for retrieving Employees active course designations from Daisy with UserID
     public function getActiveEmployeeDesignations($username)
     {
+
         //Filters designations from vt2019-vt2021
         $this->array_resource = json_decode($this->getResource('employee/username/' . $username . '@su.se', 'json')->getBody()->getContents(), TRUE);
-        $this->courses = json_decode($this->getResource('/employee/' . $this->array_resource['person']['id'] . '/contributions?fromSemesterId=20191&toSemesterId=20222', 'json')->getBody()->getContents(), TRUE);
+        $this->courses = json_decode($this->getResource('/employee/' . $this->array_resource['person']['id'] . '/contributions?fromSemesterId='.$this->from_year().'1&toSemesterId='.$this->to_year().'2', 'json')->getBody()->getContents(), TRUE);
+        $this->courses = collect($this->courses)->take(10);
         foreach ($this->courses as $this->instance) {
             if (substr($this->instance['courseSegmentInstance']['semesterId'], 4) == '1') {
-                $this->list[$this->instance['courseSegmentInstance']['designation']] = $this->instance['courseSegmentInstance']['designation'] . ' VT ' . substr($this->instance['courseSegmentInstance']['semesterId'], 0, -1);
+                //$this->list[$this->instance['courseSegmentInstance']['designation']] = $this->instance['courseSegmentInstance']['designation'] . ' VT ' . substr($this->instance['courseSegmentInstance']['semesterId'], 0, -1);
+                //The result should only be a designation
+                $this->list[$this->instance['courseSegmentInstance']['designation']] = $this->instance['courseSegmentInstance']['designation'];
             } else {
-                $this->list[$this->instance['courseSegmentInstance']['designation']] = $this->instance['courseSegmentInstance']['designation'] . ' HT ' . substr($this->instance['courseSegmentInstance']['semesterId'], 0, -1);
+                //$this->list[$this->instance['courseSegmentInstance']['designation']] = $this->instance['courseSegmentInstance']['designation'] . ' HT ' . substr($this->instance['courseSegmentInstance']['semesterId'], 0, -1);
+                //The result should only be a designation
+                $this->list[$this->instance['courseSegmentInstance']['designation']] = $this->instance['courseSegmentInstance']['designation'];
             }
         }
         return $this->list;
@@ -128,9 +134,11 @@ class DaisyIntegration extends Model
         $this->course_json = json_decode($this->getResource('/person/' . $this->array_resource['id'] . '/courseSegmentInstances', 'json')->getBody()->getContents(), 'TRUE');
         foreach ($this->course_json as $this->courselist) {
             if (substr($this->courselist['semester'], 4) == '1') {
-                $this->list[$this->courselist['designation']] = $this->courselist['designation'] . ' VT' . substr($this->courselist['semester'], 0, -1);
+                //$this->list[$this->courselist['designation']] = $this->courselist['designation'] . ' VT' . substr($this->courselist['semester'], 0, -1);
+                $this->list[$this->courselist['designation']] = $this->courselist['designation'];
             } else {
-                $this->list[$this->courselist['designation']] = $this->courselist['designation'] . ' HT' . substr($this->courselist['semester'], 0, -1);
+                //$this->list[$this->courselist['designation']] = $this->courselist['designation'] . ' HT' . substr($this->courselist['semester'], 0, -1);
+                $this->list[$this->courselist['designation']] = $this->courselist['designation'];
             }
         }
         return $this->list;
@@ -261,5 +269,27 @@ class DaisyIntegration extends Model
         $this->system_config = parse_ini_file($this->file, true);
 
         return $this->system_config['Daisy']['start_date'];
+    }
+
+    public function from_year()
+    {
+        $this->file = base_path() . '/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            $this->file = base_path() . '/systemconfig/play.ini.example';
+        }
+        $this->system_config = parse_ini_file($this->file, true);
+
+        return $this->system_config['Daisy']['from_year'];
+    }
+
+    public function to_year()
+    {
+        $this->file = base_path() . '/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            $this->file = base_path() . '/systemconfig/play.ini.example';
+        }
+        $this->system_config = parse_ini_file($this->file, true);
+
+        return $this->system_config['Daisy']['to_year'];
     }
 }

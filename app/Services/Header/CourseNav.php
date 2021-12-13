@@ -86,7 +86,8 @@ class CourseNav extends Model
     private function getFakeStudentDesignation($courses)
     {
         return Course::whereIn('id', $courses)->take(6)->get()->mapWithKeys(function ($item) {
-            return [$item['designation'] => $item['designation']. ' '.$item['semester'].' '.$item['year']];
+            //return [$item['designation'] => $item['designation']. ' '.$item['semester'].' '.$item['year']];
+            return [$item['designation'] => $item['designation']];
         });
     }
 

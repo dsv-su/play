@@ -91,25 +91,4 @@ class DaisyAPI extends DaisyIntegration
         return $courselist;
 
     }
-    private function from_year()
-    {
-        $this->file = base_path() . '/systemconfig/play.ini';
-        if (!file_exists($this->file)) {
-            $this->file = base_path() . '/systemconfig/play.ini.example';
-        }
-        $this->system_config = parse_ini_file($this->file, true);
-
-        return $this->system_config['Daisy']['from_year'];
-    }
-
-    private function to_year()
-    {
-        $this->file = base_path() . '/systemconfig/play.ini';
-        if (!file_exists($this->file)) {
-            $this->file = base_path() . '/systemconfig/play.ini.example';
-        }
-        $this->system_config = parse_ini_file($this->file, true);
-
-        return $this->system_config['Daisy']['to_year'];
-    }
 }
