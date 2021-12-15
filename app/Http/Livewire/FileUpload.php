@@ -220,7 +220,7 @@ class FileUpload extends Component
     {
         $this->filethumbs = [];
         foreach (Storage::disk('public')->files($this->dirname.'/poster/') as $this->file) {
-            $this->filethumbs[] = $this->dirname.'/poster/'. substr($this->file, strrpos($this->file, '/') + 1);
+            $this->filethumbs[] = '/storage/'.$this->dirname.'/poster/'. substr($this->file, strrpos($this->file, '/') + 1);
             $this->filesduration[] = $this->presentation->duration;
             $this->genthumb[] = ceil($this->presentation->duration/3);
             $this->files[] = '';
