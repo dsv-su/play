@@ -1,7 +1,8 @@
-<div class="col-md-4 my-2">
+<div class="col-lg-4 my-2">
+
 <!-- <label>{{ __("Source files") }}</label>-->
 
-    <div class="row text-center">
+    <div class="row text-center mt-3 mt-lg-0">
         <div class="col">
             <div class="counter">
                 <i class="far fa-file-video fa-2x"></i>
@@ -43,60 +44,60 @@
                 <h4>{{ __("Upload Custom Thumb") }}</h4>
                 <input type="file" class="form-control" wire:model="custom">
                 @error('custom') <span class="text-danger">{{ $message }}</span> @enderror
-                @foreach($filethumbs as $key => $thumb)
-
-                    <div class="p-4 my-3 rounded-lg shadow-lg transition-all duration-500"
-                         style="background-image: radial-gradient( circle farthest-corner at 14.2% 27.5%,  rgba(104,199,255,1) 0%, rgba(255,255,255,1) 90% );"
-                         wire:key="{{$loop->index}}">
-                        <i class="fas fa-times-circle text-gray-700 text-2xl float-right cursor-pointer"
-                           wire:click="remove({{$loop->index}})"></i>
-                        <!-- Thumb -->
-                        <div class="flex justify-center">
-                            <img src="{{$thumb}}?{{ rand() }}" width="90%" style="width: 250px; height: 150px;">
+                <div class="row">
+                    @foreach($filethumbs as $key => $thumb)
+                        <div class="col-12 col-sm-6 col-lg-12">
+                            <div class="p-4 my-3 rounded-lg shadow-lg transition-all duration-500 bg-light"
+                                 wire:key="{{$loop->index}}">
+                                <!-- Thumb -->
+                                <div class="flex justify-center w-100 position-relative">
+                                    <i class="fas fa-times-circle text-danger text-2xl float-right cursor-pointer"
+                                       wire:click="remove({{$loop->index}})"
+                                       style="position: absolute; top: 0; right: 0;"></i>
+                                    <img src="{{$thumb}}?{{ rand() }}" class="w-100">
+                                </div>
+                                <div style="font-family: 'Source Sans Pro', 'Arial', sans-serif; width: 90%; line-height: 1.15">
+                                    <small>
+                                        {{ __('Stream duration') }}: {{$filesduration[$loop->index]}} sec.
+                                        <br>
+                                        @if(!$custom or $key > 0)
+                                            {{ __('Thumb generated after') }}: {{$genthumb[$loop->index]}} sec.
+                                        @else
+                                            {{ __('Custom uploaded thumb') }}
+                                        @endif
+                                    </small>
+                                </div>
+                            </div>
+                            <!--<div class="form-inline my-3">-->
+                            <div class="row justify-content-between text-left">
+                                <div class="form-group col d-flex">
+                                    <input class="form-control form-control-sm" placeholder="10" type="number"
+                                           wire:model="sec.{{$key}}" style="max-width: 90px; text-align: right;">
+                                </div>
+                                <div class="form-group col-auto d-flex pull-right">
+                                    <button class="btn btn-outline-secondary btn-sm"
+                                            wire:click="regenerate({{$loop->index}})">
+                                        Regenerate
+                                    </button>
+                                </div>
+                                @error('sec') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
                         </div>
-                        <div style="font-family: 'Source Sans Pro', 'Arial', sans-serif; width: 90%;">
-                            <small>
-                                {{ __('Stream Duration') }}: {{$filesduration[$loop->index]}} sec.
-                                <br>
-                                @if(!$custom or $key > 0)
-                                    {{ __('Thumb generated after') }}: {{$genthumb[$loop->index]}} sec.
-                                @else
-                                    {{ __('Custom uploaded thumb') }}
-                                @endif
-                            </small>
-                        </div>
-                    </div>
-                    <!--<div class="form-inline my-3">-->
-                    <div class="row justify-content-between text-left">
-                        <div class="form-group col-sm-4 flex-column d-flex">
-                            <input class="form-control form-control-sm" placeholder="10" type="number" wire:model="sec.{{$key}}">
-                        </div>
-                        <div class="form-group col-sm-6 flex-column d-flex">
-                            <button class="btn btn-outline-primary btn-sm" wire:click="regenerate({{$loop->index}})">
-                                Regenerate
-                            </button>
-                        </div>
-                        @error('sec') <span class="text-danger">{{ $message }}</span> @enderror
-                    </div>
-
-            @endforeach
+                    @endforeach
+                </div>
+            @endif
         @endif
-    @endif
 
-    <!-- Loading Message for Images -->
+        <!-- Loading Message for Images -->
         <div wire:loading wire:target="files">Uploading Media...</div>
     </div>
 
-    <div class="row justify-content-center">
-        <div class="form-group col-sm-4">
-            <button id="submit" type="submit"
-                    class="btn-block btn btn-outline-primary"
-            {{ $isDisabled ? '': 'disabled' }}
-            >{{ __("Save") }}</button>
-        </div>
+    <div lass="col-sm-12">
+        <button id="submit" type="submit"
+                class="btn btn-outline-primary mx-auto d-flex font-125rem m-3"
+                {{ $isDisabled ? '': 'disabled' }}
+        >{{ __("Upload presentation") }}</button>
     </div>
-
-
 
 </div>
 <!-- end right -->
@@ -140,7 +141,8 @@
     </div>
 </div>
 <!-- Modal for out of range upload-->
-<div wire:ignore.self class="modal fade" id="outofrangeModal" tabindex="-1" role="dialog" aria-labelledby="outofrangeModalLabel"
+<div wire:ignore.self class="modal fade" id="outofrangeModal" tabindex="-1" role="dialog"
+     aria-labelledby="outofrangeModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Services\Filters\Visibility;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -179,9 +180,5 @@ class Video extends Model implements Searchable
         return app()->make('play_role') == 'Administrator' ||
             CourseadminPermission::where('username', app()->make('play_username'))->where('video_id', $this->id)->exists() ||
             IndividualPermission::where('username', app()->make('play_username'))->where('permission', 'delete')->exists();
-    }
-
-    public function visible() {
-        return $this->visability || $this->editable();
     }
 }
