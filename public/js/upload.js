@@ -1,19 +1,19 @@
-$(document).ready(function() {
+$(document).ready(function () {
     $('.datepicker').datepicker({
-        language:'sv',
+        language: 'sv',
         weekStart: 1,
         todayHighlight: true
     });
     /* Toggle video permissions settings */
-    $(document).on('change', '#permission', function(){
-        var bool=$("#video_perm").is(":hidden")
+    $(document).on('change', '#permission', function () {
+        var bool = $("#video_perm").is(":hidden")
         $("#video_perm").toggleClass('hidden')
-        $("#video_perm").attr('hidden',!bool)
+        $("#video_perm").attr('hidden', !bool)
     });
 
     var inputFormDiv = document.getElementById('presenter_table');
     var user = inputFormDiv.getElementsByTagName('input').length;
-    for(var i=1;i<=user;i++) {
+    for (var i = 1; i <= user; i++) {
         /* Restore autocomplete for failed validation */
         /* Typeahead SUKAT user */
         // Set the Options for "Bloodhound" suggestion engine
@@ -26,7 +26,7 @@ $(document).ready(function() {
             queryTokenizer: Bloodhound.tokenizers.whitespace
         });
 
-        $("#user-search-text-"+i).typeahead({
+        $("#user-search-text-" + i).typeahead({
             classNames: {
                 menu: 'search_autocomplete'
             },
@@ -70,10 +70,10 @@ $(document).ready(function() {
         /* end failed validation restore */
     }
     var count = 2;
-    $(document).on('click', '.presenteradd', function(){
+    $(document).on('click', '.presenteradd', function () {
         var html = '';
         html += '<div class="d-flex justify-content-between" id="user-search">';
-        html += '<input class="form-control w-100 mx-auto" type="search" id="user-search-text-'+user+'" name="presenters[]" autocomplete="off" aria-haspopup="true" placeholder="Name or username" aria-labelledby="user-search">';
+        html += '<input class="form-control w-100 mx-auto" type="search" id="user-search-text-' + user + '" name="presenters[]" autocomplete="off" aria-haspopup="true" placeholder="Name or username" aria-labelledby="user-search">';
         html += '<a type="button" name="presenterremove" class="absolute cursor-pointer p-2 top-2 right-2 text-gray-500 presenterremove"><i class="fas fa-user-minus"></i></a>';
         html += '</div>';
         $('#presenter_table').append(html);
@@ -88,7 +88,7 @@ $(document).ready(function() {
             queryTokenizer: Bloodhound.tokenizers.whitespace
         });
 
-        $("#user-search-text-"+user).typeahead({
+        $("#user-search-text-" + user).typeahead({
             classNames: {
                 menu: 'search_autocomplete'
             },
@@ -101,8 +101,13 @@ $(document).ready(function() {
             limit: 10,
             // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
             name: 'autocomplete-items',
+            afterSelect: function (item) {
+                // do what is needed with item
+                //and then, for example ,focus on some other control
+                console.log('ddd');
+            },
             display: function (item) {
-                return item.uid;
+                return item.displayname + ' (' + item.uid + ')';
             },
             templates: {
                 empty: [
@@ -122,27 +127,32 @@ $(document).ready(function() {
             let selected = $("#user-search-text").attr('aria-activedescendant');
             if (e.which == 13) {
                 if (selected) {
-
                 } else {
                     $(".tt-suggestion:first-child").addClass('tt-cursor');
                 }
+                // Disable the input after Enter
+                $(this).prop('disabled', true);
             }
         });
-    user++;
+        user++;
         /* end typeahead */
     });
 
-    $(document).on('click', '.presenterremove', function(){
+    $(document).on('click', '.tt-suggestion', function () {
+        $(this).closest('.twitter-typeahead').find('input').prop('disabled', true);
+    });
+
+    $(document).on('click', '.presenterremove', function () {
         $(this).closest('div').remove();
     });
     var course = 1;
-    $(document).on('click', '.courseadd', function(){
+    $(document).on('click', '.courseadd', function () {
         var html = '';
         html += '<tr>';
         html += '<td>';
         html += '<div class="d-flex justify-content-between" id="course-search">';
         html += '<label for="course-search-text" class="sr-only">Kurs</label>';
-        html += '<input type="text" name="courses[]" id="course-search-text-'+course+'" class="form-control w-100 mx-auto" autocomplete="off" aria-haspopup="true" placeholder="Kursnamn" aria-labelledby="course-search" required>';
+        html += '<input type="text" name="courses[]" id="course-search-text-' + course + '" class="form-control w-100 mx-auto" autocomplete="off" aria-haspopup="true" placeholder="Kursnamn" aria-labelledby="course-search" required>';
         html += '</div>';
         html += '</td>';
         html += '<td><button type="button" name="courseremove" class="btn btn-outline-danger btn-sm courseremove">X</button></td></tr>';
@@ -159,7 +169,7 @@ $(document).ready(function() {
             queryTokenizer: Bloodhound.tokenizers.whitespace
         });
 
-        $("#course-search-text-"+course).typeahead({
+        $("#course-search-text-" + course).typeahead({
             classNames: {
                 menu: 'search_autocomplete'
             },
@@ -190,7 +200,7 @@ $(document).ready(function() {
             }
         }).on('keyup', function (e) {
             $(".tt-suggestion:first-child").addClass('tt-cursor');
-            let selected = $("#course-search-text-"+course).attr('aria-activedescendant');
+            let selected = $("#course-search-text-" + course).attr('aria-activedescendant');
             if (e.which == 13) {
                 if (selected) {
 
@@ -203,16 +213,16 @@ $(document).ready(function() {
         /* end typeahead */
         /* */
     });
-    $(document).on('click', '.courseremove', function(){
+    $(document).on('click', '.courseremove', function () {
         $(this).closest('tr').remove();
     });
     var tag = 1;
-    $(document).on('click', '.tagadd', function(){
+    $(document).on('click', '.tagadd', function () {
         var html = '';
         html += '<tr>';
         html += '<td>';
         html += '<div class="d-flex justify-content-between" id="course-search">';
-        html += '<input type="text" name="tags[]" id="tag-search-text-'+tag+'" class="form-control w-100 mx-auto" autocomplete="off" aria-haspopup="true" placeholder="Tags" aria-labelledby="tag-search" required></td>';
+        html += '<input type="text" name="tags[]" id="tag-search-text-' + tag + '" class="form-control w-100 mx-auto" autocomplete="off" aria-haspopup="true" placeholder="Tags" aria-labelledby="tag-search" required></td>';
         html += '</div>';
         html += '</td>';
         html += '<td>';
@@ -229,7 +239,7 @@ $(document).ready(function() {
             queryTokenizer: Bloodhound.tokenizers.whitespace
         });
 
-        $("#tag-search-text-"+tag).typeahead({
+        $("#tag-search-text-" + tag).typeahead({
             classNames: {
                 menu: 'search_autocomplete'
             },
@@ -260,7 +270,7 @@ $(document).ready(function() {
             }
         }).on('keyup', function (e) {
             $(".tt-suggestion:first-child").addClass('tt-cursor');
-            let selected = $("#tag-search-text-"+tag).attr('aria-activedescendant');
+            let selected = $("#tag-search-text-" + tag).attr('aria-activedescendant');
             if (e.which == 13) {
                 if (selected) {
 
@@ -272,11 +282,11 @@ $(document).ready(function() {
         tag++;
         /* end typeahead */
     });
-    $(document).on('click', '.tagremove', function(){
+    $(document).on('click', '.tagremove', function () {
         $(this).closest('tr').remove();
     });
-    $(document).on('click', '.mediaadd', function(){
-        if (count<5){
+    $(document).on('click', '.mediaadd', function () {
+        if (count < 5) {
             var html = '';
             html += '<div class="text-center">';
             html += '<img src="/images/dsvplay.png" class="img-thumbnail" alt="thumb">';
@@ -287,12 +297,11 @@ $(document).ready(function() {
 
             count++;
             $('#media').append(html);
-        }
-        else {
+        } else {
             $('#max').modal('show');
         }
     });
-    $(document).on('click', '.mediaremove', function(){
+    $(document).on('click', '.mediaremove', function () {
         count--;
         $(this).closest('.text-center').remove();
     });

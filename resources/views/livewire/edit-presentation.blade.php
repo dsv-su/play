@@ -196,7 +196,7 @@
                                                    id="user-search-text-{{$key}}" type="search"
                                                    wire:model="presenters.{{$key}}" name="presenters[]"
                                                    placeholder="Start typing name or username" aria-haspopup="true"
-                                                   autocomplete="off" aria-labelledby="user-search">
+                                                   autocomplete="off" aria-labelledby="user-search" @if ($name) disabled @endif>
                                             <a class="absolute cursor-pointer p-2 top-2 right-2 text-gray-500"
                                                wire:click="remove_presenter({{$key}})">
                                                 <i class="fas fa-user-minus"></i>
@@ -252,7 +252,7 @@
                                                    name="individual_permissions[]"
                                                    placeholder="Start typing name or username"
                                                    aria-haspopup="true" autocomplete="off"
-                                                   aria-labelledby="perm-search">
+                                                   aria-labelledby="perm-search" @if ($name) disabled @endif>
                                             @error('individuals.*') <span class="error">{{ $message }}</span> @enderror
 
                                             <div class="p-1 col-auto">
@@ -542,8 +542,13 @@
                 } else {
                     $(".tt-suggestion:first-child").addClass('tt-cursor');
                 }
+                // Disable the input after Enter
+                $(this).prop('disabled', true);
             }
         });
         /* end typeahead */
     }
+    $(document).on('click', '.tt-suggestion', function () {
+        $(this).closest('.twitter-typeahead').find('input').prop('disabled', true);
+    });
 </script>
