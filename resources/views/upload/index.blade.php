@@ -25,8 +25,8 @@
 
     <div class="container px-3 px-sm-0">
         <div class="row">
-            <div class="col-md-8">
-                <form method="post" action="{{route('upload_step1', $presentation->id)}}">
+            <div class="col-lg-8">
+                <form class=needs-validation" method="post" action="{{route('upload_step1', $presentation->id)}}">
                     @csrf
                     <div class="rounded border shadow p-3 my-2">
                         <label class="form-control-label px-1">{{ __("Information about the presentation") }}</label>
@@ -39,8 +39,11 @@
                             <div class="form-group col-sm-6 flex-column d-flex"><label
                                         class="form-control-label px-1">{{ __("Enter title") }}<span
                                             class="text-danger"> *</span></label>
-                                <input id="title" name="title" type="text" placeholder="{{ __("Title") }}"
+                                <input class="form-control" id="title" name="title" type="text" placeholder="{{ __("Title") }}"
                                        value="{{ old('title') ? old('title'): $title ?? '' }}">
+                                <div class="invalid-feedback">
+                                    {{__('Title is required')}}
+                                </div>
                                 <div><small class="text-danger">{{ $errors->first('title') }}</small></div>
                             </div>
 
@@ -48,9 +51,12 @@
                             <div class="form-group col-sm-6 flex-column d-flex"><label
                                         class="form-control-label px-1">{{ __("Recording date") }}<span
                                             class="text-danger"> *</span></label>
-                                <input id="creationdate" class="datepicker" name="created" type="text"
+                                <input id="creationdate" class="datepicker form-control" name="created" type="text"
                                        autocomplete="off" data-provide="datepicker" data-date-autoclose="true"
-                                       data-date-today-highlight="true">
+                                       data-date-today-highlight="true" required>
+                                <div class="invalid-feedback">
+                                    {{__('Recording date is required')}}
+                                </div>
                                 <div><small class="text-danger">{{ $errors->first('created') }}</small></div>
                             </div>
                         </div>
@@ -59,7 +65,7 @@
                         <div class="row justify-content-between text-left">
                             <div class="form-group col-12 flex-column d-flex"><label
                                         class="form-control-label px-1">{{ __("Description") }}</label>
-                                <textarea id="description" name="description"
+                                <textarea id="description" name="description" class="form-control"
                                           placeholder="{{__("Add a presentation's description here (if needed)")}}"></textarea>
                             </div>
                         </div>
@@ -235,6 +241,24 @@
     <script>
         $(".datepicker").datepicker("setDate", new Date());
         $("#submit").click(function () {
+            let errors = 0;
+            if ($('#title').val() == '') {
+                $('#title').addClass('is-invalid');
+                $('#title').removeClass('is-valid');
+                errors = 1;
+            } else {
+                $('#title').removeClass('is-invalid');
+            }
+            if ($('#creationdate').val() == '') {
+                $('#creationdate').addClass('is-invalid');
+                $('#creationdate').removeClass('is-valid');
+                errors = 1;
+            } else {
+                $('#creationdate').removeClass('is-invalid');
+            }
+            if (errors) {
+                return false;
+            }
             $('form').submit();
             $("#loadtoserver").modal({
                 backdrop: "static", //remove ability to close modal with click

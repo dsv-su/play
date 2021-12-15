@@ -16,6 +16,8 @@ use App\Video;
 use App\VideoCourse;
 use App\VideoPermission;
 use App\VideoPresenter;
+use DB;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -40,7 +42,7 @@ class SearchController extends Controller
         $courses = $this->extractCourses($videos);
         $presenters = $this->extractPresenters($videos);
         $tags = $this->extractTags($videos);
-        $videos = $videos->groupBy(function ($item, $key) {
+        $videos = $videos->groupBy(function ($item) {
             $item['belongs_to_course'] = $item->video_course[0]->course['name'];
             return $item->video_course[0]->course['name'] ?? '9999';
         });
@@ -63,7 +65,7 @@ class SearchController extends Controller
         //Visibility
         $videos = $visibility->check($videos);
 
-        $videos = $videos->groupBy(function ($item, $key) {
+        $videos = $videos->groupBy(function ($item) {
             return $item->video_course[0]->course['id'] ?? 'UU9999';
         });
 
@@ -83,7 +85,7 @@ class SearchController extends Controller
         //Visibility
         $videos = $visibility->check($videos);
 
-        $videos = $videos->groupBy(function ($item, $key) {
+        $videos = $videos->groupBy(function ($item) {
             return $item->video_course[0]->course['year'] ?? '9999';
         });
 
@@ -104,6 +106,9 @@ class SearchController extends Controller
         return view('home.index', $data);
     }
 
+    /**
+     * @throws BindingResolutionException
+     */
     public function getVideos($q)
     {
         $visibility = new Visibility();
@@ -114,7 +119,7 @@ class SearchController extends Controller
                     return $query->where('username', 'LIKE', "%$q%")->orWhere('name', 'LIKE', "%$q%");
                 })
                 ->orWhereHas('video_course.course', function ($query) use ($q) {
-                    return $query->where('title', 'LIKE', "%$q%")->orwhere(\DB::raw('concat(semester,year)'), 'LIKE', "%$q%");
+                    return $query->where('title', 'LIKE', "%$q%")->orwhere(DB::raw('concat(semester,year)'), 'LIKE', "%$q%");
                 })
                 ->orWhere('title', 'LIKE', "%$q%")
                 ->orwhereHas('video_tag.tag', function ($query) use ($q) {
@@ -130,7 +135,6 @@ class SearchController extends Controller
 
                 //If user is courseadmin, uploader or staff
                 $videos_id = [];
-                $video_course_ids = [];
                 $user = Presenter::where('username', app()->make('play_username'))->first();
                 $user_videos = VideoPresenter::where('presenter_id', $user->id ?? 0)->pluck('video_id');
 
@@ -157,8 +161,13 @@ class SearchController extends Controller
                 });
             }
         }
+
+        return false;
     }
 
+    /**
+     * @throws BindingResolutionException
+     */
     public function search($q = null, Request $request = null)
     {
         $videos = $this->getVideos($q);
@@ -170,11 +179,12 @@ class SearchController extends Controller
         $permissions = VideoPermission::all();
 
         // Group videos by course
-        $videos = $videos->groupBy(function ($item, $key) {
+        $videos = $videos->groupBy(function ($item) {
             if (isset($item->video_course[0])) {
                 $course = $item->video_course[0]->course;
                 return $course['id'] ?? '0';
             }
+            return false;
         });
 
         $coursesetlist = $individual_permissions = $playback_permissions = [];
@@ -185,7 +195,7 @@ class SearchController extends Controller
         return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'permissions', 'coursesetlist', 'playback_permissions', 'individual_permissions'));
     }
 
-    public function extractSettings($videos)
+    public function extractSettings($videos): array
     {
         $coursesetlist = $individual_permissions = $playback_permissions = [];
         foreach ($videos as $courseid => $videolist) {
@@ -203,7 +213,10 @@ class SearchController extends Controller
         return array($coursesetlist, $individual_permissions, $playback_permissions);
     }
 
-    public function filterSearch($q = null, Request $request)
+    /**
+     * @throws BindingResolutionException
+     */
+    public function filterSearch($q = null, Request $request): array
     {
         $html = '';
         $videos = $this->getVideos($q);
@@ -225,6 +238,7 @@ class SearchController extends Controller
         $tags = Tag::search($request->get('query'), null, true, true)->take(3)->get();
         $presenters = Presenter::search($request->get('query'), null, true, true)->take(3)->get();
         $count = $courses->count() + $tags->count() + $presenters->count();
+
         return $courses->concat($tags)->concat($presenters)->concat($videos->take(15 - $count)->get());
     }
 
@@ -270,7 +284,7 @@ class SearchController extends Controller
         return view('home.index', $data);
     }
 
-    public function extractCourses($videos)
+    public function extractCourses($videos): array
     {
         $courses = array('nocourse' => __('No course association'));
         foreach ($videos as $video) {
@@ -283,7 +297,7 @@ class SearchController extends Controller
         return $courses;
     }
 
-    public function extractTerms($videos)
+    public function extractTerms($videos): array
     {
         $terms = array();
         foreach ($videos as $video) {
@@ -296,7 +310,7 @@ class SearchController extends Controller
         return $terms;
     }
 
-    public function extractTags($videos)
+    public function extractTags($videos): array
     {
         $tags = array();
         foreach ($videos as $video) {
@@ -309,7 +323,7 @@ class SearchController extends Controller
         return $tags;
     }
 
-    public function extractPresenters($videos)
+    public function extractPresenters($videos): array
     {
         $presenters = array();
         foreach ($videos as $video) {
@@ -322,7 +336,7 @@ class SearchController extends Controller
         return $presenters;
     }
 
-    public function filterTagVideos($tag, Request $request)
+    public function filterTagVideos($tag, Request $request): array
     {
         $data['tag'] = $tag;
         $data['latest'] = Tag::where('name', $tag)->first()->videos();
@@ -335,7 +349,7 @@ class SearchController extends Controller
         return ['html' => $html, 'courses' => $videocourses, 'presenters' => $videopresenters, 'terms' => $videoterms];
     }
 
-    public function filterPresenterVideos($username, Request $request)
+    public function filterPresenterVideos($username, Request $request): array
     {
         $presenter = Presenter::where('username', $username)->first();
         $data['presenter'] = $presenter->name;
@@ -344,12 +358,12 @@ class SearchController extends Controller
         $semesters = request('semester') ? explode(',', request('semester')) : null;
         $tags = request('tag') ? explode(',', request('tag')) : null;
         list ($html, $videocourses, $videoterms, $videopresenters, $videotags) = $this->performFiltering(
-            $data['latest'], $designations, $semesters, $tags, null
+            $data['latest'], $designations, $semesters, $tags
         );
         return ['html' => $html, 'courses' => $videocourses, 'tags' => $videotags, 'terms' => $videoterms];
     }
 
-    public function performFiltering($videos, $designations = null, $semesters = null, $tags = null, $presenters = null, $manage = false)
+    public function performFiltering($videos, $designations = null, $semesters = null, $tags = null, $presenters = null, $manage = false): array
     {
         $visibility = new Visibility();
         $videos = $visibility->check($videos);
@@ -407,11 +421,12 @@ class SearchController extends Controller
         $videopresenters = $this->extractPresenters($videos);
 
         // Group videos by course
-        $videos = $videos->groupBy(function ($item, $key) {
+        $videos = $videos->groupBy(function ($item) {
             if (isset($item->video_course[0])) {
                 $course = $item->video_course[0]->course;
                 return $course['id'] ?? '0';
             }
+            return false;
         });
 
         $coursesetlist = $individual_permissions = $playback_permissions = [];
@@ -424,7 +439,7 @@ class SearchController extends Controller
         return array($html, $videocourses, $videoterms, $videopresenters, $videotags, $videos);
     }
 
-    public function filterByDesignation($designation, Request $request)
+    public function filterByDesignation($designation, Request $request): string
     {
         $visibility = new Visibility();
         //Permissionslabel
@@ -447,10 +462,10 @@ class SearchController extends Controller
             $html .= view('home.filtered_course', compact('coursevideos', 'key', 'designation', 'permissions'))->render();
         }
 
-        return $html ? $html : '<h4 class="col my-3 font-weight-light">No presentations found</h4>';
+        return $html ?: '<h4 class="col my-3 font-weight-light">No presentations found</h4>';
     }
 
-    public function filterBySemester($semester, Request $request)
+    public function filterBySemester($semester, Request $request): string
     {
         $visibility = new Visibility();
         //Permissionslabel
@@ -480,6 +495,6 @@ class SearchController extends Controller
             $html .= view('home.filtered_course', compact('coursevideos', 'key', 'permissions'))->render();
         }
 
-        return $html ? $html : '<h4 class="col my-3 font-weight-light">No presentations found</h4>';
+        return $html ?: '<h4 class="col my-3 font-weight-light">No presentations found</h4>';
     }
 }

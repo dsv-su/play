@@ -115,7 +115,10 @@
                     <div class="row justify-content-between text-left">
                         <div class="form-group col-12 col-md-6 flex-column d-flex"><label
                                     class="form-control-label px-1">{{ __("Title") }}<span class="text-danger"> *</span></label>
-                            <input wire:model="title" name="title" type="text">
+                            <input wire:model="title" name="title" id="title" type="text" required class="form-control">
+                            <div class="invalid-feedback">
+                                {{__('Title is required')}}
+                            </div>
                             <div>
                                 @error('title') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
@@ -123,9 +126,12 @@
                         <div class="form-group col-12 col-md-6 flex-column d-flex"><label
                                     class="form-control-label px-1">{{ __("Recording date") }}<span
                                         class="text-danger"> *</span></label>
-                            <input id="creationdate" class="datepicker" wire:model="date" name="date" type="text"
+                            <input id="creationdate" class="datepicker form-control" wire:model="date" name="date" type="text"
                                    autocomplete="off" data-provide="datepicker" data-date-autoclose="true"
-                                   data-date-today-highlight="true" style="max-width: 115px;">
+                                   data-date-today-highlight="true" style="max-width: 150px;" required>
+                            <div class="invalid-feedback">
+                                {{__('Recording date is required')}}
+                            </div>
                             <div><small class="text-danger">{{ $errors->first('created') }}</small></div>
                         </div>
                     </div>
@@ -347,13 +353,36 @@
             </div>
 
             <div class="col-sm-12">
-                <button type="submit"
+                <button type="submit" id="submit"
                         class="btn btn-outline-primary mx-auto d-flex font-125rem m-3">{{ __("Update") }}</button>
             </div>
 
         </div>
     </div>
 </div>
+
+<script>
+    $("#submit").click(function () {
+        let errors = 0;
+        if ($('#title').val() == '') {
+            $('#title').addClass('is-invalid');
+            $('#title').removeClass('is-valid');
+            errors = 1;
+        } else {
+            $('#title').removeClass('is-invalid');
+        }
+        if ($('#creationdate').val() == '') {
+            $('#creationdate').addClass('is-invalid');
+            $('#creationdate').removeClass('is-valid');
+            errors = 1;
+        } else {
+            $('#creationdate').removeClass('is-invalid');
+        }
+        if (errors) {
+            return false;
+        }
+    });
+</script>
 
 <script>
     $(document).ready(function () {
