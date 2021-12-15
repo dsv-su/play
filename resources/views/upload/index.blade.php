@@ -76,8 +76,14 @@
                                         data-none-selected-text="{{ __('No course association')}}"
                                         data-live-search="true" multiple>
                                     @foreach($courses as $course)
+                                        @if(!old('courses'))
                                         <option value={{ $course->designation }}>{{ $course->name . ' (' . $course->designation .')' }}</option>
+                                        @else
+                                        <option value="{{$course->designation}}" {{ old('courses') == $course->designation || in_array($course->designation, old('courses')) ? 'selected':''}}>{{$course->name . ' (' . $course->designation .')' }}</option>
+                                        @endif
                                     @endforeach
+
+
                                 </select>
                             </div>
                         </div>
@@ -97,6 +103,14 @@
                                     <input type="text" class="form-control w-100 mx-auto"
                                            value="{{app()->make('play_user')}} ({{app()->make('play_username')}})"
                                            disabled>
+                                    @if(old('presenters'))
+                                        @foreach(old('presenters') as $presenter)
+                                            <div class="d-flex justify-content-between" id="user-search">
+                                                <input class="form-control w-100 mx-auto" type="search" id="user-search-text-{{$loop->index+1}}" name="presenters[]" value="{{$presenter}}" autocomplete="off" aria-haspopup="true" placeholder="Name or username" aria-labelledby="user-search">
+                                                <a type="button" id="presenterremove" class="absolute cursor-pointer p-2 top-2 right-2 text-gray-500 presenterremove"><i class="fas fa-user-minus"></i></a>
+                                            </div>
+                                        @endforeach
+                                    @endif
                                 </div>
                             </div>
                             <div class="form-group col-12 col-lg-6 flex-column d-flex">
@@ -109,7 +123,11 @@
                                         data-none-selected-text="{{ __("No tags selected")}}"
                                         data-live-search="true" multiple>
                                     @foreach($tags as $tag)
-                                        <option value={{ $tag->name }}>{{ $tag->name }}</option>
+                                        @if(!old('tags'))
+                                            <option value={{ $tag->name }}>{{ $tag->name }}</option>
+                                        @else
+                                            <option value="{{ $tag->name }}" {{ old('tags') == $tag->name || in_array($tag->name , old('tags')) ? 'selected':''}}>{{ $tag->name }}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>
@@ -124,22 +142,39 @@
                             <div class="form-group col-sm-6 mb-0 flex-column d-flex">
                                 <select name="permission" class="form-control permission selectpicker"
                                         data-dropup-auto="false" id="permission">
+                                    @if(!old('permission'))
                                     <option value="false" selected>@lang('lang.public')</option>
                                     <option value="true">@lang('lang.private')</option>
+                                    @else
+                                        @if(old('permission') == true)
+                                            <option value="true" selected>@lang('lang.private')</option>
+                                        @else
+                                            <option value="false" selected>@lang('lang.public')</option>
+                                        @endif
+                                    @endif
                                 </select>
                             </div>
                             <!-- Custom permissions -->
-                            <div id="video_perm" class="form-group col-sm-6 mb-0" hidden>
+                            @if(!old('video_permission'))
+                                <div id="video_perm" class="form-group col-sm-6 mb-0" hidden>
+                            @else
+                                <div id="video_perm" class="form-group col-sm-6 mb-0">
+                            @endif
+
                                 <select class="form-control selectpicker" data-dropup-auto="false"
                                         name="video_permission">
                                     @foreach($permissions as $permission)
+                                        @if(!old('video_permission'))
                                         <option value="{{$permission->id}}">{{$permission->id}}
                                             : {{$permission->scope}}</option>
+                                        @else
+                                            <option value="{{$permission->id}}" {{ old('video_permission') == $permission->id  ? 'selected':''}}>{{$permission->id}} : {{$permission->scope}}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>
                         </div>
-
+                        <input type="hidden" name="prepopulate" value="1">
                         <!-- Policy -->
                         <!-- Disabled until PO agree on a suitable text -->
                         {{--}}

@@ -11,8 +11,65 @@ $(document).ready(function() {
         $("#video_perm").attr('hidden',!bool)
     });
 
+    var inputFormDiv = document.getElementById('presenter_table');
+    var user = inputFormDiv.getElementsByTagName('input').length;
+    for(var i=1;i<=user;i++) {
+        /* Restore autocomplete for failed validation */
+        /* Typeahead SUKAT user */
+        // Set the Options for "Bloodhound" suggestion engine
+        var engine = new Bloodhound({
+            remote: {
+                url: '/ldap_search?q=%QUERY%',
+                wildcard: '%QUERY%'
+            },
+            datumTokenizer: Bloodhound.tokenizers.whitespace('query'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace
+        });
+
+        $("#user-search-text-"+i).typeahead({
+            classNames: {
+                menu: 'search_autocomplete'
+            },
+            hint: false,
+            autoselect: true,
+            highlight: true,
+            minLength: 1
+        }, {
+            source: engine.ttAdapter(),
+            limit: 10,
+            // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
+            name: 'autocomplete-items',
+            display: function (item) {
+                return item.uid;
+            },
+            templates: {
+                empty: [
+                    '<div class="list-group search-results-dropdown"><div class="list-group-item">Nothing found.</div></div>'
+                ],
+                header: [
+                    '<div class="list-group search-results-dropdown">'
+                ],
+                suggestion: function (data) {
+
+                    return '<li>' + data.displayname + ' (' + data.uid + ')' + '</li>';
+
+                }
+            }
+        }).on('keyup', function (e) {
+            $(".tt-suggestion:first-child").addClass('tt-cursor');
+            let selected = $("#user-search-text").attr('aria-activedescendant');
+            if (e.which == 13) {
+                if (selected) {
+
+                } else {
+                    $(".tt-suggestion:first-child").addClass('tt-cursor');
+                }
+            }
+        });
+        /* end typeahead */
+        /* end failed validation restore */
+    }
     var count = 2;
-    var user = 1;
     $(document).on('click', '.presenteradd', function(){
         var html = '';
         html += '<div class="d-flex justify-content-between" id="user-search">';
@@ -74,6 +131,7 @@ $(document).ready(function() {
     user++;
         /* end typeahead */
     });
+
     $(document).on('click', '.presenterremove', function(){
         $(this).closest('div').remove();
     });
@@ -238,5 +296,4 @@ $(document).ready(function() {
         count--;
         $(this).closest('.text-center').remove();
     });
-
 });

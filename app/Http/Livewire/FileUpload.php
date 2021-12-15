@@ -27,13 +27,18 @@ class FileUpload extends Component
     public $source = [];
     public $uploaded_files;
     public $isDisabled = false;
-
+    public $pre_uploaded_files;
 
     public function mount(ManualPresentation $presentation, $permissions)
     {
         $this->dirname = $presentation->local;
         $this->permissions = $permissions;
-        $this->uploaded_files = 0;
+        $this->uploaded_files = $presentation->files;
+        //If failed validation reload thumbs
+        if($presentation->files > 0) {
+            $this->loadThumbs();
+            $this->loadFileNames();
+        }
     }
 
     public function updatedcustom()
@@ -119,6 +124,7 @@ class FileUpload extends Component
 
                 //Uploaded files
                 $this->uploaded_files++;
+                $this->presentation->files = $this->uploaded_files;
 
                 //Store source
                 $this->presentation->sources = [];
@@ -199,13 +205,36 @@ class FileUpload extends Component
         if($index == 0) {
             $this->source[0]['playAudio'] = true;
         }
+
+        //Update uploaded files
+        $this->uploaded_files--;
+        $this->presentation->files = $this->uploaded_files;
+
         //Update source
         $this->presentation->sources = [];
         $this->presentation->sources = $this->source;
         $this->presentation->save();
+    }
 
-        //Update uploaded files
-        $this->uploaded_files--;
+    public function loadThumbs()
+    {
+        $this->filethumbs = [];
+        foreach (Storage::disk('public')->files($this->dirname.'/poster/') as $this->file) {
+            $this->filethumbs[] = $this->dirname.'/poster/'. substr($this->file, strrpos($this->file, '/') + 1);
+            $this->filesduration[] = $this->presentation->duration;
+            $this->genthumb[] = ceil($this->presentation->duration/3);
+            $this->files[] = '';
+        }
+        $this->isDisabled = true;
+        return true;
+    }
+
+    public function loadFileNames()
+    {
+        foreach (Storage::disk('public')->files($this->dirname.'/video/') as $this->file) {
+            $this->filenames[] = $this->file;
+        }
+        return true;
     }
 
     public function render()

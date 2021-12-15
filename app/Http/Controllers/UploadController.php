@@ -41,12 +41,19 @@ class UploadController extends Controller
         return $file;
     }
 
-    public function upload()
+    public function upload(Request $request)
     {
         $permissions = Permission::all();
-        $presentation = $this->init_upload();
         $courses = Course::get()->unique('designation');
         $tags = Tag::get()->unique('name');
+
+        if($request->old('prepopulate')) {
+
+            $presentation = ManualPresentation::where('user', app()->make('play_username'))->latest()->first();
+
+        } else {
+            $presentation = $this->init_upload();
+        }
 
         return view('upload.index', compact('presentation', 'permissions', 'courses', 'tags'));
     }
