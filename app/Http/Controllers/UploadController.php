@@ -155,7 +155,7 @@ class UploadController extends Controller
         $notify->sendSuccess('manual');
 
         if (App::isLocale('en')) {
-            $upload_message = 'The Presentationen is processing!';
+            $upload_message = 'The Presentationen is being processed!';
         }
         if (App::isLocale('swe')) {
             $upload_message = 'Presentationen bearbetas!';

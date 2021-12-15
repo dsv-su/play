@@ -33,11 +33,13 @@ class FileUpload extends Component
     {
         $this->dirname = $presentation->local;
         $this->permissions = $permissions;
-        $this->uploaded_files = $presentation->files;
+        $this->uploaded_files = 0;
+
         //If failed validation reload thumbs
         if($presentation->files > 0) {
             $this->loadThumbs();
             $this->loadFileNames();
+            $this->uploaded_files = $presentation->files;
         }
     }
 

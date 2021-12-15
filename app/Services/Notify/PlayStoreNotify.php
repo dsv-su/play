@@ -22,10 +22,12 @@ class PlayStoreNotify extends Model
         $this->presentation
             ->makeHidden('status')
             ->makeHidden('user')
+            ->makeHidden('user_email')
             ->makeHidden('local')
             ->makeHidden('files')
             ->makeHidden('permission')
             ->makeHidden('entitlement')
+            ->makeHidden('description')
             ->makeHidden('created_at')
             ->makeHidden('updated_at');
 
