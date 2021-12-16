@@ -489,7 +489,13 @@
                 } else {
                     $(".tt-suggestion:first-child").addClass('tt-cursor');
                 }
+                // Disable the input after Enter
                 $(this).prop('readonly', true);
+                // Resubmit the chosen value
+                var values = $("input[name='presenters[]']").map(function () {
+                    return $(this).val();
+                }).get();
+            @this.set('presenters', values);
             }
         });
         /* end typeahead */
@@ -544,13 +550,32 @@
                     $(".tt-suggestion:first-child").addClass('tt-cursor');
                 }
                 // Disable the input after Enter
-                 $(this).prop('readonly', true);
+                $(this).prop('readonly', true);
+                // Resubmit the chosen value
+                var values = $("input[name='individual_permissions[]']").map(function () {
+                    return $(this).val();
+                }).get();
+            @this.set('individuals', values);
             }
         });
         /* end typeahead */
     }
 
+    // Resubmit the chosen value and disable input when selected from the typeahead
     $(document).on('click', '.tt-suggestion', function () {
-          $(this).closest('.twitter-typeahead').find('input').prop('readonly', true);
+        var type = $(this).closest('div.d-flex').prop('id');
+        $(this).closest('.twitter-typeahead').find('input').prop('readonly', true);
+        if (type == 'perm-search') {
+            var values = $("input[name='individual_permissions[]']").map(function () {
+                return $(this).val();
+            }).get();
+        @this.set('individuals', values);
+        } else if (type == 'user-search') {
+            var values = $("input[name='presenters[]']").map(function () {
+                return $(this).val();
+            }).get();
+        @this.set('presenters', values);
+        } else {
+        }
     });
 </script>

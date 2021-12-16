@@ -288,8 +288,6 @@ $(document).ready(function () {
             html += '<input type="file" class="text-center center-block file-upload" name="filenames[]">';
             html += '<button type="button" name="mediaremove" class="btn btn-outline-danger btn-sm mediaremove"><i class="far fa-file-video"></i></button>';
             html += '</div>';
-
-
             count++;
             $('#media').append(html);
         } else {
