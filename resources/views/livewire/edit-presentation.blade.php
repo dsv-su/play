@@ -126,7 +126,8 @@
                         <div class="form-group col-12 col-md-6 flex-column d-flex"><label
                                     class="form-control-label px-1">{{ __("Recording date") }}<span
                                         class="text-danger"> *</span></label>
-                            <input id="creationdate" class="datepicker form-control" wire:model="date" name="date" type="text"
+                            <input id="creationdate" class="datepicker form-control" wire:model="date" name="date"
+                                   type="text"
                                    autocomplete="off" data-provide="datepicker" data-date-autoclose="true"
                                    data-date-today-highlight="true" style="max-width: 150px;" required>
                             <div class="invalid-feedback">
@@ -187,6 +188,7 @@
                                       class="btn btn-primary px-1 py-0">{{__('Add')}}<i
                                             class="fas fa-user-plus ml-1"></i></span>
                             </label>
+                            {{var_dump($presenters)}}
                             @if(count($presenters) > 0)
                                 @foreach($presenters as $key => $name)
                                     <div class="d-inline">
@@ -196,7 +198,8 @@
                                                    id="user-search-text-{{$key}}" type="search"
                                                    wire:model="presenters.{{$key}}" name="presenters[]"
                                                    placeholder="Start typing name or username" aria-haspopup="true"
-                                                   autocomplete="off" aria-labelledby="user-search" @if ($name) disabled @endif>
+                                                   autocomplete="off" aria-labelledby="user-search"
+                                                   @if ($name) readonly @endif>
                                             <a class="absolute cursor-pointer p-2 top-2 right-2 text-gray-500"
                                                wire:click="remove_presenter({{$key}})">
                                                 <i class="fas fa-user-minus"></i>
@@ -389,7 +392,6 @@
         $('.selectpicker[name="courseEdit[]"]').selectpicker('val', {{$courseids}}.map(String));
     @this.set('courseEdit', {{$courseids}}.map(String));
         $('.selectpicker[name="tags[]"]').selectpicker('val', {{$tagids}}.map(String));
-
         $(".datepicker").datepicker({
             format: "dd/mm/yyyy",
             weekStart: 1,
@@ -488,6 +490,7 @@
                 } else {
                     $(".tt-suggestion:first-child").addClass('tt-cursor');
                 }
+                $(this).prop('readonly', true);
             }
         });
         /* end typeahead */
@@ -530,7 +533,6 @@
                 ],
                 suggestion: function (data) {
                     return '<li>' + data.displayname + ' (' + data.uid + ')' + '</li>';
-
                 }
             }
         }).on('keyup', function (e) {
@@ -543,12 +545,13 @@
                     $(".tt-suggestion:first-child").addClass('tt-cursor');
                 }
                 // Disable the input after Enter
-                $(this).prop('disabled', true);
+                 $(this).prop('readonly', true);
             }
         });
         /* end typeahead */
     }
+
     $(document).on('click', '.tt-suggestion', function () {
-        $(this).closest('.twitter-typeahead').find('input').prop('disabled', true);
+          $(this).closest('.twitter-typeahead').find('input').prop('readonly', true);
     });
 </script>

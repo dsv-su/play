@@ -101,11 +101,6 @@ $(document).ready(function () {
             limit: 10,
             // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
             name: 'autocomplete-items',
-            afterSelect: function (item) {
-                // do what is needed with item
-                //and then, for example ,focus on some other control
-                console.log('ddd');
-            },
             display: function (item) {
                 return item.displayname + ' (' + item.uid + ')';
             },
@@ -131,7 +126,7 @@ $(document).ready(function () {
                     $(".tt-suggestion:first-child").addClass('tt-cursor');
                 }
                 // Disable the input after Enter
-                $(this).prop('disabled', true);
+                $(this).prop('readonly', true);
             }
         });
         user++;
@@ -139,7 +134,7 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.tt-suggestion', function () {
-        $(this).closest('.twitter-typeahead').find('input').prop('disabled', true);
+        $(this).closest('.twitter-typeahead').find('input').prop('readonly', true);
     });
 
     $(document).on('click', '.presenterremove', function () {

@@ -108,7 +108,7 @@
                                 <div id="presenter_table">
                                     <input type="text" class="form-control w-100 mx-auto"
                                            value="{{app()->make('play_user')}} ({{app()->make('play_username')}})"
-                                           disabled>
+                                           readonly>
                                     @if(old('presenters'))
                                         @foreach(old('presenters') as $presenter)
                                             <div class="d-flex justify-content-between" id="user-search">
