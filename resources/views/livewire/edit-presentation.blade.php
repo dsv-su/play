@@ -188,7 +188,6 @@
                                       class="btn btn-primary px-1 py-0">{{__('Add')}}<i
                                             class="fas fa-user-plus ml-1"></i></span>
                             </label>
-                            {{var_dump($presenters)}}
                             @if(count($presenters) > 0)
                                 @foreach($presenters as $key => $name)
                                     <div class="d-inline">
