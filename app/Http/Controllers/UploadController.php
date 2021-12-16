@@ -79,7 +79,9 @@ class UploadController extends Controller
 
             if ($request->presenters) {
                 foreach ($request->presenters as $presenter) {
-                    $presenters[] = $presenter;
+                    //Retrive only username
+                    $username = preg_filter("/[^(]*\(([^)]+)\)[^()]*/", "$1", $presenter);
+                    $presenters[] = $username;
                 }
             }
 
