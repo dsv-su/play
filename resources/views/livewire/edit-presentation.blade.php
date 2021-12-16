@@ -254,7 +254,7 @@
                                                    name="individual_permissions[]"
                                                    placeholder="Start typing name or username"
                                                    aria-haspopup="true" autocomplete="off"
-                                                   aria-labelledby="perm-search" @if ($name) disabled @endif>
+                                                   aria-labelledby="perm-search" @if ($name) readonly @endif>
                                             @error('individuals.*') <span class="error">{{ $message }}</span> @enderror
 
                                             <div class="p-1 col-auto">

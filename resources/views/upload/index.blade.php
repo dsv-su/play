@@ -88,8 +88,6 @@
                                         <option value="{{$course->designation}}" {{ old('courses') == $course->designation || in_array($course->designation, old('courses')) ? 'selected':''}}>{{$course->name . ' (' . $course->designation .')' }}</option>
                                         @endif
                                     @endforeach
-
-
                                 </select>
                             </div>
                         </div>

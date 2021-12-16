@@ -144,7 +144,7 @@
                                                    name="individual_permissions[]"
                                                    placeholder="Start typing name or username"
                                                    aria-haspopup="true" autocomplete="off"
-                                                   aria-labelledby="perm-search">
+                                                   aria-labelledby="perm-search" @if ($name) readonly @endif>
                                             @error('individuals.*') <span class="error">{{ $message }}</span> @enderror
 
                                             <div class="p-1 col-auto">
@@ -313,8 +313,13 @@
                 } else {
                     $(".tt-suggestion:first-child").addClass('tt-cursor');
                 }
+                // Disable the input after Enter
+                $(this).prop('readonly', true);
             }
         });
         /* end typeahead */
+        $(document).on('click', '.tt-suggestion', function () {
+            $(this).closest('.twitter-typeahead').find('input').prop('readonly', true);
+        });
     }
 </script>
