@@ -33,8 +33,7 @@ class PlayStoreNotify extends Model
 
         if ($type == 'update') {
             $this->presentation
-                ->makeHidden('resolution')
-                ->makeHidden('description');
+                ->makeHidden('resolution');
         }
 
         if ($type == 'mediasite') {
