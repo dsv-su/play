@@ -27,12 +27,14 @@ class PlayStoreNotify extends Model
             ->makeHidden('files')
             ->makeHidden('permission')
             ->makeHidden('entitlement')
-            ->makeHidden('description')
+
             ->makeHidden('created_at')
             ->makeHidden('updated_at');
 
         if ($type == 'update') {
-            $this->presentation->makeHidden('resolution');
+            $this->presentation
+                ->makeHidden('resolution')
+                ->makeHidden('description');
         }
 
         if ($type == 'mediasite') {
