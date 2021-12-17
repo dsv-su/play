@@ -1,6 +1,15 @@
 @extends('layouts.suplay')
 @section('content')
     @include('layouts.partials.searchbox')
+    @if (\App\ManualPresentation::where('user', app()->make('play_username'))->where('status', 'sent')->count())
+        <div class="container banner-inner">
+            <div class="row no-gutters w-100">
+        <div class="alert alert-warning w-100 mb-5">
+            {!! __('Some of the uploaded presentations are being processed now. You can track it <a href=":link">here</a>', ['link' => '/upload/pending']) !!}
+        </div>
+            </div>
+        </div>
+        @endif
     <!-- Header message section -->
     <div class="container banner-inner">
         <div class="row no-gutters w-100">
@@ -23,10 +32,7 @@
             </div> <!-- col-12 -->
         </div> <!-- row no-gutters -->
     </div>
- <style>
 
-
- </style>
     <div class="container">
         @if (isset($active) || isset($my))
             <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
@@ -101,7 +107,8 @@
                             <label class="col-form-label mr-1 font-weight-light">Filter by: </label>
                             @if (isset($courses))
                                 <select name="course" class="form-control mx-1 selectpicker"
-                                        data-none-selected-text="Course" data-live-search="true" multiple style="width: 400px">
+                                        data-none-selected-text="Course" data-live-search="true" multiple
+                                        style="width: 400px">
                                     @foreach($courses as $designation => $name)
                                         <option value="{{$designation}}">{{$name}} ({{$designation}})</option>
                                     @endforeach
@@ -128,13 +135,16 @@
                             @if (isset($tags))
                                 <select name="tag" @if (empty($tags)) disabled
                                         @endif class="form-control mx-1 selectpicker"
-                                        data-none-selected-text="Tag" data-live-search="true" multiple style="width: 200px;">
+                                        data-none-selected-text="Tag" data-live-search="true" multiple
+                                        style="width: 200px;">
                                     @foreach($tags as $tag)
                                         <option value="{{$tag}}">{{$tag}}</option>
                                     @endforeach
                                 </select>
                             @endif
-                            <button type="button" class="mb-2 btn btn-outline-secondary" onclick="$('.selectpicker').selectpicker('deselectAll'); $('.selectpicker').selectpicker('refresh');">Clear selection
+                            <button type="button" class="mb-2 btn btn-outline-secondary"
+                                    onclick="$('.selectpicker').selectpicker('deselectAll'); $('.selectpicker').selectpicker('refresh');">
+                                Clear selection
                             </button>
                             <meta name="csrf-token" content="{{ csrf_token() }}">
                         </form>

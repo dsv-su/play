@@ -58,6 +58,15 @@ class UploadController extends Controller
         return view('upload.index', compact('presentation', 'permissions', 'courses', 'tags'));
     }
 
+    public function pending_uploads() {
+        $pending = ManualPresentation::where('user', app()->make('play_username'))->where('status', 'sent')->get();
+        if ($pending->count()) {
+            return view('upload.pending', ['pending' => $pending]);
+        } else {
+            return redirect()->route('home');
+        }
+    }
+
     public function step1($id, Request $request)
     {
         if ($request->isMethod('post')) {

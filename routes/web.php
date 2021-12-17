@@ -65,7 +65,8 @@ Route::middleware('entitlements', 'playauth')->group(function () {
     Route::post('/store_permission/{id}', 'ManagePresentationController@storePermission')->name('store_permission');
 
     //Upload
-    Route::get('/user_upload', 'UploadController@upload')->name('user_upload');
+    Route::get('/upload', 'UploadController@upload')->name('user_upload');
+    Route::get('/upload/pending', 'UploadController@pending_uploads')->name('pending_uploads');
     Route::get('file-upload', function () {
         return view('default');
     });
