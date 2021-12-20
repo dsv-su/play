@@ -81,7 +81,8 @@ class Visibility extends Model
                             if(count($ipermissions = IndividualPermission::where('video_id', $video->id)->get()) >= 1) {
                                 foreach($ipermissions as $ipermission) {
                                     if($ipermission->username == app()->make('play_username')) {
-                                        //Check if user correct permissions
+                                        //Check if user has correct permissions
+                                        //Visibility
                                         if(in_array($ipermission->permission, ['read', 'edit', 'delete'])) {
                                             return $video->setAttribute('visibility_setting', false);
                                         }
@@ -106,6 +107,24 @@ class Visibility extends Model
                         }
                         else {
                             $video->setAttribute('visibility_setting', true);
+                            //Check presentation individual setting
+                            if(count($ipermissions = IndividualPermission::where('video_id', $video->id)->get()) >= 1) {
+                                foreach($ipermissions as $ipermission) {
+                                    if($ipermission->username == app()->make('play_username')) {
+                                        //Check if user has correct permissions
+                                        //Edit/delete
+                                        if(in_array($ipermission->permission, ['delete'])) {
+                                            $video->setAttribute('edit_setting', true);
+                                            $video->setAttribute('delete_setting', true);
+                                        }
+                                        //Visibility
+                                        if(in_array($ipermission->permission, ['read', 'edit', 'delete'])) {
+                                            return $video->setAttribute('visibility_setting', false);
+                                        }
+                                    }
+                                }
+                            }
+
                             return $video->visability;
                         }
                     }
@@ -116,9 +135,34 @@ class Visibility extends Model
                 if($video->visability == false and (app()->make('play_role') == 'Administrator'))  {
                     return $video->setAttribute('visibility_setting', false);
                 } else {
+
+                    //Check presentation individual setting
+                    if(count($ipermissions = IndividualPermission::where('video_id', $video->id)->get()) >= 1) {
+                        foreach($ipermissions as $ipermission) {
+                            if($ipermission->username == app()->make('play_username')) {
+                                //Check if user has correct permissions
+                                //Edit/delete
+                                if(in_array($ipermission->permission, ['delete'])) {
+                                    $video->setAttribute('edit_setting', true);
+                                    $video->setAttribute('delete_setting', true);
+                                }
+                                //Visibility
+                                if(in_array($ipermission->permission, ['read', 'edit', 'delete'])) {
+                                    return $video->setAttribute('visibility_setting', false);
+                                }
+
+                            }
+                        }
+                    }
+
                     $video->setAttribute('visibility_setting', true);
+
                     return $video->visability;
                 }
+
+
+
+
             }
 
             return false;
