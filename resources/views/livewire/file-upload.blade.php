@@ -34,7 +34,7 @@
                     </div>
                 @endif
             </div>
-            <input type="file" class="form-control" wire:model="files" multiple>
+            <input type="file" class="form-control" wire:model="files" id="{{ rand() }}" multiple>
             @error('files.*') <span class="text-danger">{{ $message }}</span> @enderror
             @error('files') <span class="text-danger">{{ $message }}</span> @enderror
         </div>
@@ -92,7 +92,7 @@
         <div wire:loading wire:target="files">Uploading Media...</div>
     </div>
 
-    <div lass="col-sm-12">
+    <div class="col-sm-12">
         <button id="submit" type="submit"
                 class="btn btn-outline-primary mx-auto d-flex font-125rem m-3"
                 {{ $isDisabled ? '': 'disabled' }}

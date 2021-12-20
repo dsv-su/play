@@ -32,6 +32,7 @@ class UploadController extends Controller
         $file->presenters = [];
         $file->tags = [];
         $file->courses = [];
+        $file->daisy_courses = [];
         $file->thumb = '';
         $file->created = now()->format('Y-m-d');
         $file->duration = 0;
@@ -44,7 +45,8 @@ class UploadController extends Controller
     public function upload(Request $request)
     {
         $permissions = Permission::all();
-        $courses = Course::get()->unique('designation');
+        //$courses = Course::get()->unique('designation');
+        $courses = Course::all();
         $tags = Tag::get()->unique('name');
 
         if($request->old('prepopulate')) {
@@ -97,9 +99,16 @@ class UploadController extends Controller
             //Courses
             if ($request->courses) {
                 foreach ($request->courses as $course) {
-                    $courses[] = $course;
+                    //$courses[] = $course;
+                    //Switching to courseID. To be enabled after play-store api has been modified
+                    $daisy_courses[] = (int)$course;
+                    $courses[] = Course::find($course)->designation;
+
                 }
-            } else $courses[] = '';
+            } else {
+                $courses[] = '';
+                $daisy_courses = 0;
+            }
 
             //Tags
             if ($request->tags) {
@@ -130,6 +139,7 @@ class UploadController extends Controller
             $manualPresentation->presenters = $presenters;
             $manualPresentation->tags = $tags;
             $manualPresentation->courses = $courses;
+            $manualPresentation->daisy_courses = $daisy_courses;
             $manualPresentation->created = strtotime($request->created);
             $id = $manualPresentation->save();
 

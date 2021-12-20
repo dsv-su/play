@@ -26,7 +26,7 @@
     <div class="container px-3 px-sm-0">
         <div class="row">
             <div class="col-lg-8">
-                <form class=needs-validation" method="post" action="{{route('upload_step1', $presentation->id)}}">
+                <form class="needs-validation" method="post" action="{{route('upload_step1', $presentation->id)}}">
                     @csrf
                     <div class="rounded border shadow p-3 my-2">
                         <label class="form-control-label px-1">{{ __("Information about the presentation") }}</label>
@@ -81,6 +81,7 @@
                                         class="form-control mx-1 selectpicker w-100" data-dropup-auto="false"
                                         data-none-selected-text="{{ __('No course association')}}"
                                         data-live-search="true" multiple>
+                                    {{--}}
                                     @foreach($courses as $course)
                                         @if(!old('courses'))
                                         <option value={{ $course->designation }}>{{ $course->name . ' (' . $course->designation .')' }}</option>
@@ -88,6 +89,16 @@
                                         <option value="{{$course->designation}}" {{ old('courses') == $course->designation || in_array($course->designation, old('courses')) ? 'selected':''}}>{{$course->name . ' (' . $course->designation .')' }}</option>
                                         @endif
                                     @endforeach
+                                    {{--}}
+
+                                    @foreach($courses as $course)
+                                        @if(!old('courses'))
+                                            <option value={{ $course->id }}>{{ $course->designation . ' '. $course->semester. $course->year . ' (' . $course->name .')' }}</option>
+                                        @else
+                                            <option value="{{$course->id}}" {{ old('courses') == $course->designation || in_array($course->designation, old('courses')) ? 'selected':''}}>{{$course->designation . ' '. $course->semester. $course->year . ' (' . $course->name .')' }}</option>
+                                        @endif
+                                    @endforeach
+
                                 </select>
                             </div>
                         </div>
@@ -208,14 +219,14 @@
             'permissions' => $permissions
             ])
         </div>
-        {{--}}
+{{--}}
         <div class="row justify-content-center">
             <div class="form-group col-sm-4">
                 <button id="submit" type="submit"
                         class="btn-block btn btn-outline-primary">{{ __("Upload") }}</button>
             </div>
         </div>
-        {{--}}
+{{--}}
     </div>
 
     <!-- Modal spinners -->

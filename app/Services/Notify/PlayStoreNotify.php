@@ -27,7 +27,7 @@ class PlayStoreNotify extends Model
             ->makeHidden('files')
             ->makeHidden('permission')
             ->makeHidden('entitlement')
-
+            ->makeHidden('daisy_courses')
             ->makeHidden('created_at')
             ->makeHidden('updated_at');
 

@@ -43,6 +43,14 @@ class DaisyIntegration extends Model
         return $this->array_resource['id'];
     }
 
+    //Retrieving course info from daisy with courseID
+    public function getCourseSegment($id)
+    {
+        $this->array_resource = json_decode($this->getResource('/courseSegment/'. $id, 'json')->getBody()->getContents(), TRUE);
+
+        return $this->array_resource;
+    }
+
     //Method for retrieving course info from daisy with
     public function getCourse($designation, $semester)
     {

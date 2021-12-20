@@ -35,6 +35,7 @@ class FileUpload extends Component
         $this->permissions = $permissions;
         $this->uploaded_files = 0;
 
+
         //If failed validation reload thumbs
         if($presentation->files > 0) {
             $this->loadThumbs();
@@ -138,7 +139,7 @@ class FileUpload extends Component
                 $message = 'File successfully prepared for Upload.';
             }
             if (App::isLocale('swe')) {
-                $message = 'Filen(a) har förberetts för uppladdning.';
+                $message = 'Filerna har förberetts för uppladdning.';
             }
             session()->flash('message', $message);
         }
