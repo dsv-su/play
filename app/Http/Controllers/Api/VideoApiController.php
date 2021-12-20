@@ -132,6 +132,10 @@ class VideoApiController extends Controller
                 $job = (new JobUploadSuccessNotification($video, $presentation));
                 // Dispatch Job and continue
                 dispatch($job);
+
+                //Update presentation status
+                $presentation->status = 'completed';
+                $presentation->save();
             }
             return response()->json('Presentation has been created', Response::HTTP_CREATED);
         } else {
