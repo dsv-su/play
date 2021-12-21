@@ -1,5 +1,5 @@
 <!-- Video - child view - will inherit all data available in the parent view-->
-<div class="card video m-auto @if ($video->visability == false && $video->visibility_setting == false )faded @endif" @if (isset($manage) && $manage) id="{{$video->id}}" @endif>
+<div class="card video m-auto @if($video->visability == false && $video->visibility_setting == false) faded @endif" @if (isset($manage) && $manage) id="{{$video->id}}" @endif>
     <div id="action-icons" class="flex-column m-1">
         @if ($video->visability == false && $video->visibility_setting == false)
             @if ($video->editable())
@@ -61,12 +61,12 @@
             <!-- end Group Permission -->
 
                 <!-- Visability -->
-                @if($video->visability == false && $video->visibility_setting == false)
+                @if($video->visability == false or $video->visibility_setting == false)
                     <div class="visability mx-1" data-toggle="tooltip" title="{{__('Presentation is hidden')}}"><i
                                 class="fas fa-eye-slash"></i></div>
                 @endif
             </div>
-            @if ($video->visability == false && $video->visibility_setting == false)
+            @if ($video->visability == false or $video->visibility_setting == false)
                 <div class="d-flex justify-content-center h-100">
                     <div class="d-inline alert alert-secondary m-auto"
                          role="alert">{{ __("Presentation hidden") }}</div>

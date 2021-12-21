@@ -41,6 +41,11 @@ class VideoUpdate extends Model
             }
 
         }
+        //Make manual uploaded presentation default hidden
+        if($this->request->origin == 'manual') {
+            $this->video->visability = false;
+            $this->video->save();
+        }
 
         return $this->video;
     }

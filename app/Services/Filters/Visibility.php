@@ -56,7 +56,26 @@ class Visibility extends Model
                                     }
                                 }
                             }
-                            return $video->setAttribute('visibility_setting', true);
+                            //Check individual settings
+                            if(count($ipermissions = IndividualPermission::where('video_id', $video->id)->get()) >= 1) {
+                                foreach($ipermissions as $ipermission) {
+                                    if($ipermission->username == app()->make('play_username')) {
+                                        //Check if user has correct permissions
+                                        //Edit/delete
+                                        if(in_array($ipermission->permission, ['delete'])) {
+                                            $video->setAttribute('edit_setting', true);
+                                            $video->setAttribute('delete_setting', true);
+                                        }
+                                        //Visibility
+                                        if(in_array($ipermission->permission, ['read', 'edit', 'delete'])) {
+                                            return $video->setAttribute('visibility_setting', true);
+                                        }
+                                    }
+                                }
+                            }
+
+                            $video->setAttribute('visibility_setting', true);
+                            return $video->visability;
                         }
                         else {
                             //Check individual course setting
@@ -82,6 +101,11 @@ class Visibility extends Model
                                 foreach($ipermissions as $ipermission) {
                                     if($ipermission->username == app()->make('play_username')) {
                                         //Check if user has correct permissions
+                                        //Edit/delete
+                                        if(in_array($ipermission->permission, ['delete'])) {
+                                            $video->setAttribute('edit_setting', true);
+                                            $video->setAttribute('delete_setting', true);
+                                        }
                                         //Visibility
                                         if(in_array($ipermission->permission, ['read', 'edit', 'delete'])) {
                                             return $video->setAttribute('visibility_setting', false);
