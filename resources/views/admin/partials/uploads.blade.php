@@ -35,7 +35,7 @@
                             <td>{{$manual_presentation->title}}</td>
                             <td>{{$manual_presentation->local}}</td>
                             <td>{{$manual_presentation->user}}</td>
-                            @if($manual_presentation->status == 'failed' or $manual_presentation->status == 'stored')
+                            @if($manual_presentation->status == 'failed' or $manual_presentation->status == 'stored' or $manual_presentation->status == 'sent')
                                 <td>
                                     <a role="button" class="btn btn-danger btn-sm"
                                        href="{{route('manual_admin_notify_fail', $manual_presentation->id)}}">Notify
