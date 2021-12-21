@@ -159,12 +159,12 @@ class PlayStoreNotify extends Model
 
         if ($this->response->getBody() == 'OK') {
             //Change manualupdate status
-            $this->presentation->status = 'notified';
+            $this->presentation->status = 'notified fail';
             $this->presentation->save();
             return back()->withInput();
         } else {
             //Change manualupdate status
-            $this->presentation->status = 'failed';
+            $this->presentation->status = 'notification error';
             $this->presentation->save();
             //TODO Store error
             return $this->response->getBody();

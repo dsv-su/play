@@ -13,10 +13,8 @@ use App\Services\Cattura\CheckCatturaRecorderStatus;
 use App\Services\Notify\PlayStoreNotify;
 use App\Video;
 use App\VideoPermission;
-use GuzzleHttp\Client;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Storage;
 
