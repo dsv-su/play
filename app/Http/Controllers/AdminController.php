@@ -53,6 +53,12 @@ class AdminController extends Controller
         $data['stored_uploads'] = Cache::remember('stored_uploads', $seconds, function () {
             return ManualPresentation::where('status', 'stored')->count();
         });
+        $data['sent_uploads'] = Cache::remember('sent_uploads', $seconds, function () {
+            return ManualPresentation::where('status', 'sent')->count();
+        });
+        $data['completed_uploads'] = Cache::remember('completed_uploads', $seconds, function () {
+            return ManualPresentation::where('status', 'completed')->count();
+        });
 
         //Downloads
         $data['requested_downloads'] = Cache::remember('requested_downloads', $seconds, function () {

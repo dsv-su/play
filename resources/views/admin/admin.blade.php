@@ -82,7 +82,8 @@
                                                 <div class="col mr-2">
                                                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                         Uploads</div>
-                                                    <div class="h5 mb-0 font-weight-bold text-gray-800"><small>Init:</small>{{$init_uploads}} <small>Pending:</small>{{$pending_uploads}} <small>Stored:</small>{{$stored_uploads}}</div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800"><small>Init:</small>{{$init_uploads}} <small>Pending:</small>{{$pending_uploads}}
+                                                        <small>Stored:</small>{{$stored_uploads}}<small>Sent:</small>{{$sent_uploads}}<small>Completed:</small>{{$completed_uploads}}</div>
                                                 </div>
                                                 <div class="col-auto">
                                                     <i class="fas fa-upload fa-2x text-color-grey"></i>
