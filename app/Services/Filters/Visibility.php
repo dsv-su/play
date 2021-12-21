@@ -172,7 +172,7 @@ class Visibility extends Model
                                 }
                                 //Visibility
                                 if(in_array($ipermission->permission, ['read', 'edit', 'delete'])) {
-                                    return $video->setAttribute('visibility_setting', false);
+                                    return $video->setAttribute('visibility_setting', true);
                                 }
 
                             }
