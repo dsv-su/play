@@ -107,7 +107,7 @@ class UploadController extends Controller
                 }
             } else {
                 $courses[] = '';
-                $daisy_courses = 0;
+                $daisy_courses = [];
             }
 
             //Tags
