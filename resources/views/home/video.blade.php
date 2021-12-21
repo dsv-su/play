@@ -74,7 +74,7 @@
             @endif
             <p class="m-1 px-1"> {{$video->duration}} </p>
         </div>
-        @if ($video->visability == false && $video->visibility_setting == false)
+        @if ($video->visability == false or $video->visibility_setting == false)
     </a>
     @endif
     <div class="card-body p-1 overflow-hidden">
