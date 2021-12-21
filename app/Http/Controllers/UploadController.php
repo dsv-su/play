@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Course;
+use App\CoursesettingsUsers;
 use App\Jobs\JobUploadProgressNotification;
 use App\ManualPresentation;
 use App\Permission;
+use App\Services\Daisy\DaisyAPI;
 use App\Services\Ldap\SukatUser;
 use App\Services\Notify\PlayStoreNotify;
 use App\Services\Store\SftpPlayStore;
@@ -46,13 +48,33 @@ class UploadController extends Controller
     {
         $permissions = Permission::all();
         //$courses = Course::get()->unique('designation');
-        $courses = Course::all();
+        $courses = Course::all()->sortByDesc('id');
+
+        if (!app()->make('play_role') == 'Administrator') {
+            // Show only courses that you have permission to
+            $daisy = new DaisyAPI();
+            $daisyPersonID = $daisy->getDaisyPersonId(app()->make('play_username'));
+            // Get all courses where user is courseadmin
+            $daisy_courses_ids = [];
+            if ($daisy_courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID)) {
+                $daisy_courses_ids = array_map(function ($d) {
+                    return $d[2];
+                }, $daisy_courses);
+            }
+
+            foreach ($courses as $key => $course) {
+                $username = app()->make('play_username');
+                $haspermission = CoursesettingsUsers::where('course_id', $course->id)->where('username', $username)->whereIn('permission', ['delete', 'edit'])->count() || in_array($course->id, $daisy_courses_ids);
+                if (!$haspermission) {
+                    unset($courses[$key]);
+                }
+            }
+        }
+
         $tags = Tag::get()->unique('name');
 
-        if($request->old('prepopulate')) {
-
+        if ($request->old('prepopulate')) {
             $presentation = ManualPresentation::where('user', app()->make('play_username'))->latest()->first();
-
         } else {
             $presentation = $this->init_upload();
         }
@@ -60,7 +82,8 @@ class UploadController extends Controller
         return view('upload.index', compact('presentation', 'permissions', 'courses', 'tags'));
     }
 
-    public function pending_uploads() {
+    public function pending_uploads()
+    {
         $pending = ManualPresentation::where('user', app()->make('play_username'))->where('status', 'sent')->get();
         if ($pending->count()) {
             return view('upload.pending', ['pending' => $pending]);
