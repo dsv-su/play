@@ -162,6 +162,7 @@
                                     class="form-control mx-1 selectpicker w-100" data-dropup-auto="false"
                                     data-none-selected-text="{{ __('No course association')}}"
                                     data-live-search="true" multiple>
+                                {{krsort($courseselect)}}
                                 @foreach($courseselect as $key => $data)
                                     <option value={{ $key }}>{{ $data[0] }}</option>
                                 @endforeach

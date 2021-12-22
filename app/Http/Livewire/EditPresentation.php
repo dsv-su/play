@@ -63,6 +63,8 @@ class EditPresentation extends Component
             foreach ($this->coursedetail->responsible() as $person) {
                 $this->course_responsible[$this->coursedetail->id][] = $person;
             }
+            // Add existing courses even if a person has no permission
+            $this->courseselect[$this->coursedetail->id] = [$this->coursedetail->designation . ' ' . $this->coursedetail->semester . $this->coursedetail->year . ' (' . $this->coursedetail->name . ')', $this->coursedetail->designation . ' ' . $this->coursedetail->semester . $this->coursedetail->year];
         }
 
         $this->courseids = json_encode($this->courseId, JSON_HEX_QUOT);
@@ -73,8 +75,9 @@ class EditPresentation extends Component
         $this->tagids = json_encode($this->tagids, JSON_HEX_QUOT);
 
         foreach ($courses as $data) {
-            $this->courseselect[$data->id] = [$data->designation . ' ' . $data->semester . '' . $data->year . ' (' . $data->name . ')', $data->designation . ' ' . $data->semester . $data->year];
+            $this->courseselect[$data->id] = [$data->designation . ' ' . $data->semester . $data->year . ' (' . $data->name . ')', $data->designation . ' ' . $data->semester . $data->year];
         }
+
 
         //Group Permissions
         foreach ($video->permissions() as $p) {

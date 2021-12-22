@@ -47,10 +47,9 @@ class UploadController extends Controller
     public function upload(Request $request)
     {
         $permissions = Permission::all();
-        //$courses = Course::get()->unique('designation');
-        $courses = Course::all()->sortByDesc('id');
+        $courses = Course::orderByDesc('id')->get();
 
-        if (!app()->make('play_role') == 'Administrator') {
+        if (app()->make('play_role') != 'Administrator') {
             // Show only courses that you have permission to
             $daisy = new DaisyAPI();
             $daisyPersonID = $daisy->getDaisyPersonId(app()->make('play_username'));
@@ -61,10 +60,9 @@ class UploadController extends Controller
                     return $d[2];
                 }, $daisy_courses);
             }
-
             foreach ($courses as $key => $course) {
                 $username = app()->make('play_username');
-                $haspermission = CoursesettingsUsers::where('course_id', $course->id)->where('username', $username)->whereIn('permission', ['delete', 'edit'])->count() || in_array($course->id, $daisy_courses_ids);
+                $haspermission = CoursesettingsUsers::where('course_id', $course->id)->where('username', $username)->whereIn('permission', ['upload', 'delete', 'edit'])->count() || in_array($course->id, $daisy_courses_ids);
                 if (!$haspermission) {
                     unset($courses[$key]);
                 }

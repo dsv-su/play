@@ -73,7 +73,7 @@ class Course extends Model implements Searchable
         );
     }
 
-    public function permissions():Collection
+    public function permissions(): Collection
     {
         return $this->belongsToMany(Permission::class, 'course_permissions', 'course_id', 'permission_id')->get();
     }
@@ -87,5 +87,4 @@ class Course extends Model implements Searchable
     {
         return $this->hasMany(CoursesettingsPermissions::class);
     }
-
 }
