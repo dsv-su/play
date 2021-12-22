@@ -153,6 +153,10 @@
                                                             @if($individuals_permission[$key] == 'read') selected @endif>
                                                         Read
                                                     </option>
+                                                    <option value="upload"
+                                                            @if($individuals_permission[$key] == 'upload') selected @endif>
+                                                        Upload
+                                                    </option>
                                                     <option value="edit"
                                                             @if($individuals_permission[$key] == 'edit') selected @endif>
                                                         Edit

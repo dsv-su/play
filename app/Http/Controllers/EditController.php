@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Course;
+use App\CoursesettingsUsers;
 use App\IndividualPermission;
 use App\Permission;
 use App\Presenter;
+use App\Services\Daisy\DaisyAPI;
 use App\Stream;
 use App\Tag;
 use App\Video;
@@ -28,6 +30,27 @@ class EditController extends Controller
     {
         $permissions = Permission::all();
         $courses = Course::all();
+
+        if (app()->make('play_role') != 'Administrator') {
+            // Show only courses that you have permission to
+            $daisy = new DaisyAPI();
+            $daisyPersonID = $daisy->getDaisyPersonId(app()->make('play_username'));
+            // Get all courses where user is courseadmin
+            $daisy_courses_ids = [];
+            if ($daisy_courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID)) {
+                $daisy_courses_ids = array_map(function ($d) {
+                    return $d[2];
+                }, $daisy_courses);
+            }
+            foreach ($courses as $key => $course) {
+                $username = app()->make('play_username');
+                $haspermission = CoursesettingsUsers::where('course_id', $course->id)->where('username', $username)->whereIn('permission', ['upload', 'delete', 'edit'])->count() || in_array($course->id, $daisy_courses_ids);
+                if (!$haspermission) {
+                    unset($courses[$key]);
+                }
+            }
+        }
+
         $presenters = $video->presenters();
         $tags = Tag::all();
         $individual_permissions = IndividualPermission::where('video_id', $video->id)->get();
