@@ -257,28 +257,32 @@
                                                    aria-haspopup="true" autocomplete="off"
                                                    aria-labelledby="perm-search" @if ($name) readonly @endif>
                                             @error('individuals.*') <span class="error">{{ $message }}</span> @enderror
-
                                             <div class="p-1 col-auto">
                                                 <select name="individual_perm_type[]" class="form-control">
                                                     <option value="read"
-                                                            @if($individuals_permission[$key] == 'read') selected @endif>
+                                                            @if($individuals_permission[$key] == 'read') selected @endif
+                                                            @if ($user_permission != 'delete' && $individuals_permission[$key] == 'delete') disabled @endif>
                                                         Read
                                                     </option>
                                                     <option value="edit"
-                                                            @if($individuals_permission[$key] == 'edit') selected @endif>
+                                                            @if($individuals_permission[$key] == 'edit') selected @endif
+                                                            @if ($user_permission != 'delete' && $individuals_permission[$key] == 'delete') disabled @endif>
                                                         Edit
                                                     </option>
                                                     <option value="delete"
-                                                            @if($individuals_permission[$key] == 'delete') selected @endif>
+                                                            @if($individuals_permission[$key] == 'delete') selected
+                                                            @endif
+                                                            @if ($user_permission != 'delete' && $individuals_permission[$key] != 'delete') disabled @endif>
                                                         Delete
                                                     </option>
                                                 </select>
                                             </div>
-
-                                            <a class="absolute cursor-pointer p-2 top-2 right-2 text-gray-500 my-auto"
-                                               wire:click="remove_user({{$key}})">
-                                                <i class="fas fa-user-minus align-content-center"></i>
-                                            </a>
+                                            @if ($user_permission == 'delete' || $individuals_permission[$key] != 'delete')
+                                                <a class="absolute cursor-pointer p-2 top-2 right-2 text-gray-500 my-auto"
+                                                   wire:click="remove_user({{$key}})">
+                                                    <i class="fas fa-user-minus align-content-center"></i>
+                                                </a>
+                                            @endif
                                         </div>
                                     </div>
                                 @endforeach

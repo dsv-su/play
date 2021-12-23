@@ -29,8 +29,9 @@ class EditPresentation extends Component
     public $course_responsible = [];
     public $visability;
     public $download;
+    public $user_permission;
 
-    public function mount($video, $courses, $permissions, $individual_permissions)
+    public function mount($video, $courses, $permissions, $individual_permissions, $user_permission)
     {
         $this->video = $video;
         $this->title = $video->title;
@@ -45,6 +46,7 @@ class EditPresentation extends Component
         $this->ipermissions = $individual_permissions->count();
         $this->visability = (bool)$video->visability;
         $this->download = (bool)$video->download;
+        $this->user_permission = $user_permission;
 
         foreach ($video->presenters() as $presenter) {
             if (!$presenter->username == null) {
