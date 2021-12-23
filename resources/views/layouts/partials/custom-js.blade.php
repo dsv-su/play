@@ -113,7 +113,7 @@
                 } else if (item.type === 'presenter') {
                     return 'Presenter: ' + item.name;
                 } else {
-                    return 'Video: ' + item.title;
+                    return 'Presentation: ' + item.title;
                 }
             },
             templates: {

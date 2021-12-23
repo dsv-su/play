@@ -14,11 +14,11 @@
 
     <div class="rounded border shadow p-3 my-2">
         <ul>
-            <li><span class="font-1rem">{{ __("Up to 4 media files can be uploaded.") }}</span></li>
+            <li><span class="font-1rem">{{ __("Up to 4 media files per presentation can be uploaded.") }}</span></li>
             <li>
-                <span class="font-1rem">{{ __("Each uploaded file should be the same length as the primary file") }}</span>
+                <span class="font-1rem">{{ __("Each uploaded file should be the same length.") }}</span>
             </li>
-            <li><span class="font-1rem">{{ __("When uploading, a default thumbnail is generated") }}</span></li>
+            <li><span class="font-1rem">{{ __("When uploading, a default thumbnail is generated.") }}</span></li>
         </ul>
     </div>
 

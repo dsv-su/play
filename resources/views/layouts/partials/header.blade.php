@@ -19,7 +19,7 @@
                             <ul class="list-unstyled row no-gutters">
                                 <li class="mega-menu-collapse-col col">
                                     <span class="level-1 text-uppercase d-block mb-3">@lang('lang.navigate')</span>
-                                    <span>{{ __("Here you can navigate among recordings from your teaching activities by semester, course or category.") }}</span>
+                                    <span>{{ __("Here you can navigate among presentations from your teaching activities by semester, course or category.") }}</span>
                                 </li>
                                 <li class="mega-menu-collapse-col col">
                                     <a class="nav-link d-flex align-items-center nav-link__border-bottom" href="">
@@ -98,7 +98,7 @@
                                 <ul class="list-unstyled row no-gutters">
                                     <li class="mega-menu-collapse-col col">
                                         <span class="level-1 text-uppercase d-block mb-3">@lang('lang.manage')</span>
-                                        <span>{{ __("Here you can manage your recordings. Upload, download, change playback rights and change course association etc.") }}</span>
+                                        <span>{{ __("Here you can manage your presentations. Upload, download, change playback rights and change course association etc.") }}</span>
                                     </li>
                                     <li class="mega-menu-collapse-col col">
                                         <a class="nav-link level-2 d-flex align-content-center"

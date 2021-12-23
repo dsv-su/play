@@ -93,7 +93,7 @@ class CourseNav extends Model
 
     private function getFakeStudentSemesters($courses)
     {
-        $course_segments = Course::whereIn('id', $courses)->distinct('year')->pluck('year')->take(3);
+        $course_segments = Course::whereIn('id', $courses)->distinct('year')->pluck('year')->take(3)->reverse();
         foreach($course_segments as $term) {
             $semester[] = 'VT'.$term;
             $semester[] = 'HT'.$term;

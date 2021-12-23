@@ -8,7 +8,7 @@ return [
     'category' => 'Category',
     'tag' => 'Tag',
     'manage'    => 'Manage',
-    'manage_recording' => 'Manage recordings',
+    'manage_recording' => 'Manage presentations',
     'manage_course' => 'Manage courses',
     'manual_upload' => 'Manual upload',
     'admin'     =>  'Admin',
