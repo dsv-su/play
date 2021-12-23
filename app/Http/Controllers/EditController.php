@@ -8,6 +8,7 @@ use App\IndividualPermission;
 use App\Permission;
 use App\Presenter;
 use App\Services\Daisy\DaisyAPI;
+use App\Services\Filters\Visibility;
 use App\Stream;
 use App\Tag;
 use App\Video;
@@ -55,7 +56,11 @@ class EditController extends Controller
         $tags = Tag::all();
         $individual_permissions = IndividualPermission::where('video_id', $video->id)->get();
 
-        return view('manage.edit', compact('video', 'permissions', 'courses', 'tags', 'presenters', 'individual_permissions'));
+        //Needs refactoring
+        $visibility = new Visibility();
+        $video = $visibility->check(Video::where('id', $video->id)->get())[0];
+        $user_permission = $video->delete_setting ? 'delete' : ($video->edit_setting ? 'edit' : 'read');
+        return view('manage.edit', compact('video', 'permissions', 'courses', 'tags', 'presenters', 'individual_permissions', 'user_permission'));
     }
 
     public function edit(Video $video, Request $request)
