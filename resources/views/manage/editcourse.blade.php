@@ -6,7 +6,8 @@
         'course' => $course,
         'coursesettings_permissions' => $coursesettings_permissions,
         'individual_permissions' => $individual_permissions,
-        'permissions' => $permissions
+        'permissions' => $permissions,
+        'user_permission' => $user_permission
         ])
     </form>
 @endsection

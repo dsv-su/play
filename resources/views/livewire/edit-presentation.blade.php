@@ -282,6 +282,9 @@
                                                    wire:click="remove_user({{$key}})">
                                                     <i class="fas fa-user-minus align-content-center"></i>
                                                 </a>
+                                            @else
+                                                <span class="absolute p-2 top-2 right-2 text-gray-500 my-auto text-white">
+                                                <i class="fas fa-user-minus align-content-center"></i></span>
                                             @endif
                                         </div>
                                     </div>

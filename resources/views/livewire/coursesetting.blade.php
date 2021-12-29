@@ -108,20 +108,19 @@
             </div>
             <div class="col-sm-12">
                 <div class="rounded border shadow p-3 my-2">
-
                     <!-- Permissions -->
                     <div class="row justify-content-between text-left">
                         <!--Video group permission settings-->
                         <div class="form-group col-12 col-md-6 flex-column d-flex">
                             <label class="form-control-label px-1">{{ __("Playback group permissions") }}</label>
                             <div id="video_perm">
-                                <select class="form-group form-control" name="course_permission" style="margin: 5px 0px;">
+                                <select class="form-group form-control" name="course_permission"
+                                        style="margin: 5px 0px;">
                                     @foreach($permissions as $perm)
                                         <option value="{{$perm->id}}"
                                                 @if($permissonId == $perm->id) selected @endif >{{$perm->id}}
                                             : {{$perm->scope}}</option>
                                     @endforeach
-
                                 </select>
                             </div>
                         </div>
@@ -132,7 +131,6 @@
                                 <span type="button" wire:click.prevent="add_individual_perm"
                                       class="btn btn-primary px-1 py-0">{{$ipermissions}} {{ __("Set") }} <i
                                             class="fas fa-user-plus"></i></span>
-
                             </label>
 
                             @if (count($individuals)>0)
@@ -146,32 +144,41 @@
                                                    aria-haspopup="true" autocomplete="off"
                                                    aria-labelledby="perm-search" @if ($name) readonly @endif>
                                             @error('individuals.*') <span class="error">{{ $message }}</span> @enderror
-
                                             <div class="p-1 col-auto">
                                                 <select name="individual_perm_type[]" class="form-control">
                                                     <option value="read"
-                                                            @if($individuals_permission[$key] == 'read') selected @endif>
+                                                            @if($individuals_permission[$key] == 'read') selected @endif
+                                                            @if ($user_permission != 'delete' && $individuals_permission[$key] == 'delete') disabled @endif>
                                                         Read
                                                     </option>
                                                     <option value="upload"
-                                                            @if($individuals_permission[$key] == 'upload') selected @endif>
+                                                            @if($individuals_permission[$key] == 'upload') selected
+                                                            @endif
+                                                            @if ($user_permission != 'delete' && $individuals_permission[$key] == 'delete') disabled @endif>
                                                         Upload
                                                     </option>
                                                     <option value="edit"
-                                                            @if($individuals_permission[$key] == 'edit') selected @endif>
+                                                            @if($individuals_permission[$key] == 'edit') selected @endif
+                                                            @if ($user_permission != 'delete' && $individuals_permission[$key] == 'delete') disabled @endif>
                                                         Edit
                                                     </option>
                                                     <option value="delete"
-                                                            @if($individuals_permission[$key] == 'delete') selected @endif>
+                                                            @if($individuals_permission[$key] == 'delete') selected
+                                                            @endif
+                                                            @if ($user_permission != 'delete' && $individuals_permission[$key] != 'delete') disabled @endif>
                                                         Delete
                                                     </option>
                                                 </select>
                                             </div>
-
-                                            <a class="absolute cursor-pointer p-2 top-2 right-2 text-gray-500 my-auto"
-                                               wire:click="remove_user({{$key}})">
-                                                <i class="fas fa-user-minus align-content-center"></i>
-                                            </a>
+                                            @if ($user_permission == 'delete' || $individuals_permission[$key] != 'delete')
+                                                <a class="absolute cursor-pointer p-2 top-2 right-2 text-gray-500 my-auto"
+                                                   wire:click="remove_user({{$key}})">
+                                                    <i class="fas fa-user-minus align-content-center"></i>
+                                                </a>
+                                            @else
+                                                <span class="absolute p-2 top-2 right-2 text-gray-500 my-auto text-white">
+                                                <i class="fas fa-user-minus align-content-center"></i></span>
+                                            @endif
                                         </div>
                                     </div>
                                 @endforeach

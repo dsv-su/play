@@ -2,7 +2,9 @@
 
 namespace App;
 
+use App\Services\Daisy\DaisyAPI;
 use App\Services\Daisy\DaisyIntegration;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -86,5 +88,33 @@ class Course extends Model implements Searchable
     public function coursesettings(): HasMany
     {
         return $this->hasMany(CoursesettingsPermissions::class);
+    }
+
+    /**
+     * @throws BindingResolutionException
+     */
+    public function userPermission() {
+        $username = app()->make('play_username');
+        $daisy_courses_ids = [];
+        if (app()->make('play_role') != 'Administrator') {
+            // Show only courses that you have permission to
+            $daisy = new DaisyAPI();
+            $daisyPersonID = $daisy->getDaisyPersonId($username);
+            // Get all courses where user is courseadmin
+            if ($daisy_courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID)) {
+                $daisy_courses_ids = array_map(function ($d) {
+                    return $d[2];
+                }, $daisy_courses);
+            }
+        }
+
+        if (in_array($this->id, $daisy_courses_ids) || app()->make('play_role') == 'Administrator') {
+            $user_permission = 'delete';
+        } else {
+            $coursesettingpermission = CoursesettingsUsers::where('course_id', $this->id)->where('username', $username)->first();
+            $user_permission = $coursesettingpermission ? $coursesettingpermission->permission : '';
+        }
+
+        return $user_permission;
     }
 }

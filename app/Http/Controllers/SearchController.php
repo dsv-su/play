@@ -178,6 +178,9 @@ class SearchController extends Controller
         $manage = \Request::is('manage');
         $permissions = VideoPermission::all();
 
+
+        $videos = $this->groupVideos($videos);
+        /*
         // Group videos by course
         $videos = $videos->groupBy(function ($item) {
             if (isset($item->video_course[0])) {
@@ -186,13 +189,38 @@ class SearchController extends Controller
             }
             return false;
         });
+        dd($videos);
+        */
 
         $coursesetlist = $individual_permissions = $playback_permissions = [];
         if ($manage) {
             list($coursesetlist, $individual_permissions, $playback_permissions) = $this->extractSettings($videos);
         }
-
         return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'permissions', 'coursesetlist', 'playback_permissions', 'individual_permissions'));
+    }
+
+    public function groupVideos($videos): \Illuminate\Database\Eloquent\Collection
+    {
+        $courseids = \Illuminate\Database\Eloquent\Collection::empty();
+        $groupedvideos = \Illuminate\Database\Eloquent\Collection::empty();
+        foreach ($videos as $video) {
+            foreach ($video->video_course as $vc) {
+                $courseids->add($vc->course_id);
+            }
+        }
+
+        foreach ($courseids->sort() as $key => $courseid) {
+            $groupedvideos[$courseid] = \Illuminate\Database\Eloquent\Collection::empty();
+            foreach ($videos as $video) {
+                foreach ($video->video_course as $vc) {
+                    if ($vc->course_id == $courseid) {
+                        $groupedvideos[$courseid]->add($video);
+                    }
+                }
+            }
+        }
+
+        return $groupedvideos;
     }
 
     public function extractSettings($videos): array
@@ -420,6 +448,8 @@ class SearchController extends Controller
         $videotags = $this->extractTags($videos);
         $videopresenters = $this->extractPresenters($videos);
 
+        $videos = $this->groupVideos($videos);
+        /*
         // Group videos by course
         $videos = $videos->groupBy(function ($item) {
             if (isset($item->video_course[0])) {
@@ -427,7 +457,7 @@ class SearchController extends Controller
                 return $course['id'] ?? '0';
             }
             return false;
-        });
+        });*/
 
         $coursesetlist = $individual_permissions = $playback_permissions = [];
         if ($manage) {

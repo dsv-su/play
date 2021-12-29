@@ -134,7 +134,14 @@ class ManageCourseSettingsController extends Controller
         //Group permissions
         $permissions = Permission::all();
 
-        return view('manage.editcourse', compact('course', 'coursesettings_permissions', 'individual_permissions', 'permissions'));
+        $user_permission = $course->userPermission();
+
+        // If user has neither course responsibility nor individual permission, prevent it.
+        if (!$user_permission || !in_array($user_permission, ['edit', 'delete'])) {
+            abort(401);
+        }
+
+        return view('manage.editcourse', compact('course', 'coursesettings_permissions', 'individual_permissions', 'permissions', 'user_permission'));
     }
 
     public function store($course_id, Request $request)

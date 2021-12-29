@@ -6,7 +6,7 @@
                aria-controls="collapse{{$key}}">
                 <i class="fa mr-2"></i>{{\App\Course::find($key) ? \App\Course::find($key)->name . ' ' . \App\Course::find($key)->semester.\App\Course::find($key)->year : 'Uncategorized'}}</a>
             <span class="badge badge-primary">{{count($videocourse)}}</span>
-            @if ($key) <a class="badge badge-primary" role="button" style="max-height: 32.38px;"
+            @if ($key && (in_array(\App\Course::find($key)->userPermission(), ['edit', 'delete']))) <a class="badge badge-primary" role="button" style="max-height: 32.38px;"
                           href="{{ route('course_edit', $key) }}"><i class="fas fa-cog"></i></a>
             @endif
         @else

@@ -31,13 +31,13 @@ class EditController extends Controller
     {
         $permissions = Permission::all();
         $courses = Course::all();
+        $daisy_courses_ids = [];
 
         if (app()->make('play_role') != 'Administrator') {
             // Show only courses that you have permission to
             $daisy = new DaisyAPI();
             $daisyPersonID = $daisy->getDaisyPersonId(app()->make('play_username'));
             // Get all courses where user is courseadmin
-            $daisy_courses_ids = [];
             if ($daisy_courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID)) {
                 $daisy_courses_ids = array_map(function ($d) {
                     return $d[2];
@@ -59,7 +59,23 @@ class EditController extends Controller
         //Needs refactoring
         $visibility = new Visibility();
         $video = $visibility->check(Video::where('id', $video->id)->get())[0];
-        $user_permission = $video->delete_setting ? 'delete' : ($video->edit_setting ? 'edit' : 'read');
+        // Check if a video is associated with any course where the user is a manager
+        $userismanager = $video->courses()->filter(function ($course) use ($daisy_courses_ids) {
+                return in_array($course->id, $daisy_courses_ids);
+            })->count() > 0;
+        if ($userismanager || $video->delete_setting || app()->make('play_role') == 'Administrator') {
+            $user_permission = 'delete';
+        } elseif ($video->edit_setting) {
+            $user_permission = 'edit';
+        } else {
+            $user_permission = 'read';
+        }
+
+        // If user has neither course responsibility nor individual permission, prevent it.
+        if (!in_array($user_permission, ['edit', 'delete'])) {
+            // abort(401);
+        }
+
         return view('manage.edit', compact('video', 'permissions', 'courses', 'tags', 'presenters', 'individual_permissions', 'user_permission'));
     }
 
@@ -105,23 +121,20 @@ class EditController extends Controller
                 }
             }
             //Update group permission for presentation
-            if($videoPermission = VideoPermission::where('video_id', $video->id)->first()) {
+            if ($videoPermission = VideoPermission::where('video_id', $video->id)->first()) {
                 //Exist
                 $videoPermission->permission_id = $request->video_permission;
-                if($request->video_permission == 1) {
+                if ($request->video_permission == 1) {
                     $videoPermission->type = 'public';
-                }
-                elseif($request->video_permission == 4) {
+                } elseif ($request->video_permission == 4) {
                     $videoPermission->type = 'external';
-                }
-                else {
+                } else {
                     $videoPermission->type = 'private';
                 }
                 $videoPermission->save();
-            }
-            else {
+            } else {
                 //Doesnt exist
-                if($request->video_permission == 1) {
+                if ($request->video_permission == 1) {
                     VideoPermission::create([
                         'video_id' => $video->id,
                         'permission_id' => $request->video_permission,
@@ -175,7 +188,7 @@ class EditController extends Controller
 
             //Update streams
             $streams = Stream::where('video_id', $video->id)->get();
-           // dump($request->hidden);
+            // dump($request->hidden);
             foreach ($streams as $key => $stream) {
                 $stream->audio = ($request->audio == $key);
                 $stream->hidden = (isset($request->hidden)) ? in_array($key, $request->hidden) : 0;
