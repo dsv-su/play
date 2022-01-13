@@ -155,10 +155,7 @@ class SearchController extends Controller
                 return $visibility->check(Video::whereIn('id', $user_videos)->orWhereIn('id', $individual_videos)->orWhereIn('id', $courseadministrator)->orWhereIn('id', $video_course_ids)->latest('creation')->get());
 
             } elseif (app()->make('play_role') == 'Administrator') {
-                //If user is Administrator results are cached
-                return Cache::remember('videos', $seconds = 180, function () use ($visibility) {
-                    return $visibility->check(Video::with('category', 'video_course.course')->latest('creation')->get());
-                });
+                return $visibility->check(Video::with('category', 'video_course.course')->latest('creation')->get());
             }
         }
 

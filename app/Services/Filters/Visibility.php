@@ -73,6 +73,13 @@ class Visibility extends Model
                                     }
                                 }
                             }
+                            //Administrator /Courseadmin
+                            if(app()->make('play_role') == 'Administrator') {
+                                return $video->setAttribute('visibility_setting', true);
+                            }
+                            elseif(app()->make('play_role') == 'Courseadmin') {
+                                return $video->setAttribute('visibility_setting', true);
+                            }
 
                             $video->setAttribute('visibility_setting', true);
                             return $video->visability;
