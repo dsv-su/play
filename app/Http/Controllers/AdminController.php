@@ -11,10 +11,12 @@ use App\Permission;
 use App\Presentation;
 use App\Services\Cattura\CheckCatturaRecorderStatus;
 use App\Services\Notify\PlayStoreNotify;
+use App\Services\ReLoadPlayStore;
 use App\Video;
 use App\VideoPermission;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Storage;
 
@@ -302,6 +304,42 @@ class AdminController extends Controller
     {
         ManualPresentation::destroy($id);
         return back()->withInput();
+    }
+
+    public function backup_json()
+    {
+        $videos = Video::all();
+        foreach ($videos as $video) {
+            $contents = json_encode(json_decode($video->presentation), JSON_PRETTY_PRINT);
+            \Illuminate\Support\Facades\Storage::disk('public')->put('backup/'.$video->id.'.json', stripslashes($contents));
+        }
+        return back()->with(['message' => 'A json backup has been created for each presentation.']);
+    }
+
+    public function reload_json()
+    {
+        foreach (Storage::disk('public')->files('backup') as $this->file) {
+            $this->file_name[] = substr($this->file, strrpos($this->file, '/') + 1);
+        }
+
+        $load = new ReLoadPlayStore();
+        $presentations = $this->file_name;
+        foreach($presentations as $presentation) {
+            $video = json_decode(Storage::disk('public')->get('/backup/'.$presentation), true);
+            //store
+            $load->reloadstore(new Request($video));
+        }
+        return redirect('/')->with(['message' => 'All presentations have been reloaded successfully!', 'alert' => 'alert-success']);
+    }
+
+    public function backup_db()
+    {
+
+    }
+
+    public function restore_db()
+    {
+
     }
 
     private function uri()

@@ -42,23 +42,24 @@
                                 Offline <span class="badge badge-danger">Daisy OK</span>
                             </button>
                     @endif
-
-                   @foreach($cattura as $recorder)
-                            <a href="{{$recorder['url']}}">
-                                <button type="button" class="btn btn-outline-primary">
-                                    @if(!$recorder['status'] == 'IDLE')
-                                        <i class="fas fa-video"></i>
-                                    @else
-                                        <i class="fas fa-video-slash"></i>
-                                    @endif
-                                    {{$recorder['recorder']}} <span
-                                        @if($recorder['status'] == 'ERROR') class="badge badge-danger"
-                                        @elseif($recorder['status'] == 'IDLE') class="badge badge-warning"
-                                        @else class="badge badge-success"
-                            @endif >{{$recorder['status']}}</span>
-                                </button>
-                            </a>
-                    @endforeach
+                   @if($cattura ?? '')
+                       @foreach($cattura as $recorder)
+                                <a href="{{$recorder['url']}}">
+                                    <button type="button" class="btn btn-outline-primary">
+                                        @if(!$recorder['status'] == 'IDLE')
+                                            <i class="fas fa-video"></i>
+                                        @else
+                                            <i class="fas fa-video-slash"></i>
+                                        @endif
+                                        {{$recorder['recorder']}} <span
+                                            @if($recorder['status'] == 'ERROR') class="badge badge-danger"
+                                            @elseif($recorder['status'] == 'IDLE') class="badge badge-warning"
+                                            @else class="badge badge-success"
+                                @endif >{{$recorder['status']}}</span>
+                                    </button>
+                                </a>
+                        @endforeach
+                   @endif
                         <!-- Statusbar -->
                     </nav>
                     <!-- End of Statusbar -->
@@ -188,7 +189,40 @@
                         <!-- Content Row -->
 
                         <div class="row">
-
+                            <div class=" col-xl-6 col-md-6 mb-4">
+                                <div class="card border-left-warning shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">JSON Backup</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <a role="button" class="btn btn-outline-info" href="{{route('backup_json')}}"><i class="far fa-hdd"></i> Create json</a>
+                                                <a role="button" class="btn btn-outline-danger"  href="{{route('reload_json')}}"><i class="far fa-hdd"></i> Reload json</a>
+                                            </div>
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><small>Note! This is mainly only for use during development. Reloading json notifications should only be done from an empty db. </small></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" col-xl-6 col-md-6 mb-4">
+                                <div class="card border-left-warning shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">DB Backup</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <a role="button" class="btn btn-outline-primary" href="{{route('backup_db')}}"><i class="far fa-hdd"></i> Backup</a>
+                                                <a role="button" class="btn btn-outline-primary" href="{{route('restore_db')}}"><i class="far fa-hdd"></i> Restore</a>
+                                            </div>
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><small>This feature is under development.</small></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
                             <!-- Permissions -->
                             <div class="col-xl-8 col-lg-7">
                                 <div class="card shadow mb-4">

@@ -98,6 +98,12 @@ Route::middleware('entitlements', 'playauth')->group(function () {
         Route::get('/downloads', 'AdminController@downloads')->name('downloads');
         Route::get('/mediasite_admin', 'AdminController@mediasite')->name('mediasite_admin');
         Route::get('/videopermissions', 'AdminController@videopermission')->name('videopermission');
+        //Backup
+        Route::get('/jsonbackup', 'AdminController@backup_json')->name('backup_json');
+        Route::get('/reloadjson', 'AdminController@reload_json')->name('reload_json');
+        Route::get('/dbbackup', 'AdminController@backup_db')->name('backup_db');
+        Route::get('/dbreload', 'AdminController@restore_db')->name('restore_db');
+
         Route::prefix('logs')->name('log-viewer::logs.')->group(function () {
             Route::get('/', 'LogViewerController@listLogs')->name('list');
             Route::delete('/delete', 'LogViewerController@delete')->name('delete');

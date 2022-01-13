@@ -26,7 +26,7 @@
         "php-ffmpeg/php-ffmpeg": "^0.16.0",
         "spatie/laravel-searchable": "^1.6",
         "tymon/jwt-auth": "^1.0",
-      "ext-zip": "*"
+        "ext-zip": "*"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.8",

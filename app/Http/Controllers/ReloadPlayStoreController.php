@@ -11,6 +11,8 @@ class ReloadPlayStoreController extends Controller
 {
    public function index()
    {
+       /* Disabled */
+
        $load = new ReLoadPlayStore();
        $presentations = $load->reloadlist();
 
