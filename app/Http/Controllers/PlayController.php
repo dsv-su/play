@@ -131,7 +131,6 @@ class PlayController extends Controller
 
         } else {
             //If user is Admin
-            //dd('g');
             //Active courses (tab 2)
 
             $data['active'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($daisy) {

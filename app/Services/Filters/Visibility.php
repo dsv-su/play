@@ -100,7 +100,13 @@ class Visibility extends Model
                                 return $video->setAttribute('visibility_setting', true);
                             }
                             elseif(app()->make('play_role') == 'Courseadmin') {
-                                return $video->setAttribute('visibility_setting', true);
+                                if($video->visability == false) {
+                                    //Presentation is set to hidden
+                                    return $video->setAttribute('visibility_setting', false);
+                                } else {
+                                    //Presentation is set to true
+                                    return $video->setAttribute('visibility_setting', true);
+                                }
                             }
 
                             $video->setAttribute('visibility_setting', true);
