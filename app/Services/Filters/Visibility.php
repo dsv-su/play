@@ -53,6 +53,17 @@ class Visibility extends Model
                                                 $video->setAttribute('delete_setting', true);
                                             }
                                         }
+                                        //Visibility
+                                        if(in_array($ipermission->permission, ['read', 'edit', 'delete'])) {
+                                            //User has been granted permission
+                                            if($video->visability == false) {
+                                                //Presentation is set to hidden
+                                                return $video->setAttribute('visibility_setting', false);
+                                            } else {
+                                                //Presentation is set to true
+                                                return $video->setAttribute('visibility_setting', true);
+                                            }
+                                        }
                                     }
                                 }
                             }
