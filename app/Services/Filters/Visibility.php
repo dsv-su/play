@@ -163,10 +163,11 @@ class Visibility extends Model
             }
             //The video is not associated to a course
             else {
+                //Presentation=hidden && Administrator
                 if($video->visability == false and (app()->make('play_role') == 'Administrator'))  {
                     return $video->setAttribute('visibility_setting', false);
-                } else {
-
+                }
+                else {
                     //Check presentation individual setting
                     if(count($ipermissions = IndividualPermission::where('video_id', $video->id)->get()) >= 1) {
                         foreach($ipermissions as $ipermission) {
@@ -185,9 +186,7 @@ class Visibility extends Model
                             }
                         }
                     }
-
                     $video->setAttribute('visibility_setting', true);
-
                     return $video->visability;
                 }
 
