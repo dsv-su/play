@@ -1,6 +1,7 @@
 @foreach ($videos as $key => $videocourse)
     <h3 class="col mt-4">
-        @if (isset($manage) && $manage)
+        {{--}} Fix for issue #78 {{--}}
+        {{--}}@if (isset($manage) && $manage){{--}}
             <a class="link" data-toggle="collapse"
                href="#collapse{{$key}}" role="button" aria-expanded="false"
                aria-controls="collapse{{$key}}">
@@ -9,13 +10,14 @@
             @if ($key && (in_array(\App\Course::find($key)->userPermission(), ['edit', 'delete']))) <a class="badge badge-primary" role="button" style="max-height: 32.38px;"
                           href="{{ route('course_edit', $key) }}"><i class="fas fa-cog"></i></a>
             @endif
-        @else
+        {{--}} Fix for issue #78 {{--}}
+       {{--}} @else
             <a class="link @if ($videos->first() !== $videocourse) collapsed @endif" data-toggle="collapse"
                href="#collapse{{$key}}" role="button" aria-expanded="false"
                aria-controls="collapse{{$key}}"><i class="fa mr-2"></i>
                 {{\App\Course::find($key)->semester.\App\Course::find($key)->year}}</a>
             <span class="badge badge-primary">{{count($videocourse)}}</span>
-        @endif
+        @endif{{--}}
     </h3>
 
     <div class="collapse @if ($videos->first() == $videocourse || (isset($manage) && $manage))show @endif"

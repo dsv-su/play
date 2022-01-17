@@ -42,10 +42,20 @@ class SearchController extends Controller
         $courses = $this->extractCourses($videos);
         $presenters = $this->extractPresenters($videos);
         $tags = $this->extractTags($videos);
-        $videos = $videos->groupBy(function ($item) {
+
+        /*$videos = $videos->groupBy(function ($item) {
             $item['belongs_to_course'] = $item->video_course[0]->course['name'];
             return $item->video_course[0]->course['name'] ?? '9999';
+        });*/
+        // Fix for issue #78
+        $videos = $videos->groupBy(function ($item) {
+            if (isset($item->video_course[0])) {
+                $course = $item->video_course[0]->course;
+                return $course['id'] ?? '0';
+            }
+            return false;
         });
+
 
         return view('home.navigator', compact('term', 'year', 'videos', 'courses', 'presenters', 'tags', 'permissions'));
     }
@@ -195,6 +205,7 @@ class SearchController extends Controller
         if ($manage) {
             list($coursesetlist, $individual_permissions, $playback_permissions) = $this->extractSettings($videos);
         }
+
         return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'permissions', 'coursesetlist', 'playback_permissions', 'individual_permissions'));
     }
 
