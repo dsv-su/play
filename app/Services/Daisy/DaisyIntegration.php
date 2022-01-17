@@ -109,8 +109,13 @@ class DaisyIntegration extends Model
     public function getActiveCourses()
     {
         $date = Carbon::now()->format('Y-m-d\TH:i:s');
-        //return $date;
-        $this->course_result = $this->getResource("courseSegment?startDateBefore=$date&endDateAfter=$date", 'json');
+
+        //$this->course_result = $this->getResource("courseSegment?startDateBefore=$date&endDateAfter=$date", 'json');
+
+        //Retrive only course from this semester
+        //Parameter 20221 should be moved to ini file -> TODO
+        $this->course_result = $this->getResource("courseSegment?semester=20221", 'json');
+
         $this->courses = json_decode($this->course_result->getBody()->getContents(), TRUE);
         //Check if there exist active courses
         if($this->courses) {

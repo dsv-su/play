@@ -109,7 +109,7 @@ class PlayController extends Controller
             $data['latest'] = $visibility->check($latest_videos);
 
         } //If user is Employee
-        elseif (App::environment('production') and (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'CourseAdmin' or app()->make('play_role') == 'Staff')) {
+        elseif (App::environment('production') and (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Staff')) {
             $courses = $daisy->getActiveEmployeeCourses(app()->make('play_username'));
             if ($courses) {
                 //My courses (tab 1)
@@ -123,6 +123,7 @@ class PlayController extends Controller
             $active_videos = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($daisy) {
                 return $query->whereIn('course_id', $daisy->getActiveCourses());
             })->get();
+
             $data['active'] = $visibility->check($active_videos);
 
             //All courses (tab 3)
