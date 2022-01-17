@@ -194,14 +194,15 @@
                                     <div class="card-body">
                                         <div class="row no-gutters align-items-center">
                                             <div class="col mr-2">
-                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">JSON Backup</div>
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">JSON Backup ({{ $json_files }})</div>
                                             </div>
                                             <div class="col-auto">
                                                 <a role="button" class="btn btn-outline-info" href="{{route('backup_json')}}"><i class="far fa-hdd"></i> Create json</a>
                                                 <a role="button" class="btn btn-outline-danger"  href="{{route('reload_json')}}"><i class="far fa-hdd"></i> Reload json</a>
+                                                <a role="button" class="btn btn-outline-info" href="{{route('download_json')}}"><i class="far fa-hdd"></i> Download</a>
                                             </div>
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><small>Note! This is mainly only for use during development. Reloading json notifications should only be done from an empty db. </small></div>
+                                            </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><small>Note! This is mainly only for use during development. Reloading json notifications should only be done when db restored (empty). </small></div>
                                     </div>
                                 </div>
                             </div>

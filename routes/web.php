@@ -101,6 +101,7 @@ Route::middleware('entitlements', 'playauth')->group(function () {
         //Backup
         Route::get('/jsonbackup', 'AdminController@backup_json')->name('backup_json');
         Route::get('/reloadjson', 'AdminController@reload_json')->name('reload_json');
+        Route::get('/downloadjson', 'AdminController@download_json')->name('download_json');
         Route::get('/dbbackup', 'AdminController@backup_db')->name('backup_db');
         Route::get('/dbreload', 'AdminController@restore_db')->name('restore_db');
 

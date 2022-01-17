@@ -113,7 +113,7 @@ class DaisyIntegration extends Model
         //$this->course_result = $this->getResource("courseSegment?startDateBefore=$date&endDateAfter=$date", 'json');
 
         //Retrive only course from this semester
-        //Parameter 20221 should be moved to ini file -> TODO
+        //Parameter 20221 should be dervied from date
         $this->course_result = $this->getResource("courseSegment?semester=20221", 'json');
 
         $this->courses = json_decode($this->course_result->getBody()->getContents(), TRUE);

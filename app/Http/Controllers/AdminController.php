@@ -10,6 +10,7 @@ use App\MediasitePresentation;
 use App\Permission;
 use App\Presentation;
 use App\Services\Cattura\CheckCatturaRecorderStatus;
+use App\Services\DownloadPackageZip;
 use App\Services\Notify\PlayStoreNotify;
 use App\Services\ReLoadPlayStore;
 use App\Video;
@@ -42,7 +43,7 @@ class AdminController extends Controller
     public function admin()
     {
         //Cache store
-        $seconds = 180;
+        $seconds = 20;
         //Uploads
         $data['init_uploads'] = Cache::remember('init_uploads', $seconds, function () {
             return ManualPresentation::where('status', 'init')->count();
@@ -101,6 +102,11 @@ class AdminController extends Controller
         });
         $data['stats_permissions_public'] = Cache::remember('stats_permissions_public', $seconds, function () {
             return VideoPermission::with('permission')->where('permission_id', 4)->count();
+        });
+
+        //Json packages
+        $data['json_files'] = Cache::remember('json_files', $seconds, function () {
+            return $this->checkJsonFiles();
         });
 
         //->
@@ -313,7 +319,12 @@ class AdminController extends Controller
             $contents = json_encode(json_decode($video->presentation), JSON_PRETTY_PRINT);
             \Illuminate\Support\Facades\Storage::disk('public')->put('backup/'.$video->id.'.json', stripslashes($contents));
         }
-        return back()->with(['message' => 'A json backup has been created for each presentation.']);
+
+        //Make zipfolder
+        $file = new DownloadPackageZip();
+        $file->makezip();
+        Cache::flush();
+        return redirect()->action([AdminController::class, 'admin']);
     }
 
     public function reload_json()
@@ -332,6 +343,17 @@ class AdminController extends Controller
         return redirect('/')->with(['message' => 'All presentations have been reloaded successfully!', 'alert' => 'alert-success']);
     }
 
+    public function download_json()
+    {
+        if (Storage::disk('public')->exists('/backup_zip/package.zip')) {
+            return Storage::disk('public')->download( '/backup_zip/package.zip');
+        } else {
+            Cache::flush();
+            return redirect()->action([AdminController::class, 'admin']);
+        }
+
+    }
+
     public function backup_db()
     {
 
@@ -340,6 +362,13 @@ class AdminController extends Controller
     public function restore_db()
     {
 
+    }
+
+    private function checkJsonFiles()
+    {
+        $directory = 'backup';
+        $files = Storage::disk('public')->files($directory);
+        return count($files);
     }
 
     private function uri()
