@@ -61,7 +61,11 @@ Requirements are best determined using Server Requirements page of corresponding
               jwt_public_key=                         ; A path or resource to your public key. E.g. 'file://path/to/public/key'
               jwt_private_key=                        ; A path or resource to your private key. E.g. 'file://path/to/private/key'
               jwt_passphrase=                         ; The passphrase for your private key. Can be null if none set.
-        
+    
+              [api]                                   ; platform api
+              email=
+              password=
+      
               [ticket]                                ; Tickethandler credentials
               email=
               password=

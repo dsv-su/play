@@ -14,17 +14,24 @@ class UserSeeder extends Seeder
      *
      * @return void
      */
+
     public function run()
     {
+        $file = base_path().'/systemconfig/play.ini';
+        if (!file_exists($file)) {
+            $file = base_path().'/systemconfig/play.ini.example';
+        }
+        $system_config = parse_ini_file($file, true);
+
         DB::table('users')->insert([
             'name' => 'ConversionServer',
-            'email' => 'CSserver@dsv.su.se',
-            'password' => Hash::make('password'),
+            'email' => $system_config['api']['email'],
+            'password' => Hash::make($system_config['api']['password']),
         ]);
         DB::table('users')->insert([
             'name' => 'TicketHandler',
-            'email' => 'playticket@dsv.su.se',
-            'password' => Hash::make('password'),
+            'email' => $system_config['ticket']['email'],
+            'password' => Hash::make($system_config['ticket']['password']),
         ]);
     }
 }
