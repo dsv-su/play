@@ -750,8 +750,8 @@ class PlayController extends Controller
                     $presentation->description = $metadata['description'];
                     $presentation->presenters = $metadata['presenters'] ?? [];
                     $presentation->tags = $metadata['tags'] ?? [];
-                    //$p->description = $metadata['description'];
-                    //$p->courses = [];
+                    // We will add courses if needed
+                    $presentation->courses = [];
                     $presentationthumb = array_filter($thumbs, function ($t) {
                         return $t['StreamType'] == 'Presentation';
                     });
