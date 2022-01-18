@@ -519,12 +519,12 @@ class PlayController extends Controller
         $dates = explode(' - ', request('daterange'));
         $start = Carbon::createFromFormat('d/m/Y', $dates[0])->startOfDay();
         $end = Carbon::createFromFormat('d/m/Y', $dates[1])->endOfDay();
-        $this->processDownload('user', $folderid, $start ?? 0, $end ?? 32472226800);
+        $this->processDownload('user', $folderid, null, $start, $end);
 
         $subfolders = array();
         $this->getSubFolders(MediasiteFolder::where('mediasite_id', $folderid)->firstOrFail(), MediasiteFolder::all(), $subfolders);
         foreach ($subfolders as $subfolder) {
-            $this->processDownload('user', $subfolder->mediasite_id, $start ?? 0, $end ?? 32472226800);
+            $this->processDownload('user', $subfolder->mediasite_id, null, $start , $end);
         }
 
         return redirect()->route('home');
@@ -542,7 +542,7 @@ class PlayController extends Controller
         $dates = explode(' - ', request('daterange'));
         $start = Carbon::createFromFormat('d/m/Y', $dates[0])->startOfDay();
         $end = Carbon::createFromFormat('d/m/Y', $dates[1])->endOfDay();
-        $this->processDownload('course', $folderid, $designation, $start ?? 0, $end ?? 32472226800);
+        $this->processDownload('course', $folderid, $designation, $start, $end);
 
         return redirect()->route('home');
     }
@@ -559,7 +559,7 @@ class PlayController extends Controller
         $start = Carbon::createFromFormat('d/m/Y', $dates[0])->startOfDay();
         $end = Carbon::createFromFormat('d/m/Y', $dates[1])->endOfDay();
 
-        $this->processDownload('various', $folderid, $start ?? 0, $end ?? 32472226800);
+        $this->processDownload('various', $folderid, null, $start, $end);
 
         return redirect()->route('home');
     }
@@ -575,7 +575,7 @@ class PlayController extends Controller
         $dates = explode(' - ', request('daterange'));
         $start = Carbon::createFromFormat('d/m/Y', $dates[0])->startOfDay();
         $end = Carbon::createFromFormat('d/m/Y', $dates[1])->endOfDay();
-        $this->processDownload('other', $folderid, $start ?? 0, $end ?? 32472226800);
+        $this->processDownload('other', $folderid, null, $start, $end);
 
         return redirect()->route('home');
     }
@@ -586,6 +586,7 @@ class PlayController extends Controller
         $dates = explode(' - ', request('daterange'));
         $start = Carbon::createFromFormat('d/m/Y', $dates[0])->startOfDay();
         $end = Carbon::createFromFormat('d/m/Y', $dates[1])->endOfDay();
+
         $system = new AuthHandler();
         $system = $system->authorize();
         $mediasite = new Client([
