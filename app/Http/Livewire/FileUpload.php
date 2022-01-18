@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use ProtoneMedia\LaravelFFMpeg\Exporters\EncodingException;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 
 class FileUpload extends Component
@@ -65,7 +66,7 @@ class FileUpload extends Component
         //Real-time Validation
         $this->isDisabled = false;
         $this->validate([
-            'files.*' => 'required|mimetypes:video/mp4,video/webm,video/avi,video/mpeg,video/quicktime,video/x-ms-wmv',
+            'files.*' => 'required|mimetypes:video/mp4,video/webm,video/avi,video/mpeg,video/quicktime,video/x-ms-wmv,video/x-msvideo',
             'files' => 'max:4',
         ],
         [
@@ -168,16 +169,22 @@ class FileUpload extends Component
         //Generate thumb
         //Create thumb and store in folder
         do {
-            FFMpeg::fromDisk('public')
-                ->open($media)
-                ->getFrameFromSeconds($seconds)
-                ->export()
-                ->toDisk('public')
-                ->save($this->dirname.'/poster/'.$thumb_name.'.png');
-            $seconds++;
-            if($seconds > $streamduration) {
-                break; //Stops the loop -> TODO we should add a message to say that the thumb will be generated on play-store instead
+            try {
+                FFMpeg::fromDisk('public')
+                    ->open($media)
+                    ->getFrameFromSeconds($seconds)
+                    ->export()
+                    ->toDisk('public')
+                    ->save($this->dirname.'/poster/'.$thumb_name.'.png');
+                $seconds++;
+                if($seconds > $streamduration) {
+                    break; //Stops the loop -> TODO we should add a message to say that the thumb will be generated on play-store instead
+                }
+            } catch (EncodingException $exception) {
+                $command = $exception->getCommand();
+                $errorLog = $exception->getErrorOutput();
             }
+
         }
         while (!Storage::disk('public')->exists($this->dirname.'/poster/'.$thumb_name.'.png'));
 
