@@ -580,9 +580,9 @@ class PlayController extends Controller
         return redirect()->route('home');
     }
 
-    public function prefetchCourseDownload(): JsonResponse
+    public function prefetchPresentationDownload(): JsonResponse
     {
-        $folderid = request()->course ?? null;
+        $folderid = request()->course ?? request()->user ?? request()->recording ?? request()->other ?? null;
         $dates = explode(' - ', request('daterange'));
         $start = Carbon::createFromFormat('d/m/Y', $dates[0])->startOfDay();
         $end = Carbon::createFromFormat('d/m/Y', $dates[1])->endOfDay();

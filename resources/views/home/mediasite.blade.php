@@ -16,7 +16,7 @@
         Dates: <input type="text" name="daterange" class="w-50"/><br/>
         Designation: <input type="text" class="col-3" id="designation" name="designation" placeholder="Designation"
                             required>
-        <div id="todownload" class="alert alert-info w-50 font-1rem" role="alert">No presentations to fetch</div>
+        <div id="todownload" class="alert alert-info w-50 font-1rem" role="alert" style="display: none;">No presentations to fetch</div>
         <input type="submit" class="btn btn-sm btn-primary" value="Download"/><br/><br/>
     </form>
 
@@ -30,7 +30,7 @@
             @endforeach
         </select><br/>
         Dates: <input type="text" name="daterange" class="w-50"/><br/>
-        <br/>
+        <div id="todownload" class="alert alert-info w-50 font-1rem" role="alert" style="display: none;">No presentations to fetch</div>
         <input type="submit" class="btn btn-sm btn-primary" value="Download"/><br/><br/>
     </form>
 
@@ -44,7 +44,7 @@
             @endforeach
         </select><br/>
         Dates: <input type="text" name="daterange" class="w-50"/><br/>
-        <br/>
+        <div id="todownload" class="alert alert-info w-50 font-1rem" role="alert" style="display: none;">No presentations to fetch</div>
         <input type="submit" class="btn btn-sm btn-primary" value="Download"/><br/><br/>
     </form>
 
@@ -58,7 +58,7 @@
             @endforeach
         </select><br/>
         Dates: <input type="text" name="daterange" class="w-50"/><br/>
-        <br/>
+        <div id="todownload" class="alert alert-info w-50 font-1rem" role="alert" style="display: none;">No presentations to fetch</div>
         <input type="submit" class="btn btn-sm btn-primary" value="Download"/><br/><br/>
     </form>
 
@@ -78,6 +78,8 @@
             }
         });
         $('form').on('change', function (e) {
+            var todownload = $(this).find('#todownload');
+            todownload.show();
             e.preventDefault();
             $.ajaxSetup({
                 headers: {
@@ -86,14 +88,14 @@
             });
             $.ajax({
                 type: 'post',
-                url: '{{route('mediasite.prefetchCourseDownload')}}',
+                url: '{{route('mediasite.prefetchPresentationDownload')}}',
                 data: $(this).serialize(),
                 success: function (data) {
                     var html = 'Presentations to be downloaded: <br>';
                     $.each(JSON.parse(data.presentations), function (i, p) {
                         html += p.name + ' (id: ' + p.id + ')</br>';
                     });
-                    $('#todownload').html(html);
+                    todownload.html(html);
                 }
             });
         });
