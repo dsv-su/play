@@ -89,7 +89,8 @@
         @endif
 
         <!-- Loading Message for Images -->
-        <div wire:loading wire:target="files">Uploading Media...</div>
+
+        <div wire:loading.block wire:target="files">@include('layouts.partials.spinner')</div>
     </div>
 
     <div class="col-sm-12">
