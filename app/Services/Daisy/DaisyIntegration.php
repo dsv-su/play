@@ -31,7 +31,7 @@ class DaisyIntegration extends Model
                 'headers' => ['Accept' => $type ? "application/$type" : '']
             ]);
         } catch (ClientException $e) {
-            abort(503);
+            abort(510);
         }
         return 0;
     }
