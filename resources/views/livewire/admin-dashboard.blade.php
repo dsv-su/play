@@ -154,7 +154,7 @@
                                                     @else
                                                     class="badge badge-success"
                                                     @endif>
-                                                    {{$unit['recorder']}}
+                                                    {{$unit['recorder']}} {{$unit['status']}}
                                                 </span>
                                                 </h4>
                                             </div>

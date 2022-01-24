@@ -54,7 +54,7 @@
                     @endif
                     @if($permission->type == 'external' or $video->external_setting)
                         <div class="permission mx-1" data-toggle="tooltip"
-                             title="{{__('External access enabled')}}"><i
+                             title="{{__('External playback enabled')}}"><i
                                     class="fas fa-globe"></i></div>
                     @endif
                 @endforeach

@@ -8,7 +8,7 @@ return [
     'category' => 'Kategori',
     'tag' => 'Tagg',
     'manage'    => 'Hantera',
-    'manage_recording' => 'Hantera inspelningar',
+    'manage_recording' => 'Hantera presentationer',
     'manage_course' => 'Hantera kurser',
     'manual_upload' => 'Manuell uppladdning',
     'admin'     =>  'Admin',

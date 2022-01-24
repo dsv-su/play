@@ -162,7 +162,7 @@
                                                 <a class="badge badge-primary video-icon" role="button"
                                                    href="{{ route('course_edit', $courseId) }}"><span class=""><i
                                                                 class="fas fa-cog "></i></span></a>
-                                                <p>{{ __("Edit") }}</p>
+                                                <p>{{ __("Settings") }}</p>
                                             </div>
                                         </div>
                                     </div>

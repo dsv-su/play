@@ -148,7 +148,7 @@
     "Use this embed code to insert the video in e.g. iLearn": "Använd den här inbäddningskoden för att infoga videon i t.ex. iLearn",
     "Editing permissions": "Redigeringsbehörigheter",
     "Viewing permissions": "Visningsbehörigheter",
-    "Changes are saved upon clicking Update button at the bottom of the page.": "Ändringar sparas när du klickar på knappen Uppdatera längst ner på sidan.",
+    "Changes are saved upon clicking Save & Close button at the bottom of the page.": "Ändringar sparas när du klickar på knappen Spara och stäng längst ned på sidan.",
     "Downloadable": "Nedladdningsbar",
     "Individual User Permissions": "Enskilda användarbehörigheter",
     "No Individual User Permissions added": "Inga individuella användarbehörigheter har lagts till",
@@ -169,6 +169,9 @@
     "Save": "Spara",
     "Presentation is hidden": "Presentationen är dold",
     "Viewing permissions modified": "Visningsbehörigheter har ändrats",
-    "External access enabled": "Extern åtkomst aktiverad"
+    "External access enabled": "Extern åtkomst aktiverad",
+    "Settings": "Inställningar",
+    "External playback enabled": "Extern uppspelning",
+    "Save & Close": "Spara och stäng"
 
 }
