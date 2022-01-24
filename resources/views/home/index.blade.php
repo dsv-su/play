@@ -1,15 +1,15 @@
 @extends('layouts.suplay')
 @section('content')
     @include('layouts.partials.searchbox')
-    @if (\App\ManualPresentation::where('user', app()->make('play_username'))->where('status', 'sent')->count())
+    @if (isset($pending) && $pending->count())
         <div class="container banner-inner">
             <div class="row no-gutters w-100">
-        <div class="alert alert-warning w-100 mb-5">
-            {!! __('Some of the uploaded presentations are being processed now. You can track it <a href=":link">here</a>', ['link' => '/upload/pending']) !!}
-        </div>
+                <div class="alert alert-info w-100 mb-5">
+                    {{__('Some of the uploaded presentations are being processed now. You can see them under All Presentations tab.')}}
+                </div>
             </div>
         </div>
-        @endif
+    @endif
     <!-- Header message section -->
     <div class="container banner-inner">
         <div class="row no-gutters w-100">
@@ -101,7 +101,7 @@
         @endif
         <!-- Content tab Active -->
             <div id="pane-C" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-C">
-                @if (isset($latest) && $latest->count())
+                @if ((isset($latest) && $latest->count()) || isset($pending) && $pending->count())
                     @if (isset($courses) || isset($terms) || isset($presenters) || isset($tags))
                         <form class="form-inline">
                             <label class="col-form-label mr-1 font-weight-light">Filter by: </label>
@@ -150,6 +150,13 @@
                         </form>
                     @endif
                     <div class="card-deck inner">
+                        @if (isset($pending) && $pending->count())
+                            @foreach ($pending as $key => $video)
+                                <div class="col my-3">
+                                    @include('home.pending_video')
+                                </div>
+                            @endforeach
+                        @endif
                         @foreach ($latest as $key => $video)
                             <div class="col my-3">
                                 @include('home.video')

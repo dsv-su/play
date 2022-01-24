@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Course;
 use App\CourseadminPermission;
 use App\IndividualPermission;
+use App\ManualPresentation;
 use App\MediasiteFolder;
 use App\MediasitePresentation;
 use App\Presenter;
@@ -141,12 +142,15 @@ class PlayController extends Controller
 
             $data['latest'] = Video::with('category', 'video_course.course')->latest('creation')->get();
             $data['latest'] = $visibility->check($data['latest']);
-
             /*if (app()->make('play_role') != 'Administrator') {
                 //$data['active'] = $visibility->check($data['active']);
                 //$data['latest'] = $visibility->check($data['latest']);
             }*/
         }
+
+        // Add placeholders for manual presentations that are currently processed
+        $pending = ManualPresentation::where('user', app()->make('play_username'))->where('status', 'sent')->get();
+        $data['pending'] = $pending;
 
         return view('home.index', $data);
     }

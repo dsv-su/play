@@ -69,7 +69,6 @@
                                 @endif
                             </div>
 
-                            <!-- While testing we need id -->
                             <p class="card-text">
                                 @if ($video->courses)
                                     @foreach($video->courses as $designation)
@@ -88,7 +87,6 @@
                                     @endforeach
                                 @endif
                             </p>
-
                         </div>
                     </div>
                 </div>
