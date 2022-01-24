@@ -267,6 +267,10 @@
     -webkit-animation: spin 1s ease-in-out infinite;
 }
 
+.grey-bg {
+    background-color: #F5F7FA;
+}
+
 @keyframes spin {
     to {
         -webkit-transform: rotate(360deg);

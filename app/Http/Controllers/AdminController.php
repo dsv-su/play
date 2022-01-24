@@ -42,130 +42,7 @@ class AdminController extends Controller
 
     public function admin()
     {
-        //Cache store
-        $seconds = 20;
-        //Uploads
-        $data['init_uploads'] = Cache::remember('init_uploads', $seconds, function () {
-            return ManualPresentation::where('status', 'init')->count();
-        });
-        $data['pending_uploads'] = Cache::remember('pending_uploads', $seconds, function () {
-            return ManualPresentation::where('status', 'pending')->count();
-        });
-        $data['stored_uploads'] = Cache::remember('stored_uploads', $seconds, function () {
-            return ManualPresentation::where('status', 'stored')->count();
-        });
-        $data['sent_uploads'] = Cache::remember('sent_uploads', $seconds, function () {
-            return ManualPresentation::where('status', 'sent')->count();
-        });
-        $data['completed_uploads'] = Cache::remember('completed_uploads', $seconds, function () {
-            return ManualPresentation::where('status', 'completed')->count();
-        });
-
-        //Downloads
-        $data['requested_downloads'] = Cache::remember('requested_downloads', $seconds, function () {
-            return Presentation::where('status', 'request download')->count();
-        });
-        $data['stored_downloads'] = Cache::remember('stored_downloads', $seconds, function () {
-            return Presentation::where('status', 'stored')->count();
-        });
-
-        //Mediasite
-        $data['stats_mediasite'] = Cache::remember('stats_mediasite', $seconds, function () {
-            return Video::where('origin', 'mediasite')->count();
-        });
-        $data['stats_mediasite_folders'] = Cache::remember('stats_mediasite_folders', $seconds, function () {
-            return MediasiteFolder::count();
-        });
-
-        //Cattura
-        $data['stats_cattura'] = Cache::remember('stats_cattura', $seconds, function () {
-            return Video::where('origin', 'cattura')->count();
-        });
-
-        //Manually uploaded
-        $data['stats_manual'] = Cache::remember('stats_manual', $seconds, function () {
-            return Video::where('origin', 'manual')->count();
-        });
-
-        //Permissions
-        $data['stats_permissions'] = Cache::remember('stats_permissions', $seconds, function () {
-            return Permission::count();
-        });
-        $data['stats_permissions_dsv'] = Cache::remember('stats_permissions_dsv', $seconds, function () {
-            return VideoPermission::with('permission')->where('permission_id', 1)->count();
-        });
-        $data['stats_permissions_staff'] = Cache::remember('stats_permissions_staff', $seconds, function () {
-            return VideoPermission::with('permission')->where('permission_id', 2)->count();
-        });
-        $data['stats_permissions_private'] = Cache::remember('stats_permissions_private', $seconds, function () {
-            return VideoPermission::with('permission')->where('permission_id', 3)->count();
-        });
-        $data['stats_permissions_public'] = Cache::remember('stats_permissions_public', $seconds, function () {
-            return VideoPermission::with('permission')->where('permission_id', 4)->count();
-        });
-
-        //Json packages
-        $data['json_files'] = Cache::remember('json_files', $seconds, function () {
-            return $this->checkJsonFiles();
-        });
-
-        //->
-        /*
-                    $data['permissions'] = VideoPermission::all();
-                    //-> Most viewed
-                    $vid = DB::table('videos')
-                        ->select(['video_id', DB::raw('MAX(playback) AS playback')])
-                        ->whereNotNull('playback')
-                        ->join('video_stats', 'videos.id', '=', 'video_stats.video_id')
-                        ->groupBy('video_id')
-                        ->take(5)->get();
-
-                    $most_viewed = collect($vid)->map(function ($item) {
-                        return $item->video_id;
-                    });
-                    $data['most_viewed'] = Video::with('category', 'video_course.course')->whereIn('id', $most_viewed)->take(24)->get();
-                    //-> Most downloaded
-                    $vid = DB::table('videos')
-                        ->select(['video_id', DB::raw('MAX(download) AS download')])
-                        ->whereNotNull('download')
-                        ->join('video_stats', 'videos.id', '=', 'video_stats.video_id')
-                        ->groupBy('video_id')
-                        ->take(5)->get();
-
-                    $most_down = collect($vid)->map(function ($item) {
-                        return $item->video_id;
-                    });
-                    $data['most_downloaded'] = Video::with('category', 'video_course.course')->whereIn('id', $most_down)->take(24)->get();
-                    */
-        //<-
-        // Cattura
-        $store = new CheckCatturaRecorderStatus();
-
-        $file = base_path() . '/systemconfig/play.ini';
-        if (!file_exists($file)) {
-            $file = base_path() . '/systemconfig/play.ini.example';
-        }
-        $system_config = parse_ini_file($file, true);
-
-        foreach($system_config['recorders'] as $key => $system) {
-            $check = $store->call($system,'api/1/status?since=');
-            $data['cattura'][] = [
-                'recorder' => $key,
-                'status' => $check['capture']['state'],
-                'url' => $system
-            ];
-        }
-        //Courses
-        $data['courses_2015'] = Course::where('year', 2015)->count();
-        $data['courses_2016'] = Course::where('year', 2016)->count();
-        $data['courses_2017'] = Course::where('year', 2017)->count();
-        $data['courses_2018'] = Course::where('year', 2018)->count();
-        $data['courses_2019'] = Course::where('year', 2019)->count();
-        $data['courses_2020'] = Course::where('year', 2020)->count();
-        $data['courses_2021'] = Course::where('year', 2021)->count();
-        $data['courses_2022'] = Course::where('year', 2022)->count();
-
-        return view('admin.admin', $data);
+        return view('admin.admin');
     }
 
     public function uploads()
@@ -362,13 +239,6 @@ class AdminController extends Controller
     public function restore_db()
     {
 
-    }
-
-    private function checkJsonFiles()
-    {
-        $directory = 'backup';
-        $files = Storage::disk('public')->files($directory);
-        return count($files);
     }
 
     private function uri()

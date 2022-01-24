@@ -79,7 +79,7 @@ class PlayStoreNotify extends Model
         //Drop slides property since it's no longer needed to save
         unset($this->presentation->slides);
 
-        if ($this->response->getBody() == 'OK') {
+        if ($this->response->getBody()) {
             //Change manualupdate status
             $this->presentation->status = 'sent';
             $this->presentation->save();

@@ -14,6 +14,9 @@
     <script src="{{asset('js/popper.min.js')}}"></script>
     <script src="{{asset('bootstrap/bootstrap-4.5.3-dist/js/bootstrap.bundle.js')}}"></script>
     <script src="{{asset('js/su.js')}}"></script>
+    <!-- Laravel Livewire -->
+    @livewireStyles
+    @livewireScripts
     <!-- Include Bootstrap Select -->
     <script src="{{ asset('js/typeahead/typeahead.bundle.js') }}"></script>
     <script src="{{ asset('bootstrap/select/bootstrap-select.min.js')}}"></script>
