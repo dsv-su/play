@@ -25,7 +25,7 @@
 
     <div class="container px-3 px-sm-0">
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <form class="needs-validation" method="post" action="{{route('upload_step1', $presentation->id)}}">
                     @csrf
                     <div class="rounded border shadow p-3 my-2">
@@ -37,8 +37,8 @@
                         <div class="row justify-content-between text-left">
                             <!-- Title -->
                             <div class="form-group col-sm-6 flex-column d-flex"><label
-                                        class="form-control-label px-1">{{ __("Enter title") }}<span
-                                            class="text-danger"> *</span></label>
+                                    class="form-control-label px-1">{{ __("Enter title") }}<span
+                                        class="text-danger"> *</span></label>
                                 <input class="form-control" id="title" name="title" type="text" placeholder="{{ __("Title") }}"
                                        value="{{ old('title') ? old('title'): $title ?? '' }}">
                                 <div class="invalid-feedback">
@@ -49,8 +49,8 @@
 
                             <!-- CreationDate -->
                             <div class="form-group col-sm-6 flex-column d-flex"><label
-                                        class="form-control-label px-1">{{ __("Recording date") }}<span
-                                            class="text-danger"> *</span></label>
+                                    class="form-control-label px-1">{{ __("Recording date") }}<span
+                                        class="text-danger"> *</span></label>
                                 <input id="creationdate" class="datepicker form-control" name="created" type="text"
                                        autocomplete="off" data-provide="datepicker" data-date-autoclose="true"
                                        data-date-today-highlight="true" required>
@@ -64,7 +64,7 @@
                         <!-- Description -->
                         <div class="row justify-content-between text-left">
                             <div class="form-group col-12 flex-column d-flex"><label
-                                        class="form-control-label px-1">{{ __("Description") }}</label>
+                                    class="form-control-label px-1">{{ __("Description") }}</label>
                                 <textarea id="description" name="description" class="form-control"
                                           placeholder="{{__("Add a presentation's description here (if needed)")}}"></textarea>
                             </div>
@@ -109,7 +109,7 @@
                                 <label class="form-control-label px-1">{{ __("Presenters") }}
                                     <span type="button" name="presenteradd"
                                           class="btn btn-primary px-1 py-0 presenteradd">{{__('Add')}}<i
-                                                class="fas fa-user-plus ml-1"></i></span>
+                                            class="fas fa-user-plus ml-1"></i></span>
                                 </label>
                                 <p class="font-1rem px-1 my-0">
                                     {{ __("Add the presenters for this video. The uploader is listed as presenter by default.") }}
@@ -158,8 +158,8 @@
                                 <select name="permission" class="form-control permission selectpicker"
                                         data-dropup-auto="false" id="permission">
                                     @if(!old('permission'))
-                                    <option value="false" selected>@lang('lang.public')</option>
-                                    <option value="true">@lang('lang.private')</option>
+                                        <option value="false" selected>@lang('lang.public')</option>
+                                        <option value="true">@lang('lang.private')</option>
                                     @else
                                         @if(old('permission') == true)
                                             <option value="true" selected>@lang('lang.private')</option>
@@ -172,61 +172,63 @@
                             <!-- Custom permissions -->
                             @if(!old('video_permission'))
                                 <div id="video_perm" class="form-group col-sm-6 mb-0" hidden>
-                            @else
-                                <div id="video_perm" class="form-group col-sm-6 mb-0">
-                            @endif
+                                    @else
+                                        <div id="video_perm" class="form-group col-sm-6 mb-0">
+                                            @endif
 
-                                <select class="form-control selectpicker" data-dropup-auto="false"
-                                        name="video_permission">
-                                    @foreach($permissions as $permission)
-                                        @if(!old('video_permission'))
-                                        <option value="{{$permission->id}}">{{$permission->id}}
-                                            : {{$permission->scope}}</option>
-                                        @else
-                                            <option value="{{$permission->id}}" {{ old('video_permission') == $permission->id  ? 'selected':''}}>{{$permission->id}} : {{$permission->scope}}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <input type="hidden" name="prepopulate" value="1">
-                        <!-- Policy -->
-                        <!-- Disabled until PO agree on a suitable text -->
-                        {{--}}
-                        <div class="col alert alert-warning" role="alert">
-                            <label class="form-control-label px-1">{{ __("DSV Disclaimer") }}</label>
-                            <p class="px-1 font-1rem">
-                                {{ __("Materials uploaded to DSVPlay may be subject to posted limitations on usage, reproduction and/or dissemination. You are responsible for adhering to such limitations if you upload materials.") }}
-                            </p>
-                            <div class="row justify-content-center">
-                                <div class="form-group flex-column d-flex">
-                                    <label class="form-control-label px-1">
-                                        <input type="checkbox" name="disclaimer"> {{ __("I understand") }}<span
-                                                class="text-danger"> *</span>
-                                    </label>
-                                    <div><small class="text-danger">{{ $errors->first('disclaimer') }}</small></div>
+                                            <select class="form-control selectpicker" data-dropup-auto="false"
+                                                    name="video_permission">
+                                                @foreach($permissions as $permission)
+                                                    @if(!old('video_permission'))
+                                                        <option value="{{$permission->id}}">{{$permission->id}}
+                                                            : {{$permission->scope}}</option>
+                                                    @else
+                                                        <option value="{{$permission->id}}" {{ old('video_permission') == $permission->id  ? 'selected':''}}>{{$permission->id}} : {{$permission->scope}}</option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        </div>
                                 </div>
-                            </div>
+                                <input type="hidden" name="prepopulate" value="1">
+                                <!-- Policy -->
+                                <!-- Disabled until PO agree on a suitable text -->
+                                {{--}}
+                                <div class="col alert alert-warning" role="alert">
+                                    <label class="form-control-label px-1">{{ __("DSV Disclaimer") }}</label>
+                                    <p class="px-1 font-1rem">
+                                        {{ __("Materials uploaded to DSVPlay may be subject to posted limitations on usage, reproduction and/or dissemination. You are responsible for adhering to such limitations if you upload materials.") }}
+                                    </p>
+                                    <div class="row justify-content-center">
+                                        <div class="form-group flex-column d-flex">
+                                            <label class="form-control-label px-1">
+                                                <input type="checkbox" name="disclaimer"> {{ __("I understand") }}<span
+                                                        class="text-danger"> *</span>
+                                            </label>
+                                            <div><small class="text-danger">{{ $errors->first('disclaimer') }}</small></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{--}}
                         </div>
-                        {{--}}
-                    </div>
                 </form>
             </div>
 
             <!--/col-9-->
+
             @livewire('file-upload', [
             'presentation' => $presentation,
             'permissions' => $permissions
             ])
+
         </div>
-{{--}}
-        <div class="row justify-content-center">
-            <div class="form-group col-sm-4">
-                <button id="submit" type="submit"
-                        class="btn-block btn btn-outline-primary">{{ __("Upload") }}</button>
-            </div>
-        </div>
-{{--}}
+        {{--}}
+                <div class="row justify-content-center">
+                    <div class="form-group col-sm-4">
+                        <button id="submit" type="submit"
+                                class="btn-block btn btn-outline-primary">{{ __("Upload") }}</button>
+                    </div>
+                </div>
+        {{--}}
     </div>
 
     <!-- Modal spinners -->

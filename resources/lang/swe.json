@@ -39,7 +39,7 @@
     "Fill in all the steps in the form to upload your presentation": "Fyll i alla steg i formuläret för att ladda upp din presentation",
     "Course": "Kurs",
     "Course association": "Kursassociation",
-    "Media files": "Mediafiler",
+    "Files": "Filer",
     "Thumbnails and Posters": "Miniatyr och Affischer",
     "Information about the presentation": "Information om presentationen",
     "Step": "Steg",
@@ -172,6 +172,8 @@
     "External access enabled": "Extern åtkomst aktiverad",
     "Settings": "Inställningar",
     "External playback enabled": "Extern uppspelning",
-    "Save & Close": "Spara och stäng"
+    "Save & Close": "Spara och stäng",
+    "Select one or up to 4 files at a time or drag and drop up to 4 files into the upload box": "Välj en eller upp till fyra filer åt gången eller dra och släpp upp till fyra filer i uppladdningsrutan",
+    "Stream duration": "Strömmens längd"
 
 }
