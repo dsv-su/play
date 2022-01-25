@@ -71,10 +71,19 @@
                         <button>2</button>
                     </li>
                     <li>
+                        <button>1.75</button>
+                    </li>
+                    <li>
                         <button>1.5</button>
                     </li>
                     <li>
+                        <button>1.25</button>
+                    </li>
+                    <li>
                         <button>1</button>
+                    </li>
+                    <li>
+                        <button>0.75</button>
                     </li>
                 </ul>
             </div>
