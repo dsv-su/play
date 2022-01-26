@@ -19,8 +19,7 @@
             <span class="badge badge-primary">{{count($videocourse)}}</span>
         @endif{{--}}
     </h3>
-
-    <div class="collapse @if ($videos->first() == $videocourse || (isset($manage) && $manage))show @endif"
+    <div class="collapse @if (isset($manage) && $manage) hide @elseif ($videos->first() == $videocourse) show @endif"
          id="collapse{{$key}}">
         @if (isset($manage) && $manage && $key)
             <h5 class="col">

@@ -18,8 +18,8 @@ use App\VideoPermission;
 use App\VideoPresenter;
 use DB;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class SearchController extends Controller
 {
@@ -42,20 +42,7 @@ class SearchController extends Controller
         $courses = $this->extractCourses($videos);
         $presenters = $this->extractPresenters($videos);
         $tags = $this->extractTags($videos);
-
-        /*$videos = $videos->groupBy(function ($item) {
-            $item['belongs_to_course'] = $item->video_course[0]->course['name'];
-            return $item->video_course[0]->course['name'] ?? '9999';
-        });*/
-        // Fix for issue #78
-        $videos = $videos->groupBy(function ($item) {
-            if (isset($item->video_course[0])) {
-                $course = $item->video_course[0]->course;
-                return $course['id'] ?? '0';
-            }
-            return false;
-        });
-
+        $videos = $this->groupVideos($videos);
 
         return view('home.navigator', compact('term', 'year', 'videos', 'courses', 'presenters', 'tags', 'permissions'));
     }
@@ -75,10 +62,17 @@ class SearchController extends Controller
         //Visibility
         $videos = $visibility->check($videos);
 
+        // Here we do a simple grouping, since we don't need all course designations
         $videos = $videos->groupBy(function ($item) {
             return $item->video_course[0]->course['id'] ?? 'UU9999';
         });
 
+        // Remove irrelevant course designations that could be added because of multiple course associations
+        foreach ($videos as $courseid => $videocourse) {
+            if (Course::find($courseid)->designation !== $designation) {
+                $videos->forget($courseid);
+            }
+        }
 
         return view('home.navigator', compact('designation', 'videos', 'permissions', 'terms', 'presenters', 'tags'));
     }
@@ -165,7 +159,6 @@ class SearchController extends Controller
                 return $visibility->check(Video::whereIn('id', $user_videos)->orWhereIn('id', $individual_videos)->orWhereIn('id', $courseadministrator)->orWhereIn('id', $video_course_ids)->latest('creation')->get());
 
             } elseif (app()->make('play_role') == 'Administrator') {
-                //dd($visibility->check(Video::with('category', 'video_course.course')->latest('creation')->get()));
                 return $visibility->check(Video::with('category', 'video_course.course')->latest('creation')->get());
             }
         }
@@ -186,10 +179,10 @@ class SearchController extends Controller
         $manage = \Request::is('manage');
         $permissions = VideoPermission::all();
 
+        // Group videos by a courseid
+        $videos = $this->groupVideos($videos);
 
-        //$videos = $this->groupVideos($videos); //This method has a bug -> does not return videos with no course-association. For now disabled.
-
-
+        /*
         // Group videos by course
         $videos = $videos->groupBy(function ($item) {
             if (isset($item->video_course[0])) {
@@ -198,8 +191,7 @@ class SearchController extends Controller
             }
             return false;
         });
-        //dd($videos);
-
+        */
 
         $coursesetlist = $individual_permissions = $playback_permissions = [];
         if ($manage) {
@@ -209,24 +201,22 @@ class SearchController extends Controller
         return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'permissions', 'coursesetlist', 'playback_permissions', 'individual_permissions'));
     }
 
-    public function groupVideos($videos): \Illuminate\Database\Eloquent\Collection
+    public function groupVideos($videos): Collection
     {
-        $courseids = \Illuminate\Database\Eloquent\Collection::empty();
-        $groupedvideos = \Illuminate\Database\Eloquent\Collection::empty();
+        $groupedvideos = Collection::empty();
         foreach ($videos as $video) {
-            foreach ($video->video_course as $vc) {
-                $courseids->add($vc->course_id);
-            }
-        }
-
-        foreach ($courseids->sort() as $key => $courseid) {
-            $groupedvideos[$courseid] = \Illuminate\Database\Eloquent\Collection::empty();
-            foreach ($videos as $video) {
+            if ($video->video_course->count()) {
                 foreach ($video->video_course as $vc) {
-                    if ($vc->course_id == $courseid) {
-                        $groupedvideos[$courseid]->add($video);
+                    if (!isset($groupedvideos[$vc->course_id])) {
+                        $groupedvideos[$vc->course_id] = Collection::empty();
                     }
+                    $groupedvideos[$vc->course_id]->add($video);
                 }
+            } else {
+                if (!isset($groupedvideos[0])) {
+                    $groupedvideos[0] = Collection::empty();
+                }
+                $groupedvideos[0]->add($video);
             }
         }
 

@@ -1,4 +1,4 @@
-<div class="card video m-auto faded" id="{{$video->id}}">
+<div class="card video m-auto faded" id="{{$video->id}}" style="box-shadow: 0 1rem 3rem rgba(240, 173, 78, 1.5)!important;">
 <!-- hide action icons for now
                     <div id="action-icons" class="flex-column m-1">
                                 <div class="mb-1">

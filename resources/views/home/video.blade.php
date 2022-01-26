@@ -1,5 +1,5 @@
 <!-- Video - child view - will inherit all data available in the parent view-->
-<div class="card video m-auto @if($video->visability == false && $video->visibility_setting == false) faded @endif" @if (isset($manage) && $manage) id="{{$video->id}}" @endif>
+<div class="shadow-lg shadow-warning card video m-auto @if($video->visability == false && $video->visibility_setting == false) faded @endif" @if (isset($manage) && $manage) id="{{$video->id}}" @endif>
     <div id="action-icons" class="flex-column m-1">
         @if ($video->visability =! false or $video->visibility_setting =! false)
             @if ($video->editable() or $video->edit_setting)

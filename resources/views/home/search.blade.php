@@ -61,8 +61,8 @@
                                 onclick="$('.selectpicker').selectpicker('deselectAll'); $('.selectpicker').selectpicker('refresh');">
                             {{ __("Clear Selection") }}
                         </button>
-                        <button type="button" class="mb-2 ml-1 btn btn-outline-secondary expanded" id="toggle">
-                            {{ __("Collapse all") }}
+                        <button type="button" class="mb-2 ml-1 btn btn-outline-secondary collapsed" id="toggle">
+                            {{ __("Expand all") }}
                         </button>
                         <meta name="csrf-token" content="{{ csrf_token() }}">
                     </form>

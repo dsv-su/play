@@ -5,7 +5,7 @@
         <div class="container banner-inner">
             <div class="row no-gutters w-100">
                 <div class="alert alert-info w-100 mb-5">
-                    {{__('Some of the uploaded presentations are being processed now. You can see them under All Presentations tab.')}}
+                    {{__('Some of the uploaded presentations are being processed now. You can see them under "All presentations" tab.')}}
                 </div>
             </div>
         </div>
