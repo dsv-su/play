@@ -71,14 +71,14 @@
                         </div>
 
                         <div class="row justify-content-between text-left">
-                            <div class="form-group col-12 flex-column d-flex">
+                            <div class="form-group col-12 col-lg-12 flex-column d-flex">
                                 <!-- Course association -->
                                 <label class="form-control-label px-1">{{ __("Course association") }}</label>
                                 <p class="font-1rem px-1 my-0">
                                     {{ __("Here you specify whether the recording should be associated with one or more courses. If you do not want the recording to be associated with a course or want to complete at a later time, leave the field blank.") }}
                                 </p>
                                 <select name="courses[]"
-                                        class="form-control mx-1 selectpicker w-100" data-dropup-auto="false"
+                                        class="form-control mx-1 selectpicker" data-dropup-auto="false"
                                         data-none-selected-text="{{ __('No course association')}}"
                                         data-live-search="true" multiple>
                                     {{--}}
@@ -93,7 +93,7 @@
 
                                     @foreach($courses as $course)
                                         @if(!old('courses'))
-                                            <option value={{ $course->id }}>{{ $course->designation . ' '. $course->semester. $course->year . ' (' . $course->name .')' }}</option>
+                                            <option value="{{ $course->id }}">{{ $course->designation . ' '. $course->semester. $course->year . ' (' . $course->name .')' }}</option>
                                         @else
                                             <option value="{{$course->id}}" {{ old('courses') == $course->designation || in_array($course->designation, old('courses')) ? 'selected':''}}>{{$course->designation . ' '. $course->semester. $course->year . ' (' . $course->name .')' }}</option>
                                         @endif
@@ -139,7 +139,7 @@
                                         data-live-search="true" multiple>
                                     @foreach($tags as $tag)
                                         @if(!old('tags'))
-                                            <option value={{ $tag->name }}>{{ $tag->name }}</option>
+                                            <option value="{{ $tag->name }}">{{ $tag->name }}</option>
                                         @else
                                             <option value="{{ $tag->name }}" {{ old('tags') == $tag->name || in_array($tag->name , old('tags')) ? 'selected':''}}>{{ $tag->name }}</option>
                                         @endif
