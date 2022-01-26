@@ -2,10 +2,6 @@ document.addEventListener('DOMContentLoaded', init)
 
 function init() {
     var cookies = getCookies()
-    var defaultres = 720
-    if('resolution' in cookies) {
-        defaultres = cookies.resolution
-    }
     var mainstream = document.querySelector('.main > video')
     setupLoader(mainstream)
 
@@ -35,12 +31,19 @@ function init() {
         var body = document.querySelector('body')
         var mainstream = document.querySelector('.main > video')
 
+        // A bit too magic with all the [0] but what can you do...
+        var defaultres = Object.keys(presentation.sources[0].video)[0]
+
+        if('resolution' in cookies) {
+            defaultres = cookies.resolution
+        }
+
         body.dataset.id = presentation.id
 
         if(playlist) {
             setupPlaylist(body, playlist)
         }
-
+        
         loadStreams(presentation, mainstream, defaultres)
 
         function awaitLoad(callback) {
@@ -51,7 +54,7 @@ function init() {
                     loaded += 1
                     if(loaded === streams.length) {
                         callback()}})})
-
+            
             setupHiding(body, mainstream)
             setupAbout(presentation.title)
             setupBlur()
@@ -138,7 +141,7 @@ function loadStreams(presentation, mainstream, defaultres) {
     var template = document.getElementById('stream-template')
 
     var main = streamlist[0]
-
+    
     if(typeof main.video === "string") {
         mainstream.src = main.video +"?token="+ token
     } else {
@@ -222,7 +225,7 @@ function setupBuffer(mainstream) {
 function setupFullscreen() {
     var body = document.querySelector('body')
     var icons = document.querySelectorAll('#fullscreen-button > svg > use')
-
+    
     function toggleFullscreen(event) {
         if(document.fullscreenElement) {
             document.exitFullscreen()
@@ -242,7 +245,7 @@ function setupHiding(body, mainstream) {
     var timer = null
     var controls = document.querySelector('#controls')
     var about = document.querySelector('#about')
-
+    
     function hide() {
         if(!body.classList.contains(selector)) {
             body.classList.add(selector)
@@ -277,7 +280,7 @@ function setupLoader(mainstream) {
     var playpause = document.querySelector('.main .fade')
     var loading = document.querySelector('#loading')
     var selector = 'hidden'
-
+    
     function showState(event) {
         switch(event.type) {
         case 'stalled':
@@ -300,7 +303,7 @@ function setupLoader(mainstream) {
             break
         }
     }
-
+    
     var events = ['loadstart',
                   'playing',
                   'stalled',
@@ -334,7 +337,7 @@ function setupPlayback(body, mainstream) {
         mainstream.currentTime = 0
         mainstream.dispatchEvent(new CustomEvent('sync'))
     }
-
+    
     document.querySelectorAll('.main, #play-button')
         .forEach(function(button) {
             button.addEventListener('click', togglePlayback)})
@@ -516,7 +519,7 @@ function setupResSwitching(streamlist, defaultres) {
 function setupSpeed() {
     var videos = document.querySelectorAll('video')
     var current = document.querySelector('#speed-current')
-
+    
     function setSpeed(event) {
         var speed = event.currentTarget.textContent
         if(event.currentTarget.id == 'speed-current') {
@@ -539,7 +542,7 @@ function setupSubs(subs, mainstream) {
     mainstream.appendChild(subtrack)
 
     var icons = document.querySelectorAll('#subtitles-button > svg > use')
-
+    
     function toggleSubs(event) {
         icons.forEach(function(icon) {
             icon.classList.toggle('hidden')})
@@ -580,7 +583,7 @@ function setupSync(mainstream) {
         others.forEach(function(stream) {
             stream.currentTime = mainstream.currentTime})
     }
-
+    
     mainstream.addEventListener('sync', sync)
 }
 
@@ -592,7 +595,7 @@ function setupVolume(soundstream) {
 
     // There may be a cached setting to apply
     soundstream.volume = volume.value
-
+    
     function toggleVolume(event) {
         if(!muted) {
             mutedVol = volume.value
@@ -613,10 +616,10 @@ function setupVolume(soundstream) {
     function slideVolume(event) {
         soundstream.volume = event.currentTarget.value
     }
-
+    
     document.querySelector('#volume-button')
         .addEventListener('click', toggleVolume)
-
+    
     document.querySelector('#volume')
         .addEventListener('input', slideVolume)
 }
