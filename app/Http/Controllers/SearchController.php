@@ -44,6 +44,14 @@ class SearchController extends Controller
         $tags = $this->extractTags($videos);
         $videos = $this->groupVideos($videos);
 
+        // Remove irrelevant terms that could be added because of multiple course associations
+        foreach ($videos as $courseid => $videocourse) {
+            $course = Course::find($courseid);
+            if ($course->semester !== $term || $course->year !== $year ) {
+                $videos->forget($courseid);
+            }
+        }
+
         return view('home.navigator', compact('term', 'year', 'videos', 'courses', 'presenters', 'tags', 'permissions'));
     }
 
@@ -61,11 +69,7 @@ class SearchController extends Controller
 
         //Visibility
         $videos = $visibility->check($videos);
-
-        // Here we do a simple grouping, since we don't need all course designations
-        $videos = $videos->groupBy(function ($item) {
-            return $item->video_course[0]->course['id'] ?? 'UU9999';
-        });
+        $videos = $this->groupVideos($videos);
 
         // Remove irrelevant course designations that could be added because of multiple course associations
         foreach ($videos as $courseid => $videocourse) {
@@ -221,6 +225,27 @@ class SearchController extends Controller
         }
 
         return $groupedvideos;
+    }
+
+    public function removeIrrelevantTerms($videos, $term, $year) {
+        // Remove irrelevant terms that could be added because of multiple course associations
+        foreach ($videos as $courseid => $videocourse) {
+            $course = Course::find($courseid);
+            if ($course->semester !== $term || $course->year !== $year ) {
+                $videos->forget($courseid);
+            }
+        }
+        return $videos;
+    }
+
+    public function removeIrrelevantDesignations($videos, $designation) {
+        // Remove irrelevant course designations that could be added because of multiple course associations
+        foreach ($videos as $courseid => $videocourse) {
+            if (Course::find($courseid)->designation !== $designation) {
+                $videos->forget($courseid);
+            }
+        }
+        return $videos;
     }
 
     public function extractSettings($videos): array
@@ -443,6 +468,8 @@ class SearchController extends Controller
         } else {
             $html .= '<h4 class="col my-3 font-weight-light">No presentations found</h4>';
         }
+
+
         $videocourses = $this->extractCourses($videos);
         $videoterms = $this->extractTerms($videos);
         $videotags = $this->extractTags($videos);
@@ -486,11 +513,9 @@ class SearchController extends Controller
             $videos, null, $semesters, $tags, $presenters
         );
 
-        // Rewrite html here because it doesn't fit our categorization view
-        $html = '';
-        foreach ($filteredvideos as $key => $coursevideos) {
-            $html .= view('home.filtered_course', compact('coursevideos', 'key', 'designation', 'permissions'))->render();
-        }
+        $videos = $this->removeIrrelevantDesignations($filteredvideos, $designation);
+
+        $html = view('home.courselist', compact('videos'))->render();
 
         return $html ?: '<h4 class="col my-3 font-weight-light">No presentations found</h4>';
     }
@@ -514,16 +539,9 @@ class SearchController extends Controller
             $videos, $designations, null, $tags, $presenters
         );
 
-        $groupedvideos = $filteredvideos->groupBy(function ($item, $key) {
-            $item['belongs_to_course'] = $item->video_course[0]->course['name'];
-            return $item->video_course[0]->course['name'] ?? '9999';
-        });
+        $videos = $this->removeIrrelevantTerms($filteredvideos, $term, $year);
 
-        // Rewrite html here because it doesn't fit our categorization view
-        $html = '';
-        foreach ($groupedvideos as $key => $coursevideos) {
-            $html .= view('home.filtered_course', compact('coursevideos', 'key', 'permissions'))->render();
-        }
+        $html = view('home.courselist', compact('videos'))->render();
 
         return $html ?: '<h4 class="col my-3 font-weight-light">No presentations found</h4>';
     }
