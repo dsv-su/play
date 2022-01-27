@@ -2,24 +2,25 @@
 
 namespace App\Console\Commands;
 
+use App\ManualPresentation;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class TruncateAdminHandler extends Command
+class UploadHandlerClear extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'adminhandler:truncate';
+    protected $signature = 'upload:clear';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Truncate the AdminHandler table daily';
+    protected $description = 'Cleans up unfinished uploads';
 
     /**
      * Create a new command instance.
@@ -38,9 +39,7 @@ class TruncateAdminHandler extends Command
      */
     public function handle()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        DB::table('admin_handlers')->truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        DB::table('manual_presentations')->where('status', 'init')->delete();
         return 0;
     }
 }
