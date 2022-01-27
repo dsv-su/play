@@ -20,7 +20,7 @@ class DownloadZip extends Model
     {
         //Create zip file of downloaded files and folders
         $this->destination = storage_path('app/public/'.$this->path.'/');
-        $this->zipFileName = $this->destination.$this->video->id.'.zip';
+        $this->zipFileName = $this->destination.$this->video->title.'.zip';
         //Directory of unzipped files
         $this->public_dir = public_path().'/storage/'.$this->path;
 

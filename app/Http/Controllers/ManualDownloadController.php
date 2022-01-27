@@ -101,13 +101,13 @@ class ManualDownloadController extends Controller
         $presentation = Presentation::find($video->id);
         $path = $presentation->local . '/';
 
-        if (Storage::disk('public')->exists($path . $video->id . '.zip')) {
+        if (Storage::disk('public')->exists($path . $video->title . '.zip')) {
             //Register stats
             $stats = VideoStat::firstOrNew(['video_id' => $video->id]);
             $stats->download = $stats->download + 1;
             $stats->save();
 
-            return Storage::disk('public')->download($path . $video->id . '.zip');
+            return Storage::disk('public')->download($path . $video->title . '.zip');
         } else {
             return redirect('/')->with(['message' => 'Ett fel har inträffat. Error: File not found!', 'alert' => 'alert-danger']);
         }
@@ -429,7 +429,7 @@ class ManualDownloadController extends Controller
                 'playAudio' => (bool) $stream->audio,
                 'name' => $stream->name
             ];
-            $resolutions = StreamResolution::where('stream_id', $stream->id)->get();
+            $resolutions = StreamResolution::where('stream_id', $stream->id)->where('resolution', $presentation->resolution)->get();
             foreach ($resolutions as $resolution) {
                 $package['sources'][$key]['video'][$resolution->resolution] = 'videos/'. $resolution->filename;
             }
