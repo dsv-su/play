@@ -150,7 +150,7 @@ class SearchController extends Controller
                 $courseadministrator = CourseadminPermission::where('username', app()->make('play_username'))->where('permission', 'delete')->pluck('video_id');
 
                 //Check for individual permissions settings
-                $individual_videos = IndividualPermission::where('username', app()->make('play_username'))->where('permission', 'edit')->orWhere('permission', 'delete')->pluck('video_id');
+                $individual_videos = IndividualPermission::where('username', app()->make('play_username'))->where('permission', 'edit')->Where('permission', 'delete')->pluck('video_id');
 
                 //Check for course individual settings
                 if (count($course_user_admins = CoursesettingsUsers::where('username', app()->make('play_username'))->whereIn('permission', ['edit', 'delete'])->get()) >= 1) {
