@@ -8,8 +8,10 @@ use App\CoursesettingsPermissions;
 use App\CoursesettingsUsers;
 use App\Permission;
 use App\Services\Daisy\DaisyAPI;
+use App\Services\Daisy\DaisyIntegration;
 use App\VideoCourse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
 
 class ManageCourseSettingsController extends Controller
 {
@@ -37,7 +39,13 @@ class ManageCourseSettingsController extends Controller
                 }
                 if ($year == substr($course['semester'], 0, 4)) {
                     $term = (substr($course['semester'], 4) == '1') ? 'VT' : 'HT';
-                    $courselist[$year][$course['id']] = $course['designation'] . ' ' . $term . substr($course['semester'], 0, 4) . ' — ' . $course['name'] . ' (' . __('id') . ' ' . $course['id'] . ')';
+                    if(Lang::locale() == 'swe') {
+                        $courselist[$year][$course['id']] = $course['designation'] . ' ' . $term . substr($course['semester'], 0, 4) . ' — ' . $course['name'] . ' (' . __('id') . ' ' . $course['id'] . ')';
+                    } else {
+                        //English
+                        $courselist[$year][$course['id']] = $course['designation'] . ' ' . $term . substr($course['semester'], 0, 4) . ' — ' . $course['name_en'] . ' (' . __('id') . ' ' . $course['id'] . ')';
+                    }
+
                     $start++;
                 } else {
                     $start = 0;
@@ -89,7 +97,13 @@ class ManageCourseSettingsController extends Controller
                     }
                     if ($year == substr($course[4], 0, 4)) {
                         $term = (substr($course[4], 4) == '1') ? 'VT' : 'HT';
-                        $courselist[$year][$course[2]] = $course[3] . ' ' . $term . substr($course[4], 0, 4) . ' — ' . $course[0] . ' (' . __('id') . ' ' . $course[2] . ')';
+                        if(Lang::locale() == 'swe') {
+                            $courselist[$year][$course[2]] = $course[3] . ' ' . $term . substr($course[4], 0, 4) . ' — ' . $course[0] . ' (' . __('id') . ' ' . $course[2] . ')';
+                        } else {
+                            //English
+                            $courselist[$year][$course[2]] = $course[3] . ' ' . $term . substr($course[4], 0, 4) . ' — ' . $course[1] . ' (' . __('id') . ' ' . $course[2] . ')';
+                        }
+
 
                         $start++;
                     } else {
@@ -125,7 +139,7 @@ class ManageCourseSettingsController extends Controller
 
     public function edit($courseid)
     {
-        //Check if course exist else through Daisyerror
+        //Check if course exist else update Course
         if($course = Course::find($courseid)) {
             $individual_permissions = [];
             $coursesettings_permissions = CoursesettingsPermissions::where('course_id', $courseid)->first();
@@ -145,10 +159,12 @@ class ManageCourseSettingsController extends Controller
 
             return view('manage.editcourse', compact('course', 'coursesettings_permissions', 'individual_permissions', 'permissions', 'user_permission'));
         } else {
-            abort(510);
+
+            return redirect()->action(
+                [ManageCourseSettingsController::class, 'edit'], ['courseid' => $this->updateCourse($courseid)]
+            );
         }
 
-        return 0;
 
     }
 
@@ -221,5 +237,29 @@ class ManageCourseSettingsController extends Controller
             $coursesettings_permissions->save();
         }
         return redirect()->route('manage');
+    }
+
+    private function updateCourse($course_id)
+    {
+        //For updating missing course from Daisy
+
+        $daisy = new DaisyIntegration();
+
+        $this->retrieved_course = $daisy->getCourseSegment($course_id);
+        //Update or Create Course
+        if (substr($this->retrieved_course['semester'], 4) == '1') {
+            $this->course = Course::updateOrCreate(
+                ['id' => $this->retrieved_course['id'], 'designation' => $this->retrieved_course['designation'], 'semester' => 'VT', 'year' => substr($this->retrieved_course['semester'], 0, 4)],
+                ['name' => $this->retrieved_course['name'], 'name_en' => $this->retrieved_course['name_en']]
+            );
+        } else {
+            $this->course = Course::updateOrCreate(
+                ['id' => $this->retrieved_course['id'], 'designation' => $this->retrieved_course['designation'], 'semester' => 'HT', 'year' => substr($this->retrieved_course['semester'], 0, 4)],
+                ['name' => $this->retrieved_course['name'], 'name_en' => $this->retrieved_course['name_en']]
+            );
+        }
+
+        return $course_id;
+
     }
 }

@@ -63,7 +63,7 @@ class DaisyIntegration extends Model
     //Method for retrieving employees active courses from Daisy with UserID
     public function getActiveEmployeeCourses($username)
     {
-        //Filters courses from ht2019-vt2021
+        //Filters courses from to
         $this->array_resource = json_decode($this->getResource('/employee/username/' . $username . '@su.se', 'json')->getBody()->getContents(), TRUE);
         $this->courses = json_decode($this->getResource('/employee/' . $this->array_resource['person']['id'] . '/contributions?fromSemesterId='.$this->from_year().'1&toSemesterId='.$this->to_year().'2', 'json')->getBody()->getContents(), TRUE);
         foreach ($this->courses as $this->instance) {
@@ -75,7 +75,7 @@ class DaisyIntegration extends Model
     //Method for retrieving employees active semesters from Daisy with UserID
     public function getActiveEmployeeSemesters($username)
     {
-        //Filters courses from ht2019-vt2021
+        //Filters courses from to
         $this->array_resource = json_decode($this->getResource('employee/username/' . $username . '@su.se', 'json')->getBody()->getContents(), TRUE);
         $this->courses = json_decode($this->getResource('/employee/' . $this->array_resource['person']['id'] . '/contributions?fromSemesterId='.$this->from_year().'1&toSemesterId='.$this->to_year().'2', 'json')->getBody()->getContents(), TRUE);
         foreach ($this->courses as $this->instance) {
@@ -88,7 +88,7 @@ class DaisyIntegration extends Model
     public function getActiveEmployeeDesignations($username)
     {
 
-        //Filters designations from vt2019-vt2021
+        //Filters designations from to
         $this->array_resource = json_decode($this->getResource('employee/username/' . $username . '@su.se', 'json')->getBody()->getContents(), TRUE);
         $this->courses = json_decode($this->getResource('/employee/' . $this->array_resource['person']['id'] . '/contributions?fromSemesterId='.$this->from_year().'1&toSemesterId='.$this->to_year().'2', 'json')->getBody()->getContents(), TRUE);
         $this->courses = collect($this->courses)->take(10);
@@ -246,12 +246,12 @@ class DaisyIntegration extends Model
                 if (substr($this->item['semester'], 4) == '1') {
                     Course::updateOrCreate(
                         ['id' => $this->item['id'], 'designation' => $this->item['designation'], 'semester' => 'VT', 'year' => substr($this->item['semester'], 0, 4)],
-                        ['name' => $this->item['name']]
+                        ['name' => $this->item['name'], 'name_en' => $this->item['name_en']]
                     );
                 } else {
                     Course::updateOrCreate(
                         ['id' => $this->item['id'], 'designation' => $this->item['designation'], 'semester' => 'HT', 'year' => substr($this->item['semester'], 0, 4)],
-                        ['name' => $this->item['name']]
+                        ['name' => $this->item['name'], 'name_en' => $this->item['name_en']]
                     );
                 }
             }

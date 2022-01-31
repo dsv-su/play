@@ -93,9 +93,17 @@
 
                                     @foreach($courses as $course)
                                         @if(!old('courses'))
-                                            <option value="{{ $course->id }}">{{ $course->designation . ' '. $course->semester. $course->year . ' (' . $course->name .')' }}</option>
+                                            @if(Lang::locale() == 'swe')
+                                                <option value="{{ $course->id }}">{{ $course->id . ' ' . $course->designation . ' '. $course->semester. $course->year . ' (' . $course->name .')' }}</option>
+                                            @else
+                                                <option value="{{ $course->id }}">{{ $course->id . ' ' . $course->designation . ' '. $course->semester. $course->year . ' (' . $course->name_en .')' }}</option>
+                                            @endif
                                         @else
-                                            <option value="{{$course->id}}" {{ old('courses') == $course->designation || in_array($course->designation, old('courses')) ? 'selected':''}}>{{$course->designation . ' '. $course->semester. $course->year . ' (' . $course->name .')' }}</option>
+                                            @if(Lang::locale() == 'swe')
+                                                <option value="{{$course->id}}" {{ old('courses') == $course->designation || in_array($course->designation, old('courses')) ? 'selected':''}}>{{$course->id . ' ' .$course->designation . ' '. $course->semester. $course->year . ' (' . $course->name .')' }}</option>
+                                            @else
+                                                <option value="{{$course->id}}" {{ old('courses') == $course->designation || in_array($course->designation, old('courses')) ? 'selected':''}}>{{$course->id . ' ' .$course->designation . ' '. $course->semester. $course->year . ' (' . $course->name_en .')' }}</option>
+                                            @endif
                                         @endif
                                     @endforeach
 

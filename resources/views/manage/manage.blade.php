@@ -60,7 +60,13 @@
                     </option>
                     @foreach($allcourses as $course)
                         <option value="{{$course->id}}"
-                                @if(app('request')->input('course') == $course->id) selected @endif>{{$course->name}}</option>
+                                @if(app('request')->input('course') == $course->id) selected @endif>
+                            @if(Lang::locale() == 'swe')
+                                {{$course->name}}
+                            @else
+                                {{$course->name_en}}
+                            @endif
+                        </option>
                     @endforeach
                 </select>
             </div>

@@ -27,7 +27,7 @@
                     <span class="su-theme-anchor"></span>
                     <h3 class="su-theme-header mb-4">
                         <span class="fas fa-address-card fa-icon-border mr-2" aria-hidden="true"></span>
-                        {{__('Manage courses')}}
+                        {{__("Manage courses")}}
                     </h3>
                 </div>
             </div> <!-- col-12 -->

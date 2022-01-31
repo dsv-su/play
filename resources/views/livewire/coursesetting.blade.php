@@ -32,7 +32,11 @@
                             </div>
                             <div class="row">
                                 <label class="col-4 col-lg-3 mb-0">{{ __("Course name") }}</label>
-                                <div class="col">{{$course->name}}
+                                @if(Lang::locale() == 'swe')
+                                    <div class="col">{{$course->name}}
+                                @else
+                                    <div class="col">{{$course->name_en}}
+                                @endif
                                 </div>
                             </div>
                             <div class="row"><label class="col-4 col-lg-3 mb-0">{{ __("Designation") }}</label>

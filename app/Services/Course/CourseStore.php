@@ -45,12 +45,12 @@ class CourseStore extends Model
                         if (substr($this->retrieved_course['semester'], 4) == '1') {
                             $this->course = Course::updateOrCreate(
                                 ['id' => $this->retrieved_course['id'], 'designation' => $this->retrieved_course['designation'], 'semester' => 'VT', 'year' => substr($this->retrieved_course['semester'], 0, 4)],
-                                ['name' => $this->retrieved_course['name']]
+                                ['name' => $this->retrieved_course['name'], 'name_en' => $this->retrieved_course['name_en']]
                             );
                         } else {
                             $this->course = Course::updateOrCreate(
                                 ['id' => $this->retrieved_course['id'], 'designation' => $this->retrieved_course['designation'], 'semester' => 'HT', 'year' => substr($this->retrieved_course['semester'], 0, 4)],
-                                ['name' => $this->retrieved_course['name']]
+                                ['name' => $this->retrieved_course['name'], 'name_en' => $this->retrieved_course['name_en']]
                             );
                         }
                         //Create relation video-course
@@ -108,7 +108,7 @@ class CourseStore extends Model
                 }
 
             } else {
-                //Cattura recordings
+                //Cattura/Mediasite recordings
                 foreach ($this->courses as $key => $this->item) {
                     if ($this->item) {
 
@@ -120,6 +120,7 @@ class CourseStore extends Model
                             $this->course = Course::create([
                                 'id' => $this->retrieved_course['id'],
                                 'name' => $this->retrieved_course['name'],
+                                'name_en' => $this->retrieved_course['name_en'],
                                 'designation' => $this->retrieved_course['designation'],
                                 'semester' => $this->convertSemester($this->timestamp),
                                 'year' => $this->convertYear($this->timestamp),
