@@ -74,22 +74,23 @@ class ManageCourseSettingsController extends Controller
                  * [0] Coursename swedish
                  * [1] Coursename english
                  * [2] CourseID
-                 * [3] Semester in format year XXXX and term 1 spring(VT) 2 fall(HT) - e.g. 20212
-                 * [4] Designation
+                 * [3] Designation
+                 * [4] Semester in format year XXXX and term 1 spring(VT) 2 fall(HT) - e.g. 20212
                  * [5] Courseadmin true/false
                  */
 
                 //Group after year
 
-
                 $start = 0;
                 foreach ($courses as $course) {
+                    //dd($course);
                     if ($start == 0) {
-                        $year = substr($course[3], 0, 4);
+                        $year = substr($course[4], 0, 4);
                     }
-                    if ($year == substr($course[3], 0, 4)) {
-                        $term = (substr($course[3], 4) == '1') ? 'VT' : 'HT';
-                        $courselist[$year][$course[2]] = $course[4] . ' ' . $term . substr($course[3], 0, 4) . ' — ' . $course[0] . ' (' . __('id') . ' ' . $course[2] . ')';
+                    if ($year == substr($course[4], 0, 4)) {
+                        $term = (substr($course[4], 4) == '1') ? 'VT' : 'HT';
+                        $courselist[$year][$course[2]] = $course[3] . ' ' . $term . substr($course[4], 0, 4) . ' — ' . $course[0] . ' (' . __('id') . ' ' . $course[2] . ')';
+
                         $start++;
                     } else {
                         $start = 0;
@@ -124,24 +125,31 @@ class ManageCourseSettingsController extends Controller
 
     public function edit($courseid)
     {
-        $course = Course::find($courseid);
-        $individual_permissions = [];
-        $coursesettings_permissions = CoursesettingsPermissions::where('course_id', $courseid)->first();
-        //Individual user settings
-        if ($ipermissions = CoursesettingsUsers::where('course_id', $courseid)->get()) {
-            $individual_permissions = $ipermissions;
+        //Check if course exist else through Daisyerror
+        if($course = Course::find($courseid)) {
+            $individual_permissions = [];
+            $coursesettings_permissions = CoursesettingsPermissions::where('course_id', $courseid)->first();
+            //Individual user settings
+            if ($ipermissions = CoursesettingsUsers::where('course_id', $courseid)->get()) {
+                $individual_permissions = $ipermissions;
+            }
+            //Group permissions
+            $permissions = Permission::all();
+
+            $user_permission = $course->userPermission();
+
+            // If user has neither course responsibility nor individual permission, prevent it.
+            if (!$user_permission || !in_array($user_permission, ['edit', 'delete'])) {
+                abort(401);
+            }
+
+            return view('manage.editcourse', compact('course', 'coursesettings_permissions', 'individual_permissions', 'permissions', 'user_permission'));
+        } else {
+            abort(510);
         }
-        //Group permissions
-        $permissions = Permission::all();
 
-        $user_permission = $course->userPermission();
+        return 0;
 
-        // If user has neither course responsibility nor individual permission, prevent it.
-        if (!$user_permission || !in_array($user_permission, ['edit', 'delete'])) {
-            abort(401);
-        }
-
-        return view('manage.editcourse', compact('course', 'coursesettings_permissions', 'individual_permissions', 'permissions', 'user_permission'));
     }
 
     public function store($course_id, Request $request)

@@ -15,7 +15,7 @@ class DaisyAPI extends DaisyIntegration
 
     public function checkCourseAdmin($id)
     {
-        if(json_decode($this->getResource('employee/' . $id . '/contributions?fromSemesterId=20191&toSemesterId=20212', 'json')->getBody()->getContents(), TRUE)) {
+        if(json_decode($this->getResource('employee/' . $id . '/contributions?fromSemesterId='.$this->from_year().'1&toSemesterId='.$this->to_year().'2', 'json')->getBody()->getContents(), TRUE)) {
             return true;
         }
         else
@@ -27,7 +27,7 @@ class DaisyAPI extends DaisyIntegration
     //All courses where user is Responible courseadministrator
     public function getDaisyEmployeeResponsibleCourses($id)
     {
-        if($this->array_resources = json_decode($this->getResource('employee/' . $id . '/contributions?fromSemesterId=20191&toSemesterId=20212', 'json')->getBody()->getContents(), TRUE)) {
+        if($this->array_resources = json_decode($this->getResource('employee/' . $id . '/contributions?fromSemesterId='.$this->from_year().'1&toSemesterId='.$this->to_year().'2', 'json')->getBody()->getContents(), TRUE)) {
             //If user is courseadmin
             //Sort the result after year
 
@@ -50,8 +50,8 @@ class DaisyAPI extends DaisyIntegration
                    * [0] Coursename swedish
                    * [1] Coursename english
                    * [2] CourseID
-                   * [3] Semester in format year XXXX and term 1 spring(VT) 2 fall(HT) - e.g. 20212
                    * [4] Designation
+                   * [3] Semester in format year XXXX and term 1 spring(VT) 2 fall(HT) - e.g. 20212
                    * [5] Courseadmin true/false
                    */
 

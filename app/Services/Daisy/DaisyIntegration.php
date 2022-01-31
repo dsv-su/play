@@ -187,7 +187,7 @@ class DaisyIntegration extends Model
     public function init($start_date=null)
     {
         $this->endpoints = array(
-            //'courseSegment?semester=20222',
+            'courseSegment?semester=20222',
             'courseSegment?semester=20221',
             'courseSegment?semester=20212',
             'courseSegment?semester=20211',
@@ -289,7 +289,7 @@ class DaisyIntegration extends Model
     {
         $this->file = base_path() . '/systemconfig/play.ini';
         if (!file_exists($this->file)) {
-            $this->file = base_path() . '/systemconfig/play.ini.example';
+            abort(510);
         }
         $this->system_config = parse_ini_file($this->file, true);
 
@@ -300,7 +300,7 @@ class DaisyIntegration extends Model
     {
         $this->file = base_path() . '/systemconfig/play.ini';
         if (!file_exists($this->file)) {
-            $this->file = base_path() . '/systemconfig/play.ini.example';
+            abort(510);
         }
         $this->system_config = parse_ini_file($this->file, true);
 
