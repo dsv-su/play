@@ -183,6 +183,8 @@
     "Semester": "Termin",
     "Year": "År",
     "Visibility": "Synlighet",
-    "No individual user permissions added":"Inga individuella användarbehörigheter har lagts till"
+    "No individual user permissions added":"Inga individuella användarbehörigheter har lagts till",
+    "Presentation": "Presentation",
+    "Presentations": "Presentationer"
 
 }

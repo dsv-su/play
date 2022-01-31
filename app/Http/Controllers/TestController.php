@@ -14,10 +14,6 @@ class TestController extends Controller
 
     public function test()
     {
-        //Run once to retrive coursenames in english
-        $update_courses = [5548, 5567, 5853, 5877, 5944, 5982, 6020, 6098, 6254, 6321, 6329];
-        $this->updateOldCourses($update_courses);
-
     }
 
     private function updateOldCourses($courses):void

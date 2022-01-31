@@ -20,6 +20,7 @@ use DB;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
 
 class SearchController extends Controller
 {
@@ -345,7 +346,12 @@ class SearchController extends Controller
         foreach ($videos as $video) {
             foreach ($video->courses() as $course) {
                 if (!in_array($course->name, $courses)) {
-                    $courses[$course->designation] = $course->name;
+                    if(Lang::locale() == 'swe') {
+                        $courses[$course->designation] = $course->name;
+                    } else {
+                        $courses[$course->designation] = $course->name_en;
+                    }
+
                 }
             }
         }

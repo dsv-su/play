@@ -4,7 +4,13 @@
            data-toggle="collapse"
            href="#collapse{{$key}}" role="button" aria-expanded="false"
            aria-controls="collapse{{$key}}">
-            <i class="fa mr-2"></i>{{\App\Course::find($key) ? \App\Course::find($key)->designation . ' ' . \App\Course::find($key)->semester.\App\Course::find($key)->year . ' — ' . \App\Course::find($key)->name : 'Uncategorized'}}</a>
+            <i class="fa mr-2"></i>
+            @if(Lang::locale() == 'swe')
+                {{\App\Course::find($key) ? \App\Course::find($key)->designation . ' ' . \App\Course::find($key)->semester.\App\Course::find($key)->year . ' — ' . \App\Course::find($key)->name : 'Okategoriserad'}}
+            @else
+                {{\App\Course::find($key) ? \App\Course::find($key)->designation . ' ' . \App\Course::find($key)->semester.\App\Course::find($key)->year . ' — ' . \App\Course::find($key)->name_en : 'Uncategorized'}}
+            @endif
+        </a>
         <span class="badge badge-light">{{count($videocourse)}}</span>
         @if (isset($manage) && $manage && $key)
             @if ($individual_permissions[$key])
@@ -48,7 +54,7 @@
          id="collapse{{$key}}">
         @if (isset($manage) && $manage)
             <h5 class="col">
-                <span class="badge badge-light">{{count($videocourse)}} @if (count($videocourse) == 1 ){{__('presentation')}} @else {{__('presentations')}} @endif</span>
+                <span class="badge badge-light">{{count($videocourse)}} @if (count($videocourse) == 1 ){{__("Presentation")}} @else {{__("Presentations")}} @endif</span>
                 @if ($key)
                     @if ($individual_permissions[$key])
                         <span class="badge badge-light mb-2">{{$individual_permissions[$key]}} {{__("individual permissions")}} <span class="badge badge-secondary"><i class="fas fa-user"></i></span></span>
