@@ -317,7 +317,7 @@ class SearchController extends Controller
         $visibility = new Visibility();
         //Permissions label
         $permissions = VideoPermission::all();
-        $tagid = Tag::where('name', $tag)->first()->id;
+        $tagid = Tag::where('name', $tag)->firstOrFail()->id;
         $videos = Video::with('video_tag.tag')->whereHas('video_tag.tag', function ($query) use ($tagid) {
             return $query->where('id', $tagid);
         })->orderBy('creation', 'desc')->get();
@@ -338,7 +338,10 @@ class SearchController extends Controller
         $visibility = new Visibility();
         //Permissions label
         $permissions = VideoPermission::all();
-        $presenter = Presenter::where('username', $username)->first();
+        $presenter = Presenter::where('username', $username)->first() ?? Presenter::where('name', $username)->first();
+        if (!$presenter) {
+            abort(404);
+        }
         $videos = Video::with('video_presenter.presenter')->whereHas('video_presenter.presenter', function ($query) use ($presenter) {
             return $query->where('id', $presenter->id);
         })->orderBy('creation', 'desc')->get();
@@ -495,7 +498,7 @@ class SearchController extends Controller
     {
         $visibility = new Visibility();
         $permissions = VideoPermission::all();
-        $tagid = Tag::where('name', $tag)->first()->id;
+        $tagid = Tag::where('name', $tag)->firstOrFail()->id;
         $videos = Video::with('video_tag.tag')->whereHas('video_tag.tag', function ($query) use ($tagid) {
             return $query->where('id', $tagid);
         })->orderBy('creation', 'desc')->get();
@@ -517,7 +520,7 @@ class SearchController extends Controller
         $visibility = new Visibility();
         //Permissions label
         $permissions = VideoPermission::all();
-        $presenter = Presenter::where('username', $username)->first();
+        $presenter = Presenter::where('username', $username)->first() ?? Presenter::where('name', $username)->first();
         $videos = Video::with('video_presenter.presenter')->whereHas('video_presenter.presenter', function ($query) use ($presenter) {
             return $query->where('id', $presenter->id);
         })->orderBy('creation', 'desc')->get();

@@ -34,11 +34,11 @@
         @if(count($videos) > 0)
             @if (isset($presenters) || isset($terms) || isset($tags) || isset($courses))
                 <form class="form-inline mx-3">
-                    <label class="col-form-label mr-1 font-weight-light">Filter by: </label>
+                    <label class="col-form-label mr-1 font-weight-light">{{__('Filter by')}}: </label>
                     @if ( isset($courses))
                         <select name="course" @if (empty($courses)) disabled
                                 @endif class="form-control mx-1 selectpicker"
-                                data-none-selected-text="Course" data-live-search="true" multiple style="width: 400px">
+                                data-none-selected-text="{{ __('Course') }}" data-live-search="true" multiple style="width: 400px">
                             @foreach($courses as $designation => $name)
                                 <option value="{{$designation}}">{{$name}} @if ($designation != 'nocourse')
                                         ({{$designation}})@endif</option>
@@ -47,7 +47,7 @@
                     @endif
                     @if (isset($presenters))
                         <select name="presenter" class="form-control mx-1 selectpicker"
-                                data-none-selected-text="Presenter" data-live-search="true" multiple
+                                data-none-selected-text="{{ __('Presenter') }}" data-live-search="true" multiple
                                 style="width: 400px;">
                             @foreach($presenters as $username => $name)
                                 <option value="{{$username}}">{{$name}}</option>
@@ -55,7 +55,7 @@
                         </select>
                     @endif
                     @if (isset($terms))
-                        <select name="semester" class="form-control mx-1 selectpicker" data-none-selected-text="Term"
+                        <select name="semester" class="form-control mx-1 selectpicker" data-none-selected-text="{{ __('Term') }}"
                                 data-live-search="true" multiple
                                 style="width: 200px">
                             @foreach($terms as $term)
@@ -66,7 +66,7 @@
                     @if (isset($tags))
                         <select name="tag" @if (empty($tags)) disabled
                                 @endif class="form-control mx-1 selectpicker"
-                                data-none-selected-text="Tag" data-live-search="true" multiple style="width: 200px;">
+                                data-none-selected-text="{{ __('Tag') }}" data-live-search="true" multiple style="width: 200px;">
                             @foreach($tags as $tag)
                                 <option value="{{$tag}}">{{$tag}}</option>
                             @endforeach
@@ -74,7 +74,7 @@
                     @endif
                     <button type="button" class="mb-2 btn btn-outline-secondary"
                             onclick="$('.selectpicker').selectpicker('deselectAll'); $('.selectpicker').selectpicker('refresh');">
-                        Clear selection
+                        {{ __("Clear Selection") }}
                     </button>
                     <button type="button" class="mb-2 ml-1 btn btn-outline-secondary collapsed" id="toggle">
                         {{ __("Expand all") }}

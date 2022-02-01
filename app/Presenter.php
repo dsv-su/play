@@ -29,6 +29,11 @@ class Presenter extends Model
         return 'presenter';
     }
 
+    public function getUsernameAttribute($value)
+    {
+        return $value ?: $this->attributes['name'];
+    }
+
     public function video_presenter(): HasMany
     {
         return $this->hasMany(VideoPresenter::class);
