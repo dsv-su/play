@@ -228,7 +228,7 @@
                     <div class="row justify-content-between text-left">
                         <!--Video group permission settings-->
                         <div class="form-group col-12 col-md-6 flex-column d-flex">
-                            <label class="form-control-label px-1">{{ __("Playback group permissions") }}</label>
+                            <label class="form-control-label px-1"><i class="fas fa-play fa-border fa-pull-left"></i>{{ __("Playback group permissions") }}</label>
                             <div id="video_perm">
                                 <select class="form-group form-control" name="video_permission" style="margin: 5px 0px;"
                                         @if(!$visability) style="background: #dddddd" @endif>
@@ -242,9 +242,10 @@
                         </div>
                         <!-- Individual permissions -->
                         <div class="form-group col-12 col-md-6 flex-column d-flex">
-                            <label class="form-control-label px-1">{{ __("Individual permissions") }}
+                            <label class="form-control-label px-1"><i class="fas fa-user fa-border fa-pull-left"></i>{{ __("Individual permissions") }}
+                                <span class="badge badge-light">{{$ipermissions}} {{ __("Set") }}</span>
                                 <span type="button" wire:click.prevent="add_individual_perm"
-                                      class="btn btn-primary px-1 py-0">{{$ipermissions}} {{ __("Set") }} <i
+                                      class="btn btn-primary px-1 py-0">{{__("Add")}} <i
                                             class="fas fa-user-plus"></i></span></label>
                             @if (count($individuals)>0)
                                 @foreach($individuals as $key => $name)
