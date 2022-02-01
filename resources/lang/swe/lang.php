@@ -7,6 +7,7 @@ return [
     'course' => 'Kurs',
     'category' => 'Kategori',
     'tag' => 'Tagg',
+    'presenter' => 'Presentatör',
     'manage'    => 'Hantera',
     'manage_recording' => 'Hantera presentationer',
     'manage_course' => 'Hantera kurser',

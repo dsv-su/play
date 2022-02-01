@@ -7,6 +7,7 @@ return [
     'course' => 'Course',
     'category' => 'Category',
     'tag' => 'Tag',
+    'presenter' => 'Presenter',
     'manage'    => 'Manage',
     'manage_recording' => 'Manage presentations',
     'manage_course' => 'Manage courses',
