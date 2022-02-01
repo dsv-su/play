@@ -11,7 +11,7 @@ class LocalizationController extends Controller
     {
         $this->middleware('web');
     }
-    public function index($locale)
+    public function index(Request $request, $locale)
     {
         App::setlocale($locale);
         session()->put('locale', $locale);
