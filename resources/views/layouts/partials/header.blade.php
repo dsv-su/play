@@ -199,10 +199,9 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" style="background-color: #002f5f;"
                                      aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="lang/en"><img
-                                                src="{{asset('images/globallinks-lang-en.gif')}}"> English</a>
-                                    <a class="dropdown-item" href="lang/swe"><img
-                                                src="{{asset('images/globallinks-lang-sv.gif')}}"> Svenska</a>
+                                    <a class="dropdown-item" href="{{route('language', 'en')}}"><img src="{{asset('images/globallinks-lang-en.gif')}}"> English</a>
+                                    {{--}}<a class="dropdown-item" href="lang/swe"><img src="{{asset('images/globallinks-lang-sv.gif')}}"> Svenska</a>{{--}}
+                                    <a class="dropdown-item" href="{{route('language', 'swe')}}"><img src="{{asset('images/globallinks-lang-sv.gif')}}"> Svenska</a>
                                 </div>
                             </li>
                         </ul>

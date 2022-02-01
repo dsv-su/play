@@ -100,7 +100,7 @@ class AdminController extends Controller
             }
         }
 
-        return redirect()->back();
+        return back()->withInput();
     }
 
     public function addPermission()
