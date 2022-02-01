@@ -17,6 +17,12 @@
                         @elseif($category ?? '')
                             <span class="fas fa-address-card fa-icon-border mr-2" aria-hidden="true"></span>
                             @lang('lang.category'): <i>{{$category}}</i>
+                        @elseif($tag ?? '')
+                            <span class="fas fa-address-card fa-icon-border mr-2" aria-hidden="true"></span>
+                            @lang('lang.tag'): <i>{{$tag}}</i>
+                        @elseif($presenter ?? '')
+                            <span class="fas fa-address-card fa-icon-border mr-2" aria-hidden="true"></span>
+                            @lang('lang.presenter'): <i>{{$presenter->name}} ({{$presenter->username}})</i>
                         @endif
                     </h3>
                 </div>
@@ -66,7 +72,9 @@
                             @endforeach
                         </select>
                     @endif
-                    <button type="button" class="mb-2 btn btn-outline-secondary" onclick="$('.selectpicker').selectpicker('deselectAll'); $('.selectpicker').selectpicker('refresh');">Clear selection
+                    <button type="button" class="mb-2 btn btn-outline-secondary"
+                            onclick="$('.selectpicker').selectpicker('deselectAll'); $('.selectpicker').selectpicker('refresh');">
+                        Clear selection
                     </button>
                     <button type="button" class="mb-2 ml-1 btn btn-outline-secondary collapsed" id="toggle">
                         {{ __("Expand all") }}
