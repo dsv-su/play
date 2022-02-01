@@ -117,17 +117,19 @@ class AdminController extends Controller
             //Validation
             $this->validate($request, [
                 'permission' => 'required',
+                'permission_en' => 'required',
                 'entitlement' => 'required'
             ]);
             if($request->modify == 0){
                 Permission::updateOrCreate(
                     ['scope' => $request->permission],
-                    ['entitlement' => $request->entitlement]
+                    ['scope_en' => $request->permission_en, 'entitlement' => $request->entitlement]
                 );
             }
             else {
                 $permission = Permission::find($request->pid);
                 $permission->scope = $request->permission;
+                $permission->scope_en = $request->permission_en;
                 $permission->entitlement = $request->entitlement;
                 $permission->save();
                 return redirect()->route('add_permission')->with(['message' => 'The permissions group has been updated']);

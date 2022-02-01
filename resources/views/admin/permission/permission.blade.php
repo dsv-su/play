@@ -19,7 +19,11 @@
                             <div class="form-group">
                                 <select name="perm[]" class="form-control" id="permission" multiple="multiple">
                                     @foreach($permissions as $permission)
-                                        <option value="{{$permission->id}}" {{ old('perm') == $permission->id || in_array($permission->id, $thispermissions) ? 'selected':''}}>{{$permission->scope}}</option>
+                                        @if(Lang::locale() == 'swe')
+                                            <option value="{{$permission->id}}" {{ old('perm') == $permission->id || in_array($permission->id, $thispermissions) ? 'selected':''}}>{{$permission->scope}}</option>
+                                        @else
+                                            <option value="{{$permission->id}}" {{ old('perm') == $permission->id || in_array($permission->id, $thispermissions) ? 'selected':''}}>{{$permission->scope_en}}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>

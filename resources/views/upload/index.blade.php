@@ -188,10 +188,17 @@
                                                     name="video_permission">
                                                 @foreach($permissions as $permission)
                                                     @if(!old('video_permission'))
-                                                        <option value="{{$permission->id}}">{{$permission->id}}
-                                                            : {{$permission->scope}}</option>
+                                                        @if(Lang::locale() == 'swe')
+                                                            <option value="{{$permission->id}}">{{$permission->id}}: {{$permission->scope}}</option>
+                                                        @else
+                                                            <option value="{{$permission->id}}">{{$permission->id}}: {{$permission->scope_en}}</option>
+                                                        @endif
                                                     @else
-                                                        <option value="{{$permission->id}}" {{ old('video_permission') == $permission->id  ? 'selected':''}}>{{$permission->id}} : {{$permission->scope}}</option>
+                                                        @if(Lang::locale() == 'swe')
+                                                            <option value="{{$permission->id}}" {{ old('video_permission') == $permission->id  ? 'selected':''}}>{{$permission->id}} : {{$permission->scope}}</option>
+                                                        @else
+                                                            <option value="{{$permission->id}}" {{ old('video_permission') == $permission->id  ? 'selected':''}}>{{$permission->id}} : {{$permission->scope_en}}</option>
+                                                        @endif
                                                     @endif
                                                 @endforeach
                                             </select>

@@ -233,9 +233,15 @@
                                 <select class="form-group form-control" name="video_permission" style="margin: 5px 0px;"
                                         @if(!$visability) style="background: #dddddd" @endif>
                                     @foreach($permissions as $perm)
+                                        @if(Lang::locale() == 'swe')
                                         <option value="{{$perm->id}}"
                                                 @if($presentationpermissonId == $perm->id) selected @endif >{{$perm->id}}
                                             : {{$perm->scope}}</option>
+                                        @else
+                                            <option value="{{$perm->id}}"
+                                                    @if($presentationpermissonId == $perm->id) selected @endif >{{$perm->id}}
+                                                : {{$perm->scope_en}}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>

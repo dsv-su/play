@@ -29,6 +29,7 @@
                 <tr>
                     <th scope="col">PresentationId</th>
                     <th scope="col">Permission</th>
+                    <th scope="col">Permission(eng)</th>
                     <th scope="col">Entitlement</th>
                     <th scope="col" colspan="2">Action</th>
                 </tr>
@@ -38,6 +39,7 @@
                     <tr>
                         <td>{{$permission->id}}</td>
                         <td>{{$permission->scope}}</td>
+                        <td>{{$permission->scope_en}}</td>
                         <td>{{$permission->entitlement}}</td>
                         <td>
                             @if($permission->id != 4) <!-- Disable action for public permission -->
@@ -59,8 +61,11 @@
                 @csrf
                 <div class="form-group mb-2">
                     <label for="permission" class="sr-only">Permission</label>
-                    <input name="permission" type="text" class="form-control" id="permission" placeholder="Permission Name">
+                    <input name="permission" type="text" class="form-control" id="permission" placeholder="Permission(swe)">
                     <small class="text-danger">{{ $errors->first('permission') }}</small>
+                    <label for="permission_en" class="sr-only">Permission</label>
+                    <input name="permission_en" type="text" class="form-control" id="permission" placeholder="Permission(eng)">
+                    <small class="text-danger">{{ $errors->first('permission_en') }}</small>
                     <label for="entitlement" class="sr-only">Entitlement</label>
                     <input name="entitlement" type="text" class="form-control" id="entitlement" placeholder="urn:mace:swami.se:gmai:dsv-user:xxxx">
                     <small class="text-danger">{{ $errors->first('entitlement') }}</small>
@@ -75,6 +80,9 @@
                     <label for="permission" class="sr-only">Permission</label>
                     <input name="permission" type="text" class="form-control bg-primary text-white" id="permission" placeholder="Permission Name" value="{{$thispermission->scope}}">
                     <small class="text-danger">{{ $errors->first('permission') }}</small>
+                    <label for="permission_en" class="sr-only">Permission</label>
+                    <input name="permission_en" type="text" class="form-control bg-primary text-white" id="permission_en" placeholder="Permission Name(eng)" value="{{$thispermission->scope_en}}">
+                    <small class="text-danger">{{ $errors->first('permission_en') }}</small>
                     <label for="entitlement" class="sr-only">Entitlement</label>
                     <input name="entitlement" type="text" class="form-control bg-primary text-white" id="entitlement" placeholder="urn:mace:swami.se:gmai:dsv-user:xxxx" value="{{$thispermission->entitlement}}">
                     <small class="text-danger">{{ $errors->first('entitlement') }}</small>

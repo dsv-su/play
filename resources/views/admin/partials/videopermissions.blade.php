@@ -15,7 +15,11 @@
                 <tr>
                     <th scope="col">Presentation</th>
                     <th scope="col">PresentationId</th>
+                    @if(Lang::locale() == 'swe')
                     <th scope="col">Permission</th>
+                    @else
+                    <th scope="col">Permission(eng)</th>
+                    @endif
                     <th scope="col">Action</th>
                 </tr>
                 </thead>
@@ -24,7 +28,11 @@
                     <tr>
                         <td>Thumb</td>
                         <td>{{$permission->video_id}}</td>
+                        @if(Lang::locale() == 'swe')
                         <td>{{$permission->permission->scope}}</td>
+                        @else
+                        <td>{{$permission->permission->scope_en}}</td>
+                        @endif
                         <td><a role="button" class="btn btn-primary btn-sm"
                                href="/edit_permission/{{$permission->video_id}}">Modify</a></td>
                     </tr>

@@ -121,9 +121,15 @@
                                 <select class="form-group form-control" name="course_permission"
                                         style="margin: 5px 0px;">
                                     @foreach($permissions as $perm)
+                                        @if(Lang::locale() == 'swe')
                                         <option value="{{$perm->id}}"
                                                 @if($permissonId == $perm->id) selected @endif >{{$perm->id}}
                                             : {{$perm->scope}}</option>
+                                        @else
+                                            <option value="{{$perm->id}}"
+                                                    @if($permissonId == $perm->id) selected @endif >{{$perm->id}}
+                                                : {{$perm->scope_en}}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>

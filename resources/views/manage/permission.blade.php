@@ -36,15 +36,19 @@
                         @csrf
                         <div class="col">
                             @if(app()->make('play_role') == 'Administrator')
-                                <label class="text-primary">{{ __("Assign Permissions") }}:</label>
+                                <label class="text-primary">{{ __("Assign Group Permission") }}:</label>
                             @else
-                                <label class="text-primary">{{ __("Assign Permissions") }}:</label>
+                                <label class="text-primary">{{ __("Assign Group Permission") }}:</label>
                             @endif
 
                             <div class="form-group">
-                                <select name="perm[]" class="form-control" id="permission" multiple="multiple">
+                                <select name="perm[]" class="form-control" id="permission" >
                                     @foreach($permissions as $permission)
+                                        @if(Lang::locale() == 'swe')
                                         <option value="{{$permission->id}}" {{ old('perm') == $permission->id || in_array($permission->id, $thispermissions) ? 'selected':''}}>{{$permission->scope}}</option>
+                                        @else
+                                            <option value="{{$permission->id}}" {{ old('perm') == $permission->id || in_array($permission->id, $thispermissions) ? 'selected':''}}>{{$permission->scope_en}}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>

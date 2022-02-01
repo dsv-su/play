@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Permission extends Model
 {
     use HasFactory;
-    protected $fillable = ['scope', 'entitlement'];
+    protected $fillable = ['scope', 'scope_en', 'entitlement'];
     /**
      * Get the videos for the permission.
      */
