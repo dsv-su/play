@@ -7,10 +7,14 @@ use Illuminate\Http\Request;
 
 class LocalizationController extends Controller
 {
-    public function index($locale)
+    public function __construct()
+    {
+        $this->middleware('web');
+    }
+    public function index(Request $request, $locale)
     {
         App::setlocale($locale);
         session()->put('locale', $locale);
-        return redirect()->back();
+        return back()->withInput();
     }
 }

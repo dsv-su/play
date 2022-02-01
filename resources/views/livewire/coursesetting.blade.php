@@ -68,12 +68,11 @@
                                 <label for="visabilitySwitch"
                                        class="col-lg-3 px-0 col-auto mb-0">{{__("Visibility")}}</label>
                                 <div class="col">
-                                       <span class="custom-control custom-switch custom-switch-lg">
-                                        <input wire:click="visibility" class="custom-control-input"
-                                               id="visibilitySwitch" name="visibility"
-                                               type="checkbox" @if($visibility == true) checked @endif>
-                                        <label class="custom-control-label" style="margin-top: 3px;"
-                                               for="visibilitySwitch"></label>
+                                    <span class="custom-control custom-switch custom-switch-lg">
+                                    <input wire:click="visibility" class="custom-control-input"
+                                           id="visibilitySwitch" name="visibility"
+                                           type="checkbox" @if($visibility == true) checked @endif>
+                                    <label class="custom-control-label" style="margin-top: 3px;" for="visibilitySwitch"></label>
                                     </span>
                                 </div>
                             </div>

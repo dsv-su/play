@@ -3,8 +3,10 @@
 namespace App\Http\Livewire;
 
 use App\CourseadminPermission;
+use App\Http\Middleware\Localization;
 use App\Services\Daisy\DaisyIntegration;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Lang;
 use Livewire\Component;
 
 class EditPresentation extends Component
@@ -58,7 +60,12 @@ class EditPresentation extends Component
         }
 
         foreach ($video->courses() as $this->coursedetail) {
-            $this->course[] = $this->coursedetail->name . ' ' . $this->coursedetail->semester . '' . $this->coursedetail->year;
+            if(Lang::locale() == 'swe') {
+                $this->course[] = $this->coursedetail->name . ' ' . $this->coursedetail->semester . '' . $this->coursedetail->year;
+            } else {
+                $this->course[] = $this->coursedetail->name_en . ' ' . $this->coursedetail->semester . '' . $this->coursedetail->year;
+            }
+
             $this->courseId[] = $this->coursedetail->id;
             $this->course_semester[] = $this->coursedetail->semester;
             $this->course_year[] = $this->coursedetail->year;
@@ -66,7 +73,12 @@ class EditPresentation extends Component
                 $this->course_responsible[$this->coursedetail->id][] = $person;
             }
             // Add existing courses even if a person has no permission
-            $this->courseselect[$this->coursedetail->id] = [$this->coursedetail->designation . ' ' . $this->coursedetail->semester . $this->coursedetail->year . ' (' . $this->coursedetail->name . ')', $this->coursedetail->designation . ' ' . $this->coursedetail->semester . $this->coursedetail->year];
+            if(Lang::locale() == 'swe') {
+                $this->courseselect[$this->coursedetail->id] = [$this->coursedetail->designation . ' ' . $this->coursedetail->semester . $this->coursedetail->year . ' (' . $this->coursedetail->name . ')', $this->coursedetail->designation . ' ' . $this->coursedetail->semester . $this->coursedetail->year];
+            } else {
+                $this->courseselect[$this->coursedetail->id] = [$this->coursedetail->designation . ' ' . $this->coursedetail->semester . $this->coursedetail->year . ' (' . $this->coursedetail->name_en . ')', $this->coursedetail->designation . ' ' . $this->coursedetail->semester . $this->coursedetail->year];
+            }
+
         }
 
         $this->courseids = json_encode($this->courseId, JSON_HEX_QUOT);
@@ -77,7 +89,12 @@ class EditPresentation extends Component
         $this->tagids = json_encode($this->tagids, JSON_HEX_QUOT);
 
         foreach ($courses as $data) {
-            $this->courseselect[$data->id] = [$data->designation . ' ' . $data->semester . $data->year . ' (' . $data->name . ')', $data->designation . ' ' . $data->semester . $data->year];
+            if(Lang::locale() == 'swe') {
+                $this->courseselect[$data->id] = [$data->designation . ' ' . $data->semester . $data->year . ' (' . $data->name . ')', $data->designation . ' ' . $data->semester . $data->year];
+            } else {
+                $this->courseselect[$data->id] = [$data->designation . ' ' . $data->semester . $data->year . ' (' . $data->name_en . ')', $data->designation . ' ' . $data->semester . $data->year];
+            }
+
         }
 
 

@@ -88,9 +88,9 @@
                             <span class="badge badge-light mb-2">{{__("Not downloadable")}} <span class="badge badge-danger"><i class="fas fa-download"></i></span></span>
                     @endif
                     @if(!key_exists($key, $coursesetlist) || $coursesetlist[$key]['visibility'] == true)
-                            <span class="badge badge-light mb-2">{{__("Viewable")}} <span class="badge badge-success"><i class="fas fa-eye"></i></span></span>
+                            <span class="badge badge-light mb-2">{{__("Visible")}} <span class="badge badge-success"><i class="fas fa-eye"></i></span></span>
                     @else
-                        <span class="badge badge-light mb-2">{{__("Not viewable")}} <span class="badge badge-danger"><i
+                        <span class="badge badge-light mb-2">{{__("Hidden")}} <span class="badge badge-danger"><i
                                         class="fas fa-eye-slash"></i></span></span>
                     @endif
                     @if (in_array(\App\Course::find($key)->userPermission(), ['edit', 'delete']))
