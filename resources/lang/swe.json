@@ -185,6 +185,7 @@
     "Visibility": "Synlighet",
     "No individual user permissions added":"Inga individuella användarbehörigheter har lagts till",
     "Presentations": "Presentationer",
-    "Assign Group Permission":"Tilldela gruppbehörighet"
+    "Assign Group Permission":"Tilldela gruppbehörighet",
+    "Visible": "Synlig"
 
 }

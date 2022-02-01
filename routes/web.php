@@ -24,7 +24,7 @@ Route::get('/multiplayer', 'MultiplayerController@multiplayer')->name('multiplay
 Route::get('/presentation/{id}', 'MultiplayerController@presentation')->middleware('presentation-permission');
 
 //Protected routes
-Route::middleware('entitlements', 'playauth')->group(function () {
+Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
 
     Route::get('/', 'PlayController@index')->name('home');
     Route::get('lang/{lang}', 'LocalizationController@index');
