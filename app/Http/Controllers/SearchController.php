@@ -48,7 +48,7 @@ class SearchController extends Controller
         // Remove irrelevant terms that could be added because of multiple course associations
         foreach ($videos as $courseid => $videocourse) {
             $course = Course::find($courseid);
-            if ($course->semester !== $term || $course->year !== $year ) {
+            if ($course->semester !== $term || $course->year !== $year) {
                 $videos->forget($courseid);
             }
         }
@@ -151,9 +151,10 @@ class SearchController extends Controller
                 $courseadministrator = CourseadminPermission::where('username', app()->make('play_username'))->where('permission', 'delete')->pluck('video_id');
 
                 //Check for individual permissions settings
-                $individual_videos = IndividualPermission::where('username', app()->make('play_username'))->where(function($query) {
+                $individual_videos = IndividualPermission::where('username', app()->make('play_username'))->where(function ($query) {
                     $query->where('permission', 'edit')
-                        ->orWhere('permission', 'delete');})->pluck('video_id');
+                        ->orWhere('permission', 'delete');
+                })->pluck('video_id');
 
                 //Check for course individual settings
                 if (count($course_user_admins = CoursesettingsUsers::where('username', app()->make('play_username'))->whereIn('permission', ['edit', 'delete'])->get()) >= 1) {
@@ -230,18 +231,20 @@ class SearchController extends Controller
         return $groupedvideos;
     }
 
-    public function removeIrrelevantTerms($videos, $term, $year) {
+    public function removeIrrelevantTerms($videos, $term, $year)
+    {
         // Remove irrelevant terms that could be added because of multiple course associations
         foreach ($videos as $courseid => $videocourse) {
             $course = Course::find($courseid);
-            if ($course->semester !== $term || $course->year !== $year ) {
+            if ($course->semester !== $term || $course->year !== $year) {
                 $videos->forget($courseid);
             }
         }
         return $videos;
     }
 
-    public function removeIrrelevantDesignations($videos, $designation) {
+    public function removeIrrelevantDesignations($videos, $designation)
+    {
         // Remove irrelevant course designations that could be added because of multiple course associations
         foreach ($videos as $courseid => $videocourse) {
             if (Course::find($courseid)->designation !== $designation) {
@@ -312,32 +315,43 @@ class SearchController extends Controller
     public function showTagVideos($tag)
     {
         $visibility = new Visibility();
-        $data['tag'] = $tag;
-        $data['latest'] = Tag::where('name', $tag)->first()->videos()->filter(function ($video) {
-            return $video;
-        });
-        $data['latest'] = $visibility->check($data['latest']);
-        $data['terms'] = $this->extractTerms($data['latest']);
-        $data['courses'] = $this->extractCourses($data['latest']);
-        $data['presenters'] = $this->extractPresenters($data['latest']);
+        //Permissions label
+        $permissions = VideoPermission::all();
+        $tagid = Tag::where('name', $tag)->first()->id;
+        $videos = Video::with('video_tag.tag')->whereHas('video_tag.tag', function ($query) use ($tagid) {
+            return $query->where('id', $tagid);
+        })->orderBy('creation', 'desc')->get();
 
-        return view('home.index', $data);
+        $terms = $this->extractTerms($videos);
+        $presenters = $this->extractPresenters($videos);
+        $courses = $this->extractCourses($videos);
+
+        //Visibility
+        $videos = $visibility->check($videos);
+        $videos = $this->groupVideos($videos);
+
+        return view('home.navigator', compact('tag', 'videos', 'permissions', 'terms', 'presenters', 'courses'));
     }
 
     public function showPresenterVideos($username)
     {
         $visibility = new Visibility();
+        //Permissions label
+        $permissions = VideoPermission::all();
         $presenter = Presenter::where('username', $username)->first();
-        $data['presenter'] = $presenter->name;
-        $data['latest'] = $presenter->videos()->filter(function ($video) {
-            return $video;
-        });
-        $data['latest'] = $visibility->check($data['latest']);
-        $data['terms'] = $this->extractTerms($data['latest']);
-        $data['courses'] = $this->extractCourses($data['latest']);
-        $data['tags'] = $this->extractTags($data['latest']);
+        $videos = Video::with('video_presenter.presenter')->whereHas('video_presenter.presenter', function ($query) use ($presenter) {
+            return $query->where('id', $presenter->id);
+        })->orderBy('creation', 'desc')->get();
 
-        return view('home.index', $data);
+        $terms = $this->extractTerms($videos);
+        $tags = $this->extractTags($videos);
+        $courses = $this->extractCourses($videos);
+
+        //Visibility
+        $videos = $visibility->check($videos);
+        $videos = $this->groupVideos($videos);
+
+        return view('home.navigator', compact('presenter', 'videos', 'permissions', 'terms', 'tags', 'courses'));
     }
 
     public function extractCourses($videos): array
@@ -346,7 +360,7 @@ class SearchController extends Controller
         foreach ($videos as $video) {
             foreach ($video->courses() as $course) {
                 if (!in_array($course->name, $courses)) {
-                    if(Lang::locale() == 'swe') {
+                    if (Lang::locale() == 'swe') {
                         $courses[$course->designation] = $course->name;
                     } else {
                         $courses[$course->designation] = $course->name_en;
@@ -395,33 +409,6 @@ class SearchController extends Controller
             }
         }
         return $presenters;
-    }
-
-    public function filterTagVideos($tag, Request $request): array
-    {
-        $data['tag'] = $tag;
-        $data['latest'] = Tag::where('name', $tag)->first()->videos();
-        $designations = request('course') ? explode(',', request('course')) : null;
-        $semesters = request('semester') ? explode(',', request('semester')) : null;
-        $presenters = request('presenter') ? explode(',', request('presenter')) : null;
-        list ($html, $videocourses, $videoterms, $videopresenters, $videotags) = $this->performFiltering(
-            $data['latest'], $designations, $semesters, null, $presenters
-        );
-        return ['html' => $html, 'courses' => $videocourses, 'presenters' => $videopresenters, 'terms' => $videoterms];
-    }
-
-    public function filterPresenterVideos($username, Request $request): array
-    {
-        $presenter = Presenter::where('username', $username)->first();
-        $data['presenter'] = $presenter->name;
-        $data['latest'] = $presenter->videos();
-        $designations = request('course') ? explode(',', request('course')) : null;
-        $semesters = request('semester') ? explode(',', request('semester')) : null;
-        $tags = request('tag') ? explode(',', request('tag')) : null;
-        list ($html, $videocourses, $videoterms, $videopresenters, $videotags) = $this->performFiltering(
-            $data['latest'], $designations, $semesters, $tags
-        );
-        return ['html' => $html, 'courses' => $videocourses, 'tags' => $videotags, 'terms' => $videoterms];
     }
 
     public function performFiltering($videos, $designations = null, $semesters = null, $tags = null, $presenters = null, $manage = false): array
@@ -502,6 +489,49 @@ class SearchController extends Controller
         $html = view('home.courselist', compact('videos', 'manage', 'coursesetlist', 'individual_permissions', 'playback_permissions'))->render();
 
         return array($html, $videocourses, $videoterms, $videopresenters, $videotags, $videos);
+    }
+
+    public function filterTagVideos($tag, Request $request): string
+    {
+        $visibility = new Visibility();
+        $permissions = VideoPermission::all();
+        $tagid = Tag::where('name', $tag)->first()->id;
+        $videos = Video::with('video_tag.tag')->whereHas('video_tag.tag', function ($query) use ($tagid) {
+            return $query->where('id', $tagid);
+        })->orderBy('creation', 'desc')->get();
+        $videos = $visibility->check($videos);
+        $designations = request('course') ? explode(',', request('course')) : null;
+        $semesters = request('semester') ? explode(',', request('semester')) : null;
+        $presenters = request('presenter') ? explode(',', request('presenter')) : null;
+        list ($html, $videocourses, $videoterms, $videopresenters, $videotags, $videos) = $this->performFiltering(
+            $videos, $designations, $semesters, null, $presenters
+        );
+
+        $html = view('home.courselist', compact('videos'))->render();
+
+        return $html ?: '<h4 class="col my-3 font-weight-light">No presentations found</h4>';
+    }
+
+    public function filterPresenterVideos($username, Request $request): string
+    {
+        $visibility = new Visibility();
+        //Permissions label
+        $permissions = VideoPermission::all();
+        $presenter = Presenter::where('username', $username)->first();
+        $videos = Video::with('video_presenter.presenter')->whereHas('video_presenter.presenter', function ($query) use ($presenter) {
+            return $query->where('id', $presenter->id);
+        })->orderBy('creation', 'desc')->get();
+        $videos = $visibility->check($videos);
+        $designations = request('course') ? explode(',', request('course')) : null;
+        $semesters = request('semester') ? explode(',', request('semester')) : null;
+        $tags = request('tag') ? explode(',', request('tag')) : null;
+        list ($html, $videocourses, $videoterms, $videopresenters, $videotags, $videos) = $this->performFiltering(
+            $videos, $designations, $semesters, null, $tags
+        );
+
+        $html = view('home.courselist', compact('videos'))->render();
+
+        return $html ?: '<h4 class="col my-3 font-weight-light">No presentations found</h4>';
     }
 
     public function filterByDesignation($designation, Request $request): string

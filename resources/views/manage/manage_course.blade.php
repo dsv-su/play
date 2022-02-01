@@ -45,8 +45,8 @@
                             </div>
                             <div class="col">
                                 <div class="row text-center">
-                                    <div class="col">
-                                        <div class="alert alert-secondary h-100 d-flex align-content-center">
+                                    <div class="col col-xl-2">
+                                        <div class="alert alert-secondary h-100 d-flex align-content-center p-1">
                                             <div class="my-auto align-middle mx-auto">
                                                     <span class="video-icon">@if($presentations[$courseId] ?? 0)
                                                             <a class="badge badge-primary" role="button"
@@ -56,8 +56,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col">
-                                        <div class="alert alert-secondary h-100 d-flex align-content-center">
+                                    <div class="col col-xl-2">
+                                        <div class="alert alert-secondary h-100 d-flex align-content-center p-1">
                                             <div class="my-auto align-middle mx-auto">
                                                     <span class="video-icon">
                                                            @if($individual_permissions[$courseId] ?? 0){{$individual_permissions[$courseId]}} @else
@@ -67,8 +67,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col">
-                                        <div class="alert alert-secondary h-100 d-flex align-content-center">
+                                    <div class="col col-xl-2">
+                                        <div class="alert alert-secondary h-100 d-flex align-content-center p-1">
                                             <div class="my-auto align-middle mx-auto">
                                                 @if($playback_permissions[$courseId] ?? 0)
                                                     @switch($playback_permissions[$courseId]->permission_id)
@@ -90,6 +90,7 @@
                                                     <span class="video-icon text-success">{{ __("DSV") }}</span>
                                                 @endif
                                                 <p>
+                                                    <!--
                                                     @if($playback_permissions[$courseId] ?? 0)
                                                         @switch($playback_permissions[$courseId]->permission_id)
                                                             @case(1)
@@ -107,12 +108,15 @@
                                                     @else
                                                         {{ __("Students/Staff") }}
                                                     @endif
+                                                        -->
+                                                        <!-- We need to display the term rather than value -->
+                                                        {{__("Playback") }}
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col">
-                                        <div class="alert alert-secondary h-100 d-flex align-content-center">
+                                    <div class="col col-xl-2">
+                                        <div class="alert alert-secondary h-100 d-flex align-content-center p-1">
                                             <div class="my-auto align-middle mx-auto">
                                                 @if($coursesetlist[$courseId] ?? 0)
                                                     @if($coursesetlist[$courseId]['downloadable'] == false)
@@ -133,8 +137,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col">
-                                        <div class="alert alert-secondary h-100 d-flex align-content-center">
+                                    <div class="col col-xl-2">
+                                        <div class="alert alert-secondary h-100 d-flex align-content-center p-1">
                                             <div class="my-auto align-middle mx-auto">
                                                 @if($coursesetlist[$courseId] ?? 0)
                                                     @if($coursesetlist[$courseId]['visibility'] == false)
@@ -156,8 +160,8 @@
                                         </div>
                                     </div>
 
-                                    <div class="col">
-                                        <div class="alert alert-secondary h-100 d-flex align-content-center">
+                                    <div class="col col-xl-2">
+                                        <div class="alert alert-secondary h-100 d-flex align-content-center p-1">
                                             <div class="my-auto align-middle mx-auto">
                                                 <a class="badge badge-primary video-icon" role="button"
                                                    href="{{ route('course_edit', $courseId) }}"><span class=""><i
