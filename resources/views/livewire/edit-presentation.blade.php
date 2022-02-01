@@ -24,7 +24,7 @@
     </div>
     <div class="container banner-inner">
         <div class="alert alert-info text-center">
-            {{__("Changes are saved upon clicking Update button at the bottom of the page.")}}
+            {{__("Changes are saved upon clicking Save & Close button at the bottom of the page.")}}
         </div>
     </div>
 
@@ -371,7 +371,7 @@
 
             <div class="col-sm-12">
                 <button type="submit" id="submit"
-                        class="btn btn-outline-primary mx-auto d-flex font-125rem m-3">{{ __("Update") }}</button>
+                        class="btn btn-outline-primary mx-auto d-flex font-125rem m-3">{{ __("Save & Close") }}</button>
             </div>
 
         </div>
