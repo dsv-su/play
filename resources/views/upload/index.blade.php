@@ -37,7 +37,7 @@
                         <div class="row justify-content-between text-left">
                             <!-- Title -->
                             <div class="form-group col-sm-6 flex-column d-flex"><label
-                                    class="form-control-label px-1">{{ __("Enter title") }}<span
+                                    class="form-control-label px-1">{{ __("Title") }}<span
                                         class="text-danger"> *</span></label>
                                 <input class="form-control" id="title" name="title" type="text" placeholder="{{ __("Title") }}"
                                        value="{{ old('title') ? old('title'): $title ?? '' }}">
@@ -61,17 +61,9 @@
                             </div>
                         </div>
 
-                        <!-- Description -->
+                        <!-- Description and Course -->
                         <div class="row justify-content-between text-left">
-                            <div class="form-group col-12 flex-column d-flex"><label
-                                    class="form-control-label px-1">{{ __("Description") }}</label>
-                                <textarea id="description" name="description" class="form-control"
-                                          placeholder="{{__("Add a presentation's description here (if needed)")}}"></textarea>
-                            </div>
-                        </div>
-
-                        <div class="row justify-content-between text-left">
-                            <div class="form-group col-12 col-lg-12 flex-column d-flex">
+                            <div class="form-group col col-lg-6 flex-column d-flex">
                                 <!-- Course association -->
                                 <label class="form-control-label px-1">{{ __("Course association") }}</label>
                                 <p class="font-1rem px-1 my-0">
@@ -106,8 +98,12 @@
                                             @endif
                                         @endif
                                     @endforeach
-
                                 </select>
+                            </div>
+                            <div class="form-group col col-lg-6 flex-column d-flex"><label
+                                        class="form-control-label px-1">{{ __("Description") }}</label>
+                                <textarea id="description" name="description" class="form-control"
+                                          placeholder="{{__("Add a presentation's description here (if needed)")}}"></textarea>
                             </div>
                         </div>
 

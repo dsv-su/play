@@ -149,7 +149,7 @@
                     <div class="row justify-content-between text-left">
                         <div wire:ignore class="form-group col-12 col-md-6 flex-column d-flex">
                             <input type="hidden" name="course" value="{{implode(',',$courseId)}}">
-                            <label class="form-control-label px-1">{{ __("Associated course") }}</label>
+                            <label class="form-control-label px-1">{{ __("Course association") }}</label>
                         <!--
                             <select wire:model.debounce.500s="courseEdit" name="courseEdit" id="select2">
                                 <option value="">@if ($course) {{$course[0]}} @else No course association @endif</option>
