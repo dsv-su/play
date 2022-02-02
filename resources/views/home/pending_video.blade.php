@@ -58,11 +58,13 @@
                     <span class="badge badge-light">{{$username}}</span>
                 @endforeach
             @endif
+                <!-- Hide tags for now
             @if ($video->tags)
                 @foreach($video->tags as $tag)
                     <span class="badge badge-secondary">{{$tag}}</span>
                 @endforeach
             @endif
+                -->
         </p>
     </div>
 </div>
