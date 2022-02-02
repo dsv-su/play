@@ -47,6 +47,7 @@
              style="background-image: @if ($video->visability == false or $video->visibility_setting == false) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); height:200px;">
             <!-- Group Permissions -->
             <div class="icons m-1">
+
                 @foreach($video->status as $permission)
                     @if($permission->type == 'private' or $video->private_setting)
                         <div class="permission mx-1" data-toggle="tooltip"
@@ -111,11 +112,13 @@
                     <a href="/presenter/{{$presenter->username}}" class="badge badge-light">{{$presenter->name}}</a>
                 @endforeach
             @endif
+                <!-- Hide tags
             @if (!$video->tags()->isEmpty())
                 @foreach($video->tags() as $tag)
                     <a href="/tag/{{$tag->name}}" class="badge badge-secondary">{{$tag->name}}</a>
                 @endforeach
             @endif
+                -->
         </p>
 
     <!-- Remove description for now
