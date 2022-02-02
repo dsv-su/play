@@ -50,11 +50,11 @@
                 @foreach($video->status as $permission)
                     @if($permission->type == 'private' or $video->private_setting)
                         <div class="permission mx-1" data-toggle="tooltip"
-                             title="{{__('Viewing permissions modified')}}"><i class="fas fa-user-lock"></i></div>
+                             title="{{__('Custom playback enabled')}}"><i class="fas fa-user-lock"></i></div>
                     @endif
                     @if($permission->type == 'external' or $video->external_setting)
                         <div class="permission mx-1" data-toggle="tooltip"
-                             title="{{__('External playback enabled')}}"><i
+                             title="{{__('Public playback enabled')}}"><i
                                     class="fas fa-globe"></i></div>
                     @endif
                 @endforeach
@@ -106,16 +106,19 @@
                        class="badge badge-primary">{{\App\Course::find($vc->course_id)->designation}}</a>
                 @endforeach
             @endif
+
             @if (!$video->presenters()->isEmpty())
                 @foreach($video->presenters() as $presenter)
-                    <a href="/presenter/{{$presenter->username}}" class="badge badge-light">{{$presenter->name}}</a>
+                    <a href="/presenter/{{$presenter->username}}" class="badge badge-light border" style="float: right;">{{$presenter->name}}</a>
                 @endforeach
             @endif
+            {{--}}
             @if (!$video->tags()->isEmpty())
                 @foreach($video->tags() as $tag)
                     <a href="/tag/{{$tag->name}}" class="badge badge-secondary">{{$tag->name}}</a>
                 @endforeach
             @endif
+            {{--}}
         </p>
 
     <!-- Remove description for now
