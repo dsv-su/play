@@ -8071,7 +8071,7 @@ p.card-text {
 
 .filter-option-inner-inner {
     text-overflow: ellipsis;
-    max-width: 200px;
+    /*max-width: 200px;*/
 }
 
 .w-100 .filter-option-inner-inner {
