@@ -34,11 +34,13 @@
             @else
                 <span class="badge badge-success mb-2" data-toggle="tooltip" title="{{ __("DSV students & staff playback") }}"><i class="fas fa-users"></i></span>
             @endif
-            @if(!key_exists($key, $coursesetlist) || $coursesetlist[$key]['downloadable'] == true)
+            <!-- If setting does not exist the download is default 'not downloadable' otherwise it is up to the download-key -->
+            @if(key_exists($key, $coursesetlist) && $coursesetlist[$key]['downloadable'] == true)
                 <span class="badge badge-success mb-2" data-toggle="tooltip" title="{{__("Downloadable")}}"><i class="fas fa-download"></i></span>
             @else
                 <span class="badge badge-danger mb-2" data-toggle="tooltip" title="{{__("Not downloadable")}}"><i class="fas fa-download"></i></span>
             @endif
+            <!-- If setting does not exist the download is default 'visible' otherwise it is up to the visibility-key -->
             @if(!key_exists($key, $coursesetlist) || $coursesetlist[$key]['visibility'] == true)
                 <span class="badge badge-success" data-toggle="tooltip" title="{{__("Visible")}}"><i class="fas fa-eye"></i></span>
             @else
