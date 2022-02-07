@@ -1,6 +1,6 @@
 <!-- Video - child view - will inherit all data available in the parent view-->
-<div class="shadow-lg shadow-warning card video m-auto @if($video->visability == false && $video->visibility_setting == false) faded @endif" @if (isset($manage) && $manage) id="{{$video->id}}" @endif>
-    <div id="action-icons" class="flex-column m-1">
+<div class="shadow-lg shadow-warning card video m-auto @if($video->visability == false or $video->visibility_setting == false) faded @endif" @if (isset($manage) && $manage) id="{{$video->id}}" @endif>
+<div id="action-icons" class="flex-column m-1">
         @if ($video->visability =! false or $video->visibility_setting =! false)
             @if ($video->editable() or $video->edit_setting)
             <div class="mb-1" data-placement="left" data-toggle="tooltip" title="{{__("Share presentation")}}">
@@ -45,17 +45,17 @@
 
         <div class="card-header position-relative"
              style="background-image: @if ($video->visability == false or $video->visibility_setting == false) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); height:200px;">
+
             <!-- Group Permissions -->
             <div class="icons m-1">
-
                 @foreach($video->status as $permission)
                     @if($permission->type == 'private' or $video->private_setting)
                         <div class="permission mx-1" data-toggle="tooltip"
-                             title="{{__('Viewing permissions modified')}}"><i class="fas fa-user-lock"></i></div>
+                             title="{{__('Custom playback enabled')}}"><i class="fas fa-user-lock"></i></div>
                     @endif
                     @if($permission->type == 'external' or $video->external_setting)
                         <div class="permission mx-1" data-toggle="tooltip"
-                             title="{{__('External playback enabled')}}"><i
+                             title="{{__('Public playback enabled')}}"><i
                                     class="fas fa-globe"></i></div>
                     @endif
                 @endforeach
@@ -107,18 +107,22 @@
                        class="badge badge-primary">{{\App\Course::find($vc->course_id)->designation}}</a>
                 @endforeach
             @endif
+
             @if (!$video->presenters()->isEmpty())
                 @foreach($video->presenters() as $presenter)
-                    <a href="/presenter/{{$presenter->username}}" class="badge badge-light">{{$presenter->name}}</a>
+                    <a href="/presenter/{{$presenter->username}}" class="badge badge-light border" style="float: right;">{{$presenter->name}}</a>
                 @endforeach
             @endif
-                <!-- Hide tags
+
+                {{--}}
+                <!-- Hide tags -->
             @if (!$video->tags()->isEmpty())
                 @foreach($video->tags() as $tag)
                     <a href="/tag/{{$tag->name}}" class="badge badge-secondary">{{$tag->name}}</a>
                 @endforeach
             @endif
-                -->
+                <!---->
+                {{--}}
         </p>
 
     <!-- Remove description for now
