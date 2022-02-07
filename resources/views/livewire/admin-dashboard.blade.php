@@ -116,7 +116,7 @@
             </div>
 
             <!-- Cattura -->
-            <div class="row" wire:poll.30s="checkStats">
+            <div class="row" wire:poll.15s="checkStats">
                 <div class="col-12 mt-3 mb-1">
                     <h4 class="text-uppercase">Cattura recorders</h4>
                 </div>
@@ -168,7 +168,7 @@
                     @if($loop->index == 3)
             </div>
             <p></p>
-            <div class="row" wire:poll.30s="checkStats">
+            <div class="row" wire:poll.15s="checkStats">
                 @endif
                 @endforeach
 

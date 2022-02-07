@@ -39,6 +39,10 @@ class Video extends Model implements Searchable
     //Playlist
     protected $appends = ['link', 'type'];
 
+    protected $casts = [
+        'permission_type' => 'string',
+    ];
+
     public function getLinkAttribute(): string
     {
         return $this->attributes['link'] = URL::to('/') . '/player/' . $this->id;
