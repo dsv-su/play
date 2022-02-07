@@ -28,6 +28,7 @@
     <script src="{{asset('bootstrap/datepicker/bootstrap-datepicker.min.js')}}"></script>
     <script src="{{asset('bootstrap/datepicker/bootstrap-datepicker.sv.js')}}"></script>
     <title>DSVPlay</title>
+    @include('layouts.partials.custom-js')
 </head>
 <body>
 @include('layouts.partials.header')

@@ -32,9 +32,11 @@
             e.preventDefault();
         });
 
-        $(document).ready(function () {
-            $('.selectpicker').selectpicker();
-        });
+        $('.selectpicker[name="courses[]"], .selectpicker[name="courseEdit[]"]').selectpicker(
+            { countSelectedText: function(numSelected, numTotal) {
+                    return (numSelected == 1) ? "{0} course selected" : "{0} courses selected";
+                }
+            });
 
         $(".datepicker").datepicker({
             format: "dd/mm/yyyy",

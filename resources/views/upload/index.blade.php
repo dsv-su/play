@@ -63,7 +63,7 @@
 
                         <!-- Description and Course -->
                         <div class="row justify-content-between text-left">
-                            <div class="form-group col col-lg-6 flex-column d-flex">
+                            <div class="form-group col-12 col-lg-6 flex-column d-flex mx-auto">
                                 <!-- Course association -->
                                 <label class="form-control-label px-1">{{ __("Course association") }}</label>
                                 <p class="font-1rem px-1 my-0">
@@ -72,6 +72,7 @@
                                 <select name="courses[]"
                                         class="form-control mx-1 selectpicker" data-dropup-auto="false"
                                         data-none-selected-text="{{ __('No course association')}}"
+                                        data-selected-text-format="count>1"
                                         data-live-search="true" multiple>
                                     {{--}}
                                     @foreach($courses as $course)
@@ -100,7 +101,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group col col-lg-6 flex-column d-flex"><label
+                            <div class="form-group col-12 col-lg-6 flex-column d-flex"><label
                                         class="form-control-label px-1">{{ __("Description") }}</label>
                                 <textarea id="description" name="description" class="form-control"
                                           placeholder="{{__("Add a presentation's description here (if needed)")}}"></textarea>
