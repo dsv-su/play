@@ -105,7 +105,7 @@
                 <div class="rounded border shadow p-3 my-2">
                     <div class="row justify-content-between text-left">
                         <!--Video group permission settings-->
-                        <div class="form-group col flex-column d-flex">
+                        <div class="form-group col flex-column d-flex my-1">
                             <label class="form-control-label px-1"><i
                                         class="fas fa-play mr-2"></i>{{ __("Playback group permissions") }}
                             </label>
@@ -130,10 +130,10 @@
                 </div>
             </div>
             <div class="col-12 col-lg-6">
-                <div class="rounded border shadow p-3 my-2" style="min-height: 127.25px;">
+                <div class="rounded border shadow p-3 my-2">
                     <div class="row justify-content-between text-left">
                         <!-- Individual permissions -->
-                        <div class="form-group col flex-column d-flex">
+                        <div class="form-group col flex-column d-flex my-1">
                             <label class="form-control-label px-1"><i
                                         class="fas fa-user mr-2"></i>{{ __("Individual user permissions") }}
                                 <span
@@ -196,7 +196,9 @@
                                     </div>
                                 @endforeach
                             @else
+                                <div class="form-group my-1">
                                 <div class="mx-1 my-2 font-1rem">{{ __("No individual user permissions added") }}</div>
+                                </div>
                             @endif
 
                         </div>
