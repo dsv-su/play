@@ -2,7 +2,7 @@
 
 namespace App\Interfaces;
 
-class VisibilityInterface
+interface VisibilityInterface
 {
-
+    public function cast();
 }

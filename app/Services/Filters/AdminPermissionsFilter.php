@@ -2,7 +2,36 @@
 
 namespace App\Services\Filters;
 
-class AdminPermissionsFilter
-{
+use App\Interfaces\VisibilityInterface;
+use App\Video;
 
+class AdminPermissionsFilter extends VisibilityFilter implements VisibilityInterface
+{
+    protected $user, $video;
+
+    public function __construct(Video $video)
+    {
+        parent::__construct($video);
+        $this->video = $video;
+        //$this->user = app()->make('play_auth'); //Use in production
+        $this->user = app()->make('play_role');
+    }
+
+    public function cast()
+    {
+        if($this->getAdminUsers()) {
+            $this->video->setAttribute('visibility', true);
+            $this->video->setAttribute('edit', true);
+            $this->video->setAttribute('delete', true);
+        }
+    }
+
+    private function getAdminUsers()
+    {
+        if($this->user == 'Administrator') {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

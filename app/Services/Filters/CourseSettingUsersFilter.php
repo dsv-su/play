@@ -2,11 +2,13 @@
 
 namespace App\Services\Filters;
 
+use App\CoursesettingsUsers;
+use App\Interfaces\VisibilityInterface;
 use App\Video;
 
-class CourseSettingUsers extends VisibilityFilter
+class CourseSettingUsersFilter extends VisibilityFilter implements VisibilityInterface
 {
-    protected $courses, $course;
+    protected $courses, $course, $user, $video;
 
     public function __construct(Video $video)
     {
@@ -16,7 +18,7 @@ class CourseSettingUsers extends VisibilityFilter
         $this->user = app()->make('play_username');
     }
 
-    public function check()
+    public function cast()
     {
         foreach($this->courses as $this->course) {
             if($users = $this->getCourseSettingUsers($this->course->id)) {
@@ -43,7 +45,7 @@ class CourseSettingUsers extends VisibilityFilter
 
     private function getCourseSettingUsers($course_id)
     {
-        return CourseSettingUsers::where('course_id', $course_id)->get();
+        return CoursesettingsUsers::where('course_id', $course_id)->get();
     }
 
 }

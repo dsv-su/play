@@ -16,26 +16,26 @@ class VisibilityFilter
         public function filter()
         {
             $this->videos->filter(function ($video, $key)  {
-                //Check and set CourseSettings
-                $test = new CoursePermissionFilter($video);
-                $test->permissionType();
-                
+                //CourseSettings
+                $CourseSettings = new CoursePermissionFilter($video);
+                $CourseSettings->cast();
+                //CourseSettingUsers
+                $CourseSettingUsers = new CourseSettingUsersFilter($video);
+                $CourseSettingUsers->cast();
+                //IndividualUsers
+                $IndividualUsers = new IndividualPermissionsFilter($video);
+                $IndividualUsers->cast();
+                //CourseAdmins
+                $CourseAdmins = new CourseAdminPermissionFilter($video);
+                $CourseAdmins->cast();
+                //Admins
+                $Admins = new AdminPermissionsFilter($video);
+                $Admins->cast();
+                return $video->visability;
             });
 
 
         }
 
-//Check if video is associated with one or many courses
-    //yes
-        //Foreach course
-            //Check course setting visibility
-                //yes
-                    //check if course is public
-                        //yes - set public setting
-
-                        //no - set private setting
-                //no
-
-    //no
 
 }

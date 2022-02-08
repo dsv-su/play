@@ -41,6 +41,8 @@ class Video extends Model implements Searchable
 
     protected $casts = [
         'permission_type' => 'string',
+        'edit' => 'boolean',
+        'delete' => 'boolean',
     ];
 
     public function getLinkAttribute(): string
