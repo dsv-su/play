@@ -32,10 +32,12 @@
             e.preventDefault();
         });
 
-        $('.selectpicker[name="courses[]"], .selectpicker[name="courseEdit[]"]').selectpicker(
-            { countSelectedText: function(numSelected, numTotal) {
-                    return (numSelected == 1) ? "{0} course selected" : "{0} courses selected";
-                }
+        // Refresh selectpicker on each update so it re-renders the dropdown
+        // Also moves selected to the top
+        $("select").on("changed.bs.select",
+            function(e, clickedIndex, newValue, oldValue) {
+                $(this).find('option:selected').prependTo($(this));
+                $(this).selectpicker('refresh');
             });
 
         $(".datepicker").datepicker({

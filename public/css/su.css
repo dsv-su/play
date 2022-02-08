@@ -8069,6 +8069,18 @@ p.card-text {
     top: 10px !important;
 }
 
+.bootstrap-select .dropdown-menu{
+    max-width: 100%!important;
+}
+
+.bootstrap-select .dropdown-menu span.text {
+    display: block !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bootstrap-select .filter-option { white-space: normal; }
+
 .filter-option-inner-inner {
     text-overflow: ellipsis;
     /*max-width: 200px;*/

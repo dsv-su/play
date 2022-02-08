@@ -161,11 +161,14 @@
                             <select wire:model.debounce.100s="courseEdit" name="courseEdit[]"
                                     class="form-control mx-1 selectpicker" data-dropup-auto="false"
                                     data-none-selected-text="{{ __('No course association')}}"
-                                    data-selected-text-format="count>1"
                                     data-live-search="true" multiple>
                                 {{krsort($courseselect)}}
                                 @foreach($courseselect as $key => $data)
-                                    <option value={{ $key }}>{{ $data[0] }}</option>
+                                    @if(Lang::locale() == 'swe')
+                                        <option value="{{ $key }}" data-subtext="{{$data[1]}}">{{ $data[0]}}</option>
+                                    @else
+                                        <option value="{{ $key }}" data-subtext="{{$data[1]}}">{{ $data[0] }}</option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>

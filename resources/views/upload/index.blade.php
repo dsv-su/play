@@ -72,7 +72,6 @@
                                 <select name="courses[]"
                                         class="form-control mx-1 selectpicker" data-dropup-auto="false"
                                         data-none-selected-text="{{ __('No course association')}}"
-                                        data-selected-text-format="count>1"
                                         data-live-search="true" multiple>
                                     {{--}}
                                     @foreach($courses as $course)
@@ -87,15 +86,15 @@
                                     @foreach($courses as $course)
                                         @if(!old('courses'))
                                             @if(Lang::locale() == 'swe')
-                                                <option value="{{ $course->id }}">{{ $course->id . ' ' . $course->designation . ' '. $course->semester. $course->year . ' (' . $course->name .')' }}</option>
+                                                <option value="{{ $course->id }}" data-subtext="{{$course->name}}">{{ $course->designation . ' '. $course->semester. $course->year}}</option>
                                             @else
-                                                <option value="{{ $course->id }}">{{ $course->id . ' ' . $course->designation . ' '. $course->semester. $course->year . ' (' . $course->name_en .')' }}</option>
+                                                <option value="{{ $course->id }}" data-subtext="{{$course->name_en}}">{{ $course->designation . ' '. $course->semester. $course->year }}</option>
                                             @endif
                                         @else
                                             @if(Lang::locale() == 'swe')
-                                                <option value="{{$course->id}}" {{ old('courses') == $course->designation || in_array($course->designation, old('courses')) ? 'selected':''}}>{{$course->id . ' ' .$course->designation . ' '. $course->semester. $course->year . ' (' . $course->name .')' }}</option>
+                                                <option value="{{$course->id}}" data-subtext="{{$course->name}}" {{ old('courses') == $course->designation || in_array($course->designation, old('courses')) ? 'selected':''}}>{{$course->designation . ' '. $course->semester. $course->year}}</option>
                                             @else
-                                                <option value="{{$course->id}}" {{ old('courses') == $course->designation || in_array($course->designation, old('courses')) ? 'selected':''}}>{{$course->id . ' ' .$course->designation . ' '. $course->semester. $course->year . ' (' . $course->name_en .')' }}</option>
+                                                <option value="{{$course->id}}" data-subtext="{{$course->name_en}}" {{ old('courses') == $course->designation || in_array($course->designation, old('courses')) ? 'selected':''}}>{{$course->designation . ' '. $course->semester. $course->year}}</option>
                                             @endif
                                         @endif
                                     @endforeach

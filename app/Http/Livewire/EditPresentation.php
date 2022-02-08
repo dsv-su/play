@@ -74,9 +74,9 @@ class EditPresentation extends Component
             }
             // Add existing courses even if a person has no permission
             if(Lang::locale() == 'swe') {
-                $this->courseselect[$this->coursedetail->id] = [$this->coursedetail->designation . ' ' . $this->coursedetail->semester . $this->coursedetail->year . ' (' . $this->coursedetail->name . ')', $this->coursedetail->designation . ' ' . $this->coursedetail->semester . $this->coursedetail->year];
+                $this->courseselect[$this->coursedetail->id] = [$this->coursedetail->designation . ' ' . $this->coursedetail->semester . $this->coursedetail->year, $this->coursedetail->name];
             } else {
-                $this->courseselect[$this->coursedetail->id] = [$this->coursedetail->designation . ' ' . $this->coursedetail->semester . $this->coursedetail->year . ' (' . $this->coursedetail->name_en . ')', $this->coursedetail->designation . ' ' . $this->coursedetail->semester . $this->coursedetail->year];
+                $this->courseselect[$this->coursedetail->id] = [$this->coursedetail->designation . ' ' . $this->coursedetail->semester . $this->coursedetail->year, $this->coursedetail->name_en];
             }
 
         }
@@ -90,9 +90,9 @@ class EditPresentation extends Component
 
         foreach ($courses as $data) {
             if(Lang::locale() == 'swe') {
-                $this->courseselect[$data->id] = [$data->designation . ' ' . $data->semester . $data->year . ' (' . $data->name . ')', $data->designation . ' ' . $data->semester . $data->year];
+                $this->courseselect[$data->id] = [$data->designation . ' ' . $data->semester . $data->year, $data->name];
             } else {
-                $this->courseselect[$data->id] = [$data->designation . ' ' . $data->semester . $data->year . ' (' . $data->name_en . ')', $data->designation . ' ' . $data->semester . $data->year];
+                $this->courseselect[$data->id] = [$data->designation . ' ' . $data->semester . $data->year, $data->name_en];
             }
 
         }

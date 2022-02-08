@@ -110,7 +110,7 @@
 
             @if (!$video->presenters()->isEmpty())
                 @foreach($video->presenters() as $presenter)
-                    <a href="/presenter/{{$presenter->username}}" class="badge badge-light border" style="float: right;">{{$presenter->name}}</a>
+                    <a href="/presenter/{{$presenter->username}}" class="badge badge-light border">{{$presenter->name}}</a>
                 @endforeach
             @endif
 
