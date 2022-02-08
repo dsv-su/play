@@ -18,125 +18,126 @@
     </div>
     <div class="container px-3 px-sm-0">
         <div class="row">
-            <div class="col-sm-12">
-                <div class="rounded border shadow p-3 my-2">
-                    <div class="row justify-content-between text-left">
-                        <div class="form-group col-sm-12 col-md-4 text-center m-auto py-3">
-                            <i class="far fa-file-alt fa-4x"></i>
-                        </div>
+            <div class="col-12">
+                <div class="rounded border shadow p-3 my-2 d-flex align-items-center justify-content-center">
+                    <div class="form-group form-row m-auto d-none d-md-block">
+                        <i class="far fa-file-alt fa-4x"></i>
+                    </div>
 
-                        <div class="form-group col col-auto col-md-8 px-sm-3 px-md-0 my-auto">
-                            <div class="row">
-                                <label class="col-4 col-lg-3 mb-0">{{__("Course id")}}</label>
-                                <div class="col"><strong>{{$course->id}}</strong></div>
-                            </div>
-                            <div class="row">
-                                <label class="col-4 col-lg-3 mb-0">{{ __("Course name") }}</label>
+                    <div class="form-group col col-auto col-md-9 px-sm-3 px-md-0 my-auto">
+                        <div class="row">
+                            <label class="col-4 col-lg-3 mb-0">{{__("Course id")}}</label>
+                            <div class="col"><strong>{{$course->id}}</strong></div>
+                        </div>
+                        <div class="row">
+                            <label class="col-4 col-lg-3 mb-0">{{ __("Course name") }}</label>
+                            <div class="col">
                                 @if(Lang::locale() == 'swe')
-                                    <div class="col">{{$course->name}}
+                                    {{$course->name}}
                                 @else
-                                    <div class="col">{{$course->name_en}}
+                                    {{$course->name_en}}
                                 @endif
-                                </div>
                             </div>
-                            <div class="row"><label class="col-4 col-lg-3 mb-0">{{ __("Designation") }}</label>
-                                <div class="col">{{$course->designation}}</div>
-                            </div>
-                            <div class="row"><label class="col-4 col-lg-3 mb-0">{{ __("Semester") }}</label>
-                                <div class="col">{{$course->semester}}</div>
-                            </div>
-                            <div class="row"><label class="col-4 col-lg-3 mb-0">{{__("Year")}}
-                                </label>
-                                <div class="col">{{$course->year}}</div>
-                            </div>
+                        </div>
+                        <div class="row"><label class="col-4 col-lg-3 mb-0">{{ __("Designation") }}</label>
+                            <div class="col">{{$course->designation}}</div>
+                        </div>
+                        <div class="row"><label class="col-4 col-lg-3 mb-0">{{ __("Semester") }}</label>
+                            <div class="col">{{$course->semester}}</div>
+                        </div>
+                        <div class="row"><label class="col-4 col-lg-3 mb-0">{{__("Year")}}
+                            </label>
+                            <div class="col">{{$course->year}}</div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-12">
-                <div class="rounded border shadow p-3 my-2">
-                    <div class="row justify-content-between text-left">
-                        <div class="form-group col-sm-12 col-md-4 m-auto text-center py-3">
-                            @if($visibility == true)
-                                <i class="far fa-eye fa-4x"></i>
-                            @else
-                                <i class="far fa-eye-slash fa-4x"></i>
-                            @endif
-                        </div>
-                        <div class="form-group col col-auto col-md-8 m-auto">
-                            <div class="row">
-                                <label for="visabilitySwitch"
-                                       class="col-lg-3 px-0 col-auto mb-0">{{__("Visibility")}}</label>
-                                <div class="col">
-                                    <span class="custom-control custom-switch custom-switch-lg">
+            <div class="col-12 col-md-6">
+                <div class="rounded border shadow p-3 my-2 d-flex align-items-center justify-content-center">
+                    <div class="form-group form-row my-auto py-3 mx-3">
+                        @if($visibility == true)
+                            <i class="far fa-eye fa-3x"></i>
+                        @else
+                            <i class="far fa-eye-slash fa-3x"></i>
+                        @endif
+                    </div>
+                    <div class="form-group my-auto form-row mx-3">
+                        <label for="visabilitySwitch"
+                               class="col px-0 col-auto mb-0">{{__("Visibility")}}</label>
+                        <div class="col">
+                                    <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip" title="{{__("Switch the toggle to change")}}">
                                     <input wire:click="visibility" class="custom-control-input"
                                            id="visibilitySwitch" name="visibility"
                                            type="checkbox" @if($visibility == true) checked @endif>
-                                    <label class="custom-control-label" style="margin-top: 3px;" for="visibilitySwitch"></label>
+                                    <label class="custom-control-label" style="margin-top: 3px;"
+                                           for="visibilitySwitch" ></label>
                                     </span>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-sm-12">
-                <div class="rounded border shadow p-3 my-2">
-                    <div class="row justify-content-between text-left">
-                        <div class="form-group col-sm-12 col-md-4 m-auto text-center py-3">
-                            @if($downloadable == true)
-                                <i class="fas fa-download fa-4x"></i>
-                            @else
-                                <i class="fas fa-times fa-4x"></i>
-                            @endif
-                        </div>
-                        <div class="form-group col col-auto col-md-8 m-auto">
-                            <div class="row">
-                                <label for="downloadSwitch"
-                                       class="col-lg-3 col-auto px-0 b-0">{{__("Downloadable")}}</label>
-                                <div class="col">
-                                       <span class="custom-control custom-switch custom-switch-lg">
+            <div class="col-12 col-md-6">
+                <div class="rounded border shadow p-3 my-2 d-flex align-items-center justify-content-center">
+                    <div class="form-group form-row my-auto py-3 mx-3">
+                        @if($downloadable == true)
+                            <i class="fas fa-download fa-3x"></i>
+                        @else
+                            <i class="fas fa-times fa-3x"></i>
+                        @endif
+                    </div>
+                    <div class="form-group my-auto form-row mx-3">
+                        <label for="downloadSwitch"
+                               class="col px-0 col-auto mb-0">{{__("Downloadable")}}</label>
+                        <div class="col">
+                                       <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip" title="{{__("Switch the toggle to change")}}">
                                         <input wire:click="downloadable" class="custom-control-input"
                                                id="downloadSwitch" name="downloadable"
                                                type="checkbox" @if($downloadable == true) checked @endif>
                                         <label class="custom-control-label" style="margin-top: 3px;"
                                                for="downloadSwitch"></label>
                                     </span>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-12">
+            <div class="col-12 col-lg-6">
                 <div class="rounded border shadow p-3 my-2">
-                    <!-- Permissions -->
                     <div class="row justify-content-between text-left">
                         <!--Video group permission settings-->
-                        <div class="form-group col-12 col-md-6 flex-column d-flex">
-                            <label class="form-control-label px-1"><i class="fas fa-play fa-border fa-pull-left"></i>{{ __("Playback group permissions") }}</label>
+                        <div class="form-group col flex-column d-flex">
+                            <label class="form-control-label px-1"><i
+                                        class="fas fa-play mr-2"></i>{{ __("Playback group permissions") }}
+                            </label>
                             <div id="video_perm">
-                                <select class="form-group form-control" name="course_permission"
+                                <select class="form-group form-control" name="course_permission" @if(!$visibility) readonly @endif
                                         style="margin: 5px 0px;">
                                     @foreach($permissions as $perm)
                                         @if(Lang::locale() == 'swe')
-                                        <option value="{{$perm->id}}"
-                                                @if($permissonId == $perm->id) selected @endif >{{$perm->id}}
-                                            : {{$perm->scope}}</option>
+                                            <option value="{{$perm->id}}"
+                                                    @if($permissonId == $perm->id) selected @elseif (!$visibility) disabled @endif >{{$perm->id}}
+                                                : {{$perm->scope}}</option>
                                         @else
                                             <option value="{{$perm->id}}"
-                                                    @if($permissonId == $perm->id) selected @endif >{{$perm->id}}
+                                                    @if($permissonId == $perm->id) selected @elseif (!$visibility) disabled @endif >{{$perm->id}}
                                                 : {{$perm->scope_en}}</option>
                                         @endif
                                     @endforeach
                                 </select>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="rounded border shadow p-3 my-2" style="min-height: 127.25px;">
+                    <div class="row justify-content-between text-left">
                         <!-- Individual permissions -->
-                        <div class="form-group col-12 col-md-6 flex-column d-flex">
-                            <label class="form-control-label px-1">{{ __("Individual User Permissions") }}
-                            <i class="fas fa-user fa-border fa-pull-left"></i> <span class="badge badge-light">{{$ipermissions}} {{ __("Set") }}</span>
+                        <div class="form-group col flex-column d-flex">
+                            <label class="form-control-label px-1"><i
+                                        class="fas fa-user mr-2"></i>{{ __("Individual user permissions") }}
+                                <span
+                                        class="badge badge-light">{{$ipermissions ?? 0}} {{ __("Set") }}</span>
                                 <span type="button" wire:click.prevent="add_individual_perm"
                                       class="btn btn-primary px-1 py-0">{{__("Add")}} <i
                                             class="fas fa-user-plus"></i></span>
@@ -152,11 +153,13 @@
                                                    placeholder="Start typing name or username"
                                                    aria-haspopup="true" autocomplete="off"
                                                    aria-labelledby="perm-search" @if ($name) readonly @endif>
-                                            @error('individuals.*') <span class="error">{{ $message }}</span> @enderror
+                                            @error('individuals.*') <span
+                                                    class="error">{{ $message }}</span> @enderror
                                             <div class="p-1 col-auto">
                                                 <select name="individual_perm_type[]" class="form-control">
                                                     <option value="read"
-                                                            @if($individuals_permission[$key] == 'read') selected @endif
+                                                            @if($individuals_permission[$key] == 'read') selected
+                                                            @endif
                                                             @if ($user_permission != 'delete' && $individuals_permission[$key] == 'delete') disabled @endif>
                                                         Read
                                                     </option>
@@ -167,7 +170,8 @@
                                                         Upload
                                                     </option>
                                                     <option value="edit"
-                                                            @if($individuals_permission[$key] == 'edit') selected @endif
+                                                            @if($individuals_permission[$key] == 'edit') selected
+                                                            @endif
                                                             @if ($user_permission != 'delete' && $individuals_permission[$key] == 'delete') disabled @endif>
                                                         Edit
                                                     </option>
