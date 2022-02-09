@@ -115,7 +115,7 @@
     "User with permissions to edit this presentation": "Användare med behörighet att revidera denna presentation",
     "Individual Permissions": "Individuella behörigheter",
     "Course Administrator": "Kursansvarig",
-    "Visability": "Synlighet",
+    "visibility": "Synlighet",
     "Presentation hidden": "Presentation gömd",
     "The value in seconds is beyond the scope of the stream": "Det angivna värdet i sekunder är utanför filmens omfattning",
     "Description": "Beskrivning",
@@ -187,6 +187,10 @@
     "Presentations": "Presentationer",
     "Assign Group Permission":"Tilldela gruppbehörighet",
     "Visible": "Synlig",
-    "Individual permissions": "Individuella behörigheter"
+    "Individual permissions": "Individuella behörigheter",
+    "DSV Staff playback": "DSV Personal uppspelning",
+    "Public playback": "Publik uppspelning",
+    "Custom playback": "Anpassad uppspelning",
+    "Work in progress": "Arbete pågår"
 
 }

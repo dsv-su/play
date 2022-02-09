@@ -65,7 +65,7 @@
                         </div>
                         <div class="form-group col col-auto col-md-8 m-auto">
                             <div class="row">
-                                <label for="visabilitySwitch"
+                                <label for="visibilitySwitch"
                                        class="col-lg-3 px-0 col-auto mb-0">{{__("Visibility")}}</label>
                                 <div class="col">
                                     <span class="custom-control custom-switch custom-switch-lg">

@@ -2,40 +2,49 @@
 
 namespace App\Services\Filters;
 
-use App\Video;
-
 class VisibilityFilter
 {
-    protected $video;
-
-    public function __construct($videos)
+    public function filter($videos)
     {
-        $this->videos = $videos;
+         return $this->FilterDownloadable($this->Filtervisibility($videos));
     }
 
-        public function filter()
-        {
-            $this->videos->filter(function ($video, $key)  {
-                //CourseSettings
-                $CourseSettings = new CoursePermissionFilter($video);
-                $CourseSettings->cast();
-                //CourseSettingUsers
-                $CourseSettingUsers = new CourseSettingUsersFilter($video);
-                $CourseSettingUsers->cast();
-                //IndividualUsers
-                $IndividualUsers = new IndividualPermissionsFilter($video);
-                $IndividualUsers->cast();
-                //CourseAdmins
-                $CourseAdmins = new CourseAdminPermissionFilter($video);
-                $CourseAdmins->cast();
-                //Admins
-                $Admins = new AdminPermissionsFilter($video);
-                $Admins->cast();
-                return $video->visability;
-            });
+    public function Filtervisibility($videos)
+    {
+        return $videos->filter(function ($video)  {
+            //CoursePermissionsSettings - type
+            $CourseSettings = new CoursePermissionFilter($video);
+            $CourseSettings->cast();
+            //PresentationPermissionsSetting - type
+            $PresentationSetting = new PresentationPermissionsFilter($video);
+            $PresentationSetting->cast();
+            //CourseSettings
+            $CourseSettings = new CourseSettingsFilter($video);
+            $CourseSettings->cast();
+            //CourseSettingUsers
+            $CourseSettingUsers = new CourseSettingUsersFilter($video);
+            $CourseSettingUsers->cast();
+            //IndividualUsers
+            $IndividualUsers = new IndividualPermissionsFilter($video);
+            $IndividualUsers->cast();
+            //CourseAdmins
+            $CourseAdmins = new CourseAdminPermissionFilter($video);
+            $CourseAdmins->cast();
+            //Admins
+            $Admins = new AdminPermissionsFilter($video);
+            $Admins->cast();
 
+            return $video->visibility;
+        });
+    }
 
-        }
-
-
+    public function FilterDownloadable($videos)
+    {
+        return $videos->filter(function ($video) {
+            //CourseDownload
+            $CourseDownload = new CourseDownloadFilter($video);
+            $CourseDownload->cast();
+            return $video;
+        });
+    }
 }

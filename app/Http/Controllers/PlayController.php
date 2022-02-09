@@ -11,7 +11,7 @@ use App\MediasitePresentation;
 use App\Presenter;
 use App\Services\AuthHandler;
 use App\Services\Daisy\DaisyIntegration;
-use App\Services\Filters\Visibility;
+use App\Services\Filters\VisibilityFilter;
 use App\Services\Notify\PlayStoreNotify;
 use App\Stream;
 use App\StreamResolution;
@@ -47,7 +47,8 @@ class PlayController extends Controller
      *  The "Fake" students emulation should be removed prior to launch.
      */
 
-    public function index()
+
+    public function index(VisibilityFilter $visibility)
     {
         if (!System::find(1)) {
             return redirect()->action([SystemController::class, 'start']);
@@ -55,8 +56,8 @@ class PlayController extends Controller
 
         $daisy = new DaisyIntegration();
         $data['permissions'] = VideoPermission::all();
-        $visibility = new Visibility();
 
+        /*********************************************************************/
         //For testing
         //Fake students
         if (in_array(app()->make('play_role'), ['Student1', 'Student2', 'Student3'])) {
@@ -70,82 +71,74 @@ class PlayController extends Controller
 
             //Test students
             //My courses (tab 1)
-            $my_videos = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
+            $data['my'] = $visibility->filter(Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
                 return $query->whereIn('course_id', $courses)->take(24);
-            })->get();
-            $data['my'] = $visibility->check($my_videos);
+            })->get());
 
 
             //Active courses (tab 2)
-            $active_videos = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($daisy) {
+            $data['active'] = $visibility->filter(Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($daisy) {
                 return $query->whereIn('course_id', $daisy->getActiveCourses());
-            })->get();
-            $data['active'] = $visibility->check($active_videos);
+            })->get());
 
             //All courses (tab 3)
-            $latest_videos = Video::with('category', 'video_course.course')->latest('creation')->get();
-            $data['latest'] = $visibility->check($latest_videos);
-        } // end testing
+            $data['latest'] = $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->get());
+        }
+
+        /************************************************************************/
 
         //Production server
         //User is Student
         elseif (App::environment('production') and app()->make('play_role') == 'Student') {
             $courses = $daisy->getActiveStudentCourses(app()->make('play_username'));
+
+            //My courses (tab 1)
             if ($courses) {
-                //My courses (tab 1)
-                $my_videos = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
+                $data['my'] = $visibility->filter(Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
                     return $query->whereIn('course_id', $courses)->take(24);
-                })->get();
-                $data['my'] = $visibility->check($my_videos);
+                })->get());
             }
 
             //Active courses (tab 2)
-            $active_videos = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($daisy) {
+            $data['active'] = $visibility->filter(Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($daisy) {
                 return $query->whereIn('course_id', $daisy->getActiveCourses());
-            })->get();
-            $data['active'] = $visibility->check($active_videos);
+            })->get());
 
             //All courses (tab 3)
-            $latest_videos = Video::with('category', 'video_course.course')->latest('creation')->get();
-            $data['latest'] = $visibility->check($latest_videos);
+            $data['latest'] = $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->get());
 
-        } //If user is Employee
+        }
+        //If user is Employee
         elseif (App::environment('production') and (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Staff')) {
             $courses = $daisy->getActiveEmployeeCourses(app()->make('play_username'));
+
+            //My courses (tab 1)
             if ($courses) {
-                //My courses (tab 1)
-                $my_videos = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
+                $data['my'] = $visibility->filter(Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
                     return $query->whereIn('course_id', $courses);
-                })->get();
-                $data['my'] = $visibility->check($my_videos);
+                })->get());
             }
 
             //Active courses (tab 2)
-            $active_videos = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($daisy) {
+            $data['active'] = $visibility->filter(Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($daisy) {
                 return $query->whereIn('course_id', $daisy->getActiveCourses());
-            })->get();
-
-            $data['active'] = $visibility->check($active_videos);
+            })->get());
 
             //All courses (tab 3)
-            $latest_videos = Video::with('category', 'video_course.course')->latest('creation')->get();
-            $data['latest'] = $visibility->check($latest_videos);
+            $data['latest'] = $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->get());
 
         } else {
-            //If user is Admin
+
+            //If in dev or user is Admin
+
             //Active courses (tab 2)
-
-            $data['active'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($daisy) {
+            $data['active'] = $visibility->filter(Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($daisy) {
                 return $query->whereIn('course_id', $daisy->getActiveCourses());
-            })->get();
-            $data['active'] = $visibility->check($data['active']);
+            })->get());
 
-            $data['latest'] = Video::with('category', 'video_course.course')->latest('creation')->get();
-            $data['latest'] = $visibility->check($data['latest']);
-            /*if (app()->make('play_role') != 'Administrator') {
-                //$data['active'] = $visibility->check($data['active']);
-                //$data['latest'] = $visibility->check($data['latest']);
-            }*/
+            //$data['latest'] = $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->get());
+            $data['latest'] = $visibility->filter(Video::with('category', 'video_course.course')->limit(3)->get());
+            //dd($data['latest'][0]['permission_type'], $data['latest'][1]['permission_type'], $data['latest'][2]['permission_type']);
         }
 
         // Add placeholders for manual presentations that are currently processed

@@ -11,7 +11,6 @@ class AdminPermissionsFilter extends VisibilityFilter implements VisibilityInter
 
     public function __construct(Video $video)
     {
-        parent::__construct($video);
         $this->video = $video;
         //$this->user = app()->make('play_auth'); //Use in production
         $this->user = app()->make('play_role');
@@ -20,7 +19,10 @@ class AdminPermissionsFilter extends VisibilityFilter implements VisibilityInter
     public function cast()
     {
         if($this->getAdminUsers()) {
-            $this->video->setAttribute('visibility', true);
+            if(!$this->video->visibility) {
+                $this->video->setAttribute('visibility', true);
+                $this->video->setAttribute('hidden', true);
+            }
             $this->video->setAttribute('edit', true);
             $this->video->setAttribute('delete', true);
         }

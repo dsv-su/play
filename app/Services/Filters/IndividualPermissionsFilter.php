@@ -12,7 +12,6 @@ class IndividualPermissionsFilter extends VisibilityFilter implements Visibility
 
     public function __construct(Video $video)
     {
-        parent::__construct($video);
         $this->video = $video;
         $this->user = app()->make('play_username');
     }
@@ -22,16 +21,15 @@ class IndividualPermissionsFilter extends VisibilityFilter implements Visibility
         if($users = $this->getIndividualSettingUsers()) {
             foreach($users as $user) {
                 if($user->username == $this->user) {
+                    if(!$this->video->visibility) {
+                        $this->video->setAttribute('visibility', true);
+                        $this->video->setAttribute('hidden', true);
+                    }
                     switch($user->permission) {
-                        case('read'):
-                            $this->video->setAttribute('visibility', true);
-                            break;
                         case('edit'):
-                            $this->video->setAttribute('visibility', true);
                             $this->video->setAttribute('edit', true);
                             break;
                         case('delete'):
-                            $this->video->setAttribute('visibility', true);
                             $this->video->setAttribute('edit', true);
                             $this->video->setAttribute('delete', true);
                     }

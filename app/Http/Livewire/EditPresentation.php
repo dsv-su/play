@@ -29,7 +29,7 @@ class EditPresentation extends Component
     public $i = 0;
     public $suser;
     public $course_responsible = [];
-    public $visability;
+    public $visibility;
     public $download;
     public $user_permission;
 
@@ -46,7 +46,7 @@ class EditPresentation extends Component
         $this->category = $video->category->category_name;
         $this->sources = $video->streams;
         $this->ipermissions = $individual_permissions->count();
-        $this->visability = (bool)$video->visability;
+        $this->visibility = (bool)$video->visibility;
         $this->download = (bool)$video->download;
         $this->user_permission = $user_permission;
 
@@ -129,10 +129,10 @@ class EditPresentation extends Component
         return $this->system_config['store']['list_uri'];
     }
 
-    public function visability()
+    public function visibility()
     {
         //Toggles the img and presentation_hidden text
-        $this->visability = !$this->visability;
+        $this->visibility = !$this->visibility;
     }
 
     public function updatedCourseEdit($value)

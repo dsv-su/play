@@ -2,24 +2,21 @@
 
 namespace App\Services\Filters;
 
-use App\CoursePermissions;
-use App\Interfaces\VisibilityInterface;
 use App\Video;
 
-class CoursePermissionFilter extends VisibilityFilter implements VisibilityInterface
+class PresentationPermissionsFilter extends VisibilityFilter implements \App\Interfaces\VisibilityInterface
 {
-    protected $courses, $course, $video;
+    protected $video, $permissions, $permission;
 
     public function __construct(Video $video)
     {
         $this->video = $video;
-        $this->courses = $video->courses();
+        $this->permissions = $video->status;
     }
-
     public function cast()
     {
-        foreach($this->courses as $this->course) {
-            if($id = $this->getCoursePermissionId($this->course->id)) {
+        foreach($this->permissions as $this->permission) {
+            if($id = $this->permission->permission_id) {
                 switch($id) {
                     case(1):
                         $this->video->setAttribute('permission_type', 'dsv');
@@ -37,13 +34,6 @@ class CoursePermissionFilter extends VisibilityFilter implements VisibilityInter
                         $this->video->setAttribute('permission_type', 'custom');
                 }
             }
-
         }
-
-    }
-
-    private function getCoursePermissionId($course_id)
-    {
-        return CoursePermissions::where('course_id', $course_id)->pluck('permission_id')->first();
     }
 }

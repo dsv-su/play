@@ -47,7 +47,7 @@ class Visibility extends Model
                                         if(in_array($course_user_admin->permission, ['read', 'edit', 'delete'])) {
                                             if(in_array($course_user_admin->permission, ['edit'])) {
                                                 $video->setAttribute('edit_setting', true);
-                                                if($video->visability == false) {
+                                                if($video->visibility == false) {
                                                     //Presentation is set to hidden
                                                     return $video->setAttribute('visibility_setting', false);
                                                 } else {
@@ -58,7 +58,7 @@ class Visibility extends Model
                                             if(in_array($course_user_admin->permission, ['delete'])) {
                                                 $video->setAttribute('edit_setting', true);
                                                 $video->setAttribute('delete_setting', true);
-                                                if($video->visability == false) {
+                                                if($video->visibility == false) {
                                                     //Presentation is set to hidden
                                                     return $video->setAttribute('visibility_setting', false);
                                                 } else {
@@ -84,7 +84,7 @@ class Visibility extends Model
                                         //Visibility
                                         if(in_array($ipermission->permission, ['read', 'edit', 'delete'])) {
                                             //User has been granted permission
-                                            if($video->visability == false) {
+                                            if($video->visibility == false) {
                                                 //Presentation is set to hidden
                                                 return $video->setAttribute('visibility_setting', false);
                                             } else {
@@ -100,7 +100,7 @@ class Visibility extends Model
                                 return $video->setAttribute('visibility_setting', true);
                             }
                             elseif(app()->make('play_role') == 'Courseadmin') {
-                                if($video->visability == false) {
+                                if($video->visibility == false) {
                                     //Presentation is set to hidden
                                     return $video->setAttribute('visibility_setting', false);
                                 } else {
@@ -110,7 +110,7 @@ class Visibility extends Model
                             }
 
                             $video->setAttribute('visibility_setting', true);
-                            return $video->visability;
+                            return $video->visibility;
                         }
                         else {
                             //Check individual course setting
@@ -158,10 +158,10 @@ class Visibility extends Model
                     }
                     //There is no explicit course setting
                     else {
-                        if($video->visability == false and (app()->make('play_role') == 'Administrator'))  {
+                        if($video->visibility == false and (app()->make('play_role') == 'Administrator'))  {
                             return $video->setAttribute('visibility_setting', false);
                         }
-                        elseif($video->visability == false and (app()->make('play_role') == 'Courseadmin'))  {
+                        elseif($video->visibility == false and (app()->make('play_role') == 'Courseadmin'))  {
                             return $video->setAttribute('visibility_setting', false);
                         }
                         else {
@@ -184,7 +184,7 @@ class Visibility extends Model
                                 }
                             }
 
-                            return $video->visability;
+                            return $video->visibility;
                         }
                     }
                 }
@@ -192,7 +192,7 @@ class Visibility extends Model
             //The video is not associated to a course
             else {
                 //Presentation=hidden && Administrator
-                if($video->visability == false and (app()->make('play_role') == 'Administrator'))  {
+                if($video->visibility == false and (app()->make('play_role') == 'Administrator'))  {
                     return $video->setAttribute('visibility_setting', false);
                 }
                 else {
@@ -209,7 +209,7 @@ class Visibility extends Model
                                 //Visibility
                                 if(in_array($ipermission->permission, ['read', 'edit', 'delete'])) {
                                     //User has been granted permission
-                                    if($video->visability == false) {
+                                    if($video->visibility == false) {
                                         //Presentation is set to hidden
                                         return $video->setAttribute('visibility_setting', false);
                                     } else {
@@ -223,7 +223,7 @@ class Visibility extends Model
                         }
                     }
                     $video->setAttribute('visibility_setting', true);
-                    return $video->visability;
+                    return $video->visibility;
                 }
 
             }

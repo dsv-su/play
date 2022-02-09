@@ -195,14 +195,14 @@ class EditController extends Controller
                 $stream->save();
             }
 
-            //Update visability
-            if ($request->visability) {
-                $video->visability = true;
+            //Update visibility
+            if ($request->visibility) {
+                $video->visibility = true;
             } else {
-                $video->visability = false;
+                $video->visibility = false;
             }
 
-            //Update visability
+            //Update visibility
             if ($request->download) {
                 $video->download = true;
             } else {

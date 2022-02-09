@@ -34,12 +34,12 @@
                 <div class="rounded border shadow p-3 my-2">
                     <div class="row justify-content-between text-left">
                         <div class="form-group col-md-6 col-lg-4 mx-auto text-center">
-                            @if($visability)
+                            @if($visibility)
                                 <img id="presentation" src="{{$thumb}}?{{ rand() }}" style="max-width: 300px;"
                                      class="mx-auto w-100">
                             @endif
                             <div class="d-flex justify-content-center h-100">
-                                @if(!$visability)
+                                @if(!$visibility)
                                     <div id="presentation_hidden" class="alert alert-secondary m-auto"
                                          role="alert">{{ __("Presentation hidden") }}</div>
                                 @endif
@@ -81,15 +81,15 @@
                                 </label>
                                 <div class="col">@if (empty($course)) {{ __("Not associated to a course") }} @else {{implode(', ', $course)}} @endif</div>
                             </div>
-                            <div class="row"><label for="visabilitySwitch"
+                            <div class="row"><label for="visibilitySwitch"
                                                     class="col-4 col-lg-3 mb-0">{{__("Visibility")}}</label>
                                 <div class="col">
                                        <span class="custom-control custom-switch custom-switch-lg">
-                                        <input wire:click="visability" class="custom-control-input"
-                                               id="visabilitySwitch" name="visability"
-                                               type="checkbox" @if($visability == true) checked @endif>
+                                        <input wire:click="visibility" class="custom-control-input"
+                                               id="visibilitySwitch" name="visibility"
+                                               type="checkbox" @if($visibility == true) checked @endif>
                                         <label class="custom-control-label" style="margin-top: 3px;"
-                                               for="visabilitySwitch"></label>
+                                               for="visibilitySwitch"></label>
                                     </span>
                                 </div>
                             </div>
@@ -232,7 +232,7 @@
                             <label class="form-control-label px-1"><i class="fas fa-play fa-border fa-pull-left"></i>{{ __("Playback group permissions") }}</label>
                             <div id="video_perm">
                                 <select class="form-group form-control" name="video_permission" style="margin: 5px 0px;"
-                                        @if(!$visability) style="background: #dddddd" @endif>
+                                        @if(!$visibility) style="background: #dddddd" @endif>
                                     @foreach($permissions as $perm)
                                         @if(Lang::locale() == 'swe')
                                         <option value="{{$perm->id}}"
@@ -303,7 +303,7 @@
                         </div>
                         <!-- end Individual permissions -->
                         <!-- Alert warning -->
-                        @if(!$visability)
+                        @if(!$visibility)
                             <div class="form-group col-12 col-md-6 flex-column d-flex">
                                 <div class="col alert alert-warning" role="alert">
                                     <p class="px-1 font-1rem">
