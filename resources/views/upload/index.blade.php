@@ -261,7 +261,11 @@
     <!-- Typeahead.js Bundle -->
     <script src="{{ asset('./js/typeahead/typeahead.bundle.js') }}"></script>
     <script>
-        $(".datepicker").datepicker("setDate", new Date());
+        $(".datepicker").datepicker({
+            format: "dd/mm/yyyy",
+            weekStart: 1,
+            todayHighlight: true
+        }).datepicker("setDate", new Date());
         $("#submit").click(function () {
             let errors = 0;
             if ($('#title').val() == '') {

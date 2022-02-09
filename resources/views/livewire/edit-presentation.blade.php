@@ -33,10 +33,10 @@
             <div class="col-sm-12">
                 <div class="rounded border shadow p-3 my-2">
                     <div class="row justify-content-between text-left">
-                        <div class="form-group col-md-6 col-lg-4 mx-auto text-center">
+                        <div class="form-group col-md-6 col-lg-4 m-auto text-center">
                             @if($visability)
                                 <img id="presentation" src="{{$thumb}}?{{ rand() }}" style="max-width: 300px;"
-                                     class="mx-auto w-100">
+                                     class="w-100">
                             @endif
                             <div class="d-flex justify-content-center h-100">
                                 @if(!$visability)
@@ -58,7 +58,7 @@
                             {{--}}
                         </div>
 
-                        <div class="form-group col-md-6 col-lg-8 px-md-3">
+                        <div class="form-group col-md-6 col-lg-8 px-md-3 mb-0">
                             <div class="row">
                                 <label class="col-4 col-lg-3 mb-0">{{__("Title")}}</label>
                                 <div class="col">{{$video->title}}</div>
