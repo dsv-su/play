@@ -59,7 +59,7 @@
                         </select>
                         <button type="button" class="mb-2 btn btn-outline-secondary"
                                 onclick="$('.selectpicker').selectpicker('deselectAll'); $('.selectpicker').selectpicker('refresh');">
-                            {{ __("Clear Selection") }}
+                            {{ __("Clear selection") }}
                         </button>
                         <button type="button" class="mb-2 ml-1 btn btn-outline-secondary collapsed" id="toggle">
                             {{ __("Expand all") }}

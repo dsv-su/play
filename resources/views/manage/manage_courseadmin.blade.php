@@ -23,7 +23,7 @@
                             <h4 class="card-title">
                                 <b>{{$course}}</b>
                                 <div class="container text-right">
-                                    <p class="d-inline">{{__("Course Setting")}}</p>
+                                    <p class="d-inline">{{__("Course settings")}}</p>
                                     <a class="btn btn-outline-primary" role="button" href="{{ route('course_edit', $courseId) }}"><span style="color: blue;"><i class="fas fa-cog fa-3x"></i></span></a>
                                 </div>
 

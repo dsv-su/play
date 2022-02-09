@@ -153,7 +153,7 @@
                         </div>
 
                         <!-- Permissions -->
-                        <label class="form-control-label px-1">{{ __("Playback Permissions") }}</label>
+                        <label class="form-control-label px-1">{{ __("Playback permissions") }}</label>
                         <p class="px-1 font-1rem mb-0">
                             {{ __("All uploaded presentations are accessible to DSV Students and Staff unless otherwise specified with the 'Custom' alternative.") }}
                         </p>

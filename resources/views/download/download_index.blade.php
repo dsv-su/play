@@ -2,7 +2,7 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <h1 class="word-wrap_xs-only" id="sub-entry-page-header">{{__("The Presentation has been downloaded.")}}</h1>
+            <h1 class="word-wrap_xs-only" id="sub-entry-page-header">{{__("The presentation has been downloaded.")}}</h1>
         </div>
         <div class="row">
             <div class="col-md-4">
