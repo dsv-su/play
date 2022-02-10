@@ -43,11 +43,11 @@
             <div class="icons m-1">
                 <!-- Group Permissions icons-->
                 @if($video->permission_type == 'dsv')
-                    <div class="permission mx-1" data-toggle="tooltip" title="{{__("DSV Students and Staff playback")}}">
+                    <div class="permission mx-1" data-toggle="tooltip" title="{{__("DSV students & staff playback")}}">
                         <i class="fas fa-users"></i>
                     </div>
                 @elseif($video->permission_type == 'dsv_staff')
-                    <div class="permission mx-1" data-toggle="tooltip" title="{{__("DSV Staff playback")}}">
+                    <div class="permission mx-1" data-toggle="tooltip" title="{{__("DSV staff playback")}}">
                         <i class="fas fa-house-user"></i>
                     </div>
                 @elseif($video->permission_type == 'public')
