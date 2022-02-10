@@ -72,7 +72,6 @@
                                 <select name="courses[]"
                                         class="form-control mx-1 selectpicker" data-dropup-auto="false"
                                         data-none-selected-text="{{ __('No course association')}}"
-                                        data-selected-text-format="count>1"
                                         data-live-search="true" multiple>
                                     {{--}}
                                     @foreach($courses as $course)
@@ -87,15 +86,15 @@
                                     @foreach($courses as $course)
                                         @if(!old('courses'))
                                             @if(Lang::locale() == 'swe')
-                                                <option value="{{ $course->id }}">{{ $course->id . ' ' . $course->designation . ' '. $course->semester. $course->year . ' (' . $course->name .')' }}</option>
+                                                <option value="{{ $course->id }}" data-subtext="{{$course->name}}">{{ $course->designation . ' '. $course->semester. $course->year}}</option>
                                             @else
-                                                <option value="{{ $course->id }}">{{ $course->id . ' ' . $course->designation . ' '. $course->semester. $course->year . ' (' . $course->name_en .')' }}</option>
+                                                <option value="{{ $course->id }}" data-subtext="{{$course->name_en}}">{{ $course->designation . ' '. $course->semester. $course->year }}</option>
                                             @endif
                                         @else
                                             @if(Lang::locale() == 'swe')
-                                                <option value="{{$course->id}}" {{ old('courses') == $course->designation || in_array($course->designation, old('courses')) ? 'selected':''}}>{{$course->id . ' ' .$course->designation . ' '. $course->semester. $course->year . ' (' . $course->name .')' }}</option>
+                                                <option value="{{$course->id}}" data-subtext="{{$course->name}}" {{ old('courses') == $course->designation || in_array($course->designation, old('courses')) ? 'selected':''}}>{{$course->designation . ' '. $course->semester. $course->year}}</option>
                                             @else
-                                                <option value="{{$course->id}}" {{ old('courses') == $course->designation || in_array($course->designation, old('courses')) ? 'selected':''}}>{{$course->id . ' ' .$course->designation . ' '. $course->semester. $course->year . ' (' . $course->name_en .')' }}</option>
+                                                <option value="{{$course->id}}" data-subtext="{{$course->name_en}}" {{ old('courses') == $course->designation || in_array($course->designation, old('courses')) ? 'selected':''}}>{{$course->designation . ' '. $course->semester. $course->year}}</option>
                                             @endif
                                         @endif
                                     @endforeach
@@ -154,7 +153,7 @@
                         </div>
 
                         <!-- Permissions -->
-                        <label class="form-control-label px-1">{{ __("Playback Permissions") }}</label>
+                        <label class="form-control-label px-1">{{ __("Playback permissions") }}</label>
                         <p class="px-1 font-1rem mb-0">
                             {{ __("All uploaded presentations are accessible to DSV Students and Staff unless otherwise specified with the 'Custom' alternative.") }}
                         </p>
@@ -262,7 +261,11 @@
     <!-- Typeahead.js Bundle -->
     <script src="{{ asset('./js/typeahead/typeahead.bundle.js') }}"></script>
     <script>
-        $(".datepicker").datepicker("setDate", new Date());
+        $(".datepicker").datepicker({
+            format: "dd/mm/yyyy",
+            weekStart: 1,
+            todayHighlight: true
+        }).datepicker("setDate", new Date());
         $("#submit").click(function () {
             let errors = 0;
             if ($('#title').val() == '') {

@@ -2,17 +2,17 @@
 
 return [
 
-    'navigate'  => 'Navigera',
+    'navigate' => 'Navigera',
     'semester' => 'Termin',
     'course' => 'Kurs',
     'category' => 'Kategori',
     'tag' => 'Tagg',
     'presenter' => 'Presentatör',
-    'manage'    => 'Hantera',
+    'manage' => 'Hantera',
     'manage_recording' => 'Hantera presentationer',
     'manage_course' => 'Hantera kurser',
     'manual_upload' => 'Manuell uppladdning',
-    'admin'     =>  'Admin',
+    'admin' => 'Admin',
     'su' => 'Stockholms universitet, DSV',
     'post_nr' => 'Postbox 7003, 164 07 Kista',
     'phone' => 'Telefon: 08-16 20 20',
@@ -26,7 +26,7 @@ return [
     'private' => 'Anpassad',
     'my_courses' => 'Mina kurser',
     'active_courses' => 'Aktiva kurser',
-    'latest' => 'Alla kurser',
+    'latest' => 'Alla presentationer',
     'viewed' => 'Mest spelade',
     'downloaded' => 'Mest nerladdade',
 ];

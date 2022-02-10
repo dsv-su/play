@@ -191,6 +191,20 @@
     "DSV Staff playback": "DSV Personal uppspelning",
     "Public playback": "Publik uppspelning",
     "Custom playback": "Anpassad uppspelning",
-    "Work in progress": "Arbete pågår"
-
+    "Some of the uploaded presentations are being processed now. You can see them under \"All presentations\" tab.": "Några av de uppladdade presentationerna bearbetas nu. Du kan se dem under fliken \"Alla presentationer\".",
+    "Expand all": "Expandera alla",
+    "Collapse all": "Kollapsa alla",
+    "Playback": "Uppspelning",
+    "courses": "kurser",
+    "Assign permissions": "Tilldela rättigheter",
+    "Original recording date": "Ursprunglig inspelningsdatum",
+    "Upload custom thumb": "Ladda upp en egen miniatyr",
+    "Course manager": "Kursansvarig",
+    "Playback permissions": "Uppspelningsrättigheter",
+    "Clear selection": "Rensa urval",
+    "Individual user permissions": "Enskilda användarbehörigheter",
+    "The presentation has been downloaded.": "Presentationen har laddats ner.",
+    "Assign group permission": "Tilldela gruppbehörighet",
+    "Users with individual permissions": "Användare med individuella behörigheter",
+    "Not downloadable": "Ej nedladdningsbar"
 }

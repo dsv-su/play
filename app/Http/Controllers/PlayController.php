@@ -136,9 +136,8 @@ class PlayController extends Controller
                 return $query->whereIn('course_id', $daisy->getActiveCourses());
             })->get());
 
-            //$data['latest'] = $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->get());
-            $data['latest'] = $visibility->filter(Video::with('category', 'video_course.course')->limit(3)->get());
-            //dd($data['latest'][0]['permission_type'], $data['latest'][1]['permission_type'], $data['latest'][2]['permission_type']);
+            $data['latest'] = $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->get());
+
         }
 
         // Add placeholders for manual presentations that are currently processed

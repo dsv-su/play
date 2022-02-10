@@ -25,11 +25,13 @@ class CourseDownloadFilter extends VisibilityFilter implements \App\Interfaces\V
         //Check that one of all coursesettings are not false
         if(in_array(0, $this->courseSettings)) {
             $this->video->setAttribute('download', false);
+            /*
             //Override with the presentation setting
             $presentation = $this->video->fresh();
             if($presentation->download) {
                 $this->video->setAttribute('download', true);
             }
+            */
         } else {
             $presentation = $this->video->fresh();
             if(!$presentation->download) {

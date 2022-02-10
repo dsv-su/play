@@ -10,16 +10,14 @@ class DaisyAPI extends DaisyIntegration
 
     public function loadCourses($endpoints)
     {
-       //Loader
+        //Loader
     }
 
     public function checkCourseAdmin($id)
     {
-        if(json_decode($this->getResource('employee/' . $id . '/contributions?fromSemesterId='.$this->from_year().'1&toSemesterId='.$this->to_year().'2', 'json')->getBody()->getContents(), TRUE)) {
+        if (json_decode($this->getResource('employee/' . $id . '/contributions?fromSemesterId=' . $this->from_year() . '1&toSemesterId=' . $this->to_year() . '2', 'json')->getBody()->getContents(), TRUE)) {
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
@@ -27,22 +25,21 @@ class DaisyAPI extends DaisyIntegration
     //All courses where user is Responible courseadministrator
     public function getDaisyEmployeeResponsibleCourses($id)
     {
-        if($this->array_resources = json_decode($this->getResource('employee/' . $id . '/contributions?fromSemesterId='.$this->from_year().'1&toSemesterId='.$this->to_year().'2', 'json')->getBody()->getContents(), TRUE)) {
+        if ($this->array_resources = json_decode($this->getResource('employee/' . $id . '/contributions?fromSemesterId=' . $this->from_year() . '1&toSemesterId=' . $this->to_year() . '2', 'json')->getBody()->getContents(), TRUE)) {
             //If user is courseadmin
             //Sort the result after year
 
-            $this->resources = collect($this->array_resources)->sortBy(function($course, $key) {
+            $this->resources = collect($this->array_resources)->sortBy(function ($course, $key) {
                 return $course['courseSegmentInstance']['semesterId'];
             });
-            $this->resources = collect($this->resources)->sortBy(function($course, $key) {
+            $this->resources = collect($this->resources)->sortBy(function ($course, $key) {
                 return $course['courseSegmentInstance']['id'];
             });
 
             foreach ($this->resources->reverse() as $course) {
                 $courselist[] = Arr::flatten($course);
             }
-        }
-        else {
+        } else {
             return false;
         }
         /*
@@ -56,7 +53,6 @@ class DaisyAPI extends DaisyIntegration
                    */
 
         return $courselist;
-
     }
 
     //All courses from Daisy
@@ -64,31 +60,28 @@ class DaisyAPI extends DaisyIntegration
     {
         //Retrive all courses from Daisy from_year -- to_year
         $intervall = $this->to_year() - $this->from_year();
-        for($i=0; $i<=$intervall;$i++){
+        for ($i = 0; $i <= $intervall; $i++) {
             $years[] = $this->to_year() - $i;
-
         }
 
-        foreach($years as $year) {
-            for($i=1;$i<=2;$i++) {
-                $this->array_resources = json_decode($this->getResource('courseSegment?semester='.$year.$i, 'json')->getBody()->getContents(), TRUE);
-
-                $this->resources = collect($this->array_resources)->sortBy(function($course, $key) {
+        foreach ($years as $year) {
+            // Order is reversed to get HT before VT since we're querying backwards
+            for ($i = 2; $i >= 1; $i--) {
+                $this->array_resources = json_decode($this->getResource('courseSegment?semester=' . $year . $i, 'json')->getBody()->getContents(), TRUE);
+                /* we don't need to sort by semester, just ids
+                $this->resources = collect($this->array_resources)->sortBy(function ($course, $key) {
                     return $course['semester'];
                 });
-                $this->resources = collect($this->resources)->sortBy(function($course, $key) {
+                */
+                $this->resources = collect($this->array_resources)->sortBy(function ($course, $key) {
                     return $course['id'];
                 });
-                //return $this->resources;
                 foreach ($this->resources->reverse() as $course) {
                     $courselist[] = $course;
                 }
             }
         }
 
-
-
         return $courselist;
-
     }
 }

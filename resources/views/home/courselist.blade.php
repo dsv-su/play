@@ -26,10 +26,10 @@
                     <span class="badge badge-secondary mb-2" data-toggle="tooltip" title="{{__("DSV staff only playback")}}"><i class="fas fa-house-user"></i></span>
                     @break
                     @case(4)
-                    <span class="badge badge-info mb-2" data-toggle="tooltip" title="{{__("External playback")}}"><i class="fas fa-globe"></i></span>
+                    <span class="badge badge-info mb-2" data-toggle="tooltip" title="{{__("Public playback")}}"><i class="fas fa-globe"></i></span>
                     @break
                     @default
-                    <span class="badge badge-info mb-2" data-toggle="tooltip" title="{{__("Custom playback permission")}}"><i class="fas fa-user-lock"></i></span>
+                    <span class="badge badge-info mb-2" data-toggle="tooltip" title="{{__("Custom playback")}}"><i class="fas fa-user-lock"></i></span>
                 @endswitch
             @else
                 <span class="badge badge-success mb-2" data-toggle="tooltip" title="{{ __("DSV students & staff playback") }}"><i class="fas fa-users"></i></span>
@@ -73,11 +73,11 @@
                                         class="badge badge-secondary"><i class="fas fa-house-user"></i></span></span>
                             @break
                             @case(4)
-                            <span class="badge badge-light mb-2">{{ __("External playback") }} <span
+                            <span class="badge badge-light mb-2">{{ __("Public playback") }} <span
                                         class="badge badge-info"><i class="fas fa-globe"></i></span></span>
                             @break
                             @default
-                            <span class="badge badge-light mb-2">{{ __("Custom playback permission") }} <span
+                            <span class="badge badge-light mb-2">{{ __("Custom playback") }} <span
                                         class="badge badge-info"><i class="fas fa-user-lock"></i></span></span>
                         @endswitch
                     @else

@@ -36,7 +36,7 @@
                         <div class="form-group col-md-6 col-lg-4 mx-auto text-center">
                             @if($visibility)
                                 <img id="presentation" src="{{$thumb}}?{{ rand() }}" style="max-width: 300px;"
-                                     class="mx-auto w-100">
+                                     class="w-100">
                             @endif
                             <div class="d-flex justify-content-center h-100">
                                 @if(!$visibility)
@@ -58,7 +58,7 @@
                             {{--}}
                         </div>
 
-                        <div class="form-group col-md-6 col-lg-8 px-md-3">
+                        <div class="form-group col-md-6 col-lg-8 px-md-3 mb-0">
                             <div class="row">
                                 <label class="col-4 col-lg-3 mb-0">{{__("Title")}}</label>
                                 <div class="col">{{$video->title}}</div>
@@ -161,11 +161,14 @@
                             <select wire:model.debounce.100s="courseEdit" name="courseEdit[]"
                                     class="form-control mx-1 selectpicker" data-dropup-auto="false"
                                     data-none-selected-text="{{ __('No course association')}}"
-                                    data-selected-text-format="count>1"
                                     data-live-search="true" multiple>
                                 {{krsort($courseselect)}}
                                 @foreach($courseselect as $key => $data)
-                                    <option value={{ $key }}>{{ $data[0] }}</option>
+                                    @if(Lang::locale() == 'swe')
+                                        <option value="{{ $key }}" data-subtext="{{$data[1]}}">{{ $data[0]}}</option>
+                                    @else
+                                        <option value="{{ $key }}" data-subtext="{{$data[1]}}">{{ $data[0] }}</option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>

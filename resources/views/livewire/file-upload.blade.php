@@ -93,7 +93,7 @@
         @if($uploaded_files > 0)
         <div class="row justify-content-between text-left">
             <div class="col-xl-3 col-sm-6 my-2">
-                <label class="form-control-label px-1">{{__("Upload Custom Thumb") }}</label>
+                <label class="form-control-label px-1">{{__("Upload custom thumb") }}</label>
                 <input type="file" class="form-control-file" wire:model="custom">
                 @error('custom') <span class="text-danger">{{ $message }}</span> @enderror
             </div>

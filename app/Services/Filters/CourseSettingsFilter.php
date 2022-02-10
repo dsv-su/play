@@ -19,42 +19,32 @@ class CourseSettingsFilter extends VisibilityFilter implements \App\Interfaces\V
     {
         //Collect all coursesettings
         foreach($this->courses as $this->course) {
-            $this->courseSettings[] = $this->getCourseVisibilitysetting($this->course->id);
-        }
-        //Check that one of all coursesettings are not false
-        if(in_array(0, $this->courseSettings)) {
-            $this->video->setAttribute('visibility', false);
-            /*
-             * Coursesettings have higher priority
-             *
-            //Override with the presentation setting
-            $presentation = $this->video->fresh();
-            if($presentation->visibility) {
-                $this->video->setAttribute('visibility', true);
+            if($check = $this->getCourseVisibilitysetting($this->course->id)) {
+                $this->courseSettings[] = $check->visibility;
             }
-            */
-        } else {
-            //$presentation = $this->video->fresh();
-            //if(!$presentation->visibility) {
-                foreach($this->courses as $this->course) {
-                    if($download = $this->getCourseVisibilitysetting($this->course->id)) {
-                        switch($download) {
-                            case(0):
-                                $this->video->setAttribute('visibility', false);
-                                break;
-                            case(1):
-                                $this->video->setAttribute('visibility', true);
-                                break;
-                        }
+
+        }
+        foreach($this->courses as $this->course) {
+            if($setting = $this->getCourseVisibilitysetting($this->course->id)) {
+                //Check that all values are the same and there are multiple coursesettings
+                if(!(count(array_unique($this->courseSettings)) === 1) && (count($this->courseSettings) > 1)) {
+                    $this->video->setAttribute('visibility', false);
+                } else {
+                    switch($setting->visibility) {
+                        case(0):
+                            $this->video->setAttribute('visibility', false);
+                            break;
+                        case(1):
+                            $this->video->setAttribute('visibility', true);
+                            break;
                     }
                 }
-            //}
-
+            }
         }
     }
 
     private function getCourseVisibilitysetting($course_id)
     {
-        return CoursesettingsPermissions::where('course_id', $course_id)->pluck('visibility')->first();
+        return CoursesettingsPermissions::where('course_id', $course_id)->first();
     }
 }

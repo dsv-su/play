@@ -1,7 +1,6 @@
 @extends('layouts.suplay')
 @section('content')
-    @include('layouts.partials.searchbox')
-    @if (isset($pending) && $pending->count())
+    @if (isset($pending) && $pending->count() && !session()->has('message'))
         <div class="container banner-inner">
             <div class="row no-gutters w-100">
                 <div class="alert alert-info w-100 mb-5">
@@ -10,6 +9,7 @@
             </div>
         </div>
     @endif
+    @include('layouts.partials.searchbox')
     <!-- Header message section -->
     <div class="container banner-inner">
         <div class="row no-gutters w-100">
@@ -144,7 +144,7 @@
                             @endif
                             <button type="button" class="mb-2 btn btn-outline-secondary"
                                     onclick="$('.selectpicker').selectpicker('deselectAll'); $('.selectpicker').selectpicker('refresh');">
-                                Clear selection
+                                {{__("Clear selection")}}
                             </button>
                             <meta name="csrf-token" content="{{ csrf_token() }}">
                         </form>

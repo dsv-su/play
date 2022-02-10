@@ -91,7 +91,11 @@
             </div>
             @if ($video->description)
                 <div class="ml-auto" id="showmore">
-                    <a tabindex="0" class="btn btn-sm" role="button" data-toggle="popover" data-trigger="focus" data-original-title="Description" data-placement="bottom" data-content="{{$video->description}}">
+                    <a tabindex="0" class="btn btn-sm" role="button" data-toggle="popover"
+                       data-trigger="focus"
+                       data-original-title="{{__("Description")}}"
+                       data-placement="bottom"
+                       data-content="{{$video->description}}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                              class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
                             <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
@@ -111,7 +115,7 @@
 
             @if (!$video->presenters()->isEmpty())
                 @foreach($video->presenters() as $presenter)
-                    <a href="/presenter/{{$presenter->username}}" class="badge badge-light border" style="float: right;">{{$presenter->name}}</a>
+                    <a href="/presenter/{{$presenter->username}}" class="badge badge-light">{{$presenter->name}}</a>
                 @endforeach
             @endif
                 {{--}}

@@ -12,12 +12,12 @@ class VisibilityFilter
     public function Filtervisibility($videos)
     {
         return $videos->filter(function ($video)  {
-            //CoursePermissionsSettings - type
-            $CourseSettings = new CoursePermissionFilter($video);
-            $CourseSettings->cast();
             //PresentationPermissionsSetting - type
             $PresentationSetting = new PresentationPermissionsFilter($video);
             $PresentationSetting->cast();
+            //CoursePermissionsSettings - type
+            $CourseSettings = new CoursePermissionFilter($video);
+            $CourseSettings->cast();
             //CourseSettings
             $CourseSettings = new CourseSettingsFilter($video);
             $CourseSettings->cast();
