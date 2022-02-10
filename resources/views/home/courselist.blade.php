@@ -84,7 +84,8 @@
                         <span class="badge badge-light mb-2">{{__("DSV students & staff playback")}} <span
                                     class="badge badge-success"><i class="fas fa-users"></i></span></span>
                     @endif
-                    @if(!key_exists($key, $coursesetlist) || $coursesetlist[$key]['downloadable'] == true)
+                    <!-- If setting does not exist the download is default 'not downloadable' otherwise it is up to the download-key -->
+                    @if(key_exists($key, $coursesetlist) && $coursesetlist[$key]['downloadable'] == true)
                         <span class="badge badge-light mb-2">{{__("Downloadable")}} <span class="badge badge-success"><i
                                         class="fas fa-download"></i></span></span>
                     @else
