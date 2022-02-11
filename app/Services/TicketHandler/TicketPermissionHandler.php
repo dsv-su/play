@@ -25,7 +25,7 @@ class TicketPermissionHandler
         $coursesettings->cast();
 
         //Check if presentation is public or enviroment is local dev
-        if($user_entitlement->validate($this->video->permission_ticket_id)) {
+        if($user_entitlement->validate($this->video->ticket_permission_id)) {
             //Return Token
             $this->video = $this->video->fresh();
             $token = new TokenIssuer($this->video);
@@ -54,8 +54,8 @@ class TicketPermissionHandler
             //$admin = new AdminTicket($this->video);
             //$admin->cast();
         }
-
-        if($this->video->ticket or $user_entitlement->validate($this->video->permission_ticket_id)) {
+        if($this->video->ticket == true) {
+        if($this->video->ticket or $user_entitlement->validate($this->video->ticket_permission_id)) {
             $this->video = $this->video->fresh();
             $token = new TokenIssuer($this->video);
             return $token->issue();
