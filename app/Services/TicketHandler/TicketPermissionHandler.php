@@ -51,8 +51,8 @@ class TicketPermissionHandler
             $courseAdmin->cast();
 
             //Admin (1)
-            //$admin = new AdminTicket($this->video);
-            //$admin->cast();
+            $admin = new AdminTicket($this->video);
+            $admin->cast();
         }
 
         if($this->video->ticket or $user_entitlement->validate($this->video->ticket_permission_id)) {
