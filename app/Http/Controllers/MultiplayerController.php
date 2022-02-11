@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\TicketHandler;
+use App\Services\TicketHandler\TicketPermissionHandler;
 use App\Stream;
 use App\StreamResolution;
 use App\Video;
@@ -31,7 +31,7 @@ class MultiplayerController extends Controller
     {
         $this->file = base_path() . '/systemconfig/play.ini';
         if (!file_exists($this->file)) {
-            $this->file = base_path() . '/systemconfig/play.ini.example';
+            abort(503);
         }
         $this->system_config = parse_ini_file($this->file, true);
 
@@ -55,7 +55,7 @@ class MultiplayerController extends Controller
         $video = Video::find($id);
 
         //Issue ticket for video
-        $ticket = new TicketHandler($video);
+        $ticket = new TicketPermissionHandler($video);
         $token = $ticket->issue();
 
         // Construct Presentation json from DB

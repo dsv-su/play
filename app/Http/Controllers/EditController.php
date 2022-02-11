@@ -8,7 +8,7 @@ use App\IndividualPermission;
 use App\Permission;
 use App\Presenter;
 use App\Services\Daisy\DaisyAPI;
-use App\Services\Filters\Visibility;
+use App\Services\Filters\VisibilityFilter;
 use App\Stream;
 use App\Tag;
 use App\Video;
@@ -27,7 +27,7 @@ class EditController extends Controller
         $this->middleware('edit-permission');
     }
 
-    public function show(Video $video)
+    public function show(Video $video, VisibilityFilter $visibility)
     {
         $permissions = Permission::all();
         $courses = Course::all();
@@ -57,8 +57,7 @@ class EditController extends Controller
         $individual_permissions = IndividualPermission::where('video_id', $video->id)->get();
 
         //Needs refactoring
-        $visibility = new Visibility();
-        $video = $visibility->check(Video::where('id', $video->id)->get())[0];
+        $video = $visibility->filter(Video::where('id', $video->id)->get())[0];
         // Check if a video is associated with any course where the user is a manager
         $userismanager = $video->courses()->filter(function ($course) use ($daisy_courses_ids) {
                 return in_array($course->id, $daisy_courses_ids);
