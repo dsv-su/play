@@ -17,7 +17,7 @@ class CourseAdminTicket extends TicketPermissionHandler implements \App\Interfac
     public function cast()
     {
         foreach ($this->video->coursepermissions as $this->cadmin) {
-            if($this->cadmin->username == app()->make('play_username') && $this->cadmin->permission == 'delete') {
+            if($this->cadmin->username. '@su.se' == $_SERVER['eppn'] && $this->cadmin->permission == 'delete') {
                 $this->video->setAttribute('ticket', true);
             }
         }

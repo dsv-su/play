@@ -13,8 +13,8 @@ class Entitlement
         if(app()->environment('local') or $id == 4) {
            return true;
         } else {
-            $this->entitlement = Permission::where('id', $id)->pluck('entitlement');
-            $this->explicit_entitlements = explode(";", $this->entitlement[0]);
+            $this->entitlement = Permission::where('id', $id)->pluck('entitlement')->first();
+            $this->explicit_entitlements = explode(";", $this->entitlement);
             $this->server = explode(";", $_SERVER['entitlement']);
             foreach ($this->explicit_entitlements as $this->explicit_entitlement) {
                 foreach ($this->server as $this->server_entitlement) {

@@ -21,7 +21,7 @@ class CourseIndividualTicket extends TicketPermissionHandler implements \App\Int
         foreach($this->courses as $this->course) {
             if($setting = $this->getCourseIndividuals($this->course->id)) {
                 //Check if user is listed
-                if($setting->username == app()->make('play_username') && in_array($setting->permission, ['read', 'edit', 'delete'])) {
+                if($setting->username. '@su.se' == $_SERVER['eppn'] && in_array($setting->permission, ['read', 'edit', 'delete'])) {
                     $this->video->setAttribute('ticket', true);
                 }
             }

@@ -7,7 +7,7 @@ use App\Video;
 
 class CourseSettingTicket extends TicketPermissionHandler implements \App\Interfaces\TicketInterface
 {
-    protected $video, $courses, $courseSettings;
+    protected $video, $course, $courses, $courseSettings;
 
     public function __construct(Video $video)
     {
