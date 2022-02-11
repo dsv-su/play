@@ -54,7 +54,7 @@ class TicketPermissionHandler
             //$admin = new AdminTicket($this->video);
             //$admin->cast();
         }
-        if($this->video->ticket == true) {
+
         if($this->video->ticket or $user_entitlement->validate($this->video->ticket_permission_id)) {
             $this->video = $this->video->fresh();
             $token = new TokenIssuer($this->video);
