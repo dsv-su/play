@@ -3,7 +3,7 @@
     <!-- Navigation -->
     <div class="container d-flex h-100">
         <a href="{{route('home')}}" class="text-decoration-none logo d-sm-flex align-items-center">
-            DSVPlay&nbsp;
+            DSVPlay
         </a>
         <nav class="d-none d-lg-flex main-menu mega-menu__primary transition w-100" aria-hidden="true">
             <ul class="nav not-list-styled">
