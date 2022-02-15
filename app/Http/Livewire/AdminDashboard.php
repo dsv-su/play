@@ -26,6 +26,7 @@ class AdminDashboard extends Component
     public $stats_permissions, $stats_permissions_dsv, $stats_permissions_staff, $stats_permissions_public, $stats_permissions_private, $total_set;
     public $videos, $cattura, $json_files;
     public $total_courses, $courses_2022, $percent_courses_2022, $courses_2021, $percent_courses_2021, $courses_2020, $percent_courses_2020, $courses_2019, $percent_courses_2019;
+    public $api_tab, $stats_tab, $action_tab, $permission_tab, $backup_tab;
     protected $file;
     protected $listeners = ['refreshCattura' => '$refresh'];
 
@@ -36,6 +37,43 @@ class AdminDashboard extends Component
         $this->checkStats($cattura, $countPresentations);
         //Stats
         $this->stats($countPresentations);
+        $this->setTabs(false);
+        $this->api_tab = true;
+    }
+
+    public function setTabs($state)
+    {
+        $this->api_tab = $state;
+        $this->stats_tab = $state;
+        $this->action_tab = $state;
+        $this->permission_tab = $state;
+        $this->backup_tab = $state;
+    }
+    
+    public function tab($tab)
+    {
+       switch($tab) {
+           case ('api'):
+               $this->setTabs(false);
+               $this->api_tab = true;
+               break;
+           case('stats'):
+               $this->setTabs(false);
+               $this->stats_tab = true;
+               break;
+           case('action'):
+               $this->setTabs(false);
+               $this->action_tab = true;
+               break;
+           case('permission'):
+               $this->setTabs(false);
+               $this->permission_tab = true;
+               break;
+           case('backup'):
+               $this->setTabs(false);
+               $this->backup_tab = true;
+               break;
+       }
     }
 
     public function checkStats(Cattura $cattura, CountPresentations $countPresentations)

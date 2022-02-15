@@ -1,6 +1,24 @@
 <div>
-    <div class="grey-bg container-fluid">
-        <section id="external-api" class="tab-content">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a wire:click="tab('api')" class="nav-link @if($api_tab == true) active @endif" data-toggle="tab" href="#external-api">External API</a>
+        </li>
+        <li class="nav-item">
+            <a wire:click="tab('stats')" class="nav-link @if($stats_tab == true) active @endif" data-toggle="tab" href="#stats">Stats</a>
+        </li>
+        <li class="nav-item">
+            <a wire:click="tab('action')" class="nav-link @if($action_tab == true) active @endif" data-toggle="tab" href="#actions">Manage</a>
+        </li>
+        <li class="nav-item">
+            <a wire:click="tab('permission')" class="nav-link @if($permission_tab == true) active @endif" data-toggle="tab" href="#permissions">Permissions</a>
+        </li>
+        <li class="nav-item">
+            <a wire:click="tab('backup')" class="nav-link @if($backup_tab == true) active @endif" data-toggle="tab" href="#backup">Backup</a>
+        </li>
+    </ul>
+    <div class="grey-bg container-fluid tab-content">
+        <section id="external-api" class="tab-pane container @if($api_tab == true) active @else fade @endif">
             <div class="row">
                 <div class="col-12 mt-3 mb-1">
                     <h4 class="text-uppercase">External API statuses</h4>
@@ -174,7 +192,8 @@
 
             </div>
         </section>
-        <section id="stats">
+
+        <section id="stats" class="tab-pane container @if($stats_tab == true) active @else fade @endif">
             <!-- Stats -->
             <div class="row">
                 <div class="col-12 mt-3 mb-1">
@@ -345,7 +364,7 @@
                 </div>
             </div>
         </section>
-        <section id="actions">
+        <section id="actions" class="tab-pane container @if($action_tab == true) active @else fade @endif">
             <div class="row">
                 <div class="col-12 mt-3 mb-1">
                     <h4 class="text-uppercase">Manage</h4>
@@ -418,7 +437,7 @@
             </div>
         </section>
 
-        <section id="permissions">
+        <section id="permissions" class="tab-pane container @if($permission_tab == true) active @else fade @endif">
             <div class="row">
                 <div class="col-12 mt-3 mb-1">
                     <h4 class="text-uppercase">Group Permissions</h4>
@@ -527,7 +546,7 @@
 
             </div>
         </section>
-        <section id="backup">
+        <section id="backup" class="tab-pane container @if($backup_tab == true) active @else fade @endif">
             <div class="row">
                 <div class="col-12 mt-3 mb-1">
                     <h4 class="text-uppercase">Backup</h4>
