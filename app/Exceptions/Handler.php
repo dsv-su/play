@@ -37,6 +37,7 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             // Create Notification Data
             $exception = [
+                "server" => config('app.name'),
                 "name" => get_class($e),
                 "message" => $e->getMessage(),
                 "file" => $e->getFile(),

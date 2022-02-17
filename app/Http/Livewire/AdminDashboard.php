@@ -49,7 +49,7 @@ class AdminDashboard extends Component
         $this->permission_tab = $state;
         $this->backup_tab = $state;
     }
-    
+
     public function tab($tab)
     {
        switch($tab) {
