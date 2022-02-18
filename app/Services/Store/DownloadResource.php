@@ -2,7 +2,7 @@
 
 namespace App\Services\Store;
 
-use App\Services\TicketHandler;
+use App\Services\TicketHandler\TicketPermissionHandler;
 use App\Video;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +11,7 @@ class DownloadResource extends Model
 {
     protected $video, $ticket, $token;
 
-    public function __construct(Video $video, TicketHandler $ticketHandler)
+    public function __construct(Video $video, TicketPermissionHandler $ticketHandler)
     {
         $this->video = $video;
         $this->ticket = $ticketHandler;

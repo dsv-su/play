@@ -2,13 +2,13 @@ document.addEventListener('DOMContentLoaded', init)
 
 function init() {
     var cookies = getCookies()
+    var args = getArgs()
     var mainstream = document.querySelector('.main > video')
     setupLoader(mainstream)
 
     if(typeof localPresentation !== "undefined") {
         doSetup(localPresentation, null)
     } else {
-        var args = getArgs()
         if(args.hasMore) {
             document.getElementById('more-indicator').classList.toggle('hidden')
         }
@@ -60,6 +60,7 @@ function init() {
             setupBlur()
             setupSpeed()
             setupFullscreen()
+            setupCopying(mainstream)
             setupVolume(mainstream)
             setupResSwitching(presentation.sources, defaultres)
             setupSwitching(mainstream)
@@ -70,7 +71,7 @@ function init() {
         }
         awaitLoad(function() {
             setupBuffer(mainstream)
-            setupProgress(body, mainstream)
+            setupProgress(body, mainstream, args.timecode)
         })
     }
 }
@@ -79,7 +80,13 @@ function getArgs() {
     var get = window.location.search.substring(1)
     var out = {'presentation': null,
                'playlist': null,
-               'hasMore': null}
+               'hasMore': null,
+               'timecode': 0}
+    var shortnames = {'presentation': 'p',
+                      'playlist': 'l',
+                      'hasMore': 'm',
+                      'timecode': 't',
+                      'debug': 'debug'}
     get.split('&').forEach(function(arg) {
         [name, value] = arg.split('=')
         value = decodeURIComponent(value)
@@ -100,11 +107,26 @@ function getArgs() {
         case 'm':
             out.hasMore = true
             break
+        case 'timestamp':
+        case 'timecode':
+        case 'time':
+        case 't':
+            out.timecode = value
+            break;
         case 'debug':
             out.debug = true
             break
         }
     })
+    out.toString = function() {
+        var result = []
+        for(key of Object.keys(shortnames)) {
+            if(this[key]) {
+                result.push(shortnames[key] + '=' + this[key])
+            }
+        }
+        return result.join('&')
+    }
     if(!out.debug) {
         if(out.presentation && !out.presentation.startsWith('/presentation/')) {
             out.presentation = '/presentation/' + out.presentation
@@ -220,6 +242,16 @@ function setupBuffer(mainstream) {
     mainstream.addEventListener('progress', flagUpdate)
     window.addEventListener('resize', flagUpdate)
     window.requestAnimationFrame(paintBuffer)
+}
+
+function setupCopying(mainstream) {
+    var copyButton = document.querySelector('#timelink-button')
+    copyButton.addEventListener('click', function(event) {
+        var url = window.location.href.split('?')[0]
+        var args = getArgs()
+        args.timecode = mainstream.currentTime
+        navigator.clipboard.writeText(url + '?' + args)
+    })
 }
 
 function setupFullscreen() {
@@ -409,7 +441,7 @@ function setupPlaylist(body, playlistfile) {
     }
 }
 
-function setupProgress(body, mainstream) {
+function setupProgress(body, mainstream, starttime) {
     var backdrop = document.querySelector('#progress-container')
     var pb = document.querySelector('#progress')
     var dragging = false
@@ -419,7 +451,8 @@ function setupProgress(body, mainstream) {
     var popup = document.querySelector('#progress-popup')
 
     printTime(mainstream.duration, duration)
-    printTime(0, elapsed)
+    printTime(starttime, elapsed)
+    setTime(starttime)
 
     function printTime(time, elem) {
         var hours = (Math.floor(time / 3600) + '').padStart(2, '0')
@@ -442,10 +475,13 @@ function setupProgress(body, mainstream) {
             updateProgress(event.offsetX)
         }
     }
-    function set(event) {
+    function setPos(event) {
         var pos = event.offsetX
         updateProgress(pos)
         var newtime = pos / backdrop.clientWidth * mainstream.duration
+        setTime(newtime)
+    }
+    function setTime(newtime) {
         mainstream.currentTime = newtime
         mainstream.dispatchEvent(new CustomEvent('sync'))
     }
@@ -464,13 +500,13 @@ function setupProgress(body, mainstream) {
     }
 
     backdrop.addEventListener('mousedown', startDrag)
-    backdrop.addEventListener('click', set)
+    backdrop.addEventListener('click', setPos)
     body.addEventListener('mousemove', update)
     body.addEventListener('mouseup', stopDrag)
     mainstream.addEventListener('timeupdate', showPlayback)
     window.setInterval(function() {
         printTime(mainstream.currentTime, elapsed)
-    }, 1000)
+    }, 500)
 }
 
 function setupResSwitching(streamlist, defaultres) {
