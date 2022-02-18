@@ -8069,7 +8069,7 @@ p.card-text {
     top: 10px !important;
 }
 
-.bootstrap-select .dropdown-menu{
+.bootstrap-select.w-100 .dropdown-menu {
     max-width: 100%!important;
 }
 

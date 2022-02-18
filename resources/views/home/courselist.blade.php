@@ -1,6 +1,6 @@
 @foreach ($videos as $key => $videocourse)
     <h3 class="col mt-4" style="line-height: 1.5em;">
-        <a class="link @if ($videos->first() !== $videocourse || (isset($manage) && $manage)) collapsed @endif"
+        <a class="link @if ($videos->first() !== $videocourse || (isset($manage) && $manage))collapsed @endif"
            data-toggle="collapse"
            href="#collapse{{$key}}" role="button" aria-expanded="false"
            aria-controls="collapse{{$key}}">
@@ -9,9 +9,8 @@
                 {{\App\Course::find($key) ? \App\Course::find($key)->designation . ' ' . \App\Course::find($key)->semester.\App\Course::find($key)->year . ' — ' . \App\Course::find($key)->name : 'Okategoriserad'}}
             @else
                 {{\App\Course::find($key) ? \App\Course::find($key)->designation . ' ' . \App\Course::find($key)->semester.\App\Course::find($key)->year . ' — ' . \App\Course::find($key)->name_en : 'Uncategorized'}}
-            @endif
-        </a>
-        <span class="badge badge-light" data-toggle="tooltip" title="{{__("Number of presentations")}}">{{count($videocourse)}}</span>
+            @endif</a>
+        <span class="badge badge-light ml-2 mb-2" data-toggle="tooltip" title="{{__("Number of presentations")}}">{{count($videocourse)}}</span>
         @if (isset($manage) && $manage && $key)
             @if ($individual_permissions[$key])
                 <span class="badge badge-secondary mb-2" data-toggle="tooltip" title="{{__("Users with individual permissions")}}">{{$individual_permissions[$key]}} <i

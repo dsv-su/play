@@ -70,7 +70,7 @@
                                     {{ __("Here you specify whether the presentation should be associated with one or more courses. If you do not want the presentation to be associated with a course or want to complete at a later time, leave the field blank.") }}
                                 </p>
                                 <select name="courses[]"
-                                        class="form-control mx-1 selectpicker" data-dropup-auto="false"
+                                        class="form-control mx-1 selectpicker w-100" data-dropup-auto="false"
                                         data-none-selected-text="{{ __('No course association')}}"
                                         data-live-search="true" multiple>
                                     {{--}}

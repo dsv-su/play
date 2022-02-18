@@ -159,7 +159,7 @@
                                 </select>
 -->
                             <select wire:model.debounce.100s="courseEdit" name="courseEdit[]"
-                                    class="form-control mx-1 selectpicker" data-dropup-auto="false"
+                                    class="form-control mx-1 selectpicker w-100" data-dropup-auto="false"
                                     data-none-selected-text="{{ __('No course association')}}"
                                     data-live-search="true" multiple>
                                 {{krsort($courseselect)}}
