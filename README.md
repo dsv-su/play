@@ -184,6 +184,10 @@ Updating the multiplayer is easiest with the artisan command:
 
     php artisan update:multiplayer
 
+    and then to integrate into the platform
+
+    php artisan integrate:multiplayer
+
 This will check if an update is available on the multiplayer repo and if so perform a git pull, execute the multiplayer python script to create a local player and finally integrate the player into the platform.
 
 
