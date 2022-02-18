@@ -59,7 +59,7 @@
                 <span class="badge badge-light">{{__("Presentations")}} <span class="badge badge-secondary">{{count($videocourse)}}</span></span>
                 @if ($key)
                     @if ($individual_permissions[$key])
-                        <span class="badge badge-light mb-2">{{__("Individual permissions")}} <span class="badge badge-secondary mb-2">{{$individual_permissions[$key]}} <i
+                        <span class="badge badge-light mb-2">{{__("Individual permissions")}} <span class="badge badge-secondary">{{$individual_permissions[$key]}} <i
                                         class="fas fa-user"></i></span></span>
                     @endif
                     @if ($playback_permissions[$key])
