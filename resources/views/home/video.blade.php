@@ -167,6 +167,7 @@
                     <small id="embbedCodeHelp"
                            class="form-text text-muted">{{ __("Use this embed code to insert the video in e.g. iLearn") }}</small>
                 </div>
+                @if(!$video->course_permission)
                 <div class="form-group">
                     <label for="permissions">{{__("Permissions")}}
                         @if ($video->edit)
@@ -190,6 +191,7 @@
                         @endforeach
                     </p>
                 </div>
+                @endif
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

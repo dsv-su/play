@@ -20,11 +20,12 @@ class AdminPermissionsFilter extends VisibilityFilter implements VisibilityInter
     {
         if($this->getAdminUsers()) {
             if(!$this->video->visibility) {
-                $this->video->setAttribute('visibility', true);
                 $this->video->setAttribute('hidden', true);
             }
             $this->video->setAttribute('edit', true);
             $this->video->setAttribute('delete', true);
+
+            return true;
         }
     }
 

@@ -32,7 +32,9 @@ class VisibilityFilter
             $CourseAdmins->cast();
             //Admins
             $Admins = new AdminPermissionsFilter($video);
-            $Admins->cast();
+            if($Admins->cast()) {
+                return $video;
+            }
 
             return $video->visibility;
         });
