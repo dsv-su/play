@@ -24,8 +24,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('adminhandler:truncate')->daily();
-        $schedule->command('upload:clear')->daily();
+        $schedule->command('adminhandler:truncate');
+        $schedule->command('upload:clear');
         $schedule->command('update:courses')->daily();
     }
 

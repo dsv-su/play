@@ -6,6 +6,7 @@ use App\Cattura;
 use App\Services\Cattura\CatturaRecoders;
 use App\Services\ConfigurationHandler;
 use App\Services\CountPresentations;
+use App\Services\Filters\VisibilityFilter;
 use Illuminate\Support\ServiceProvider;
 
 class PlayServiceProvider extends ServiceProvider
@@ -27,6 +28,10 @@ class PlayServiceProvider extends ServiceProvider
 
         app()->singleton('countpresentations', function(){
             return new CountPresentations();
+        });
+
+        app()->bind('visibility', function(){
+            return new VisibilityFilter();
         });
     }
 

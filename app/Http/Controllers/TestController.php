@@ -9,9 +9,6 @@ use App\Video;
 
 class TestController extends Controller
 {
-
-
-
     public function test()
     {
     }

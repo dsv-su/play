@@ -14,7 +14,7 @@ class AddDownloadOption extends Migration
     public function up()
     {
         Schema::table('videos', function (Blueprint $table) {
-            $table->boolean('download')->default(false)->after('visability');
+            $table->boolean('download')->default(false)->after('visibility');
         });
     }
 

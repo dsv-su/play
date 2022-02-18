@@ -88,7 +88,7 @@ class Playback
 
         //Check if video is hidden
         if($video ?? false) {
-            if($video->visability == true) {
+            if($video->visibility == true) {
                 foreach($video->courses() as $course) {
                     if($coursesetting = CoursesettingsPermissions::where('course_id', $course->id)->first()) {
                         if($coursesetting->visibility == true) {

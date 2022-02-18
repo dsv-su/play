@@ -30,7 +30,7 @@ class ErrorAlert extends Mailable
      */
     public function build()
     {
-        return $this->from('play_server@dsv.su.se', 'DSVPlay')->subject("[DSVPlay] Error Alert")
+        return $this->from('play_server@dsv.su.se', 'DSVPlay')->subject("[". $this->exception['server'] ."] Error Alert")
             ->view('emails.error_alert');
     }
 }

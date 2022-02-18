@@ -32,7 +32,6 @@
             </div> <!-- col-12 -->
         </div> <!-- row no-gutters -->
     </div>
-
     <div class="container">
         @if (isset($active) || isset($my))
             <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">

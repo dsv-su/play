@@ -62,7 +62,7 @@
                         @endif
                     </div>
                     <div class="form-group my-auto form-row mx-3">
-                        <label for="visabilitySwitch"
+                        <label for="visibilitySwitch"
                                class="col px-0 col-auto mb-0">{{__("Visibility")}}</label>
                         <div class="col">
                                     <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip" title="{{__("Switch the toggle to change")}}">

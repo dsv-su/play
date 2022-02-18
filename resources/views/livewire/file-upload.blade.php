@@ -15,7 +15,7 @@
                 </div>
                 <label class="form-control-label px-1">{{ __("Files to upload") }}<span class="text-danger"> *</span></label>
                 <p class="font-1rem px-1">
-                    {{ __("Select one or up to 4 files at a time or drag and drop up to 4 files into the upload box") }}
+                    {{ __("Select one or drag and drop up to 4 files at a time into the box below") }}
                 </p>
                 <div class="form-group">
                     <input type="file" class="form-control-file" wire:model="files" id="{{ rand() }}" multiple />

@@ -67,7 +67,7 @@
                                 <!-- Course association -->
                                 <label class="form-control-label px-1">{{ __("Course association") }}</label>
                                 <p class="font-1rem px-1 my-0">
-                                    {{ __("Here you specify whether the recording should be associated with one or more courses. If you do not want the recording to be associated with a course or want to complete at a later time, leave the field blank.") }}
+                                    {{ __("Here you specify whether the presentation should be associated with one or more courses. If you do not want the presentation to be associated with a course or want to complete at a later time, leave the field blank.") }}
                                 </p>
                                 <select name="courses[]"
                                         class="form-control mx-1 selectpicker" data-dropup-auto="false"
@@ -103,7 +103,7 @@
                             <div class="form-group col-12 col-lg-6 flex-column d-flex"><label
                                         class="form-control-label px-1">{{ __("Description") }}</label>
                                 <textarea id="description" name="description" class="form-control"
-                                          placeholder="{{__("Add a presentation's description here (if needed)")}}"></textarea>
+                                          placeholder="{{__("Add a description here (optional)")}}"></textarea>
                             </div>
                         </div>
 
@@ -116,7 +116,7 @@
                                             class="fas fa-user-plus ml-1"></i></span>
                                 </label>
                                 <p class="font-1rem px-1 my-0">
-                                    {{ __("Add the presenters for this video. The uploader is listed as presenter by default.") }}
+                                    {{ __("Add the presenters for this presentation. The uploader is listed as presenter by default.") }}
                                 </p>
                                 <div id="presenter_table">
                                     <input type="text" class="form-control w-100 mx-auto"
@@ -135,7 +135,7 @@
                             <div class="form-group col-12 col-lg-6 flex-column d-flex">
                                 <label class="form-control-label px-1 py-0">{{ __("Tags") }}</label>
                                 <p class="font-1rem px-1 my-0">
-                                    {{ __("Also make the recording searchable by entering tags.") }}
+                                    {{ __("Enter tags for the presentation") }}
                                 </p>
                                 <select name="tags[]"
                                         class="form-control mx-1 selectpicker w-100" data-dropup-auto="false"

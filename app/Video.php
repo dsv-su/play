@@ -39,6 +39,12 @@ class Video extends Model implements Searchable
     //Playlist
     protected $appends = ['link', 'type'];
 
+    protected $casts = [
+        'permission_type' => 'string',
+        'edit' => 'boolean',
+        'delete' => 'boolean',
+    ];
+
     public function getLinkAttribute(): string
     {
         return $this->attributes['link'] = URL::to('/') . '/player/' . $this->id;
@@ -170,15 +176,15 @@ class Video extends Model implements Searchable
     }
 
     //These flags should be refactored in the future as it would speed up by casting instead
-    public function editable() {
+    /*public function editable() {
         return app()->make('play_role') == 'Administrator' ||
             CourseadminPermission::where('username', app()->make('play_username'))->where('video_id', $this->id)->exists() ||
             IndividualPermission::where('username', app()->make('play_username'))->where('permission', 'edit')->exists();
-    }
+    }*/
 
-    public function deletable() {
+    /*public function deletable() {
         return app()->make('play_role') == 'Administrator' ||
             CourseadminPermission::where('username', app()->make('play_username'))->where('video_id', $this->id)->exists() ||
             IndividualPermission::where('username', app()->make('play_username'))->where('permission', 'delete')->exists();
-    }
+    }*/
 }
