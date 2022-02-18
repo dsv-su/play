@@ -20,6 +20,7 @@ class CoursePermissionFilter extends VisibilityFilter implements VisibilityInter
     {
         foreach($this->courses as $this->course) {
             if($id = $this->getCoursePermissionId($this->course->id)) {
+                $this->video->setAttribute('course_permission', true);
                 switch($id) {
                     case(1):
                         $this->video->setAttribute('permission_type', 'dsv');
@@ -37,9 +38,7 @@ class CoursePermissionFilter extends VisibilityFilter implements VisibilityInter
                         $this->video->setAttribute('permission_type', 'custom');
                 }
             }
-
         }
-
     }
 
     private function getCoursePermissionId($course_id)
