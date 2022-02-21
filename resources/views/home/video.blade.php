@@ -38,7 +38,7 @@
             @endif
     </div>
     <a href="{{ route('player', ['video' => $video]) }}">
-        <div class="card-header position-relative" style="background-image: @if ($video->hidden) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); height:200px;">
+        <div class="card-header position-relative" style="background-image: @if ($video->hidden) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); height:135px;">
             <!-- Icons -->
             <div class="icons m-1">
                 <!-- Group Permissions icons-->

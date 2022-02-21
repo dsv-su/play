@@ -5223,7 +5223,7 @@ p.kill-p, .kill-p p {
 
 .video .card-header {
     background: #002f5f url("../images/eld_footer.png") no-repeat center;
-    background-size: cover;
+    background-size: contain;
     font-size: 1rem;
     border-bottom: none;
 }

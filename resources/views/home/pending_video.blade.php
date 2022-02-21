@@ -18,7 +18,7 @@
                     </div>
 -->
     <div class="card-header position-relative"
-         style="background-image: url({{ url('/storage/'.$video->local.'/'. $video->thumb) }}); height:200px;">
+         style="background-image: url({{ url('/storage/'.$video->local.'/'. $video->thumb) }}); height:135px;">
         <div class="d-flex justify-content-center h-100">
             <div class="d-inline alert alert-secondary m-auto"
                  role="alert">{{ __("Processing started at ") }} {{$video->created_at}}</div>
