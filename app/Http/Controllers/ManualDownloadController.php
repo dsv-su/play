@@ -10,7 +10,7 @@ use App\Services\Notify\PlayStoreNotify;
 use App\Services\Store\DownloadResource;
 use App\Services\Store\DownloadStreamResolution;
 use App\Services\Store\SftpPlayStore;
-use App\Services\TicketHandler;
+use App\Services\TicketHandler\TicketPermissionHandler;
 use App\Stream;
 use App\StreamResolution;
 use App\Video;
@@ -122,7 +122,7 @@ class ManualDownloadController extends Controller
         $dir_poster = $presentation->local . '/posters/';
 
         //Download Files
-        $file = new DownloadResource($video, new TicketHandler($video));
+        $file = new DownloadResource($video, new TicketPermissionHandler($video));
 
         //Image is not needed for this download
         /*$thumb_url = $video->thumb;
