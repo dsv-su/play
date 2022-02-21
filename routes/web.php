@@ -28,13 +28,21 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
 
     Route::get('/', 'PlayController@index')->name('home');
     Route::get('lang/{lang}', 'LocalizationController@index')->name('language');
-    //Search
-    Route::get('/semester/{semester}', 'SearchController@searchBySemester')->name('semester');
-    Route::post('/semester/{semester}', 'SearchController@filterBySemester')->name('filter_semester');
-    Route::get('/designation/{designation}', 'SearchController@searchByDesignation')->name('designation');
-    Route::post('/designation/{designation}', 'SearchController@filterByDesignation')->name('filter_designation');
-    Route::get('/category/{category}', 'SearchController@searchByCategory')->name('category');
-    Route::get('/student/{username}', 'SearchController@searchByUser');
+
+    //View
+    Route::get('/semester/{semester}', 'SearchController@viewBySemester')->name('semester');
+    Route::post('/semester/{semester}', 'SearchController@filterBySemester')->name('semester.filter');
+    Route::get('/designation/{designation}', 'SearchController@viewByDesignation')->name('designation');
+    Route::post('/designation/{designation}', 'SearchController@filterByDesignation')->name('designations.filter');
+    Route::get('/category/{category}', 'SearchController@viewByCategory')->name('category');
+    Route::get('/student/{username}', 'SearchController@viewByStudent')->name('student');
+    Route::get('/course/{course}', 'SearchController@viewByCourse')->name('course');
+    Route::get('/tag/{tag}', 'SearchController@viewByTag')->name('tag.presentations');
+    Route::post('/tag/{tag}', 'SearchController@filterByTag')->name('tag.filter');
+    Route::get('/presenter/{presenter}', 'SearchController@viewByPresenter')->name('presenter.presentations');
+    Route::post('/presenter/{presenter}', 'SearchController@filterByPresenter')->name('presenter.filter');
+
+    // Search and autocomplete
     Route::get('/search/{q}', 'SearchController@search')->name('search');
     Route::post('/search/{q}', 'SearchController@filterSearch')->name('filter_search');
     Route::get('/find', 'SearchController@find')->name('find');
@@ -45,20 +53,15 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
 
     //Manage
     Route::get('/manage', 'SearchController@search')->name('manage');
+    Route::post('/manage', 'SearchController@filterSearch')->name('filter_manage');
     Route::get('/manage/courses', 'ManageCourseSettingsController@index')->name('manage_course');
     Route::get('/course/{courseid}/edit', 'ManageCourseSettingsController@edit')->name('course_edit');
     Route::post('/course/{courseid}/store', 'ManageCourseSettingsController@store')->name('course_edit_store');
-    Route::post('/manage', 'SearchController@filterSearch')->name('filter_manage');
     Route::get('/edit/{video}', 'EditController@show')->name('presentation_edit');
     Route::post('/edit/{video}', 'EditController@edit')->name('editpresentation');
 
     Route::post('/manage/deleteAjax', 'PlayController@deleteVideoAjax')->name('manage.deleteVideo');
     Route::post('/manage/editAjax', 'PlayController@editVideoAjax')->name('manage.editVideo');
-    Route::get('/course/{course}', 'SearchController@showCourseVideos')->name('course.videos');
-    Route::get('/tag/{tag}', 'SearchController@showTagVideos')->name('tag.videos');
-    Route::post('/tag/{tag}', 'SearchController@FilterTagVideos')->name('tag.filter_videos');
-    Route::get('/presenter/{presenter}', 'SearchController@showPresenterVideos')->name('presenter.videos');
-    Route::post('/presenter/{presenter}', 'SearchController@filterPresenterVideos')->name('presenter.filter_videos');
     Route::get('/my', 'PlayController@myVideos')->name('my.videos');
     Route::post('/my/filter', 'PlayController@myVideosFilter')->name('my.filter');
     Route::get('/edit_permission/{video}', 'ManagePresentationController@SetPermission')->name('edit_permission');
@@ -151,5 +154,7 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     //-->
 });
 Route::any('{query}',
-    function() { return redirect('/'); })
+    function () {
+        return redirect('/');
+    })
     ->where('query', '.*');
