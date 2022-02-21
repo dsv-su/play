@@ -22,9 +22,9 @@ function init() {
                 console.log(read.responseText)
                 throw new Error("Could not get presentation data.")
             }
-            doSetup(data, args.playlist)
+            doSetup(data, args.getList())
         })
-        read.open('GET', args.presentation)
+        read.open('GET', args.getPres())
         read.send()
     }
     function doSetup(presentation, playlist) {
@@ -127,13 +127,17 @@ function getArgs() {
         }
         return result.join('&')
     }
-    if(!out.debug) {
-        if(out.presentation && !out.presentation.startsWith('/presentation/')) {
-            out.presentation = '/presentation/' + out.presentation
+    out.getPres = function() {
+        if(this.debug) {
+            return this.presentation
         }
-        if(out.playlist && !out.playlist.startsWith('/playlist/')) {
-            out.playlist = '/playlist/' + out.playlist
+        return '/presentation/' + this.presentation
+    }
+    out.getList = function() {
+        if(this.debug) {
+            return this.playlist
         }
+        return '/playlist/' + this.playlist
     }
     return out
 }
