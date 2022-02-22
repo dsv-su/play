@@ -76,6 +76,10 @@ class MultiplayerController extends Controller
         $presentation['id'] = $video->id;
         $presentation['title'] = $video->title;
         $presentation['thumb'] = $video->thumb;
+
+        //Add subtitles
+        $presentation['subtitles'] = $this->base_uri() .'/' . $video->id . '/' .$video->id.'.vtt';
+
         //Add valid token
         $presentation['token'] = $token;
 
