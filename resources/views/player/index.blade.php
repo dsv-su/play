@@ -23,7 +23,10 @@
       </div>
       <div id="about">
         <button id="playlist-button" class="playlist hidden"
-                title="Visa spellista">
+                title="Visa spellista"
+                data-title_alt="Dölj spellista"
+                data-title_en="Show playlist"
+                data-title_alt_en="Hide playlist">
           <svg>
             <use href="#playlist-icon"></use>
             <use href="#close-icon" class="hidden"></use>
@@ -42,31 +45,34 @@
         </div>
         <div id="left-controls" class="control-box">
           <button id="previous" class="playlist hidden"
-                  title="Föregående">
+                  title="Föregående"
+                  data-title_en="Previous">
             <svg>
               <use href="#previous-icon"></use>
             </svg>
           </button>
           <button id="play-button"
-                  title="Spela">
+                  title="Spela"
+                  data-title_alt="Pausa"
+                  data-title_en="Play"
+                  data-title_alt_en="Pause">
             <svg>
               <use href="#play-icon"></use>
               <use href="#pause-icon" class="hidden"></use>
             </svg>
           </button>
           <button id="next" class="playlist hidden"
-                  title="Nästa">
+                  title="Nästa"
+                  data-title_en="Next">
             <svg>
               <use href="#next-icon"></use>
             </svg>
           </button>
           <div class="select" id="speed-select">
             <button id="speed-current"
-                    title="Välj hastighet">1</button>
+                    title="Välj hastighet"
+                    data-title_en="Speed selection">1</button>
             <ul class="list" id="speed-list">
-              <li>
-                <button>4</button>
-              </li>
               <li>
                 <button>2</button>
               </li>
@@ -88,7 +94,10 @@
             </ul>
           </div>
           <button id="volume-button"
-                  title="Stäng av ljud">
+                  title="Stäng av ljud"
+                  data-title_alt="Slå på ljud"
+                  data-title_en="Mute"
+                  data-title_alt_en="Unmute">
             <svg>
               <use href="#volume-icon"></use>
               <use href="#mute-icon" class="hidden"></use>
@@ -107,28 +116,32 @@
         </div>
         <div id="right-controls" class="control-box">
           <button id="timelink-button"
-                  title="Kopiera länk till den här tidpunkten">
+                  title="Kopiera länk till den här tidpunkten"
+                  data-title_en="Copy URL at current time">
             <svg>
               <use href="#timelink-icon">
             </svg>
           </button>
-          <!--
           <button id="subtitles-button"
-                  title="Undertexter är av">
+                  title="Undertexter är av"
+                  data-title_alt="Undertexter är på"
+                  data-title_en="Subtitles are off"
+                  data-title_alt_en="Subtitles are on">
             <svg>
               <use href="#subtitles-off-icon"></use>
               <use href="#subtitles-on-icon" class="hidden"></use>
             </svg>
           </button>
-          -->
           <div class="select" id="resolution-select">
             <button id="resolution-current"
-                    title="Välj upplösning"></button>
+                    title="Välj upplösning"
+                    data-title_en="Resolution selection"></button>
             <ul class="list" id="resolution-list">
             </ul>
           </div>
           <button id="fullscreen-button"
-                   title="Helskärm">
+                  title="Helskärm"
+                  data-title_en="Fullscreen">
             <svg>
               <use href="#fullscreen-enter-icon"></use>
               <use href="#fullscreen-exit-icon" class="hidden"></use>
@@ -230,18 +243,18 @@
           <polygon points="6.23,20.23 8,22 18,12 8,2 6.23,3.77 14.46,12" transform="rotate(90, 12, 12)"/>
         </symbol>
 
+        <symbol id="timelink-icon" viewBox="0 0 24 24">
+          <path d="m 8,11 6.034644,0.0768 -1.779826,1.91574 L 8,13 Z m 12.211341,0.499144 h 1.9 C 22.111341,8.7391436 19.76,7 17,7 h -4 v 1.9 h 4 c 1.71,0 3.211341,0.8891436 3.211341,2.599144 z M 3.9,12 C 3.9,10.29 5.29,8.9 7,8.9 h 4 V 7 H 7 c -2.76,0 -5,2.24 -5,5 0,2.76 2.24,5 5,5 h 4 V 15.1 H 7 C 5.29,15.1 3.9,13.71 3.9,12 Z"/>
+          <path d="M 11.99,2 C 6.47,2 2,6.48 2,12 2,17.52 6.47,22 11.99,22 17.52,22 22,17.52 22,12 22,6.48 17.52,2 11.99,2 Z M 15.29,16.71 11,12.41 V 7 h 2 v 4.59 l 3.71,3.71 z"
+                transform="matrix(0.49567486,0,0,0.49567486,11.505292,10.652661)"/>
+        </symbol>
+
         <symbol id="subtitles-off-icon" viewBox="0 0 24 24">
           <path d="M20,4H6.83l8,8H19c0.55,0,1,0.45,1,1c0,0.55-0.45,1-1,1h-2.17l4.93,4.93C21.91,18.65,22,18.34,22,18V6C22,4.9,21.1,4,20,4 z"/><path d="M20,20l-6-6l-1.71-1.71L12,12L3.16,3.16c-0.39-0.39-1.02-0.39-1.41,0c-0.39,0.39-0.39,1.02,0,1.41l0.49,0.49 C2.09,5.35,2,5.66,2,6v12c0,1.1,0.9,2,2,2h13.17l2.25,2.25c0.39,0.39,1.02,0.39,1.41,0c0.39-0.39,0.39-1.02,0-1.41L20,20z M8,13 c0,0.55-0.45,1-1,1H5c-0.55,0-1-0.45-1-1c0-0.55,0.45-1,1-1h2C7.55,12,8,12.45,8,13z M14,17c0,0.55-0.45,1-1,1H5 c-0.55,0-1-0.45-1-1c0-0.55,0.45-1,1-1h8c0.08,0,0.14,0.03,0.21,0.04l0.74,0.74C13.97,16.86,14,16.92,14,17z"/>
         </symbol>
 
         <symbol id="subtitles-on-icon" viewBox="0 0 24 24">
           <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM5 12h2c.55 0 1 .45 1 1s-.45 1-1 1H5c-.55 0-1-.45-1-1s.45-1 1-1zm8 6H5c-.55 0-1-.45-1-1s.45-1 1-1h8c.55 0 1 .45 1 1s-.45 1-1 1zm6 0h-2c-.55 0-1-.45-1-1s.45-1 1-1h2c.55 0 1 .45 1 1s-.45 1-1 1zm0-4h-8c-.55 0-1-.45-1-1s.45-1 1-1h8c.55 0 1 .45 1 1s-.45 1-1 1z"/>
-        </symbol>
-
-        <symbol id="timelink-icon" viewBox="0 0 24 24">
-          <path d="m 8,11 h 8 v 2 H 8 Z m 12.1,1 H 22 C 22,9.24 19.76,7 17,7 h -4 v 1.9 h 4 c 1.71,0 3.1,1.39 3.1,3.1 z M 3.9,12 C 3.9,10.29 5.29,8.9 7,8.9 h 4 V 7 H 7 c -2.76,0 -5,2.24 -5,5 0,2.76 2.24,5 5,5 h 4 V 15.1 H 7 C 5.29,15.1 3.9,13.71 3.9,12 Z M 15.470925,10.9943 16,11 v 2 c 0,0 0,0 -0.529075,-0.0057 L 16,11 v 0 0 z"/>
-          <path d="m 17.976104,11.734986 c -2.350077,0 -4.25313,1.90731 -4.25313,4.257387 0,2.350079 1.903053,4.257389 4.25313,4.257389 2.354336,0 4.261646,-1.90731 4.261646,-4.257389 0,-2.350077 -1.90731,-4.257387 -4.261646,-4.257387 z m 1.404939,6.262618 -1.826419,-1.830677 V 13.86368 H 18.4061 v 1.95414 l 1.579492,1.579492 z"/>
-          <path d="m 17.54803,11.710672 c -2.724856,0 -4.931397,2.211477 -4.931397,4.936333 0,2.724857 2.206541,4.936334 4.931397,4.936334 2.729792,0 4.941269,-2.211477 4.941269,-4.936334 0,-2.724856 -2.211477,-4.936333 -4.941269,-4.936333 z m 0.0049,8.8854 c -2.181859,0 -3.949067,-1.767207 -3.949067,-3.949067 0,-2.181859 1.767208,-3.949066 3.949067,-3.949066 2.181859,0 3.949066,1.767207 3.949066,3.949066 0,2.18186 -1.767207,3.949067 -3.949066,3.949067 z m 0.246852,-6.417233 h -0.740449 v 2.9618 l 2.591574,1.554945 0.370225,-0.607169 -2.22135,-1.318001 z"/>
         </symbol>
 
         <symbol id="fullscreen-enter-icon" viewBox="0 0 24 24">

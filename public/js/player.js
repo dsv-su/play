@@ -61,13 +61,12 @@ function init() {
             setupSpeed()
             setupFullscreen()
             setupCopying(mainstream)
-            setupVolume(mainstream)
+            setupVolume(mainstream, cookies.volume, cookies.mute)
             setupResSwitching(presentation.sources, defaultres)
             setupSwitching(mainstream)
             setupSync(mainstream)
             setupPlayback(body, mainstream)
-            // TODO: implement subs
-            // setupSubs(presentation.subtitles, mainstream)
+            setupSubs(presentation.subtitles, cookies.subtitles)
         }
         awaitLoad(function() {
             setupBuffer(mainstream)
@@ -160,6 +159,18 @@ function setCookie(name, value) {
     document.cookie = cookie
 }
 
+function delCookie(name) {
+    var cookie = name + '='
+    cookie += ';samesite=strict;expires=Thu, 01 Jan 1970 00:00:01 GMT'
+    document.cookie = cookie
+}
+
+function swapText(element) {
+    var oldtext = element.title
+    element.title = element.dataset['title_alt']
+    element.dataset['title_alt'] = oldtext
+}
+
 function loadStreams(presentation, mainstream, defaultres) {
     var streamlist = presentation.sources
     var token = presentation.token
@@ -250,17 +261,20 @@ function setupBuffer(mainstream) {
 
 function setupCopying(mainstream) {
     var copyButton = document.querySelector('#timelink-button')
-    copyButton.addEventListener('click', function(event) {
-        var url = window.location.href.split('?')[0]
-        var args = getArgs()
-        args.timecode = mainstream.currentTime
-        navigator.clipboard.writeText(url + '?' + args)
-    })
+    if(copyButton) { // might not exist in case of local playback
+        copyButton.addEventListener('click', function(event) {
+            var url = window.location.href.split('?')[0]
+            var args = getArgs()
+            args.timecode = mainstream.currentTime
+            navigator.clipboard.writeText(url + '?' + args)
+        })
+    }
 }
 
 function setupFullscreen() {
     var body = document.querySelector('body')
     var icons = document.querySelectorAll('#fullscreen-button > svg > use')
+    var button = document.querySelector('#fullscreen-button')
     
     function toggleFullscreen(event) {
         if(document.fullscreenElement) {
@@ -270,9 +284,9 @@ function setupFullscreen() {
         }
         icons.forEach(function(icon) {
             icon.classList.toggle('hidden')})
+        swapText(button)
     }
 
-    var button = document.querySelector('#fullscreen-button')
     button.addEventListener('click', toggleFullscreen)
 }
 
@@ -283,6 +297,9 @@ function setupHiding(body, mainstream) {
     var about = document.querySelector('#about')
     
     function hide() {
+        if(about.classList.contains('expand')) {
+            return
+        }
         if(!body.classList.contains(selector)) {
             body.classList.add(selector)
         }
@@ -350,6 +367,7 @@ function setupLoader(mainstream) {
 
 function setupPlayback(body, mainstream) {
     var selector = 'hidden'
+    var button = document.querySelector('#play-button')
     var playing = false
     var videos = document.querySelectorAll('video')
 
@@ -367,6 +385,7 @@ function setupPlayback(body, mainstream) {
         document.querySelectorAll('#play-button use, .main .fade > use')
             .forEach(function(elem) {
                 elem.classList.toggle(selector)})
+        swapText(button)
     }
     function rewind() {
         togglePlayback()
@@ -378,7 +397,7 @@ function setupPlayback(body, mainstream) {
         .forEach(function(button) {
             button.addEventListener('click', togglePlayback)})
     body.addEventListener('keyup', function(event) {
-        if(event.keyCode == 32) {
+        if(event.keyCode == 32) { //space
             togglePlayback(event)}})
     mainstream.addEventListener('ended', rewind)
 }
@@ -401,11 +420,13 @@ function setupPlaylist(body, playlistfile) {
     function doSetup(playlist) {
         var template = document.getElementById('listitem-template')
         var parent = document.querySelector('#playlist')
+        var button = document.querySelector('#playlist-button')
         function togglePlaylist(event) {
             document.querySelector('#about').classList.toggle('expand')
             document.querySelectorAll('#playlist-button > svg > use, h1, h2')
                 .forEach(function(icon) {
                     icon.classList.toggle('hidden')})
+            swapText(button)
         }
         function switchPresentation(event) {
             var myid = document.querySelector('body').dataset.id
@@ -418,8 +439,7 @@ function setupPlaylist(body, playlistfile) {
             }
             window.location.href = sibling.querySelector('a').href
         }
-        document.querySelector('#playlist-button')
-            .addEventListener('click', togglePlaylist)
+        button.addEventListener('click', togglePlaylist)
         document.querySelectorAll('#previous, #next')
             .forEach(function(button) {
                 button.addEventListener('click', switchPresentation)})
@@ -511,6 +531,18 @@ function setupProgress(body, mainstream, starttime) {
     window.setInterval(function() {
         printTime(mainstream.currentTime, elapsed)
     }, 500)
+    body.addEventListener('keyup', function(event) {
+        switch(event.keyCode) {
+        case 37: //left
+            setTime(mainstream.currentTime - 5)
+            break
+        case 39: //right
+            setTime(mainstream.currentTime + 5)
+            break
+        default:
+            break
+        }
+    })
 }
 
 function setupResSwitching(streamlist, defaultres) {
@@ -575,26 +607,41 @@ function setupSpeed() {
             button.addEventListener('click', setSpeed)})
 }
 
-function setupSubs(subs, mainstream) {
-    var subtrack = document.createElement('track')
-    subtrack.kind = 'subtitles'
-    subtrack.src = subs
-    mainstream.appendChild(subtrack)
-
+function setupSubs(subs, subCookie) {
+    var button = document.querySelector('#subtitles-button')
     var icons = document.querySelectorAll('#subtitles-button > svg > use')
-    
+
+    if(!subs) {
+        button.parentNode.removeChild(button)
+        return
+    }
+    document.querySelectorAll('video').forEach(function(stream) {
+        var subtrack = document.createElement('track')
+        subtrack.kind = 'subtitles'
+        subtrack.src = subs
+        stream.appendChild(subtrack)
+    })
+
     function toggleSubs(event) {
         icons.forEach(function(icon) {
             icon.classList.toggle('hidden')})
+        var mainstream = document.querySelector('.main > video')
         var track = mainstream.textTracks[0]
         if(track.mode == 'disabled') {
             track.mode = 'showing'
+            setCookie('subtitles', 'on')
         } else {
             track.mode = 'disabled'
+            delCookie('subtitles')
         }
+        swapText(button)
     }
     document.querySelector('#subtitles-button')
         .addEventListener('click', toggleSubs)
+
+    if(subCookie == 'on') {
+        toggleSubs(null)
+    }
 }
 
 function setupSwitching(mainstream) {
@@ -604,6 +651,12 @@ function setupSwitching(mainstream) {
         var curmain = main.querySelector('video')
         var target = event.currentTarget
         var newmain = target.querySelector('video')
+        var curmode = curmain.textTracks[0].mode
+        var newmode = newmain.textTracks[0].mode
+
+        curmain.textTracks[0].mode = newmode
+        newmain.textTracks[0].mode = curmode
+
         main.replaceChild(newmain, curmain)
         target.insertBefore(curmain, target.firstElementChild)
     }
@@ -627,41 +680,50 @@ function setupSync(mainstream) {
     mainstream.addEventListener('sync', sync)
 }
 
-function setupVolume(soundstream) {
+function setupVolume(soundstream, volCookie, muteCookie) {
     var icons = document.querySelectorAll('#volume-button > svg > use')
+    var button = document.querySelector('#volume-button')
     var volume = document.querySelector('#volume')
     var muted = false
     var mutedVol = 0
 
-    // There may be a cached setting to apply
-    soundstream.volume = volume.value
-    
     function toggleVolume(event) {
         if(!muted) {
             mutedVol = volume.value
             volume.value = 0
             soundstream.volume = 0
             muted = true
+            setCookie('mute', 'on')
         } else {
             if(mutedVol < 0.1) {
                 mutedVol = 0.1
             }
             volume.value = mutedVol
             soundstream.volume = mutedVol
-            muted = false;
+            muted = false
+            delCookie('mute')
         }
         icons.forEach(function(icon) {
             icon.classList.toggle('hidden')})
+        swapText(button)
     }
     function slideVolume(event) {
-        soundstream.volume = event.currentTarget.value
+        var newVol = event.currentTarget.value
+        soundstream.volume = newVol
+        setCookie('volume', newVol)
     }
     
-    document.querySelector('#volume-button')
-        .addEventListener('click', toggleVolume)
-    
-    document.querySelector('#volume')
-        .addEventListener('input', slideVolume)
+    button.addEventListener('click', toggleVolume)
+    volume.addEventListener('input', slideVolume)
+
+    if(volCookie) {
+        soundstream.volume = volCookie
+        volume.value = volCookie
+    }
+
+    if(muteCookie) {
+        toggleVolume(null)
+    }
 }
 
 function teardownLoader(timer) {

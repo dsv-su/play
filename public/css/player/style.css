@@ -293,6 +293,11 @@ body {
     max-width: calc(var(--secondary-height) / 3);
 }
 
+/** subtitles **/
+video::cue {
+    background-color: var(--backdrop);
+}
+
 /** wide screens **/
 
 @media screen and (min-aspect-ratio: 16/9) {
