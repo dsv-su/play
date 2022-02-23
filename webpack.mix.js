@@ -10,8 +10,24 @@ const mix = require('laravel-mix');
  | file for the application as well as bundling up all the JS files.
  |
  */
+mix.styles([
+    'node_modules/bootstrap/dist/css/bootstrap.min.css',
+    'resources/css/su.css',
+    'resources/css/upload.css',
+    'node_modules/bootstrap-select/dist/css/bootstrap-select.min.css',
+    'node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css',
+    'node_modules/@fortawesome/fontawesome-free/css/all.css'
+], 'public/css/dsvplay.css');
+mix.copy('node_modules/@fortawesome/fontawesome-free/webfonts/*', 'public/webfonts/');
+mix.scripts([
+    //'resources/js/app.js',
+    'node_modules/jquery/dist/jquery.min.js',
+    'node_modules/@popperjs/core/dist/umd/popper.min.js',
+    'node_modules/bootstrap/dist/js/bootstrap.bundle.js',
+    'resources/js/su.js',
+    'node_modules/corejs-typeahead/dist/typeahead.bundle.js',
+    'node_modules/bootstrap-select/dist/js/bootstrap-select.min.js',
+    'node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js',
+    'resources/js/spinner.js'
+], 'public/js/dsvplay.js');
 
-mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css')
-    .sass('resources/sass/search.scss', 'public/css')
-    //.sass('resources/sass/player.scss', 'public/css');

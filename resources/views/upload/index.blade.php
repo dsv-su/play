@@ -258,8 +258,6 @@
     </div>
 
     <script src="{{ asset('./js/upload.js') }}"></script>
-    <!-- Typeahead.js Bundle -->
-    <script src="{{ asset('./js/typeahead/typeahead.bundle.js') }}"></script>
     <script>
         $(".datepicker").datepicker({
             format: "dd/mm/yyyy",
