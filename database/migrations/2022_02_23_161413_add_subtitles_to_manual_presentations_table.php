@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddvisibilityToVideosTable extends Migration
+class AddSubtitlesToManualPresentationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddvisibilityToVideosTable extends Migration
      */
     public function up()
     {
-        Schema::table('videos', function (Blueprint $table) {
-            $table->boolean('visibility')->default(true)->after('duration');
+        Schema::table('manual_presentations', function (Blueprint $table) {
+            $table->string('subtitle')->after('base')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddvisibilityToVideosTable extends Migration
      */
     public function down()
     {
-        Schema::table('videos', function (Blueprint $table) {
-            $table->dropColumn('visibility');
+        Schema::table('manual_presentations', function (Blueprint $table) {
+            $table->dropColumn('subtitles');
         });
     }
 }

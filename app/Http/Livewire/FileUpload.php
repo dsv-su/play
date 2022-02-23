@@ -75,6 +75,8 @@ class FileUpload extends Component
         */
         $this->subname = $this->subtitle->storeAs('/public/' . $this->dirname . '/subs', 'subtitle.vtt');
         $this->sub = true;
+        $this->presentation->subtitles = '/subs/subtitle.vtt';
+        $this->presentation->save();
     }
 
     public function updatedfiles()

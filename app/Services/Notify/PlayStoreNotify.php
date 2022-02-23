@@ -73,7 +73,7 @@ class PlayStoreNotify extends Model
                 //Change model status
                 $this->presentation->status = 'failed';
                 $this->presentation->save();
-                
+
                 //Write info to log
                 Log::error($e->getResponse()->getBody());
 
