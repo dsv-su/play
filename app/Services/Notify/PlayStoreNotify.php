@@ -5,6 +5,7 @@ namespace App\Services\Notify;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class PlayStoreNotify extends Model
 {
@@ -72,7 +73,10 @@ class PlayStoreNotify extends Model
                 //Change model status
                 $this->presentation->status = 'failed';
                 $this->presentation->save();
-                //TODO Store error
+                
+                //Write info to log
+                Log::error($e->getResponse()->getBody());
+
                 return $this->response = $e->getResponse()->getBody();
             }
         }
@@ -152,12 +156,15 @@ class PlayStoreNotify extends Model
                 //Change model status
                 $this->presentation->status = 'failed';
                 $this->presentation->save();
-                //TODO Store error
+
+                //Write info to log
+                Log::error($e->getResponse()->getBody());
+
                 return $this->response = $e->getResponse()->getBody();
             }
         }
 
-        if ($this->response->getBody() == 'OK') {
+        if ($this->response->getBody()) {
             //Change manualupdate status
             $this->presentation->status = 'notified fail';
             $this->presentation->save();
