@@ -128,7 +128,26 @@ Requirements are best determined using Server Requirements page of corresponding
 
 * For developing purposes there are a couple of seeders to run. Reset (rollback) the migration and run `php artisan migrate:fresh --seed`
 
-## 4. API
+## 4. Building assets
+
+Make sure you have updated npm to the latest version
+
+    npm update -g
+
+Install the dependecies
+
+    npm install
+
+Build the development assets by running
+
+    npm run dev
+
+For production build the production assets
+
+    npm run production
+
+
+## 5. API
 Issued valid tokens are stored in the play.ini file (/systemconfig). There are tokens for storing new presentations and for retrieving presentation metadata (not yet fully implemented).
 
 Endpoints for storing presentations:
@@ -173,11 +192,11 @@ The response:
        
     }
 
-## 5. Database
+## 6. Database
 
 ![Database](./public/images/play_db.png)
 
-## 6. Multiplayer
+## 7. Multiplayer
 
 The multiplayer is available under /storage/app/multiplayer and is a standalone application. The folder is linked to the multiplayer repo on gitea.dsv.su.se and excluded from the platform's git repo.
 Updating the multiplayer is easiest with the artisan command:
