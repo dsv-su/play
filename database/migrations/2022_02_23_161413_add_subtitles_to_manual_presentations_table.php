@@ -14,7 +14,7 @@ class AddSubtitlesToManualPresentationsTable extends Migration
     public function up()
     {
         Schema::table('manual_presentations', function (Blueprint $table) {
-            $table->string('subtitle')->after('base')->nullable();
+            $table->string('subtitles')->after('base')->nullable();
         });
     }
 

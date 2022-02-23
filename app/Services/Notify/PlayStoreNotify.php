@@ -31,7 +31,11 @@ class PlayStoreNotify extends Model
             ->makeHidden('daisy_courses')
             ->makeHidden('created_at')
             ->makeHidden('updated_at');
-
+        //Check if subtitles has been uploaded
+        if(!$this->presentation->subtitles) {
+            $this->presentation
+                ->makeHidden('subtitles');
+        }
         if ($type == 'update') {
             $this->presentation
                 ->makeHidden('resolution');
