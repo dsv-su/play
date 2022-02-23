@@ -63,7 +63,7 @@
                                                 <div class="my-auto align-middle mx-auto">
                                                     <span class="video-icon">@if($presentations[$courseId] ?? 0)
                                                             <a class="badge badge-primary" role="button"
-                                                               href="{{ route('course.videos', $courseId) }}">{{$presentations[$courseId]}}</a> @else
+                                                               href="{{ route('course', $courseId) }}">{{$presentations[$courseId]}}</a> @else
                                                             0 @endif</span>
                                                     <p>{{ __("Presentations")  }}</p>
                                                 </div>
