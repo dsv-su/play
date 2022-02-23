@@ -27,6 +27,20 @@
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
+                <!-- Subtitles file-->
+                <span class="border border-warning px-2">
+                    @if(!$sub)
+                    <label class="form-control-label px-1">{{ __("Add a subtitle .vtt-file") }}<span class="text-warning"> *</span></label>
+                    <div class="form-group">
+                        <input type="file" class="form-control-file" wire:model="subtitle" id="{{ rand() }}" />
+                        @error('subtitle')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    @else
+                        <label class="form-control-label px-1">{{ __("A subtitle file has been added") }}</label>
+                    @endif
+                </span>
             </div>
             <div class="form-group col-sm-6 flex-column d-flex">
                 <div class="row text-center mt-3 mt-lg-0">

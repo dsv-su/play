@@ -207,5 +207,7 @@
     "Assign group permission": "Tilldela gruppbehörighet",
     "Users with individual permissions": "Användare med individuella behörigheter",
     "Not downloadable": "Ej nedladdningsbar",
-    "DSV students & staff playback": "DSV studenter och personal"
+    "DSV students & staff playback": "DSV studenter och personal",
+    "Add a subtitle .vtt-file": "Lägg till en undertextfil i formatet .vtt",
+    "A subtitle file has been added": "En undertextfil har lagts till"
 }

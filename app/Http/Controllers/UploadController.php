@@ -182,6 +182,7 @@ class UploadController extends Controller
 
         $upload = new SftpPlayStore($presentation);
         $upload->sftpVideo();
+        $upload->sftpSubtitle();
         //$upload->sftpImage(); -> disabled
         $upload->sftpPoster();
 
@@ -195,17 +196,7 @@ class UploadController extends Controller
         // Send notify
         $notify = new PlayStoreNotify($presentation);
         $notify->sendSuccess('manual');
-        /*
-         * Is already on the homepage
-        if (App::isLocale('en')) {
-            $upload_message = 'The uploaded presentation is being processed now. You can see it under "All presentations" tab.';
-        }
-        if (App::isLocale('swe')) {
-            $upload_message = 'Presentationen bearbetas.';
-        }
 
-        return redirect('/')->with(['message' => $upload_message]);
-        */
         return redirect('/');
     }
 

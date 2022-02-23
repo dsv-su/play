@@ -29,6 +29,7 @@ class FileUpload extends Component
     public $uploaded_files;
     public $isDisabled = false;
     public $pre_uploaded_files;
+    public $subtitle, $subname, $sub;
 
     public function mount(ManualPresentation $presentation, $permissions)
     {
@@ -59,6 +60,21 @@ class FileUpload extends Component
         $this->presentation->sources = [];
         $this->presentation->sources = $this->source;
         $this->presentation->save();
+    }
+
+    public function updatedsubtitle()
+    {
+        /*
+        $this->validate([
+            'subtitle' => 'mimetypes:text/vtt|max:1',
+        ],
+            [
+                'subtitle.mimetypes' => 'The file must be of type .vtt',
+                'subtitle.max' => 'The maximum number of files allowed is 1',
+            ]);
+        */
+        $this->subname = $this->subtitle->storeAs('/public/' . $this->dirname . '/subs', 'subtitle.vtt');
+        $this->sub = true;
     }
 
     public function updatedfiles()

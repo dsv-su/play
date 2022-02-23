@@ -5,7 +5,6 @@ namespace App\Services\Store;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
-//use Storage;
 
 class SftpPlayStore extends Model
 {
@@ -13,6 +12,7 @@ class SftpPlayStore extends Model
     protected $video_directory, $image_directory, $poster_directory;
     protected $video_remote_dir, $image_remote_dir;
     protected $presentation, $response, $contents, $sendfile, $media, $name;
+    protected $subs_directory, $subs_remote_dir;
 
     public function __construct(Model $model)
     {
@@ -34,11 +34,13 @@ class SftpPlayStore extends Model
 
         //Temporary directories
         $this->video_directory =  $this->presentation->local . '/video';
+        $this->subs_directory = $this->presentation->local . '/subs';
         //$this->image_directory = $this->presentation->local . '/image'; //Disabled
         $this->poster_directory =  $this->presentation->local . '/poster';
 
         //Remote directories
         $this->video_remote_dir = $this->presentation->local . '/video';
+        $this->subs_remote_dir = $this->presentation->local . '/subs';
         //$this->image_remote_dir = $this->presentation->local . '/image'; //Disabled
         $this->poster_remote_dir = $this->presentation->local . '/poster';
     }
@@ -76,6 +78,22 @@ class SftpPlayStore extends Model
                 $this->name = substr($this->sendfile, strrpos($this->sendfile, '/') + 1);
                 //Automatic Streaming
                 $this->response = Storage::disk('sftp')->putFileAs($this->image_remote_dir, new File($this->public_path.$this->sendfile), $this->name);
+            }
+        } catch (RunTimeException $e) {
+            dd('Error' . $e->getMessage());
+        }
+    }
+
+    public function sftpSubtitle()
+    {
+        //Send subtitle file
+        $this->contents = Storage::disk('public')->files($this->subs_directory);
+
+        try {
+            foreach ($this->contents as $this->sendfile) {
+                $this->name = substr($this->sendfile, strrpos($this->sendfile, '/') + 1);
+                //Automatic Streaming
+                $this->response = Storage::disk('sftp')->putFileAs($this->subs_remote_dir, new File($this->public_path.$this->sendfile), $this->name);
             }
         } catch (RunTimeException $e) {
             dd('Error' . $e->getMessage());
