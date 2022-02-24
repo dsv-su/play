@@ -16,13 +16,14 @@ class LocalizationController extends Controller
     {
         App::setlocale($locale);
         session()->put('locale', $locale);
+        $minutes = 3600;
         if($locale == 'swe') {
-            $minutes = 3600;
             return back()->withInput()->cookie(
                 'language', 'se', $minutes
             );
         }
-        Cookie::expire('language');
-        return back()->withInput();
+        return back()->withInput()->cookie(
+            'language', 'en', $minutes
+        );
     }
 }
