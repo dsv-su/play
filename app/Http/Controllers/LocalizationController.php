@@ -19,11 +19,11 @@ class LocalizationController extends Controller
         $minutes = 3600;
         if($locale == 'swe') {
             return back()->withInput()->cookie(
-                'language', 'se', $minutes
+                'language', 'se', $minutes, null, null, false, false
             );
         }
         return back()->withInput()->cookie(
-            'language', 'en', $minutes
+            'language', 'en', $minutes, null, null, false, false
         );
     }
 }
