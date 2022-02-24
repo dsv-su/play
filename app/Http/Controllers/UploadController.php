@@ -166,7 +166,7 @@ class UploadController extends Controller
             $manualPresentation->created = strtotime($request->created);
             $id = $manualPresentation->save();
 
-            //return redirect()->action([UploadController::class, 'store'], ['id' => $manualPresentation->id]);
+            return redirect()->action([UploadController::class, 'store'], ['id' => $manualPresentation->id]);
         }
 
         return back()->withInput();
