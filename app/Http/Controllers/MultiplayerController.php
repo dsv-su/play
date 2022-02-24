@@ -81,7 +81,7 @@ class MultiplayerController extends Controller
         if($video->subtitles) {
             $presentation['subtitles'] = $this->base_uri() .'/' . $video->id . '/subtitle.vtt';
         }
-        
+
         //Add valid token
         $presentation['token'] = $token;
 
