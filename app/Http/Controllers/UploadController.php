@@ -14,8 +14,10 @@ use App\Services\Store\SftpPlayStore;
 use App\Tag;
 use App\VideoPermission;
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Monolog\DateTimeImmutable;
 use Storage;
 
 class UploadController extends Controller
@@ -164,7 +166,7 @@ class UploadController extends Controller
             $manualPresentation->created = strtotime($request->created);
             $id = $manualPresentation->save();
 
-            return redirect()->action([UploadController::class, 'store'], ['id' => $manualPresentation->id]);
+            //return redirect()->action([UploadController::class, 'store'], ['id' => $manualPresentation->id]);
         }
 
         return back()->withInput();
