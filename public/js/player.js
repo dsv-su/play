@@ -38,6 +38,21 @@ function init() {
             defaultres = cookies.resolution
         }
 
+        if('language' in cookies) {
+            var lang = cookies['language']
+            if (lang != 'se') {
+                document.querySelector('html').lang = lang
+                var dataname = 'title_' + lang
+                document.querySelectorAll('[data-' + dataname + ']').forEach(
+                    function(tag) {
+                        tag.title = tag.dataset[dataname]})
+                var altname = 'title_alt_' + lang
+                document.querySelectorAll('[data-' + altname + ']').forEach(
+                    function(tag) {
+                        tag.dataset['title_alt'] = tag.dataset[altname]})
+            }
+        }
+
         body.dataset.id = presentation.id
 
         if(playlist) {
@@ -66,7 +81,9 @@ function init() {
             setupSwitching(mainstream)
             setupSync(mainstream)
             setupPlayback(body, mainstream)
-            setupSubs(presentation.subtitles, cookies.subtitles)
+            setupSubs(presentation.subtitles,
+                      cookies.subtitles,
+                      presentation.token)
         }
         awaitLoad(function() {
             setupBuffer(mainstream)
@@ -607,7 +624,7 @@ function setupSpeed() {
             button.addEventListener('click', setSpeed)})
 }
 
-function setupSubs(subs, subCookie) {
+function setupSubs(subs, subCookie, accessToken) {
     var button = document.querySelector('#subtitles-button')
     var icons = document.querySelectorAll('#subtitles-button > svg > use')
 
@@ -618,7 +635,7 @@ function setupSubs(subs, subCookie) {
     document.querySelectorAll('video').forEach(function(stream) {
         var subtrack = document.createElement('track')
         subtrack.kind = 'subtitles'
-        subtrack.src = subs
+        subtrack.src = subs + '?token=' + accessToken
         stream.appendChild(subtrack)
     })
 
