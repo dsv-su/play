@@ -30,7 +30,7 @@
                 <!-- Subtitles file-->
                 <span class="border border-warning px-2">
                     @if(!$sub)
-                    <label class="form-control-label px-1">{{ __("Add a subtitle .vtt-file") }}<span class="text-warning"> *</span></label>
+                    <small>{{ __("Testing in progress - Add a subtitle .vtt-file") }}<span class="text-warning"> *</span></small>
                     <div class="form-group">
                         <input type="file" class="form-control-file" wire:model="subtitle" id="{{ rand() }}" />
                         @error('subtitle')

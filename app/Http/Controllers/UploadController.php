@@ -163,7 +163,7 @@ class UploadController extends Controller
             $manualPresentation->tags = $tags;
             $manualPresentation->courses = $courses;
             $manualPresentation->daisy_courses = $daisy_courses;
-            $manualPresentation->created = strtotime($request->created);
+            $manualPresentation->created = Carbon::createFromFormat('d/m/Y', $request->created)->timestamp;
             $id = $manualPresentation->save();
 
             return redirect()->action([UploadController::class, 'store'], ['id' => $manualPresentation->id]);

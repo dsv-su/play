@@ -260,7 +260,7 @@
     <script src="{{ asset('./js/upload.js') }}"></script>
     <script>
         $(".datepicker").datepicker({
-            format: "yyyy-mm-dd",
+            format: "dd/mm/yyyy",
             weekStart: 1,
             todayHighlight: true
         }).datepicker("setDate", new Date());
