@@ -66,7 +66,7 @@ class FileUpload extends Component
     {
         /*
         $this->validate([
-            'subtitle' => 'mimetypes:text/vtt|max:1',
+            'subtitle' => 'mimetypes: text/vtt'
         ],
             [
                 'subtitle.mimetypes' => 'The file must be of type .vtt',

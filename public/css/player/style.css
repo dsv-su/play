@@ -1,0 +1,447 @@
+
+/* global settings */
+
+@import 'range-style.css';
+
+:root {
+    --background: black;
+    --background-other: #1c1c1c;
+    --backdrop: rgba(0, 0, 0, 0.7);
+    --foreground: white;
+    --highlight: #9BB2CE;
+    --spotlight: #EB7125;
+    --fade: #a4a4a4;
+    --fade-other: #ababab;
+
+    --gap: 3px;
+    --svg-size: calc(var(--gap) * 8);
+    --controls-height: calc(var(--gap) * 10);
+    --progress-height: calc(var(--gap) * 2);
+    --controls-fullheight: calc(var(--progress-height)
+                                + var(--gap) * 4
+                                + var(--controls-height));
+
+    --main-width: 100vw;
+    --main-height: 75vh;
+    --secondary-width: calc((100vw - var(--gap) * 2) / 3);
+    --secondary-height: calc(25vh - var(--gap));
+
+    --font: verdana, sans-serif;
+}
+
+svg {
+    height: var(--svg-size);
+    width: var(--svg-size);
+    fill: var(--foreground);
+}
+button {
+    background: none;
+    border: none;
+    color: var(--foreground);
+}
+
+/* passive element styles */
+
+/** general layout **/
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    display: grid;
+    background-color: var(--background);
+    color: var(--foreground);
+    place-items: center;
+    font-family: var(--font);
+}
+
+#wrapper {
+    display: grid;
+    grid-gap: var(--gap);
+    gap: var(--gap);
+}
+
+/** about box **/
+
+#about {
+    display: grid;
+    grid-template-areas: "button title" "playlist playlist";
+    grid-template-rows: 3rem;
+    align-items: start;
+    justify-items: start;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: var(--backdrop);
+    padding-right: calc(var(--gap) * 6);
+}
+#playlist-button, #title, #playlist-title {
+    padding: calc(var(--gap) * 4);
+    margin: 0;
+    font-size: 120%;
+    place-self: stretch;
+}
+#playlist-button {
+    grid-area: button;
+    width: 3rem;
+}
+#title {
+    grid-area: title;
+}
+#playlist {
+    grid-area: playlist;
+    display: none;
+    flex-direction: column;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    max-height: 100%;
+    margin-bottom: var(--controls-fullheight);
+}
+.playlist-item a {
+    background: var(--background);
+    margin: var(--gap);
+    padding: var(--gap);
+    padding-right: calc(var(--gap) * 10);
+    border: var(--gap) solid var(--fade);
+    color: var(--foreground);
+    display: flex;
+    align-items: center;
+}
+.playlist-item img {
+    width: 150px;
+    height: auto;
+    margin: var(--gap);
+    border: 1px solid var(--fade);
+}
+.playlist-item span {
+    margin: calc(var(--gap) * 3);
+    max-width: 30vw;
+}
+.current a {
+    background-color: var(--background-other);
+    color: var(--fade-other);
+}
+
+/** control box **/
+
+#controls {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    display: grid;
+    grid-row-gap: var(--gap);
+    row-gap: var(--gap);
+    grid-template-areas: "progress progress progress" "left center right";
+    grid-template-columns: 1fr 24px 1fr;
+}
+#controls button {
+    padding: 0 calc(var(--gap) * 2);
+}
+#controls button,
+#controls span {
+    font-size: 100%;
+}
+#controls button,
+#controls input {
+    margin: 0;
+    height: var(--controls-height);
+}
+#progress-container {
+    position: relative;
+    grid-area: progress;
+    margin: 0 calc(var(--gap) * 3);
+    height: calc(var(--progress-height) + var(--gap) * 2);
+    opacity: 60%;
+}
+#buffer, #progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: var(--progress-height);
+}
+#buffer {
+    background-color: var(--fade);
+    width: 100%;
+    z-index: 1;
+}
+#progress {
+    background-color: var(--spotlight);
+    z-index: 2;
+}
+#progress-popup {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(50%, -150%);
+    background: var(--background);
+    border-radius: var(--gap);
+    padding: var(--gap);
+    visibility: hidden;
+    opacity: 0;
+    user-select: none;
+}
+.control-box {
+    display: flex;
+    align-items: stretch;
+    height: var(--controls-height);
+    background-color: var(--backdrop);
+}
+.control-box > * {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#left-controls {
+    grid-area: left;
+}
+#center-controls {
+    grid-area: center;
+    justify-content: center;
+}
+#right-controls {
+    grid-area: right;
+    justify-content: flex-end;
+}
+.select {
+    position: relative;
+    user-select: none;
+}
+.list {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding: 0;
+    margin-top: 0;
+    margin-bottom: var(--controls-height);
+    padding-bottom: var(--gap);
+    list-style: none;
+}
+.list li {
+    background-color: var(--fade);
+}
+.list li:nth-child(2n) {
+    background-color: var(--fade-other);
+}
+.list button {
+    text-align: right;
+    width: 100%;
+}
+#speed-select button::after {
+    content: "x";
+}
+#resolution-select button::after {
+    content: "p";
+}
+#volume {
+    width: 0;
+    visibility: hidden;
+}
+#elapsed,
+#duration {
+    padding: 0 var(--gap);
+}
+
+/** video streams **/
+
+.stream {
+    display: grid;
+    align-items: center;
+    justify-items: center;
+}
+.stream > video {
+    grid-row: 1 / 4;
+    grid-column: 1 / 4;
+}
+.stream > svg {
+    grid-row: 2 / 3;
+    grid-column: 2 / 3;
+    height: auto;
+    width: auto;
+}
+.fade {
+    opacity: 0;
+}
+.main {
+    position: relative;
+    grid-row: 2 / 5;
+    grid-column: 1 / 4;
+}
+.secondary {
+    grid-row-start: 1;
+}
+.main > video {
+    max-height: var(--main-height);
+    max-width: var(--main-width);
+}
+.secondary > video {
+    max-height: var(--secondary-height);
+    max-width: var(--secondary-width);
+}
+.main > svg {
+    max-height: calc(var(--main-height) / 3);
+    max-width: calc(var(--main-height) / 3);
+}
+.secondary > svg {
+    max-height: calc(var(--secondary-height) / 3);
+    max-width: calc(var(--secondary-height) / 3);
+}
+
+/** subtitles **/
+video::cue {
+    background-color: var(--backdrop);
+}
+
+/** wide screens **/
+
+@media screen and (min-aspect-ratio: 16/9) {
+    :root {
+        --main-width: 75vw;
+        --main-height: 100vh;
+        --secondary-width: calc(25vw - var(--gap));
+        --secondary-height: calc((100vh - var(--gap) * 2) / 3);
+    }
+    .main {
+        grid-row: 1 / 4;
+        grid-column: 1 / 4;
+    }
+    .secondary {
+        grid-row-start: initial;
+        grid-column-start: 4;
+    }
+}
+
+/* dynamic changes */
+
+:focus {
+    outline: 2px solid var(--highlight);
+}
+
+/** element hiding **/
+
+.invisible {
+    visibility: hidden;
+    opacity: 0;
+}
+.hidden {
+    display: none !important;
+}
+.nocursor {
+    cursor: none;
+}
+
+.nocursor .fade {
+    opacity: 0 !important;
+}
+.nocursor #controls,
+.nocursor #about {
+    max-height: 0;
+    overflow-y: hidden;
+}
+
+/** element showing **/
+
+#about.expand {
+    height: 100vh;
+    grid-template-columns: 3rem auto;
+}
+#about.expand #playlist {
+    display: flex;
+    margin-bottom: var(--controls-fullheight);
+    place-self: stretch;
+}
+.stream:hover > .fade {
+    opacity: 80%;
+}
+#progress-container:hover,
+#progress-container:focus-within {
+    opacity: 100%;
+}
+#progress-container:hover #progress-popup,
+#progress-container:focus-within #progress-popup {
+    visibility: visible;
+    opacity: 100%;
+}
+#progress-container:hover #progress::after,
+#progress-container:focus-within #progress::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(50%, -25%);
+    border: var(--progress-height) solid var(--spotlight);
+    border-radius: var(--progress-height);
+}
+.select:focus-within .list,
+.select:hover .list {
+    visibility: initial;
+    opacity: 100%;
+}
+#volume-button:hover + #volume,
+#volume-button:focus + #volume,
+#volume:hover,
+#volume:focus-within {
+    width: 5rem;
+    visibility: initial;
+}
+
+/** highlighting **/
+
+svg:hover,
+svg:focus,
+*:hover > svg,
+*:focus > svg {
+    fill: var(--highlight);
+}
+/* override highlight for non-interactive icons */
+.no-highlight:hover,
+*:hover > .no-highlight {
+    fill: var(--foreground);
+}
+
+.playlist-item a:hover {
+    border-color: var(--highlight);
+    color: var(--highlight);
+}
+.playlist-item a:hover img {
+    border-color: var(--highlight);
+}
+.select:focus-within .current,
+.select:hover .current {
+    color: var(--highlight);
+}
+.list button:hover,
+.list button:focus {
+    background-color: var(--highlight);
+}
+
+/** transition settings **/
+
+.fade {
+    transition: opacity 0.5s;
+}
+
+#about,
+#controls {
+    transition: max-height 0.5s;
+    max-height: 100vh;
+}
+#progress-container {
+    transition: opacity 0.5s;
+}
+#progress-popup {
+    transition: opacity 0.5s, visibility 0.5s;
+}
+.list {
+    transition: opacity 0.5s, visibility 0.5s;
+}
+#volume {
+    transition: width 0.5s, visibility 0.5s;
+}
