@@ -27,4 +27,7 @@ _ide_helper_models.php
 /public/multiplayer
 id_rsa
 id_rsa.pub
+/resources/views/player
+/public/css/player
+/public/js/player.js
 *~
