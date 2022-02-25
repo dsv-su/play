@@ -108,6 +108,14 @@ Requirements are best determined using Server Requirements page of corresponding
               FriendlyName = recorder.dns.name
               OtherRecorder = other.name
         
+* Make sure the subdirectories `bootstrap/cache` and `/storage` is writable by your web server user.
+
+Make sure these folder exist or create these folders under storage/framework: 
+
+    sessions 
+    views
+    cache
+
 * Once the global settings are entered you can install the dependencies. `composer install`
 
 * Make sure that .env file is present (copy .env.example to .env). If you are setting up a dev enviroment add the following settings to the .env file:
@@ -120,15 +128,13 @@ Requirements are best determined using Server Requirements page of corresponding
 
 * Either create application key manually or do that with a command `php artisan key:generate`
 
-* Make sure the subdirectories `bootstrap/cache` and `/storage` is writable by your web server user.
-
 * If you need to change the email configuration. Open the .env file and set the needed values
 
 * Create the database with `php artisan migrate` (this should create database tables needed)
 
 * For developing purposes there are a couple of seeders to run. Reset (rollback) the migration and run `php artisan migrate:fresh --seed`
 
-## 4. Building assets
+## 4. Building assets (dev)
 
 Make sure you have updated npm to the latest version
 
@@ -202,10 +208,8 @@ The multiplayer is available under /storage/app/multiplayer and is a standalone 
 Updating the multiplayer is easiest with the artisan command:
 
     php artisan update:multiplayer
-
-    and then to integrate into the platform
-
     php artisan integrate:multiplayer
+
 
 This will check if an update is available on the multiplayer repo and if so perform a git pull, execute the multiplayer python script to create a local player and finally integrate the player into the platform.
 

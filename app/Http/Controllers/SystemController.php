@@ -34,7 +34,9 @@ class SystemController extends Controller
     public function SUidpReturn()
     {
         Session::regenerate();
-        return redirect()->intended('/');
+        return redirect()->intended('/')->cookie(
+            'language', 'en', 0, null, null, false, false
+        );
     }
 
     public function start()
