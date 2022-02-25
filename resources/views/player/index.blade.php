@@ -105,6 +105,7 @@
               <use href="#mute-icon" class="hidden"></use>
             </svg>
           </button>
+
           <input type="range" id="volume"
                  min="0" max="1" step="0.01" value="1">
           <span id="elapsed"></span>
