@@ -22,6 +22,7 @@ class IndividualPermissionsFilter extends VisibilityFilter implements Visibility
             foreach($users as $user) {
                 if($user->username == $this->user) {
                     if(!$this->video->visibility) {
+                        $this->video->setAttribute('visibility', true);
                         $this->video->setAttribute('hidden', true);
                     }
                     switch($user->permission) {
