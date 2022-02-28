@@ -46,7 +46,7 @@ class EditPresentation extends Component
         $this->category = $video->category->category_name;
         $this->sources = $video->streams;
         $this->ipermissions = $individual_permissions->count();
-        $this->visibility = (bool)$video->visibility;
+        $this->visibility = (bool)$video->fresh()->visibility;
         $this->download = (bool)$video->download;
         $this->user_permission = $user_permission;
 
