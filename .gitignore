@@ -28,6 +28,7 @@ _ide_helper_models.php
 id_rsa
 id_rsa.pub
 public/js/player.js
-public/css/player
-resources/views/player
+public/css/player/favicon.ico
+public/css/player/*.css
+resources/views/player/index.blade.php
 *~
