@@ -32,7 +32,7 @@
                     @if(!$sub)
                     <small>{{ __("Testing in progress - Add a subtitle .vtt-file") }}<span class="text-warning"> *</span></small>
                     <div class="form-group">
-                        <input type="file" class="form-control-file" wire:model="subtitle" id="{{ rand() }}" />
+                        <input type="file" class="form-control-file" wire:model="subtitle" accept="text/vtt" />
                         @error('subtitle')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror

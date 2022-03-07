@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\ManualPresentation;
 use App\Services\Ffmpeg\DetermineDurationVideo;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
@@ -66,7 +67,7 @@ class FileUpload extends Component
     {
         /*
         $this->validate([
-            'subtitle' => 'mimetypes: text/vtt'
+            'subtitle' => 'mimetypes:text/vtt',
         ],
             [
                 'subtitle.mimetypes' => 'The file must be of type .vtt',
