@@ -25,6 +25,7 @@ class AdminController extends Controller
 {
     public function __construct()
     {
+        $this->middleware('entitlements');
         $this->middleware('play-admin')->except('emulateUser');
         //New admin2
         $this->middleware('playauth:api');

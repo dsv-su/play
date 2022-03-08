@@ -37,19 +37,19 @@
             <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
                 @if (isset($my) && !$my->isEmpty())
                     <li class="nav-item pb-0">
-                        <a class="nav-link" href="#pane-A" data-toggle="tab"
+                        <a class="nav-link" href="#pane-A" data-toggle="tab" role="tab"
                            title="@lang('lang.my_courses')">@lang('lang.my_courses') ({{$my->count()}})</a>
                     </li>
                 @endif
                 @if (isset($active) && !$active->isEmpty())
                     <li class="nav-item pb-0">
-                        <a class="nav-link" href="#pane-B" data-toggle="tab"
+                        <a class="nav-link" href="#pane-B" data-toggle="tab" role="tab"
                            title="@lang('lang.active_courses')">@lang('lang.active_courses') ({{$active->count()}})</a>
                     </li>
                 @endif
                 @if (isset($latest) && $latest->count())
                     <li class="nav-item pb-0">
-                        <a class="nav-link" href="#pane-C" data-toggle="tab"
+                        <a class="nav-link" href="#pane-C" data-toggle="tab" role="tab"
                            title="@lang('lang.latest')">@lang('lang.latest') ({{$latest->count()}})</a>
                     </li>
                 @endif

@@ -134,6 +134,7 @@ class PlayAuthenticate
             if($_SERVER['entitlement'] ?? false) {
                 $server = explode(";", $_SERVER['entitlement']);
             } else {
+                return redirect()->guest(route('sulogin'));
                 abort(511);
             }
 
