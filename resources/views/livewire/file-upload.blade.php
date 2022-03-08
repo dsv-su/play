@@ -1,128 +1,163 @@
-<div class="col-lg-12 my-2">
-    <div class="rounded border shadow p-3 my-2">
-        <label class="form-control-label px-1">{{ __("Mediafiles to be uploaded") }}</label>
-        <p class="font-1rem px-1">
-            {{ __("Up to 4 media files per presentation can be uploaded.") }} {{ __("Each uploaded file should be the same length.") }}
-        </p>
-        <div class="row justify-content-between text-left">
-            <div class="form-group col-sm-6 flex-column d-flex">
-                <div>
-                    @if(session()->has('message'))
-                        <div class="alert alert-success">
-                            {{ session('message') }}
-                        </div>
-                    @endif
-                </div>
-                <label class="form-control-label px-1">{{ __("Files to upload") }}<span class="text-danger"> *</span></label>
-                <p class="font-1rem px-1">
-                    {{ __("Select one or drag and drop up to 4 files at a time into the box below") }}
-                </p>
-                <div class="form-group">
-                    <input type="file" class="form-control-file" wire:model="files" id="{{ rand() }}" multiple />
-
-                    @error('files.*')
-                    <span class="text-danger">{{ $message }}</span>
-                    @enderror
-                    @error('files')
-                    <span class="text-danger">{{ $message }}</span>
-                    @enderror
-                </div>
-                <!-- Subtitles file-->
-                <span class="border border-warning px-2">
-                    @if(!$sub)
-                    <small>{{ __("Testing in progress - Add a subtitle .vtt-file") }}<span class="text-warning"> *</span></small>
-                    <div class="form-group">
-                        <input type="file" class="form-control-file" wire:model="subtitle" accept="text/vtt" />
-                        @error('subtitle')
-                        <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    @else
-                        <label class="form-control-label px-1">{{ __("A subtitle file has been added") }}</label>
-                    @endif
-                </span>
-            </div>
-            <div class="form-group col-sm-6 flex-column d-flex">
-                <div class="row text-center mt-3 mt-lg-0">
-                    <div class="col">
-                        <div class="counter">
-                            <i class="far fa-file-video fa-2x"></i>
-                            <h2 class="timer count-title count-number" data-to="100" data-speed="1500">{{$uploaded_files}}</h2>
-                            <p class="count-text ">{{ __("Files") }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row justify-content-between text-left">
-            <div wire:loading.block wire:target="files">@include('layouts.partials.spinner')</div>
-        </div>
-        @if($files)
-            @if($filethumbs)
-                <div class="row justify-content-left text-left">
-                    <!-- Thumbs -->
-                    @foreach($filethumbs as $key => $thumb)
+<div>
+    <div class="row">
+        <div class="col-lg-12 my-2">
+            <div class="rounded border shadow p-3 my-2">
+                <div class="row justify-content-between text-left">
                     <div class="col-xl-3 col-sm-6 my-2">
-                        <div class="card border-left-info rounded border shadow h-100 py-2" wire:key="{{$loop->index}}">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2 text-right">
-                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                            <button wire:click="remove({{$loop->index}})" class="btn-outline-primary btn-sm fas fa-trash-alt"></button>
-                                        </div>
-                                        <div class="position-relative">
-                                            <img src="{{$thumb}}?{{ rand() }}" class="w-100">
-                                        </div>
-                                        <div class="custom-control custom-switch text-left">
-                                            <small>
-                                                <label class="footer-department-name">{{ __("Stream duration") }}: {{$filesduration[$loop->index]}} sec.</label>
+                        <label class="form-control-label px-1"><i class="fa-regular fa-image"></i> {{__("Upload custom thumb") }}</label>
+                        <p class="font-1rem px-1">
+                            {{ __("If you want, you can upload a custom image to represent your presentation.") }}
+                        </p>
+                        <input type="file" class="form-control-file" wire:model="custom">
+                        @error('custom') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="col-xl-3 col-sm-6 my-2">
+                        @if ($custom)
+                            <img src="{{ $custom->temporaryUrl() }}" class="w-100">
+                        @else
+                            <div class="card" style="border: .5vh solid blue;border-radius: 2vh;margin: auto">
+                                <img src="{{asset('images/dsvplay.png')}}" >
+                            </div>
 
-                                                @if(!$custom or $key > 0)
-                                                    <label class="footer-department-name">{{ __('Thumb generated after') }}: {{$genthumb[$loop->index]}} sec.</label>
-                                                @else
-                                                    <label class="footer-department-name">{{ __('Custom uploaded thumb') }}</label>
-                                                @endif
-                                            </small>
-                                            <div class="input-group mb-3">
-                                                <input type="text" class="form-control" placeholder="0"  type="number"
-                                                       wire:model="sec.{{$key}}">
-                                                <div class="input-group-append">
-                                                    <button class="btn btn-outline-secondary" type="button" wire:click="regenerate({{$loop->index}})">
-                                                        {{__("Regenerate")}}</button>
-                                                </div>
-                                                @error('sec') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-                                        </div>
-                                    </div>
+                        @endif
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 my-2">
+            <div class="rounded border shadow p-3 my-2">
+                <label class="form-control-label px-1">{{ __("Mediafiles to be uploaded") }}</label>
+                <p class="font-1rem px-1">
+                    {{ __("Up to 4 media files per presentation can be uploaded.") }} {{ __("Each uploaded file should be the same length.") }}
+                </p>
+                <div class="row justify-content-between text-left">
+                    <div class="form-group col-sm-6 flex-column d-flex">
+                        <label class="form-control-label px-1">{{ __("Files to upload") }}<span class="text-danger"> *</span></label>
+                        <p class="font-1rem px-1">
+                            {{ __("Select one or drag and drop up to 4 files at a time into the box below") }}
+                        </p>
+                        <div class="form-group">
+                            <input type="file" class="form-control-file" wire:model="files" id="{{ rand() }}" multiple />
+
+                            @error('files.*')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                            @error('files')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-6 flex-column d-flex">
+                        <!-- Subtitles file-->
+                        <span class="border border-warning px-2">
+                            <label class="form-control-label px-1">{{ __("Add a subtitle file") }} <small><span class="text-warning">{{ __("Testing in progress") }} *</span></small></label>
+                        <p class="font-1rem px-1">
+                            {{ __("Select one or drag and drop a WebVTT (.vtt) file into the box below") }}
+                        </p>
+
+                        @if(!$sub)
+
+                        <div class="form-group">
+                            <input type="file" class="form-control-file" wire:model="subtitle" accept="text/vtt" />
+                            @error('subtitle')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        @else
+                            <label class="form-control-label px-1">{{ __("A subtitle file has been added") }}</label>
+                        @endif
+                        </span>
+                    </div>
+                    {{--}}
+                    <div class="form-group col-sm-6 flex-column d-flex">
+                        <div class="row text-center mt-3 mt-lg-0">
+                            <div class="col">
+                                <div class="counter">
+                                    <i class="far fa-file-video fa-2x"></i>
+                                    <h2 class="timer count-title count-number" data-to="100" data-speed="1500">{{$uploaded_files}}</h2>
+                                    <p class="count-text ">{{ __("Files") }}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    @endforeach
-                    <!-- end thumbs -->
-
+                    {{--}}
                 </div>
-            @endif
-        @endif
-        @if($uploaded_files > 0)
-        <div class="row justify-content-between text-left">
-            <div class="col-xl-3 col-sm-6 my-2">
-                <label class="form-control-label px-1">{{__("Upload custom thumb") }}</label>
-                <input type="file" class="form-control-file" wire:model="custom">
-                @error('custom') <span class="text-danger">{{ $message }}</span> @enderror
+                <div class="row justify-content-between text-left">
+                    <div wire:loading.block wire:target="files">@include('layouts.partials.spinner')</div>
+                </div>
+
+                <div class="py-4">
+                    @if(session()->has('message'))
+                        {{ session('message') }} <span class="badge badge-primary">{{$uploaded_files}}</span>
+                    @endif
+                </div>
+
+                @if($files)
+                    @if($filethumbs)
+                        <div class="row justify-content-left text-left">
+                            <!-- Thumbs -->
+                            @foreach($filethumbs as $key => $thumb)
+                                <div class="col-xl-3 col-sm-6 my-2">
+                                    <div class="card border-left-info rounded border shadow h-100 py-2" wire:key="{{$loop->index}}">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2 text-right">
+                                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                        <button wire:click="remove({{$loop->index}})" class="btn-outline-primary btn-sm fas fa-trash-alt"></button>
+                                                    </div>
+                                                    <div class="position-relative">
+                                                        <img src="{{$thumb}}?{{ rand() }}" class="w-100">
+                                                    </div>
+                                                    <div class="custom-control custom-switch text-left">
+                                                        <small>
+                                                            <label class="footer-department-name">{{ __("Stream duration") }}: {{$filesduration[$loop->index]}} sec.</label>
+
+                                                            @if(!$custom or $key > 0)
+                                                                <label class="footer-department-name">{{ __('Thumb generated after') }}: {{$genthumb[$loop->index]}} sec.</label>
+                                                            @else
+                                                                <label class="footer-department-name">{{ __('Custom uploaded thumb') }}</label>
+                                                            @endif
+                                                        </small>
+                                                        @if(!$custom or $key > 0)
+                                                        <div class="input-group mb-3">
+                                                            <input type="text" class="form-control" placeholder="0"  type="number"
+                                                                   wire:model="sec.{{$key}}">
+                                                            <div class="input-group-append">
+                                                                <button class="btn btn-outline-secondary" type="button" wire:click="regenerate({{$loop->index}})">
+                                                                    {{__("Regenerate")}}</button>
+                                                            </div>
+                                                            @error('sec') <span class="text-danger">{{ $message }}</span> @enderror
+                                                        </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        @endforeach
+                        <!-- end thumbs -->
+
+                        </div>
+                    @endif
+                @endif
+            </div>
+            <div class="col-sm-12">
+                <button id="submit" type="submit"
+                        class="btn btn-outline-primary mx-auto d-flex font-125rem m-3"
+                    {{ $isDisabled ? '': 'disabled' }}
+                >{{ __("Upload presentation") }}</button>
             </div>
         </div>
-        @endif
-    </div>
-    <div class="col-sm-12">
-        <button id="submit" type="submit"
-                class="btn btn-outline-primary mx-auto d-flex font-125rem m-3"
-                {{ $isDisabled ? '': 'disabled' }}
-        >{{ __("Upload presentation") }}</button>
     </div>
 
 </div>
-<!-- end right -->
+
 
 <!-- Modal for max upload-->
 <div wire:ignore.self class="modal fade" id="exampleModal" tabindex="-1" role="dialog"

@@ -129,8 +129,14 @@ class PlayAuthenticate
             app()->bind('play_email', function() {
                 return $_SERVER['mail'];
             });
+
             // Get Shibboleth entitlements
-            $server = explode(";", $_SERVER['entitlement']);
+            if($_SERVER['entitlement'] ?? false) {
+                $server = explode(";", $_SERVER['entitlement']);
+            } else {
+                abort(511);
+            }
+
 
             // Roles
             $role_admin = $system->global->admin;

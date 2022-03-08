@@ -208,6 +208,9 @@
     "Users with individual permissions": "Användare med individuella behörigheter",
     "Not downloadable": "Ej nedladdningsbar",
     "DSV students & staff playback": "DSV studenter och personal",
-    "Add a subtitle .vtt-file": "Lägg till en undertextfil i formatet .vtt",
-    "A subtitle file has been added": "En undertextfil har lagts till"
+    "Add a subtitle file": "Lägg till en undertextfil",
+    "Select one or drag and drop a WebVTT (.vtt) file into the box below": "Välj en eller dra och släpp en WebVTT (.vtt)-fil i rutan nedan",
+    "A subtitle file has been added": "En undertextfil har lagts till",
+    "Testing in progress": "Test pågår",
+    "If you want, you can upload a custom image to represent your presentation.": "Om du vill kan du ladda upp en anpassad bild som representerar din presentation."
 }

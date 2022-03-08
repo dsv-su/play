@@ -49,6 +49,10 @@ class FileUpload extends Component
 
     public function updatedcustom()
     {
+        $this->validate([
+            'custom' => 'image|max:1024',
+        ]);
+
         //Store custom thumb i image folder
         $customthumb = $this->custom->store($this->dirname.'/poster','public');
 
@@ -117,9 +121,12 @@ class FileUpload extends Component
                     $primary_video_name = basename($filename);
 
                     //Create and store generated thumb
-                    $this->filethumbs[] = $this->createThumb($filename, ($this->presentation->duration/3), $this->presentation->duration);
+                    if(!$this->custom) {
+                        $this->filethumbs[] = $this->createThumb($filename, ($this->presentation->duration/3), $this->presentation->duration);
+                        $this->presentation->thumb = 'poster/'. basename($this->filethumbs[0]);
+                    }
                     $this->genthumb[] = ceil($this->presentation->duration/3);
-                    $this->presentation->thumb = 'poster/'. basename($this->filethumbs[0]);
+
 
                     //Store playAudio for primary
                     $this->source[0]['playAudio'] = true;
@@ -156,10 +163,10 @@ class FileUpload extends Component
             }
             $this->isDisabled = true;
             if (App::isLocale('en')) {
-                $message = 'File successfully prepared for Upload.';
+                $message = 'Files selected for Upload:';
             }
             if (App::isLocale('swe')) {
-                $message = 'Filerna har förberetts för uppladdning.';
+                $message = 'Filer valda för uppladdning:';
             }
             session()->flash('message', $message);
         }

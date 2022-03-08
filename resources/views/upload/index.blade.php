@@ -223,7 +223,7 @@
                         </div>
                 </form>
             </div>
-
+        </div>
             <!--/col-9-->
 
             @livewire('file-upload', [
@@ -231,7 +231,7 @@
             'permissions' => $permissions
             ])
 
-        </div>
+
         {{--}}
                 <div class="row justify-content-center">
                     <div class="form-group col-sm-4">
