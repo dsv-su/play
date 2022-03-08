@@ -110,8 +110,11 @@ class FileUpload extends Component
                 //Make source
                 $this->source[$this->uploaded_files]['video'] = 'video/'. basename($filename);
                 $base = basename($filename);
-                $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', $base);
-                $this->source[$this->uploaded_files]['poster'] = 'poster/'. $thumb_name.'.png';
+                if(!$this->custom or $this->uploaded_files > 0) {
+                    $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', $base);
+                    $this->source[$this->uploaded_files]['poster'] = 'poster/'. $thumb_name.'.png';
+                }
+
 
                 //Store primary media duration
                 if($key == 0 and count($this->filenames) < 2 ) {
