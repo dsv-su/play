@@ -39,7 +39,7 @@ class ManualDownloadController extends Controller
 
     public function __construct()
     {
-        $this->store_server = 'https://play-store.dsv.su.se/presentation/';
+        //$this->store_server = 'https://play-store.dsv.su.se/presentation/';
     }
 
     public function initDownload(Video $video, $resolution)
