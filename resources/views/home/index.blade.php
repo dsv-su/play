@@ -37,19 +37,19 @@
             <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
                 @if (isset($my) && !$my->isEmpty())
                     <li class="nav-item pb-0">
-                        <a class="nav-link" href="#pane-A" data-toggle="tab" role="tab"
+                        <a class="nav-link" href="#my" data-toggle="tab" role="tab" aria-controls="my"
                            title="@lang('lang.my_courses')">@lang('lang.my_courses') ({{$my->count()}})</a>
                     </li>
                 @endif
                 @if (isset($active) && !$active->isEmpty())
                     <li class="nav-item pb-0">
-                        <a class="nav-link" href="#pane-B" data-toggle="tab" role="tab"
+                        <a class="nav-link" href="#active" data-toggle="tab" role="tab" aria-controls="active"
                            title="@lang('lang.active_courses')">@lang('lang.active_courses') ({{$active->count()}})</a>
                     </li>
                 @endif
                 @if (isset($latest) && $latest->count())
                     <li class="nav-item pb-0">
-                        <a class="nav-link" href="#pane-C" data-toggle="tab" role="tab"
+                        <a class="nav-link" href="#all" data-toggle="tab" role="tab" aria-controls="all"
                            title="@lang('lang.latest')">@lang('lang.latest') ({{$latest->count()}})</a>
                     </li>
                 @endif
@@ -58,7 +58,7 @@
         <div class="tab-content" id="myTabContent">
             <!-- Content tab My -->
             @if (isset($my) && !$my->isEmpty())
-                <div id="pane-A" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-A">
+                <div id="my" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-A">
                     <div class="card-deck inner">
                         @foreach ($my as $key => $video)
                             <div class="col my-3 w">
@@ -79,7 +79,7 @@
             @endif
         <!-- Content tab Active -->
             @if (isset($active) && !$active->isEmpty())
-                <div id="pane-B" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-B">
+                <div id="active" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-B">
                     <div class="card-deck inner">
                         @foreach ($active as $key => $video)
                             <div class="col my-3">
@@ -99,7 +99,7 @@
                 </div>
         @endif
         <!-- Content tab Active -->
-            <div id="pane-C" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-C">
+            <div id="all" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-C">
                 @if ((isset($latest) && $latest->count()) || isset($pending) && $pending->count())
                     @if (isset($courses) || isset($terms) || isset($presenters) || isset($tags))
                         <form class="form-inline">
@@ -187,6 +187,7 @@
             $('#myTab').find('li').first().find('a').addClass('active');
             $('div.tab-pane').first().addClass('show active');
         });
+
         $(document).on('change', 'select', function (e) {
             $.ajaxSetup({
                 headers: {
@@ -206,7 +207,7 @@
                 contentType: false,
                 processData: false,
                 success: (data) => {
-                    $('#pane-C').find('.card-deck.inner').html(data['html']);
+                    $('#all').find('.card-deck.inner').html(data['html']);
                     $('select[name="tag"] option').each(function () {
                         console.log(data['tags']);
                         if (data['tags'].indexOf($(this).val()) >= 0) {
@@ -247,5 +248,31 @@
             });
         });
     </script>
+    <script>
+        $(document).ready(() => {
+            let url = location.href.replace(/\/$/, "");
 
+            if (location.hash) {
+                const hash = url.split("#");
+                $('#myTab a[href="#'+hash[1]+'"]').tab("show");
+                url = location.href.replace(/\/#/, "#");
+                history.replaceState(null, null, url);
+                setTimeout(() => {
+                    $(window).scrollTop(0);
+                }, 400);
+            }
+
+            $('a[data-toggle="tab"]').on("click", function() {
+                let newUrl;
+                const hash = $(this).attr("href");
+                if(hash == "#my") {
+                    newUrl = url.split("#")[0];
+                } else {
+                    newUrl = url.split("#")[0] + hash;
+                }
+                newUrl += "/";
+                history.replaceState(null, null, newUrl);
+            });
+        });
+    </script>
 @endsection

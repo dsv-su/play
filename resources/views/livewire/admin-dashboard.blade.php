@@ -1,6 +1,6 @@
 <div>
     <!-- Nav tabs -->
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
             <a wire:click="tab('api')" class="nav-link @if($api_tab == true) active @endif" data-toggle="tab" href="#external-api">External API</a>
         </li>
@@ -597,3 +597,30 @@
     </div>
 
 </div>
+<script>
+    $(document).ready(() => {
+        let url = location.href.replace(/\/$/, "");
+
+        if (location.hash) {
+            const hash = url.split("#");
+            $('#myTab a[href="#'+hash[1]+'"]').tab("show");
+            url = location.href.replace(/\/#/, "#");
+            history.replaceState(null, null, url);
+            setTimeout(() => {
+                $(window).scrollTop(0);
+            }, 400);
+        }
+
+        $('a[data-toggle="tab"]').on("click", function() {
+            let newUrl;
+            const hash = $(this).attr("href");
+            if(hash == "#external-api") {
+                newUrl = url.split("#")[0];
+            } else {
+                newUrl = url.split("#")[0] + hash;
+            }
+            newUrl += "/";
+            history.replaceState(null, null, newUrl);
+        });
+    });
+</script>
