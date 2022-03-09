@@ -22,6 +22,7 @@ class CreateVideosTable extends Migration
             $table->string('title');
             $table->string('thumb')->nullable();
             $table->time('duration', 0)->nullable();
+            $table->boolean('visibility')->default(true);
             $table->string('subtitles')->nullable();
             $table->json('sources')->nullable();
             $table->json('presentation')->nullable();

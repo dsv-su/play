@@ -108,7 +108,8 @@ Requirements are best determined using Server Requirements page of corresponding
               FriendlyName = recorder.dns.name
               OtherRecorder = other.name
         
-* Make sure the subdirectories `bootstrap/cache` and `/storage` is writable by your web server user.
+* Make sure the subdirectories 
+  `bootstrap/cache` and `/storage` is writable by your web server user.
 
 Make sure these folder exist or create these folders under storage/framework: 
 
@@ -118,11 +119,15 @@ Make sure these folder exist or create these folders under storage/framework:
 
 * Once the global settings are entered you can install the dependencies. `composer install`
 
-* Make sure that .env file is present (copy .env.example to .env). If you are setting up a dev enviroment add the following settings to the .env file:
+  * Make sure that .env file is present (copy .env.example to .env). If you are setting up a dev enviroment add the following settings to the .env file:
+  
 
     FFMPEG_BINARIES=/usr/local/bin/ffmpeg
+
     FFPROBE_BINARIES=/usr/local/bin/ffprobe
+
     LOG_CHANNEL=daily
+
     LDAP_CACHE=true
   
 

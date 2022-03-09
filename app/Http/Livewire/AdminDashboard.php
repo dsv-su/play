@@ -92,14 +92,22 @@ class AdminDashboard extends Component
         $this->presentations =  $countPresentations->latest();
         //Mediasite
         $this->stats_mediasite = Video::where('origin', 'mediasite')->count();
-        $this->percent_mediasite = (int)$this->stats_mediasite / (int)$this->presentations * 100;
+        if((int)$this->presentations){
+            $this->percent_mediasite = (int)$this->stats_mediasite / (int)$this->presentations  * 100;
+        }
         $this->stats_mediasite_folders = MediasiteFolder::count();
         //Cattura
         $this->stats_cattura = Video::where('origin', 'cattura')->count();
-        $this->percent_cattura = (int)$this->stats_cattura / (int)$this->presentations * 100;
+        if((int)$this->presentations) {
+            $this->percent_cattura = (int)$this->stats_cattura / (int)$this->presentations * 100;
+        }
+
         //Manual
         $this->stats_manual = Video::where('origin', 'manual')->count();
-        $this->percent_manual = (int)$this->stats_manual / (int)$this->presentations * 100;
+        if((int)$this->presentations) {
+            $this->percent_manual = (int)$this->stats_manual / (int)$this->presentations * 100;
+        }
+
         //Uploads
         $this->total_uploads = ManualPresentation::all()->count();
         $this->init_uploads = ManualPresentation::where('status', 'init')->count();
@@ -123,13 +131,25 @@ class AdminDashboard extends Component
         //Courses
         $this->total_courses = Course::all()->count();
         $this->courses_2022 = Course::where('year', 2022)->count();
-        $this->percent_courses_2022 = (int)$this->courses_2022 / (int)$this->total_courses * 100;
+        if((int)$this->total_courses) {
+            $this->percent_courses_2022 = (int)$this->courses_2022 / (int)$this->total_courses * 100;
+        }
+
         $this->courses_2021 = Course::where('year', 2021)->count();
-        $this->percent_courses_2021 = (int)$this->courses_2021 / (int)$this->total_courses * 100;
+        if((int)$this->total_courses) {
+            $this->percent_courses_2021 = (int)$this->courses_2021 / (int)$this->total_courses * 100;
+        }
+
         $this->courses_2020 = Course::where('year', 2020)->count();
-        $this->percent_courses_2020 = (int)$this->courses_2020 / (int)$this->total_courses * 100;
+        if((int)$this->total_courses) {
+            $this->percent_courses_2020 = (int)$this->courses_2020 / (int)$this->total_courses * 100;
+        }
+
         $this->courses_2019 = Course::where('year', 2019)->count();
-        $this->percent_courses_2019 = (int)$this->courses_2019 / (int)$this->total_courses * 100;
+        if((int)$this->total_courses) {
+            $this->percent_courses_2019 = (int)$this->courses_2019 / (int)$this->total_courses * 100;
+        }
+
 
     }
     private function checkJsonFiles()
