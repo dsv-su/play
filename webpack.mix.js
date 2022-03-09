@@ -16,7 +16,8 @@ mix.styles([
     'resources/css/upload.css',
     'node_modules/bootstrap-select/dist/css/bootstrap-select.min.css',
     'node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css',
-    'node_modules/@fortawesome/fontawesome-free/css/all.css'
+    'node_modules/@fortawesome/fontawesome-free/css/all.css',
+    'node_modules/daterangepicker/daterangepicker.css'
 ], 'public/css/dsvplay.css');
 mix.copy('node_modules/@fortawesome/fontawesome-free/webfonts/*', 'public/webfonts/');
 mix.scripts([
@@ -28,6 +29,8 @@ mix.scripts([
     'node_modules/corejs-typeahead/dist/typeahead.bundle.js',
     'node_modules/bootstrap-select/dist/js/bootstrap-select.min.js',
     'node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js',
-    'resources/js/spinner.js'
+    'resources/js/spinner.js',
+    'node_modules/daterangepicker/moment.min.js',
+    'node_modules/daterangepicker/daterangepicker.js'
 ], 'public/js/dsvplay.js');
 

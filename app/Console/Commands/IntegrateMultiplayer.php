@@ -20,7 +20,7 @@ class IntegrateMultiplayer extends Command
      *
      * @var string
      */
-    protected $description = 'This artisan command is used to integrate the multiplayer in the play platform';
+    protected $description = 'Integrate the multiplayer in the play platform';
 
     /**
      * Create a new command instance.
@@ -51,17 +51,7 @@ class IntegrateMultiplayer extends Command
         $style = '"./css/player/style.css?a"';
         $player = '"./js/player.js"';
 
-        $head = '
-                <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="initial-scale=1.0">
-                <meta http-equiv="X-UA-Compatible" content="ie=edge">
-                <link rel="shortcut icon" href="{{ asset('.$favicon.') }}">
-                <link rel="stylesheet" href="{{ asset('.$style.')}}">
-                <title></title>
-                <script src="{{asset('.$player.')}}" defer></script>
-                </head>
-                ';
+        $head = '<head><meta charset="UTF-8"><meta name="viewport" content="initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="ie=edge"><link rel="shortcut icon" href="{{ asset('.$favicon.') }}"><link rel="stylesheet" href="{{ asset('.$style.')}}"><title></title><script src="{{asset('.$player.')}}" defer></script></head>';
 
         //Finds <head>
         $regex = '(<head>([\s\S]*)<\/head>)';

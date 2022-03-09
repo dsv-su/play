@@ -1,8 +1,5 @@
 @extends('layouts.suplay')
 @section('content')
-    <script type="text/javascript" src="{{asset('daterangepicker/moment.min.js')}}"></script>
-    <script type="text/javascript" src="{{asset('daterangepicker/daterangepicker.min.js')}}"></script>
-    <link rel="stylesheet" type="text/css" href="{{asset('daterangepicker/daterangepicker.css')}}"/>
     <form action="{{ route('mediasiteCourseDownload') }}" method="POST">
         @csrf
         @method('POST')
