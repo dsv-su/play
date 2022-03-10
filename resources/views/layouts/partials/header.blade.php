@@ -467,4 +467,4 @@
         </nav>
     </div>
 </header>
-
+@include('layouts.partials.redirect_play2')

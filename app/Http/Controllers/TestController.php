@@ -11,7 +11,6 @@ class TestController extends Controller
 {
     public function test()
     {
-
     }
 
     private function updateOldCourses($courses):void
