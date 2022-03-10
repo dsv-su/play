@@ -147,9 +147,6 @@ class PlayController extends Controller
         return view('home.index', $data);
     }
 
-    /**
-     * @return Application|Factory|View
-     */
     public function myVideos()
     {
         //--> This should be refactored
