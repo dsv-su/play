@@ -187,13 +187,13 @@
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     @switch($locale)
                                         @case('eng')
-                                        <img src="{{asset('images/globallinks-lang-en.gif')}}"> English
+                                        <img src="{{asset('images/globallinks-lang-en.gif')}}" alt="English"> English
                                         @break
                                         @case('swe')
-                                        <img src="{{asset('images/globallinks-lang-sv.gif')}}"> Svenska
+                                        <img src="{{asset('images/globallinks-lang-sv.gif')}}" alt="Swedish"> Svenska
                                         @break
                                         @default
-                                        <img src="{{asset('images/globallinks-lang-en.gif')}}"> English
+                                        <img src="{{asset('images/globallinks-lang-en.gif')}}" alt="English"> English
                                     @endswitch
                                     <span class="caret"></span>
                                 </a>
