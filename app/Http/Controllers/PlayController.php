@@ -948,4 +948,13 @@ class PlayController extends Controller
             ]);
         }
     }
+
+    public function listCourses() {
+        $courses = Course::all();
+        dd($courses);
+    }
+
+    public function listTerms() {
+
+    }
 }

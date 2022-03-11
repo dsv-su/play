@@ -22,7 +22,7 @@
                                     <span>{{ __("Here you can navigate among presentations from your teaching activities by semester, course or category.") }}</span>
                                 </li>
                                 <li class="mega-menu-collapse-col col">
-                                    <a class="nav-link d-flex align-items-center nav-link__border-bottom" href="">
+                                    <a class="nav-link d-flex align-items-center nav-link__border-bottom" href="/semester/all">
                                         <span class="fas fa-layer-group fa-icon-border mr-2" aria-hidden="true"></span>
                                         <span class="d-inline-block first-letter-capitalized level-2">@lang('lang.semester')</span>
                                     </a>
@@ -36,7 +36,7 @@
                                     @endif
                                 </li>
                                 <li class="mega-menu-collapse-col col">
-                                    <a class="nav-link d-flex align-items-center nav-link__border-bottom" href="">
+                                    <a class="nav-link d-flex align-items-center nav-link__border-bottom" href="/course/all">
                                         <span class="fas fa-address-card fa-icon-border mr-2" aria-hidden="true"></span>
                                         <span class="d-inline-block first-letter-capitalized level-2">@lang('lang.course')</span>
                                     </a>
@@ -243,7 +243,7 @@
                                     <ul class="navbar-nav top main-menu not-list-styled">
                                         <li class="nav-item">
                                             <a class="nav-link text-uppercase d-inline-block pr-0"
-                                               href="#">
+                                               href="/semester/all">
                                                 <span class="fas fa-layer-group fa-icon-border mr-2"
                                                       aria-hidden="true"></span>
                                                 <span class="d-inline-block first-letter-capitalized level-3">@lang('lang.semester')</span>
@@ -282,7 +282,7 @@
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link text-uppercase d-inline-block pr-0"
-                                               href="#">
+                                               href="/course/all">
                                                 <span class="fas fa-address-card fa-icon-border mr-2"
                                                       aria-hidden="true"></span>
                                                 <span class="d-inline-block text-capitalize level-2">@lang('lang.course')</span>
@@ -369,7 +369,7 @@
 
                                         <li class="nav-item">
                                             <a class="nav-link text-capitalize d-inline-block pr-0 preventdefault"
-                                               href="#">
+                                               href="">
                                                 <i class="fas fa-edit fa-icon-border mr-2"></i> @lang('lang.manage')
                                             </a>
                                             <div class="float-right pt-1 pr-2">
@@ -411,7 +411,7 @@
                                         @if(app()->make('play_role') == 'Administrator')
                                             <li class="nav-item" style="">
                                                 <a class="nav-link text-capitalize d-inline-block pr-0 preventdefault"
-                                                   href="#">
+                                                   href="">
                                                     <i class="fas fa-edit fa-icon-border mr-2"></i> @lang('lang.admin')
                                                 </a>
                                                 <div class="float-right pt-1 pr-2">
