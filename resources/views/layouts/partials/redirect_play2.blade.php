@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row no-gutters">
             <div class="col d-flex align-items-center">
-                <i class="fa-solid fa-share-from-square"></i>
+                <div class="d-none d-sm-block"><i class="fa-solid fa-share-from-square"></i></div>
                 <div class="webb2021-article p-0 p-lg-2">
                     <a href="https://play2.dsv.su.se">{{__("If you are missing presentations from before 20th of March, the old site is available here.")}}</a>
                 </div>
