@@ -18,6 +18,7 @@ use App\VideoStat;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 use Storage;
@@ -109,7 +110,12 @@ class ManualDownloadController extends Controller
 
             return Storage::disk('public')->download($path . $video->title . '.zip');
         } else {
-            return redirect('/')->with(['message' => 'Ett fel har inträffat. Error: File not found!', 'alert' => 'alert-danger']);
+            if (App::isLocale('swe')) {
+                $message = 'Ett fel har inträffat.';
+            } else {
+                $message = 'Error: File not found!';
+            }
+            return redirect('/')->with(['message' => $message, 'alert' => 'alert-danger']);
         }
     }
 

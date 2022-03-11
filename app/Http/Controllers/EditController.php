@@ -18,6 +18,7 @@ use App\VideoPresenter;
 use App\VideoTag;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 
 class EditController extends Controller
@@ -212,7 +213,11 @@ class EditController extends Controller
         }
 
         Cache::flush();
-
-        return redirect()->route('manage')->with('success', 'Presentation successfully updated');
+        if (App::isLocale('swe')) {
+            $message = 'Presentationen har uppdaterats';
+        } else {
+            $message = 'Presentation successfully updated';
+        }
+        return redirect()->route('manage')->with('success', $message);
     }
 }

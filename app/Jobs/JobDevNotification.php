@@ -37,7 +37,7 @@ class JobDevNotification implements ShouldQueue
      */
     public function handle() {
         // Send Mail
-        //Mail::to("ryan@dsv.su.se")->send(new ErrorAlert($this->exception));
-        //Mail::to("psokolov@dsv.su.se")->send(new ErrorAlert($this->exception));
+        Mail::to("ryan@dsv.su.se")->send(new ErrorAlert($this->exception));
+        Mail::to("psokolov@dsv.su.se")->send(new ErrorAlert($this->exception));
     }
 }

@@ -5,6 +5,7 @@ namespace App\Services\Notify;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
 class PlayStoreNotify extends Model
@@ -91,7 +92,14 @@ class PlayStoreNotify extends Model
             //Change manualupdate status
             $this->presentation->status = 'sent';
             $this->presentation->save();
-            return redirect('/')->with(['message' => 'Presentationen har redigerats och laddats upp!']);
+
+            if (App::isLocale('swe')) {
+                $message = 'Bearbetar presentationen';
+            } else {
+                $message = 'Processing the Presentation';
+            }
+
+            return redirect('/')->with(['message' => $message]);
         } else {
             //Change manualupdate status
             $this->presentation->status = 'failed';
