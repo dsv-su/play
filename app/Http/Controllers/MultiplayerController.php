@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Filters\VisibilityFilter;
 use App\Services\TicketHandler\TicketPermissionHandler;
 use App\Stream;
 use App\StreamResolution;
@@ -97,8 +98,10 @@ class MultiplayerController extends Controller
     {
         //Generate a playlist of videos associated with the course
         $videos = VideoCourse::where('course_id', $id)->latest()->pluck('video_id')->toArray();
+        
+        $visibility = app(VisibilityFilter::class);
 
-        $playlist = Video::whereIn('id', $videos)->orderBy('creation')->get();
+        $playlist = $visibility->filter(Video::whereIn('id', $videos)->orderBy('creation')->get());
 
         //Build json playlist
         $json = Collection::make([
