@@ -714,6 +714,7 @@ class PlayController extends Controller
                                 return $t['StreamType'] == $stream['StreamType'];
                             });
                             $metadata['sources'][] = array(
+                                'name' => $stream['StreamType'],
                                 'video' => $streamurl,
                                 'poster' => array_pop($thumb)['ThumbnailUrl'],
                                 'playAudio' => !$key
