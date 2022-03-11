@@ -107,8 +107,7 @@ class PlayController extends Controller
             //All courses (tab 3)
             $data['latest'] = $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->get());
 
-        }
-        //If user is Employee
+        } //If user is Employee
         elseif (App::environment('production') and (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Staff')) {
             $courses = $daisy->getActiveEmployeeCourses(app()->make('play_username'));
 
@@ -517,7 +516,7 @@ class PlayController extends Controller
         $subfolders = array();
         $this->getSubFolders(MediasiteFolder::where('mediasite_id', $folderid)->firstOrFail(), MediasiteFolder::all(), $subfolders);
         foreach ($subfolders as $subfolder) {
-            $this->processDownload('user', $subfolder->mediasite_id, null, $start , $end);
+            $this->processDownload('user', $subfolder->mediasite_id, null, $start, $end);
         }
 
         return redirect()->route('home');
@@ -597,6 +596,11 @@ class PlayController extends Controller
             $presentationid = $presentation->id;
             $mediasite_presentation = json_decode($mediasite->get($url . "/Presentations('$presentationid')?\$select=full")->getBody(), true);
 
+            // First check if it's already sent to play-store or even processed
+            if (MediasitePresentation::where('id', $presentationid)->where('status', 'sent')->count() || Video::where('origin', 'mediasite')->where('notification_id', $presentationid)->count()) {
+                continue;
+            }
+
             if ($start || $end) {
                 $recorded = strtotime($mediasite_presentation['RecordDate']);
                 if ($recorded < $start->timestamp || $recorded > $end->timestamp) {
@@ -636,6 +640,11 @@ class PlayController extends Controller
                 try {
                     $presentationid = $presentation->id;
                     $mediasite_presentation = json_decode($mediasite->get($url . "/Presentations('$presentationid')?\$select=full")->getBody(), true);
+
+                    // First check if it's already sent to play-store or even processed
+                    if (MediasitePresentation::where('id', $presentationid)->where('status', 'sent')->count() || Video::where('origin', 'mediasite')->where('notification_id', $presentationid)->count()) {
+                        continue;
+                    }
 
                     if ($start || $end) {
                         $recorded = strtotime($mediasite_presentation['RecordDate']);
@@ -879,7 +888,7 @@ class PlayController extends Controller
 
         //Send Delete notification -> when this is active
         $notify = new PlayStoreNotify($video);
-        if($notify->sendDelete()) {
+        if ($notify->sendDelete()) {
             return Response()->json(['message' => 'Presentationen har raderats']);
         } else {
             return Response()->json(['message' => 'Play-Store error']);
