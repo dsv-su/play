@@ -98,7 +98,8 @@ class MultiplayerController extends Controller
         //Generate a playlist of videos associated with the course
         $videos = VideoCourse::where('course_id', $id)->latest()->pluck('video_id')->toArray();
 
-        $playlist = Video::whereIn('id', $videos)->latest()->get();
+        $playlist = Video::whereIn('id', $videos)->orderBy('creation')->get();
+
         //Build json playlist
         $json = Collection::make([
             'title' => 'My Playlist'
