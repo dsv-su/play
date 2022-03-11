@@ -1,5 +1,6 @@
 <script>
     $(document).ajaxStop(function() {
+        /*{{--}}
         $('a.delete').on('click', function (e) {
             e.preventDefault();
             $.ajaxSetup({
@@ -26,6 +27,7 @@
                 }
             });
         });
+        {{--}}*/
     });
     $(document).ready(function () {
         $('.preventdefault').on('click', function(e) {
