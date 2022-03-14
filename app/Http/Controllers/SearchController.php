@@ -40,6 +40,22 @@ class SearchController extends Controller
      */
     public function viewBySemester(VisibilityFilter $visibility, $semester)
     {
+        if ($semester == 'all') {
+            $courses = Course::all()->sortBy('created_at');
+            $terms = [];
+            foreach ($courses as $course) {
+                if (!in_array($course->semester . $course->year, $terms)) {
+                    if ($course->semester == 'VT') {
+                        $key = $course->year . '1';
+                    } else {
+                        $key = $course->year . '2';
+                    }
+                    $terms[$key] = $course->semester . $course->year;
+                }
+            }
+            krsort($terms);
+            return view('home.allterms', ['terms' => $terms]);
+        }
         $term = substr($semester, 0, 2);
         $year = substr($semester, 2, 4);
         $videos = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($term, $year) {
@@ -208,6 +224,10 @@ class SearchController extends Controller
      */
     public function viewByCourse(VisibilityFilter $visibility, $courseid)
     {
+        if ($courseid == 'all') {
+            $courses = Course::all()->unique('designation')->sortBy('designation');
+            return view('home.allcourses', ['courses' => $courses]);
+        }
         $data['course'] = Course::find($courseid);
         $data['latest'] = Course::find($courseid)->videos()->filter(function ($video) {
             return $video;

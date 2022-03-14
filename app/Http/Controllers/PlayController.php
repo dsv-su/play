@@ -714,6 +714,7 @@ class PlayController extends Controller
                                 return $t['StreamType'] == $stream['StreamType'];
                             });
                             $metadata['sources'][] = array(
+                                'name' => $stream['StreamType'],
                                 'video' => $streamurl,
                                 'poster' => array_pop($thumb)['ThumbnailUrl'],
                                 'playAudio' => !$key
@@ -946,5 +947,14 @@ class PlayController extends Controller
                 'message' => 'Error.',
             ]);
         }
+    }
+
+    public function listCourses() {
+        $courses = Course::all();
+        dd($courses);
+    }
+
+    public function listTerms() {
+
     }
 }
