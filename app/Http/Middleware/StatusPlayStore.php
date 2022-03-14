@@ -18,18 +18,23 @@ class StatusPlayStore
     public function handle(Request $request, Closure $next)
     {
         $store = new CheckPlayStoreApi();
-        $check = $store->call('status/daemon');
-        if($check['running'] == true) {
-            app()->bind('store_status', function() {
-                return 'on';
-            });
+        $check = $store->call('status/daemon2');
+        if(is_array($check)) {
+            if ($check['running'] == true) {
+                app()->bind('store_status', function () {
+                    return 'on';
+                });
 
+            } else {
+                app()->bind('store_status', function () {
+                    return 'off';
+                });
+            }
+        } else {
+            abort(512);
         }
-        else {
-            app()->bind('store_status', function() {
-                return 'off';
-            });
-        }
+
+
 
         return $next($request);
     }
