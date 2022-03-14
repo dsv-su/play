@@ -18,7 +18,7 @@ class StatusPlayStore
     public function handle(Request $request, Closure $next)
     {
         $store = new CheckPlayStoreApi();
-        $check = $store->call('status/daemon2');
+        $check = $store->call('status/daemon');
         if(is_array($check)) {
             if ($check['running'] == true) {
                 app()->bind('store_status', function () {
