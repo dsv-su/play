@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Lang;
 class SearchController extends Controller
 {
     /** viewBy% and filterBy% methods for viewing presentations that belong to certain entity
-     (course designation, term, category, student) and filtering the output */
+     * (course designation, term, category, student) and filtering the output */
 
     /** Show presentations that belong to the given term
      * @param VisibilityFilter $visibility
@@ -44,16 +44,18 @@ class SearchController extends Controller
             $courses = Course::all()->sortBy('created_at');
             $terms = [];
             foreach ($courses as $course) {
-                if (!in_array($course->semester . $course->year, $terms)) {
-                    if ($course->semester == 'VT') {
-                        $key = $course->year . '1';
-                    } else {
-                        $key = $course->year . '2';
+                if ($course->videos()->count()) {
+                    if (!isset($terms[$course->year])) {
+                        $terms[$course->year] = [];
                     }
-                    $terms[$key] = $course->semester . $course->year;
+                    if (!isset($terms[$course->year][$course->semester])) {
+                        $terms[$course->year][$course->semester] = 0;
+                    }
+                    $terms[$course->year][$course->semester] += 1;
                 }
             }
             krsort($terms);
+
             return view('home.allterms', ['terms' => $terms]);
         }
         $term = substr($semester, 0, 2);
@@ -186,7 +188,8 @@ class SearchController extends Controller
      * @param Request $request
      * @return void
      */
-    public function filterByCategory($category, Request $request) {
+    public function filterByCategory($category, Request $request)
+    {
         // Perform filtering on /category presentations
     }
 
@@ -213,7 +216,8 @@ class SearchController extends Controller
      * @param Request $request
      * @return void
      */
-    public function filterByStudent($username, Request $request) {
+    public function filterByStudent($username, Request $request)
+    {
         // Perform filtering on /student presentations
     }
 
@@ -226,6 +230,28 @@ class SearchController extends Controller
     {
         if ($courseid == 'all') {
             $courses = Course::all()->unique('designation')->sortBy('designation');
+            foreach ($courses as $ckey => $course) {
+                $instances = Course::where('designation', $course->designation)->orderByDesc('created_at')->get();
+                $terms = [];
+                foreach ($instances as $ikey => $instance) {
+                    if ($instance->videos()->count()) {
+                        if ($instance->semester == 'VT') {
+                            $key = $instance->year . '1';
+                        } else {
+                            $key = $instance->year . '2';
+                        }
+                        $terms[$key] = $instance->semester . $instance->year;
+                    }
+                    $course->name_en = $instance->name_en;
+                    $course->name = $instance->name;
+                }
+                if (empty($terms)) {
+                    unset($courses[$ckey]);
+                } else {
+                    krsort($terms);
+                    $course->terms = $terms;
+                }
+            }
             return view('home.allcourses', ['courses' => $courses]);
         }
         $data['course'] = Course::find($courseid);

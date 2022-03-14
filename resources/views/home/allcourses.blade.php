@@ -16,12 +16,15 @@
     </div>
     <div class="container">
         @foreach ($courses as $course)
-            <h3 class="row no-gutters mt-4" style="line-height: 1.5em;">
+            <h3 class="col no-gutters mt-4" style="line-height: 1.5em;">
                 <a class="link"
                    role="button" aria-expanded="false" href="/designation/{{$course->designation}}">
-                    <i class="fa mr-2"></i>@if(Lang::locale() == 'swe'){{$course->designation . ' — ' .$course->name}}
+                    @if(Lang::locale() == 'swe'){{$course->designation . ' — ' .$course->name}}
                     @else{{$course->designation . ' — ' .$course->name_en}}
                     @endif</a>
+                @foreach($course->terms as $term)
+                    <span class="badge badge-light ml-2 mb-2">{{$term}}</span>
+                @endforeach
             </h3>
         @endforeach
     </div>
