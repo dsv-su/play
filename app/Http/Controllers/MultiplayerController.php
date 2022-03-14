@@ -98,7 +98,7 @@ class MultiplayerController extends Controller
     {
         //Generate a playlist of videos associated with the course
         $videos = VideoCourse::where('course_id', $id)->latest()->pluck('video_id')->toArray();
-        
+
         $visibility = app(VisibilityFilter::class);
 
         $playlist = $visibility->filter(Video::whereIn('id', $videos)->orderBy('creation')->get());

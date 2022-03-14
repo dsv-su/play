@@ -13,7 +13,7 @@
                     </div>
                     <div class="col-xl-3 col-sm-6 my-2">
                         @if ($custom)
-                            <img src="{{ $custom->temporaryUrl() }}" class="w-100">
+                            <img src="{{ $custom->temporaryUrl() }}" class="w-100" style="width: 100%; height: 150px; object-fit: contain; background-repeat: no-repeat; background-position: 50% 50%;">
                         @else
                             <div class="card" style="border: .5vh solid blue;border-radius: 2vh;margin: auto">
                                 <img src="{{asset('images/dsvplay.png')}}" >
