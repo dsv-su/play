@@ -20,7 +20,7 @@
                                  style="width: 100%; height: 150px; object-fit: contain; background-repeat: no-repeat; background-position: 50% 50%;">
                         @else
                             <div class="card d-inline-block mx-auto justify-content-center"
-                                 style="border: .5vh solid blue;border-radius: 2vh;margin: auto">
+                                 style="border: .2vh solid blue;border-radius: 8px;margin: auto">
                                 <img src="{{asset('images/dsvplay.png')}}">
                             </div>
 
