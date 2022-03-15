@@ -64,16 +64,10 @@ class SearchController extends Controller
             return $query->where('year', $year)->where('semester', $term);
         })->get();
 
-        // Visibility
-        $videos = $visibility->filter($videos);
-
-        // Extract filters
-        $courses = $this->extractCourses($videos);
-        $presenters = $this->extractPresenters($videos);
-        $tags = $this->extractTags($videos);
-
-        // Group videos by a course
-        $videos = $this->groupVideos($videos);
+        $filters = $this->handleUrlParams();
+        list ($html, $courses, $terms, $presenters, $tags, $videos) = $this->performFiltering(
+            $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
+        );
 
         // Remove irrelevant terms that could be added because of multiple course associations
         $videos = $this->removeIrrelevantTerms($videos, $term, $year);
@@ -113,27 +107,21 @@ class SearchController extends Controller
      * @param $designation
      * @return Application|Factory|View
      */
-    public function viewByDesignation(VisibilityFilter $visibility, $designation)
+    public function viewByDesignation(VisibilityFilter $visibility, $designation, $presenter = null, $term = null, $tag = null)
     {
         $videos = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($designation) {
             return $query->where('designation', $designation);
         })->orderBy('creation', 'desc')->get();
 
-        // Visibility
-        $videos = $visibility->filter($videos);
-
-        // Extract filters
-        $terms = $this->extractTerms($videos);
-        $presenters = $this->extractPresenters($videos);
-        $tags = $this->extractTags($videos);
-
-        // Group videos by a course
-        $videos = $this->groupVideos($videos);
+        $filters = $this->handleUrlParams();
+        list ($html, $courses, $terms, $presenters, $tags, $videos) = $this->performFiltering(
+            $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
+        );
 
         // Remove irrelevant course designations that could be added because of multiple course associations
         $videos = $this->removeIrrelevantDesignations($videos, $designation);
 
-        return view('home.navigator', compact('designation', 'videos', 'terms', 'presenters', 'tags'));
+        return view('home.navigator', compact('designation', 'videos', 'terms', 'presenters', 'tags', 'filters'));
     }
 
     /** Filter presentations that belong to a given course designtation by criteria provided by a user form
@@ -274,16 +262,10 @@ class SearchController extends Controller
             return $query->where('id', $tagid);
         })->orderBy('creation', 'desc')->get();
 
-        // Visibility
-        $videos = $visibility->filter($videos);
-
-        // Extract filters
-        $terms = $this->extractTerms($videos);
-        $presenters = $this->extractPresenters($videos);
-        $courses = $this->extractCourses($videos);
-
-        // Group videos by a course
-        $videos = $this->groupVideos($videos);
+        $filters = $this->handleUrlParams();
+        list ($html, $courses, $terms, $presenters, $tags, $videos) = $this->performFiltering(
+            $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
+        );
 
         return view('home.navigator', compact('tag', 'videos', 'terms', 'presenters', 'courses'));
     }
@@ -326,16 +308,11 @@ class SearchController extends Controller
             return $query->where('id', $presenter->id);
         })->orderBy('creation', 'desc')->get();
 
-        //Visibility
-        $videos = $visibility->filter($videos);
+        $filters = $this->handleUrlParams();
 
-        // Extract filters
-        $terms = $this->extractTerms($videos);
-        $tags = $this->extractTags($videos);
-        $courses = $this->extractCourses($videos);
-
-        // Group videos by a course
-        $videos = $this->groupVideos($videos);
+        list ($html, $courses, $terms, $presenters, $tags, $videos) = $this->performFiltering(
+            $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
+        );
 
         return view('home.navigator', compact('presenter', 'videos', 'terms', 'tags', 'courses'));
     }
@@ -355,7 +332,7 @@ class SearchController extends Controller
         $semesters = request('semester') ? explode(',', request('semester')) : null;
         $tags = request('tag') ? explode(',', request('tag')) : null;
         list ($html, $videocourses, $videoterms, $videopresenters, $videotags, $videos) = $this->performFiltering(
-            $videos, $designations, $semesters, null, $tags
+            $videos, $designations, $semesters, $tags, null
         );
 
         $html = view('home.courselist', compact('videos'))->render();
@@ -706,5 +683,18 @@ class SearchController extends Controller
         $html = view('home.courselist', compact('videos', 'manage', 'coursesetlist', 'individual_permissions', 'playback_permissions'))->render();
 
         return array($html, $videocourses, $videoterms, $videopresenters, $videotags, $videos);
+    }
+
+    /** Reads GET parameters from the url.
+     * @return null[]
+     */
+    public function handleUrlParams(): array
+    {
+        return [
+            'courses' => request('course') ? explode(',', request('presenter')) : null,
+            'presenters' => request('presenter') ? explode(',', request('presenter')) : null,
+            'terms' => request('semester') ? explode(',', request('semester')) : null,
+            'tags' => request('tag') ? explode(',', request('tag')) : null
+        ];
     }
 }
