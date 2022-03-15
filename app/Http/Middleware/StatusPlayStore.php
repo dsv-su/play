@@ -31,7 +31,9 @@ class StatusPlayStore
                 });
             }
         } else {
-            abort(512);
+            app()->bind('store_status', function () {
+                return 'off';
+            });
         }
 
 
