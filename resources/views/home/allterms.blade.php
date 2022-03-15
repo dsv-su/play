@@ -15,11 +15,13 @@
         </div> <!-- row no-gutters -->
     </div>
     <div class="container">
-        @foreach ($terms as $key => $term)
-            <h3 class="row no-gutters mt-4" style="line-height: 1.5em;">
-                <a class="link"
-                   role="button" aria-expanded="false" href="/semester/{{$term}}">
-                    <i class="fa mr-2"></i>{{$term}}</a>
+        @foreach ($terms as $year => $term)
+            <h3 class="col mt-4" style="line-height: 1.5em;">
+                @foreach($term as $key => $courses)
+                    <a class="link"
+                       role="button" aria-expanded="false" href="/semester/{{$key.$year}}">{{$key.$year}}</a><span
+                            class="badge badge-light ml-2 mb-2 mr-3">{{$courses}} {{__('courses')}}</span>
+                @endforeach
             </h3>
         @endforeach
     </div>
