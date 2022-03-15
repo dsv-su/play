@@ -1,5 +1,9 @@
 <!doctype html>
+@if(app()->getLocale() == 'swe')
+<html lang="sv">
+@else
 <html lang="en">
+@endif
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
