@@ -13,7 +13,7 @@
                         @elseif($designation ?? '')
                             <span class="fas fa-address-card fa-icon-border mr-2" aria-hidden="true"></span>
                             @lang('lang.course'):
-                            <i>{{\App\Course::where('designation', $designation)->latest()->first()->name}}</i>
+                            <i>{{(Lang::locale() == 'swe') ? \App\Course::where('designation', $designation)->latest()->first()->name : \App\Course::where('designation', $designation)->latest()->first()->name_en}}</i>
                         @elseif($category ?? '')
                             <span class="fas fa-address-card fa-icon-border mr-2" aria-hidden="true"></span>
                             @lang('lang.category'): <i>{{$category}}</i>
@@ -35,12 +35,13 @@
             @if (isset($presenters) || isset($terms) || isset($tags) || isset($courses))
                 <form class="form-inline mx-3">
                     <label class="col-form-label mr-1 font-weight-light">{{__('Filter by')}}: </label>
-                    @if ( isset($courses))
+                    @if (isset($courses))
                         <select name="course" @if (empty($courses)) disabled
                                 @endif class="form-control mx-1 selectpicker"
-                                data-none-selected-text="{{ __('Course') }}" data-live-search="true" multiple style="width: 400px">
+                                data-none-selected-text="{{ __('Course') }}" data-live-search="true" multiple
+                                style="width: 400px">
                             @foreach($courses as $designation => $name)
-                                <option value="{{$designation}}">{{$name}} @if ($designation != 'nocourse')
+                                <option value="{{$designation}}" @if (isset($filters['courses']) && in_array($designation, $filters['courses'])) selected @endif>{{$name}} @if ($designation != 'nocourse')
                                         ({{$designation}})@endif</option>
                             @endforeach
                         </select>
@@ -50,25 +51,27 @@
                                 data-none-selected-text="{{ __('Presenter') }}" data-live-search="true" multiple
                                 style="width: 400px;">
                             @foreach($presenters as $username => $name)
-                                <option value="{{$username}}">{{$name}}</option>
+                                <option value="{{$username}}" @if (isset($filters['presenters']) && in_array($username, $filters['presenters'])) selected @endif>{{$name}}</option>
                             @endforeach
                         </select>
                     @endif
                     @if (isset($terms))
-                        <select name="semester" class="form-control mx-1 selectpicker" data-none-selected-text="{{ __('Term') }}"
+                        <select name="semester" class="form-control mx-1 selectpicker"
+                                data-none-selected-text="{{ __('Term') }}"
                                 data-live-search="true" multiple
                                 style="width: 200px">
                             @foreach($terms as $term)
-                                <option value="{{$term}}">{{$term}}</option>
+                                <option value="{{$term}}" @if (isset($filters['terms']) && in_array($term, $filters['terms'])) selected @endif>{{$term}}</option>
                             @endforeach
                         </select>
                     @endif
                     @if (isset($tags))
                         <select name="tag" @if (empty($tags)) disabled
                                 @endif class="form-control mx-1 selectpicker"
-                                data-none-selected-text="{{ __('Tag') }}" data-live-search="true" multiple style="width: 200px;">
+                                data-none-selected-text="{{ __('Tag') }}" data-live-search="true" multiple
+                                style="width: 200px;">
                             @foreach($tags as $tag)
-                                <option value="{{$tag}}">{{$tag}}</option>
+                                <option value="{{$tag}}" @if (isset($filters['tags']) && in_array($tag, $filters['tags'])) selected @endif>{{$tag}}</option>
                             @endforeach
                         </select>
                     @endif
@@ -107,11 +110,34 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
+            var course = $('select[name="course"]').val();
+            var presenter = $('select[name="presenter"]').val();
+            var semester = $('select[name="semester"]').val();
+            var tag = $('select[name="tag"]').val();
+            var url = '?';
+
+            if (course && course.length) {
+                url += '&course='+course;
+            }
+            if (presenter && presenter.length) {
+                url += '&presenter='+presenter;
+            }
+            if (tag && tag.length) {
+                url += '&tag='+tag;
+            }
+            if (semester && semester.length) {
+                url += '&semester='+semester;
+            }
+
             let formData = new FormData();
             formData.append("course", $('select[name="course"]').val());
             formData.append("presenter", $('select[name="presenter"]').val());
             formData.append("semester", $('select[name="semester"]').val());
             formData.append("tag", $('select[name="tag"]').val());
+
+            window.history.replaceState(null, null, url);
+
             $.ajax({
                 type: 'POST',
                 url: "/{{ Request::path()}}",

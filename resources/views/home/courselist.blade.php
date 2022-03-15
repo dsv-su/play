@@ -10,6 +10,7 @@
             @else
                 {{\App\Course::find($key) ? \App\Course::find($key)->designation . ' ' . \App\Course::find($key)->semester.\App\Course::find($key)->year . ' — ' . \App\Course::find($key)->name_en : 'Uncategorized'}}
             @endif</a>
+        <div class="d-inline-block">
         <span class="badge badge-light ml-2 mb-2" data-toggle="tooltip" title="{{__("Number of presentations")}}">{{count($videocourse)}}</span>
         @if (isset($manage) && $manage && $key)
             @if ($individual_permissions[$key])
@@ -50,6 +51,7 @@
                    href="{{ route('course_edit', $key) }}">{{__("Settings")}} <i class="fas fa-cog"></i></a>
             @endif
         @endif
+        </div>
     </h3>
     <div class="collapse @if ((isset($manage) && $manage) || $videos->first() !== $videocourse) hide @else show @endif"
          id="collapse{{$key}}">
