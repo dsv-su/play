@@ -4,7 +4,7 @@
             <div class="col d-flex align-items-center">
                 <div class="d-none d-sm-block"><i class="fa-solid fa-share-from-square"></i></div>
                 <div class="webb2021-article p-0 p-lg-2">
-                    <a href="https://play2.dsv.su.se">{{__("If you are missing presentations from before 20th of March, the old site is available here. Click here!")}}</a>
+                    <a href="https://play2.dsv.su.se">{{__("If you are missing presentations from before 20th of March, click here to reach the old site!")}}</a>
                 </div>
                 <div class="ml-auto pl-3 h-100 d-flex align-items-center">
                     <button class="button-remove-style js-alert-banner-dismiss-btn pl-4 h-100" type="button" data-dismiss="alert"  aria-label="{{__('Close')}}">
