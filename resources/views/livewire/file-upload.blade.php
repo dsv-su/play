@@ -2,41 +2,38 @@
     <div class="row">
         <div class="col-lg-12 my-2">
             <div class="rounded border shadow p-3 my-2">
-                <div class="row text-left">
+                <h5 class="mb-4">
+                    <i class="fa fa-solid fa-6 fa-icon-border mr-2"></i><label class="form-control-label px-1" for="custom">{{__("Upload custom thumb") }}</label>
+                </h5>
+                <p class="font-1rem px-1">
+                    {{ __("If you want, you can upload a custom image to represent your presentation.") }}
+                </p>
+                <div class="row justify-content-between text-left">
                     <div class="col-6 col-sm-6 my-2 d-flex align-items-center">
                         <div class="my-auto">
-                        <label class="form-control-label px-1"><i
-                                    class="fa-regular fa-image"></i> {{__("Upload custom thumb") }}</label>
-                        <p class="font-1rem px-1">
-                            {{ __("If you want, you can upload a custom image to represent your presentation.") }}
-                        </p>
-                        <input type="file" class="form-control-file" wire:model="custom">
+                        <input type="file" class="form-control-file" wire:model="custom" id="custom">
                         @error('custom') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                     </div>
                     <div class="col-6 col-sm-6 my-2 d-flex align-items-center">
                         @if ($custom)
                             <img src="{{ $custom->temporaryUrl() }}" class="w-100"
-                                 style="width: 100%; height: 150px; object-fit: contain; background-repeat: no-repeat; background-position: 50% 50%;">
+                                 style="width: 100%; height: 150px; object-fit: contain; background-repeat: no-repeat; background-position: 50% 50%;" alt="Custom thumb">
                         @else
                             <div class="card d-inline-block mx-auto justify-content-center"
                                  style="border: .2vh solid blue;border-radius: 8px;margin: auto">
-                                <img src="{{asset('images/dsvplay.png')}}">
+                                <img src="{{asset('images/dsvplay.png')}}" alt="Custom thumb">
                             </div>
-
                         @endif
                     </div>
-
                 </div>
             </div>
-
         </div>
-    </div>
-
-    <div class="row">
         <div class="col-lg-12 my-2">
             <div class="rounded border shadow p-3 my-2">
-                <label class="form-control-label px-1">{{ __("Mediafiles to be uploaded") }}</label>
+                <h5 class="mb-4">
+                    <i class="fa fa-solid fa-7 fa-icon-border mr-2"></i><label class="form-control-label px-1">{{ __("Mediafiles to be uploaded") }}</label>
+                </h5>
                 <p class="font-1rem px-1">
                     {{ __("Up to 4 media files per presentation can be uploaded.") }} {{ __("Each uploaded file should be the same length.") }}
                 </p>
@@ -79,19 +76,6 @@
                         @endif
 
                     </div>
-                    {{--}}
-                    <div class="form-group col-sm-6 flex-column d-flex">
-                        <div class="row text-center mt-3 mt-lg-0">
-                            <div class="col">
-                                <div class="counter">
-                                    <i class="far fa-file-video fa-2x"></i>
-                                    <h2 class="timer count-title count-number" data-to="100" data-speed="1500">{{$uploaded_files}}</h2>
-                                    <p class="count-text ">{{ __("Files") }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {{--}}
                 </div>
                 <div class="row justify-content-between text-left">
                     <div wire:loading.block wire:target="files">@include('layouts.partials.spinner')</div>
