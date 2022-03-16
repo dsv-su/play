@@ -30,21 +30,21 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     Route::get('lang/{lang}', 'LocalizationController@index')->name('language');
 
     //View
-    Route::get('/semester/{semester}', 'SearchController@viewBySemester')->name('semester');
-    Route::post('/semester/{semester}', 'SearchController@filterBySemester')->name('semester.filter');
-    Route::get('/designation/{designation}', 'SearchController@viewByDesignation')->name('designation');
-    Route::post('/designation/{designation}', 'SearchController@filterByDesignation')->name('designations.filter');
+    Route::get('/semester/{semester}', 'SearchController@viewBySemester')->name('semester.presentations');
+    Route::post('/semester/{semester}', 'SearchController@viewBySemester')->name('semester.filter');
+    Route::get('/designation/{designation}', 'SearchController@viewByDesignation')->name('designation.presentations');
+    Route::post('/designation/{designation}', 'SearchController@viewByDesignation')->name('designation.filter');
     Route::get('/category/{category}', 'SearchController@viewByCategory')->name('category');
     Route::get('/student/{username}', 'SearchController@viewByStudent')->name('student');
     Route::get('/course/{course}', 'SearchController@viewByCourse')->name('course');
     Route::get('/tag/{tag}', 'SearchController@viewByTag')->name('tag.presentations');
-    Route::post('/tag/{tag}', 'SearchController@filterByTag')->name('tag.filter');
+    Route::post('/tag/{tag}', 'SearchController@viewByTag')->name('tag.filter');
     Route::get('/presenter/{presenter}', 'SearchController@viewByPresenter')->name('presenter.presentations');
-    Route::post('/presenter/{presenter}', 'SearchController@filterByPresenter')->name('presenter.filter');
+    Route::post('/presenter/{presenter}', 'SearchController@viewByPresenter')->name('presenter.filter');
 
     // Search and autocomplete
     Route::get('/search/{q}', 'SearchController@search')->name('search');
-    Route::post('/search/{q}', 'SearchController@filterSearch')->name('filter_search');
+    Route::post('/search/{q}', 'SearchController@search')->name('filter_search');
     Route::get('/find', 'SearchController@find')->name('find');
 
     //Multiplayer

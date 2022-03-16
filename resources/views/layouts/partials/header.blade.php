@@ -29,7 +29,7 @@
                                     @if($semesters ?? '')
                                         @foreach($semesters as $semester)
                                             <a class="nav-link"
-                                               href="{{route('semester', $semester)}}">{{$semester}}</a>
+                                               href="{{route('semester.presentations', $semester)}}">{{$semester}}</a>
                                         @endforeach
                                     @else
                                         {{ __("No presentations from your registered Semesters were found.") }}
@@ -44,7 +44,7 @@
                                         @if(count($designations)>0)
                                             @foreach($designations as $key => $designation)
                                                 <a class="nav-link"
-                                                   href="{{route('designation', $key)}}">{{$designation}}</a>
+                                                   href="{{route('designation.presentations', $key)}}">{{$designation}}</a>
                                             @endforeach
                                         @else
                                             {{ __("No active courses found.") }}
@@ -266,7 +266,7 @@
                                                             @if($semesters ?? '')
                                                                 @foreach($semesters as $semester)
                                                                     <a class="nav-link"
-                                                                       href="{{route('semester', $semester)}}">
+                                                                       href="{{route('semester.presentations', $semester)}}">
                                                                         <span class="d-inline-block text-capitalize level-2">{{$semester}}</span>
                                                                     </a>
                                                                 @endforeach
@@ -306,7 +306,7 @@
                                                                 @if(count($designations)>0)
                                                                     @foreach($designations as $key => $designation)
                                                                         <a class="nav-link"
-                                                                           href="{{route('designation', $key)}}">
+                                                                           href="{{route('designation.presentations', $key)}}">
                                                                             <span class="d-inline-block text-capitalize level-2">{{$designation}}</span>
                                                                         </a>
                                                                     @endforeach

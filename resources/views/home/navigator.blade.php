@@ -117,24 +117,25 @@
             var tag = $('select[name="tag"]').val();
             var url = '?';
 
+            let formData = new FormData();
+
             if (course && course.length) {
                 url += '&course='+course;
+                formData.append("course", $('select[name="course"]').val());
             }
             if (presenter && presenter.length) {
                 url += '&presenter='+presenter;
+                formData.append("presenter", $('select[name="presenter"]').val());
             }
             if (tag && tag.length) {
                 url += '&tag='+tag;
+                formData.append("tag", $('select[name="tag"]').val());
+
             }
             if (semester && semester.length) {
                 url += '&semester='+semester;
+                formData.append("semester", $('select[name="semester"]').val());
             }
-
-            let formData = new FormData();
-            formData.append("course", $('select[name="course"]').val());
-            formData.append("presenter", $('select[name="presenter"]').val());
-            formData.append("semester", $('select[name="semester"]').val());
-            formData.append("tag", $('select[name="tag"]').val());
 
             window.history.replaceState(null, null, url);
 

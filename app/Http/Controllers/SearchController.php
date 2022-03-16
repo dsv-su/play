@@ -36,9 +36,10 @@ class SearchController extends Controller
     /** Show presentations that belong to the given term
      * @param VisibilityFilter $visibility
      * @param $semester
-     * @return Application|Factory|View
+     * @param Request $request
+     * @return Application|Factory|View|string
      */
-    public function viewBySemester(VisibilityFilter $visibility, $semester)
+    public function viewBySemester(VisibilityFilter $visibility, $semester, Request $request)
     {
         if ($semester == 'all') {
             $courses = Course::all()->sortBy('created_at');
@@ -60,11 +61,13 @@ class SearchController extends Controller
         }
         $term = substr($semester, 0, 2);
         $year = substr($semester, 2, 4);
+
         $videos = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($term, $year) {
             return $query->where('year', $year)->where('semester', $term);
         })->get();
 
         $filters = $this->handleUrlParams();
+
         list ($html, $courses, $terms, $presenters, $tags, $videos) = $this->performFiltering(
             $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
         );
@@ -72,42 +75,20 @@ class SearchController extends Controller
         // Remove irrelevant terms that could be added because of multiple course associations
         $videos = $this->removeIrrelevantTerms($videos, $term, $year);
 
-        return view('home.navigator', compact('term', 'year', 'videos', 'courses', 'presenters', 'tags'));
-    }
-
-    /** Filter presentations from a given term by criteria provided by a user form
-     * @param $semester
-     * @param Request $request
-     * @return string
-     */
-    public function filterBySemester($semester, Request $request): string
-    {
-        $term = substr($semester, 0, 2);
-        $year = substr($semester, 2, 4);
-        $videos = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($term, $year) {
-            return $query->where('year', $year)->where('semester', $term);
-        })->get();
-        $presenters = request('presenter') ? explode(',', request('presenter')) : null;
-        $designations = request('course') ? explode(',', request('course')) : null;
-        $tags = request('tag') ? explode(',', request('tag')) : null;
-
-        list ($html, $videocourses, $videoterms, $videopresenters, $videotags, $filteredvideos) = $this->performFiltering(
-            $videos, $designations, null, $tags, $presenters
-        );
-
-        $videos = $this->removeIrrelevantTerms($filteredvideos, $term, $year);
-
-        $html = view('home.courselist', compact('videos'))->render();
-
-        return $html ?: '<h4 class="col my-3 font-weight-light">No presentations found</h4>';
+        if ($request->isMethod('get')) {
+            return view('home.navigator', compact('term', 'year', 'videos', 'courses', 'presenters', 'tags', 'filters'));
+        } else {
+            return view('home.courselist', compact('videos'))->render();
+        }
     }
 
     /** Show presentations that belong to the given course designation
      * @param VisibilityFilter $visibility
      * @param $designation
-     * @return Application|Factory|View
+     * @param Request $request
+     * @return Application|Factory|View|string
      */
-    public function viewByDesignation(VisibilityFilter $visibility, $designation, $presenter = null, $term = null, $tag = null)
+    public function viewByDesignation(VisibilityFilter $visibility, $designation, Request $request)
     {
         $videos = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($designation) {
             return $query->where('designation', $designation);
@@ -121,33 +102,13 @@ class SearchController extends Controller
         // Remove irrelevant course designations that could be added because of multiple course associations
         $videos = $this->removeIrrelevantDesignations($videos, $designation);
 
-        return view('home.navigator', compact('designation', 'videos', 'terms', 'presenters', 'tags', 'filters'));
+        if ($request->isMethod('get')) {
+            return view('home.navigator', compact('designation', 'videos', 'terms', 'presenters', 'tags', 'filters'));
+        } else {
+            return view('home.courselist', compact('videos'))->render();
+        }
     }
 
-    /** Filter presentations that belong to a given course designtation by criteria provided by a user form
-     * @param $designation
-     * @param Request $request
-     * @return string
-     */
-    public function filterByDesignation($designation, Request $request): string
-    {
-        $presenters = request('presenter') ? explode(',', request('presenter')) : null;
-        $semesters = request('semester') ? explode(',', request('semester')) : null;
-        $tags = request('tag') ? explode(',', request('tag')) : null;
-        $videos = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($designation) {
-            return $query->where('designation', $designation);
-        })->orderBy('creation', 'desc')->get();
-
-        list ($html, $videocourses, $videoterms, $videopresenters, $videotags, $filteredvideos) = $this->performFiltering(
-            $videos, null, $semesters, $tags, $presenters
-        );
-
-        $videos = $this->removeIrrelevantDesignations($filteredvideos, $designation);
-
-        $html = view('home.courselist', compact('videos'))->render();
-
-        return $html ?: '<h4 class="col my-3 font-weight-light">No presentations found</h4>';
-    }
 
     /** Show presentations that belong to the given category (currently not used)
      * This method shall be rewritten if used.
@@ -253,9 +214,10 @@ class SearchController extends Controller
     /**
      * @param VisibilityFilter $visibility
      * @param $tag
-     * @return Application|Factory|View
+     * @param Request $request
+     * @return Application|Factory|View|string
      */
-    public function viewByTag(VisibilityFilter $visibility, $tag)
+    public function viewByTag(VisibilityFilter $visibility, $tag, Request $request)
     {
         $tagid = Tag::where('name', $tag)->firstOrFail()->id;
         $videos = Video::with('video_tag.tag')->whereHas('video_tag.tag', function ($query) use ($tagid) {
@@ -267,38 +229,20 @@ class SearchController extends Controller
             $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
         );
 
-        return view('home.navigator', compact('tag', 'videos', 'terms', 'presenters', 'courses'));
-    }
-
-    /** Filter presentations with a given tag by criteria provided by a user form
-     * @param $tag
-     * @param Request $request
-     * @return string
-     */
-    public function filterByTag($tag, Request $request): string
-    {
-        $tagid = Tag::where('name', $tag)->firstOrFail()->id;
-        $videos = Video::with('video_tag.tag')->whereHas('video_tag.tag', function ($query) use ($tagid) {
-            return $query->where('id', $tagid);
-        })->orderBy('creation', 'desc')->get();
-        $designations = request('course') ? explode(',', request('course')) : null;
-        $semesters = request('semester') ? explode(',', request('semester')) : null;
-        $presenters = request('presenter') ? explode(',', request('presenter')) : null;
-        list ($html, $videocourses, $videoterms, $videopresenters, $videotags, $videos) = $this->performFiltering(
-            $videos, $designations, $semesters, null, $presenters
-        );
-
-        $html = view('home.courselist', compact('videos'))->render();
-
-        return $html ?: '<h4 class="col my-3 font-weight-light">No presentations found</h4>';
+        if ($request->isMethod('get')) {
+            return view('home.navigator', compact('tag', 'videos', 'terms', 'presenters', 'courses', 'filters'));
+        } else {
+            return view('home.courselist', compact('videos'))->render();
+        }
     }
 
     /**
      * @param VisibilityFilter $visibility
      * @param $username
-     * @return Application|Factory|View
+     * @param Request $request
+     * @return Application|Factory|View|string
      */
-    public function viewByPresenter(VisibilityFilter $visibility, $username)
+    public function viewByPresenter(VisibilityFilter $visibility, $username, Request $request)
     {
         $presenter = Presenter::where('username', $username)->first() ?? Presenter::where('name', $username)->first();
         if (!$presenter) {
@@ -314,36 +258,18 @@ class SearchController extends Controller
             $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
         );
 
-        return view('home.navigator', compact('presenter', 'videos', 'terms', 'tags', 'courses'));
+        if ($request->isMethod('get')) {
+            return view('home.navigator', compact('presenter', 'videos', 'terms', 'tags', 'courses', 'filters'));
+        } else {
+            return view('home.courselist', compact('videos'))->render();
+        }
     }
 
-    /** Filter presentations from a given presenter by criteria provided by a user form
-     * @param $username
-     * @param Request $request
-     * @return string
-     */
-    public function filterByPresenter($username, Request $request): string
-    {
-        $presenter = Presenter::where('username', $username)->first() ?? Presenter::where('name', $username)->first();
-        $videos = Video::with('video_presenter.presenter')->whereHas('video_presenter.presenter', function ($query) use ($presenter) {
-            return $query->where('id', $presenter->id);
-        })->orderBy('creation', 'desc')->get();
-        $designations = request('course') ? explode(',', request('course')) : null;
-        $semesters = request('semester') ? explode(',', request('semester')) : null;
-        $tags = request('tag') ? explode(',', request('tag')) : null;
-        list ($html, $videocourses, $videoterms, $videopresenters, $videotags, $videos) = $this->performFiltering(
-            $videos, $designations, $semesters, $tags, null
-        );
-
-        $html = view('home.courselist', compact('videos'))->render();
-
-        return $html ?: '<h4 class="col my-3 font-weight-light">No presentations found</h4>';
-    }
 
     /** Primary method that lists all videos related to the search query (or all if $q is null)
      * @throws BindingResolutionException
      */
-    public function search($q = null, Request $request = null)
+    public function search($q = null, Request $request)
     {
         $videos = $this->getVideos($q);
 
@@ -354,13 +280,13 @@ class SearchController extends Controller
             $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
         );
 
-        $coursesetlist = $individual_permissions = $playback_permissions = [];
-        if ($manage) {
-            list($coursesetlist, $individual_permissions, $playback_permissions) = $this->extractSettings($videos);
+        if ($request->isMethod('get')) {
+            return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'filters'));
+        } else {
+            return ['html' => $html, 'courses' => $videocourses, 'presenters' => $videopresenters, 'terms' => $videoterms, 'tags' => $videotags];
         }
-
-        return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'filters', 'coursesetlist', 'playback_permissions', 'individual_permissions'));
     }
+
 
     /** Helper method for getting all videos related to the search query (or all if query is empty)
      * @throws BindingResolutionException
@@ -588,24 +514,6 @@ class SearchController extends Controller
         return $presenters;
     }
 
-    /** Filter search results by criteria provided by a user form
-     * @throws BindingResolutionException
-     */
-    public function filterSearch($q = null, Request $request): array
-    {
-        $html = '';
-        $videos = $this->getVideos($q);
-        $designations = request('course') ? explode(',', request('course')) : null;
-        $semesters = request('semester') ? explode(',', request('semester')) : null;
-        $presenters = request('presenter') ? explode(',', request('presenter')) : null;
-        $tags = request('tag') ? explode(',', request('tag')) : null;
-        $manage = \Request::is('manage');
-        list ($html, $videocourses, $videoterms, $videopresenters, $videotags) = $this->performFiltering(
-            $videos, $designations, $semesters, $tags, $presenters, $manage
-        );
-        return ['html' => $html, 'courses' => $videocourses, 'presenters' => $videopresenters, 'terms' => $videoterms, 'tags' => $videotags];
-    }
-
     /** Perform the actual filtering of search/designation/presenter/term/tag results
      * @param $videos
      * @param $designations
@@ -690,7 +598,7 @@ class SearchController extends Controller
     public function handleUrlParams(): array
     {
         return [
-            'courses' => request('course') ? explode(',', request('presenter')) : null,
+            'courses' => request('course') ? explode(',', request('course')) : null,
             'presenters' => request('presenter') ? explode(',', request('presenter')) : null,
             'terms' => request('semester') ? explode(',', request('semester')) : null,
             'tags' => request('tag') ? explode(',', request('tag')) : null
