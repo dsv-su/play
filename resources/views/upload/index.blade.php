@@ -16,9 +16,9 @@
         <div class="row no-gutters w-100">
             <div class="col-12">
                 <span class="su-theme-anchor"></span>
-                <h3 class="su-theme-header mb-4">
+                <h1 class="su-theme-header mb-4">
                     <i class="fas fa-arrow-circle-up fa-icon-border mr-2"></i>{{ __("Upload presentation") }}
-                </h3>
+                </h1>
             </div> <!-- col-12 -->
         </div> <!-- row no-gutters -->
     </div>
@@ -29,15 +29,18 @@
                 <form class="needs-validation" method="post" action="{{route('upload_step1', $presentation->id)}}">
                     @csrf
                     <div class="rounded border shadow p-3 my-2">
-                        <label class="form-control-label px-1">{{ __("Information about the presentation") }}</label>
+                        <h5 class="mb-4">
+                            <i class="fa fa-solid fa-1 fa-icon-border mr-2"></i><label class="form-control-label px-1">{{ __("Information about the presentation") }}</label>
+                        </h5>
+
                         <p class="font-1rem px-1">
                             {{ __("Enter the title of the presentation and the date of recording. If the recording date is unknown, you can enter today's date. Description is optional.") }}
                         </p>
 
                         <div class="row justify-content-between text-left">
                             <!-- Title -->
-                            <div class="form-group col-sm-6 flex-column d-flex"><label
-                                    class="form-control-label px-1">{{ __("Title") }}<span
+                            <div class="form-group col-sm-6 flex-column d-flex"><label for="title"
+                                     class="form-control-label px-1">{{ __("Title") }}<span
                                         class="text-danger"> *</span></label>
                                 <input class="form-control" id="title" name="title" type="text" placeholder="{{ __("Title") }}"
                                        value="{{ old('title') ? old('title'): $title ?? '' }}">
@@ -48,7 +51,8 @@
                             </div>
 
                             <!-- CreationDate -->
-                            <div class="form-group col-sm-6 flex-column d-flex"><label
+                            <div class="form-group col-sm-6 flex-column d-flex">
+                                <label for="creationdate"
                                     class="form-control-label px-1">{{ __("Recording date") }}<span
                                         class="text-danger"> *</span></label>
                                 <input id="creationdate" class="datepicker form-control" name="created" type="text"
@@ -60,15 +64,27 @@
                                 <div><small class="text-danger">{{ $errors->first('created') }}</small></div>
                             </div>
                         </div>
+                        <div class="row justify-content-between text-left">
+                            <div class="form-group col-12 col-lg-6 flex-column d-flex"><label for="description"
+                                    class="form-control-label px-1">{{ __("Description") }}</label>
+                                <textarea id="description" name="description" class="form-control"
+                                          placeholder="{{__("Add a description here (optional)")}}"></textarea>
+                            </div>
+                        </div>
 
-                        <!-- Description and Course -->
+                    </div>
+                    <div class="rounded border shadow p-3 my-2">
+                        <!-- Course -->
+                        <h5 class="mb-4">
+                            <i class="fa fa-solid fa-2 fa-icon-border mr-2"></i><label class="form-control-label px-1">{{ __("Course association") }}</label>
+                        </h5>
+                        <p class="font-1rem px-1 my-0">
+                            {{ __("Here you specify whether the presentation should be associated with one or more courses. If you do not want the presentation to be associated with a course or want to complete at a later time, leave the field blank.") }}
+                        </p>
                         <div class="row justify-content-between text-left">
                             <div class="form-group col-12 col-lg-6 flex-column d-flex mx-auto">
                                 <!-- Course association -->
-                                <label class="form-control-label px-1">{{ __("Course association") }}</label>
-                                <p class="font-1rem px-1 my-0">
-                                    {{ __("Here you specify whether the presentation should be associated with one or more courses. If you do not want the presentation to be associated with a course or want to complete at a later time, leave the field blank.") }}
-                                </p>
+
                                 <select name="courses[]"
                                         class="form-control mx-1 selectpicker w-100" data-dropup-auto="false"
                                         data-none-selected-text="{{ __('No course association')}}"
@@ -100,26 +116,29 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group col-12 col-lg-6 flex-column d-flex"><label
-                                        class="form-control-label px-1">{{ __("Description") }}</label>
-                                <textarea id="description" name="description" class="form-control"
-                                          placeholder="{{__("Add a description here (optional)")}}"></textarea>
+                            <div class="form-group col-12 col-lg-6 flex-column d-flex">
+
                             </div>
                         </div>
-
-                        <!-- Presenters and Tags -->
+                    </div>
+                    <div class="rounded border shadow p-3 my-2">
+                        <!-- Presenters -->
+                        <h5 class="mb-4">
+                            <i class="fa fa-solid fa-3 fa-icon-border mr-2"></i><label class="form-control-label px-1">{{ __("Presenters") }}</label>
+                        </h5>
+                        <p class="font-1rem px-1 my-0">
+                            {{ __("Add the presenters for this presentation. The uploader is listed as presenter by default.") }}
+                        </p>
                         <div class="row justify-content-between text-left">
                             <div class="form-group col-12 col-lg-6 flex-column d-flex">
-                                <label class="form-control-label px-1">{{ __("Presenters") }}
+                                <label class="form-control-label px-1" for="uploader">
                                     <span type="button" name="presenteradd"
                                           class="btn btn-primary px-1 py-0 presenteradd">{{__('Add')}}<i
                                             class="fas fa-user-plus ml-1"></i></span>
                                 </label>
-                                <p class="font-1rem px-1 my-0">
-                                    {{ __("Add the presenters for this presentation. The uploader is listed as presenter by default.") }}
-                                </p>
+
                                 <div id="presenter_table">
-                                    <input type="text" class="form-control w-100 mx-auto"
+                                    <input type="text" class="form-control w-100 mx-auto" id="uploader"
                                            value="{{app()->make('play_user')}} ({{app()->make('play_username')}})"
                                            readonly>
                                     @if(old('presenters'))
@@ -132,8 +151,13 @@
                                     @endif
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                        <div class="rounded border shadow p-3 my-2">
+                            <h5 class="mb-4">
+                                <i class="fa fa-solid fa-4 fa-icon-border mr-2"></i><label class="form-control-label px-1">{{ __("Tags") }}</label>
+                            </h5>
                             <div class="form-group col-12 col-lg-6 flex-column d-flex">
-                                <label class="form-control-label px-1 py-0">{{ __("Tags") }}</label>
                                 <p class="font-1rem px-1 my-0">
                                     {{ __("Enter tags for the presentation") }}
                                 </p>
@@ -151,9 +175,12 @@
                                 </select>
                             </div>
                         </div>
-
+                    <div class="rounded border shadow p-3 my-2">
                         <!-- Permissions -->
-                        <label class="form-control-label px-1">{{ __("Playback permissions") }}</label>
+                        <h5 class="mb-4">
+                            <i class="fa fa-solid fa-5 fa-icon-border mr-2"></i><label class="form-control-label px-1">{{ __("Playback permissions") }}</label>
+                        </h5>
+
                         <p class="px-1 font-1rem mb-0">
                             {{ __("All uploaded presentations are accessible to DSV Students and Staff unless otherwise specified with the 'Custom' alternative.") }}
                         </p>
@@ -221,6 +248,7 @@
                                 </div>
                                 {{--}}
                         </div>
+
                 </form>
             </div>
         </div>
