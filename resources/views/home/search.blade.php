@@ -29,16 +29,8 @@
                                 data-none-selected-text="{{ __('Course') }}" data-live-search="true" multiple
                                 style="width: 400px">
                             @foreach($videocourses as $designation => $name)
-                                <option value="{{$designation}}">{{$name}} @if ($designation != 'nocourse')
+                                <option value="{{$designation}}" @if (isset($filters['courses']) && in_array($designation, $filters['courses'])) selected @endif>{{$name}} @if ($designation != 'nocourse')
                                         ({{$designation}})@endif</option>
-                            @endforeach
-                        </select>
-                        <select name="semester" @if (empty($videoterms)) disabled
-                                @endif class="form-control mx-1 selectpicker" data-none-selected-text="{{ __('Term')}}"
-                                data-live-search="true"
-                                multiple style="width: 200px">
-                            @foreach($videoterms as $term)
-                                <option value="{{$term}}">{{$term}}</option>
                             @endforeach
                         </select>
                         <select name="presenter" @if (empty($videopresenters)) disabled
@@ -46,7 +38,15 @@
                                 data-none-selected-text="{{ __('Presenter') }}" data-live-search="true" multiple
                                 style="width: 200px;">
                             @foreach($videopresenters as $username => $name)
-                                <option value="{{$username}}">{{$name}}</option>
+                                <option value="{{$username}}" @if (isset($filters['presenters']) && in_array($username, $filters['presenters'])) selected @endif>{{$name}}</option>
+                            @endforeach
+                        </select>
+                        <select name="semester" @if (empty($videoterms)) disabled
+                                @endif class="form-control mx-1 selectpicker" data-none-selected-text="{{ __('Term')}}"
+                                data-live-search="true"
+                                multiple style="width: 200px">
+                            @foreach($videoterms as $term)
+                                <option value="{{$term}}" @if (isset($filters['terms']) && in_array($term, $filters['terms'])) selected @endif>{{$term}}</option>
                             @endforeach
                         </select>
                         <select name="tag" @if (empty($videotags)) disabled
@@ -54,7 +54,7 @@
                                 data-none-selected-text="{{ __('Tag') }}" data-live-search="true" multiple
                                 style="width: 200px;">
                             @foreach($videotags as $tag)
-                                <option value="{{$tag}}">{{$tag}}</option>
+                                <option value="{{$tag}}" @if (isset($filters['tags']) && in_array($tag, $filters['tags'])) selected @endif>{{$tag}}</option>
                             @endforeach
                         </select>
                         <button type="button" class="mb-2 btn btn-outline-secondary"
@@ -91,12 +91,35 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
+            var course = $('select[name="course"]').val();
+            var presenter = $('select[name="presenter"]').val();
+            var semester = $('select[name="semester"]').val();
+            var tag = $('select[name="tag"]').val();
+            var url = '?';
+
+            if (course && course.length) {
+                url += '&course='+course;
+            }
+            if (presenter && presenter.length) {
+                url += '&presenter='+presenter;
+            }
+            if (tag && tag.length) {
+                url += '&tag='+tag;
+            }
+            if (semester && semester.length) {
+                url += '&semester='+semester;
+            }
+
             let formData = new FormData();
             formData.append("presenter", $('select[name="presenter"]').val());
             formData.append("semester", $('select[name="semester"]').val());
             formData.append("course", $('select[name="course"]').val());
             formData.append("tag", $('select[name="tag"]').val());
             formData.append("filtered", '1');
+
+            window.history.replaceState(null, null, url);
+
             $.ajax({
                 type: 'POST',
                 url: "/{{ Request::path()}}",

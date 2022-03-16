@@ -346,21 +346,20 @@ class SearchController extends Controller
     public function search($q = null, Request $request = null)
     {
         $videos = $this->getVideos($q);
-        $videocourses = $this->extractCourses($videos);
-        $videopresenters = $this->extractPresenters($videos);
-        $videoterms = $this->extractTerms($videos);
-        $videotags = $this->extractTags($videos);
+
         $manage = \Request::is('manage');
 
-        // Group videos by a courseid
-        $videos = $this->groupVideos($videos);
+        $filters = $this->handleUrlParams();
+        list ($html, $videocourses, $videoterms, $videopresenters, $videotags, $videos) = $this->performFiltering(
+            $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
+        );
 
         $coursesetlist = $individual_permissions = $playback_permissions = [];
         if ($manage) {
             list($coursesetlist, $individual_permissions, $playback_permissions) = $this->extractSettings($videos);
         }
 
-        return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'coursesetlist', 'playback_permissions', 'individual_permissions'));
+        return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'filters', 'coursesetlist', 'playback_permissions', 'individual_permissions'));
     }
 
     /** Helper method for getting all videos related to the search query (or all if query is empty)
