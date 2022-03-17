@@ -4,11 +4,13 @@ namespace App\Services\Course;
 
 use App\Course;
 use App\CourseadminPermission;
+use App\Jobs\JobFailedNotification;
 use App\ManualPresentation;
 use App\Services\Daisy\DaisyIntegration;
 use App\VideoCourse;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 
 class CourseStore extends Model
@@ -116,22 +118,30 @@ class CourseStore extends Model
                         if (!$this->db_course = Course::where('designation', $this->item)->where('semester', $this->convertSemester($this->timestamp))->where('year', $this->convertYear($this->timestamp))->first()) {
 
                             //Retrive course information from Daisy
-                            $this->retrieved_course = $this->daisy->getCourse($this->item, $this->convertYear($this->timestamp) . $this->convertDaisySemester($this->timestamp));
-                            $this->course = Course::create([
-                                'id' => $this->retrieved_course['id'],
-                                'name' => $this->retrieved_course['name'],
-                                'name_en' => $this->retrieved_course['name_en'],
-                                'designation' => $this->retrieved_course['designation'],
-                                'semester' => $this->convertSemester($this->timestamp),
-                                'year' => $this->convertYear($this->timestamp),
-                            ]);
+                            if($this->retrieved_course = $this->daisy->getCourse($this->item, $this->convertYear($this->timestamp) . $this->convertDaisySemester($this->timestamp))) {
+                                $this->course = Course::create([
+                                    'id' => $this->retrieved_course['id'],
+                                    'name' => $this->retrieved_course['name'],
+                                    'name_en' => $this->retrieved_course['name_en'],
+                                    'designation' => $this->retrieved_course['designation'],
+                                    'semester' => $this->convertSemester($this->timestamp),
+                                    'year' => $this->convertYear($this->timestamp),
+                                ]);
 
-                            VideoCourse::create([
-                                'video_id' => $this->video->id,
-                                'course_id' => $this->course->id,
-                            ]);
+                                VideoCourse::create([
+                                    'video_id' => $this->video->id,
+                                    'course_id' => $this->course->id,
+                                ]);
 
-                            $this->cid = $this->course->id;
+                                $this->cid = $this->course->id;
+                            } else {
+                                //Log message
+                                Log::error('Designation: '.$this->item.' is not found in Daisy.');
+                                // and create a error notification to admins
+                                $job = (new JobFailedNotification($this->video, $this->item));
+                                dispatch($job);
+                            }
+
                         } else {
                             //The course exists
                             if ($key == 0) {

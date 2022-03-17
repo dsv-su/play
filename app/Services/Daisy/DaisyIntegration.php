@@ -56,8 +56,8 @@ class DaisyIntegration extends Model
     public function getCourse($designation, $semester)
     {
         $this->array_resource = json_decode($this->getResource('/courseSegment?designation=' . $designation . '&semester=' . $semester, 'json')->getBody()->getContents(), TRUE);
-        // I hope no courses are given two times within the given term...
-        return $this->array_resource[0];
+        // Returns false if unsuccessful call
+        return $this->array_resource[0] ?? false;
     }
 
     //Method for retrieving employees active courses from Daisy with UserID
