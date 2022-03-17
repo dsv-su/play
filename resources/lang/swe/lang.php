@@ -25,7 +25,7 @@ return [
     'public' => 'DSV användare',
     'private' => 'Anpassad',
     'my_courses' => 'Mina kurser',
-    'active_courses' => 'Aktiva kurser',
+    'active_courses' => 'VT2022',
     'latest' => 'Alla presentationer',
     'viewed' => 'Mest spelade',
     'downloaded' => 'Mest nerladdade',

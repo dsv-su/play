@@ -25,7 +25,7 @@ return [
     'public' => 'DSV Users',
     'private' => 'Custom',
     'my_courses' => 'My courses',
-    'active_courses' => 'Active courses',
+    'active_courses' => 'VT2022',
     'latest' => 'All presentations',
     'viewed' => 'Most viewed',
     'downloaded' => 'Most downloaded',
