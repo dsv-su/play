@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Course;
 use App\Services\Filters\VisibilityFilter;
 use App\Services\TicketHandler\TicketPermissionHandler;
 use App\Stream;
@@ -103,9 +104,11 @@ class MultiplayerController extends Controller
 
         $playlist = $visibility->filter(Video::whereIn('id', $videos)->orderBy('creation')->get());
 
+        $course = Course::findOrFail($id);
+
         //Build json playlist
         $json = Collection::make([
-            'title' => 'My Playlist'
+            'title' => $course->designation . ' ' . $course->semester . $course->year . ' presentations'
         ]);
         $playlist
             ->makeHidden('presentation')
