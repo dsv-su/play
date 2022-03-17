@@ -7,6 +7,7 @@ use App\Course;
 use App\Presenter;
 use App\Services\AuthHandler;
 use App\Services\Daisy\DaisyIntegration;
+use App\VideoCourse;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
@@ -155,21 +156,41 @@ class CourseNav extends Model
 
     private function getDesignation()
     {
-        return Course::take(6)->get()->mapWithKeys(function ($item) {
-            //return [$item['designation'] => $item['designation']. ' '.$item['semester'].''.$item['year']];
+        $courses = VideoCourse::orderByDesc('created_at')->distinct('course_id')->take(6)->pluck('course_id');
+        $designations = [];
+        foreach ($courses as $course) {
+            $course = Course::find($course);
+            $designations[$course->designation] = $course->designation;
+        }
+        return $designations;
+        /*
+        return $course->mapWithKeys(function ($item) {
             return [$item['designation'] => $item['designation']];
-        });
+        });*/
     }
 
     private function getSemesters()
     {
-        $courses = Course::distinct('year')->pluck('year')->take(3);
-        foreach($courses as $course) {
-            $semester[] = 'VT'.$course;
-            $semester[] = 'HT'.$course;
-        }
+        //$courses = Course::distinct('year')->pluck('year')->sortDesc()->take(3);
 
-        return $semester ?? '';
+        $courses = Course::all()->sortBy('created_at');
+        $semester = [];
+        foreach ($courses as $course) {
+            if ($course->videos()->count()) {
+                if ($course->semester == 'VT') {
+                    $term = $course->year . '1';
+                } else {
+                    $term = $course->year . '2';
+                }
+                if (!in_array($term, $semester)) {
+                    $semester[$term] = $course->semester . $course->year;
+                }
+            }
+        }
+        krsort($semester);
+
+
+        return array_values(array_slice($semester, 0 ,6)) ?? '';
     }
 
     private function getActiveCourses()
