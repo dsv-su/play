@@ -269,7 +269,7 @@ class SearchController extends Controller
     /** Primary method that lists all videos related to the search query (or all if $q is null)
      * @throws BindingResolutionException
      */
-    public function search($q = null, Request $request)
+    public function search($q = null)
     {
         $videos = $this->getVideos($q);
 
@@ -280,8 +280,12 @@ class SearchController extends Controller
             $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
         );
 
-        if ($request->isMethod('get')) {
-            return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'filters'));
+        if (\Request::isMethod('get')) {
+            $coursesetlist = $individual_permissions = $playback_permissions = [];
+            if ($manage) {
+                list($coursesetlist, $individual_permissions, $playback_permissions) = $this->extractSettings($videos);
+            }
+            return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'filters', 'coursesetlist', 'individual_permissions', 'playback_permissions'));
         } else {
             return ['html' => $html, 'courses' => $videocourses, 'presenters' => $videopresenters, 'terms' => $videoterms, 'tags' => $videotags];
         }
@@ -583,6 +587,7 @@ class SearchController extends Controller
         $videos = $this->groupVideos($videos);
 
         $coursesetlist = $individual_permissions = $playback_permissions = [];
+
         if ($manage) {
             list($coursesetlist, $individual_permissions, $playback_permissions) = $this->extractSettings($videos);
         }
