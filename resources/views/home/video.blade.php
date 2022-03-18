@@ -2,14 +2,14 @@
 <div class="shadow-lg shadow-warning card video m-auto @if($video->hidden) faded @endif" @if (isset($manage) && $manage) id="{{$video->id}}" @endif>
     <div id="action-icons" class="flex-column m-1">
             @if ($video->edit)
-                <div class="mb-1" data-placement="left" data-toggle="tooltip" title="{{__("Share presentation")}}">
+                <div class="" data-placement="left" data-toggle="tooltip" title="{{__("Share presentation")}}">
                     <a href="#" data-toggle="modal" data-target="#shareModal{{$video->id}}" title="{{ __('Share presentation') }}" class="btn btn-dark btn-sm">
                         <i class="fas fa-external-link-alt fa-fw"></i>
                     </a>
                 </div>
             @endif
             @if ($video->download)
-                <div class="dropdown mb-1" data-placement="left" data-toggle="tooltip" title="{{ __("Download presentation") }}">
+                <div class="dropdown" data-placement="left" data-toggle="tooltip" title="{{ __("Download presentation") }}">
                     <a href="#" data-toggle="modal" data-target="#downloadModal{{$video->id}}" title="{{ __('Download presentation') }}" class="btn btn-dark btn-sm">
                         <i class="fas fa-download fa-fw"></i>
                     </a>
@@ -18,14 +18,14 @@
 
             @if (isset($manage) && $manage or (isset($manage) && $manage and app()->make('play_role') == 'Administrator'))
                 @if ($video->edit)
-                    <div class="mb-1">
+                    <div class="">
                         <a href="{{route('presentation_edit', $video->id)}}" data-toggle="tooltip" data-placement="left" title="{{ __('Edit presentation') }}" class="btn btn-dark btn-sm">
                             <i class="far fa-edit fa-fw"></i>
                         </a>
                     </div>
                 @endif
                 @if ($video->delete)
-                    <div class="mb-1">
+                    <div class="">
                         <form>
                             <meta name="csrf-token" content="{{ csrf_token() }}">
                             <a href="#" data-toggle="tooltip" data-placement="left" title="{{ __("Delete presentation") }}" class="btn btn-dark btn-sm delete">
