@@ -226,8 +226,6 @@
         </div>
     </div>
 </div>
-<!-- Typeahead.js Bundle -->
-<script src="{{ asset('./js/typeahead/typeahead.bundle.js') }}"></script>
 <script>
     $(document).ready(sukat);
     $(document).ready(sukatuser);
