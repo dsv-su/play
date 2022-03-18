@@ -18,16 +18,16 @@
                     </div>
 -->
     <div class="card-header position-relative"
-         style="background-image: url({{ url('/storage/'.$video->local.'/'. $video->thumb) }}); height:135px;">
+         style="background-image: url({{ url('/storage/'.$video->local.'/'. $video->thumb) }});">
         <div class="d-flex justify-content-center h-100">
             <div class="d-inline alert alert-secondary m-auto"
-                 role="alert">{{ __("Processing started at ") }} {{$video->created_at}}</div>
+                 role="alert">{{ __("Processing") }}</div>
         </div>
         <p class="m-1 px-1"> {{\Carbon\Carbon::parse($video->duration)->toTimeString()}} </p>
     </div>
     <div class="card-body p-1 overflow-hidden">
         <div class="d-flex align-items-start">
-            <div class=""><h4 class="card-text font-1rem font-weight-bold px-1 py-2">{{ $video->title }}</h4>
+            <div class=""><h4 class="card-text font-1rem font-weight-bold px-1 py-2">{{ $video->title }} ({{$video->created_at}})</h4>
             </div>
             @if ($video->description)
                 <div class="ml-auto" id="showmore">

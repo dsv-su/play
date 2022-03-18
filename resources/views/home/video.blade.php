@@ -1,7 +1,6 @@
 <!-- Video - child view - will inherit all data available in the parent view-->
 <div class="shadow-lg shadow-warning card video m-auto @if($video->hidden) faded @endif" @if (isset($manage) && $manage) id="{{$video->id}}" @endif>
     <div id="action-icons" class="flex-column m-1">
-
             @if ($video->edit)
                 <div class="mb-1" data-placement="left" data-toggle="tooltip" title="{{__("Share presentation")}}">
                     <a href="#" data-toggle="modal" data-target="#shareModal{{$video->id}}" title="{{ __('Share presentation') }}" class="btn btn-dark btn-sm">
@@ -38,7 +37,7 @@
             @endif
     </div>
     <a href="{{ route('player', ['video' => $video]) }}">
-        <div class="card-header position-relative" style="background-image: @if ($video->hidden) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); width: 100%; height: 150px; object-fit: contain; background-repeat: no-repeat; background-position: 50% 50%;">
+        <div class="card-header position-relative" style="background-image: @if ($video->hidden) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); width: 100%; height: 0px; object-fit: contain; background-repeat: round; background-position: 50% 50%;">
             <!-- Icons -->
             <div class="icons m-1">
                 <!-- Group Permissions icons-->
@@ -75,7 +74,7 @@
             <!-- Visibility banner -->
             @if ($video->hidden)
                 <div class="d-flex justify-content-center h-100">
-                    <div class="d-inline alert alert-secondary m-auto" role="alert">{{ __("Presentation hidden") }}</div>
+                    <div class="d-inline alert alert-secondary m-auto" role="alert">{{ __("Hidden") }}</div>
                 </div>
             @endif
             <p class="m-1 px-1"> {{$video->duration}} </p>
