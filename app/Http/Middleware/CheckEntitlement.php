@@ -22,9 +22,9 @@ class CheckEntitlement
         $system = new AuthHandler();
         $system = $system->authorize();
         $auth_param = $system->global->authorization_parameter;
-        //$authstring = $system->global->authorization; //For multiple entitlements
-        $entitlement = $system->global->authorization;
-        //$auth = explode(";", $authstring); //For multiple entitlements
+        $authstring = $system->global->authorization; //For multiple entitlements
+        //$entitlement = $system->global->authorization;
+        $auth = explode(";", $authstring); //For multiple entitlements
         $match = 0;
         if(!$request->server('REMOTE_USER'))
         {
@@ -37,8 +37,8 @@ class CheckEntitlement
         else
         {
             $server = explode(";", $_SERVER[$auth_param]);
-            //foreach ($auth as $entitlement)  //For multiple entitlements
-            //{                                 //For multiple entitlements
+            foreach ($auth as $entitlement)  //For multiple entitlements
+            {                                 //For multiple entitlements
                 foreach($server as $server_entitlement)
                 {
                     if($entitlement == $server_entitlement)
@@ -46,7 +46,7 @@ class CheckEntitlement
                         $match++;
                     }
                 }
-            //} //For multiple entitlements
+            } //For multiple entitlements
         }
 
         if ($match !== 1)
