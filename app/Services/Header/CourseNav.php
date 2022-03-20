@@ -19,7 +19,7 @@ class CourseNav extends Model
     /**
      * Bind data to the view.
      *
-     * @param  \Illuminate\View\View  $view
+     * @param View $view
      * @return void
      */
 
