@@ -277,7 +277,7 @@ class SearchController extends Controller
 
         $filters = $this->handleUrlParams();
         list ($html, $videocourses, $videoterms, $videopresenters, $videotags, $videos) = $this->performFiltering(
-            $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
+            $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters'], $manage
         );
 
         if (\Request::isMethod('get')) {

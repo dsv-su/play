@@ -81,7 +81,12 @@ class DaisyIntegration extends Model
         foreach ($this->courses as $this->instance) {
             $this->list[$this->instance['courseSegmentInstance']['id']] = $this->instance['courseSegmentInstance']['semesterId'];
         }
-        return $this->list;
+        if (!empty($this->list)) {
+            krsort($this->list);
+            return array_slice(array_unique($this->list), 0, 6);
+        } else {
+            return $this->list;
+        }
     }
 
     //Method for retrieving Employees active course designations from Daisy with UserID
@@ -90,12 +95,15 @@ class DaisyIntegration extends Model
         //Filters designations from to
         $this->array_resource = json_decode($this->getResource('employee/username/' . $username . '@su.se', 'json')->getBody()->getContents(), TRUE);
         $this->courses = json_decode($this->getResource('/employee/' . $this->array_resource['person']['id'] . '/contributions?fromSemesterId=' . $this->from_year() . '1&toSemesterId=' . $this->to_year() . '2', 'json')->getBody()->getContents(), TRUE);
-        $this->courses = collect($this->courses)->take(10);
         foreach ($this->courses as $this->instance) {
-            $this->list[$this->instance['courseSegmentInstance']['semesterId']] = $this->instance['courseSegmentInstance']['designation'];
+            $this->list[$this->instance['courseSegmentInstance']['id']] = $this->instance['courseSegmentInstance']['designation'];
         }
-        krsort($this->list);
-        return array_slice($this->list, 0, 6);
+        if (!empty($this->list)) {
+            krsort($this->list);
+            return array_slice(array_unique($this->list), 0, 6);
+        } else {
+            return $this->list;
+        }
     }
 
     //Method for retrieving current active courses from Daisy
@@ -139,10 +147,14 @@ class DaisyIntegration extends Model
         $this->array_resource = json_decode($this->getResource('person/username/' . $username . '@su.se', 'json')->getBody()->getContents(), TRUE);
         $this->course_json = json_decode($this->getResource('/person/' . $this->array_resource['id'] . '/courseSegmentInstances', 'json')->getBody()->getContents(), 'TRUE');
         foreach ($this->course_json as $this->courselist) {
-            $this->list[$this->courselist['semester']] = $this->courselist['designation'];
+            $this->list[$this->courselist['id']] = $this->courselist['designation'];
         }
-        krsort($this->list);
-        return array_slice($this->list, 0, 6);
+        if (!empty($this->list)) {
+            krsort($this->list);
+            return array_slice(array_unique($this->list), 0, 6);
+        } else {
+            return $this->list;
+        }
     }
 
     //Responible courseadministrators (as an array) for a Courssegment

@@ -32,7 +32,7 @@
                                                href="{{route('semester.presentations', $semester)}}">{{$semester}}</a>
                                         @endforeach
                                     @else
-                                        {{ __("No presentations from your registered Semesters were found.") }}
+                                        {{ __("No presentations from your registered semesters were found.") }}
                                     @endif
                                 </li>
                                 <li class="mega-menu-collapse-col col">
@@ -272,7 +272,7 @@
                                                                 @endforeach
                                                             @else
                                                                 <a class="nav-link" href="">
-                                                                    {{ __("No presentations from your registered Semesters were found.") }}
+                                                                    {{ __("No presentations from your registered semesters were found.") }}
                                                                 </a>
                                                             @endif
                                                         </li>
