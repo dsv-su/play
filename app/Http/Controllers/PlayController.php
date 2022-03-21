@@ -57,8 +57,8 @@ class PlayController extends Controller
 
         $daisy = new DaisyIntegration();
         $data['permissions'] = VideoPermission::all();
+        $courses = [];
 
-        /*********************************************************************/
         //For testing
         //Fake students
         if (in_array(app()->make('play_role'), ['Student1', 'Student2', 'Student3'])) {
@@ -68,77 +68,29 @@ class PlayController extends Controller
                 $courses = [6817, 6644, 6737, 6661, 6816, 6835, 6780, 6626, 6656, 6748, 6604, 6684, 6819, 6595, 6852];
             } elseif (app()->make('play_role') == 'Student3') {
                 $courses = [6798, 6799, 6760, 6778, 6828, 6796, 6719, 6720];
-            }
+            } // End testing
+        } elseif (App::environment('production') and app()->make('play_role') == 'Student') {
+            // User is Student
+            $courses = $daisy->getActiveStudentCourses(app()->make('play_username'));
+        } elseif (App::environment('production') and (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Staff')) {
+            // User is Employee
+            $courses = $daisy->getActiveEmployeeCourses(app()->make('play_username'));
+        }
 
-            //Test students
+        if (!empty($courses)) {
             //My courses (tab 1)
             $data['my'] = $visibility->filter(Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
-                return $query->whereIn('course_id', $courses)->take(24);
-            })->get());
-
-
-            //Active courses (tab 2)
-            $data['active'] = $visibility->filter(Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($daisy) {
-                return $query->whereIn('course_id', $daisy->getActiveCourses());
-            })->get());
-
-            //All courses (tab 3)
-            $data['latest'] = $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->get());
+                return $query->whereIn('course_id', $courses);
+            })->latest('creation')->get());
         }
 
-        /************************************************************************/
+        // Active courses (current semester)
+        $data['active'] = $visibility->filter(Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($daisy) {
+            return $query->whereIn('course_id', $daisy->getActiveCourses());
+        })->latest('creation')->get());
 
-        //Production server
-        //User is Student
-        elseif (App::environment('production') and app()->make('play_role') == 'Student') {
-            $courses = $daisy->getActiveStudentCourses(app()->make('play_username'));
-
-            //My courses (tab 1)
-            if ($courses) {
-                $data['my'] = $visibility->filter(Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
-                    return $query->whereIn('course_id', $courses)->take(24);
-                })->get());
-            }
-
-            //Active courses (tab 2)
-            $data['active'] = $visibility->filter(Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($daisy) {
-                return $query->whereIn('course_id', $daisy->getActiveCourses());
-            })->get());
-
-            //All courses (tab 3)
-            $data['latest'] = $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->get());
-
-        } //If user is Employee
-        elseif (App::environment('production') and (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Staff')) {
-            $courses = $daisy->getActiveEmployeeCourses(app()->make('play_username'));
-
-            //My courses (tab 1)
-            if ($courses) {
-                $data['my'] = $visibility->filter(Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
-                    return $query->whereIn('course_id', $courses);
-                })->get());
-            }
-
-            //Active courses (tab 2)
-            $data['active'] = $visibility->filter(Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($daisy) {
-                return $query->whereIn('course_id', $daisy->getActiveCourses());
-            })->get());
-
-            //All courses (tab 3)
-            $data['latest'] = $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->get());
-
-        } else {
-
-            //If in dev or user is Admin
-
-            //Active courses (tab 2)
-            $data['active'] = $visibility->filter(Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($daisy) {
-                return $query->whereIn('course_id', $daisy->getActiveCourses());
-            })->get());
-
-            $data['latest'] = $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->get());
-
-        }
+        // All courses (tab 3)
+        $data['latest'] = $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->get());
 
         // Add placeholders for manual presentations that are currently processed
         $pending = ManualPresentation::where('user', app()->make('play_username'))->where('status', 'sent')->get();
@@ -748,7 +700,7 @@ class PlayController extends Controller
                                     $metadata['slides'][] = ['url' => $slideurl, 'duration' => isset($array['Slides']['SlideEntry'][$i - 1]) ? $array['Slides']['SlideEntry'][$i - 1]['Time'] : $array['Slides']['SlideEntry']['Time']];
                                 }
                             } else {
-                                Log::error('Slides for presentation with id '.$mediasiteid.' are missing in the database.');
+                                Log::error('Slides for presentation with id ' . $mediasiteid . ' are missing in the database.');
                             }
                         }
                     }
@@ -955,12 +907,14 @@ class PlayController extends Controller
         }
     }
 
-    public function listCourses() {
+    public function listCourses()
+    {
         $courses = Course::all();
         dd($courses);
     }
 
-    public function listTerms() {
+    public function listTerms()
+    {
 
     }
 }
