@@ -87,10 +87,10 @@ class PlayController extends Controller
         // Active courses (current semester)
         $data['active'] = $visibility->filter(Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($daisy) {
             return $query->whereIn('course_id', $daisy->getActiveCourses());
-        })->latest('creation')->get());
+        })->latest('creation')->take(24)->get());
 
         // All courses (tab 3)
-        $data['latest'] = $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->get());
+        $data['latest'] = $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->take(24));
 
         // Add placeholders for manual presentations that are currently processed
         $pending = ManualPresentation::where('user', app()->make('play_username'))->where('status', 'sent')->get();

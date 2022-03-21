@@ -61,7 +61,6 @@ class CourseNav extends Model
             //$view->with('hasmycourses', ($this->getUserCoursesWithVideos($this->getUserName() ?? 'dsv-dev@su.se')->count() > 0));
             //<--
         }
-
     }
 
     private function getUserName()
@@ -119,12 +118,16 @@ class CourseNav extends Model
         return Cache::remember('student_semesters', $seconds = 30, function () use($username){
             $daisy = new DaisyIntegration();
             $courses = $daisy->getActiveStudentCourses($username);
-            $course_segments = Course::whereIn('id', $courses)->distinct('year')->pluck('year')->take(3);
-            foreach($course_segments as $term) {
-                $semester[] = 'VT'.$term;
-                $semester[] = 'HT'.$term;
+            $semester = [];
+            foreach ($courses as $courseid) {
+                $course = Course::find($courseid);
+                $semester[] = $course->semester . $course->year;
             }
-            return $semester ?? '';
+            if (!empty($semester)) {
+                return array_unique($semester);
+            } else {
+                return '';
+            }
         });
     }
 

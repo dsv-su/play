@@ -138,6 +138,9 @@ class DaisyIntegration extends Model
         foreach ($this->courses as $this->courselist) {
             $this->list[] = $this->courselist['id'];
         }
+        if (!empty($this->list)) {
+            rsort($this->list);
+        }
         return $this->list;
     }
 
