@@ -2,11 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Course;
-use App\Services\Daisy\DaisyIntegration;
-use App\Services\Notify\PlayStoreNotify;
-use App\Video;
-
 class TestController extends Controller
 {
     public function test()
