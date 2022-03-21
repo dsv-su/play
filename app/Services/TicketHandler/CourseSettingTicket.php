@@ -29,7 +29,10 @@ class CourseSettingTicket extends TicketPermissionHandler implements \App\Interf
             } else {
                 $this->video->setAttribute('ticket_permission_id', $this->courseSettings[0]);
             }
+        } else {
+            $this->video->setAttribute('ticket_permission_id', 1);
         }
+
         return $this->video;
     }
 
