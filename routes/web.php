@@ -82,15 +82,9 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     Route::get('/tag_search', 'UploadController@tag_search')->name('tag_search');
 
     //Download
-    Route::post('/download/{video}', 'ManualDownloadController@step1')->name('download');
-    Route::get('/download_step2/{video}', 'ManualDownloadController@step2');
+    Route::get('/download/{video}', 'ManualDownloadController@start');
+    Route::get('/download_zip/{video}', 'ManualDownloadController@browserDownloadZip');
     Route::get('/download_presentation/{video}', 'ManualDownloadController@download');
-    Route::get('/download_step3/{video}', 'ManualDownloadController@step3')->name('download_step3');
-    Route::post('/download_store/{video}', 'ManualDownloadController@store')->name('download_store');
-    Route::post('/gen_thumb_download/{id}', 'ManualDownloadController@gen_thumb_download')->name('gen_thumb_download');
-    Route::post('/gen_poster_download/{id}', 'ManualDownloadController@gen_poster_download')->name('gen_poster_download');
-    Route::get('/download_step4/{id}', 'ManualDownloadController@step4')->name('download_step4');
-    Route::get('/download_send/{id}', 'ManualDownloadController@send');
 
     //Admin
     Route::prefix('admin/')->group(function () {
@@ -116,6 +110,18 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
             Route::get('/{date}/{level}', 'LogViewerController@showByLevel')->name('filter');
             Route::get('/{date}/{level}/search', 'LogViewerController@search')->name('search');
         });
+
+        //Testing routes --> to be removed before production
+        Route::get('/test', 'TestController@test')->name('test');
+        Route::get('/roles', 'TestController@roles')->name('roles');
+        Route::get('/upload_destroy/{id}', 'AdminController@destroy_upload')->name('upload_delete');
+        Route::get('/download_destroy/{id}', 'AdminController@destroy_download')->name('download_delete');
+        Route::get('/dev_destroy/{id}', 'AdminController@dev_destroy');
+        Route::get('/php', 'TestController@php')->name('php');
+        Route::get('/server', 'TestController@server')->name('server');
+        Route::get('/reload', 'ReloadPlayStoreController@index')->name('reload'); //Reload all presentations from play store
+        Route::get('/del/{video}', 'TestController@del')->name('del'); //Send delete notification to play-store
+
     });
     Route::get('/start', 'SystemController@start')->name('playboot');
     Route::get('/manual_admin_erase/{id}', 'AdminController@admin_erase')->name('manual_admin_erase');
@@ -135,23 +141,7 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     Route::post('/mediasiteUserDownload', 'PlayController@mediasiteUserDownload')->name('mediasiteUserDownload');
     Route::post('/mediasiteOtherDownload', 'PlayController@mediasiteOtherDownload')->name('mediasiteOtherDownload');
     Route::post('/mediasite/prefetchPresentation', 'PlayController@prefetchPresentationDownload')->name('mediasite.prefetchPresentationDownload');
-    /*
-    Route::get('/upload', 'PlayController@upload');
-    Route::post('/store', 'PlayController@store')->name('store');
-   */
 
-    //Testing routes --> to be removed before production
-    Route::get('/test', 'TestController@test')->name('test');
-    Route::get('/roles', 'TestController@roles')->name('roles');
-    Route::get('/upload_destroy/{id}', 'AdminController@destroy_upload')->name('upload_delete');
-    Route::get('/download_destroy/{id}', 'AdminController@destroy_download')->name('download_delete');
-    Route::get('/dev_destroy/{id}', 'AdminController@dev_destroy');
-    Route::get('/php', 'TestController@php')->name('php');
-    Route::get('/server', 'TestController@server')->name('server');
-    Route::get('/reload', 'ReloadPlayStoreController@index')->name('reload'); //Reload all presentations from play store
-    Route::get('/del/{video}', 'TestController@del')->name('del'); //Send delete notification to play-store
-
-    //-->
 });
 Route::any('{query}',
     function () {
