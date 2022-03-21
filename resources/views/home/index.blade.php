@@ -180,6 +180,9 @@
         </div>
     </div>
 
+    <!--Download modal -->
+    <livewire:modals.download-presentation />
+
     <script>
         $(document).ready(function (e) {
             // Makes the first tab visible
