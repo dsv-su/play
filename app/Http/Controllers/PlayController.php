@@ -90,7 +90,7 @@ class PlayController extends Controller
         })->latest('creation')->take(24)->get());
 
         // All courses (tab 3)
-        $data['latest'] = $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->take(24));
+        $data['latest'] = $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->take(24)->get());
 
         // Add placeholders for manual presentations that are currently processed
         $pending = ManualPresentation::where('user', app()->make('play_username'))->where('status', 'sent')->get();
