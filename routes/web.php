@@ -111,16 +111,14 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
             Route::get('/{date}/{level}/search', 'LogViewerController@search')->name('search');
         });
 
-        //Testing routes --> to be removed before production
-        Route::get('/test', 'TestController@test')->name('test');
-        Route::get('/roles', 'TestController@roles')->name('roles');
         Route::get('/upload_destroy/{id}', 'AdminController@destroy_upload')->name('upload_delete');
         Route::get('/download_destroy/{id}', 'AdminController@destroy_download')->name('download_delete');
         Route::get('/dev_destroy/{id}', 'AdminController@dev_destroy');
-        Route::get('/php', 'TestController@php')->name('php');
-        Route::get('/server', 'TestController@server')->name('server');
         Route::get('/reload', 'ReloadPlayStoreController@index')->name('reload'); //Reload all presentations from play store
-        Route::get('/del/{video}', 'TestController@del')->name('del'); //Send delete notification to play-store
+
+        //Testing routes
+        Route::get('/test', 'TestController@test')->name('test');
+        Route::get('/roles', 'TestController@roles')->name('roles');
 
     });
     Route::get('/start', 'SystemController@start')->name('playboot');

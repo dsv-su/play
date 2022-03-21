@@ -31,6 +31,7 @@ mix.scripts([
     'node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js',
     'resources/js/spinner.js',
     'node_modules/daterangepicker/moment.min.js',
-    'node_modules/daterangepicker/daterangepicker.js'
+    'node_modules/daterangepicker/daterangepicker.js',
+    'resources/js/download.js',
 ], 'public/js/dsvplay.js');
 
