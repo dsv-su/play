@@ -42,9 +42,9 @@
                                     </a>
                                     @if($designations ?? '')
                                         @if(count($designations)>0)
-                                            @foreach($designations as $key => $designation)
+                                            @foreach($designations as $designation)
                                                 <a class="nav-link"
-                                                   href="{{route('designation.presentations', $key)}}">{{$designation}}</a>
+                                                   href="{{route('designation.presentations', $designation)}}">{{$designation}}</a>
                                             @endforeach
                                         @else
                                             {{ __("No active courses found.") }}

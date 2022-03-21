@@ -136,7 +136,7 @@
     "Camera": "Kamera",
     "Stream hidden": "Video gömd",
     "Audio": "Ljud",
-    "Hidden": "Gömd",
+    "Hidden": "Dold",
     "Clear Selection": "Rensa urval",
     "Add the presenters for this presentation. The uploader is listed as presenter by default.": "Lägg till presentatörerna för den här presentationen. Som standard läggs uppladdaren alltid till som presentatör.",
     "Share presentation": "Dela presentation",
@@ -213,7 +213,7 @@
     "A subtitle file has been added": "En undertextfil har lagts till",
     "Testing in progress": "Test pågår",
     "If you want, you can upload a custom image to represent your presentation.": "Om du vill kan du ladda upp en anpassad bild som representerar din presentation.",
-    "If you are missing presentations from before 20th of March, click here to reach the old site!": "Om du saknar presentationer från före 20 mars, klicka här för att komma till den gamla sidan!",
+    "If you are missing presentations, click here to reach the old site!": "Om du saknar presentationer, klicka här för att komma till den gamla sidan!",
     "All courses": "Alla kurser",
     "All semesters": "Alla terminer"
 }

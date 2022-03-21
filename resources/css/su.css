@@ -5223,9 +5223,10 @@ p.kill-p, .kill-p p {
 
 .video .card-header {
     background: #002f5f url("../../public/images/eld_footer.png") no-repeat center;
-    background-size: contain;
+    background-size: 102% auto;
     font-size: 1rem;
     border-bottom: none;
+    padding-top: 52.8%; /* (img-height / img-width * container-width) */ /* (853 / 1280 * 100) */
 }
 
 .video .card-header .title {
@@ -5239,6 +5240,14 @@ p.kill-p, .kill-p p {
     opacity: 0.85;
     transition: var(--ease);
     font-family: "TheSansC5-SemiBoldWeb", serif;
+}
+
+.video .card-header .alert {
+    position: absolute;
+    top: 35%;
+    left: 10%;
+    width: 80%;
+    text-align: center;
 }
 
 .video .card-text {

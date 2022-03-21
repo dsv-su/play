@@ -47,7 +47,7 @@ class DaisyIntegration extends Model
     //Retrieving course info from daisy with courseID
     public function getCourseSegment($id)
     {
-        $this->array_resource = json_decode($this->getResource('/courseSegment/'. $id, 'json')->getBody()->getContents(), TRUE);
+        $this->array_resource = json_decode($this->getResource('/courseSegment/' . $id, 'json')->getBody()->getContents(), TRUE);
 
         return $this->array_resource;
     }
@@ -65,7 +65,7 @@ class DaisyIntegration extends Model
     {
         //Filters courses from to
         $this->array_resource = json_decode($this->getResource('/employee/username/' . $username . '@su.se', 'json')->getBody()->getContents(), TRUE);
-        $this->courses = json_decode($this->getResource('/employee/' . $this->array_resource['person']['id'] . '/contributions?fromSemesterId='.$this->from_year().'1&toSemesterId='.$this->to_year().'2', 'json')->getBody()->getContents(), TRUE);
+        $this->courses = json_decode($this->getResource('/employee/' . $this->array_resource['person']['id'] . '/contributions?fromSemesterId=' . $this->from_year() . '1&toSemesterId=' . $this->to_year() . '2', 'json')->getBody()->getContents(), TRUE);
         foreach ($this->courses as $this->instance) {
             $this->list[] = $this->instance['courseSegmentInstance']['id'];
         }
@@ -77,7 +77,7 @@ class DaisyIntegration extends Model
     {
         //Filters courses from to
         $this->array_resource = json_decode($this->getResource('employee/username/' . $username . '@su.se', 'json')->getBody()->getContents(), TRUE);
-        $this->courses = json_decode($this->getResource('/employee/' . $this->array_resource['person']['id'] . '/contributions?fromSemesterId='.$this->from_year().'1&toSemesterId='.$this->to_year().'2', 'json')->getBody()->getContents(), TRUE);
+        $this->courses = json_decode($this->getResource('/employee/' . $this->array_resource['person']['id'] . '/contributions?fromSemesterId=' . $this->from_year() . '1&toSemesterId=' . $this->to_year() . '2', 'json')->getBody()->getContents(), TRUE);
         foreach ($this->courses as $this->instance) {
             $this->list[$this->instance['courseSegmentInstance']['id']] = $this->instance['courseSegmentInstance']['semesterId'];
         }
@@ -87,23 +87,15 @@ class DaisyIntegration extends Model
     //Method for retrieving Employees active course designations from Daisy with UserID
     public function getActiveEmployeeDesignations($username)
     {
-
         //Filters designations from to
         $this->array_resource = json_decode($this->getResource('employee/username/' . $username . '@su.se', 'json')->getBody()->getContents(), TRUE);
-        $this->courses = json_decode($this->getResource('/employee/' . $this->array_resource['person']['id'] . '/contributions?fromSemesterId='.$this->from_year().'1&toSemesterId='.$this->to_year().'2', 'json')->getBody()->getContents(), TRUE);
+        $this->courses = json_decode($this->getResource('/employee/' . $this->array_resource['person']['id'] . '/contributions?fromSemesterId=' . $this->from_year() . '1&toSemesterId=' . $this->to_year() . '2', 'json')->getBody()->getContents(), TRUE);
         $this->courses = collect($this->courses)->take(10);
         foreach ($this->courses as $this->instance) {
-            if (substr($this->instance['courseSegmentInstance']['semesterId'], 4) == '1') {
-                //$this->list[$this->instance['courseSegmentInstance']['designation']] = $this->instance['courseSegmentInstance']['designation'] . ' VT ' . substr($this->instance['courseSegmentInstance']['semesterId'], 0, -1);
-                //The result should only be a designation
-                $this->list[$this->instance['courseSegmentInstance']['designation']] = $this->instance['courseSegmentInstance']['designation'];
-            } else {
-                //$this->list[$this->instance['courseSegmentInstance']['designation']] = $this->instance['courseSegmentInstance']['designation'] . ' HT ' . substr($this->instance['courseSegmentInstance']['semesterId'], 0, -1);
-                //The result should only be a designation
-                $this->list[$this->instance['courseSegmentInstance']['designation']] = $this->instance['courseSegmentInstance']['designation'];
-            }
+            $this->list[$this->instance['courseSegmentInstance']['semesterId']] = $this->instance['courseSegmentInstance']['designation'];
         }
-        return $this->list;
+        krsort($this->list);
+        return array_slice($this->list, 0, 6);
     }
 
     //Method for retrieving current active courses from Daisy
@@ -119,7 +111,7 @@ class DaisyIntegration extends Model
 
         $this->courses = json_decode($this->course_result->getBody()->getContents(), TRUE);
         //Check if there exist active courses
-        if($this->courses) {
+        if ($this->courses) {
             foreach ($this->courses as $this->courselist) {
                 $this->list[] = $this->courselist['id'];
             }
@@ -147,24 +139,19 @@ class DaisyIntegration extends Model
         $this->array_resource = json_decode($this->getResource('person/username/' . $username . '@su.se', 'json')->getBody()->getContents(), TRUE);
         $this->course_json = json_decode($this->getResource('/person/' . $this->array_resource['id'] . '/courseSegmentInstances', 'json')->getBody()->getContents(), 'TRUE');
         foreach ($this->course_json as $this->courselist) {
-            if (substr($this->courselist['semester'], 4) == '1') {
-                //$this->list[$this->courselist['designation']] = $this->courselist['designation'] . ' VT' . substr($this->courselist['semester'], 0, -1);
-                $this->list[$this->courselist['designation']] = $this->courselist['designation'];
-            } else {
-                //$this->list[$this->courselist['designation']] = $this->courselist['designation'] . ' HT' . substr($this->courselist['semester'], 0, -1);
-                $this->list[$this->courselist['designation']] = $this->courselist['designation'];
-            }
+            $this->list[$this->courselist['semester']] = $this->courselist['designation'];
         }
-        return $this->list;
+        krsort($this->list);
+        return array_slice($this->list, 0, 6);
     }
 
     //Responible courseadministrators (as an array) for a Courssegment
     public function getDaisyCourseResponsible($id)
     {
         $this->array_resource = json_decode($this->getResource('courseSegment/' . $id, 'json')->getBody()->getContents(), TRUE);
-        if($this->array_resource['contributors']) {
-            foreach($this->array_resource['contributors'] as $contributor) {
-                if($contributor['responsible'] == true) {
+        if ($this->array_resource['contributors']) {
+            foreach ($this->array_resource['contributors'] as $contributor) {
+                if ($contributor['responsible'] == true) {
                     //Return responisble teachers details
                     $responsible_contributor[] = json_decode($this->getResource('/person/' . $contributor['personId'], 'json')->getBody()->getContents(), 'TRUE');
                 }
@@ -184,7 +171,7 @@ class DaisyIntegration extends Model
 
 
     //Method for initiating play and preloading courses from Daisy
-    public function init($start_date=null)
+    public function init($start_date = null)
     {
         $this->endpoints = array(
             'courseSegment?semester=20222',
@@ -257,9 +244,7 @@ class DaisyIntegration extends Model
             }
 
 
-
         }
-
 
 
     }
