@@ -204,6 +204,9 @@ class SearchController extends Controller
             return view('home.allcourses', ['courses' => $courses]);
         }
         $data['course'] = Course::find($courseid);
+        if (!$data['course']) {
+            abort(404);
+        }
         $data['latest'] = $visibility->filter(Course::find($courseid)->videos()->filter(function ($video) {
             return $video;
         }));

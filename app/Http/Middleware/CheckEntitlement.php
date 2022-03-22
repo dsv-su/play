@@ -33,10 +33,12 @@ class CheckEntitlement
                 return redirect()->guest(route('sulogin'));
             }
         } else {
-            $server_entitlements = explode(";", $_SERVER[$auth_param]);
-            foreach ($server_entitlements as $server_entitlement) {
-                if (in_array($server_entitlement, $auth)) {
-                    $match = true;
+            if (isset($_SERVER[$auth_param])) {
+                $server_entitlements = explode(";", $_SERVER[$auth_param]);
+                foreach ($server_entitlements as $server_entitlement) {
+                    if (in_array($server_entitlement, $auth)) {
+                        $match = true;
+                    }
                 }
             }
         }

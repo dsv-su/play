@@ -121,7 +121,9 @@ class CourseNav extends Model
             $semester = [];
             foreach ($courses as $courseid) {
                 $course = Course::find($courseid);
-                $semester[] = $course->semester . $course->year;
+                if ($course) {
+                    $semester[] = $course->semester . $course->year;
+                }
             }
             if (!empty($semester)) {
                 return array_unique($semester);
