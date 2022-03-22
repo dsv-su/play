@@ -751,6 +751,16 @@ class PlayController extends Controller
         return false;
     }
 
+    public function pendingMediasite() {
+        $mps = MediasitePresentation::where('status', 'sent')->where('video_id', '')->get();
+        foreach ($mps as $mp) {
+            $mp->courses = json_decode($mp->courses);
+            $mp->presenters = json_decode($mp->presenters);
+            $mp->tags = json_decode($mp->tags);
+        }
+        return view('home.pending_mediasite', ['videos' => $mps]);
+    }
+
     /**
      * @return Application|Factory|View
      */
