@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Cattura;
+use App\Services\AuthHandler;
 use App\Services\Cattura\CatturaRecoders;
 use App\Services\ConfigurationHandler;
 use App\Services\CountPresentations;
@@ -20,6 +21,10 @@ class PlayServiceProvider extends ServiceProvider
     {
         app()->singleton('init', function(){
             return new ConfigurationHandler();
+        });
+
+        app()->singleton('authHandler', function(){
+            return new AuthHandler();
         });
 
         app()->singleton('cattura', function(){
