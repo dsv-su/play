@@ -119,6 +119,7 @@ class ManageCourseSettingsController extends Controller
 
     public function store($course_id, Request $request)
     {
+        //dd($course_id, $request->all());
         if ($request->isMethod('post')) {
             $coursesettings_permissions = CoursesettingsPermissions::firstOrNew(['course_id' => $course_id]);
             //Store
@@ -159,7 +160,7 @@ class ManageCourseSettingsController extends Controller
                 } else {
                     CoursePermissions::create([
                         'course_id' => $course_id,
-                        'permission_id' => $request->course_permission,
+                        'permission_id' => $request->course_permission ?? 1,
                         'type' => 'private'
                     ]);
                 }
