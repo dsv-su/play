@@ -62,9 +62,9 @@ class SearchController extends Controller
         $term = substr($semester, 0, 2);
         $year = substr($semester, 2, 4);
 
-        $videos = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($term, $year) {
+        $videos = $visibility->filter(Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($term, $year) {
             return $query->where('year', $year)->where('semester', $term);
-        })->get();
+        })->get());
 
         $filters = $this->handleUrlParams();
 
@@ -90,9 +90,9 @@ class SearchController extends Controller
      */
     public function viewByDesignation(VisibilityFilter $visibility, $designation, Request $request)
     {
-        $videos = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($designation) {
+        $videos = $visibility->filter(Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($designation) {
             return $query->where('designation', $designation);
-        })->orderBy('creation', 'desc')->get();
+        })->orderBy('creation', 'desc')->get());
 
         $filters = $this->handleUrlParams();
         list ($html, $courses, $terms, $presenters, $tags, $videos) = $this->performFiltering(
@@ -118,9 +118,9 @@ class SearchController extends Controller
      */
     public function viewByCategory(VisibilityFilter $visibility, $category)
     {
-        $videos = Video::with('category', 'video_course.course')->whereHas('category', function ($query) use ($category) {
+        $videos = $visibility->filter(Video::with('category', 'video_course.course')->whereHas('category', function ($query) use ($category) {
             return $query->where('category_name', $category);
-        })->get();
+        })->get());
 
         //Visibility
         $videos = $visibility->filter($videos);
@@ -204,9 +204,9 @@ class SearchController extends Controller
             return view('home.allcourses', ['courses' => $courses]);
         }
         $data['course'] = Course::find($courseid);
-        $data['latest'] = Course::find($courseid)->videos()->filter(function ($video) {
+        $data['latest'] = $visibility->filter(Course::find($courseid)->videos()->filter(function ($video) {
             return $video;
-        });
+        }));
         $data['latest'] = $visibility->filter($data['latest']);
         return view('home.index', $data);
     }
@@ -220,9 +220,9 @@ class SearchController extends Controller
     public function viewByTag(VisibilityFilter $visibility, $tag, Request $request)
     {
         $tagid = Tag::where('name', $tag)->firstOrFail()->id;
-        $videos = Video::with('video_tag.tag')->whereHas('video_tag.tag', function ($query) use ($tagid) {
+        $videos = $visibility->filter(Video::with('video_tag.tag')->whereHas('video_tag.tag', function ($query) use ($tagid) {
             return $query->where('id', $tagid);
-        })->orderBy('creation', 'desc')->get();
+        })->orderBy('creation', 'desc')->get());
 
         $filters = $this->handleUrlParams();
         list ($html, $courses, $terms, $presenters, $tags, $videos) = $this->performFiltering(
@@ -248,9 +248,9 @@ class SearchController extends Controller
         if (!$presenter) {
             abort(404);
         }
-        $videos = Video::with('video_presenter.presenter')->whereHas('video_presenter.presenter', function ($query) use ($presenter) {
+        $videos = $visibility->filter(Video::with('video_presenter.presenter')->whereHas('video_presenter.presenter', function ($query) use ($presenter) {
             return $query->where('id', $presenter->id);
-        })->orderBy('creation', 'desc')->get();
+        })->orderBy('creation', 'desc')->get());
 
         $filters = $this->handleUrlParams();
 
