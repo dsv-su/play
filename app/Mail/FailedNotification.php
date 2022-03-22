@@ -30,7 +30,8 @@ class FailedNotification extends Mailable
      */
     public function build()
     {
-        return $this->from('play@dsv.su.se', 'DSVPlay')->subject("[DSVPlay] Failed notification")
+        $server = config('app.name');
+        return $this->from('play@dsv.su.se', 'DSVPlay')->subject("[$server] Failed notification")
             ->view('emails.failed_notification');
     }
 }
