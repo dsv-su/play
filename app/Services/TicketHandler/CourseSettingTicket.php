@@ -20,18 +20,19 @@ class CourseSettingTicket extends TicketPermissionHandler implements \App\Interf
     {
         //Collect all coursesettings
         foreach($this->courses as $this->course) {
-            $this->courseSettings[] = $this->getCoursePermissionId($this->course->id);
+            if( $permissionId = $this->getCoursePermissionId($this->course->id)) {
+                $this->courseSettings[] = $permissionId;
+                } else {
+                $this->courseSettings[] = 1;
+                }
             }
+
         if($this->courseSettings) {
             if (count($this->courseSettings) > 1) {
                 //If there exist multiple settings -> set default to dsv students and staff
                 $this->video->setAttribute('ticket_permission_id', 1);
             } else {
-                if(!is_null($this->courseSettings)) {
-                    $this->video->setAttribute('ticket_permission_id', 1);
-                } else {
-                    $this->video->setAttribute('ticket_permission_id', $this->courseSettings[0]);
-                }
+                $this->video->setAttribute('ticket_permission_id', $this->courseSettings[0]);
             }
         }
 
