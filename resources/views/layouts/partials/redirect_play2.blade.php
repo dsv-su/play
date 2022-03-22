@@ -21,7 +21,7 @@
         <div class="row no-gutters">
             <div class="col d-flex align-items-center justify-content-center">
                 <div class="webb2021-article p-0 p-lg-2 d-inline-block">
-                    <a href={{route('mediasite.pending')}}>{{__("Presentations currently queued for conversion can be found here")}}</a>
+                    <a href={{route('mediasite.pending')}}>{{__("Mediasite (Play2) presentations that are currently queued for the import can be found here")}}</a>
                 </div>
             <!--
                 <div class="h-100 d-flex align-items-center">

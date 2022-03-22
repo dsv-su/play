@@ -8,7 +8,7 @@
                     <span class="su-theme-anchor"></span>
                     <h3 class="su-theme-header mb-4">
                         <span class="fas fa-layer-group fa-icon-border mr-2" aria-hidden="true"></span>
-                        {{ __("Presentations currently queued for conversion") }}
+                        {{ __("Mediasite presentations currently queued for conversion") }}
                     </h3>
                 </div>
             </div> <!-- col-12 -->
