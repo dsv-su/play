@@ -226,24 +226,26 @@ class PlayAuthenticate
 
             //If user is not system administrator -> check role
 
-            //User is Course Admin
-            elseif($daisy->checkCourseAdmin($daisyPersonID)) {
-                app()->bind('play_auth', function () {
-                    return 'Courseadmin';
-                });
-                app()->bind('play_role', function () {
-                    return 'Courseadmin';
-                });
-            }
-
             //User is Uploader
             elseif (in_array($role_uploader, $server)) {
+                //User is Course Admin
+                if($daisy->checkCourseAdmin($daisyPersonID)) {
+
                 app()->bind('play_auth', function () {
-                    return 'Uploader';
+                    return 'Courseadmin';
                 });
                 app()->bind('play_role', function () {
-                    return 'Uploader';
+                    return 'Courseadmin';
                 });
+                } else {
+                    app()->bind('play_auth', function () {
+                        return 'Uploader';
+                    });
+                    app()->bind('play_role', function () {
+                        return 'Uploader';
+                    });
+                }
+
             }
 
             //User is Staff
