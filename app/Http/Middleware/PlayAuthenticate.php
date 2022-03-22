@@ -131,8 +131,8 @@ class PlayAuthenticate
             });
 
             // Get Shibboleth entitlements
-            if($_SERVER['entitlement'] ?? false) {
-                $server = explode(";", $_SERVER['entitlement']);
+            if(isset($_SERVER[$system->global->authorization_parameter])) {
+                $server = explode(";", $_SERVER[$system->global->authorization_parameter]);
             } else {
                 return redirect()->guest(route('sulogin'));
                 abort(511);
@@ -226,18 +226,18 @@ class PlayAuthenticate
 
             //If user is not system administrator -> check role
 
-            //User is Uploader
-            elseif (in_array($role_uploader, $server)) {
-                //User is Course Admin
+            //User is Course Admin
+            elseif (in_array($role_staff, $server)) {
                 if($daisy->checkCourseAdmin($daisyPersonID)) {
-
-                app()->bind('play_auth', function () {
-                    return 'Courseadmin';
-                });
-                app()->bind('play_role', function () {
-                    return 'Courseadmin';
-                });
-                } else {
+                    app()->bind('play_auth', function () {
+                        return 'Courseadmin';
+                    });
+                    app()->bind('play_role', function () {
+                        return 'Courseadmin';
+                    });
+                }
+                //User is Uploader
+                elseif (in_array($role_uploader, $server)) {
                     app()->bind('play_auth', function () {
                         return 'Uploader';
                     });
@@ -245,17 +245,15 @@ class PlayAuthenticate
                         return 'Uploader';
                     });
                 }
-
-            }
-
-            //User is Staff
-            elseif (in_array($role_staff, $server)) {
-                app()->bind('play_auth', function () {
-                    return 'Staff';
-                });
-                app()->bind('play_role', function () {
-                    return 'Staff';
-                });
+                else {
+                    //User is Staff
+                    app()->bind('play_auth', function () {
+                        return 'Staff';
+                    });
+                    app()->bind('play_role', function () {
+                        return 'Staff';
+                    });
+                }
             }
 
             //User is Student
@@ -267,7 +265,6 @@ class PlayAuthenticate
                     return 'Student';
                 });
             }
-
 
             return $next($request);
         }
