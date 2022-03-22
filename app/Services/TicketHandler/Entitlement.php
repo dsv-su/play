@@ -15,6 +15,7 @@ class Entitlement
            return true;
         } else {
             $system = app(AuthHandler::class);
+            $system = $system->authorize();
             $this->entitlement = Permission::where('id', $id)->pluck('entitlement')->first();
             $this->explicit_entitlements = explode(";", $this->entitlement);
             if(!isset($_SERVER[$system->global->authorization_parameter])) {
