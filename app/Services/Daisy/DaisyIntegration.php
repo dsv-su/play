@@ -32,6 +32,7 @@ class DaisyIntegration extends Model
             ]);
         } catch (ClientException $e) {
             app()->make('init')->check_system();
+            report($e);
             abort(510);
         }
         return 0;
