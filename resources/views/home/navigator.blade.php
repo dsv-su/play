@@ -13,7 +13,11 @@
                         @elseif($designation ?? '')
                             <span class="fas fa-address-card fa-icon-border mr-2" aria-hidden="true"></span>
                             @lang('lang.course'):
-                            <i>{{(Lang::locale() == 'swe') ? \App\Course::where('designation', $designation)->latest()->first()->name : \App\Course::where('designation', $designation)->latest()->first()->name_en}}</i>
+                            @if (\App\Course::where('designation', $designation)->count())
+                                <i>{{(Lang::locale() == 'swe') ? \App\Course::where('designation', $designation)->latest()->first()->name : \App\Course::where('designation', $designation)->latest()->first()->name_en}}</i>
+                            @else
+                                <i>{{$designation}}</i>
+                            @endif
                         @elseif($category ?? '')
                             <span class="fas fa-address-card fa-icon-border mr-2" aria-hidden="true"></span>
                             @lang('lang.category'): <i>{{$category}}</i>
@@ -41,7 +45,8 @@
                                 data-none-selected-text="{{ __('Course') }}" data-live-search="true" multiple
                                 style="width: 400px">
                             @foreach($courses as $designation => $name)
-                                <option value="{{$designation}}" @if (isset($filters['courses']) && in_array($designation, $filters['courses'])) selected @endif>{{$name}} @if ($designation != 'nocourse')
+                                <option value="{{$designation}}"
+                                        @if (isset($filters['courses']) && in_array($designation, $filters['courses'])) selected @endif>{{$name}} @if ($designation != 'nocourse')
                                         ({{$designation}})@endif</option>
                             @endforeach
                         </select>
@@ -51,7 +56,8 @@
                                 data-none-selected-text="{{ __('Presenter') }}" data-live-search="true" multiple
                                 style="width: 400px;">
                             @foreach($presenters as $username => $name)
-                                <option value="{{$username}}" @if (isset($filters['presenters']) && in_array($username, $filters['presenters'])) selected @endif>{{$name}}</option>
+                                <option value="{{$username}}"
+                                        @if (isset($filters['presenters']) && in_array($username, $filters['presenters'])) selected @endif>{{$name}}</option>
                             @endforeach
                         </select>
                     @endif
@@ -61,7 +67,8 @@
                                 data-live-search="true" multiple
                                 style="width: 200px">
                             @foreach($terms as $term)
-                                <option value="{{$term}}" @if (isset($filters['terms']) && in_array($term, $filters['terms'])) selected @endif>{{$term}}</option>
+                                <option value="{{$term}}"
+                                        @if (isset($filters['terms']) && in_array($term, $filters['terms'])) selected @endif>{{$term}}</option>
                             @endforeach
                         </select>
                     @endif
@@ -71,7 +78,8 @@
                                 data-none-selected-text="{{ __('Tag') }}" data-live-search="true" multiple
                                 style="width: 200px;">
                             @foreach($tags as $tag)
-                                <option value="{{$tag}}" @if (isset($filters['tags']) && in_array($tag, $filters['tags'])) selected @endif>{{$tag}}</option>
+                                <option value="{{$tag}}"
+                                        @if (isset($filters['tags']) && in_array($tag, $filters['tags'])) selected @endif>{{$tag}}</option>
                             @endforeach
                         </select>
                     @endif
@@ -120,20 +128,20 @@
             let formData = new FormData();
 
             if (course && course.length) {
-                url += '&course='+course;
+                url += '&course=' + course;
                 formData.append("course", $('select[name="course"]').val());
             }
             if (presenter && presenter.length) {
-                url += '&presenter='+presenter;
+                url += '&presenter=' + presenter;
                 formData.append("presenter", $('select[name="presenter"]').val());
             }
             if (tag && tag.length) {
-                url += '&tag='+tag;
+                url += '&tag=' + tag;
                 formData.append("tag", $('select[name="tag"]').val());
 
             }
             if (semester && semester.length) {
-                url += '&semester='+semester;
+                url += '&semester=' + semester;
                 formData.append("semester", $('select[name="semester"]').val());
             }
 
