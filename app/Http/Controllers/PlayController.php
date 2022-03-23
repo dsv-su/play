@@ -94,6 +94,7 @@ class PlayController extends Controller
 
         // Add placeholders for manual presentations that are currently processed
         $pending = ManualPresentation::where('user', app()->make('play_username'))->where('status', 'sent')->get();
+        $data['upload'] = true;
         $data['pending'] = $pending;
 
         return view('home.index', $data);
