@@ -22,13 +22,14 @@ class Video extends Model implements Searchable
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected $fillable = ['presentation_id', 'title', 'thumb','creation','origin','notification_id', 'presenter', 'duration', 'thumb', 'category_id', 'description'];
+    protected $fillable = ['presentation_id', 'title', 'title_en', 'thumb','creation','origin','notification_id', 'presenter', 'duration', 'thumb', 'category_id', 'description'];
     protected $table = 'videos';
 
     //
     protected $searchable = [
         'columns' => [
             'videos.title' => 10,
+            'videos.title_en' => 9,
             'categories.category_name' => 5,
         ],
         'joins' => [
@@ -175,16 +176,4 @@ class Video extends Model implements Searchable
         return $this->system_config['store']['list_uri'];
     }
 
-    //These flags should be refactored in the future as it would speed up by casting instead
-    /*public function editable() {
-        return app()->make('play_role') == 'Administrator' ||
-            CourseadminPermission::where('username', app()->make('play_username'))->where('video_id', $this->id)->exists() ||
-            IndividualPermission::where('username', app()->make('play_username'))->where('permission', 'edit')->exists();
-    }*/
-
-    /*public function deletable() {
-        return app()->make('play_role') == 'Administrator' ||
-            CourseadminPermission::where('username', app()->make('play_username'))->where('video_id', $this->id)->exists() ||
-            IndividualPermission::where('username', app()->make('play_username'))->where('permission', 'delete')->exists();
-    }*/
 }

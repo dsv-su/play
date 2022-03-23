@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ManualPresentation extends Model
 {
     use HasFactory;
-    protected $fillable = ['status', 'user','base','title','creation', 'presenters', 'courses','daisy_courses', 'tags', 'thumb','permission', 'entitlement', 'sources', 'description'];
+    protected $fillable = ['status', 'user','base', 'title', 'title_en', 'creation', 'presenters', 'courses','daisy_courses', 'tags', 'thumb','permission', 'entitlement', 'sources', 'description'];
 
     protected $casts = [
         'presenters' => 'array',
@@ -17,6 +17,12 @@ class ManualPresentation extends Model
         'daisy_courses' => 'array',
         'sources' =>  'array',
     ];
+
+    public function getTitleAttribute(): array
+    {
+        return $this->attributes['title'] = ['sv' => $this->attributes['title'], 'en' => $this->attributes['title_en']];
+    }
+
 
     public function setPresentersAttribute($value)
     {

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 
 class PlayStoreNotify extends Model
 {
-    protected $json, $client, $headers, $response;
+    protected $json, $client, $headers, $response, $title;
     private $file, $system_config;
 
     public function __construct(Model $model)
@@ -22,6 +22,7 @@ class PlayStoreNotify extends Model
     {
         // type: manual | type: update
         $this->presentation
+            ->makeHidden('title_en')
             ->makeHidden('status')
             ->makeHidden('user')
             ->makeHidden('user_email')
@@ -51,7 +52,9 @@ class PlayStoreNotify extends Model
             'status' => 'success',
             'type' => $type
         ]);
+
         $this->json['package'] = $this->presentation;
+
         $this->json = $this->json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
         //*********************************************************************************

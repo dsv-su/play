@@ -33,6 +33,7 @@ class UploadController extends Controller
         $file->local = Carbon::now()->toDateString('Y-m-d') . '_' . rand(1, 999);
         $file->base = '-';
         $file->title = '';
+        $file->title_en = '';
         $file->presenters = [];
         $file->tags = [];
         $file->courses = [];
@@ -99,6 +100,7 @@ class UploadController extends Controller
             //Second validation
             $this->validate($request, [
                 'title' => 'required',
+                'title_en' => 'required',
                 'created' => 'required',
                 //Disabled for now
                 //'disclaimer' => 'required',
@@ -158,6 +160,7 @@ class UploadController extends Controller
             $manualPresentation->status = 'pending';
             $manualPresentation->base = '/data0/incoming/' . $manualPresentation->local;
             $manualPresentation->title = $request->title;
+            $manualPresentation->title_en = $request->title_en;
             $manualPresentation->description = $request->description ?? '';
             $manualPresentation->presenters = $presenters;
             $manualPresentation->tags = $tags;

@@ -40,9 +40,9 @@
                         <div class="row justify-content-between text-left">
                             <!-- Title -->
                             <div class="form-group col-sm-6 flex-column d-flex"><label for="title"
-                                     class="form-control-label px-1">{{ __("Title") }}<span
+                                     class="form-control-label px-1">{{ __("Title in Swedish") }}<span
                                         class="text-danger"> *</span></label>
-                                <input class="form-control" id="title" name="title" type="text" placeholder="{{ __("Title") }}"
+                                <input class="form-control" id="title" name="title" type="text" placeholder="{{ __("Title in Swedish") }}"
                                        value="{{ old('title') ? old('title'): $title ?? '' }}">
                                 <div class="invalid-feedback">
                                     {{__('Title is required')}}
@@ -65,6 +65,17 @@
                             </div>
                         </div>
                         <div class="row justify-content-between text-left">
+                            <div class="form-group col-sm-6 flex-column d-flex">
+                                <label for="title_en" class="form-control-label px-1">{{ __("Title in English") }}<span class="text-danger"> *</span></label>
+                                <input class="form-control" id="title_en" name="title_en" type="text" placeholder="{{ __("Title in English") }}"
+                                       value="{{ old('title') ? old('title'): $title ?? '' }}">
+                                <div class="invalid-feedback">
+                                    {{__('Title is required')}}
+                                </div>
+                                <div><small class="text-danger">{{ $errors->first('title_en') }}</small></div>
+                            </div>
+
+
                             <div class="form-group col-12 col-lg-6 flex-column d-flex"><label for="description"
                                     class="form-control-label px-1">{{ __("Description") }}</label>
                                 <textarea id="description" name="description" class="form-control"
