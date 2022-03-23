@@ -20,14 +20,14 @@ class VideoStore extends Model
     public function presentation(): Video
     {
         $this->video = new Video;
-        //$title = new TitleObject($this->request->title);
+        $title = new TitleObject($this->request->title);
         $this->video->id = $this->request->id;
         $this->video->origin = $this->request->origin;
         $this->video->notification_id = $this->request->notification_id;
         $this->video->creation = $this->request->creation;
-        $this->video->title = $this->request->title;
-        //$this->video->title = $title->swedish();
-        //$this->video->title_en = $title->english();
+        //$this->video->title = $this->request->title;
+        $this->video->title = $title->swedish();
+        $this->video->title_en = $title->english();
         $this->video->description = $this->request->description;
         $this->video->thumb = $this->request->thumb;
         $this->video->duration = Carbon::parse($this->request->duration);
