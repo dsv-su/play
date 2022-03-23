@@ -2,6 +2,7 @@
 
 namespace App\Services\TicketHandler;
 
+use App\Services\AuthHandler;
 use App\Video;
 
 class AdminTicket extends TicketPermissionHandler implements \App\Interfaces\TicketInterface
@@ -16,7 +17,9 @@ class AdminTicket extends TicketPermissionHandler implements \App\Interfaces\Tic
 
     public function cast()
     {
-        $this->server = explode(";", $_SERVER['entitlement']);
+        $system = app(AuthHandler::class);
+        $system = $system->authorize();
+        $this->server = explode(";", $_SERVER[$system->global->authorization_parameter]);
         foreach ($this->server as $this->server_entitlement) {
             if ($this->admin_entitlement() == $this->server_entitlement) {
                 $this->video->setAttribute('ticket', true);

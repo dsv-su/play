@@ -17,7 +17,7 @@ class PresentationIndividualTicket extends TicketPermissionHandler implements \A
     public function cast()
     {
         foreach ($this->video->ipermissions as $this->iperm) {
-            if($this->iperm->username. '@su.se' == $_SERVER['eppn'] && in_array($this->iperm->permission, ['read', 'edit', 'delete'])) {
+            if($this->iperm->username. '@su.se' == $_SERVER['REMOTE_USER'] && in_array($this->iperm->permission, ['read', 'edit', 'delete'])) {
                 $this->video->setAttribute('ticket', true);
             }
         }
