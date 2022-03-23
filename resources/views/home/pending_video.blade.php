@@ -18,7 +18,7 @@
                     </div>
 -->
     <div class="card-header position-relative"
-         style="background-image: url({{ url('/storage/'.$video->local.'/'. $video->thumb) }});">
+         style="">
         <div class="d-flex justify-content-center h-100">
             <div class="d-inline alert alert-secondary m-auto"
                  role="alert">{{ __("Processing") }}</div>
