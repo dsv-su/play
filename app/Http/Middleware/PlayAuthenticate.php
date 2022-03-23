@@ -124,7 +124,7 @@ class PlayAuthenticate
                 return $_SERVER['displayName'];
             });
             app()->bind('play_username', function() {
-                return substr($_SERVER['eppn'], 0, strpos($_SERVER['eppn'], "@"));
+                return substr($_SERVER['REMOTE_USER'], 0, strpos($_SERVER['REMOTE_USER'], "@"));
             });
             app()->bind('play_email', function() {
                 return $_SERVER['mail'];
@@ -146,7 +146,7 @@ class PlayAuthenticate
 
             $daisy = new DaisyAPI();
             //Get user DaisyID
-            $daisyPersonID = $daisy->getDaisyPersonId(substr($_SERVER['eppn'], 0, strpos($_SERVER['eppn'], "@")));
+            $daisyPersonID = $daisy->getDaisyPersonId(substr($_SERVER['REMOTE_USER'], 0, strpos($_SERVER['REMOTE_USER'], "@")));
 
             // Assign role to user
             //If user is system administrator
