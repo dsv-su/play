@@ -120,6 +120,7 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
         //Testing routes
         Route::get('/test', 'TestController@test')->name('test');
         Route::get('/roles', 'TestController@roles')->name('roles');
+        Route::get('/server', 'TestController@server')->name('server');
 
     });
     Route::get('/start', 'SystemController@start')->name('playboot');

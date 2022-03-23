@@ -8,6 +8,11 @@ class TestController extends Controller
     {
     }
 
+    public function server()
+    {
+        dd($_SERVER);
+    }
+
     public function roles()
     {
         //Check role status
