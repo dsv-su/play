@@ -19,6 +19,9 @@ class AdminTicket extends TicketPermissionHandler implements \App\Interfaces\Tic
     {
         $system = app(AuthHandler::class);
         $system = $system->authorize();
+        if(!isset($_SERVER[$system->global->authorization_parameter])) {
+            return false;
+        }
         $this->server = explode(";", $_SERVER[$system->global->authorization_parameter]);
         foreach ($this->server as $this->server_entitlement) {
             if ($this->admin_entitlement() == $this->server_entitlement) {
