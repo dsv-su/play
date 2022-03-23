@@ -23,7 +23,7 @@
             <div class="d-inline alert alert-secondary m-auto"
                  role="alert">{{ __("Processing") }}</div>
         </div>
-        <p class="m-1 px-1"> {{\Carbon\Carbon::parse($video->duration)->toTimeString()}} </p>
+        <p class="m-1 px-1"> @if(isset($video->mediasite_folder_id)) {{\Carbon\Carbon::parse($video->duration/1000)->toTimeString()}} @else {{\Carbon\Carbon::parse($video->duration)->toTimeString()}} @endif</p>
     </div>
     <div class="card-body p-1 overflow-hidden">
         <div class="d-flex align-items-start">
@@ -31,7 +31,7 @@
                 @if(isset($upload))
                     <h4 class="card-text font-1rem font-weight-bold px-1 py-2">{{ $video->title['sv'] }} ({{$video->created_at}})</h4>
                 @else
-                    <h4 class="card-text font-1rem font-weight-bold px-1 py-2">{{ $video->title }} ({{$video->created_at}})</h4>
+                    <h4 class="card-text font-1rem font-weight-bold px-1 py-2">{{ $video->title }} ({{$video->updated_at}})</h4>
                 @endif
             </div>
             @if ($video->description)
