@@ -752,7 +752,7 @@ class PlayController extends Controller
     }
 
     public function pendingMediasite() {
-        $mps = MediasitePresentation::where('status', 'sent')->where('video_id', '')->get();
+        $mps = MediasitePresentation::where('status', 'sent')->where('video_id', '')->orderBy('updated_at')->get();
         foreach ($mps as $mp) {
             $mp->courses = json_decode($mp->courses);
             $mp->presenters = json_decode($mp->presenters);
