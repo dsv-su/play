@@ -258,12 +258,22 @@ class PlayAuthenticate
 
             //User is Student
             else  {
-                app()->bind('play_auth', function () {
-                    return 'Student';
-                });
-                app()->bind('play_role', function () {
-                    return 'Student';
-                });
+                    //Check if student is uploader
+                    if (in_array($role_uploader, $server)) {
+                        app()->bind('play_auth', function () {
+                            return 'Uploader';
+                        });
+                        app()->bind('play_role', function () {
+                            return 'Uploader';
+                        });
+                    } else {
+                        app()->bind('play_auth', function () {
+                            return 'Student';
+                        });
+                        app()->bind('play_role', function () {
+                            return 'Student';
+                        });
+                    }
             }
 
             return $next($request);
