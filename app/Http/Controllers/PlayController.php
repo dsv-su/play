@@ -87,7 +87,7 @@ class PlayController extends Controller
         // Active courses (current semester)
         $data['activepaginated'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($daisy) {
             return $query->whereIn('course_id', $daisy->getActiveCourses());
-        })->latest('creation')->take(24)->Paginate(8);
+        })->latest('creation')->take(24)->Paginate(8)->fragment('active');
         $data['active'] = $visibility->filter($data['activepaginated']);
 
         // All courses (tab 3)
