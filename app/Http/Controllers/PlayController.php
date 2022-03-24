@@ -35,6 +35,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -58,6 +59,8 @@ class PlayController extends Controller
         $daisy = new DaisyIntegration();
         $data['permissions'] = VideoPermission::all();
         $courses = [];
+        //Seconds to hold cache
+        $seconds = 60;
 
         //For testing
         //Fake students
@@ -70,11 +73,18 @@ class PlayController extends Controller
                 $courses = [6798, 6799, 6760, 6778, 6828, 6796, 6719, 6720];
             } // End testing
         } elseif (App::environment('production') and app()->make('play_role') == 'Student') {
-            // User is Student
-            $courses = $daisy->getActiveStudentCourses(app()->make('play_username'));
+            // User is Student store courses in cache
+            $courses = Cache::remember('student', $seconds, function () use ($daisy){
+                return $daisy->getActiveStudentCourses(app()->make('play_username'));
+            });
+            //$courses = $daisy->getActiveStudentCourses(app()->make('play_username'));
         } elseif (App::environment('production') and (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Staff')) {
-            // User is Employee
-            $courses = $daisy->getActiveEmployeeCourses(app()->make('play_username'));
+            // User is Employee store courses in cache
+            $courses = Cache::remember('staff', $seconds, function () use ($daisy){
+                return $daisy->getActiveEmployeeCourses(app()->make('play_username'));
+            });
+
+            //$courses = $daisy->getActiveEmployeeCourses(app()->make('play_username'));
         }
 
         if (!empty($courses)) {
@@ -84,10 +94,15 @@ class PlayController extends Controller
             })->latest('creation')->get());
         }
 
-        // Active courses (current semester)
-        $data['activepaginated'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($daisy) {
-            return $query->whereIn('course_id', $daisy->getActiveCourses());
-        })->latest('creation')->take(24)->Paginate(8)->fragment('active');
+        // Active courses (current semester) store in cache
+        $active_courses = Cache::remember('active', $seconds, function () use ($daisy){
+            return $daisy->getActiveCourses();
+        });
+
+
+        $data['activepaginated'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses) {
+            return $query->whereIn('course_id', $active_courses);
+        })->latest('creation')->Paginate(8)->fragment('active');
         $data['active'] = $visibility->filter($data['activepaginated']);
 
         // All courses (tab 3)
