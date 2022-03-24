@@ -13,6 +13,7 @@
         Dates: <input type="text" name="daterange" class="w-50"/><br/>
         Designation: <input type="text" class="col-3" id="designation" name="designation" placeholder="Designation"
                             required>
+        <br><input type="checkbox" name="onlyfetch"> Only fetch</input><br>
         <div id="todownload" class="alert alert-info w-50 font-1rem" role="alert" style="display: none;">No presentations to fetch</div>
         <input type="submit" class="btn btn-sm btn-primary" value="Download"/><br/><br/>
     </form>
@@ -27,6 +28,7 @@
             @endforeach
         </select><br/>
         Dates: <input type="text" name="daterange" class="w-50"/><br/>
+        <br><input type="checkbox" name="onlyfetch"> Only fetch</input><br>
         <div id="todownload" class="alert alert-info w-50 font-1rem" role="alert" style="display: none;">No presentations to fetch</div>
         <input type="submit" class="btn btn-sm btn-primary" value="Download"/><br/><br/>
     </form>
@@ -41,6 +43,7 @@
             @endforeach
         </select><br/>
         Dates: <input type="text" name="daterange" class="w-50"/><br/>
+        <br><input type="checkbox" name="onlyfetch"> Only fetch</input><br>
         <div id="todownload" class="alert alert-info w-50 font-1rem" role="alert" style="display: none;">No presentations to fetch</div>
         <input type="submit" class="btn btn-sm btn-primary" value="Download"/><br/><br/>
     </form>
@@ -55,6 +58,7 @@
             @endforeach
         </select><br/>
         Dates: <input type="text" name="daterange" class="w-50"/><br/>
+        <br><input type="checkbox" name="onlyfetch"> Only fetch</input><br>
         <div id="todownload" class="alert alert-info w-50 font-1rem" role="alert" style="display: none;">No presentations to fetch</div>
         <input type="submit" class="btn btn-sm btn-primary" value="Download"/><br/><br/>
     </form>

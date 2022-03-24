@@ -68,7 +68,8 @@ class PlayStoreNotify extends Model
             'Accept' => 'application/json',
         ];
         try {
-            $this->response = $this->client->request('POST', $this->uri(), [
+            $uri = ($type == 'mediasite') ? $this->mediasite_uri() : $this->uri();
+            $this->response = $this->client->request('POST', $uri, [
                 'headers' => $this->headers,
                 'body' => $this->json
             ]);
@@ -99,7 +100,7 @@ class PlayStoreNotify extends Model
             if (App::isLocale('swe')) {
                 $message = 'Bearbetar presentationen';
             } else {
-                $message = 'Processing the Presentation';
+                $message = 'Processing the presentation';
             }
 
             return redirect('/')->with(['message' => $message]);
@@ -248,6 +249,17 @@ class PlayStoreNotify extends Model
         $this->system_config = parse_ini_file($this->file, true);
 
         return $this->system_config['store']['notify_uri'];
+    }
+
+    private function mediasite_uri()
+    {
+        $this->file = base_path() . '/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            $this->file = base_path() . '/systemconfig/play.ini.example';
+        }
+        $this->system_config = parse_ini_file($this->file, true);
+
+        return $this->system_config['store']['notify_mediasite_uri'];
     }
 
     private function storeauth()
