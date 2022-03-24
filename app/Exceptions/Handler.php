@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use App\Jobs\JobDevNotification;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 
 class Handler extends ExceptionHandler
@@ -16,6 +17,7 @@ class Handler extends ExceptionHandler
      */
     protected $dontReport = [
         TokenExpiredException::class,
+        TokenBlacklistedException::class,
     ];
 
     /**
