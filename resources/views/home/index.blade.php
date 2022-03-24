@@ -97,8 +97,9 @@
                         </div>
                     </div>
                 </div>
-        @endif
             {{ $activepaginated->links() }}
+        @endif
+
 
         <!-- Content tab Active -->
             <div id="all" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-C">
