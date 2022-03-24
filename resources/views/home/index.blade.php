@@ -44,13 +44,13 @@
                 @if (isset($active) && !$active->isEmpty())
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#active" data-toggle="tab" role="tab" aria-controls="active"
-                           title="@lang('lang.active_courses')">@lang('lang.active_courses') ({{$active->count()}})</a>
+                           title="@lang('lang.active_courses')">@lang('lang.active_courses') {{--}}({{$active->count()}}){{--}}</a>
                     </li>
                 @endif
                 @if (isset($latest) && $latest->count())
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#all" data-toggle="tab" role="tab" aria-controls="all"
-                           title="@lang('lang.latest')">@lang('lang.latest') ({{$latest->count()}})</a>
+                           title="@lang('lang.latest')">@lang('lang.latest') {{--}}({{$latest->count()}}){{--}}</a>
                     </li>
                 @endif
             </ul>
@@ -98,6 +98,8 @@
                     </div>
                 </div>
         @endif
+            {{ $activepaginated->links() }}
+
         <!-- Content tab Active -->
             <div id="all" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-C">
                 @if ((isset($latest) && $latest->count()) || isset($pending) && $pending->count())
@@ -176,6 +178,7 @@
                         {{ __("No presentations from ongoing courses were found") }}
                     </p>
                 @endif
+                    {{ $allpaginated->links() }}
             </div>
         </div>
     </div>
