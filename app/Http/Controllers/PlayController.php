@@ -488,7 +488,7 @@ class PlayController extends Controller
         $dates = explode(' - ', request('daterange'));
         $start = Carbon::createFromFormat('d/m/Y', $dates[0])->startOfDay();
         $end = Carbon::createFromFormat('d/m/Y', $dates[1])->endOfDay();
-        $this->processDownload('course', $folderid, $designation, $start, $end);
+        $this->processDownload('course', $folderid, $designation, $start, $end, request()->onlyfetch ?? null);
 
         return redirect()->route('home');
     }
@@ -575,7 +575,7 @@ class PlayController extends Controller
      * @return bool
      */
     public
-    function processDownload($type, $folderid, $designation = null, $start = null, $end = null): bool
+    function processDownload($type, $folderid, $designation = null, $start = null, $end = null, $onlyfetch = false): bool
     {
         $system = new AuthHandler();
         $system = $system->authorize();
@@ -689,6 +689,7 @@ class PlayController extends Controller
                     foreach ($slides as $slide) {
                         if (!$slide['IsGeneratedFromVideoStream']) {
                             $mediasiteid = substr(substr_replace(substr_replace(substr_replace(substr_replace($slide['Id'], '-', 20, 0), '-', 16, 0), '-', 12, 0), '-', 8, 0), 0, -2);
+                            $parentresourceid = substr(substr_replace(substr_replace(substr_replace(substr_replace($slide['ParentResourceId'], '-', 20, 0), '-', 16, 0), '-', 12, 0), '-', 8, 0), 0, -2);
                             $request = DB::connection('notmediasite')->select("select * from Timecodes where id = '$mediasiteid'");
                             if ($request) {
                                 $blobs = $request[0]->datablob;
@@ -697,8 +698,10 @@ class PlayController extends Controller
                                 $array = json_decode($json, TRUE);
                                 for ($i = 1; $i < $slide['Length'] + 1; $i++) {
                                     $filename = "slide_" . str_pad($i, 4, "0", STR_PAD_LEFT) . ".jpg";
+                                    $filenamedirect = str_replace('{0:D4}', str_pad($i, 4, "0", STR_PAD_LEFT), $slide['FileNameWithExtension']);
                                     $slideurl = "https://play2.dsv.su.se/FileServer/" . $slide['ContentServerId'] . "/Presentation/" . $slide['ParentResourceId'] . "/" . $filename;
-                                    $metadata['slides'][] = ['url' => $slideurl, 'duration' => isset($array['Slides']['SlideEntry'][$i - 1]) ? $array['Slides']['SlideEntry'][$i - 1]['Time'] : $array['Slides']['SlideEntry']['Time']];
+                                    $slideurldirect = "https://mediasite-media.dsv.su.se/SmoothStreaming/OnDemand/Slides/$parentresourceid/$filenamedirect";
+                                    $metadata['slides'][] = ['url' => $slideurldirect, 'duration' => isset($array['Slides']['SlideEntry'][$i - 1]) ? $array['Slides']['SlideEntry'][$i - 1]['Time'] : $array['Slides']['SlideEntry']['Time']];
                                 }
                             } else {
                                 Log::error('Slides for presentation with id ' . $mediasiteid . ' are missing in the database.');
@@ -738,8 +741,14 @@ class PlayController extends Controller
                         }
                     }
 
-                    $notify = new PlayStoreNotify($presentation);
-                    $notify->sendSuccess('mediasite');
+                    if (!$onlyfetch) {
+                        $notify = new PlayStoreNotify($presentation);
+                        $notify->sendSuccess('mediasite');
+                    } else {
+                        unset($presentation->slides);
+                        $presentation->status = 'fetched';
+                        $presentation->save();
+                    }
                 } catch (GuzzleException $e) {
                     report($e);
                 }
