@@ -147,15 +147,12 @@
                                 @error('title_en') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
-
-                    </div>
-
-                    <!-- Description -->
-                    <div class="row justify-content-between text-left">
+                        <!-- Description -->
                         <div class="form-group col-12 col-md-6 flex-column d-flex"><label
-                                    class="form-control-label px-1">{{ __("Description") }}</label>
+                                class="form-control-label px-1">{{ __("Description") }}</label>
                             <textarea id="description" wire:model="description" name="description"></textarea>
                         </div>
+
                     </div>
 
                     <!-- Course -->
