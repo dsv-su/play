@@ -96,8 +96,9 @@
                             <div class="card video my-0 mx-auto"></div>
                         </div>
                     </div>
+                    {{ $activepaginated->links() }}
                 </div>
-            {{ $activepaginated->links() }}
+
         @endif
 
 
