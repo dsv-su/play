@@ -113,28 +113,41 @@
                 <div class="rounded border shadow p-3 my-2">
                     <!-- Title -->
                     <div class="row justify-content-between text-left">
-                        <div class="form-group col-12 col-md-6 flex-column d-flex"><label
-                                    class="form-control-label px-1">{{ __("Title") }}<span class="text-danger"> *</span></label>
+
+                        <div class="form-group col-12 col-md-6 flex-column d-flex">
+                            <label class="form-control-label px-1">{{ __("Title in Swedish") }}<span class="text-danger"> *</span></label>
                             <input wire:model="title" name="title" id="title" type="text" required class="form-control">
                             <div class="invalid-feedback">
-                                {{__('Title is required')}}
+                                {{__("Title is required")}}
                             </div>
                             <div>
                                 @error('title') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
-                        <div class="form-group col-12 col-md-6 flex-column d-flex"><label
-                                    class="form-control-label px-1">{{ __("Recording date") }}<span
-                                        class="text-danger"> *</span></label>
+
+                        <div class="form-group col-12 col-md-6 flex-column d-flex">
+                            <label class="form-control-label px-1">{{ __("Recording date") }}<span class="text-danger"> *</span></label>
                             <input id="creationdate" class="datepicker form-control" wire:model="date" name="date"
                                    type="text"
                                    autocomplete="off" data-provide="datepicker" data-date-autoclose="true"
                                    data-date-today-highlight="true" style="max-width: 150px;" required>
                             <div class="invalid-feedback">
-                                {{__('Recording date is required')}}
+                                {{__("Recording date is required")}}
                             </div>
                             <div><small class="text-danger">{{ $errors->first('created') }}</small></div>
                         </div>
+
+                        <div class="form-group col-12 col-md-6 flex-column d-flex">
+                            <label class="form-control-label px-1">{{ __("Title in English") }}<span class="text-danger"> *</span></label>
+                            <input wire:model="title_en" name="title_en" id="title_en" type="text" required class="form-control">
+                            <div class="invalid-feedback">
+                                {{__("Title in English is required")}}
+                            </div>
+                            <div>
+                                @error('title_en') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+
                     </div>
 
                     <!-- Description -->
@@ -150,6 +163,7 @@
                         <div wire:ignore class="form-group col-12 col-md-6 flex-column d-flex">
                             <input type="hidden" name="course" value="{{implode(',',$courseId)}}">
                             <label class="form-control-label px-1">{{ __("Course association") }}</label>
+                            {{--}}
                         <!--
                             <select wire:model.debounce.500s="courseEdit" name="courseEdit" id="select2">
                                 <option value="">@if ($course) {{$course[0]}} @else No course association @endif</option>
@@ -157,7 +171,8 @@
                             <option value="{{ $key }}">{{$key}} - {{ $data[0] }}</option>
                                 @endforeach
                                 </select>
--->
+                        -->
+                        {{--}}
                             <select wire:model.debounce.100s="courseEdit" name="courseEdit[]"
                                     class="form-control mx-1 selectpicker w-100" data-dropup-auto="false"
                                     data-none-selected-text="{{ __('No course association')}}"
@@ -391,6 +406,13 @@
             errors = 1;
         } else {
             $('#title').removeClass('is-invalid');
+        }
+        if ($('#title_en').val() == '') {
+            $('#title_en').addClass('is-invalid');
+            $('#title_en').removeClass('is-valid');
+            errors = 1;
+        } else {
+            $('#title_en').removeClass('is-invalid');
         }
         if ($('#creationdate').val() == '') {
             $('#creationdate').addClass('is-invalid');

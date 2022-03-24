@@ -84,6 +84,7 @@ class EditController extends Controller
         if ($request->isMethod('post')) {
             //Video attributes
             $video->title = $request->title;
+            $video->title_en = $request->title_en;
             $video->description = $request->description;
             $video->creation = Carbon::createFromFormat('d/m/Y', $request->date)->timestamp;
             $video->save();
