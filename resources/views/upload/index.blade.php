@@ -45,7 +45,7 @@
                                 <input class="form-control" id="title" name="title" type="text" placeholder="{{ __("Title in Swedish") }}"
                                        value="{{ old('title') ? old('title'): $title ?? '' }}">
                                 <div class="invalid-feedback">
-                                    {{__('Title is required')}}
+                                    {{__("Title is required")}}
                                 </div>
                                 <div><small class="text-danger">{{ $errors->first('title') }}</small></div>
                             </div>
@@ -70,7 +70,7 @@
                                 <input class="form-control" id="title_en" name="title_en" type="text" placeholder="{{ __("Title in English") }}"
                                        value="{{ old('title') ? old('title'): $title ?? '' }}">
                                 <div class="invalid-feedback">
-                                    {{__('Title is required')}}
+                                    {{__("Title in English is required")}}
                                 </div>
                                 <div><small class="text-danger">{{ $errors->first('title_en') }}</small></div>
                             </div>
@@ -311,6 +311,13 @@
                 errors = 1;
             } else {
                 $('#title').removeClass('is-invalid');
+            }
+            if ($('#title_en').val() == '') {
+                $('#title_en').addClass('is-invalid');
+                $('#title_en').removeClass('is-valid');
+                errors = 1;
+            } else {
+                $('#title_en').removeClass('is-invalid');
             }
             if ($('#creationdate').val() == '') {
                 $('#creationdate').addClass('is-invalid');

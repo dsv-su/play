@@ -11,10 +11,9 @@ use Livewire\Component;
 
 class EditPresentation extends Component
 {
-    //use WithFileUploads;
 
     public $video;
-    public $title, $thumb, $created, $date, $origin, $duration, $category, $description;
+    public $title, $title_en, $thumb, $created, $date, $origin, $duration, $category, $description;
     public $presenters = [], $presenters_uid = [];
     public $course = [], $coursedetail = [], $course_semester = [], $course_year = [], $courseId = [];
     public $courseids;
@@ -37,6 +36,7 @@ class EditPresentation extends Component
     {
         $this->video = $video;
         $this->title = $video->title;
+        $this->title_en = $video->title_en;
         $this->thumb = $video->thumb;
         $this->origin = $video->origin;
         $this->duration = $video->duration;
