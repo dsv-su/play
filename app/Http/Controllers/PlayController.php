@@ -74,13 +74,13 @@ class PlayController extends Controller
             } // End testing
         } elseif (App::environment('production') and app()->make('play_role') == 'Student') {
             // User is Student store courses in cache
-            $courses = Cache::remember('student', $seconds, function () use ($daisy){
+            $courses = Cache::remember(app()->make('play_username'), $seconds, function () use ($daisy){
                 return $daisy->getActiveStudentCourses(app()->make('play_username'));
             });
             //$courses = $daisy->getActiveStudentCourses(app()->make('play_username'));
         } elseif (App::environment('production') and (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Staff')) {
             // User is Employee store courses in cache
-            $courses = Cache::remember('staff', $seconds, function () use ($daisy){
+            $courses = Cache::remember(app()->make('play_username'), $seconds, function () use ($daisy){
                 return $daisy->getActiveEmployeeCourses(app()->make('play_username'));
             });
 
@@ -102,11 +102,11 @@ class PlayController extends Controller
 
         $data['activepaginated'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses) {
             return $query->whereIn('course_id', $active_courses);
-        })->latest('creation')->Paginate(8)->fragment('active');
+        })->latest('creation')->Paginate(8, ['*'], 'active');
         $data['active'] = $visibility->filter($data['activepaginated']);
 
         // All courses (tab 3)
-        $data['allpaginated'] = Video::with('category', 'video_course.course')->latest('creation')->Paginate(8)->fragment('all');
+        $data['allpaginated'] = Video::with('category', 'video_course.course')->latest('creation')->Paginate(8, ['*'], 'all');
         $data['latest'] = $visibility->filter($data['allpaginated']);
 
         // Add placeholders for manual presentations that are currently processed
