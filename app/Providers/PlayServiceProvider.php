@@ -7,6 +7,7 @@ use App\Services\AuthHandler;
 use App\Services\Cattura\CatturaRecoders;
 use App\Services\ConfigurationHandler;
 use App\Services\CountPresentations;
+use App\Services\Daisy\DaisyIntegration;
 use App\Services\Filters\VisibilityFilter;
 use Illuminate\Support\ServiceProvider;
 
@@ -25,6 +26,10 @@ class PlayServiceProvider extends ServiceProvider
 
         app()->singleton('authHandler', function(){
             return new AuthHandler();
+        });
+
+        app()->singleton('daisyIntegration', function(){
+            return new DaisyIntegration();
         });
 
         app()->singleton('cattura', function(){

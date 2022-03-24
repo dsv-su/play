@@ -50,13 +50,12 @@ class PlayController extends Controller
      */
 
 
-    public function index(VisibilityFilter $visibility)
+    public function index(DaisyIntegration $daisy, VisibilityFilter $visibility)
     {
         if (!System::find(1)) {
             return redirect()->action([SystemController::class, 'start']);
         }
 
-        $daisy = new DaisyIntegration();
         $data['permissions'] = VideoPermission::all();
         $courses = [];
         //Seconds to hold cache
@@ -95,7 +94,7 @@ class PlayController extends Controller
         }
 
         // Active courses (current semester) store in cache
-        $active_courses = Cache::remember('active', $seconds, function () use ($daisy){
+        $active_courses = Cache::remember(app()->make('play_username') . '_active', $seconds, function () use ($daisy){
             return $daisy->getActiveCourses();
         });
 

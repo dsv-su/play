@@ -3,33 +3,32 @@
 namespace App\Services\Daisy;
 
 use App\Course;
-use App\System;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class DaisyIntegration extends Model
+class DaisyIntegration
 {
-    protected $system, $res, $client;
+    protected $system, $res, $client, $jar;
     protected $endpoints, $endp, $xml, $json, $array, $item, $course;
     protected $resource, $array_resource;
     protected $courses, $courselist, $course_json, $course_result, $list, $designation_header;
 
     public function __construct()
     {
-        $this->system = System::find(1);
+        $this->client = new Client();
     }
 
     public function getResource($endpoint, $type = null)
     {
-        $this->client = new Client();
+
         try {
-            return $this->client->request('GET', $this->system->daisy_url . $endpoint, [
-                'auth' => [$this->system->daisy_username, $this->system->daisy_password],
+            return $this->client->request('GET', $this->daisy_url() . $endpoint, [
+                'auth' => [$this->daisy_username(), $this->daisy_password()],
                 'headers' => ['Accept' => $type ? "application/$type" : '']
             ]);
+
         } catch (ClientException $e) {
             app()->make('init')->check_system();
             report($e);
@@ -306,5 +305,38 @@ class DaisyIntegration extends Model
         $this->system_config = parse_ini_file($this->file, true);
 
         return $this->system_config['Daisy']['to_year'];
+    }
+
+    private function daisy_url()
+    {
+        $this->file = base_path() . '/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            abort(510);
+        }
+        $this->system_config = parse_ini_file($this->file, true);
+
+        return $this->system_config['Daisy']['daisy_url'];
+    }
+
+    private function daisy_username()
+    {
+        $this->file = base_path() . '/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            abort(510);
+        }
+        $this->system_config = parse_ini_file($this->file, true);
+
+        return $this->system_config['Daisy']['daisy_username'];
+    }
+
+    private function daisy_password()
+    {
+        $this->file = base_path() . '/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            abort(510);
+        }
+        $this->system_config = parse_ini_file($this->file, true);
+
+        return $this->system_config['Daisy']['daisy_password'];
     }
 }

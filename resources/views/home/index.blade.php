@@ -44,13 +44,13 @@
                 @if (isset($active) && !$active->isEmpty())
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#active" data-toggle="tab" role="tab" aria-controls="active"
-                           title="@lang('lang.active_courses')">@lang('lang.active_courses') {{--}}({{$active->count()}}){{--}}</a>
+                           title="@lang('lang.active_courses')">@lang('lang.active_courses') ({{$activepaginated->total()}})</a>
                     </li>
                 @endif
-                @if (isset($latest) && $latest->count())
+                @if (isset($latest) && $allpaginated->total())
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#all" data-toggle="tab" role="tab" aria-controls="all"
-                           title="@lang('lang.latest')">@lang('lang.latest') {{--}}({{$latest->count()}}){{--}}</a>
+                           title="@lang('lang.latest')">@lang('lang.latest') ({{$allpaginated->total()}})</a>
                     </li>
                 @endif
             </ul>
@@ -96,193 +96,179 @@
                             <div class="card video my-0 mx-auto"></div>
                         </div>
                     </div>
-                    {{$activepaginated->appends(['active' => $activepaginated->currentPage(), 'all' => $allpaginated->currentPage()])->links()}}
-    {{--}}{{ $activepaginated->links() }}{{--}}
-</div>
-
-@endif
-
-
-<!-- Content tab Active -->
-<div id="all" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-C">
-@if ((isset($latest) && $latest->count()) || isset($pending) && $pending->count())
-    @if (isset($courses) || isset($terms) || isset($presenters) || isset($tags))
-        <form class="form-inline">
-            <label class="col-form-label mr-1 font-weight-light">Filter by: </label>
-            @if (isset($courses))
-                <select name="course" class="form-control mx-1 selectpicker"
-                        data-none-selected-text="Course" data-live-search="true" multiple
-                        style="width: 400px">
-                    @foreach($courses as $designation => $name)
-                        <option value="{{$designation}}">{{$name}} ({{$designation}})</option>
-                    @endforeach
-                </select>
-            @endif
-            @if (isset($terms))
-                <select name="semester" class="form-control mx-1 selectpicker"
-                        data-none-selected-text="Term" data-live-search="true" multiple
-                        style="width: 200px">
-                    @foreach($terms as $term)
-                        <option value="{{$term}}">{{$term}}</option>
-                    @endforeach
-                </select>
-            @endif
-            @if (isset($presenters))
-                <select name="presenter" class="form-control mx-1 selectpicker"
-                        data-none-selected-text="Presenter" data-live-search="true" multiple
-                        style="width: 200px">
-                    @foreach($presenters as $username => $name)
-                        <option value="{{$username}}">{{$name}}</option>
-                    @endforeach
-                </select>
-            @endif
-            @if (isset($tags))
-                <select name="tag" @if (empty($tags)) disabled
-                        @endif class="form-control mx-1 selectpicker"
-                        data-none-selected-text="Tag" data-live-search="true" multiple
-                        style="width: 200px;">
-                    @foreach($tags as $tag)
-                        <option value="{{$tag}}">{{$tag}}</option>
-                    @endforeach
-                </select>
-            @endif
-            <button type="button" class="mb-2 btn btn-outline-secondary"
-                    onclick="$('.selectpicker').selectpicker('deselectAll'); $('.selectpicker').selectpicker('refresh');">
-                {{__("Clear selection")}}
-            </button>
-            <meta name="csrf-token" content="{{ csrf_token() }}">
-        </form>
-    @endif
-    <div class="card-deck inner">
-        @if (isset($pending) && $pending->count())
-            @foreach ($pending as $key => $video)
-                <div class="col my-3">
-                    @include('home.pending_video')
+                    <div class="pagination justify-content-center">
+                        {{ $activepaginated->fragment('active')->links() }}
+                    </div>
                 </div>
-            @endforeach
-        @endif
-        @foreach ($latest as $key => $video)
-            <div class="col my-3">
-                @include('home.video')
+            @endif
+
+        <!-- Content tab All -->
+        <div id="all" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-C">
+        @if ((isset($latest) && $latest->count()) || isset($pending) && $pending->count())
+            @if (isset($courses) || isset($terms) || isset($presenters) || isset($tags))
+                <form class="form-inline">
+                    <label class="col-form-label mr-1 font-weight-light">Filter by: </label>
+                    @if (isset($courses))
+                        <select name="course" class="form-control mx-1 selectpicker"
+                            data-none-selected-text="Course" data-live-search="true" multiple
+                            style="width: 400px">
+                        @foreach($courses as $designation => $name)
+                            <option value="{{$designation}}">{{$name}} ({{$designation}})</option>
+                        @endforeach
+                        </select>
+                    @endif
+                    @if (isset($terms))
+                        <select name="semester" class="form-control mx-1 selectpicker"
+                                data-none-selected-text="Term" data-live-search="true" multiple
+                                style="width: 200px">
+                        @foreach($terms as $term)
+                            <option value="{{$term}}">{{$term}}</option>
+                        @endforeach
+                        </select>
+                    @endif
+                    @if (isset($presenters))
+                        <select name="presenter" class="form-control mx-1 selectpicker"
+                                data-none-selected-text="Presenter" data-live-search="true" multiple
+                                style="width: 200px">
+                        @foreach($presenters as $username => $name)
+                            <option value="{{$username}}">{{$name}}</option>
+                        @endforeach
+                        </select>
+                    @endif
+                     @if (isset($tags))
+                        <select name="tag" @if (empty($tags)) disabled
+                                @endif class="form-control mx-1 selectpicker"
+                                data-none-selected-text="Tag" data-live-search="true" multiple
+                                style="width: 200px;">
+                        @foreach($tags as $tag)
+                            <option value="{{$tag}}">{{$tag}}</option>
+                        @endforeach
+                        </select>
+                    @endif
+                    <button type="button" class="mb-2 btn btn-outline-secondary"
+                        onclick="$('.selectpicker').selectpicker('deselectAll'); $('.selectpicker').selectpicker('refresh');">
+                    {{__("Clear selection")}}
+                    </button>
+                    <meta name="csrf-token" content="{{ csrf_token() }}">
+                </form>
+            @endif
+            <div class="card-deck inner">
+                @if (isset($pending) && $pending->count())
+                    @foreach ($pending as $key => $video)
+                        <div class="col my-3">
+                            @include('home.pending_video')
+                        </div>
+                    @endforeach
+                @endif
+                @foreach ($latest as $key => $video)
+                    <div class="col my-3">
+                        @include('home.video')
+                    </div>
+                @endforeach
+                <div class="col">
+                    <div class="card video my-0 mx-auto"></div>
+                </div>
+                <div class="col">
+                    <div class="card video my-0 mx-auto"></div>
+                </div>
+                <div class="col">
+                    <div class="card video my-0 mx-auto"></div>
+                </div>
             </div>
-        @endforeach
-        <div class="col">
-            <div class="card video my-0 mx-auto"></div>
+        @else
+            <p class="my-3">
+            {{ __("No presentations from ongoing courses were found") }}
+            </p>
+        @endif
+        <div class="pagination justify-content-center">
+            {{ $allpaginated->fragment('all')->links() }}
         </div>
-        <div class="col">
-            <div class="card video my-0 mx-auto"></div>
+
         </div>
-        <div class="col">
-            <div class="card video my-0 mx-auto"></div>
         </div>
     </div>
-@else
-    <p class="my-3">
-        {{ __("No presentations from ongoing courses were found") }}
-    </p>
-@endif
-    {{$allpaginated->appends(['all' => $allpaginated->currentPage(), 'active' => $activepaginated->currentPage()])->links()}}
-    {{--}}{{ $allpaginated->links() }}{{--}}
-</div>
-</div>
-</div>
 
-<!--Download modal -->
-<livewire:modals.download-presentation />
+        <!--Download modal -->
+        <livewire:modals.download-presentation />
 
 <script>
-$(document).ready(function (e) {
-// Makes the first tab visible
-$('#myTab').find('li').first().addClass('active');
-$('#myTab').find('li').first().find('a').addClass('active');
-$('div.tab-pane').first().addClass('show active');
-});
+    $(document).ready(function (e) {
+        // Makes the first tab visible
+        $('#myTab').find('li').first().addClass('active');
+        $('#myTab').find('li').first().find('a').addClass('active');
+        $('div.tab-pane').first().addClass('show active');
+    });
 
-$(document).on('change', 'select', function (e) {
-$.ajaxSetup({
-headers: {
-    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-}
-});
-let formData = new FormData();
-formData.append("course", $('select[name="course"]').val());
-formData.append("semester", $('select[name="semester"]').val());
-formData.append("presenter", $('select[name="presenter"]').val());
-formData.append("tag", $('select[name="tag"]').val());
-$.ajax({
-type: 'POST',
-url: "/{{ Request::path()}}",
-data: formData,
-cache: false,
-contentType: false,
-processData: false,
-success: (data) => {
-    $('#all').find('.card-deck.inner').html(data['html']);
-    $('select[name="tag"] option').each(function () {
-        console.log(data['tags']);
-        if (data['tags'].indexOf($(this).val()) >= 0) {
-            $(this).prop('disabled', false);
-        } else {
-            $(this).prop('disabled', true);
-        }
+    $(document).on('change', 'select', function (e) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        let formData = new FormData();
+        formData.append("course", $('select[name="course"]').val());
+        formData.append("semester", $('select[name="semester"]').val());
+        formData.append("presenter", $('select[name="presenter"]').val());
+        formData.append("tag", $('select[name="tag"]').val());
+        $.ajax({
+            type: 'POST',
+            url: "/{{ Request::path()}}",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: (data) => {
+                $('#all').find('.card-deck.inner').html(data['html']);
+                $('select[name="tag"] option').each(function () {
+                    console.log(data['tags']);
+                    if (data['tags'].indexOf($(this).val()) >= 0) {
+                    $(this).prop('disabled', false);
+                    } else {
+                    $(this).prop('disabled', true);
+                    }
+                });
+                $('select[name="course"] option').each(function () {
+                    console.log($(this).val());
+                    console.log(data['courses']);
+                    if (data['courses'][$(this).val()]) {
+                    $(this).prop('disabled', false);
+                    } else {
+                    $(this).prop('disabled', true);
+                    }
+                });
+                $('select[name="presenter"] option').each(function () {
+                    if (data['presenters'][$(this).val()]) {
+                    $(this).prop('disabled', false);
+                    } else {
+                    $(this).prop('disabled', true);
+                    }
+                });
+                $('select[name="semester"] option').each(function () {
+                    if (data['terms'].indexOf($(this).val()) >= 0) {
+                    $(this).prop('disabled', false);
+                    } else {
+                    $(this).prop('disabled', true);
+                    }
+                });
+                $('.selectpicker').selectpicker('refresh');
+            },
+            error: function (data) {
+            //alert('There was an error');
+            console.log(data);
+            }
+        });
     });
-    $('select[name="course"] option').each(function () {
-        console.log($(this).val());
-        console.log(data['courses']);
-        if (data['courses'][$(this).val()]) {
-            $(this).prop('disabled', false);
-        } else {
-            $(this).prop('disabled', true);
-        }
-    });
-    $('select[name="presenter"] option').each(function () {
-        if (data['presenters'][$(this).val()]) {
-            $(this).prop('disabled', false);
-        } else {
-            $(this).prop('disabled', true);
-        }
-    });
-    $('select[name="semester"] option').each(function () {
-        if (data['terms'].indexOf($(this).val()) >= 0) {
-            $(this).prop('disabled', false);
-        } else {
-            $(this).prop('disabled', true);
-        }
-    });
-    $('.selectpicker').selectpicker('refresh');
-},
-error: function (data) {
-    //alert('There was an error');
-    console.log(data);
-}
-});
-});
 </script>
-<script>
-$(document).ready(() => {
-let url = location.href.replace(/\/$/, "");
-
-if (location.hash) {
-const hash = url.split("#");
-$('#myTab a[href="#'+hash[1]+'"]').tab("show");
-url = location.href.replace(/\/#/, "#");
-history.replaceState(null, null, url);
-setTimeout(() => {
-    $(window).scrollTop(0);
-}, 400);
-}
-
-$('a[data-toggle="tab"]').on("click", function() {
-let newUrl;
-const hash = $(this).attr("href");
-if(hash == "#my") {
-    newUrl = url.split("#")[0];
-} else {
-    newUrl = url.split("#")[0] + hash;
-}
-newUrl += "/";
-history.replaceState(null, null, newUrl);
-});
-});
-</script>
+    <script>
+        $(document).ready(function(){
+            var url = document.location.toString();
+            if (url.match('#')) {
+                $('.nav-tabs a[href="#' + url.split('#')[1] + '"]')[0].click();
+            }
+            //To make sure that the page always goes to the top
+            setTimeout(function () {
+                window.scrollTo(0, 0);
+            },200);
+        });
+    </script>
 @endsection

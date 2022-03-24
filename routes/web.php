@@ -7,9 +7,6 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Under development
-|
 */
 
 if (class_exists(AuthHandler::class))
@@ -75,8 +72,6 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
         return view('default');
     });
     Route::post('/upload_step1/{id}', 'UploadController@step1')->name('upload_step1');
-    //Route::post('/thumb/{id}', 'UploadController@thumb')->name('thumb');
-    //Route::post('/poster/{id}', 'UploadController@poster')->name('poster');
     Route::get('/upload_store/{id}', 'UploadController@store')->name('upload_store');
     Route::get('/ldap_search', 'UploadController@ldap_search')->name('ldap_search');
     Route::get('/course_search', 'UploadController@course_search')->name('course_search');

@@ -63,15 +63,15 @@ class CourseNav extends Model
         }
     }
 
-    private function getUserName()
+    private function getUserName(AuthHandler $authHandler)
     {
-        $system = new AuthHandler();
+        $system = $authHandler;
         $system = $system->authorize();
         if($system->global->app_env == 'local') {
             return 'dsv-dev';
         }
         else {
-            return $_SERVER['eppn'];
+            return $_SERVER['REMOTE_USER'];
         }
     }
 
@@ -107,16 +107,16 @@ class CourseNav extends Model
 
     private function getStudentDesignation($username)
     {
-        return Cache::remember('student_designation', $seconds = 180, function () use($username) {
-            $daisy = new DaisyIntegration();
+        return Cache::remember($username . '_designation', $seconds = 3600, function () use($username) {
+            $daisy = app(DaisyIntegration::class);
             return $daisy->getActiveStudentDesignations($username) ?? '';
         });
     }
 
     private function getStudentSemesters($username)
     {
-        return Cache::remember('student_semesters', $seconds = 30, function () use($username){
-            $daisy = new DaisyIntegration();
+        return Cache::remember($username . '_semesters', $seconds = 3600, function () use($username){
+            $daisy = app(DaisyIntegration::class);
             $courses = $daisy->getActiveStudentCourses($username);
             $semester = [];
             foreach ($courses as $courseid) {
@@ -135,8 +135,8 @@ class CourseNav extends Model
 
     private function getEmployeeDesignation($username)
     {
-        return Cache::remember('employee_designation', $seconds = 30, function () use($username) {
-            $daisy = new DaisyIntegration();
+        return Cache::remember($username . '_designation', $seconds = 3600, function () use($username) {
+            $daisy = app(DaisyIntegration::class);
             return $daisy->getActiveEmployeeDesignations($username) ?? '';
             //return array_slice($daisy->getActiveEmployeeDesignations($username), 0, 6);
         });
@@ -144,8 +144,8 @@ class CourseNav extends Model
 
     private function getEmployeeSemesters($username)
     {
-        return Cache::remember('employee_semesters', $seconds = 30, function () use($username){
-            $daisy = new DaisyIntegration();
+        return Cache::remember($username . '_semesters', $seconds = 3600, function () use($username){
+            $daisy = app(DaisyIntegration::class);
             $semesters = collect($daisy->getActiveEmployeeSemesters($username));
             $course_segments = $semesters->unique()->sortDesc();
             foreach($course_segments as $term) {
