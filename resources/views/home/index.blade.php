@@ -36,23 +36,46 @@
         @if (isset($active) || isset($my))
             <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
                 @if (isset($my) && !$my->isEmpty())
+                    <!-- Paginated tab -->
+                    {{--}}
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#my" data-toggle="tab" role="tab" aria-controls="my"
                            title="@lang('lang.my_courses')">@lang('lang.my_courses') ({{$mypaginated->total()}})</a>
                     </li>
+                    {{--}}
+                    <li class="nav-item pb-0">
+                        <a class="nav-link" href="#my" data-toggle="tab" role="tab" aria-controls="my"
+                           title="@lang('lang.my_courses')">@lang('lang.my_courses') ({{$my->count()}})</a>
+                    </li>
                 @endif
                 @if (isset($active) && !$active->isEmpty())
+                    <!-- Paginated tab -->
+                    {{--}}
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#active" data-toggle="tab" role="tab" aria-controls="active"
                            title="@lang('lang.active_courses')">@lang('lang.active_courses') ({{$activepaginated->total()}})</a>
                     </li>
+                    {{--}}
+                    <li class="nav-item pb-0">
+                        <a class="nav-link" href="#active" data-toggle="tab" role="tab" aria-controls="active"
+                           title="@lang('lang.active_courses')">@lang('lang.active_courses') ({{$active->count()}})</a>
+                    </li>
                 @endif
+                <!-- Paginated tab -->
+                {{--}}
                 @if (isset($latest) && $allpaginated->total())
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#all" data-toggle="tab" role="tab" aria-controls="all"
                            title="@lang('lang.latest')">@lang('lang.latest') ({{$allpaginated->total()}})</a>
                     </li>
                 @endif
+                {{--}}
+                    @if (isset($latest) && $latest->count())
+                        <li class="nav-item pb-0">
+                            <a class="nav-link" href="#all" data-toggle="tab" role="tab" aria-controls="all"
+                               title="@lang('lang.latest')">@lang('lang.latest') ({{$latest->count()}})</a>
+                        </li>
+                    @endif
             </ul>
         @endif
         <div class="tab-content" id="myTabContent">
@@ -75,9 +98,11 @@
                             <div class="card video my-0 mx-auto"></div>
                         </div>
                     </div>
+                    {{--}}  Pagination for tab1 - My courses
                     <div class="pagination justify-content-end">
                         {{ $mypaginated->fragment('my')->links() }}
                     </div>
+                    {{--}}
                 </div>
             @endif
         <!-- Content tab Active -->
@@ -99,9 +124,11 @@
                             <div class="card video my-0 mx-auto"></div>
                         </div>
                     </div>
+                    {{--}}  Pagination for tab2 - Active courses
                     <div class="pagination justify-content-end">
                         {{ $activepaginated->fragment('active')->links() }}
                     </div>
+                    {{--}}
                 </div>
             @endif
 
@@ -183,10 +210,11 @@
             {{ __("No presentations from ongoing courses were found") }}
             </p>
         @endif
+         {{--}}  Pagination for tab3 - All courses
         <div class="pagination justify-content-end">
             {{ $allpaginated->fragment('all')->links() }}
         </div>
-
+        {{--}}
         </div>
         </div>
     </div>
@@ -262,6 +290,7 @@
         });
     });
 </script>
+    {{--}} For pagination
     <script>
         $(document).ready(function(){
             var url = document.location.toString();
@@ -272,6 +301,34 @@
             setTimeout(function () {
                 window.scrollTo(0, 0);
             },200);
+        });
+    </script>
+    {{--}}
+    <script>
+        $(document).ready(() => {
+            let url = location.href.replace(/\/$/, "");
+
+            if (location.hash) {
+                const hash = url.split("#");
+                $('#myTab a[href="#'+hash[1]+'"]').tab("show");
+                url = location.href.replace(/\/#/, "#");
+                history.replaceState(null, null, url);
+                setTimeout(() => {
+                    $(window).scrollTop(0);
+                }, 400);
+            }
+
+            $('a[data-toggle="tab"]').on("click", function() {
+                let newUrl;
+                const hash = $(this).attr("href");
+                if(hash == "#my") {
+                    newUrl = url.split("#")[0];
+                } else {
+                    newUrl = url.split("#")[0] + hash;
+                }
+                newUrl += "/";
+                history.replaceState(null, null, newUrl);
+            });
         });
     </script>
 @endsection
