@@ -15,7 +15,7 @@ class MediasitePresentation extends Model
     protected $keyType = 'string';
     public $incrementing = false;
     protected $table = 'mediasite_presentations';
-    protected $fillable = ['id', 'status', 'user', 'video_id', 'mediasite_folder_id', 'title', 'presenters', 'created', 'duration', 'courses', 'tags', 'thumb', 'sources', 'description'];
+    protected $fillable = ['id', 'status', 'user', 'video_id', 'mediasite_folder_id', 'title', 'visibility', 'presenters', 'created', 'duration', 'courses', 'tags', 'thumb', 'sources', 'description'];
 
     public function folder(): BelongsTo
     {
