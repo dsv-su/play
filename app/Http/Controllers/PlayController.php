@@ -89,10 +89,15 @@ class PlayController extends Controller
 
         if (!empty($courses)) {
             //My courses (tab 1)
+            $data['my'] = $visibility->filter(Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
+                    return $query->whereIn('course_id', $courses);
+                })->latest('creation')->get());
+            /*
             $data['mypaginated'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
                 return $query->whereIn('course_id', $courses);
             })->latest('creation')->Paginate(24, ['*'], 'my');
             $data['my'] = $visibility->filter($data['mypaginated']);
+            */
         }
 
         // Active courses (current semester) store in cache
@@ -100,15 +105,23 @@ class PlayController extends Controller
             return $daisy->getActiveCourses();
         });
 
-
+        //Active (tab2)
+        $data['active'] = $visibility->filter(Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses) {
+            return $query->whereIn('course_id', $active_courses);
+        })->latest('creation')->take(24)->get());
+        /*
         $data['activepaginated'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses) {
             return $query->whereIn('course_id', $active_courses);
         })->latest('creation')->Paginate(24, ['*'], 'active');
         $data['active'] = $visibility->filter($data['activepaginated']);
+        */
 
         // All courses (tab 3)
+        $data['latest'] = $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->take(24)->get());
+        /*
         $data['allpaginated'] = Video::with('category', 'video_course.course')->latest('creation')->Paginate(24, ['*'], 'all');
         $data['latest'] = $visibility->filter($data['allpaginated']);
+        */
 
         // Add placeholders for manual presentations that are currently processed
         $pending = ManualPresentation::where('user', app()->make('play_username'))->where('status', 'sent')->get();
