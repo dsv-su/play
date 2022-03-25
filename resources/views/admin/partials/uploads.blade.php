@@ -32,7 +32,7 @@
                             <td>{{$manual_presentation->status}}</td>
                             <td>{{$manual_presentation->id}}</td>
                             <td>{{$manual_presentation->created_at}}</td>
-                            <td>{{$manual_presentation->title}}</td>
+                            <td>{{$manual_presentation->title['sv']}}</td>
                             <td>{{$manual_presentation->local}}</td>
                             <td>{{$manual_presentation->user}}</td>
                             @if($manual_presentation->status == 'failed' or $manual_presentation->status == 'stored' or $manual_presentation->status == 'sent')

@@ -43,6 +43,8 @@ class UploadController extends Controller
         $file->duration = 0;
         $file->sources = [];
         $file->save();
+        $file->local = $file->local . $file->id;
+        $file->save();
 
         return $file;
     }
