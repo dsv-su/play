@@ -38,7 +38,7 @@
                 @if (isset($my) && !$my->isEmpty())
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#my" data-toggle="tab" role="tab" aria-controls="my"
-                           title="@lang('lang.my_courses')">@lang('lang.my_courses') ({{$my->count()}})</a>
+                           title="@lang('lang.my_courses')">@lang('lang.my_courses') ({{$mypaginated->total()}})</a>
                     </li>
                 @endif
                 @if (isset($active) && !$active->isEmpty())
@@ -75,6 +75,9 @@
                             <div class="card video my-0 mx-auto"></div>
                         </div>
                     </div>
+                    <div class="pagination justify-content-end">
+                        {{ $mypaginated->fragment('my')->links() }}
+                    </div>
                 </div>
             @endif
         <!-- Content tab Active -->
@@ -96,7 +99,7 @@
                             <div class="card video my-0 mx-auto"></div>
                         </div>
                     </div>
-                    <div class="pagination justify-content-center">
+                    <div class="pagination justify-content-end">
                         {{ $activepaginated->fragment('active')->links() }}
                     </div>
                 </div>
@@ -180,7 +183,7 @@
             {{ __("No presentations from ongoing courses were found") }}
             </p>
         @endif
-        <div class="pagination justify-content-center">
+        <div class="pagination justify-content-end">
             {{ $allpaginated->fragment('all')->links() }}
         </div>
 
