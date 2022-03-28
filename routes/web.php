@@ -22,8 +22,7 @@ Route::get('/presentation/{id}', 'MultiplayerController@presentation')->middlewa
 
 //Protected routes
 Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
-
-    Route::get('/', 'PlayController@index')->name('home');
+    Route::get('/', 'HomeController@index')->name('home');
     Route::get('lang/{lang}', 'LocalizationController@index')->name('language');
 
     //View
