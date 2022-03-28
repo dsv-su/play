@@ -72,14 +72,19 @@ class PlayController extends Controller
                 $courses = [6798, 6799, 6760, 6778, 6828, 6796, 6719, 6720];
             } // End testing
 
-        } elseif (App::environment('production') and app()->make('play_role') == 'Student') {
+        }
+        elseif (App::environment('production') &&
+            (app()->make('play_auth') == 'Student' && (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Student'))) {
             // User is Student store courses in cache
             $courses = Cache::remember(app()->make('play_username'), $seconds, function () use ($daisy){
                 return $daisy->getActiveStudentCourses(app()->make('play_username'));
             });
             //$courses = $daisy->getActiveStudentCourses(app()->make('play_username'));
 
-        } elseif (App::environment('production') and (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Staff')) {
+        } elseif (App::environment('production') &&
+            (app()->make('play_auth') == 'Administrator' or app()->make('play_auth') == 'Courseadmin' or app()->make('play_auth') == 'Staff') &&
+            (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Staff')
+        ) {
             // User is Employee store courses in cache
             $courses = Cache::remember(app()->make('play_username'), $seconds, function () use ($daisy){
                 return $daisy->getActiveEmployeeCourses(app()->make('play_username'));

@@ -239,7 +239,7 @@ class PlayAuthenticate
                 //User is Uploader
                 elseif (in_array($role_uploader, $server)) {
                     app()->bind('play_auth', function () {
-                        return 'Uploader';
+                        return 'Staff';
                     });
                     app()->bind('play_role', function () {
                         return 'Uploader';
@@ -261,7 +261,7 @@ class PlayAuthenticate
                     //Check if student is uploader
                     if (in_array($role_uploader, $server)) {
                         app()->bind('play_auth', function () {
-                            return 'Uploader';
+                            return 'Student';
                         });
                         app()->bind('play_role', function () {
                             return 'Uploader';
