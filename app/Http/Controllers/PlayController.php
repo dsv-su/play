@@ -416,17 +416,19 @@ class PlayController extends Controller
                 $folderid = $folder->mediasite_id;
                 $presentations = json_decode($mediasite->get($url . "/Folders('$folderid')/Presentations?\$top=100000")->getBody(), true)['value'];
                 foreach ($presentations as $presentation) {
-                    if ($presentation['Status'] == 'Viewable') {
+                    if ($presentation['Status'] == 'Viewable' || $presentation['Status'] == 'Offline') {
                         $mp = MediasitePresentation::find($presentation['Id']);
                         if (!$mp) {
                             MediasitePresentation::create([
                                 'title' => $presentation['Title'],
                                 'id' => $presentation['Id'],
-                                'mediasite_folder_id' => $folder->id
+                                'mediasite_folder_id' => $folder->id,
+                                'visibility' => !($presentation['Status'] == 'Offline')
                             ]);
                         } else {
                             $mp->title = $presentation['Title'];
                             $mp->mediasite_folder_id = $folder->id;
+                            $mp->visibility = !($presentation['Status'] == 'Offline');
                             $mp->save();
                         }
                     } else {
@@ -646,7 +648,8 @@ class PlayController extends Controller
                         'recorded' => $mediasite_presentation['RecordDate'],
                         'duration' => $mediasite_presentation['Duration'],
                         'owner' => $mediasite_presentation['Owner'],
-                        'tags' => $mediasite_presentation['TagList']
+                        'tags' => $mediasite_presentation['TagList'],
+                        'visibility' => !($mediasite_presentation['Status'] == 'Offline' || $mediasite_presentation['Private'] == true)
                     );
 
                     // Presenters
@@ -755,6 +758,7 @@ class PlayController extends Controller
                     $presentation->created = strtotime($metadata['recorded']);
                     $presentation->duration = $metadata['duration'];
                     $presentation->sources = $metadata['sources'];
+                    $presentation->visibility = $metadata['visibility'];
                     if (isset($metadata['slides'])) {
                         $presentation->slides = $metadata['slides'];
                     }
