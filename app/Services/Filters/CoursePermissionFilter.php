@@ -37,6 +37,10 @@ class CoursePermissionFilter extends VisibilityFilter implements VisibilityInter
                     default:
                         $this->video->setAttribute('permission_type', 'custom');
                 }
+            } else {
+                //Fallback to default setting if not set
+                $this->video->setAttribute('course_permission', true);
+                $this->video->setAttribute('permission_type', 'dsv');
             }
         }
     }

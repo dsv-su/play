@@ -21,6 +21,8 @@ class CourseSettingsFilter extends VisibilityFilter implements \App\Interfaces\V
         foreach($this->courses as $this->course) {
             if($check = $this->getCourseVisibilitysetting($this->course->id)) {
                 $this->courseSettings[] = $check->visibility;
+            } else {
+                $this->courseSettings[] = true; //Fallback to default if not set
             }
 
         }
