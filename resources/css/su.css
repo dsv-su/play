@@ -8180,8 +8180,10 @@ textarea#embedCode, textarea#staticLink {
     background-color: #002f5f !important;
 }
 
-
 a.badge-primary:hover {
     background-color: #597898 !important;
+}
 
+span[type="button"] {
+    -webkit-appearance: none !important;
 }
