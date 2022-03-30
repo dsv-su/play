@@ -210,7 +210,8 @@ class SearchController extends Controller
         $data['latest'] = $visibility->filter(Course::find($courseid)->videos()->filter(function ($video) {
             return $video;
         }));
-        $data['latest'] = $visibility->filter($data['latest']);
+        $data['manage'] = \Request::is('course/'.$courseid.'/manage');
+
         return view('home.index', $data);
     }
 
