@@ -37,7 +37,6 @@ class CheckEditPermission
             }
 
             //Check if user is courseadmin
-            // This should be changed to 'play_auth' for production
             if (app()->make('play_role') == 'Courseadmin') {
                 $courseadmin = new \App\Services\Course\CourseAdmin();
                 if($courseadmin->check(app()->make('play_username') , $video)) {
