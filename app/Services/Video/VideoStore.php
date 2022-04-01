@@ -31,6 +31,7 @@ class VideoStore extends Model
         $this->video->description = $this->request->description;
         $this->video->thumb = $this->request->thumb;
         $this->video->duration = Carbon::parse($this->request->duration);
+        $this->video->visibility = !isset($this->request->visibility) || (bool)$this->request->visibility;
         $this->video->subtitles = $this->request->subtitles;
         $this->video->sources = json_encode($this->request->sources, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         $this->video->presentation = json_encode($this->request->all(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
