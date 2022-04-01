@@ -28,7 +28,7 @@ class CourseSettingsFilter extends VisibilityFilter implements \App\Interfaces\V
         }
         foreach($this->courses as $this->course) {
             if($setting = $this->getCourseVisibilitysetting($this->course->id)) {
-                //Check that all values are the same and there are multiple coursesettings
+                //Check that all values are the same if there exist multiple coursesettings
                 if(!(count(array_unique($this->courseSettings)) === 1) && (count($this->courseSettings) > 1)) {
                     $this->video->setAttribute('visibility', false);
                 } else {
