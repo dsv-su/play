@@ -45,9 +45,7 @@ class Playback
             //Shibboleth
 
             //If user is Admin
-            if(app()->make('play_role') == 'Administrator') {
-                return $next($request);
-            }
+            //TODO
 
 
             //Check if video belongs to course
@@ -57,17 +55,15 @@ class Playback
                 $coursesetting = new CourseSettingVisibility();
 
                 // (1) Check if user is courseAdmin
-                if(app()->make('play_role') == 'Courseadmin') {
-                    //User is courseadmin
-                    $courseadmin = new \App\Services\Course\CourseAdmin();
-                    if($courseadmin->check(app()->make('play_username'), $video)) {
-
-                        return $next($request);
-                    }
+                //User is courseadmin
+                $courseadmin = new \App\Services\Course\CourseAdmin();
+                if($courseadmin->check($_SERVER['REMOTE_USER'], $video)) {
+                    return $next($request);
                 }
 
+
                 // (2) Check if user exist in coursesettings list
-                if($courseadmin_list->check(app()->make('play_username'), $video)) {
+                if($courseadmin_list->check($_SERVER['REMOTE_USER'], $video)) {
                     //User exist in CourseAdmin List
 
                     return $next($request);
@@ -78,7 +74,7 @@ class Playback
                 if($individuals = $video->ipermissions ?? false) {
                     foreach($individuals as $iper) {
                         //Check if user is listed
-                        if($iper->username == app()->make('play_username')) {
+                        if($iper->username == $_SERVER['REMOTE_USER']) {
                             //Check if user has set permissions
                             if(in_array($iper->permission, ['read', 'edit', 'delete'])) {
 
@@ -108,9 +104,7 @@ class Playback
             } else {
 
                 //Not associated to a course
-
                 if($video->visibility) {
-
                     return $next($request);
                 }
                 else {
@@ -120,17 +114,14 @@ class Playback
                     if($individuals = $video->ipermissions ?? false) {
                         foreach($individuals as $iper) {
                             //Check if user is listed
-                            if($iper->username == app()->make('play_username')) {
+                            if($iper->username == $_SERVER['REMOTE_USER']) {
                                 //Check if user has set permissions
                                 if(in_array($iper->permission, ['read', 'edit', 'delete'])) {
-
                                     return $next($request);
                                 }
                             }
-
                         }
                     }
-
                     return redirect()->route('home');
                 }
             }

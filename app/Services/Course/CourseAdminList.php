@@ -17,6 +17,7 @@ class CourseAdminList
 
     public function check($username, $video)
     {
+        $username = substr($username, 0, strpos($username, "@"));
         foreach($video->courses() as $this->course) {
             $this->courselist[] = $this->course->id;
             }

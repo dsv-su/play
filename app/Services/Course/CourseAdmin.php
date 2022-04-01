@@ -17,8 +17,8 @@ class CourseAdmin
     {
         $this->daisy = new DaisyAPI();
         //Get user DaisyID
-        $id = $id . '@su.se';
-        $this->daisyPersonID = $this->daisy->getDaisyPersonId(substr($id, 0, strpos($id, "@")));
+        //$this->daisyPersonID = $this->daisy->getDaisyPersonId(substr($id, 0, strpos($id, "@")));
+        $this->daisyPersonID = $this->daisy->getDaisyPersonId($id);
         //Get CourseAdmin courses
         $courselist = collect($this->daisy->getDaisyEmployeeResponsibleCourses($this->daisyPersonID));
         return $courselist->map(function ($item, $key) {
