@@ -18,6 +18,8 @@ class CourseSettingVisibility
         foreach($this->courselist as $this->courseId) {
             if($check = $this->getCourseSetting($this->courseId)) {
                 $this->coursesetting_list[] = $check->visibility;
+            } else {
+                $this->coursesetting_list[] = true; //Fallback to default if not set
             }
 
         }

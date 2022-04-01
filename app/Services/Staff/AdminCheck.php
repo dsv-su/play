@@ -4,7 +4,7 @@ namespace App\Services\Staff;
 
 use App\Services\AuthHandler;
 
-class StaffCheck
+class AdminCheck
 {
     protected $authHandler, $system, $auth_param, $auth;
     private $file, $system_config;
@@ -14,7 +14,7 @@ class StaffCheck
         $this->authHandler = new AuthHandler();
         $this->system = $this->authHandler->authorize();
         $this->auth_param = $this->system->global->authorization_parameter;
-        $this->auth = $this->staff_entitlement();
+        $this->auth = $this->admin_entitlement();
     }
 
     public function check()
@@ -27,7 +27,7 @@ class StaffCheck
         }
     }
 
-    private function staff_entitlement()
+    private function admin_entitlement()
     {
         $this->file = base_path() . '/systemconfig/play.ini';
         if (!file_exists($this->file)) {
@@ -35,6 +35,6 @@ class StaffCheck
         }
         $this->system_config = parse_ini_file($this->file, true);
 
-        return $this->system_config['global']['staff'];
+        return $this->system_config['global']['admin'];
     }
 }

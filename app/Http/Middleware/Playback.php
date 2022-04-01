@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Services\AuthHandler;
 use App\Services\Course\CourseAdminList;
 use App\Services\Course\CourseSettingVisibility;
+use App\Services\Staff\AdminCheck;
 use App\Services\Staff\StaffCheck;
 use App\Video;
 use Closure;
@@ -46,8 +47,10 @@ class Playback
             //Shibboleth
 
             //If user is Admin
-            //TODO
-
+            $admin = new AdminCheck();
+            if($admin->check()) {
+                return $next($request);
+            }
 
             //Check if video belongs to course
             if(count($video->courses()) >= 1) {
@@ -58,7 +61,7 @@ class Playback
                 $coursesetting = new CourseSettingVisibility();
 
                 // (1) Check if user is courseAdmin
-                if($staff->is()) {
+                if($staff->check()) {
                     //User is courseadmin
                     $courseadmin = new \App\Services\Course\CourseAdmin();
                     if($courseadmin->check($_SERVER['REMOTE_USER'], $video)) {
