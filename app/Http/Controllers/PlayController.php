@@ -557,7 +557,7 @@ class PlayController extends Controller
                         'duration' => $mediasite_presentation['Duration'],
                         'owner' => $mediasite_presentation['Owner'],
                         'tags' => $mediasite_presentation['TagList'],
-                        'visibility' => !($mediasite_presentation['Status'] == 'Offline' || $mediasite_presentation['Private'] == true)
+                        'visibility' => (int) !($mediasite_presentation['Status'] == 'Offline' || $mediasite_presentation['Private'] == true)
                     );
 
                     // Presenters
