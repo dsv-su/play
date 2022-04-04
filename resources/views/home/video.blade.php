@@ -287,7 +287,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit"
+                            <button id="delete" type="button"
                                     class="btn btn-primary disabled">{{_("Confirm deletion")}}</button>
                             <button type="button" class="btn btn-secondary"
                                     data-dismiss="modal">{{__("Close")}}</button>
@@ -305,13 +305,14 @@
         if ($(this).val().toLowerCase() == title.toLowerCase()) {
             $(this).addClass('is-valid');
             $(this).removeClass('is-invalid');
-            $(this).closest('.modal-content').find('button[type="submit"]').removeClass('disabled');
+            $(this).closest('.modal-content').find('#delete').removeClass('disabled');
+            $(this).closest('.modal-content').find('#delete').prop('type', 'submit');
         } else {
-            $(this).closest('.modal-content').find('button[type="submit"]').addClass('disabled');
+            $(this).closest('.modal-content').find('#delete').addClass('disabled');
+            $(this).closest('.modal-content').find('#delete').prop('type', 'button');
             $(this).removeClass('is-valid');
             $(this).addClass('is-invalid');
         }
-        ;
     });
     $("#retype{{$video->id}}").on('paste', function ($this) {
         alert('You need to manually type it in!')
