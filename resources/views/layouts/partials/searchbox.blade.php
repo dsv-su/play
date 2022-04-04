@@ -1,7 +1,7 @@
 <!-- Flash Message section -->
 @if(session()->has('message'))
     <div class="container align-self-center">
-        <div class="alert {{session('alert') ?? 'alert-info'}}">
+        <div class="alert @if (session('success')) alert-success @elseif (session('warning')) alert-warning @elseif (session('error')) alert-danger @else alert-info @endif">
             {{ session('message') }}
         </div>
     </div>

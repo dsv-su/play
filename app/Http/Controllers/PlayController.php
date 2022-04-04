@@ -3,23 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Course;
-use App\CourseadminPermission;
-use App\IndividualPermission;
 use App\MediasiteFolder;
 use App\MediasitePresentation;
 use App\Presenter;
 use App\Services\AuthHandler;
 use App\Services\Notify\PlayStoreNotify;
-use App\Stream;
-use App\StreamResolution;
-use App\System;
 use App\Tag;
 use App\UploadHandler;
 use App\Video;
 use App\VideoCourse;
-use App\VideoPermission;
-use App\VideoPresenter;
-use App\VideoStat;
 use App\VideoTag;
 use Carbon\Carbon;
 use Exception;
@@ -557,7 +549,7 @@ class PlayController extends Controller
                         'duration' => $mediasite_presentation['Duration'],
                         'owner' => $mediasite_presentation['Owner'],
                         'tags' => $mediasite_presentation['TagList'],
-                        'visibility' => (int) !($mediasite_presentation['Status'] == 'Offline' || $mediasite_presentation['Private'] == true)
+                        'visibility' => (int)!($mediasite_presentation['Status'] == 'Offline' || $mediasite_presentation['Private'] == true)
                     );
 
                     // Presenters
@@ -704,7 +696,8 @@ class PlayController extends Controller
         return false;
     }
 
-    public function pendingMediasite() {
+    public function pendingMediasite()
+    {
         $mps = MediasitePresentation::where('status', 'sent')->where('video_id', '')->orderBy('updated_at')->get();
         foreach ($mps as $mp) {
             $mp->courses = json_decode($mp->courses);
@@ -763,59 +756,6 @@ class PlayController extends Controller
             }
         }
         return false;
-    }
-
-
-    public function deleteVideoAjax(Request $request): JsonResponse
-    {
-        /*** This method should be refactored
-         ***/
-
-        $video = Video::find($request->video_id);
-
-        //Start transaction
-        DB::beginTransaction();
-
-        try {
-            if ($video->origin == 'mediasite') {
-                foreach (MediasitePresentation::where('video_id', $video->id)->get() as $mp) {
-                    $mp->status = null;
-                    $mp->video_id = null;
-                    $mp->save();
-                }
-            }
-            VideoCourse::where('video_id', $video->id)->delete();
-            VideoTag::where('video_id', $video->id)->delete();
-            VideoPresenter::where('video_id', $video->id)->delete();
-            VideoPermission::where('video_id', $request->video_id)->delete();
-            VideoStat::where('video_id', $request->video_id)->delete();
-            CourseadminPermission::where('video_id', $request->video_id)->delete();
-            IndividualPermission::where('video_id', $request->video_id)->delete();
-
-            $streams = Stream::where('video_id', $video->id)->get();
-            foreach ($streams as $stream) {
-                StreamResolution::where('stream_id', $stream->id)->delete();
-                $stream->delete();
-            }
-            $video->delete();
-        } catch (Exception $e) {
-            report($e);
-            DB::rollback(); // Something went wrong
-            return Response()->json([
-                'message' => $e->getMessage(),
-            ]);
-        }
-
-        DB::commit();   // Successfully removed
-
-        //Send Delete notification -> when this is active
-        $notify = new PlayStoreNotify($video);
-        if ($notify->sendDelete()) {
-            return Response()->json(['message' => 'Presentationen har raderats']);
-        } else {
-            return Response()->json(['message' => 'Play-Store error']);
-        }
-
     }
 
     public
