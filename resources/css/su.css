@@ -5252,6 +5252,7 @@ p.kill-p, .kill-p p {
 
 .video .card-text {
     font-size: 0.8em;
+    word-break: break-word;
 }
 
 .video .card-header .icons {
