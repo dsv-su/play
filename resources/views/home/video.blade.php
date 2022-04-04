@@ -159,13 +159,20 @@
                     <small id="staticLinkHelp"
                            class="form-text text-muted">{{ __("Permalink to this presentation") }}</small>
                 </div>
+
+                <div class="form-group">
+                    <label for="embedCode">{{__("Embed ilearn")}}</label>
+                    <textarea readonly class="form-control text-muted" rows="5" id="embedCode"><a href="{{ route('player', ['video' => $video]) }}"><img src="{{ asset($video->thumb)}}" width="560" height="315"></a></textarea>
+                    <small id="embbedCodeHelp" class="form-text text-muted">{{ __("Use this embed code to insert the video in iLearn") }}</small>
+                </div>
+                {{--}}
                 <div class="form-group">
                     <label for="embedCode">{{__("Embed code")}}</label>
                     <textarea readonly class="form-control text-muted" rows="4" id="embedCode"><iframe width="560" height="315" src="{{ route('player', ['video' => $video]) }}" frameborder="0" allowfullscreen></iframe></textarea>
-                    {{--}}<textarea readonly class="form-control text-muted" rows="4" id="embedCode"><iframe width="560" height="315" src="{{url("/multiplayer?p={$video->id}")}}" frameborder="0" allowfullscreen></iframe></textarea>{{--}}
                     <small id="embbedCodeHelp"
                            class="form-text text-muted">{{ __("Use this embed code to insert the video in e.g. iLearn") }}</small>
                 </div>
+                {{--}}
                 @if(!$video->course_permission)
                 <div class="form-group">
                     <label for="permissions">{{__("Permissions")}}

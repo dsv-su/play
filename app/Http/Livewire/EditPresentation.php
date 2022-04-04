@@ -34,6 +34,7 @@ class EditPresentation extends Component
 
     public function mount($video, $courses, $permissions, $individual_permissions, $user_permission)
     {
+        //dd($video);
         $this->video = $video;
         $this->title = $video->title;
         $this->title_en = $video->title_en;
@@ -46,7 +47,12 @@ class EditPresentation extends Component
         $this->category = $video->category->category_name;
         $this->sources = $video->streams;
         $this->ipermissions = $individual_permissions->count();
-        $this->visibility = (bool)$video->fresh()->visibility;
+        if(isset($video->hidden)) {
+            $this->visibility = false;
+        } else {
+            $this->visibility = (bool)$video->fresh()->visibility;
+        }
+
         $this->download = (bool)$video->download;
         $this->user_permission = $user_permission;
 

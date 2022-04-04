@@ -48,7 +48,13 @@ class Video extends Model implements Searchable
 
     public function getLinkAttribute(): string
     {
-        return $this->attributes['link'] = URL::to('/') . '/player/' . $this->id;
+        if (!$playlist = VideoCourse::where('video_id', $this->id)->first()) {
+            //No playlist
+            return $this->attributes['link'] = URL::to('/') . '/multiplayer?p=' . $this->id;
+        } else {
+            return $this->attributes['link'] = URL::to('/') . '/multiplayer?p=' . $this->id . '&l=' . $playlist->course_id;
+        }
+        //return $this->attributes['link'] = URL::to('/') . '/player/' . $this->id;
     }
 
     public function getThumbAttribute(): string
