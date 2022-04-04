@@ -57,7 +57,7 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     Route::post('/course/{courseid}/store', 'ManageCourseSettingsController@store')->name('course_edit_store');
     Route::get('/edit/{video}', 'EditController@show')->name('presentation_edit');
     Route::post('/edit/{video}', 'EditController@edit')->name('editpresentation');
-
+    Route::post('/delete/{id}', 'ManagePresentationController@delete')->name('presentation.delete');
     Route::post('/manage/deleteAjax', 'PlayController@deleteVideoAjax')->name('manage.deleteVideo');
     Route::post('/manage/editAjax', 'PlayController@editVideoAjax')->name('manage.editVideo');
     Route::get('/my', 'PlayController@myVideos')->name('my.videos');

@@ -1,34 +1,4 @@
 <script>
-    $(document).ajaxStop(function() {
-        /*{{--}}
-        $('a.delete').on('click', function (e) {
-            e.preventDefault();
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            let formData = new FormData();
-            let video_id = $(this).closest('div.video').attr('id');
-            formData.append("video_id", video_id);
-            $.ajax({
-                type: 'POST',
-                url: "{{ route('manage.deleteVideo') }}",
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: () => {
-                    alert('The video has been deleted');
-                    $("#" + video_id).closest('.col').hide();
-                },
-                error: function () {
-                    alert('There was an error in deleting the video. Please check the logs for more info.');
-                }
-            });
-        });
-        {{--}}*/
-    });
     $(document).ready(function () {
         $('.preventdefault').on('click', function(e) {
             e.preventDefault();
@@ -46,33 +16,6 @@
             format: "dd/mm/yyyy",
             weekStart: 1,
             todayHighlight: true
-        });
-
-        $('a.delete').on('click', function (e) {
-            e.preventDefault();
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            let formData = new FormData();
-            let video_id = $(this).closest('div.video').attr('id');
-            formData.append("video_id", video_id);
-            $.ajax({
-                type: 'POST',
-                url: "{{ route('manage.deleteVideo') }}",
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: () => {
-                    alert('The video has been deleted');
-                    $("#" + video_id).closest('.col').hide();
-                },
-                error: function () {
-                    alert('There was an error in deleting the video. Please check the logs for more info.');
-                }
-            });
         });
     });
 
