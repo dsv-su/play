@@ -12,7 +12,8 @@ use Illuminate\Http\Request;
 class CheckPresentationPermission
 {
     /**
-     * Handle an incoming request.
+     * Handle an incoming request and check if the requested presentation
+     * is public.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
@@ -28,25 +29,37 @@ class CheckPresentationPermission
             $presentation = Video::find($id);
 
             if(!$request->server('REMOTE_USER')) {
-                foreach($presentation->courses() as $course) {
-                    $coursepersmission = CoursePermissions::where('course_id', $course->id)->pluck('permission_id');
-                    if(count($coursepersmission) == 1) {
-                        if($coursepersmission[0] == 4 and ($permission->permission_id == 2 or $permission->permission_id == 3 or $permission->permission_id > 4)) {
-                            if($system->global->app_env == 'local') {
-                                return $next($request);
-                            } else {
-                                return redirect()->guest(route('sulogin'));
+
+                // Check the Presentationsetting
+                if ($permission->permission_id == 4) {
+                    //Presentation is public
+                    return $next($request);
+                }
+
+                // Check default setting
+                if($permission->permission_id != 1) {
+                    if($system->global->app_env == 'local') {
+                        return $next($request);
+                    } else {
+                        return redirect()->guest(route('sulogin'));
+                    }
+                }
+
+                // Course settings
+                //Coursesetting for each course
+                if(count($presentation->courses())>=1 ) {
+                    //If presentation is associated with one or several course
+                    foreach($presentation->courses() as $course) {
+                        if($coursepersmission = CoursePermissions::where('course_id', $course->id)->pluck('permission_id')->first()) {
+                            if($coursepersmission != 4) {
+                                if($system->global->app_env == 'local') {
+                                    return $next($request);
+                                } else {
+                                    return redirect()->guest(route('sulogin'));
+                                }
                             }
                         }
                     }
-                    elseif($permission->permission_id != 4) {
-                        if($system->global->app_env == 'local') {
-                            return $next($request);
-                        } else {
-                            return redirect()->guest(route('sulogin'));
-                        }
-                    }
-
                 }
             }
         }

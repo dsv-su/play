@@ -12,7 +12,8 @@ use Illuminate\Http\Request;
 class CheckVideoPermission
 {
     /**
-     * Handle an incoming request.
+     * Handle an incoming request and check if the requested presentation
+     * is public.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
@@ -30,13 +31,13 @@ class CheckVideoPermission
 
             if($presentation) {
                 if(!$request->server('REMOTE_USER')) {
-                    //If presentation permisson setting is not default
+                    
                     //Check the Presentationsetting
                     if ($permission->permission_id == 4) {
                         //Presentation is public
                         return $next($request);
                     }
-                    //If not the presentation has default setting
+                    // Check default setting
                     if($permission->permission_id != 1) {
                         if($system->global->app_env == 'local') {
                             return $next($request);
