@@ -15,15 +15,27 @@ class VisibilityFilter
             //PresentationPermissionsSetting - type
             $PresentationSetting = new PresentationPermissionsFilter($video);
             $PresentationSetting->cast();
-            //CoursePermissionsSettings - type
-            $CourseSettings = new CoursePermissionFilter($video);
-            $CourseSettings->cast();
-            //CourseSettings
-            $CourseSettings = new CourseSettingsFilter($video);
-            $CourseSettings->cast();
+            if(!$video->permission_type == 'dsv') {
+                //Respect presentation setting - override only if not set
+
+                //CoursePermissionsSettings - type
+                $CourseSettings = new CoursePermissionFilter($video);
+                $CourseSettings->cast();
+            }
+
+            if($video->visibility == true) {
+                //Respekt presentation setting - override only if not set
+
+                //CourseSettings
+                $CourseSettings = new CourseSettingsFilter($video);
+                $CourseSettings->cast();
+            }
+
+
             //CourseSettingUsers
             $CourseSettingUsers = new CourseSettingUsersFilter($video);
             $CourseSettingUsers->cast();
+
             //IndividualUsers
             $IndividualUsers = new IndividualPermissionsFilter($video);
             $IndividualUsers->cast();

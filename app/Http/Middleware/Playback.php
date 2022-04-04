@@ -94,11 +94,9 @@ class Playback
                 // (4) Check if Course visibility allows playback
                 if($coursesetting->check($video)) {
                     return $next($request);
-                } else {
-                    return redirect()->route('home');
                 }
 
-                // (5) **Disabled** Check if Presentation visibility allows playback
+                // (5) Check if Presentation visibility allows playback
                 if($video->visibility) {
                     return $next($request);
                 }

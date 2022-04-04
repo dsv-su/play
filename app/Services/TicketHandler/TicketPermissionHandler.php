@@ -20,9 +20,14 @@ class TicketPermissionHandler
         $presentationSetting = new PresentationTicket($this->video);
         $presentationSetting->cast();
 
-        //CourseSetting (1)
-        $coursesettings = new CourseSettingTicket($this->video);
-        $coursesettings->cast();
+        if($this->video->ticket_permission_id == 1) {
+            //Respect presentation setting - override only if default
+
+            //CourseSetting (1)
+            $coursesettings = new CourseSettingTicket($this->video);
+            $coursesettings->cast();
+        }
+
 
         //Check if presentation is public or enviroment is local dev
         if($user_entitlement->validate($this->video->ticket_permission_id)) {
