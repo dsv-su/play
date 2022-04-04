@@ -28,11 +28,25 @@ class CheckVideoPermission
             //Public Course setting
             $presentation = Video::find($request->p);
 
-
             if($presentation) {
                 if(!$request->server('REMOTE_USER')) {
-                    //Coursesetting
-                    if(count($presentation->courses())>=1) {
+                    //If presentation permisson setting is not default
+                    //Check the Presentationsetting
+                    if ($permission->permission_id == 4) {
+                        //Presentation is public
+                        return $next($request);
+                    }
+                    //If not the presentation has default setting
+                    if($permission->permission_id != 1) {
+                        if($system->global->app_env == 'local') {
+                            return $next($request);
+                        } else {
+                            return redirect()->guest(route('sulogin'));
+                        }
+                    }
+
+                    //Coursesetting for each course
+                    if(count($presentation->courses())>=1 ) {
                         //If presentation is associated with one or several course
                         foreach($presentation->courses() as $course) {
                             if($coursepersmission = CoursePermissions::where('course_id', $course->id)->pluck('permission_id')->first()) {
@@ -43,24 +57,6 @@ class CheckVideoPermission
                                         return redirect()->guest(route('sulogin'));
                                     }
                                 }
-                            } else {
-                                //Presentationsetting
-                                if($permission->permission_id != 4) {
-                                    if($system->global->app_env == 'local') {
-                                        return $next($request);
-                                    } else {
-                                        return redirect()->guest(route('sulogin'));
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        //Check the Presentationsetting
-                        if($permission->permission_id != 4) {
-                            if($system->global->app_env == 'local') {
-                                return $next($request);
-                            } else {
-                                return redirect()->guest(route('sulogin'));
                             }
                         }
                     }
