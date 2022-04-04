@@ -98,7 +98,7 @@ class ManagePresentationController extends Controller
     {
         /*** This method should be refactored
          ***/
-        return \Redirect::back()->with('success', true)->with('message', __('The presentation has been deleted'));
+
         $video = Video::find($request->video_id);
 
         //Start transaction
