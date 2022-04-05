@@ -4,10 +4,12 @@ namespace App\Http\Middleware;
 
 use App\Services\AuthHandler;
 use App\Services\Course\CourseAdminList;
+use App\Services\Course\CourseSettingPublic;
 use App\Services\Course\CourseSettingVisibility;
 use App\Services\Staff\AdminCheck;
 use App\Services\Staff\StaffCheck;
 use App\Video;
+use App\VideoPermission;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -41,6 +43,26 @@ class Playback
                 return $next($request);
             }
             //If Shibboleth session is missing
+
+            //Check if video is public
+            $permission = VideoPermission::where('video_id', $video->id)->firstOrFail();
+            if ($permission->permission_id == 4) {
+                //Presentation is public
+                if($video->visibility) {
+                    return $next($request);
+                }
+            }
+
+            //Check if coursesettings is public
+            $course_permission = new CourseSettingPublic();
+            $coursesetting = new CourseSettingVisibility();
+            if($course_permission->check($video) == 4) {
+                //Course is public
+                if($coursesetting->check($video)) {
+                    return $next($request);
+                }
+            }
+
             return redirect()->route('home');
         }
         else {
