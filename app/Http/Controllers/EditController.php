@@ -25,6 +25,7 @@ class EditController extends Controller
 {
     public function __construct()
     {
+        //$this->middleware(['edit-permission', 'redirect-links']); // For session history
         $this->middleware('edit-permission');
     }
 
@@ -219,6 +220,11 @@ class EditController extends Controller
         } else {
             $message = 'Presentation successfully updated';
         }
+
         return redirect()->route('manage')->with('success', $message);
+        // If redirect-links middleware is used -> Will redirect 2 links back
+        //return redirect(session('links')[2])->with('success', $message);
+
+
     }
 }

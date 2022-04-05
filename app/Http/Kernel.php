@@ -74,5 +74,6 @@ class Kernel extends HttpKernel
         'admin-stats' => \App\Http\Middleware\AdminStats::class,
         'playback' => \App\Http\Middleware\Playback::class,
         'auth.basic.once' => \App\Http\Middleware\AuthenticateOnceWithBasicAuth::class,
+        'redirect-links' => \App\Http\Middleware\RedirectLinks::class,
     ];
 }
