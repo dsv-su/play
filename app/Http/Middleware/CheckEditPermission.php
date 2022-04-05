@@ -39,7 +39,7 @@ class CheckEditPermission
             //Check if user is courseadmin
             if (app()->make('play_role') == 'Courseadmin') {
                 $courseadmin = new \App\Services\Course\CourseAdmin();
-                if($courseadmin->check(app()->make('play_username') , $video)) {
+                if($courseadmin->check(app()->make('play_username').'@su.se' , $video)) {
                     return $next($request);
                 } else {
                     return redirect()->route('home');
@@ -50,7 +50,7 @@ class CheckEditPermission
             foreach ($video->courses() as $course) {
                 if (count($course_user_admins = CoursesettingsUsers::where('course_id', $course->id)->get()) >= 1) {
                     foreach ($course_user_admins as $course_user_admin) {
-                        if ($course_user_admin->username . '@su.se' == app()->make('play_username')) {
+                        if ($course_user_admin->username == app()->make('play_username')) {
                             //Check if user correct permissions
                             if (in_array($course_user_admin->permission, ['edit', 'delete'])) {
                                 return $next($request);
@@ -64,7 +64,7 @@ class CheckEditPermission
             if ($individuals = $video->ipermissions ?? false) {
                 foreach ($individuals as $iper) {
                     //Check if user is listed
-                    if ($iper->username . '@su.se' == app()->make('play_username')) {
+                    if ($iper->username == app()->make('play_username')) {
                         //Check if user has set permissions
                         if (in_array($iper->permission, ['edit', 'delete'])) {
                             return $next($request);
