@@ -28,7 +28,7 @@
     <div class="card-body p-1 overflow-hidden">
         <div class="d-flex align-items-start">
             <div class="">
-                @if(isset($upload) == true)
+                @if(isset($upload))
                     <h4 class="card-text font-1rem font-weight-bold px-1 py-2">{{ $video->title['sv'] }} ({{$video->created_at}})</h4>
                 @else
                     <h4 class="card-text font-1rem font-weight-bold px-1 py-2">{{ $video->title }} ({{$video->updated_at}})</h4>

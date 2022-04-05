@@ -11,7 +11,7 @@ class UploadProgressNotification extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $presentation;
+    public $presentation = [];
 
     /**
      * Create a new message instance.
