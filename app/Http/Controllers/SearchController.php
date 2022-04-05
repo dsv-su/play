@@ -39,6 +39,13 @@ class SearchController extends Controller
      * @param Request $request
      * @return Application|Factory|View|string
      */
+
+    /*public function __construct()
+    {
+        //For session history
+        $this->middleware('redirect-links');
+    }*/
+
     public function viewBySemester(VisibilityFilter $visibility, $semester, Request $request)
     {
         if ($semester == 'all') {
