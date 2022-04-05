@@ -49,7 +49,12 @@ class Playback
             if ($permission->permission_id == 4) {
                 //Presentation is public
                 if($video->visibility) {
-                    return $next($request);
+                    //Presentation visibility is set to default
+                    $coursesetting = new CourseSettingVisibility();
+                    if($coursesetting->check($video)) {
+                        //Coursesetting is set to default visibility
+                        return $next($request);
+                    }
                 }
             }
 
