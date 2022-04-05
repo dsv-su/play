@@ -22,10 +22,17 @@
             </div> <!-- col-12 -->
         </div> <!-- row no-gutters -->
     </div>
-    <div class="container banner-inner">
-        <div class="alert alert-info text-center">
-            {{__("Changes are saved upon clicking Save & Close button at the bottom of the page.")}}
-        </div>
+
+    <div wire:ignore class="container banner-inner">
+        @if(session()->has('message'))
+            <div class="alert text-center @if (session('success')) alert-success @elseif (session('warning')) alert-warning @elseif (session('error')) alert-danger @else alert-info @endif">
+                {{ session('message') }}
+            </div>
+        @else
+            <div class="alert alert-info text-center">
+                {{__("Changes are saved upon clicking Save button at the bottom of the page.")}}
+            </div>
+        @endif
     </div>
 
     <div class="container px-3 px-sm-0">
@@ -115,7 +122,8 @@
                     <div class="row justify-content-between text-left">
 
                         <div class="form-group col-12 col-md-6 flex-column d-flex">
-                            <label class="form-control-label px-1">{{ __("Title in Swedish") }}<span class="text-danger"> *</span></label>
+                            <label class="form-control-label px-1">{{ __("Title in Swedish") }}<span
+                                        class="text-danger"> *</span></label>
                             <input wire:model="title" name="title" id="title" type="text" required class="form-control">
                             <div class="invalid-feedback">
                                 {{__("Title is required")}}
@@ -138,8 +146,10 @@
                         </div>
 
                         <div class="form-group col-12 col-md-6 flex-column d-flex">
-                            <label class="form-control-label px-1">{{ __("Title in English") }}<span class="text-danger"> *</span></label>
-                            <input wire:model="title_en" name="title_en" id="title_en" type="text" required class="form-control">
+                            <label class="form-control-label px-1">{{ __("Title in English") }}<span
+                                        class="text-danger"> *</span></label>
+                            <input wire:model="title_en" name="title_en" id="title_en" type="text" required
+                                   class="form-control">
                             <div class="invalid-feedback">
                                 {{__("Title in English is required")}}
                             </div>
@@ -149,7 +159,7 @@
                         </div>
                         <!-- Description -->
                         <div class="form-group col-12 col-md-6 flex-column d-flex"><label
-                                class="form-control-label px-1">{{ __("Description") }}</label>
+                                    class="form-control-label px-1">{{ __("Description") }}</label>
                             <textarea id="description" wire:model="description" name="description"></textarea>
                         </div>
 
@@ -244,15 +254,17 @@
                     <div class="row justify-content-between text-left">
                         <!--Video group permission settings-->
                         <div class="form-group col-12 col-md-6 flex-column d-flex">
-                            <label class="form-control-label px-1"><i class="fas fa-play fa-border fa-pull-left"></i>{{ __("Playback group permissions") }}</label>
+                            <label class="form-control-label px-1"><i
+                                        class="fas fa-play fa-border fa-pull-left"></i>{{ __("Playback group permissions") }}
+                            </label>
                             <div id="video_perm">
                                 <select class="form-group form-control" name="video_permission" style="margin: 5px 0px;"
                                         @if(!$visibility) style="background: #dddddd" @endif>
                                     @foreach($permissions as $perm)
                                         @if(Lang::locale() == 'swe')
-                                        <option value="{{$perm->id}}"
-                                                @if($presentationpermissonId == $perm->id) selected @endif >{{$perm->id}}
-                                            : {{$perm->scope}}</option>
+                                            <option value="{{$perm->id}}"
+                                                    @if($presentationpermissonId == $perm->id) selected @endif >{{$perm->id}}
+                                                : {{$perm->scope}}</option>
                                         @else
                                             <option value="{{$perm->id}}"
                                                     @if($presentationpermissonId == $perm->id) selected @endif >{{$perm->id}}
@@ -264,7 +276,8 @@
                         </div>
                         <!-- Individual permissions -->
                         <div class="form-group col-12 col-md-6 flex-column d-flex">
-                            <label class="form-control-label px-1"><i class="fas fa-user fa-border fa-pull-left"></i>{{ __("Individual permissions") }}
+                            <label class="form-control-label px-1"><i
+                                        class="fas fa-user fa-border fa-pull-left"></i>{{ __("Individual permissions") }}
                                 <span class="badge badge-light">{{$ipermissions}} {{ __("Set") }}</span>
                                 <span type="button" wire:click.prevent="add_individual_perm"
                                       class="btn btn-primary px-1 py-0">{{__("Add")}} <i
@@ -385,9 +398,11 @@
                 </div>
             </div>
 
-            <div class="col-sm-12">
+            <div class="col-sm-12 d-flex align-items-center">
                 <button type="submit" id="submit"
-                        class="btn btn-outline-primary mx-auto d-flex font-125rem m-3">{{ __("Save & Close") }}</button>
+                        class="btn btn-outline-primary ml-auto d-inline-block font-125rem m-3">{{ __("Save") }}</button>
+                <a href="{{route('manage')}}" id="back"
+                   class="btn btn-outline-primary mr-auto  d-inline-block font-125rem m-3">{{ __("Return back") }}</a>
             </div>
 
         </div>

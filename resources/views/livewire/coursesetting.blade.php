@@ -11,11 +11,18 @@
         </div> <!-- row no-gutters -->
     </div>
 
-    <div class="container banner-inner">
-        <div class="alert alert-info text-center">
-            {{__("Changes are saved upon clicking Save & Close button at the bottom of the page.")}}
-        </div>
+    <div wire:ignore class="container banner-inner">
+        @if(session()->has('message'))
+            <div class="alert text-center @if (session('success')) alert-success @elseif (session('warning')) alert-warning @elseif (session('error')) alert-danger @else alert-info @endif">
+                {{ session('message') }}
+            </div>
+        @else
+            <div class="alert alert-info text-center">
+                {{__("Changes are saved upon clicking Save button at the bottom of the page.")}}
+            </div>
+        @endif
     </div>
+
     <div class="container px-3 px-sm-0">
         <div class="row">
             <div class="col-12">
@@ -65,12 +72,13 @@
                         <label for="visibilitySwitch"
                                class="col px-0 col-auto mb-0">{{__("Visibility")}}</label>
                         <div class="col">
-                                    <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip" title="{{__("Switch the toggle to change")}}">
+                                    <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip"
+                                          title="{{__("Switch the toggle to change")}}">
                                     <input wire:click="visibility" class="custom-control-input"
                                            id="visibilitySwitch" name="visibility"
                                            type="checkbox" @if($visibility == true) checked @endif>
                                     <label class="custom-control-label" style="margin-top: 3px;"
-                                           for="visibilitySwitch" ></label>
+                                           for="visibilitySwitch"></label>
                                     </span>
                         </div>
                     </div>
@@ -90,7 +98,8 @@
                         <label for="downloadSwitch"
                                class="col px-0 col-auto mb-0">{{__("Downloadable")}}</label>
                         <div class="col">
-                                       <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip" title="{{__("Switch the toggle to change")}}">
+                                       <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip"
+                                             title="{{__("Switch the toggle to change")}}">
                                         <input wire:click="downloadable" class="custom-control-input"
                                                id="downloadSwitch" name="downloadable"
                                                type="checkbox" @if($downloadable == true) checked @endif>
@@ -110,16 +119,19 @@
                                         class="fas fa-play mr-2"></i>{{ __("Playback group permissions") }}
                             </label>
                             <div id="video_perm">
-                                <select class="form-group form-control" name="course_permission" @if(!$visibility) readonly @endif
+                                <select class="form-group form-control" name="course_permission"
+                                        @if(!$visibility) readonly @endif
                                         style="margin: 5px 0px;">
                                     @foreach($permissions as $perm)
                                         @if(Lang::locale() == 'swe')
                                             <option value="{{$perm->id}}"
-                                                    @if($permissonId == $perm->id) selected @elseif (!$visibility) disabled @endif >{{$perm->id}}
+                                                    @if($permissonId == $perm->id) selected
+                                                    @elseif (!$visibility) disabled @endif >{{$perm->id}}
                                                 : {{$perm->scope}}</option>
                                         @else
                                             <option value="{{$perm->id}}"
-                                                    @if($permissonId == $perm->id) selected @elseif (!$visibility) disabled @endif >{{$perm->id}}
+                                                    @if($permissonId == $perm->id) selected
+                                                    @elseif (!$visibility) disabled @endif >{{$perm->id}}
                                                 : {{$perm->scope_en}}</option>
                                         @endif
                                     @endforeach
@@ -197,7 +209,7 @@
                                 @endforeach
                             @else
                                 <div class="form-group my-1">
-                                <div class="mx-1 my-2 font-1rem">{{ __("No individual user permissions added") }}</div>
+                                    <div class="mx-1 my-2 font-1rem">{{ __("No individual user permissions added") }}</div>
                                 </div>
                             @endif
 
@@ -218,9 +230,11 @@
                 </div>
             @endif
 
-            <div class="col-sm-12">
+            <div class="col-sm-12 d-flex align-items-center">
                 <button type="submit"
-                        class="btn btn-outline-primary mx-auto d-flex font-125rem m-3">{{ __("Save & Close") }}</button>
+                        class="btn btn-outline-primary ml-auto d-flex font-125rem m-3">{{ __("Save") }}</button>
+                <a href="{{route('manage')}}" id="back"
+                   class="btn btn-outline-primary mr-auto d-inline-block font-125rem m-3">{{ __("Return back") }}</a>
             </div>
 
         </div>

@@ -214,11 +214,8 @@ class EditController extends Controller
         }
 
         Cache::flush();
-        if (App::isLocale('swe')) {
-            $message = 'Presentationen har uppdaterats';
-        } else {
-            $message = 'Presentation successfully updated';
-        }
-        return redirect()->route('manage')->with('success', $message);
+
+        //return redirect()->route('manage')->with('success', $message);
+        return redirect()->back()->with('success', true)->with('message', __("Presentation successfully updated"));
     }
 }

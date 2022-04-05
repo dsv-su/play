@@ -36,7 +36,7 @@ class ManageCourseSettingsController extends Controller
                 $year = substr($course['semester'], 0, 4);
                 $term = (substr($course['semester'], 4) == '1') ? 'VT' : 'HT';
                 $name = Lang::locale() == 'swe' ? $course['name'] : $course['name_en'];
-                $courselist[$term.$year][$course['id']] = $course['designation'] . ' ' . $term . $year . ' — ' . $name . ' (' . __('id') . ' ' . $course['id'] . ')';
+                $courselist[$term . $year][$course['id']] = $course['designation'] . ' ' . $term . $year . ' — ' . $name . ' (' . __('id') . ' ' . $course['id'] . ')';
                 $this->checkCourseSettings($course['id'], $coursesetlist, $presentations, $individual_permissions, $playback_permissions);
             }
         } else {
@@ -60,7 +60,7 @@ class ManageCourseSettingsController extends Controller
                     $year = substr($course[3], 0, 4);
                     $term = (substr($course[3], 4) == '1') ? 'VT' : 'HT';
                     $name = Lang::locale() == 'swe' ? $course[0] : $course[1];
-                    $courselist[$term.$year][$course[2]] = $course[4] . ' ' . $term . $year . ' — ' . $name . ' (' . __('id') . ' ' . $course[2] . ')';
+                    $courselist[$term . $year][$course[2]] = $course[4] . ' ' . $term . $year . ' — ' . $name . ' (' . __('id') . ' ' . $course[2] . ')';
                     $this->checkCourseSettings($course[2], $coursesetlist, $presentations, $individual_permissions, $playback_permissions);
                 }
             } else {
@@ -113,8 +113,6 @@ class ManageCourseSettingsController extends Controller
                 [ManageCourseSettingsController::class, 'edit'], ['courseid' => $this->updateCourse($courseid)]
             );
         }
-
-
     }
 
     public function store($course_id, Request $request)
@@ -185,7 +183,9 @@ class ManageCourseSettingsController extends Controller
 
             $coursesettings_permissions->save();
         }
-        return redirect()->route('manage');
+
+        //return redirect()->route('manage');
+        return redirect()->back()->with('success', true)->with('message', __('The course was successfully updated'));
     }
 
     private function updateCourse($course_id)
