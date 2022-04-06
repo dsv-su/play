@@ -1,6 +1,6 @@
 Uppladdning pågår<br><br>
 
-Din presentation med titel: <b>{{ $presentation['title']['sv']['sv'] }}</b> bearbetas. Detta kan ta några minuter.
+Din presentation med titel: <b>{{ $presentation['title_en'] }}</b> bearbetas. Detta kan ta några minuter.
 Du kommer att få ett e-postmeddelande när din presentation har laddats upp.
 <br><br>
 ---

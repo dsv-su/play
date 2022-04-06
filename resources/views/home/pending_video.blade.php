@@ -29,7 +29,7 @@
         <div class="d-flex align-items-start">
             <div class="">
                 @if(isset($upload))
-                    <h4 class="card-text font-1rem font-weight-bold px-1 py-2">{{ $video->title['sv']['sv'] }} ({{$video->created_at}})</h4>
+                    <h4 class="card-text font-1rem font-weight-bold px-1 py-2">{{ $video->title_en }} ({{$video->created_at}})</h4>
                 @else
                     <h4 class="card-text font-1rem font-weight-bold px-1 py-2">{{ $video->title }} ({{$video->updated_at}})</h4>
                 @endif
