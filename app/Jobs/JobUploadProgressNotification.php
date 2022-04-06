@@ -15,7 +15,7 @@ class JobUploadProgressNotification implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $presentation;
+    public $presentation = [];
 
     /**
      * Create a new job instance.
