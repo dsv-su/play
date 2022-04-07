@@ -176,7 +176,7 @@
                     </div>
                     <div class="form-group">
                         <label for="embedCode">{{__("Embed ilearn")}}</label>
-                        <textarea readonly class="form-control text-muted" rows="5" id="embedCode"><a href="{{ route('player', ['video' => $video]) }}"><img src="{{ asset($video->thumb)}}" width="560" height="315"></a></textarea>
+                        <textarea readonly class="form-control text-muted" rows="5" id="embedCode"><a target="_blank" href="{{ route('player', ['video' => $video]) }}"><img src="{{ asset($video->thumb)}}" width="560" height="315"></a></textarea>
                         <small id="embbedCodeHelp" class="form-text text-muted">{{ __("Use this embed code to insert the video in iLearn") }}</small>
                     </div>
                     @if(!$video->course_permission)
