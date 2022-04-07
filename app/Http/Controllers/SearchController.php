@@ -217,7 +217,7 @@ class SearchController extends Controller
         $data['latest'] = $visibility->filter(Course::find($courseid)->videos()->filter(function ($video) {
             return $video;
         }));
-        $data['manage'] = \Request::is('course/'.$courseid.'/manage');
+        $data['manage'] = \Request::is('course/' . $courseid . '/manage');
 
         return view('home.index', $data);
     }
@@ -454,6 +454,19 @@ class SearchController extends Controller
         $count = $courses->count() + $tags->count() + $presenters->count();
 
         return $courses->concat($tags)->concat($presenters)->concat($videos->take(15 - $count)->get());
+    }
+
+    public function findTag(Request $request)
+    {
+        $tags = Tag::search($request->get('query'), null, true, true)->take(10)->get();
+        if (!$tags->filter(function ($item) use ($request) { return strtolower($item->name) == strtolower($request->get('query')); })->count()) {
+            $input = new \stdClass(['name' => $request->get('query'), 'manual' => 'manual']);
+            $input->name = $request->get('query');
+            $input->type = 'input';
+            $tags->prepend($input);
+        }
+
+        return $tags;
     }
 
     /**

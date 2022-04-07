@@ -237,8 +237,23 @@
                                 <div class="mx-1 my-2 font-1rem">{{ __("No registered presenters") }}</div>
                             @endif
                         </div>
-                        <div wire:ignore class="form-group col-12 col-md-6 flex-column d-flex">
+                        <div class="form-group col-12 col-md-6 flex-column d-flex" id="tag-search-form">
                             <label class="form-control-label px-1">{{ __("Tags") }}</label>
+                            <div>
+                                @foreach($tagids as $key => $tagid)
+                                    <input type="hidden" value="{{$tagid}}" name="tags[]">
+                                    <span class="badge badge-pill badge-light">{{\App\Tag::find($tagid)->name}} <a class="cursor-pointer" wire:click="remove_tag({{$key}})"><i class="fa-solid fa-xmark"></i></a></span>
+                                @endforeach
+                            </div>
+                            <div wire:ignore id="tag-search-form" class="flex-column d-flex">
+                                <!--<span class="text-font-size-80">{{__('Add a tag')}}: </span>-->
+                            <input class="mx-1 w-100" type="search"
+                                   id="tag-search" name="q" autocomplete="off"
+                                   aria-haspopup="true"
+                                   placeholder="{{ __("Start typing to add a tag") }}"
+                                   aria-labelledby="tag-search">
+                            </div>
+                            <!--
                             <select name="tags[]"
                                     class="form-control mx-1 selectpicker w-100" data-dropup-auto="false"
                                     data-none-selected-text="{{ __("No tags")}}"
@@ -247,7 +262,9 @@
                                     <option value={{ $tag->id }}>{{ $tag->name }}</option>
                                 @endforeach
                             </select>
+                            -->
                         </div>
+
                     </div>
 
                     <!-- Permissions -->
@@ -443,7 +460,6 @@
     $(document).ready(function () {
         $('.selectpicker[name="courseEdit[]"]').selectpicker('val', {{$courseids}}.map(String));
     @this.set('courseEdit', {{$courseids}}.map(String));
-        $('.selectpicker[name="tags[]"]').selectpicker('val', {{$tagids}}.map(String));
         $(".datepicker").datepicker({
             format: "dd/mm/yyyy",
             weekStart: 1,
@@ -489,6 +505,59 @@
     });
     window.addEventListener('permissionChanged', event => {
         $(sukatuser);
+    });
+
+    jQuery(document).ready(function ($) {
+        // Set the Options for "Bloodhound" suggestion engine
+        var engine = new Bloodhound({
+            remote: {
+                url: '/findtag?query=%QUERY%',
+                wildcard: '%QUERY%'
+            },
+            datumTokenizer: Bloodhound.tokenizers.whitespace('query'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace
+        });
+
+        $("#tag-search").typeahead({
+            classNames: {
+                menu: 'search_autocomplete'
+            },
+            hint: false,
+            autoselect: false,
+            highlight: true,
+            minLength: 1
+        }, {
+            source: engine.ttAdapter(),
+            limit: 15,
+            // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
+            name: 'autocomplete-items',
+            display: function (item) {
+                return item.name;
+            },
+            templates: {
+                empty: [
+                    ''
+                ],
+                header: [
+                    ''
+                ],
+                suggestion: function (data) {
+                    if (data.type == 'input') {
+                        return '<a class="badge badge-secondary d-inline-block m-1 cursor-pointer" data-id=0 data-name="'+data.name+'">{{__('New tag')}}: ' + data.name + ' <i class="fa-solid fa-plus"></i></a>';
+                    } else {
+                        return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-id='+data.id+'>' + data.name + ' <i class="fa-solid fa-plus"></i></a>';
+                    }
+                }
+            }
+        }).on('keyup', function (e) {
+            //$(".tt-suggestion:first-child").addClass('tt-cursor');
+            let selected = $("#tag-search").attr('aria-activedescendant');
+            if (e.which === 13) {
+                if (selected) {
+                   // window.location.href = $("#" + selected).find('a').prop('href');
+                }
+            }
+        });
     });
 
     function sukat($) {
@@ -612,10 +681,11 @@
         /* end typeahead */
     }
 
+
     // Resubmit the chosen value and disable input when selected from the typeahead
     $(document).on('click', '.tt-suggestion', function () {
         var type = $(this).closest('div.d-flex').prop('id');
-        $(this).closest('.twitter-typeahead').find('input').prop('readonly', true);
+       // $(this).closest('.twitter-typeahead').find('input').prop('readonly', true);
         if (type == 'perm-search') {
             var values = $("input[name='individual_permissions[]']").map(function () {
                 return $(this).val();
@@ -626,7 +696,13 @@
                 return $(this).val();
             }).get();
         @this.set('presenters', values);
-        } else {
+        } else if (type='tag-search') {
+            if ($(this).attr('data-id') > 0) {
+                @this.add_tag($(this).attr('data-id'));
+            } else {
+                @this.create_tag($(this).attr('data-name'));
+            }
+            $('#tag-search').val('');
         }
     });
 </script>
