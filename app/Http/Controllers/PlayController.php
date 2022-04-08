@@ -645,8 +645,8 @@ class PlayController extends Controller
 
                     //$p = MediasitePresentation::where('mediasite_id', $presentationid)->first();
                     $presentation->status = 'request download';
-                    $presentation->title = $metadata['title'];
-                    $presentation->description = $metadata['description'];
+                    $presentation->title = ['sv' => $metadata['title'], 'en' => $metadata['title']];
+                    $presentation->description = $metadata['description'] ?? '';
                     $presentation->presenters = $metadata['presenters'] ?? [];
                     $presentation->tags = $metadata['tags'] ?? [];
                     // We will add courses if needed
@@ -654,26 +654,13 @@ class PlayController extends Controller
                     $presentationthumb = array_filter($thumbs, function ($t) {
                         return $t['StreamType'] == 'Presentation';
                     });
-                    $presentation->thumb = array_pop($presentationthumb)['ThumbnailUrl'];
-                    $presentation->created = strtotime($metadata['recorded']);
+                    $presentation->thumb = array_pop($presentationthumb)['ThumbnailUrl'] ?? '';
+                    $presentation->created = $metadata['recorded'] ? strtotime($metadata['recorded']) : 0;
                     $presentation->duration = $metadata['duration'];
-                    $presentation->sources = $metadata['sources'];
+                    $presentation->sources = $metadata['sources'] ?? [];
                     $presentation->visibility = $metadata['visibility'];
                     if (isset($metadata['slides'])) {
                         $presentation->slides = $metadata['slides'];
-                    }
-
-                    $semester = $year = '';
-                    if ($type == 'course') {
-                        // We also need to create a course and a category.
-                        //$designation = explode(' - ', $foldername)[0] ?? $foldername;
-                        $presentation->courses = array($designation);
-                        $re = '/([V|H|S]T)(19|20)\d{2}/';
-                        preg_match($re, $metadata['title'], $term, 0, 0);
-                        if ($term && $term[0]) {
-                            //  $semester = substr($term[0], 0, 2);
-                            //  $year = substr($term[0], 2, 4);
-                        }
                     }
 
                     if (!$onlyfetch) {

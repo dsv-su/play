@@ -121,6 +121,8 @@ class UploadController extends Controller
                     $username = preg_filter("/[^(]*\(([^)]+)\)[^()]*/", "$1", $presenter);
                     $presenters[] = $username;
                 }
+            } else {
+                $presenters = [];
             }
 
             //Courses
@@ -133,7 +135,7 @@ class UploadController extends Controller
 
                 }
             } else {
-                $courses[] = '';
+                $courses = [];
                 $daisy_courses = [];
             }
 
@@ -142,7 +144,7 @@ class UploadController extends Controller
                 foreach ($request->tags as $tag) {
                     $tags[] = $tag;
                 }
-            } else $tags[] = '';
+            } else $tags = [];
 
             //Set video permissions
             $video_permissions = new VideoPermission();
