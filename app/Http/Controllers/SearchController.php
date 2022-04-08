@@ -458,7 +458,7 @@ class SearchController extends Controller
 
     public function findTag(Request $request)
     {
-        $tags = Tag::search($request->get('query'), null, true, true)->take(10)->get();
+        $tags = Tag::search($request->get('query'), null, true, true)->get();
         if (!$tags->filter(function ($item) use ($request) { return strtolower($item->name) == strtolower($request->get('query')); })->count()) {
             $input = new \stdClass(['name' => $request->get('query'), 'manual' => 'manual']);
             $input->name = $request->get('query');

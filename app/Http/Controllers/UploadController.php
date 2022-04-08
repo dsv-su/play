@@ -74,7 +74,7 @@ class UploadController extends Controller
             }
         }
 
-        $tags = Tag::get()->unique('name');
+        //$tags = Tag::get()->unique('name');
 
         if ($request->old('prepopulate')) {
             $presentation = ManualPresentation::where('user', app()->make('play_username'))->latest()->first();
@@ -82,7 +82,7 @@ class UploadController extends Controller
             $presentation = $this->init_upload();
         }
 
-        return view('upload.index', compact('presentation', 'permissions', 'courses', 'tags'));
+        return view('upload.index', compact('presentation', 'permissions', 'courses'));
     }
 
     public function pending_uploads()

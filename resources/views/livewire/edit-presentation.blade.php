@@ -264,7 +264,6 @@
                             </select>
                             -->
                         </div>
-
                     </div>
 
                     <!-- Permissions -->
@@ -685,13 +684,14 @@
     // Resubmit the chosen value and disable input when selected from the typeahead
     $(document).on('click', '.tt-suggestion', function () {
         var type = $(this).closest('div.d-flex').prop('id');
-       // $(this).closest('.twitter-typeahead').find('input').prop('readonly', true);
         if (type == 'perm-search') {
+            $(this).closest('.twitter-typeahead').find('input').prop('readonly', true);
             var values = $("input[name='individual_permissions[]']").map(function () {
                 return $(this).val();
             }).get();
         @this.set('individuals', values);
         } else if (type == 'user-search') {
+            $(this).closest('.twitter-typeahead').find('input').prop('readonly', true);
             var values = $("input[name='presenters[]']").map(function () {
                 return $(this).val();
             }).get();
@@ -702,7 +702,7 @@
             } else {
                 @this.create_tag($(this).attr('data-name'));
             }
-            $('#tag-search').val('');
+            $('#tag-search').typeahead('val', '');
         }
     });
 </script>

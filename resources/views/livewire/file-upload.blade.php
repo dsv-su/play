@@ -3,7 +3,8 @@
         <div class="col-lg-12 my-2">
             <div class="rounded border shadow p-3 my-2">
                 <h5 class="mb-4">
-                    <i class="fa fa-solid fa-6 fa-icon-border mr-2"></i><label class="form-control-label px-1" for="custom">{{__("Upload custom thumb") }}</label>
+                    <i class="fa fa-solid fa-6 fa-icon-border mr-2"></i><label class="form-control-label px-1"
+                                                                               for="custom">{{__("Upload custom thumb") }}</label>
                 </h5>
                 <p class="font-1rem px-1">
                     {{ __("If you want, you can upload a custom image to represent your presentation.") }}
@@ -11,14 +12,15 @@
                 <div class="row justify-content-between text-left">
                     <div class="col-6 col-sm-6 my-2 d-flex align-items-center">
                         <div class="my-auto">
-                        <input type="file" class="form-control-file" wire:model="custom" id="custom">
-                        @error('custom') <span class="text-danger">{{ $message }}</span> @enderror
+                            <input type="file" class="form-control-file" wire:model="custom" id="custom">
+                            @error('custom') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                     </div>
                     <div class="col-6 col-sm-6 my-2 d-flex align-items-center">
                         @if ($custom)
                             <img src="{{ $custom->temporaryUrl() }}" class="w-100"
-                                 style="width: 100%; height: 150px; object-fit: contain; background-repeat: no-repeat; background-position: 50% 50%;" alt="Custom thumb">
+                                 style="width: 100%; height: 150px; object-fit: contain; background-repeat: no-repeat; background-position: 50% 50%;"
+                                 alt="Custom thumb">
                         @else
                             <div class="card d-inline-block mx-auto justify-content-center"
                                  style="border: .2vh solid blue;border-radius: 8px;margin: auto">
@@ -32,13 +34,14 @@
         <div class="col-lg-12 my-2">
             <div class="rounded border shadow p-3 my-2">
                 <h5 class="mb-4">
-                    <i class="fa fa-solid fa-7 fa-icon-border mr-2"></i><label class="form-control-label px-1">{{ __("Mediafiles to be uploaded") }}</label>
+                    <i class="fa fa-solid fa-7 fa-icon-border mr-2"></i><label
+                            class="form-control-label px-1">{{ __("Mediafiles to be uploaded") }}</label>
                 </h5>
                 <p class="font-1rem px-1">
                     {{ __("Up to 4 media files per presentation can be uploaded.") }} {{ __("Each uploaded file should be the same length.") }}
                 </p>
                 <div class="row justify-content-between text-left">
-                    <div class="form-group col-sm-6 flex-column d-flex">
+                    <div class="form-group col-md-6 flex-column d-flex">
                         <label class="form-control-label px-1">{{ __("Files to upload") }}<span
                                     class="text-danger"> *</span></label>
                         <p class="font-1rem px-1">
@@ -55,7 +58,7 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="form-group col-sm-6 flex-column d-flex">
+                    <div class="form-group col-md-6 flex-column d-flex">
                         <!-- Subtitles file-->
                         <label class="form-control-label px-1">{{ __("Add a subtitle file") }} <span
                                     class="badge badge-warning">{{ __("Testing in progress") }}</span></label>
@@ -153,7 +156,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 
