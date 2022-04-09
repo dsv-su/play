@@ -815,7 +815,7 @@ input::-ms-clear {
     width: 75%;
 }
 
-#header-main-search-form .search_autocomplete, #tag-search-form .search_autocomplete {
+#header-main-search-form .search_autocomplete, #tag-search-form .search_autocomplete, #course-search-form .search_autocomplete {
     -webkit-box-shadow: 0 0 6px 0 rgba(76, 76, 76, 0.2);
     box-shadow: 0 0 6px 0 rgba(76, 76, 76, 0.2);
     padding: 0;
@@ -829,7 +829,7 @@ input::-ms-clear {
     color: #002f5f
 }
 
-#tag-search-form .search_autocomplete {
+#tag-search-form .search_autocomplete, #course-search-form .search_autocomplete {
     padding: 4px;
     margin: 4px;
 }

@@ -46,6 +46,12 @@ class SearchController extends Controller
         $this->middleware('redirect-links');
     }*/
 
+    /**
+     * @param VisibilityFilter $visibility
+     * @param $semester
+     * @param Request $request
+     * @return Application|Factory|View|string
+     */
     public function viewBySemester(VisibilityFilter $visibility, $semester, Request $request)
     {
         if ($semester == 'all') {
@@ -456,17 +462,30 @@ class SearchController extends Controller
         return $courses->concat($tags)->concat($presenters)->concat($videos->take(15 - $count)->get());
     }
 
+    /** Method for tag search autocomplete suggestions
+     * @param Request $request
+     * @return mixed
+     */
     public function findTag(Request $request)
     {
         $tags = Tag::search($request->get('query'), null, true, true)->get();
         if (!$tags->filter(function ($item) use ($request) { return strtolower($item->name) == strtolower($request->get('query')); })->count()) {
-            $input = new \stdClass(['name' => $request->get('query'), 'manual' => 'manual']);
+            $input = new \stdClass();
             $input->name = $request->get('query');
             $input->type = 'input';
             $tags->prepend($input);
         }
 
         return $tags;
+    }
+
+    /** Method for course search autocomplete suggestions
+     * @param Request $request
+     * @return mixed
+     */
+    public function findCourse(Request $request)
+    {
+        return Course::search($request->get('query'), null, true, true)->groupBy('designation')->orderBy('year', 'desc')->get();
     }
 
     /**

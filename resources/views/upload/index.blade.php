@@ -181,7 +181,6 @@
                         </div>
                     </div>
                     <div class="rounded border shadow p-3 my-2" id="tag-search-form">
-
                         <h5 class="mb-4">
                             <i class="fa fa-solid fa-4 fa-icon-border mr-2"></i><label
                                     class="form-control-label px-1">{{ __("Tags") }}</label>
