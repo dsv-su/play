@@ -177,7 +177,8 @@
                     <div class="form-group">
                         <label for="embedCode">{{__("Embed ilearn")}}</label>
                         <textarea readonly class="form-control text-muted" rows="5" id="embedCode"><a target="_blank" href="{{ route('player', ['video' => $video]) }}"><img src="{{ asset($video->thumb)}}" width="560" height="315"></a></textarea>
-                        <small id="embbedCodeHelp" class="form-text text-muted">{{ __("Use this embed code to insert the video in iLearn") }}</small>
+                        <small id="embbedCodeHelp"
+                               class="form-text text-muted">{{ __("Use this embed code to insert the video in iLearn") }}</small>
                     </div>
                     @if(!$video->course_permission)
                         <div class="form-group">
@@ -214,54 +215,54 @@
     </div>
 @endif
 <!-- -->
-@if (isset($manage) && $manage)
-    @if ($video->download)
-        <div class="modal fade" id="downloadModal{{$video->id}}" tabindex="-1" role="dialog"
-             aria-labelledby="downloadModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="shareModalLabel">{{__("Download presentation")}}
-                            <strong>{{$video->title}}</strong></h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="staticLink">{{__("Choose a resolution")}}</label>
-                            <div class="dropdown">
-                                @csrf
-                                @foreach(json_decode($video->sources, true) as $source)
-                                    @if(is_array($source['video']) && $loop->first)
-                                        @foreach($source['video'] as $key => $source)
-                                            <button class="btn btn-outline-primary btn-sm" name="res"
-                                                    data-dismiss="modal"
-                                                    onclick="downloadPresentation('<?php echo $video->id;?>','<?php echo $key;?>')"
-                                                    value="{{$key}}"><i class="fas fa-download"></i>
-                                                {{$key}}p
-                                            </button>
-                                        @endforeach
-                                    @elseif($loop->first)
+@if ($video->download)
+    <div class="modal fade" id="downloadModal{{$video->id}}" tabindex="-1" role="dialog"
+         aria-labelledby="downloadModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="shareModalLabel">{{__("Download presentation")}}
+                        <strong>{{$video->title}}</strong></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="staticLink">{{__("Choose a resolution")}}</label>
+                        <div class="dropdown">
+                            @csrf
+                            @foreach(json_decode($video->sources, true) as $source)
+                                @if(is_array($source['video']) && $loop->first)
+                                    @foreach($source['video'] as $key => $source)
                                         <button class="btn btn-outline-primary btn-sm" name="res"
-                                                onclick="downloadPresentation('<?php echo $video->id;?>','<?php echo $key;?>')"
                                                 data-dismiss="modal"
-                                                value="999">
-                                            <i class="fas fa-download"></i> 720p
+                                                onclick="downloadPresentation('<?php echo $video->id;?>','<?php echo $key;?>')"
+                                                value="{{$key}}"><i class="fas fa-download"></i>
+                                            {{$key}}p
                                         </button>
-                                    @endif
-                                @endforeach
-                            </div>
+                                    @endforeach
+                                @elseif($loop->first)
+                                    <button class="btn btn-outline-primary btn-sm" name="res"
+                                            onclick="downloadPresentation('<?php echo $video->id;?>','<?php echo $key;?>')"
+                                            data-dismiss="modal"
+                                            value="999">
+                                        <i class="fas fa-download"></i> 720p
+                                    </button>
+                                @endif
+                            @endforeach
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__("Close")}}</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__("Close")}}</button>
                 </div>
             </div>
         </div>
-    @endif
+    </div>
+@endif
+@if (isset($manage) && $manage)
     <!-- Modal delete -->
     @if ($video->delete)
         <div class="modal fade" id="deleteModal{{$video->id}}" tabindex="-1" role="dialog"
