@@ -33,6 +33,7 @@ class EditController extends Controller
         $courses = Course::all();
         $daisy_courses_ids = [];
 
+
         if (app()->make('play_role') != 'Administrator') {
             // Show only courses that you have permission to
             $daisy = new DaisyAPI();
@@ -74,7 +75,7 @@ class EditController extends Controller
             // abort(401);
         }
 
-        return view('manage.edit', compact('video', 'permissions', 'courses', 'presenters', 'individual_permissions', 'user_permission'));
+        return view('manage.edit', compact('video', 'permissions', 'presenters', 'individual_permissions', 'user_permission'));
     }
 
     public function edit(Video $video, Request $request)

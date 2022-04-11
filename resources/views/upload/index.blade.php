@@ -80,9 +80,8 @@
                                 <div><small class="text-danger">{{ $errors->first('title_en') }}</small></div>
                             </div>
 
-
-                            <div class="form-group col-12 col-lg-6 flex-column d-flex"><label for="description"
-                                                                                              class="form-control-label px-1">{{ __("Description") }}</label>
+                            <div class="form-group col-12 col-lg-6 flex-column d-flex">
+                                <label for="description" class="form-control-label px-1">{{ __("Description") }}</label>
                                 <textarea id="description" name="description" class="form-control"
                                           placeholder="{{__("Add a description here (optional)")}}"></textarea>
                             </div>
@@ -99,46 +98,17 @@
                             {{ __("Here you specify whether the presentation should be associated with one or more courses. If you do not want the presentation to be associated with a course or want to complete at a later time, leave the field blank.") }}
                         </p>
                         <div class="row justify-content-between text-left">
-                            <div class="form-group col-12 col-lg-6 flex-column d-flex mx-auto">
-                                <!-- Course association -->
-
-                                <select name="courses[]"
-                                        class="form-control mx-1 selectpicker w-100" data-dropup-auto="false"
-                                        data-none-selected-text="{{ __('No course association')}}"
-                                        data-live-search="true" multiple>
-                                    {{--}}
-                                    @foreach($courses as $course)
-                                        @if(!old('courses'))
-                                        <option value={{ $course->designation }}>{{ $course->name . ' (' . $course->designation .')' }}</option>
-                                        @else
-                                        <option value="{{$course->designation}}" {{ old('courses') == $course->designation || in_array($course->designation, old('courses')) ? 'selected':''}}>{{$course->name . ' (' . $course->designation .')' }}</option>
-                                        @endif
-                                    @endforeach
-                                    {{--}}
-
-                                    @foreach($courses as $course)
-                                        @if(!old('courses'))
-                                            @if(Lang::locale() == 'swe')
-                                                <option value="{{ $course->id }}"
-                                                        data-subtext="{{$course->name}}">{{ $course->designation . ' '. $course->semester. $course->year}}</option>
-                                            @else
-                                                <option value="{{ $course->id }}"
-                                                        data-subtext="{{$course->name_en}}">{{ $course->designation . ' '. $course->semester. $course->year }}</option>
-                                            @endif
-                                        @else
-                                            @if(Lang::locale() == 'swe')
-                                                <option value="{{$course->id}}"
-                                                        data-subtext="{{$course->name}}" {{ old('courses') == $course->designation || in_array($course->designation, old('courses')) ? 'selected':''}}>{{$course->designation . ' '. $course->semester. $course->year}}</option>
-                                            @else
-                                                <option value="{{$course->id}}"
-                                                        data-subtext="{{$course->name_en}}" {{ old('courses') == $course->designation || in_array($course->designation, old('courses')) ? 'selected':''}}>{{$course->designation . ' '. $course->semester. $course->year}}</option>
-                                            @endif
-                                        @endif
-                                    @endforeach
-                                </select>
-                            </div>
                             <div class="form-group col-12 col-lg-6 flex-column d-flex">
-
+                                <!-- Course association -->
+                                <div id="addedCourses" class="mx-1 my-2">
+                                </div>
+                                <div id="course-search-form" class="flex-column d-flex p-0">
+                                    <input wire:ignore class="mx-1 w-100" type="search"
+                                           id="course-search" name="q" autocomplete="off"
+                                           aria-haspopup="true"
+                                           placeholder="{{ __("Start typing to add a course") }}"
+                                           aria-labelledby="course-search">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -188,10 +158,9 @@
                         <p class="font-1rem px-1 my-0">
                             {{ __("Enter tags for the presentation") }}
                         </p>
-                        <div id="addedTags">
+                        <div id="addedTags" class="mx-1 my-2">
                         </div>
                         <div id="tag-search-form" class="flex-column d-flex col col-md-6 p-0">
-                        <!--<span class="text-font-size-80">{{__('Add a tag')}}: </span>-->
                             <input wire:ignore class="mx-1 w-100" type="search"
                                    id="tag-search" name="q" autocomplete="off"
                                    aria-haspopup="true"
@@ -317,22 +286,86 @@
         <script src="{{ asset('./js/upload.js') }}"></script>
         <script>
             function remove(el) {
-                var tag = el.attr('data-name');
-                $('#addedTags').find('input[value="' + tag + '"]').remove();
+                var type =el.closest('div').attr('id');
+                console.log(type);
+                if (type == 'addedTags') {
+                    var tag = el.attr('data-name');
+                    $('#addedTags').find('input[value="' + tag + '"]').remove();
+                }
+                if (type == 'addedCourses') {
+                    var courseid = el.attr('data-id');
+                    $('#addedCourses').find('input[value="' + courseid + '"]').remove();
+                }
                 el.closest('span').remove();
             }
 
-            $(document).on('click', '.tt-suggestion', function () {
+            $(document).on('click', '#course-search-form .tt-suggestion', function () {
+                var courseid = $(this).attr('data-id');
+                var coursename = $(this).attr('data-name');
+                var fullname = $(this).attr('data-fullname');
+                if (!$('#addedCourses').find('input[value="' + courseid + '"]').length) {
+                    $('#addedCourses').append('<input type="hidden" value="' + courseid + '" name="courses[]"><span class="badge badge-pill badge-light" data-toggle="tooltip" title="' + fullname + '">' + coursename + ' <a class="cursor-pointer" data-id="' + courseid + '" onclick="remove($(this))"><i class="fa-solid fa-xmark"></i></a></span>');
+                }
+                $('#course-search').typeahead('val', '');
+            });
+            $(document).on('click', '#tag-search-form .tt-suggestion', function () {
                 var tag = $(this).attr('data-name');
                 if (!$('#addedTags').find('input[value="' + tag + '"]').length) {
                     $('#addedTags').append('<input type="hidden" value="' + tag + '" name="tags[]"><span class="badge badge-pill badge-light">' + tag + ' <a class="cursor-pointer" data-name="' + tag + '" onclick="remove($(this))"><i class="fa-solid fa-xmark"></i></a></span>');
                 }
-                if ($(this).attr('data-id') > 0) {
-                } else {
-                }
                 $('#tag-search').typeahead('val', '');
             });
             jQuery(document).ready(function ($) {
+                var engine2 = new Bloodhound({
+                    remote: {
+                        url: '/findcourse?query=%QUERY%&onlydesignation=true',
+                        wildcard: '%QUERY%'
+                    },
+                    datumTokenizer: Bloodhound.tokenizers.whitespace('query'),
+                    queryTokenizer: Bloodhound.tokenizers.whitespace
+                });
+
+                $("#course-search").typeahead({
+                    classNames: {
+                        menu: 'search_autocomplete'
+                    },
+                    hint: false,
+                    autoselect: false,
+                    highlight: true,
+                    minLength: 1
+                }, {
+                    source: engine2.ttAdapter(),
+                    limit: 15,
+                    // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
+                    name: 'autocomplete-items',
+                    display: function (item) {
+                        return item.name;
+                    },
+                    templates: {
+                        empty: [
+                            ''
+                        ],
+                        header: [
+                            ''
+                        ],
+                        suggestion: function (data) {
+                            var fullname = @if(Lang::locale() == 'swe') data.name
+                            @else data.name_en @endif;
+                            //return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-toggle="tooltip" title="' + data.name + '" data-id="' + data.id + '" data-name="' + data.designation + ' ' + data.semester + data.year + '" data-fullname="' + data.name + '">' + data.designation + ' ' + data.semester + data.year + ' <i class="fa-solid fa-plus"></i></a>';
+                            // Show only designations for now since play-store can't handle course ids
+                            return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-toggle="tooltip" title="' + data.name + '" data-id="' + data.id + '" data-name="' + data.designation + '" data-fullname="' + data.name + '">' + data.designation + ' <i class="fa-solid fa-plus"></i></a>';
+                        }
+                    }
+                }).on('keyup', function (e) {
+                    //$(".tt-suggestion:first-child").addClass('tt-cursor');
+                    let selected = $("#tag-search").attr('aria-activedescendant');
+                    if (e.which === 13) {
+                        if (selected) {
+                            // window.location.href = $("#" + selected).find('a').prop('href');
+                        }
+                    }
+                });
+
                 // Set the Options for "Bloodhound" suggestion engine
                 var engine = new Bloodhound({
                     remote: {

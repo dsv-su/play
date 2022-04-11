@@ -27,7 +27,7 @@ class Course extends Model implements Searchable
     protected $searchable = [
         'columns' => [
             'name' => 5,
-            'name_en' =>6,
+            'name_en' => 6,
             'designation' => 10
         ]
     ];

@@ -32,7 +32,7 @@ class EditPresentation extends Component
     public $download;
     public $user_permission;
 
-    public function mount($video, $courses, $permissions, $individual_permissions, $user_permission)
+    public function mount($video, $permissions, $individual_permissions, $user_permission)
     {
         $this->video = $video;
         $this->title = $video->title;

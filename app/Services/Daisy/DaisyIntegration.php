@@ -22,19 +22,16 @@ class DaisyIntegration
 
     public function getResource($endpoint, $type = null)
     {
-
         try {
             return $this->client->request('GET', $this->daisy_url() . $endpoint, [
                 'auth' => [$this->daisy_username(), $this->daisy_password()],
                 'headers' => ['Accept' => $type ? "application/$type" : '']
             ]);
-
         } catch (ClientException $e) {
             app()->make('init')->check_system();
             report($e);
             abort(510);
         }
-        return 0;
     }
 
     //Method for retrieving DaisyId with UserID

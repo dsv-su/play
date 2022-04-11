@@ -170,9 +170,9 @@
 
                         <div class="form-group col-12 col-md-6 flex-column d-flex" id="course-search-form">
                             <label class="form-control-label px-1">{{ __("Course association") }}</label>
-                            <div id="addedCourses">
+                            <div id="addedCourses" class="mx-1 my-2">
                                 @if (empty($courseids))
-                                    <div class="mx-1 my-2 font-1rem">{{__('No course association')}}</div>
+                                    <span class="font-1rem">{{__('No course association')}}</span>
                                 @else
                                     @foreach($courseids as $courseid => $names)
                                         <input type="hidden" value="{{$courseid}}" name="courseids[]">
@@ -236,9 +236,9 @@
                         </div>
                         <div class="form-group col-12 col-md-6 flex-column d-flex">
                             <label class="form-control-label px-1">{{ __("Tags") }}</label>
-                            <div id="addedTags">
+                            <div id="addedTags" class="mx-1 my-2">
                                 @if (empty($tagids))
-                                    <div class="mx-1 my-2 font-1rem">{{__('No tags added')}}</div>
+                                    <span class="font-1rem">{{__('No tags added')}}</span>
                                 @else
                                     @foreach($tagids as $key => $tagid)
                                         <input type="hidden" value="{{$tagid}}" name="tags[]">
@@ -448,6 +448,20 @@
 </script>
 
 <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+
+        Livewire.hook('message.processed', (message, component) => {
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
+        })
+    });
+</script>
+
+<script>
     $(document).ready(function () {
         $(".datepicker").datepicker({
             format: "dd/mm/yyyy",
@@ -586,7 +600,7 @@
                     if ($('#addedCourses').find('input[value="' + data.id + '"]').length) {
                         return '<span></span>';
                     } else {
-                        return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-id=' + data.id + '>' + data.designation + ' ' + data.semester + data.year + ' <i class="fa-solid fa-plus"></i></a>';
+                        return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-toggle="tooltip" title="'+data.name+'" data-id=' + data.id + '>' + data.designation + ' ' + data.semester + data.year + ' <i class="fa-solid fa-plus"></i></a>';
                     }
                 }
             }
