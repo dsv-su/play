@@ -494,9 +494,9 @@ class SearchController extends Controller
         }
 
         // For non-admins show only courses that a user has permission to
-        //if (app()->make('play_role') !== 'Administrator') {
+        if (app()->make('play_role') !== 'Administrator') {
             $daisy = new DaisyAPI();
-            $daisyPersonID = $daisy->getDaisyPersonId('gwett');
+            $daisyPersonID = $daisy->getDaisyPersonId(app()->make('play_username'));
             // Get all courses where user is courseadmin
             $daisy_courses_ids = [];
             if ($daisy_courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID)) {
@@ -511,7 +511,7 @@ class SearchController extends Controller
                     unset($courses[$key]);
                 }
             }
-       // }
+        }
 
         return $courses;
     }
