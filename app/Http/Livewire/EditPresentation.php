@@ -2,21 +2,21 @@
 
 namespace App\Http\Livewire;
 
+use App\Course;
 use App\CourseadminPermission;
-use App\Http\Middleware\Localization;
 use App\Services\Daisy\DaisyIntegration;
+use App\Tag;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Lang;
 use Livewire\Component;
 
 class EditPresentation extends Component
 {
-
     public $video;
     public $title, $title_en, $thumb, $created, $date, $origin, $duration, $category, $description;
     public $presenters = [], $presenters_uid = [];
-    public $course = [], $coursedetail = [], $course_semester = [], $course_year = [], $courseId = [];
-    public $courseids;
+    public $course = [], $coursedetail = [], $courseId = [];
+    public $courseids = [];
     public $courseselect = [];
     public $sukatusers = [];
     public $courseEdit = [];
@@ -32,9 +32,8 @@ class EditPresentation extends Component
     public $download;
     public $user_permission;
 
-    public function mount($video, $courses, $permissions, $individual_permissions, $user_permission)
+    public function mount($video, $permissions, $individual_permissions, $user_permission)
     {
-        //dd($video);
         $this->video = $video;
         $this->title = $video->title;
         $this->title_en = $video->title_en;
@@ -47,7 +46,7 @@ class EditPresentation extends Component
         $this->category = $video->category->category_name;
         $this->sources = $video->streams;
         $this->ipermissions = $individual_permissions->count();
-        if(isset($video->hidden)) {
+        if (isset($video->hidden)) {
             $this->visibility = false;
         } else {
             $this->visibility = (bool)$video->fresh()->visibility;
@@ -65,13 +64,8 @@ class EditPresentation extends Component
             $this->presenters_uid[] = $presenter->username;
         }
 
+        /*
         foreach ($video->courses() as $this->coursedetail) {
-            if(Lang::locale() == 'swe') {
-                $this->course[] = $this->coursedetail->name . ' ' . $this->coursedetail->semester . '' . $this->coursedetail->year;
-            } else {
-                $this->course[] = $this->coursedetail->name_en . ' ' . $this->coursedetail->semester . '' . $this->coursedetail->year;
-            }
-
             $this->courseId[] = $this->coursedetail->id;
             $this->course_semester[] = $this->coursedetail->semester;
             $this->course_year[] = $this->coursedetail->year;
@@ -79,30 +73,21 @@ class EditPresentation extends Component
                 $this->course_responsible[$this->coursedetail->id][] = $person;
             }
             // Add existing courses even if a person has no permission
-            if(Lang::locale() == 'swe') {
+            if (Lang::locale() == 'swe') {
                 $this->courseselect[$this->coursedetail->id] = [$this->coursedetail->designation . ' ' . $this->coursedetail->semester . $this->coursedetail->year, $this->coursedetail->name];
             } else {
                 $this->courseselect[$this->coursedetail->id] = [$this->coursedetail->designation . ' ' . $this->coursedetail->semester . $this->coursedetail->year, $this->coursedetail->name_en];
             }
-
+        }*/
+        foreach ($video->courses() as $this->coursedetail) {
+            $name = (Lang::locale() == 'swe') ? $this->coursedetail->name : $this->coursedetail->name_en;
+            $this->course[] = $name . ' ' . $this->coursedetail->semester . $this->coursedetail->year;
+            $this->courseids[$this->coursedetail->id] = ['fullname' => $name, 'shortname' => $this->coursedetail->designation . ' ' . $this->coursedetail->semester . $this->coursedetail->year];
         }
-
-        $this->courseids = json_encode($this->courseId, JSON_HEX_QUOT);
 
         foreach ($video->tags() as $tag) {
             $this->tagids[] = $tag->id;
         }
-        $this->tagids = json_encode($this->tagids, JSON_HEX_QUOT);
-
-        foreach ($courses as $data) {
-            if(Lang::locale() == 'swe') {
-                $this->courseselect[$data->id] = [$data->designation . ' ' . $data->semester . $data->year, $data->name];
-            } else {
-                $this->courseselect[$data->id] = [$data->designation . ' ' . $data->semester . $data->year, $data->name_en];
-            }
-
-        }
-
 
         //Group Permissions
         foreach ($video->permissions() as $p) {
@@ -191,8 +176,8 @@ class EditPresentation extends Component
     public
     function add_individual_perm()
     {
-        array_push($this->individuals, '');
-        array_push($this->individuals_permission, '');
+        $this->individuals[] = '';
+        $this->individuals_permission[] = '';
         $this->ipermissions++;
         $this->dispatchBrowserEvent('permissionChanged');
     }
@@ -207,8 +192,8 @@ class EditPresentation extends Component
     public
     function newpresenter()
     {
-        array_push($this->presenters, '');
-        array_push($this->presenters_uid, '');
+        $this->presenters[] = '';
+        $this->presenters_uid[] = '';
         $this->dispatchBrowserEvent('contentChanged');
     }
 
@@ -225,10 +210,40 @@ class EditPresentation extends Component
         $this->ipermissions = $this->ipermissions - 1;
     }
 
-    public
-    function remove_course()
+    public function add_course($courseid)
     {
-        $this->course = '';
+        if (!key_exists($courseid, $this->courseids)) {
+            $course = Course::find($courseid);
+            $this->courseids[$courseid] = [
+                'fullname' => (Lang::locale() == 'swe') ? $course->name : $course->name_en,
+                'shortname' => $course->designation . ' ' . $course->semester . $course->year
+            ];
+        }
+        $this->updatedCourseEdit(array_keys($this->courseids));
+    }
+
+    public function remove_course($courseid)
+    {
+        unset($this->courseids[$courseid]);
+        $this->updatedCourseEdit(array_keys($this->courseids));
+    }
+
+    public function add_tag($tagid)
+    {
+        if (!in_array($tagid, $this->tagids)) {
+            $this->tagids[] = $tagid;
+        }
+    }
+
+    public function create_tag($tagname)
+    {
+        $tag = Tag::firstOrCreate(['name' => $tagname]);
+        $this->tagids[] = $tag->id;
+    }
+
+    public function remove_tag($index)
+    {
+        array_splice($this->tagids, $index, 1);
     }
 
     public

@@ -52,29 +52,6 @@ class UploadController extends Controller
     public function upload(Request $request)
     {
         $permissions = Permission::all();
-        $courses = Course::orderByDesc('id')->get();
-
-        if (app()->make('play_role') != 'Administrator') {
-            // Show only courses that you have permission to
-            $daisy = new DaisyAPI();
-            $daisyPersonID = $daisy->getDaisyPersonId(app()->make('play_username'));
-            // Get all courses where user is courseadmin
-            $daisy_courses_ids = [];
-            if ($daisy_courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID)) {
-                $daisy_courses_ids = array_map(function ($d) {
-                    return $d[2];
-                }, $daisy_courses);
-            }
-            foreach ($courses as $key => $course) {
-                $username = app()->make('play_username');
-                $haspermission = CoursesettingsUsers::where('course_id', $course->id)->where('username', $username)->whereIn('permission', ['upload', 'delete', 'edit'])->count() || in_array($course->id, $daisy_courses_ids);
-                if (!$haspermission) {
-                    unset($courses[$key]);
-                }
-            }
-        }
-
-        $tags = Tag::get()->unique('name');
 
         if ($request->old('prepopulate')) {
             $presentation = ManualPresentation::where('user', app()->make('play_username'))->latest()->first();
@@ -82,7 +59,7 @@ class UploadController extends Controller
             $presentation = $this->init_upload();
         }
 
-        return view('upload.index', compact('presentation', 'permissions', 'courses', 'tags'));
+        return view('upload.index', compact('presentation', 'permissions'));
     }
 
     public function pending_uploads()
@@ -121,6 +98,8 @@ class UploadController extends Controller
                     $username = preg_filter("/[^(]*\(([^)]+)\)[^()]*/", "$1", $presenter);
                     $presenters[] = $username;
                 }
+            } else {
+                $presenters = [];
             }
 
             //Courses
@@ -133,7 +112,7 @@ class UploadController extends Controller
 
                 }
             } else {
-                $courses[] = '';
+                $courses = [];
                 $daisy_courses = [];
             }
 
@@ -142,7 +121,7 @@ class UploadController extends Controller
                 foreach ($request->tags as $tag) {
                     $tags[] = $tag;
                 }
-            } else $tags[] = '';
+            } else $tags = [];
 
             //Set video permissions
             $video_permissions = new VideoPermission();

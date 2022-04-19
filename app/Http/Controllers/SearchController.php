@@ -9,6 +9,7 @@ use App\CoursesettingsPermissions;
 use App\CoursesettingsUsers;
 use App\IndividualPermission;
 use App\Presenter;
+use App\Services\Daisy\DaisyAPI;
 use App\Services\Daisy\DaisyIntegration;
 use App\Services\Filters\VisibilityFilter;
 use App\Tag;
@@ -46,6 +47,12 @@ class SearchController extends Controller
         $this->middleware('redirect-links');
     }*/
 
+    /**
+     * @param VisibilityFilter $visibility
+     * @param $semester
+     * @param Request $request
+     * @return Application|Factory|View|string
+     */
     public function viewBySemester(VisibilityFilter $visibility, $semester, Request $request)
     {
         if ($semester == 'all') {
@@ -217,7 +224,7 @@ class SearchController extends Controller
         $data['latest'] = $visibility->filter(Course::find($courseid)->videos()->filter(function ($video) {
             return $video;
         }));
-        $data['manage'] = \Request::is('course/'.$courseid.'/manage');
+        $data['manage'] = \Request::is('course/' . $courseid . '/manage');
 
         return view('home.index', $data);
     }
@@ -454,6 +461,59 @@ class SearchController extends Controller
         $count = $courses->count() + $tags->count() + $presenters->count();
 
         return $courses->concat($tags)->concat($presenters)->concat($videos->take(15 - $count)->get());
+    }
+
+    /** Method for tag search autocomplete suggestions
+     * @param Request $request
+     * @return mixed
+     */
+    public function findTag(Request $request)
+    {
+        $tags = Tag::search($request->get('query'), null, true, true)->get();
+        if (!$tags->filter(function ($item) use ($request) { return strtolower($item->name) == strtolower($request->get('query')); })->count()) {
+            $input = new \stdClass();
+            $input->name = $request->get('query');
+            $input->type = 'input';
+            $tags->prepend($input);
+        }
+
+        return $tags;
+    }
+
+    /** Method for course search autocomplete suggestions
+     * @param Request $request
+     * @return mixed
+     * @throws BindingResolutionException
+     */
+    public function findCourse(Request $request)
+    {
+        if ($request->get('onlydesignation') !== null && $request->get('onlydesignation')) {
+            $courses = Course::search($request->get('query'), null, true, true)->groupBy('designation')->orderBy('year', 'desc')->get();
+        } else {
+            $courses = Course::search($request->get('query'), null, true, true)->orderBy('id', 'desc')->get();
+        }
+
+        // For non-admins show only courses that a user has permission to
+        //if (app()->make('play_role') !== 'Administrator') {
+            $daisy = new DaisyAPI();
+            $daisyPersonID = $daisy->getDaisyPersonId('gwett');
+            // Get all courses where user is courseadmin
+            $daisy_courses_ids = [];
+            if ($daisy_courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID)) {
+                $daisy_courses_ids = array_map(function ($d) {
+                    return $d[2];
+                }, $daisy_courses);
+            }
+            foreach ($courses as $key => $course) {
+                $username = app()->make('play_username');
+                $haspermission = CoursesettingsUsers::where('course_id', $course->id)->where('username', $username)->whereIn('permission', ['upload', 'delete', 'edit'])->count() || in_array($course->id, $daisy_courses_ids);
+                if (!$haspermission) {
+                    unset($courses[$key]);
+                }
+            }
+       // }
+
+        return $courses;
     }
 
     /**

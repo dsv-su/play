@@ -84,8 +84,8 @@
                             <div class="row"><label class="col-4 col-lg-3 mb-0">{{ __("Duration") }}</label>
                                 <div class="col">{{$duration}}</div>
                             </div>
-                            <div class="row"><label class="col-4 col-lg-3 mb-0">{{__("Course")}}
-                                </label>
+                            <div class="row">
+                                <label class="col-4 col-lg-3 mb-0">{{__("Course")}}</label>
                                 <div class="col">@if (empty($course)) {{ __("Not associated to a course") }} @else {{implode(', ', $course)}} @endif</div>
                             </div>
                             <div class="row"><label for="visibilitySwitch"
@@ -167,33 +167,30 @@
 
                     <!-- Course -->
                     <div class="row justify-content-between text-left">
-                        <div wire:ignore class="form-group col-12 col-md-6 flex-column d-flex">
-                            <input type="hidden" name="course" value="{{implode(',',$courseId)}}">
+
+                        <div class="form-group col-12 col-md-6 flex-column d-flex" id="course-search-form">
                             <label class="form-control-label px-1">{{ __("Course association") }}</label>
-                            {{--}}
-                        <!--
-                            <select wire:model.debounce.500s="courseEdit" name="courseEdit" id="select2">
-                                <option value="">@if ($course) {{$course[0]}} @else No course association @endif</option>
-                                @foreach($courseselect as $key => $data)
-                            <option value="{{ $key }}">{{$key}} - {{ $data[0] }}</option>
-                                @endforeach
-                                </select>
-                        -->
-                        {{--}}
-                            <select wire:model.debounce.100s="courseEdit" name="courseEdit[]"
-                                    class="form-control mx-1 selectpicker w-100" data-dropup-auto="false"
-                                    data-none-selected-text="{{ __('No course association')}}"
-                                    data-live-search="true" multiple>
-                                {{krsort($courseselect)}}
-                                @foreach($courseselect as $key => $data)
-                                    @if(Lang::locale() == 'swe')
-                                        <option value="{{ $key }}" data-subtext="{{$data[1]}}">{{ $data[0]}}</option>
-                                    @else
-                                        <option value="{{ $key }}" data-subtext="{{$data[1]}}">{{ $data[0] }}</option>
-                                    @endif
-                                @endforeach
-                            </select>
+                            <div id="addedCourses" class="mx-1 my-2">
+                                @if (empty($courseids))
+                                    <span class="font-1rem">{{__('No course association')}}</span>
+                                @else
+                                    @foreach($courseids as $courseid => $names)
+                                        <input type="hidden" value="{{$courseid}}" name="courseids[]">
+                                        <span class="badge badge-pill badge-light"><span data-toggle="tooltip" title="{{$names['fullname']}}">{{$names['shortname']}}</span> <a
+                                                    class="cursor-pointer" wire:click="remove_course({{$courseid}})"><i
+                                                        class="fa-solid fa-xmark"></i></a></span>
+                                    @endforeach
+                                @endif
+                            </div>
+                            <div wire:ignore id="course-search-form" class="flex-column d-flex">
+                                <input class="mx-1 w-100" type="search"
+                                       id="course-search" name="q" autocomplete="off"
+                                       aria-haspopup="true"
+                                       placeholder="{{ __("Start typing to add a course") }}"
+                                       aria-labelledby="course-search">
+                            </div>
                         </div>
+
                         <div class="form-group col-12 col-md-6 flex-column d-flex">
                             <label class="form-control-label px-1">{{ __("Course manager(s)") }}</label>
                             <div class="mx-1 my-2 font-1rem">
@@ -237,16 +234,27 @@
                                 <div class="mx-1 my-2 font-1rem">{{ __("No registered presenters") }}</div>
                             @endif
                         </div>
-                        <div wire:ignore class="form-group col-12 col-md-6 flex-column d-flex">
+                        <div class="form-group col-12 col-md-6 flex-column d-flex">
                             <label class="form-control-label px-1">{{ __("Tags") }}</label>
-                            <select name="tags[]"
-                                    class="form-control mx-1 selectpicker w-100" data-dropup-auto="false"
-                                    data-none-selected-text="{{ __("No tags")}}"
-                                    data-live-search="true" multiple>
-                                @foreach($tags as $tag)
-                                    <option value={{ $tag->id }}>{{ $tag->name }}</option>
-                                @endforeach
-                            </select>
+                            <div id="addedTags" class="mx-1 my-2">
+                                @if (empty($tagids))
+                                    <span class="font-1rem">{{__('No tags added')}}</span>
+                                @else
+                                    @foreach($tagids as $key => $tagid)
+                                        <input type="hidden" value="{{$tagid}}" name="tags[]">
+                                        <span class="badge badge-pill badge-light">{{\App\Tag::find($tagid)->name}} <a
+                                                    class="cursor-pointer" wire:click="remove_tag({{$key}})"><i
+                                                        class="fa-solid fa-xmark"></i></a></span>
+                                    @endforeach
+                                @endif
+                            </div>
+                            <div wire:ignore id="tag-search-form" class="flex-column d-flex">
+                                <input class="mx-1 w-100" type="search"
+                                       id="tag-search" name="q" autocomplete="off"
+                                       aria-haspopup="true"
+                                       placeholder="{{ __("Start typing to add a tag") }}"
+                                       aria-labelledby="tag-search">
+                            </div>
                         </div>
                     </div>
 
@@ -440,20 +448,28 @@
 </script>
 
 <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+
+        Livewire.hook('message.processed', (message, component) => {
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
+        })
+    });
+</script>
+
+<script>
     $(document).ready(function () {
-        $('.selectpicker[name="courseEdit[]"]').selectpicker('val', {{$courseids}}.map(String));
-    @this.set('courseEdit', {{$courseids}}.map(String));
-        $('.selectpicker[name="tags[]"]').selectpicker('val', {{$tagids}}.map(String));
         $(".datepicker").datepicker({
             format: "dd/mm/yyyy",
             weekStart: 1,
             todayHighlight: true
         });
 
-        $('select[name="courseEdit[]"]').on('change', function (e) {
-            var item = $(this).val();
-        @this.set('courseEdit', item);
-        });
+    @this.set('courseEdit', {{json_encode(array_keys($courseids))}}.map(String));
     });
 </script>
 
@@ -489,6 +505,114 @@
     });
     window.addEventListener('permissionChanged', event => {
         $(sukatuser);
+    });
+
+    jQuery(document).ready(function ($) {
+        // Set the Options for "Bloodhound" suggestion engine
+        var engine = new Bloodhound({
+            remote: {
+                url: '/findtag?query=%QUERY%',
+                wildcard: '%QUERY%'
+            },
+            datumTokenizer: Bloodhound.tokenizers.whitespace('query'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace
+        });
+
+        $("#tag-search").typeahead({
+            classNames: {
+                menu: 'search_autocomplete'
+            },
+            hint: false,
+            autoselect: false,
+            highlight: true,
+            minLength: 1
+        }, {
+            source: engine.ttAdapter(),
+            limit: 20,
+            // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
+            name: 'autocomplete-items',
+            display: function (item) {
+                return item.name;
+            },
+            templates: {
+                empty: [
+                    ''
+                ],
+                header: [
+                    ''
+                ],
+                suggestion: function (data) {
+                    if (data.type == 'input') {
+                        return '<a class="badge badge-secondary d-inline-block m-1 cursor-pointer" data-id=0 data-name="' + data.name + '">{{__('New tag')}}: ' + data.name + ' <i class="fa-solid fa-plus"></i></a>';
+                    } else {
+                        if ($('#addedTags').find('input[value="' + data.id + '"]').length) {
+                            return '<span></span>';
+                        } else {
+                            return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-id=' + data.id + '>' + data.name + ' <i class="fa-solid fa-plus"></i></a>';
+                        }
+                    }
+                }
+            }
+        }).on('keyup', function (e) {
+            //$(".tt-suggestion:first-child").addClass('tt-cursor');
+            let selected = $("#tag-search").attr('aria-activedescendant');
+            if (e.which === 13) {
+                if (selected) {
+                    // window.location.href = $("#" + selected).find('a').prop('href');
+                }
+            }
+        });
+
+        // Set the Options for "Bloodhound" suggestion engine
+        var engine2 = new Bloodhound({
+            remote: {
+                url: '/findcourse?query=%QUERY%',
+                wildcard: '%QUERY%'
+            },
+            datumTokenizer: Bloodhound.tokenizers.whitespace('query'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace
+        });
+
+        $("#course-search").typeahead({
+            classNames: {
+                menu: 'search_autocomplete'
+            },
+            hint: false,
+            autoselect: false,
+            highlight: true,
+            minLength: 1
+        }, {
+            source: engine2.ttAdapter(),
+            limit: 20,
+            // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
+            name: 'autocomplete-items',
+            display: function (item) {
+                return item.name;
+            },
+            templates: {
+                empty: [
+                    ''
+                ],
+                header: [
+                    ''
+                ],
+                suggestion: function (data) {
+                    if ($('#addedCourses').find('input[value="' + data.id + '"]').length) {
+                        return '<span></span>';
+                    } else {
+                        return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-toggle="tooltip" title="'+data.name+'" data-id=' + data.id + '>' + data.designation + ' ' + data.semester + data.year + ' <i class="fa-solid fa-plus"></i></a>';
+                    }
+                }
+            }
+        }).on('keyup', function (e) {
+            //$(".tt-suggestion:first-child").addClass('tt-cursor');
+            let selected = $("#course-search").attr('aria-activedescendant');
+            if (e.which === 13) {
+                if (selected) {
+                    // window.location.href = $("#" + selected).find('a').prop('href');
+                }
+            }
+        });
     });
 
     function sukat($) {
@@ -596,7 +720,6 @@
             let selected = $("#perm-search-text").attr('aria-activedescendant');
             if (e.which == 13) {
                 if (selected) {
-
                 } else {
                     $(".tt-suggestion:first-child").addClass('tt-cursor');
                 }
@@ -615,18 +738,28 @@
     // Resubmit the chosen value and disable input when selected from the typeahead
     $(document).on('click', '.tt-suggestion', function () {
         var type = $(this).closest('div.d-flex').prop('id');
-        $(this).closest('.twitter-typeahead').find('input').prop('readonly', true);
         if (type == 'perm-search') {
+            $(this).closest('.twitter-typeahead').find('input').prop('readonly', true);
             var values = $("input[name='individual_permissions[]']").map(function () {
                 return $(this).val();
             }).get();
         @this.set('individuals', values);
         } else if (type == 'user-search') {
+            $(this).closest('.twitter-typeahead').find('input').prop('readonly', true);
             var values = $("input[name='presenters[]']").map(function () {
                 return $(this).val();
             }).get();
         @this.set('presenters', values);
-        } else {
+        } else if (type == 'tag-search-form') {
+            if ($(this).attr('data-id') > 0) {
+            @this.add_tag($(this).attr('data-id'));
+            } else {
+            @this.create_tag($(this).attr('data-name'));
+            }
+            $('#tag-search').typeahead('val', '');
+        } else if (type == 'course-search-form') {
+        @this.add_course($(this).attr('data-id'));
+            $('#course-search').typeahead('val', '');
         }
     });
 </script>

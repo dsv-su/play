@@ -133,7 +133,7 @@ $(document).ready(function () {
         user++;
     });
 
-    $(document).on('click', '.tt-suggestion', function () {
+    $(document).on('click', '.presenteradd .tt-suggestion', function () {
         $(this).closest('.twitter-typeahead').find('input').prop('readonly', true);
     });
 

@@ -42,7 +42,7 @@ class CheckEditPermission
                 if($courseadmin->check(app()->make('play_username').'@su.se' , $video)) {
                     return $next($request);
                 } else {
-                    return redirect()->route('home');
+                   // return redirect()->route('home');
                 }
             }
 

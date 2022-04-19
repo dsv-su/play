@@ -10,7 +10,6 @@ use App\Presenter;
 use App\Services\Daisy\DaisyAPI;
 use App\Services\Filters\VisibilityFilter;
 use App\Stream;
-use App\Tag;
 use App\Video;
 use App\VideoCourse;
 use App\VideoPermission;
@@ -18,7 +17,6 @@ use App\VideoPresenter;
 use App\VideoTag;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 
 class EditController extends Controller
@@ -34,6 +32,7 @@ class EditController extends Controller
         $permissions = Permission::all();
         $courses = Course::all();
         $daisy_courses_ids = [];
+
 
         if (app()->make('play_role') != 'Administrator') {
             // Show only courses that you have permission to
@@ -55,7 +54,6 @@ class EditController extends Controller
         }
 
         $presenters = $video->presenters();
-        $tags = Tag::all();
         $individual_permissions = IndividualPermission::where('video_id', $video->id)->get();
 
         //Needs refactoring
@@ -77,7 +75,7 @@ class EditController extends Controller
             // abort(401);
         }
 
-        return view('manage.edit', compact('video', 'permissions', 'courses', 'tags', 'presenters', 'individual_permissions', 'user_permission'));
+        return view('manage.edit', compact('video', 'permissions', 'presenters', 'individual_permissions', 'user_permission'));
     }
 
     public function edit(Video $video, Request $request)
@@ -171,11 +169,10 @@ class EditController extends Controller
                 }
             }
 
-
             //Update course
             VideoCourse::where(['video_id' => $video->id])->delete();
-            if (!$request->courseEdit == null) {
-                foreach ($request->courseEdit as $courseid) {
+            if (!$request->courseids == null) {
+                foreach ($request->courseids as $courseid) {
                     VideoCourse::updateOrCreate(['video_id' => $video->id, 'course_id' => $courseid]);
                 }
             }
