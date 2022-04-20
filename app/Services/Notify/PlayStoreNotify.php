@@ -20,7 +20,7 @@ class PlayStoreNotify extends Model
 
     public function sendSuccess(string $type)
     {
-        // type: manual | type: update
+        // type: manual | type: update | type: mediasite
         $this->presentation
             ->makeHidden('title_en')
             ->makeHidden('status')
@@ -33,6 +33,7 @@ class PlayStoreNotify extends Model
             ->makeHidden('daisy_courses')
             ->makeHidden('created_at')
             ->makeHidden('updated_at');
+
         //Check if subtitles has been uploaded
         if(!$this->presentation->subtitles) {
             $this->presentation
@@ -57,13 +58,13 @@ class PlayStoreNotify extends Model
 
         $this->json = $this->json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
-        //*********************************************************************************
+        //
         //return $this->json;
-        //*********************************************************************************
+        //
 
         $this->client = new Client(['base_uri' => $this->uri()]);
+
         $this->headers = [
-            //'Authorization' => 'Bearer ' . $this->token(),
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ];
@@ -84,12 +85,12 @@ class PlayStoreNotify extends Model
                 $this->presentation->save();
 
                 //Write info to log
-                Log::error('Failed Notificationpackage:');
                 Log::error($e->getResponse()->getBody());
 
                 return $this->response = $e->getResponse()->getBody();
             }
         }
+
         if ($type == 'mediasite') {
             //Drop slides property since it's no longer needed to save
             unset($this->presentation->slides);
@@ -151,13 +152,12 @@ class PlayStoreNotify extends Model
 
         $this->json = $this->json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
-        //*********************************************************************************
+        //
         //return $this->json;
-        //*********************************************************************************
+        //
 
         $this->client = new Client(['base_uri' => $this->uri()]);
         $this->headers = [
-            //'Authorization' => 'Bearer ' . $this->token(),
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ];
@@ -184,11 +184,15 @@ class PlayStoreNotify extends Model
         }
 
         if ($this->response->getBody()) {
+
             //Change manualupdate status
             $this->presentation->status = 'notified fail';
             $this->presentation->save();
+
             return back()->withInput();
+
         } else {
+
             //Change manualupdate status
             $this->presentation->status = 'notification error';
             $this->presentation->save();
