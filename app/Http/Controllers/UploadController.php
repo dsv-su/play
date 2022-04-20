@@ -180,7 +180,7 @@ class UploadController extends Controller
 
         // Send notify
         $notify = new PlayStoreNotify($presentation);
-        return $notify->sendSuccess('manual');
+        $notify->sendSuccess('manual');
 
         return redirect('/');
     }
