@@ -39,7 +39,7 @@ class UploadHandlerClear extends Command
      */
     public function handle()
     {
-        DB::table('manual_presentations')->where('status', 'init')->delete();
+        DB::table('manual_presentations')->where('status', 'init')->orWhere('status', 'completed')->delete();
         return 0;
     }
 }

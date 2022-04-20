@@ -172,8 +172,9 @@ class UploadController extends Controller
         //$upload->sftpImage(); -> disabled
         $upload->sftpPoster();
 
+        // Moved to api -> the files are stored until upload is completed
         //Remove temp storage
-        Storage::disk('public')->deleteDirectory($presentation->local);
+        //Storage::disk('public')->deleteDirectory($presentation->local);
 
         //Change manualupdate status
         $presentation->status = 'stored';

@@ -22,6 +22,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -136,6 +137,9 @@ class VideoApiController extends Controller
                 //Update presentation status
                 $presentation->status = 'completed';
                 $presentation->save();
+
+                //Remove temp storage
+                Storage::disk('public')->deleteDirectory($presentation->local);
             }
             return response()->json('Presentation has been created', Response::HTTP_CREATED);
         } else {
