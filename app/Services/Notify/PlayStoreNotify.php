@@ -84,13 +84,16 @@ class PlayStoreNotify extends Model
                 $this->presentation->save();
 
                 //Write info to log
+                Log::error('Failed Notificationpackage:');
                 Log::error($e->getResponse()->getBody());
 
                 return $this->response = $e->getResponse()->getBody();
             }
         }
-        //Drop slides property since it's no longer needed to save
-        unset($this->presentation->slides);
+        if ($type == 'mediasite') {
+            //Drop slides property since it's no longer needed to save
+            unset($this->presentation->slides);
+        }
 
         if ($this->response->getBody()) {
             //Change manualupdate status

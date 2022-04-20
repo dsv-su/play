@@ -110,7 +110,7 @@ class UploadController extends Controller
 
                 }
             } else {
-                $courses = '';
+                $courses = [];
                 $daisy_courses = [];
             }
 
@@ -119,7 +119,7 @@ class UploadController extends Controller
                 foreach ($request->tags as $tag) {
                     $tags[] = $tag;
                 }
-            } else $tags = '';
+            } else $tags = [];
 
             //Set video permissions
             $video_permissions = new VideoPermission();
@@ -180,7 +180,7 @@ class UploadController extends Controller
 
         // Send notify
         $notify = new PlayStoreNotify($presentation);
-        $notify->sendSuccess('manual');
+        return $notify->sendSuccess('manual');
 
         return redirect('/');
     }
