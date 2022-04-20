@@ -168,9 +168,13 @@ class AdminController extends Controller
     public function admin_upload_notify_fail($id)
     {
         $presentation = ManualPresentation::find($id);
+
         // Send notify
         $notify = new PlayStoreNotify($presentation);
         $notify->sendFail('manual');
+
+        //Remove temp storage
+        Storage::disk('public')->deleteDirectory($presentation->local);
 
         return back()->withInput();
     }
