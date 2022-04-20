@@ -43,7 +43,7 @@ class ManualDownloadController extends Controller
             if (!$presentation = Presentation::find($video->id)) {
                 $presentation = new Presentation();
             }
-            $download_dir = $this->setDownloaddir();
+            $download_dir = $this->setDownloaddir($presentation->id);
             $presentation->id = $video->id;
             $presentation->status = 'request download';
             $presentation->resolution = $resolution;
@@ -246,9 +246,9 @@ class ManualDownloadController extends Controller
         return $this->file_name;
     }
 
-    private function setDownloaddir()
+    private function setDownloaddir($id)
     {
-        return Carbon::now()->toDateString('Y-m-d') . '_' . rand(1, 999);
+        return Carbon::now()->toDateString('Y-m-d') . '_' . rand(1, 999). $id;
     }
 
     private function check_download_status($video)
