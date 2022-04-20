@@ -98,8 +98,6 @@ class UploadController extends Controller
                     $username = preg_filter("/[^(]*\(([^)]+)\)[^()]*/", "$1", $presenter);
                     $presenters[] = $username;
                 }
-            } else {
-                $presenters = [];
             }
 
             //Courses
@@ -140,7 +138,7 @@ class UploadController extends Controller
             //Update model
             $manualPresentation->status = 'pending';
             $manualPresentation->base = '/data0/incoming/' . $manualPresentation->local;
-            $manualPresentation->title = $request->title;
+            $manualPresentation->title = $request->title_en;
             $manualPresentation->title_en = $request->title_en;
             $manualPresentation->description = $request->description ?? '';
             $manualPresentation->presenters = $presenters;
