@@ -155,7 +155,6 @@
     </div>
 </div>
 <!-- Modal Share-->
-@if ($video->edit)
     <div class="modal fade" id="shareModal{{$video->id}}" tabindex="-1" role="dialog" aria-labelledby="shareModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -213,7 +212,7 @@
             </div>
         </div>
     </div>
-@endif
+
 <!-- -->
 @if ($video->download)
     <div class="modal fade" id="downloadModal{{$video->id}}" tabindex="-1" role="dialog"
