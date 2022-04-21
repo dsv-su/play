@@ -2,14 +2,14 @@
 <div class="shadow-lg shadow-warning card video m-auto @if($video->hidden) faded @endif"
      @if (isset($manage) && $manage) id="{{$video->id}}" @endif>
     <div id="action-icons" class="flex-column m-1">
-        @if ($video->edit)
-            <div class="" data-placement="left" data-toggle="tooltip" title="{{__("Share presentation")}}">
-                <a href="#" data-toggle="modal" data-target="#shareModal{{$video->id}}"
-                   title="{{ __('Share presentation') }}" class="btn btn-dark btn-sm">
-                    <i class="fas fa-external-link-alt fa-fw"></i>
-                </a>
-            </div>
-        @endif
+
+        <div class="" data-placement="left" data-toggle="tooltip" title="{{__("Share presentation")}}">
+            <a href="#" data-toggle="modal" data-target="#shareModal{{$video->id}}"
+               title="{{ __('Share presentation') }}" class="btn btn-dark btn-sm">
+                <i class="fas fa-external-link-alt fa-fw"></i>
+            </a>
+        </div>
+        
         @if ($video->download)
             <div class="dropdown" data-placement="left" data-toggle="tooltip" title="{{ __("Download presentation") }}">
                 <a href="#" data-toggle="modal" data-target="#downloadModal{{$video->id}}"
