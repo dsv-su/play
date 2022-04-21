@@ -50,6 +50,12 @@ class Playback
                 //Presentation is public
                 if($video->visibility) {
                     //Presentation visibility is set to default
+
+                    //Check course association
+                    if(!count($video->courses()) > 0) {
+                        return $next($request);
+                    }
+
                     $coursesetting = new CourseSettingVisibility();
                     if($coursesetting->check($video)) {
                         //Coursesetting is set to default visibility
