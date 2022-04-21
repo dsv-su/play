@@ -144,7 +144,8 @@
 @else
     <h3 class="col mt-4">{{ __("No presentations") }}</h3>
 @endif
-
+<!--Download modal -->
+<livewire:modals.download-presentation />
 @if (isset($manage) && $manage)
     <script>
         $(document).on('click', 'a.link', function (e) {
