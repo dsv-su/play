@@ -19,6 +19,7 @@ class Manage extends Component
     public $counter, $coursesetlist;
     public $individual_permissions, $playback_permissions;
     public $filterTerm;
+    protected $queryString = ['filterTerm'];
 
     public function mount()
     {
@@ -112,6 +113,7 @@ class Manage extends Component
 
     public function render()
     {
+        $this->updatedFilterTerm();
         return view('livewire.manage');
     }
 }
