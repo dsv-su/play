@@ -52,14 +52,14 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     Route::get('/playlist/{id}', 'MultiplayerController@playlist');
 
     //New Manage
-    Route::middleware('play-admin')->group(function () {
+    Route::middleware('administrator-manage')->group(function () {
         Route::get('/manage_n', function () {
             return view('manage.manage_new');
-        });
+        })->name('manage');
     });
 
     //Manage
-    Route::get('/manage', 'SearchController@search')->name('manage');
+    Route::get('/manage', 'SearchController@search')->name('user_manage');
     Route::post('/manage', 'SearchController@search')->name('filter_manage');
     Route::get('/manage/courses', 'ManageCourseSettingsController@index')->name('manage_course');
     Route::get('/course/{courseid}/edit', 'ManageCourseSettingsController@edit')->name('course_edit');

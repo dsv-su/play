@@ -12,6 +12,9 @@
                    aria-labelledby="manage-filter">
         </form>
     </div>
+    <div wire:loading wire:target="loadUncat">
+        @include('livewire.modals.loading_spinner')
+    </div>
     <div wire:loading wire:target="loadCourseVideos">
         @include('livewire.modals.loading_spinner')
     </div>
