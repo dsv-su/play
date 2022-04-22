@@ -12,6 +12,9 @@
                    aria-labelledby="manage-filter">
         </form>
     </div>
+    <div wire:loading wire:target="loadCourseVideos">
+        @include('livewire.modals.loading_spinner')
+    </div>
     <!-- Uncategorized -->
     <div id="accordion">
         <div class="card">
