@@ -362,7 +362,7 @@ class SearchController extends Controller
 
             } elseif (app()->make('play_role') == 'Administrator') {
                 //Redirect to new manage
-                return redirect('/manage_n');
+                return redirect('/');
                 //return $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->get());
             }
         }
