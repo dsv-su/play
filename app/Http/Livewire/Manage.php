@@ -13,10 +13,10 @@ use Livewire\Component;
 class Manage extends Component
 {
     public $video_courses;
-    public $uncat, $uncat_videos = [];
+    public $uncat, $uncat_videos = [], $uncat_paginate;
     public $videos = [];
     public $contend = [];
-    public $counter, $coursesetlist;
+    public $counter, $uncatcounter, $coursesetlist;
     public $individual_permissions, $playback_permissions;
     public $filterTerm;
     protected $queryString = ['filterTerm'];
@@ -45,6 +45,7 @@ class Manage extends Component
         $this->video_courses = VideoCourse::with('course')->groupBy('course_id')->orderBy('course_id', 'desc')->get();
         $this->collapseAll($this->video_courses);
         $this->countPresentations($this->video_courses);
+        $this->countUncatPresentations();
         $this->courseSettings($this->video_courses);
     }
 
@@ -66,14 +67,15 @@ class Manage extends Component
     {
         $this->uncat = !$this->uncat;
         $this->uncat_videos = $visibility->filter(Video::doesntHave('video_course')->get());
+        $this->uncat_paginate = Video::doesntHave('video_course')->get();
     }
 
-    public function hydrate()
+    /*public function hydrate()
     {
         $visibility = app(VisibilityFilter::class);
         $this->uncat_videos = $visibility->filter(Video::doesntHave('video_course')->get());
         $this->courseSettings($this->video_courses);
-    }
+    }*/
 
 
     public function courseSettings($courses)
@@ -91,6 +93,11 @@ class Manage extends Component
             $this->playback_permissions[$course->course_id] = CoursePermissions::where('course_id', $course->course_id)->first();
         }
 
+    }
+
+    public function countUncatPresentations()
+    {
+        $this->uncatcounter = Video::doesntHave('video_course')->count();
     }
 
     public function countPresentations($courses)

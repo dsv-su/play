@@ -361,7 +361,9 @@ class SearchController extends Controller
                 return $visibility->filter(Video::whereIn('id', $user_videos)->orWhereIn('id', $individual_videos)->orWhereIn('id', $courseadministrator)->orWhereIn('id', $video_course_ids)->latest('creation')->get());
 
             } elseif (app()->make('play_role') == 'Administrator') {
-                return $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->get());
+                //Redirect to new manage
+                return redirect()->route('manage');
+                //return $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->get());
             }
         }
 

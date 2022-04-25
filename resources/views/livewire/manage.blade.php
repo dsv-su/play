@@ -27,6 +27,7 @@
                         <i class="fa mr-2"></i>
                         {{__("Uncategorized")}}
                     </a>
+                    <span class="badge badge-primary ml-2 mb-2" data-toggle="tooltip" title="{{__("Number of presentations")}}">{{$uncatcounter}}</span>
                 </h3>
             </div>
 
@@ -67,7 +68,6 @@
                             {{$video_course->course->designation}}
                             {{$video_course->course->semester}}
                             {{$video_course->course->year}}
-                            [{{$video_course->course->id}}]
                             @if(Lang::locale() == 'swe')
                                 {{$video_course->course->name}}
                             @else
