@@ -46,4 +46,3 @@
        href="{{ route('course_edit', $video_course->course->id) }}">{{__("Settings")}} <i class="fas fa-cog"></i></a>
 @endif
 
-

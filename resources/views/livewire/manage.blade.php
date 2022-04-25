@@ -118,3 +118,16 @@
         @endforeach
     </div> <!-- accordian -->
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+
+        Livewire.hook('message.processed', (message, component) => {
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
+        })
+    });
+</script>
