@@ -289,6 +289,12 @@ class SearchController extends Controller
      */
     public function search($q = null)
     {
+        // Redirect to new manage for administrators
+        if (app()->make('play_role') == 'Administrator') {
+            return redirect()->route('manage');
+        }
+
+
         $videos = $this->getVideos($q) ?? Collection::empty();
 
         $manage = \Request::is('manage');
@@ -361,9 +367,7 @@ class SearchController extends Controller
                 return $visibility->filter(Video::whereIn('id', $user_videos)->orWhereIn('id', $individual_videos)->orWhereIn('id', $courseadministrator)->orWhereIn('id', $video_course_ids)->latest('creation')->get());
 
             } elseif (app()->make('play_role') == 'Administrator') {
-                //Redirect to new manage
-                return redirect('/');
-                //return $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->get());
+                return $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->get());
             }
         }
 
