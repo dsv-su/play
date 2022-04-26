@@ -12,6 +12,7 @@ class UploadProgressNotification extends Mailable
     use Queueable, SerializesModels;
 
     public $presentation;
+    public $title_array = [], $title_swedish, $title_english;
 
     /**
      * Create a new message instance.
@@ -21,6 +22,9 @@ class UploadProgressNotification extends Mailable
     public function __construct($presentation)
     {
         $this->presentation = $presentation;
+        $this->title_array = json_decode($presentation->title['sv'], true);
+        $this->title_swedish = $this->title_array['sv'];
+        $this->title_english = $this->title_array['en'];
     }
 
     /**

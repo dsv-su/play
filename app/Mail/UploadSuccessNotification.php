@@ -12,6 +12,7 @@ class UploadSuccessNotification extends Mailable
     use Queueable, SerializesModels;
 
     public $presentation;
+    public $title_array = [], $title_swedish, $title_english;
 
     /**
      * Create a new message instance.
