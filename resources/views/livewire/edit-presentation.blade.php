@@ -413,30 +413,23 @@
 
 <script>
     $("#submit").click(function () {
-        let errors = 0;
         if ($('#title').val() == '') {
             $('#title').addClass('is-invalid');
             $('#title').removeClass('is-valid');
-            errors = 1;
         } else {
             $('#title').removeClass('is-invalid');
         }
         if ($('#title_en').val() == '') {
             $('#title_en').addClass('is-invalid');
             $('#title_en').removeClass('is-valid');
-            errors = 1;
         } else {
             $('#title_en').removeClass('is-invalid');
         }
         if ($('#creationdate').val() == '') {
             $('#creationdate').addClass('is-invalid');
             $('#creationdate').removeClass('is-valid');
-            errors = 1;
         } else {
             $('#creationdate').removeClass('is-invalid');
-        }
-        if (errors) {
-            return false;
         }
     });
 </script>
