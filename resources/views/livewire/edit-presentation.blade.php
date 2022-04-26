@@ -176,7 +176,7 @@
                                 @else
                                     @foreach($courseids as $courseid => $names)
                                         <input type="hidden" value="{{$courseid}}" name="courseids[]">
-                                        <span class="badge badge-pill badge-light"><span data-toggle="tooltip" title="{{$names['fullname']}}">{{$names['shortname']}}</span> <a
+                                        <span class="badge badge-pill badge-light"><span data-toggle="tooltip" data-title="{{$names['fullname']}}">{{$names['shortname']}}</span> <a
                                                     class="cursor-pointer" wire:click="remove_course({{$courseid}})"><i
                                                         class="fa-solid fa-xmark"></i></a></span>
                                     @endforeach
@@ -269,15 +269,9 @@
                                 <select class="form-group form-control" name="video_permission" style="margin: 5px 0px;"
                                         @if(!$visibility) style="background: #dddddd" @endif>
                                     @foreach($permissions as $perm)
-                                        @if(Lang::locale() == 'swe')
                                             <option value="{{$perm->id}}"
                                                     @if($presentationpermissonId == $perm->id) selected @endif >{{$perm->id}}
-                                                : {{$perm->scope}}</option>
-                                        @else
-                                            <option value="{{$perm->id}}"
-                                                    @if($presentationpermissonId == $perm->id) selected @endif >{{$perm->id}}
-                                                : {{$perm->scope_en}}</option>
-                                        @endif
+                                                : {{ Lang::locale() == 'swe' ? $perm->scope : $perm->scope_en}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -448,20 +442,6 @@
 </script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        })
-
-        Livewire.hook('message.processed', (message, component) => {
-            $(function () {
-                $('[data-toggle="tooltip"]').tooltip()
-            })
-        })
-    });
-</script>
-
-<script>
     $(document).ready(function () {
         $(".datepicker").datepicker({
             format: "dd/mm/yyyy",
@@ -600,7 +580,8 @@
                     if ($('#addedCourses').find('input[value="' + data.id + '"]').length) {
                         return '<span></span>';
                     } else {
-                        return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-toggle="tooltip" title="'+data.name+'" data-id=' + data.id + '>' + data.designation + ' ' + data.semester + data.year + ' <i class="fa-solid fa-plus"></i></a>';
+                        var name = @if (Lang::locale() == 'swe') data.name @else data.name_en @endif;
+                        return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-toggle="tooltip" data-title="' + name + '" data-id="' + data.id + '">' + data.designation + ' ' + data.semester + data.year + ' <i class="fa-solid fa-plus"></i></a>';
                     }
                 }
             }
@@ -737,6 +718,7 @@
 
     // Resubmit the chosen value and disable input when selected from the typeahead
     $(document).on('click', '.tt-suggestion', function () {
+        $(this).tooltip('hide');
         var type = $(this).closest('div.d-flex').prop('id');
         if (type == 'perm-search') {
             $(this).closest('.twitter-typeahead').find('input').prop('readonly', true);
@@ -761,5 +743,11 @@
         @this.add_course($(this).attr('data-id'));
             $('#course-search').typeahead('val', '');
         }
+    });
+    $(document).on('mouseover', '#addedCourses span', function () {
+        $(this).tooltip('show');
+    });
+    $(document).on('mouseover', '#course-search-form .tt-suggestion', function () {
+       $(this).tooltip('show');
     });
 </script>

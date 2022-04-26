@@ -298,15 +298,24 @@
                 }
                 el.closest('span').remove();
             }
-
+            $(document).on('mouseover', '#course-search-form .tt-suggestion', function () {
+                $(this).tooltip('show');
+            });
+            $(document).on('mouseover', '#addedCourses span', function () {
+                $(this).tooltip('show');
+            });
             $(document).on('click', '#course-search-form .tt-suggestion', function () {
+                $(this).tooltip('hide');
                 var courseid = $(this).attr('data-id');
                 var coursename = $(this).attr('data-name');
                 var fullname = $(this).attr('data-fullname');
                 if (!$('#addedCourses').find('input[value="' + courseid + '"]').length) {
-                    $('#addedCourses').append('<input type="hidden" value="' + courseid + '" name="courses[]"><span class="badge badge-pill badge-light" data-toggle="tooltip" title="' + fullname + '">' + coursename + ' <a class="cursor-pointer" data-id="' + courseid + '" onclick="remove($(this))"><i class="fa-solid fa-xmark"></i></a></span>');
+                    $('#addedCourses').append('<input type="hidden" value="' + courseid + '" name="courses[]"><span class="badge badge-pill badge-light" data-toggle="tooltip" data-title="' + fullname + '">' + coursename + ' <a class="cursor-pointer" data-id="' + courseid + '" onclick="remove($(this))"><i class="fa-solid fa-xmark"></i></a></span>');
                 }
                 $('#course-search').typeahead('val', '');
+            });
+            $(document).on('mouseover', '#course-search-form .tt-suggestion', function () {
+                $(this).tooltip('show');
             });
             $(document).on('click', '#tag-search-form .tt-suggestion', function () {
                 var tag = $(this).attr('data-name');
@@ -353,7 +362,7 @@
                             @else data.name_en @endif;
                             //return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-toggle="tooltip" title="' + data.name + '" data-id="' + data.id + '" data-name="' + data.designation + ' ' + data.semester + data.year + '" data-fullname="' + data.name + '">' + data.designation + ' ' + data.semester + data.year + ' <i class="fa-solid fa-plus"></i></a>';
                             // Show only designations for now since play-store can't handle course ids
-                            return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-toggle="tooltip" title="' + data.name + '" data-id="' + data.id + '" data-name="' + data.designation + '" data-fullname="' + data.name + '">' + data.designation + ' <i class="fa-solid fa-plus"></i></a>';
+                            return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-toggle="tooltip" data-title="' + data.name + '" data-id="' + data.id + '" data-name="' + data.designation + '" data-fullname="' + data.name + '">' + data.designation + ' <i class="fa-solid fa-plus"></i></a>';
                         }
                     }
                 }).on('keyup', function (e) {
