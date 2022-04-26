@@ -744,6 +744,9 @@
             $('#course-search').typeahead('val', '');
         }
     });
+    $(document).on('mouseover', '#addedCourses span', function () {
+        $(this).tooltip('show');
+    });
     $(document).on('mouseover', '#course-search-form .tt-suggestion', function () {
        $(this).tooltip('show');
     });
