@@ -19,6 +19,7 @@ class Manage extends Component
     public $counter, $uncatcounter, $coursesetlist;
     public $individual_permissions, $playback_permissions;
     public $filterTerm;
+    public $test;
     protected $queryString = ['filterTerm'];
 
     public function mount()
@@ -30,13 +31,24 @@ class Manage extends Component
     public function updatedFilterTerm()
     {
         $filterTerm = '%' . $this->filterTerm . '%';
-        $this->video_courses = VideoCourse::with('course')->whereHas('Course', function($q) use ($filterTerm) {
-            $q->where('id', 'LIKE', $filterTerm)
+        $this->video_courses = VideoCourse::with('course', 'video.video_tag.tag', 'video.video_presenter.presenter')
+            ->whereHas('Course', function($query) use ($filterTerm) {
+                $query->where('id', 'LIKE', $filterTerm)
                 ->orwhere('name', 'LIKE', $filterTerm)->orWhere('name_en', 'like', $filterTerm)
                 ->orWhere('designation', 'LIKE', $filterTerm)
                 ->orWhere('semester', 'LIKE', $filterTerm)
                 ->orWhere('year', 'LIKE', $filterTerm);
-        })->groupBy('course_id')->orderBy('course_id', 'desc')->get();
+            })
+            ->orWhereHas('video.video_presenter.presenter', function($query) use ($filterTerm) {
+                $query->where('username', 'LIKE', $filterTerm)
+                    ->orwhere('name', 'LIKE', $filterTerm);
+            })
+            ->orWhereHas('video.video_tag.tag', function($query) use ($filterTerm) {
+                $query->where('id', 'LIKE', $filterTerm)
+                    ->orwhere('name', 'LIKE', $filterTerm);
+            })
+            ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
+
         $this->courseSettings($this->video_courses);
     }
 

@@ -3,15 +3,17 @@
     <div class="container align-self-center">
         <form class="form-inline manage-filter d-flex justify-content-between" method="GET" id="manage-filter" role="search">
             <h2><span style="color:blue;">{{count($video_courses)}}</span></h2>
-            <label for="manage-filter" class="sr-only">{{ __("Filter courses") }}</label>
+            <label for="manage-filter" class="sr-only">{{ __("Filter courses by entering a course, presenter or tag term") }}</label>
             <input class="form-control w-50 mx-auto" type="search"
                    wire:model="filterTerm"
                    id="manage-filter-text" autocomplete="off"
                    aria-haspopup="true"
-                   placeholder="{{ __("Filter courses") }}"
+                   placeholder="{{ __("Filter courses by entering a course, presenter or tag term") }}"
+                   style="font-size: 100% !important;"
                    aria-labelledby="manage-filter">
         </form>
     </div>
+
     <div wire:loading wire:target="loadUncat">
         @include('livewire.modals.loading_spinner')
     </div>
@@ -96,7 +98,6 @@
                                 @foreach ($videos[$video_course->course->id] as $video)
 
                                     <div wire:key="{{ $video['id'] }}" class="col my-3">
-
                                         @include('home.video_m')
                                     </div>
                                 @endforeach
