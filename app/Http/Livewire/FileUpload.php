@@ -89,7 +89,8 @@ class FileUpload extends Component
         //Real-time Validation
         $this->isDisabled = false;
         $this->validate([
-            'files.*' => 'required|mimetypes:video/mp4,video/webm,video/avi,video/mpeg,video/quicktime,video/x-ms-wmv,video/x-msvideo',
+            //'files.*' => 'required|mimetypes:video/mp4,video/webm,video/avi,video/mpeg,video/quicktime,video/x-ms-wmv,video/x-msvideo',
+            'files.*' => 'required|mimetypes:video/*',
             'files' => 'max:4',
         ],
         [

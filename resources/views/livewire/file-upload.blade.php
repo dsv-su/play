@@ -48,7 +48,7 @@
                             {{ __("Select one or drag and drop up to 4 files at a time into the box below") }}
                         </p>
                         <div class="form-group">
-                            <input type="file" class="form-control-file" wire:model="files" id="{{ rand() }}" multiple/>
+                            <input type="file" class="form-control-file" wire:model="files" id="{{ rand() }}" accept="video/*" multiple/>
 
                             @error('files.*')
                             <span class="text-danger">{{ $message }}</span>
