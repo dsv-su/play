@@ -8,6 +8,14 @@
                 <li class="breadcrumb-item active" aria-current="page">Uploads</li>
             </ol>
         </nav>
+
+        <div class="card" style="border: 1px solid #3E7DC0 !important;">
+            <div class="card-body">
+                {{ __("Uploads are deleted after status completed.") }}
+            </div>
+        </div>
+        <br>
+
         <div class="row">
             <table class="table table-bordered">
                 <thead>
@@ -32,7 +40,11 @@
                             <td>{{$manual_presentation->status}}</td>
                             <td>{{$manual_presentation->id}}</td>
                             <td>{{$manual_presentation->created_at}}</td>
-                            <td>{{$manual_presentation->title['sv']}}</td>
+                            @if(Lang::locale() == 'swe')
+                                <td>{{json_decode($manual_presentation->title['sv'])->sv}}</td>
+                            @else
+                                <td>{{json_decode($manual_presentation->title['sv'])->en}}</td>
+                            @endif
                             <td>{{$manual_presentation->local}}</td>
                             <td>{{$manual_presentation->user}}</td>
                             @if($manual_presentation->status == 'failed' or $manual_presentation->status == 'stored' or $manual_presentation->status == 'sent')
