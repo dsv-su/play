@@ -81,7 +81,9 @@
                                 {{$video_course->course->name_en}}
                             @endif
                         </a>
-                        @include('livewire.status.coursestatus')
+                        @if(!$contend[$video_course->course->id])
+                            @include('livewire.status.coursestatus')
+                        @endif
                     </h3>
                 </div>
                 <div id="collapse{{$key}}"
@@ -91,7 +93,7 @@
                          class="collapse"
                      @endif
                      aria-labelledby="heading{{$key}}" data-parent="#accordion">
-
+                    @include('livewire.status.coursestatusfull')
                     <div class="d-flex flex-wrap">
                         @foreach ($videos[$video_course->course->id] as $video)
                             <div wire:key="{{ $video['id'] }}" class="col my-3">
