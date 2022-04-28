@@ -46,6 +46,7 @@
                  aria-labelledby="headingOne" data-parent="#accordion">
                 <div class="d-flex flex-wrap">
                     @foreach ($uncat_videos as $video)
+
                         <div wire:key="{{ $video->id}}" class="col my-3">
                             @include('home.video_m')
                         </div>
@@ -115,6 +116,7 @@
         @endforeach
     </div> <!-- accordian -->
 </div>
+
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         $(function () {

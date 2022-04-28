@@ -1,9 +1,9 @@
 <!-- Video - child view - will inherit all data available in the parent view-->
-<div class="shadow-lg shadow-warning card video m-auto @if(isset($video['hidden'])) faded @endif"
+<div wire:ignore.self class="shadow-lg shadow-warning card video m-auto @if(isset($video['hidden'])) faded @endif"
      id="{{$video['id']}}">
     <div wire:ignore id="action-icons" class="flex-column m-1">
         @if (isset($video['edit']))
-            <div wire:ignore class="" data-placement="left" data-toggle="tooltip" title="{{__("Share presentation")}}">
+            <div wire:ignore.self data-placement="left" data-toggle="tooltip" title="{{__("Share presentation")}}">
                 <a href="#" data-toggle="modal" data-target="#shareModal{{$video['id']}}"
                    title="{{ __('Share presentation') }}" class="btn btn-dark btn-sm">
                     <i class="fas fa-external-link-alt fa-fw"></i>
@@ -140,75 +140,73 @@
 
     </div>
 </div>
-<!-- Modal Share-->
-@if (isset($video['edit']))
-    <div wire:ignore class="modal fade" id="shareModal{{$video['id']}}" tabindex="-1" role="dialog"
-         aria-labelledby="shareModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="shareModalLabel">{{__("Share a presentation")}}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+<!-- Modal share -->
+<div wire:ignore.self class="modal fade" id="shareModal{{$video['id']}}"
+     data-backdrop="false" tabindex="-1" role="dialog"
+     aria-labelledby="shareModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="shareModalLabel">{{__("Share a presentation")}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="staticLink">{{__("Direct link")}}</label>
+                    <textarea readonly class="form-control" id="staticLink"
+                              value="">{{url("/multiplayer?p={$video['id']}")}} </textarea>
+                    <small id="staticLinkHelp"
+                           class="form-text text-muted">{{ __("Permalink to this presentation") }}</small>
                 </div>
-                <div class="modal-body">
+                <div class="form-group">
+                    <label for="embedCode">{{__("Embed ilearn")}}</label>
+                    <textarea readonly class="form-control text-muted" rows="5" id="embedCode"><a target="_blank" href="{{ route('player', ['video' => $video['id']]) }}"><img src="{{ asset($video['thumb'])}}" width="560" height="315"></a></textarea>
+                    <small id="embedCodeHelp"
+                           class="form-text text-muted">{{ __("Use this embed code to insert the video in iLearn") }}</small>
+                </div>
+                @if(!isset($video['course_permission']))
                     <div class="form-group">
-                        <label for="staticLink">{{__("Direct link")}}</label>
-                        <textarea readonly class="form-control" id="staticLink"
-                                  value="">{{url("/multiplayer?p={$video['id']}")}} </textarea>
-                        <small id="staticLinkHelp"
-                               class="form-text text-muted">{{ __("Permalink to this presentation") }}</small>
+                        <label for="permissions">{{__("Permissions")}}
+                            @if (isset($video['edit']))
+                                <a href="{{route('presentation_edit', $video['id'])}}" data-toggle="tooltip"
+                                   title="{{ __('Edit presentation') }}" class="btn btn-info btn-sm">{{__('Edit')}}
+                                    <i
+                                        class="far fa-edit"></i></a>
+                            @endif</label>
+                        <p class="font-1rem">
+                            {{--}}
+                            @foreach ($video->permissions() as $permission)
+                                <span class="d-block">{{$permission->scope}}</span>
+                            @endforeach
+                            {{--}}
+                        </p>
+                        <p class="font-1rem">
+                            {{--}}
+                            @foreach($video->coursepermissions as $cpermission)
+                                <span class="d-block">{{$cpermission->name}} ({{$cpermission->username}}): <span
+                                            class="text-capitalize badge badge-light">{{__('Manager')}}</span></span>
+                            @endforeach
+                            @foreach ($video->ipermissions as $ipermission)
+                                <span class="d-block">{{$ipermission->name}} ({{$ipermission->username}}): <span
+                                            class="text-capitalize badge badge-light">{{$ipermission->permission}}</span></span>
+                            @endforeach
+                            {{--}}
+                        </p>
                     </div>
-                    <div class="form-group">
-                        <label for="embedCode">{{__("Embed ilearn")}}</label>
-                        <textarea readonly class="form-control text-muted" rows="5" id="embedCode"><a target="_blank" href="{{ route('player', ['video' => $video['id']]) }}"><img src="{{ asset($video['thumb'])}}" width="560" height="315"></a></textarea>
-                        <small id="embbedCodeHelp"
-                               class="form-text text-muted">{{ __("Use this embed code to insert the video in iLearn") }}</small>
-                    </div>
-                    @if(!isset($video['course_permission']))
-                        <div class="form-group">
-                            <label for="permissions">{{__("Permissions")}}
-                                @if (isset($video['edit']))
-                                    <a href="{{route('presentation_edit', $video['id'])}}" data-toggle="tooltip"
-                                       title="{{ __('Edit presentation') }}" class="btn btn-info btn-sm">{{__('Edit')}}
-                                        <i
-                                                class="far fa-edit"></i></a>
-                                @endif</label>
-                            <p class="font-1rem">
-                                {{--}}
-                                @foreach ($video->permissions() as $permission)
-                                    <span class="d-block">{{$permission->scope}}</span>
-                                @endforeach
-                                {{--}}
-                            </p>
-                            <p class="font-1rem">
-                                {{--}}
-                                @foreach($video->coursepermissions as $cpermission)
-                                    <span class="d-block">{{$cpermission->name}} ({{$cpermission->username}}): <span
-                                                class="text-capitalize badge badge-light">{{__('Manager')}}</span></span>
-                                @endforeach
-                                @foreach ($video->ipermissions as $ipermission)
-                                    <span class="d-block">{{$ipermission->name}} ({{$ipermission->username}}): <span
-                                                class="text-capitalize badge badge-light">{{$ipermission->permission}}</span></span>
-                                @endforeach
-                                {{--}}
-                            </p>
-                        </div>
-                    @endif
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
+                @endif
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
-@endif
-<!-- -->
+</div>
 
 @if (isset($video['download']))
-    <div class="modal fade" id="downloadModal{{$video['id']}}" tabindex="-1" role="dialog"
+    <div wire:ignore.self class="modal fade" id="downloadModal{{$video['id']}}" tabindex="-1" role="dialog"
+         data-backdrop="false"
          aria-labelledby="downloadModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -256,7 +254,8 @@
 @endif
 <!-- Modal delete -->
 @if (isset($video['delete']))
-    <div class="modal fade" id="deleteModal{{$video['id']}}" tabindex="-1" role="dialog"
+    <div wire:ignore.self class="modal fade" id="deleteModal{{$video['id']}}" tabindex="-1" role="dialog"
+         data-backdrop="false"
          aria-labelledby="deleteModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -309,5 +308,18 @@
     $("#retype{{$video['id']}}").on('paste', function ($this) {
         alert('You need to manually type it in!')
         return false;
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        $(function () {
+            $('[data-toggle="modal"]').modal()
+        })
+
+        Livewire.hook('message.processed', (message, component) => {
+            $(function () {
+                $('[data-toggle="modal"]').modal()
+            })
+        })
     });
 </script>
