@@ -2,9 +2,8 @@
     <div class="container">
         <div class="row no-gutters">
             <div class="col d-flex align-items-center justify-content-center">
-                <div class="d-none d-sm-inline-block"><i class="fa-solid fa-share-from-square"></i></div>
                 <div class="webb2021-article p-0 p-lg-2 d-inline-block">
-                    <a href="https://play2.dsv.su.se">{{__("If you are missing presentations, click here to reach the old site!")}}</a>
+                    <a href="https://play2.dsv.su.se"><i class="fa-solid fa-share-from-square"></i> {{__("If you are missing presentations, click here to reach the old site!")}}</a>
                 </div>
                 <!--
                 <div class="h-100 d-flex align-items-center">
@@ -17,7 +16,7 @@
         </div>
     </div>
     @if (in_array(app()->make('play_role'), ['Administrator', 'Staff', 'Uploader', 'Courseadmin']) && !Request::is('queue'))
-    <div class="container">
+    <div class="container mt-1">
         <div class="row no-gutters">
             <div class="col d-flex align-items-center justify-content-center">
                 <div class="webb2021-article p-0 p-lg-2 d-inline-block">
