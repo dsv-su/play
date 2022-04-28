@@ -21,7 +21,7 @@ class FileUpload extends Component
     public $filethumbsname = [];
     public $filesduration = [];
     public $genthumb = [];
-    public $custom;
+    public $custom, $custom_set;
     public $sec = [];
     public $dirname;
     public $presentation, $permissions;
@@ -57,14 +57,15 @@ class FileUpload extends Component
         $customthumb = $this->custom->store($this->dirname.'/poster','public');
 
         //Change thumb name to custom thumb name
-        $this->filethumbs[0] = url('/storage/'. $customthumb);
+        //$this->filethumbs[0] = url('/storage/'. $customthumb);
 
         //Update source
         $this->presentation->thumb = 'poster/'. basename($customthumb);
-        $this->source[0]['poster'] = 'poster/' . basename($customthumb);
-        $this->presentation->sources = [];
-        $this->presentation->sources = $this->source;
+        //$this->source[0]['poster'] = 'poster/' . basename($customthumb);
+        //$this->presentation->sources = [];
+        //$this->presentation->sources = $this->source;
         $this->presentation->save();
+        $this->custom_set = true;
     }
 
     public function updatedsubtitle()
@@ -111,10 +112,10 @@ class FileUpload extends Component
                 //Make source
                 $this->source[$this->uploaded_files]['video'] = 'video/'. basename($filename);
                 $base = basename($filename);
-                if(!$this->custom or $this->uploaded_files > 0) {
+                //if(!$this->custom or $this->uploaded_files > 0) {
                     $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', $base);
                     $this->source[$this->uploaded_files]['poster'] = 'poster/'. $thumb_name.'.png';
-                }
+                //}
 
 
                 //Store primary media duration
@@ -125,10 +126,13 @@ class FileUpload extends Component
                     $primary_video_name = basename($filename);
 
                     //Create and store generated thumb
-                    if(!$this->custom) {
-                        $this->filethumbs[] = $this->createThumb($filename, ($this->presentation->duration/3), $this->presentation->duration);
-                        $this->presentation->thumb = 'poster/'. basename($this->filethumbs[0]);
+                    $this->filethumbs[] = $this->createThumb($filename, ($this->presentation->duration/3), $this->presentation->duration);
+                    if(!$this->custom_set) {
+                        //Send empty thumb
+                        //$this->presentation->thumb = 'poster/'. basename($this->filethumbs[0]);
                     }
+
+
                     $this->genthumb[] = ceil($this->presentation->duration/3);
 
 

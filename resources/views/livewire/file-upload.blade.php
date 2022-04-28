@@ -113,14 +113,9 @@
                                                             <label class="footer-department-name">{{ __("Stream duration") }}
                                                                 : {{$filesduration[$loop->index]}} sec.</label>
 
-                                                            @if(!$custom or $key > 0)
                                                                 <label class="footer-department-name">{{ __('Thumb generated after') }}
                                                                     : {{$genthumb[$loop->index]}} sec.</label>
-                                                            @else
-                                                                <label class="footer-department-name">{{ __('Custom uploaded thumb') }}</label>
-                                                            @endif
                                                         </small>
-                                                        @if(!$custom or $key > 0)
                                                             <div class="input-group mb-3">
                                                                 <input type="text" class="form-control" placeholder="0"
                                                                        type="number"
@@ -134,7 +129,6 @@
                                                                 @error('sec') <span
                                                                         class="text-danger">{{ $message }}</span> @enderror
                                                             </div>
-                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
