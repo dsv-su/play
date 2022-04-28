@@ -1,6 +1,6 @@
 <!-- Video - child view - will inherit all data available in the parent view-->
 <div class="shadow-lg shadow-warning card video m-auto @if(isset($video['hidden'])) faded @endif"
-      id="{{$video['id']}}">
+     id="{{$video['id']}}">
     <div wire:ignore id="action-icons" class="flex-column m-1">
         @if (isset($video['edit']))
             <div wire:ignore class="" data-placement="left" data-toggle="tooltip" title="{{__("Share presentation")}}">
@@ -11,7 +11,8 @@
             </div>
         @endif
         @if (isset($video['download']))
-            <div wire:ignore class="dropdown" data-placement="left" data-toggle="tooltip" title="{{ __("Download presentation") }}">
+            <div wire:ignore class="dropdown" data-placement="left" data-toggle="tooltip"
+                 title="{{ __("Download presentation") }}">
                 <a href="#" data-toggle="modal" data-target="#downloadModal{{$video['id']}}"
                    title="{{ __('Download presentation') }}" class="btn btn-dark btn-sm">
                     <i class="fas fa-download fa-fw"></i>
@@ -31,12 +32,14 @@
             @endif
             @if (isset($video['delete']))
                 <div>
-                    <a type="button" class="btn btn-dark btn-sm" data-toggle="modal"
-                       data-target="#deleteModal{{$video['id']}}">
-                        <i class="far fa-trash-alt fa-fw"></i>
-                    </a>
+                    <span data-toggle="tooltip" data-placement="left" data-title="{{__("Delete presentation")}}">
+                        <a type="button" class="btn btn-dark btn-sm" data-toggle="modal"
+                           data-target="#deleteModal{{$video['id']}}">
+                            <i class="far fa-trash-alt fa-fw"></i>
+                        </a>
+                    </span>
                 </div>
-            <!--
+                <!--
                         <div class="">
                         <form>
                             <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -76,7 +79,7 @@
                         <i class="fas fa-wrench"></i>
                     </div>
                 @endif
-            <!-- end Group Permission -->
+                <!-- end Group Permission -->
 
                 <!-- Visibility icon-->
                 @if(isset($video['hidden']))
@@ -119,26 +122,28 @@
         </div>
 
         <p class="card-text">
-           @if ($video['video_course'])
-               @foreach($video['video_course'] as $vc)
-                   <a href="/designation/{{$vc['course']['designation']}}"
-                      class="badge badge-primary">{{$vc['course']['designation']}}</a>
-               @endforeach
-           @endif
+            @if ($video['video_course'])
+                @foreach($video['video_course'] as $vc)
+                    <a href="/designation/{{$vc['course']['designation']}}"
+                       class="badge badge-primary">{{$vc['course']['designation']}}</a>
+                @endforeach
+            @endif
 
-          @if ($video['video_presenter'])
+            @if ($video['video_presenter'])
 
-              @foreach($video['video_presenter'] as $presenter)
-                  <a href="/presenter/{{$presenter['presenter']['username']}}" class="badge badge-light">{{$presenter['presenter']['name']}}</a>
-              @endforeach
-          @endif
+                @foreach($video['video_presenter'] as $presenter)
+                    <a href="/presenter/{{$presenter['presenter']['username']}}"
+                       class="badge badge-light">{{$presenter['presenter']['name']}}</a>
+                @endforeach
+            @endif
         </p>
 
     </div>
 </div>
 <!-- Modal Share-->
 @if (isset($video['edit']))
-    <div wire:ignore class="modal fade" id="shareModal{{$video['id']}}" tabindex="-1" role="dialog" aria-labelledby="shareModalLabel"
+    <div wire:ignore class="modal fade" id="shareModal{{$video['id']}}" tabindex="-1" role="dialog"
+         aria-labelledby="shareModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -159,7 +164,8 @@
                     <div class="form-group">
                         <label for="embedCode">{{__("Embed ilearn")}}</label>
                         <textarea readonly class="form-control text-muted" rows="5" id="embedCode"><a target="_blank" href="{{ route('player', ['video' => $video['id']]) }}"><img src="{{ asset($video['thumb'])}}" width="560" height="315"></a></textarea>
-                        <small id="embbedCodeHelp" class="form-text text-muted">{{ __("Use this embed code to insert the video in iLearn") }}</small>
+                        <small id="embbedCodeHelp"
+                               class="form-text text-muted">{{ __("Use this embed code to insert the video in iLearn") }}</small>
                     </div>
                     @if(!isset($video['course_permission']))
                         <div class="form-group">
@@ -201,88 +207,88 @@
 @endif
 <!-- -->
 
-    @if (isset($video['download']))
-        <div class="modal fade" id="downloadModal{{$video['id']}}" tabindex="-1" role="dialog"
-             aria-labelledby="downloadModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
+@if (isset($video['download']))
+    <div class="modal fade" id="downloadModal{{$video['id']}}" tabindex="-1" role="dialog"
+         aria-labelledby="downloadModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="shareModalLabel">{{__("Download presentation")}}
+                        <strong>{{$video['title']}}</strong></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="staticLink">{{__("Choose a resolution")}}</label>
+                        <div class="dropdown">
+                            @csrf
+                            @foreach(json_decode($video['sources'], true) as $source)
+                                @if(is_array($source['video']) && $loop->first)
+                                    @foreach($source['video'] as $key => $source)
+                                        <button class="btn btn-outline-primary btn-sm" name="res"
+                                                data-dismiss="modal"
+                                                onclick="downloadPresentation('<?php echo $video['id'];?>','<?php echo $key;?>')"
+                                                value="{{$key}}"><i class="fas fa-download"></i>
+                                            {{$key}}p
+                                        </button>
+                                    @endforeach
+                                @elseif($loop->first)
+                                    <button class="btn btn-outline-primary btn-sm" name="res"
+                                            onclick="downloadPresentation('<?php echo $video['id'];?>','<?php echo $key;?>')"
+                                            data-dismiss="modal"
+                                            value="999">
+                                        <i class="fas fa-download"></i> 720p
+                                    </button>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__("Close")}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+<!-- Modal delete -->
+@if (isset($video['delete']))
+    <div class="modal fade" id="deleteModal{{$video['id']}}" tabindex="-1" role="dialog"
+         aria-labelledby="deleteModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <form method="post" action="{{route('presentation.delete', $video['id'])}}">
+                @csrf
+                <input type="hidden" name="video_id" value="{{$video['id']}}">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="shareModalLabel">{{__("Download presentation")}}
-                            <strong>{{$video['title']}}</strong></h5>
+                        <h5 class="modal-title" id="deleteModalLabel">{{__("Delete presentation")}}
+                            "{{$video['title']}}"?</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="staticLink">{{__("Choose a resolution")}}</label>
-                            <div class="dropdown">
-                                @csrf
-                                @foreach(json_decode($video['sources'], true) as $source)
-                                    @if(is_array($source['video']) && $loop->first)
-                                        @foreach($source['video'] as $key => $source)
-                                            <button class="btn btn-outline-primary btn-sm" name="res"
-                                                    data-dismiss="modal"
-                                                    onclick="downloadPresentation('<?php echo $video['id'];?>','<?php echo $key;?>')"
-                                                    value="{{$key}}"><i class="fas fa-download"></i>
-                                                {{$key}}p
-                                            </button>
-                                        @endforeach
-                                    @elseif($loop->first)
-                                        <button class="btn btn-outline-primary btn-sm" name="res"
-                                                onclick="downloadPresentation('<?php echo $video['id'];?>','<?php echo $key;?>')"
-                                                data-dismiss="modal"
-                                                value="999">
-                                            <i class="fas fa-download"></i> 720p
-                                        </button>
-                                    @endif
-                                @endforeach
-                            </div>
+                            <label for="retype{{$video['id']}}" class="form-control-label">
+                                {{_("To confirm deletion, type the presentation title:")}}</label>
+                            <input type="text" class="form-control" id="retype{{$video['id']}}">
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__("Close")}}</button>
+                        <button id="delete" type="button"
+                                class="btn btn-primary disabled">{{_("Confirm deletion")}}</button>
+                        <button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">{{__("Close")}}</button>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
-    @endif
-    <!-- Modal delete -->
-    @if (isset($video['delete']))
-        <div class="modal fade" id="deleteModal{{$video['id']}}" tabindex="-1" role="dialog"
-             aria-labelledby="deleteModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <form method="post" action="{{route('presentation.delete', $video['id'])}}">
-                    @csrf
-                    <input type="hidden" name="video_id" value="{{$video['id']}}">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="deleteModalLabel">{{__("Delete presentation")}}
-                                "{{$video['title']}}"?</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="retype{{$video['id']}}" class="form-control-label">
-                                    {{_("To confirm deletion, type the presentation title:")}}</label>
-                                <input type="text" class="form-control" id="retype{{$video['id']}}">
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button id="delete" type="button"
-                                    class="btn btn-primary disabled">{{_("Confirm deletion")}}</button>
-                            <button type="button" class="btn btn-secondary"
-                                    data-dismiss="modal">{{__("Close")}}</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    @endif
+    </div>
+@endif
 
 
 <script>
