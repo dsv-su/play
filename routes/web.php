@@ -33,7 +33,6 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     Route::get('/category/{category}', 'SearchController@viewByCategory')->name('category');
     Route::get('/student/{username}', 'SearchController@viewByStudent')->name('student');
     Route::get('/course/{course}', 'SearchController@viewByCourse')->name('course');
-    Route::get('/course/{course}/manage', 'SearchController@viewByCourse')->name('course_manage');
     Route::get('/tag/{tag}', 'SearchController@viewByTag')->name('tag.presentations');
     Route::post('/tag/{tag}', 'SearchController@viewByTag')->name('tag.filter');
     Route::get('/presenter/{presenter}', 'SearchController@viewByPresenter')->name('presenter.presentations');

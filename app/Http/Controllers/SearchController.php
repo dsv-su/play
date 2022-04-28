@@ -224,7 +224,6 @@ class SearchController extends Controller
         $data['latest'] = $visibility->filter(Course::find($courseid)->videos()->filter(function ($video) {
             return $video;
         }));
-        $data['manage'] = \Request::is('course/' . $courseid . '/manage');
 
         return view('home.index', $data);
     }
@@ -294,7 +293,6 @@ class SearchController extends Controller
             return redirect()->route('manage');
         }
 
-
         $videos = $this->getVideos($q) ?? Collection::empty();
 
         $manage = \Request::is('manage');
@@ -306,9 +304,7 @@ class SearchController extends Controller
 
         if (\Request::isMethod('get')) {
             $coursesetlist = $individual_permissions = $playback_permissions = [];
-            if ($manage) {
-                list($coursesetlist, $individual_permissions, $playback_permissions) = $this->extractSettings($videos);
-            }
+            list($coursesetlist, $individual_permissions, $playback_permissions) = $this->extractSettings($videos);
             return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'filters', 'coursesetlist', 'individual_permissions', 'playback_permissions'));
         } else {
             return ['html' => $html, 'courses' => $videocourses, 'presenters' => $videopresenters, 'terms' => $videoterms, 'tags' => $videotags];
