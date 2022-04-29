@@ -10,7 +10,7 @@
                 </a>
             </div>
         @endif
-        @if (isset($video['download']))
+        @if ($video['download'])
             <div wire:ignore class="dropdown" data-placement="left" data-toggle="tooltip"
                  title="{{ __("Download presentation") }}">
                 <a href="#" data-toggle="modal" data-target="#downloadModal{{$video['id']}}"
