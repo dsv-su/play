@@ -12,6 +12,7 @@ use App\Presenter;
 use App\Services\Daisy\DaisyAPI;
 use App\Services\Daisy\DaisyIntegration;
 use App\Services\Filters\VisibilityFilter;
+use App\Services\Ldap\SukatUser;
 use App\Tag;
 use App\Video;
 use App\VideoCourse;
@@ -480,6 +481,64 @@ class SearchController extends Controller
         }
 
         return $tags;
+    }
+
+    /** Method for user search autocomplete suggestions
+     * @param Request $request
+     * @return mixed
+     */
+    public function findPerson(Request $request)
+    {
+        $sukatusers = SukatUser::query();
+        $sukatusernames = SukatUser::query();
+
+        $string = explode(' ', $request->q);
+
+        $searchterms = preg_split('/\s+/', $request->q);
+        $search = '(&';
+        foreach($searchterms as $term) {
+            $search .= "(|(givenName=$term*)(sn=$term*))";
+
+        }
+        $search .= ')';
+
+        $sukatusers = $sukatusers->rawFilter($search)->get();
+        
+        $users = new Collection();
+        //Also let's add all local external presenters to be able to find them
+        foreach (Presenter::search($request->get('q'))->where('description', 'external')->get() as $local) {
+            $user = new \stdClass();
+            $user->uid = 0;
+            $user->local = true;
+            $user->name = $local->name;
+            $users->add($user);
+        }
+        foreach ($sukatusers as $su) {
+            $user = new \stdClass();
+            if (!$su->uid) {
+                continue;
+            }
+            $user->uid = $su->uid[0];
+            $user->name = $su->displayName[0];
+            if (!empty($su->edupersonentitlement)) {
+                if (in_array('urn:mace:swami.se:gmai:dsv-user:staff', $su->edupersonentitlement)) {
+                    $user->role = 'DSV';
+                } elseif (in_array('urn:mace:swami.se:gmai:dsv-user:student', $su->edupersonentitlement)) {
+                    $user->role = 'Student';
+                }
+            }
+            $users->add($user);
+        }
+        $users = $users->sortBy(function ($user, $key) {
+            return $user->role ?? 'a';
+        });
+        if (!$users->filter(function ($item) use ($request) { return strtolower($item->name) == strtolower($request->get('q'));})->count()) {
+            $input = new \stdClass();
+            $input->uid = 0;
+            $input->name = ucwords($request->q);
+            $users->prepend($input);
+        }
+        return $users;
     }
 
     /** Method for course search autocomplete suggestions

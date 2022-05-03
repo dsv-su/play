@@ -92,19 +92,19 @@ class EditController extends Controller
             VideoPresenter::where('video_id', $video->id)->delete();
 
             //Linked Presenter attributes
-            if ($request->presenters) {
-                foreach ($request->presenters as $presenter) {
-
-                    $username = preg_filter("/[^(]*\(([^)]+)\)[^()]*/", "$1", $presenter);
-                    $name = trim(preg_replace("/\([^)]+\)/", "", $presenter));
-                    if ($username == null && $name) {
+            if ($request->presenteruids && $request->presenternames) {
+                foreach ($request->presenteruids as $key => $uid) {
+                    $name = $request->presenternames[$key];
+                    //   $username = preg_filter("/[^(]*\(([^)]+)\)[^()]*/", "$1", $presenter);
+                    //   $name = trim(preg_replace("/\([^)]+\)/", "", $presenter));
+                    if (!$uid || strpos($uid, 'external') !== false) {
                         $presenter = Presenter::firstOrCreate([
-                            'username' => $username,
+                            'name' => $name,
                             'description' => 'external'
                         ]);
-                    } elseif ($username) {
+                    } else {
                         $presenter = Presenter::firstOrCreate([
-                            'username' => $username,
+                            'username' => $uid,
                             'description' => 'sukat'
                         ]);
                     }

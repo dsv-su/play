@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Course;
 use App\CourseadminPermission;
 use App\Services\Daisy\DaisyIntegration;
+use App\Services\Ldap\SukatUser;
 use App\Tag;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Lang;
@@ -15,6 +16,7 @@ class EditPresentation extends Component
     public $video;
     public $title, $title_en, $thumb, $created, $date, $origin, $duration, $category, $description;
     public $presenters = [], $presenters_uid = [];
+    public $presenterids = [];
     public $course = [], $coursedetail = [], $courseId = [];
     public $courseids = [];
     public $courseselect = [];
@@ -56,12 +58,18 @@ class EditPresentation extends Component
         $this->user_permission = $user_permission;
 
         foreach ($video->presenters() as $presenter) {
-            if (!$presenter->username == null) {
-                $this->presenters[] = $presenter->name . ' (' . $presenter->username . ')';
-            } else {
-                $this->presenters[] = $presenter->name;
+            $role = null;
+            if ($presenter->username) {
+                $su = SukatUser::where('uid', $presenter->username)->first();
+                if (!empty($su->edupersonentitlement)) {
+                    if (in_array('urn:mace:swami.se:gmai:dsv-user:staff', $su->edupersonentitlement)) {
+                        $role = 'DSV';
+                    } elseif (in_array('urn:mace:swami.se:gmai:dsv-user:student', $su->edupersonentitlement)) {
+                        $role = 'Student';
+                    }
+                }
             }
-            $this->presenters_uid[] = $presenter->username;
+            $this->presenters[] = ['uid' => $presenter->username, 'name' => $presenter->name, 'type' => $presenter->description, 'role' => $role];
         }
 
         /*
@@ -190,11 +198,24 @@ class EditPresentation extends Component
     }
 
     public
-    function newpresenter()
+    function add_presenter($uid, $name)
     {
-        $this->presenters[] = '';
-        $this->presenters_uid[] = '';
-        $this->dispatchBrowserEvent('contentChanged');
+        if (!count(array_filter($this->presenters, function ($item) use ($uid, $name) {
+            return $item['uid'] == $uid && $item['name'] = $name;
+        }))) {
+            $role = null;
+            if ($uid) {
+                $su = SukatUser::where('uid', $uid)->first();
+                if (!empty($su->edupersonentitlement)) {
+                    if (in_array('urn:mace:swami.se:gmai:dsv-user:staff', $su->edupersonentitlement)) {
+                        $role = 'DSV';
+                    } elseif (in_array('urn:mace:swami.se:gmai:dsv-user:student', $su->edupersonentitlement)) {
+                        $role = 'Student';
+                    }
+                }
+            }
+            $this->presenters[] = ['uid' => $uid, 'name' => $name, 'type' => $uid ? 'sukat' : 'external', 'role' => $role];
+        }
     }
 
     public

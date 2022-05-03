@@ -72,9 +72,12 @@
                             </div>
                             <div class="row">
                                 <label class="col-4 col-lg-3 mb-0">{{ __("Origin") }}</label>
-                                <div class="col">@if($origin == 'mediasite') {{ __("Migrated from Mediasite") }}
-                                    @elseif($origin == 'cattura') {{ __("Recorded at DSV") }}
-                                    @elseif($origin == 'manual') {{ __("Uploaded by user") }}
+                                <div class="col">@if($origin == 'mediasite')
+                                        {{ __("Migrated from Mediasite") }}
+                                    @elseif($origin == 'cattura')
+                                        {{ __("Recorded at DSV") }}
+                                    @elseif($origin == 'manual')
+                                        {{ __("Uploaded by user") }}
                                     @endif
                                 </div>
                             </div>
@@ -86,7 +89,11 @@
                             </div>
                             <div class="row">
                                 <label class="col-4 col-lg-3 mb-0">{{__("Course")}}</label>
-                                <div class="col">@if (empty($course)) {{ __("Not associated to a course") }} @else {{implode(', ', $course)}} @endif</div>
+                                <div class="col">@if (empty($course))
+                                        {{ __("Not associated to a course") }}
+                                    @else
+                                        {{implode(', ', $course)}}
+                                    @endif</div>
                             </div>
                             <div class="row"><label for="visibilitySwitch"
                                                     class="col-4 col-lg-3 mb-0">{{__("Visibility")}}</label>
@@ -176,7 +183,8 @@
                                 @else
                                     @foreach($courseids as $courseid => $names)
                                         <input type="hidden" value="{{$courseid}}" name="courseids[]">
-                                        <span class="badge badge-pill badge-light"><span data-toggle="tooltip" data-title="{{$names['fullname']}}">{{$names['shortname']}}</span> <a
+                                        <span class="badge badge-pill badge-light"><span data-toggle="tooltip"
+                                                                                         data-title="{{$names['fullname']}}">{{$names['shortname']}}</span> <a
                                                     class="cursor-pointer" wire:click="remove_course({{$courseid}})"><i
                                                         class="fa-solid fa-xmark"></i></a></span>
                                     @endforeach
@@ -197,8 +205,12 @@
                                 @if (empty($course_responsible))
                                     {{__("No course manager added")}}
                                 @else
-                                    @foreach($course_responsible as $i=>$id) @foreach($id as $k=>$responsible) <span
-                                            class="m-1 badge badge-pill badge-light font-1rem">{{$responsible['firstName']}} {{$responsible['lastName']}}</span> @endforeach @endforeach
+                                    @foreach($course_responsible as $i=>$id)
+                                        @foreach($id as $k=>$responsible)
+                                            <span
+                                                    class="m-1 badge badge-pill badge-light font-1rem">{{$responsible['firstName']}} {{$responsible['lastName']}}</span>
+                                        @endforeach
+                                    @endforeach
                                 @endif
                             </div>
                         </div>
@@ -208,31 +220,30 @@
                     <div class="row justify-content-between text-left">
                         <div class="form-group col-12 col-md-6 flex-column d-flex">
                             <label class="form-control-label px-1">{{ __("Presenters") }}
-                                <span type="button" wire:click.prevent="newpresenter"
-                                      class="btn btn-primary px-1 py-0">{{__('Add')}}<i
-                                            class="fas fa-user-plus ml-1"></i></span>
                             </label>
-                            @if(count($presenters) > 0)
-                                @foreach($presenters as $key => $name)
-                                    <div class="d-inline">
-                                        <div wire:ignore class="d-flex justify-content-between" id="user-search">
-                                            <input @if($key == 0) style="border-color: blue;"
-                                                   @endif class="form-control w-100 mx-auto edit"
-                                                   id="user-search-text-{{$key}}" type="search"
-                                                   wire:model="presenters.{{$key}}" name="presenters[]"
-                                                   placeholder="Start typing name or username" aria-haspopup="true"
-                                                   autocomplete="off" aria-labelledby="user-search"
-                                                   @if ($name) readonly @endif>
-                                            <a class="absolute cursor-pointer p-2 top-2 right-2 text-gray-500"
-                                               wire:click="remove_presenter({{$key}})">
-                                                <i class="fas fa-user-minus"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @else
-                                <div class="mx-1 my-2 font-1rem">{{ __("No registered presenters") }}</div>
-                            @endif
+                            <div id="addedPresenters" class="mx-1 my-2">
+                                @if (empty($presenters))
+                                    <span class="font-1rem">{{__('No registered presenters')}}</span>
+                                @else
+                                    @foreach($presenters as $key => $presenter)
+                                        <input type="hidden" @if ($presenter['type'] == 'sukat') value="{{$presenter['uid']}}" @else value="0" @endif name="presenteruids[]">
+                                        <input type="hidden" value="{{$presenter['name']}}" name="presenternames[]">
+                                        <span class="badge badge-pill badge-light">
+                                            <span data-toggle="tooltip" @if ($presenter['type'] == 'sukat')  data-title="SU username: {{$presenter['uid']}}" @else data-title="External" @endif>{{$presenter['name']}}
+                                            </span>@if (isset($presenter['role']) && $presenter['role'] == 'DSV') <span class="badge badge-primary px-1" style="border-radius: 4px;">DSV</span> @endif
+                                            @if (isset($presenter['role']) && $presenter['role'] == 'Student') <span class="badge badge-success px-1" style="border-radius: 4px;">Student</span> @endif<a
+                                                    class="cursor-pointer" wire:click="remove_presenter({{$key}})"><i
+                                                        class="fa-solid fa-xmark"></i></a></span>
+                                    @endforeach
+                                @endif
+                            </div>
+                            <div wire:ignore id="presenter-search-form" class="flex-column d-flex">
+                                <input class="mx-1 w-100" type="search"
+                                       id="presenter-search" name="q" autocomplete="off"
+                                       aria-haspopup="true"
+                                       placeholder="{{ __("Start typing to add a presenter") }}"
+                                       aria-labelledby="presenter-search">
+                            </div>
                         </div>
                         <div class="form-group col-12 col-md-6 flex-column d-flex">
                             <label class="form-control-label px-1">{{ __("Tags") }}</label>
@@ -269,9 +280,9 @@
                                 <select class="form-group form-control" name="video_permission" style="margin: 5px 0px;"
                                         @if(!$visibility) style="background: #dddddd" @endif>
                                     @foreach($permissions as $perm)
-                                            <option value="{{$perm->id}}"
-                                                    @if($presentationpermissonId == $perm->id) selected @endif >{{$perm->id}}
-                                                : {{ Lang::locale() == 'swe' ? $perm->scope : $perm->scope_en}}</option>
+                                        <option value="{{$perm->id}}"
+                                                @if($presentationpermissonId == $perm->id) selected @endif >{{$perm->id}}
+                                            : {{ Lang::locale() == 'swe' ? $perm->scope : $perm->scope_en}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -341,8 +352,8 @@
                                     </p>
                                 </div>
                             </div>
-                    @endif
-                    <!-- -->
+                        @endif
+                        <!-- -->
                     </div>
                 </div>
             </div>
@@ -360,10 +371,16 @@
                                                 {{ __("Stream") }} {{$loop->index + 1}}
                                                 @if (!is_numeric($source->name))
                                                     : @if ($origin == 'cattura' && !in_array($source->name, ['right', 'left', 'main']))
-                                                        {{ __("Camera") }} @else {{$source->name}} @endif @endif
+                                                        {{ __("Camera") }}
+                                                    @else
+                                                        {{$source->name}}
+                                                    @endif
+                                                @endif
                                             </div>
                                             <div class="position-relative">
-                                                <img class=@if ($hidden[$key]) "opacity-1" @else "opacity-5" @endif
+                                                <img class=@if ($hidden[$key]) "opacity-1" @else
+                                                    "opacity-5"
+                                                @endif
                                                 src="{{$poster[$key]}}?{{ rand() }}" width="100%">
                                                 <div class="d-flex justify-content-center h-100">
                                                     <div id="stream_hidden" class="alert alert-secondary m-auto"
@@ -471,11 +488,7 @@
     });
 </script>
 <script>
-    $(document).ready(sukat);
     $(document).ready(sukatuser);
-    window.addEventListener('contentChanged', event => {
-        $(sukat);
-    });
     window.addEventListener('permissionChanged', event => {
         $(sukatuser);
     });
@@ -573,7 +586,8 @@
                     if ($('#addedCourses').find('input[value="' + data.id + '"]').length) {
                         return '<span></span>';
                     } else {
-                        var name = @if (Lang::locale() == 'swe') data.name @else data.name_en @endif;
+                        var name = @if (Lang::locale() == 'swe') data.name
+                        @else data.name_en @endif;
                         return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-toggle="tooltip" data-title="' + name + '" data-id="' + data.id + '">' + data.designation + ' ' + data.semester + data.year + ' <i class="fa-solid fa-plus"></i></a>';
                     }
                 }
@@ -587,68 +601,65 @@
                 }
             }
         });
-    });
 
-    function sukat($) {
         /* Typeahead SUKAT user */
         // Set the Options for "Bloodhound" suggestion engine
-        var engine = new Bloodhound({
+        var engine3 = new Bloodhound({
             remote: {
-                url: '/ldap_search?q=%QUERY%',
+                url: '/findperson?q=%QUERY%',
                 wildcard: '%QUERY%'
             },
             datumTokenizer: Bloodhound.tokenizers.whitespace('query'),
             queryTokenizer: Bloodhound.tokenizers.whitespace
         });
 
-        $('.edit:first-child').typeahead({
+        $('#presenter-search').typeahead({
             classNames: {
                 menu: 'search_autocomplete'
             },
             hint: false,
-            autoselect: true,
+            autoselect: false,
             highlight: true,
-            minLength: 1
+            minLength: 3
         }, {
-            source: engine.ttAdapter(),
-            limit: 10,
+            source: engine3.ttAdapter(),
+            limit: 20,
             // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
             name: 'autocomplete-items',
             display: function (item) {
-                return item.displayname + ' (' + item.uid + ')';
+                return item.fullname + ' (' + item.uid + ')';
             },
             templates: {
                 empty: [
-                    '<div class="list-group search-results-dropdown"><div class="list-group-item">Nothing found.</div></div>'
+                    ''
                 ],
                 header: [
-                    '<div class="list-group search-results-dropdown">'
+                    ''
                 ],
                 suggestion: function (data) {
-                    return '<li>' + data.displayname + ' (' + data.uid + ')' + '</li>';
-
+                    if ($('#addedPresenters').find('input[value="' + data.name + '"]').length) {
+                        return '<span></span>';
+                    } else {
+                        if (!data.uid) {
+                            var string = (!data.local ? '{{__('New external')}}: ' : '');
+                            return '<a class="badge badge-secondary d-inline-block m-1 cursor-pointer" data-id=0 data-name="' + data.name + '">' + string + data.name + ' <i class="fa-solid fa-plus"></i></a>';
+                        } else {
+                            var label = (data.role == 'DSV' ? '<span class="bagde badge-primary ml-2 px-1" style="border-radius: 4px;">DSV</span>' : (data.role == 'Student' ? '<span class="bagde badge-success mx-1 px-1" style="border-radius: 4px;">Student</span>' : ''));
+                            return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-toggle="tooltip" data-title="SU username: ' + data.uid + '" data-name="' + data.name + '" data-id="' + data.uid + '">' + data.name + label + ' <i class="fa-solid fa-plus"></i></a>';
+                        }
+                    }
                 }
             }
         }).on('keyup', function (e) {
-            $(".tt-suggestion:first-child").addClass('tt-cursor');
-            let selected = $("#user-search-text").attr('aria-activedescendant');
-            if (e.which == 13) {
+            let selected = $("#presenter-search").attr('aria-activedescendant');
+            if (e.which === 13) {
                 if (selected) {
-
-                } else {
-                    $(".tt-suggestion:first-child").addClass('tt-cursor');
+                    // window.location.href = $("#" + selected).find('a').prop('href');
                 }
-                // Disable the input after Enter
-                $(this).prop('readonly', true);
-                // Resubmit the chosen value
-                var values = $("input[name='presenters[]']").map(function () {
-                    return $(this).val();
-                }).get();
-            @this.set('presenters', values);
             }
         });
         /* end typeahead */
-    }
+    });
 
     function sukatuser($) {
         /* Typeahead SUKAT user */
@@ -735,12 +746,21 @@
         } else if (type == 'course-search-form') {
         @this.add_course($(this).attr('data-id'));
             $('#course-search').typeahead('val', '');
+        } else if (type == 'presenter-search-form') {
+        @this.add_presenter($(this).attr('data-id'), $(this).attr('data-name'));
+            $('#presenter-search').typeahead('val', '');
         }
     });
     $(document).on('mouseover', '#addedCourses span', function () {
         $(this).tooltip('show');
     });
+    $(document).on('mouseover', '#addedPresenters span', function () {
+        $(this).tooltip('show');
+    });
+    $(document).on('mouseover', '#presenter-search-form .tt-suggestion', function () {
+        $(this).tooltip('show');
+    });
     $(document).on('mouseover', '#course-search-form .tt-suggestion', function () {
-       $(this).tooltip('show');
+        $(this).tooltip('show');
     });
 </script>
