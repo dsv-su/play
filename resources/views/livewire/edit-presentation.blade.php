@@ -183,7 +183,7 @@
                                 @else
                                     @foreach($courseids as $courseid => $names)
                                         <input type="hidden" value="{{$courseid}}" name="courseids[]">
-                                        <span class="badge badge-pill badge-light"><span data-toggle="tooltip"
+                                        <span class="badge badge-pill badge-light mb-1"><span data-toggle="tooltip"
                                                                                          data-title="{{$names['fullname']}}">{{$names['shortname']}}</span> <a
                                                     class="cursor-pointer" wire:click="remove_course({{$courseid}})"><i
                                                         class="fa-solid fa-xmark"></i></a></span>
@@ -228,7 +228,7 @@
                                     @foreach($presenters as $key => $presenter)
                                         <input type="hidden" @if ($presenter['type'] == 'sukat') value="{{$presenter['uid']}}" @else value="0" @endif name="presenteruids[]">
                                         <input type="hidden" value="{{$presenter['name']}}" name="presenternames[]">
-                                        <span class="badge badge-pill badge-light">
+                                        <span class="badge badge-pill badge-light mb-1">
                                             <span data-toggle="tooltip" @if ($presenter['type'] == 'sukat')  data-title="SU username: {{$presenter['uid']}}" @else data-title="External" @endif>{{$presenter['name']}}
                                             </span>@if (isset($presenter['role']) && $presenter['role'] == 'DSV') <span class="badge badge-primary px-1" style="border-radius: 4px;">DSV</span> @endif
                                             @if (isset($presenter['role']) && $presenter['role'] == 'Student') <span class="badge badge-success px-1" style="border-radius: 4px;">Student</span> @endif<a
@@ -253,7 +253,7 @@
                                 @else
                                     @foreach($tagids as $key => $tagid)
                                         <input type="hidden" value="{{$tagid}}" name="tags[]">
-                                        <span class="badge badge-pill badge-light">{{\App\Tag::find($tagid)->name}} <a
+                                        <span class="badge badge-pill badge-light mb-1">{{\App\Tag::find($tagid)->name}} <a
                                                     class="cursor-pointer" wire:click="remove_tag({{$key}})"><i
                                                         class="fa-solid fa-xmark"></i></a></span>
                                     @endforeach
