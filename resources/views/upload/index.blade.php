@@ -40,10 +40,9 @@
 
                         <div class="row justify-content-between text-left">
                             <!-- Title -->
-                            <div class="form-group col-sm-6 flex-column d-flex"><label for="title"
-                                                                                       class="form-control-label px-1">{{ __("Title in Swedish") }}
-                                    <span
-                                            class="text-danger"> *</span></label>
+                            <div class="form-group col-sm-6 flex-column d-flex">
+                                <label for="title" class="form-control-label px-1">{{ __("Title in Swedish") }}
+                                    <span class="text-danger"> *</span></label>
                                 <input class="form-control" id="title" name="title" type="text"
                                        placeholder="{{ __("Title in Swedish") }}"
                                        value="{{ old('title') ? old('title'): $title ?? '' }}">
@@ -123,29 +122,22 @@
                         </p>
                         <div class="row justify-content-between text-left">
                             <div class="form-group col-12 col-lg-6 flex-column d-flex">
-                                <label class="form-control-label px-1" for="uploader">
-                                    <span type="button" name="presenteradd"
-                                          class="btn btn-primary px-1 py-0 presenteradd">{{__('Add')}}<i
-                                                class="fas fa-user-plus ml-1"></i></span>
-                                </label>
-
-                                <div id="presenter_table">
-                                    <input type="text" class="form-control w-100 mx-auto" id="uploader"
-                                           value="{{app()->make('play_user')}} ({{app()->make('play_username')}})"
-                                           readonly>
+                                <!-- Course association -->
+                                <div id="addedPresenters" class="mx-1 my-2">
+                                    <span class="badge badge-pill badge-light" data-toggle="tooltip"
+                                          data-title="SU username: {{app()->make('play_username')}}">{{app()->make('play_user')}}</span>
                                     @if(old('presenters'))
                                         @foreach(old('presenters') as $presenter)
-                                            <div class="d-flex justify-content-between" id="user-search">
-                                                <input class="form-control w-100 mx-auto" type="search"
-                                                       id="user-search-text-{{$loop->index+1}}" name="presenters[]"
-                                                       value="{{$presenter}}" autocomplete="off" aria-haspopup="true"
-                                                       placeholder="Name or username" aria-labelledby="user-search">
-                                                <a type="button" id="presenterremove"
-                                                   class="absolute cursor-pointer p-2 top-2 right-2 text-gray-500 presenterremove"><i
-                                                            class="fas fa-user-minus"></i></a>
-                                            </div>
+                                            <input type="">
                                         @endforeach
                                     @endif
+                                </div>
+                                <div id="presenter-search-form" class="flex-column d-flex p-0">
+                                    <input wire:ignore class="mx-1 w-100" type="search"
+                                           id="presenter-search" name="q" autocomplete="off"
+                                           aria-haspopup="true"
+                                           placeholder="{{ __("Start typing to add a presenter") }}"
+                                           aria-labelledby="presenter-search">
                                 </div>
                             </div>
                         </div>
@@ -286,8 +278,7 @@
         <script src="{{ asset('./js/upload.js') }}"></script>
         <script>
             function remove(el) {
-                var type =el.closest('div').attr('id');
-                console.log(type);
+                var type = el.closest('div').attr('id');
                 if (type == 'addedTags') {
                     var tag = el.attr('data-name');
                     $('#addedTags').find('input[value="' + tag + '"]').remove();
@@ -296,12 +287,23 @@
                     var courseid = el.attr('data-id');
                     $('#addedCourses').find('input[value="' + courseid + '"]').remove();
                 }
+                if (type == 'addedPresenters') {
+                    var name = el.attr('data-name');
+                    $('#addedPresenters').find('input[value="' + name + '"]').remove();
+                }
                 el.closest('span').remove();
             }
+
             $(document).on('mouseover', '#course-search-form .tt-suggestion', function () {
                 $(this).tooltip('show');
             });
             $(document).on('mouseover', '#addedCourses span', function () {
+                $(this).tooltip('show');
+            });
+            $(document).on('mouseover', '#presenter-search-form .tt-suggestion', function () {
+                $(this).tooltip('show');
+            });
+            $(document).on('mouseover', '#addedPresenters span', function () {
                 $(this).tooltip('show');
             });
             $(document).on('click', '#course-search-form .tt-suggestion', function () {
@@ -314,9 +316,6 @@
                 }
                 $('#course-search').typeahead('val', '');
             });
-            $(document).on('mouseover', '#course-search-form .tt-suggestion', function () {
-                $(this).tooltip('show');
-            });
             $(document).on('click', '#tag-search-form .tt-suggestion', function () {
                 var tag = $(this).attr('data-name');
                 if (!$('#addedTags').find('input[value="' + tag + '"]').length) {
@@ -324,6 +323,24 @@
                 }
                 $('#tag-search').typeahead('val', '');
             });
+            $(document).on('click', '#presenter-search-form .tt-suggestion', function () {
+                $(this).tooltip('hide');
+                var username = $(this).attr('data-id');
+                var name = $(this).attr('data-name');
+                var role = $(this).attr('data-role');
+                if (username != 0) {
+                    if (!$('#addedPresenters').find('input[value="' + username + '"]').length) {
+                        var label = (role == 'DSV' ? '<span class="bagde badge-primary ml-2 px-1" style="border-radius: 4px;">DSV</span>' : (role == 'Student' ? '<span class="bagde badge-success mx-1 px-1" style="border-radius: 4px;">Student</span>' : ''));
+                        $('#addedPresenters').append('<input type="hidden" value="' + username + '" name="presenters[]"><span class="badge badge-pill badge-light" data-toggle="tooltip" data-title="SU username: ' + username + '">' + name + label + ' <a class="cursor-pointer" data-name="' + username + '" onclick="remove($(this))"><i class="fa-solid fa-xmark"></i></a></span>');
+                    }
+                } else {
+                    if (!$('#addedPresenters').find('input[value="' + name + '"]').length) {
+                        $('#addedPresenters').append('<input type="hidden" value="' + name + '" name="presenters[]"><span class="badge badge-pill badge-light" data-toggle="tooltip" data-title="External">' + name + ' <a class="cursor-pointer" data-name="' + name + '" onclick="remove($(this))"><i class="fa-solid fa-xmark"></i></a></span>');
+                    }
+                }
+                $('#presenter-search').typeahead('val', '');
+            });
+
             jQuery(document).ready(function ($) {
                 var engine2 = new Bloodhound({
                     remote: {
@@ -425,6 +442,64 @@
                         }
                     }
                 });
+
+                /* Typeahead SUKAT user */
+                // Set the Options for "Bloodhound" suggestion engine
+                var engine3 = new Bloodhound({
+                    remote: {
+                        url: '/findperson?q=%QUERY%',
+                        wildcard: '%QUERY%'
+                    },
+                    datumTokenizer: Bloodhound.tokenizers.whitespace('query'),
+                    queryTokenizer: Bloodhound.tokenizers.whitespace
+                });
+
+                $('#presenter-search').typeahead({
+                    classNames: {
+                        menu: 'search_autocomplete'
+                    },
+                    hint: false,
+                    autoselect: false,
+                    highlight: true,
+                    minLength: 3
+                }, {
+                    source: engine3.ttAdapter(),
+                    limit: 20,
+                    // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
+                    name: 'autocomplete-items',
+                    display: function (item) {
+                        return item.fullname + ' (' + item.uid + ')';
+                    },
+                    templates: {
+                        empty: [
+                            ''
+                        ],
+                        header: [
+                            ''
+                        ],
+                        suggestion: function (data) {
+                            if ($('#addedPresenters').find('input[value="' + data.name + '"]').length) {
+                                return '<span></span>';
+                            } else {
+                                if (!data.uid) {
+                                    var string = (!data.local ? '{{__('New external')}}: ' : '');
+                                    return '<a class="badge badge-secondary d-inline-block m-1 cursor-pointer" data-id=0 data-name="' + data.name + '">' + string + data.name + ' <i class="fa-solid fa-plus"></i></a>';
+                                } else {
+                                    var label = (data.role == 'DSV' ? '<span class="bagde badge-primary ml-2 px-1" style="border-radius: 4px;">DSV</span>' : (data.role == 'Student' ? '<span class="bagde badge-success mx-1 px-1" style="border-radius: 4px;">Student</span>' : ''));
+                                    return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-toggle="tooltip" data-role="' + data.role + '" data-title="SU username: ' + data.uid + '" data-name="' + data.name + '" data-id="' + data.uid + '">' + data.name + label + ' <i class="fa-solid fa-plus"></i></a>';
+                                }
+                            }
+                        }
+                    }
+                }).on('keyup', function (e) {
+                    let selected = $("#presenter-search").attr('aria-activedescendant');
+                    if (e.which === 13) {
+                        if (selected) {
+                            // window.location.href = $("#" + selected).find('a').prop('href');
+                        }
+                    }
+                });
+                /* end typeahead */
             });
             $(".datepicker").datepicker({
                 format: "dd/mm/yyyy",

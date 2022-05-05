@@ -491,11 +491,6 @@ class SearchController extends Controller
      */
     public function findPerson(Request $request)
     {
-        $sukatusers = SukatUser::query();
-        $sukatusernames = SukatUser::query();
-
-        $string = explode(' ', $request->q);
-
         $searchterms = preg_split('/\s+/', $request->q);
         $search = '(&';
         foreach ($searchterms as $term) {
@@ -504,8 +499,14 @@ class SearchController extends Controller
         $search .= ')';
 
         $sukatusersdsv = SukatUser::rawFilter($search)->whereContains('edupersonentitlement', 'urn:mace:swami.se:gmai:dsv-user:staff')->get();
-        $sukatusersstudents = SukatUser::rawFilter($search)->whereContains('edupersonentitlement', 'urn:mace:swami.se:gmai:dsv-user:student')->whereNotContains('edupersonentitlement', 'urn:mace:swami.se:gmai:dsv-user:staff')->get();
-        $sukatusersother = SukatUser::rawFilter($search)->whereNotContains('edupersonentitlement', 'urn:mace:swami.se:gmai:dsv-user:staff')->whereNotContains('edupersonentitlement', 'urn:mace:swami.se:gmai:dsv-user:student')->get();
+        $sukatusersstudents = SukatUser::rawFilter($search)
+            ->whereContains('edupersonentitlement', 'urn:mace:swami.se:gmai:dsv-user:student')
+            ->whereNotContains('edupersonentitlement', 'urn:mace:swami.se:gmai:dsv-user:staff')
+            ->get();
+        $sukatusersother = SukatUser::rawFilter($search)
+            ->whereNotContains('edupersonentitlement', 'urn:mace:swami.se:gmai:dsv-user:staff')
+            ->whereNotContains('edupersonentitlement', 'urn:mace:swami.se:gmai:dsv-user:student')
+            ->get();
 
         foreach ($sukatusersdsv as $su) {
             $su->role = 'DSV';
@@ -525,7 +526,7 @@ class SearchController extends Controller
             $user->role = $su->role;
             $users->add($user);
         }
-        
+
         //Also let's add all local external presenters to be able to find them
         $presenters = Presenter::query();
         foreach ($searchterms as $term) {
@@ -539,6 +540,7 @@ class SearchController extends Controller
             $users->prepend($user);
         }
 
+        // We only add 'New external' if it's not already there
         if (!$users->filter(function ($item) use ($request) {
             return strtolower($item->name) == strtolower($request->get('q'));
         })->count()) {
