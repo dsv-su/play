@@ -126,11 +126,6 @@
                                 <div id="addedPresenters" class="mx-1 my-2">
                                     <span class="badge badge-pill badge-light" data-toggle="tooltip"
                                           data-title="SU username: {{app()->make('play_username')}}">{{app()->make('play_user')}}</span>
-                                    @if(old('presenters'))
-                                        @foreach(old('presenters') as $presenter)
-                                            <input type="">
-                                        @endforeach
-                                    @endif
                                 </div>
                                 <div id="presenter-search-form" class="flex-column d-flex p-0">
                                     <input wire:ignore class="mx-1 w-100" type="search"

@@ -98,8 +98,6 @@ class UploadController extends Controller
                 }
             }
 
-            dd($presenters);
-
           //  if ($request->presenters) {
           //      foreach ($request->presenters as $presenter) {
                     //Retrive only username
