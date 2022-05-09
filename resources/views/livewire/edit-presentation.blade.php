@@ -68,7 +68,7 @@
                         <div class="form-group col-md-6 col-lg-8 px-md-3 mb-0">
                             <div class="row">
                                 <label class="col-4 col-lg-3 mb-0">{{__("Title")}}</label>
-                                <div class="col">{{$video->title}}</div>
+                                <div class="col">{{$video->LangTitle}}</div>
                             </div>
                             <div class="row">
                                 <label class="col-4 col-lg-3 mb-0">{{ __("Origin") }}</label>

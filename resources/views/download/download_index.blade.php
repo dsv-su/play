@@ -8,7 +8,7 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
-                        {{$video->title}}
+                        {{$video->LangTitle}}
                     </div>
                     <img class="card-img-top" src="{{ $video->thumb}}" alt="Card image cap">
                     <div class="card-body">

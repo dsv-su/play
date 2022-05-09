@@ -7,7 +7,7 @@
         <a href="{{ route('player', ['video' => $video]) }}">
             <div class="card-header position-relative"
                  style="background-image: url({{ asset($video->thumb)}}); height:200px;">
-                <div class="title">{{ $video->title }}</div>
+                <div class="title">{{ $video->LangTitle }}</div>
                 <p class="p-1"> {{$video->duration}} </p>
             </div>
         </a>

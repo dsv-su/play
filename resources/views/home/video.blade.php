@@ -84,7 +84,7 @@
         <div class="d-flex align-items-start">
             <div class="">
                 <h4 class="card-text font-1rem font-weight-bold px-1 py-2">
-                    <a href="{{ route('player', ['video' => $video]) }}" class="link">{{ $video->title }}</a>
+                    <a href="{{ route('player', ['video' => $video]) }}" class="link">{{ $video->LangTitle }}</a>
                 </h4>
             </div>
             @if ($video->description)
@@ -197,7 +197,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="shareModalLabel">{{__("Download presentation")}}
-                        <strong>{{$video->title}}</strong></h5>
+                        <strong>{{$video->LangTitle}}</strong></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -249,7 +249,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="deleteModalLabel">{{__("Delete presentation")}}
-                            "{{$video->title}}"?</h5>
+                            "{{$video->LangTitle}}"?</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -276,7 +276,7 @@
 
 <script>
     $("#retype{{$video->id}}").on('change input', function ($this) {
-        var title = "{{$video->title}}";
+        var title = "{{$video->LangTitle}}";
         if ($(this).val().toLowerCase() == title.toLowerCase()) {
             $(this).addClass('is-valid');
             $(this).removeClass('is-invalid');
