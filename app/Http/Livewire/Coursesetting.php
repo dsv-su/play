@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire;
 
+use App\CourseTag;
+use App\Tag;
 use Livewire\Component;
 
 class Coursesetting extends Component
@@ -9,6 +11,7 @@ class Coursesetting extends Component
     public $course;
     public $coursesettings;
     public $downloadable;
+    public $tagids = [];
     public $ipermissions;
     public $user_permission;
     public $individuals = [], $individuals_permission = [];
@@ -34,6 +37,11 @@ class Coursesetting extends Component
 
         //Current user permission;
         $this->user_permission = $user_permission;
+
+        //Course tags
+        foreach ($this->course->tags() as $tag) {
+            $this->tagids[] = $tag->id;
+        }
 
         //Group permissions
         $this->permissions = $permissions;
@@ -65,6 +73,24 @@ class Coursesetting extends Component
     {
         array_splice($this->individuals, $index, 1);
         $this->ipermissions = $this->ipermissions - 1;
+    }
+
+    public function add_tag($tagid)
+    {
+        if (!in_array($tagid, $this->tagids)) {
+            $this->tagids[] = $tagid;
+        }
+    }
+
+    public function create_tag($tagname)
+    {
+        $tag = Tag::firstOrCreate(['name' => $tagname]);
+        $this->tagids[] = $tag->id;
+    }
+
+    public function remove_tag($index)
+    {
+        array_splice($this->tagids, $index, 1);
     }
 
     public function render()
