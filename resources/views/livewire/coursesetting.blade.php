@@ -110,6 +110,39 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col-12">
+                <div class="rounded border shadow p-3 my-2">
+                    <div class="row justify-content-between text-left">
+                        <!-- Course Tags -->
+                        <div class="form-group col flex-column d-flex my-1">
+                            <label class="form-control-label px-1"><i class="fa-solid fa-tags mr-2"></i>{{ __("Course tags") }}
+                            </label>
+                            <p class="font-1rem mx-1 my-2">{{__('Tags added here will be shown as course subsections. You also need to assign these tags to individual presentations so they are shown under these headings on course views.')}}</p>
+                            <div id="addedTags" class="mx-1 my-2">
+                                @if (empty($tagids))
+                                    <span class="font-1rem">{{__('No tags added')}}</span>
+                                @else
+                                    @foreach($tagids as $key => $tagid)
+                                        <input type="hidden" value="{{$tagid}}" name="tags[]">
+                                        <span class="badge badge-pill badge-light mb-1">{{\App\Tag::find($tagid)->name}} <a
+                                                    class="cursor-pointer" wire:click="remove_tag({{$key}})"><i
+                                                        class="fa-solid fa-xmark"></i></a></span>
+                                    @endforeach
+                                @endif
+                            </div>
+                            <div wire:ignore id="tag-search-form" class="flex-column d-flex">
+                                <input class="mx-1 w-100" type="search"
+                                       id="tag-search" name="q" autocomplete="off"
+                                       aria-haspopup="true"
+                                       placeholder="{{ __("Start typing to add a tag") }}"
+                                       aria-labelledby="tag-search">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-12 col-lg-6">
                 <div class="rounded border shadow p-3 my-2">
                     <div class="row justify-content-between text-left">
@@ -136,37 +169,6 @@
                                         @endif
                                     @endforeach
                                 </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-lg-6">
-                <div class="rounded border shadow p-3 my-2">
-                    <div class="row justify-content-between text-left">
-                        <!-- Course Tags -->
-                        <div class="form-group col flex-column d-flex my-1">
-                            <label class="form-control-label px-1"><i class="fa-solid fa-tags mr-2"></i>{{ __("Tags") }}
-                            </label>
-                            <div id="addedTags" class="mx-1 my-2">
-                                @if (empty($tagids))
-                                    <span class="font-1rem">{{__('No tags added')}}</span>
-                                @else
-                                    @foreach($tagids as $key => $tagid)
-                                        <input type="hidden" value="{{$tagid}}" name="tags[]">
-                                        <span class="badge badge-pill badge-light mb-1">{{\App\Tag::find($tagid)->name}} <a
-                                                    class="cursor-pointer" wire:click="remove_tag({{$key}})"><i
-                                                        class="fa-solid fa-xmark"></i></a></span>
-                                    @endforeach
-                                @endif
-                            </div>
-                            <div wire:ignore id="tag-search-form" class="flex-column d-flex">
-                                <input class="mx-1 w-100" type="search"
-                                       id="tag-search" name="q" autocomplete="off"
-                                       aria-haspopup="true"
-                                       placeholder="{{ __("Start typing to add a tag") }}"
-                                       aria-labelledby="tag-search">
                             </div>
                         </div>
                     </div>

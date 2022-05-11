@@ -23,9 +23,15 @@
                             {{ __("from your ongoing courses") }}
                         @endif
                         @if (isset($course))
-                            {{ __("from the course") }} <i> @if(Lang::locale() == 'swe'){{$course->name}}@else {{$course->name_en}} @endif {{$course->semester}}{{$course->year}}</i>
-                        @elseif (isset($tag)) {{ __("after the tag: ") }} <i>{{$tag}}</i>
-                        @elseif (isset($presenter))  {{ __("by") }} <i>{{$presenter}}</i>
+                            {{ __("from the course") }} <i> @if(Lang::locale() == 'swe')
+                                    {{$course->name}}
+                                @else
+                                    {{$course->name_en}}
+                                @endif {{$course->semester}}{{$course->year}}</i>
+                        @elseif (isset($tag))
+                            {{ __("after the tag: ") }} <i>{{$tag}}</i>
+                        @elseif (isset($presenter))
+                            {{ __("by") }} <i>{{$presenter}}</i>
                         @endif
                     </h3>
                 </div>
@@ -35,8 +41,8 @@
     <div class="container">
         @if (isset($active) || isset($my))
             <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
-            @if (isset($my) && !$my->isEmpty())
-                <!-- Paginated tab -->
+                @if (isset($my) && !$my->isEmpty())
+                    <!-- Paginated tab -->
                     {{--}}
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#my" data-toggle="tab" role="tab" aria-controls="my"
@@ -49,7 +55,7 @@
                     </li>
                 @endif
                 @if (isset($active) && !$active->isEmpty())
-                <!-- Paginated tab -->
+                    <!-- Paginated tab -->
                     {{--}}
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#active" data-toggle="tab" role="tab" aria-controls="active"
@@ -61,7 +67,7 @@
                            title="@lang('lang.active_courses')">@lang('lang.active_courses') ({{$active->count()}})</a>
                     </li>
                 @endif
-            <!-- Paginated tab -->
+                <!-- Paginated tab -->
                 {{--}}
                 @if (isset($latest) && $allpaginated->total())
                     <li class="nav-item pb-0">
@@ -105,7 +111,7 @@
                     {{--}}
                 </div>
             @endif
-        <!-- Content tab Active -->
+            <!-- Content tab Active -->
             @if (isset($active) && !$active->isEmpty())
                 <div id="active" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-B">
                     <div class="card-deck inner">
@@ -130,9 +136,9 @@
                     </div>
                     {{--}}
                 </div>
-        @endif
+            @endif
 
-        <!-- Content tab All -->
+            <!-- Content tab All -->
             <div id="all" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-C">
                 @if ((isset($latest) && $latest->count()) || isset($pending) && $pending->count())
                     @if (isset($courses) || isset($terms) || isset($presenters) || isset($tags))
@@ -190,20 +196,46 @@
                                 </div>
                             @endforeach
                         @endif
-                        @foreach ($latest as $key => $video)
-                            <div class="col my-3">
-                                @include('home.video')
+                        @if (isset($tagged) && $tagged)
+                            @foreach($tagged as $tagname => $taggedvideos)
+                                <div class="row mx-1 mt-2">
+                                    <div class="col">
+                                        <h2>{{$tagname ? $tagname : 'Uncategorized'}}</h2>
+                                    </div>
+                                </div>
+                                <div class="row mx-1">
+                                    @foreach ($taggedvideos as $key => $video)
+                                        <div class="col my-3">
+                                            @include('home.video')
+                                        </div>
+                                    @endforeach
+                                    <div class="col">
+                                        <div class="card video my-0 mx-auto"></div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="card video my-0 mx-auto"></div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="card video my-0 mx-auto"></div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @else
+                            @foreach ($latest as $key => $video)
+                                <div class="col my-3">
+                                    @include('home.video')
+                                </div>
+                            @endforeach
+                            <div class="col">
+                                <div class="card video my-0 mx-auto"></div>
                             </div>
-                        @endforeach
-                        <div class="col">
-                            <div class="card video my-0 mx-auto"></div>
-                        </div>
-                        <div class="col">
-                            <div class="card video my-0 mx-auto"></div>
-                        </div>
-                        <div class="col">
-                            <div class="card video my-0 mx-auto"></div>
-                        </div>
+                            <div class="col">
+                                <div class="card video my-0 mx-auto"></div>
+                            </div>
+                            <div class="col">
+                                <div class="card video my-0 mx-auto"></div>
+                            </div>
+                        @endif
                     </div>
                 @else
                     <p class="my-3">
@@ -220,7 +252,7 @@
     </div>
 
     <!--Download modal -->
-    <livewire:modals.download-presentation />
+    <livewire:modals.download-presentation/>
 
     <script>
         $(document).ready(function (e) {
@@ -308,17 +340,17 @@
             let url = location.href.replace(/\/$/, "");
             if (location.hash) {
                 const hash = url.split("#");
-                $('#myTab a[href="#'+hash[1]+'"]').tab("show");
+                $('#myTab a[href="#' + hash[1] + '"]').tab("show");
                 url = location.href.replace(/\/#/, "#");
                 history.replaceState(null, null, url);
                 setTimeout(() => {
                     $(window).scrollTop(0);
                 }, 400);
             }
-            $('a[data-toggle="tab"]').on("click", function() {
+            $('a[data-toggle="tab"]').on("click", function () {
                 let newUrl;
                 const hash = $(this).attr("href");
-                if(hash == "#my") {
+                if (hash == "#my") {
                     newUrl = url.split("#")[0];
                 } else {
                     newUrl = url.split("#")[0] + hash;

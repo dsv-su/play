@@ -7,6 +7,7 @@ use App\CourseadminPermission;
 use App\CoursePermissions;
 use App\CoursesettingsPermissions;
 use App\CoursesettingsUsers;
+use App\CourseTag;
 use App\IndividualPermission;
 use App\Presenter;
 use App\Services\Daisy\DaisyAPI;
@@ -222,9 +223,26 @@ class SearchController extends Controller
         if (!$data['course']) {
             abort(404);
         }
+        $tags = CourseTag::where('course_id', $courseid)->get();
         $data['latest'] = $visibility->filter(Course::find($courseid)->videos()->filter(function ($video) {
             return $video;
         }));
+        if (count($tags)) {
+            foreach ($tags as $tag) {
+                $tagname = Tag::find($tag->tag_id)->name;
+                foreach ($data['latest'] as $video) {
+                    if ($video->has_tag($tag->tag_id)) {
+                        $data['tagged'][$tagname][] = $video;
+                    }
+                }
+            }
+            $temparr =array_reduce($data['tagged'], 'array_merge', array());
+            foreach ($data['latest'] as $video) {
+                if (!in_array($video, $temparr)) {
+                    $data['tagged']['0'][] = $video;
+                }
+            }
+        }
 
         return view('home.index', $data);
     }
@@ -235,7 +253,8 @@ class SearchController extends Controller
      * @param Request $request
      * @return Application|Factory|View|string
      */
-    public function viewByTag(VisibilityFilter $visibility, $tag, Request $request)
+    public
+    function viewByTag(VisibilityFilter $visibility, $tag, Request $request)
     {
         $tagid = Tag::where('name', $tag)->firstOrFail()->id;
         $videos = $visibility->filter(Video::with('video_tag.tag')->whereHas('video_tag.tag', function ($query) use ($tagid) {
@@ -260,7 +279,8 @@ class SearchController extends Controller
      * @param Request $request
      * @return Application|Factory|View|string
      */
-    public function viewByPresenter(VisibilityFilter $visibility, $username, Request $request)
+    public
+    function viewByPresenter(VisibilityFilter $visibility, $username, Request $request)
     {
         $presenter = Presenter::where('username', $username)->first() ?? Presenter::where('name', $username)->first();
         if (!$presenter) {
@@ -287,7 +307,8 @@ class SearchController extends Controller
     /** Primary method that lists all videos related to the search query (or all if $q is null)
      * @throws BindingResolutionException
      */
-    public function search($q = null)
+    public
+    function search($q = null)
     {
         // Redirect to new manage for administrators
         if (app()->make('play_role') == 'Administrator') {
@@ -316,7 +337,8 @@ class SearchController extends Controller
     /** Helper method for getting all videos related to the search query (or all if query is empty)
      * @throws BindingResolutionException
      */
-    public function getVideos($q)
+    public
+    function getVideos($q)
     {
         $visibility = app(VisibilityFilter::class);
         if ($q) {
@@ -375,7 +397,8 @@ class SearchController extends Controller
      * @param $videos
      * @return Collection
      */
-    public function groupVideos($videos): Collection
+    public
+    function groupVideos($videos): Collection
     {
         $groupedvideos = Collection::empty();
         foreach ($videos as $video) {
@@ -403,7 +426,8 @@ class SearchController extends Controller
      * @param $year
      * @return mixed
      */
-    public function removeIrrelevantTerms($videos, $term, $year)
+    public
+    function removeIrrelevantTerms($videos, $term, $year)
     {
         foreach ($videos as $courseid => $videocourse) {
             $course = Course::find($courseid);
@@ -419,7 +443,8 @@ class SearchController extends Controller
      * @param $designation
      * @return mixed
      */
-    public function removeIrrelevantDesignations($videos, $designation)
+    public
+    function removeIrrelevantDesignations($videos, $designation)
     {
         foreach ($videos as $courseid => $videocourse) {
             if (Course::find($courseid)->designation !== $designation) {
@@ -433,7 +458,8 @@ class SearchController extends Controller
      * @param $videos
      * @return array[]
      */
-    public function extractSettings($videos): array
+    public
+    function extractSettings($videos): array
     {
         $coursesetlist = $individual_permissions = $playback_permissions = [];
         foreach ($videos as $courseid => $videolist) {
@@ -455,7 +481,8 @@ class SearchController extends Controller
      * @param Request $request
      * @return mixed
      */
-    public function find(Request $request)
+    public
+    function find(Request $request)
     {
         $courses = Course::search($request->get('query'), null, true, true)->groupBy('designation')->orderBy('year', 'desc')->take(2)->get();
         $videos = Video::search($request->get('query'), null, true, true)->orderBy('creation', 'desc');
@@ -470,7 +497,8 @@ class SearchController extends Controller
      * @param Request $request
      * @return mixed
      */
-    public function findTag(Request $request)
+    public
+    function findTag(Request $request)
     {
         $tags = Tag::search($request->get('query'), null, true, true)->get();
         if (!$tags->filter(function ($item) use ($request) {
@@ -489,7 +517,8 @@ class SearchController extends Controller
      * @param Request $request
      * @return mixed
      */
-    public function findPerson(Request $request)
+    public
+    function findPerson(Request $request)
     {
         $searchterms = preg_split('/\s+/', $request->q);
         $search = '(&';
@@ -557,7 +586,8 @@ class SearchController extends Controller
      * @return mixed
      * @throws BindingResolutionException
      */
-    public function findCourse(Request $request)
+    public
+    function findCourse(Request $request)
     {
         if ($request->get('onlydesignation') !== null && $request->get('onlydesignation')) {
             $courses = Course::search($request->get('query'), null, true, true)->groupBy('designation')->orderBy('year', 'desc')->get();
@@ -592,7 +622,8 @@ class SearchController extends Controller
      * @param $videos
      * @return array
      */
-    public function extractCourses($videos): array
+    public
+    function extractCourses($videos): array
     {
         $courses = array('nocourse' => __('No course association'));
         foreach ($videos as $video) {
@@ -614,7 +645,8 @@ class SearchController extends Controller
      * @param $videos
      * @return array
      */
-    public function extractTerms($videos): array
+    public
+    function extractTerms($videos): array
     {
         $terms = array();
         foreach ($videos as $video) {
@@ -631,7 +663,8 @@ class SearchController extends Controller
      * @param $videos
      * @return array
      */
-    public function extractTags($videos): array
+    public
+    function extractTags($videos): array
     {
         $tags = array();
         foreach ($videos as $video) {
@@ -648,7 +681,8 @@ class SearchController extends Controller
      * @param $videos
      * @return array
      */
-    public function extractPresenters($videos): array
+    public
+    function extractPresenters($videos): array
     {
         $presenters = array();
         foreach ($videos as $video) {
@@ -670,7 +704,8 @@ class SearchController extends Controller
      * @param $manage
      * @return array
      */
-    public function performFiltering($videos, $designations = null, $semesters = null, $tags = null, $presenters = null, $manage = false): array
+    public
+    function performFiltering($videos, $designations = null, $semesters = null, $tags = null, $presenters = null, $manage = false): array
     {
         $html = '';
         foreach ($videos as $key => $video) {
@@ -743,7 +778,8 @@ class SearchController extends Controller
     /** Reads GET parameters from the url.
      * @return null[]
      */
-    public function handleUrlParams(): array
+    public
+    function handleUrlParams(): array
     {
         return [
             'courses' => request('course') ? explode(',', request('course')) : null,
