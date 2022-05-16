@@ -27,6 +27,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
+use stdClass;
 
 /**
  *
@@ -84,7 +85,7 @@ class SearchController extends Controller
 
         $filters = $this->handleUrlParams();
 
-        list ($html, $courses, $terms, $presenters, $tags, $videos) = $this->performFiltering(
+        list ($courses, $terms, $presenters, $tags, $videos) = $this->performFiltering(
             $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
         );
 
@@ -111,17 +112,24 @@ class SearchController extends Controller
         })->orderBy('creation', 'desc')->get());
 
         $filters = $this->handleUrlParams();
-        list ($html, $courses, $terms, $presenters, $tags, $videos) = $this->performFiltering(
+        list($courses, $terms, $presenters, $tags, $videos) = $this->performFiltering(
             $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
         );
 
         // Remove irrelevant course designations that could be added because of multiple course associations
         $videos = $this->removeIrrelevantDesignations($videos, $designation);
+        $tagged = [];
+        foreach ($videos as $courseid => $coursevideos) {
+            $tags = CourseTag::where('course_id', $courseid)->get();
+            if (count($tags)) {
+                $tagged[$courseid] = $this->groupByTags($tags, $coursevideos);
+            }
+        }
 
         if ($request->isMethod('get')) {
-            return view('home.navigator', compact('designation', 'videos', 'terms', 'presenters', 'tags', 'filters'));
+            return view('home.navigator', compact('designation', 'videos', 'terms', 'presenters', 'tags', 'filters', 'tagged'));
         } else {
-            return view('home.courselist', compact('videos'))->render();
+            return view('home.courselist', compact('videos', 'tagged'))->render();
         }
     }
 
@@ -227,24 +235,37 @@ class SearchController extends Controller
         $data['latest'] = $visibility->filter(Course::find($courseid)->videos()->filter(function ($video) {
             return $video;
         }));
+
         if (count($tags)) {
-            foreach ($tags as $tag) {
-                $tagname = Tag::find($tag->tag_id)->name;
-                foreach ($data['latest'] as $video) {
-                    if ($video->has_tag($tag->tag_id)) {
-                        $data['tagged'][$tagname][] = $video;
-                    }
-                }
-            }
-            $temparr =array_reduce($data['tagged'], 'array_merge', array());
-            foreach ($data['latest'] as $video) {
-                if (!in_array($video, $temparr)) {
-                    $data['tagged']['0'][] = $video;
-                }
-            }
+            $data['tagged'] = $this->groupByTags($tags, $data['latest']);
         }
 
         return view('home.index', $data);
+    }
+
+    /**
+     * @param $tags
+     * @param $videos
+     * @return array
+     */
+    public function groupByTags($tags, $videos): array
+    {
+        $tagged = [];
+        foreach ($tags as $tag) {
+            $tagname = Tag::find($tag->tag_id)->name;
+            foreach ($videos as $video) {
+                if ($video->has_tag($tag->tag_id)) {
+                    $tagged[$tagname][] = $video;
+                }
+            }
+        }
+        $temparr = array_reduce($tagged, 'array_merge', array());
+        foreach ($videos as $video) {
+            if (!in_array($video, $temparr)) {
+                $tagged['0'][] = $video;
+            }
+        }
+        return $tagged;
     }
 
     /**
@@ -262,7 +283,7 @@ class SearchController extends Controller
         })->orderBy('creation', 'desc')->get());
 
         $filters = $this->handleUrlParams();
-        list ($html, $courses, $terms, $presenters, $tags, $videos) = $this->performFiltering(
+        list ($courses, $terms, $presenters, $tags, $videos) = $this->performFiltering(
             $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
         );
 
@@ -292,7 +313,7 @@ class SearchController extends Controller
 
         $filters = $this->handleUrlParams();
 
-        list ($html, $courses, $terms, $presenters, $tags, $videos) = $this->performFiltering(
+        list ($courses, $terms, $presenters, $tags, $videos) = $this->performFiltering(
             $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
         );
 
@@ -320,16 +341,17 @@ class SearchController extends Controller
         $manage = \Request::is('manage');
 
         $filters = $this->handleUrlParams();
-        list ($html, $videocourses, $videoterms, $videopresenters, $videotags, $videos) = $this->performFiltering(
-            $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters'], $manage
+
+        list ($videocourses, $videoterms, $videopresenters, $videotags, $videos) = $this->performFiltering(
+            $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
         );
 
+        list($coursesetlist, $individual_permissions, $playback_permissions) = $this->extractSettings($videos);
+
         if (\Request::isMethod('get')) {
-            $coursesetlist = $individual_permissions = $playback_permissions = [];
-            list($coursesetlist, $individual_permissions, $playback_permissions) = $this->extractSettings($videos);
             return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'filters', 'coursesetlist', 'individual_permissions', 'playback_permissions'));
         } else {
-            return ['html' => $html, 'courses' => $videocourses, 'presenters' => $videopresenters, 'terms' => $videoterms, 'tags' => $videotags];
+            return ['html' => view('home.courselist', compact('videos', 'manage', 'coursesetlist', 'individual_permissions', 'playback_permissions'))->render(), 'courses' => $videocourses, 'presenters' => $videopresenters, 'terms' => $videoterms, 'tags' => $videotags];
         }
     }
 
@@ -504,7 +526,7 @@ class SearchController extends Controller
         if (!$tags->filter(function ($item) use ($request) {
             return strtolower($item->name) == strtolower($request->get('query'));
         })->count()) {
-            $input = new \stdClass();
+            $input = new stdClass();
             $input->name = $request->get('query');
             $input->type = 'input';
             $tags->prepend($input);
@@ -515,10 +537,10 @@ class SearchController extends Controller
 
     /** Method for user search autocomplete suggestions
      * @param Request $request
-     * @return mixed
+     * @return Collection
      */
     public
-    function findPerson(Request $request)
+    function findPerson(Request $request): Collection
     {
         $searchterms = preg_split('/\s+/', $request->q);
         $search = '(&';
@@ -546,7 +568,7 @@ class SearchController extends Controller
 
         $users = new Collection();
         foreach ($sukatusersdsv->merge($sukatusersstudents)->merge($sukatusersother) as $su) {
-            $user = new \stdClass();
+            $user = new stdClass();
             if (!$su->uid) {
                 continue;
             }
@@ -562,7 +584,7 @@ class SearchController extends Controller
             $presenters = $presenters->where('name', 'LIKE', '%' . $term . '%');
         }
         foreach ($presenters->where('description', 'external')->get() as $local) {
-            $user = new \stdClass();
+            $user = new stdClass();
             $user->uid = 0;
             $user->local = true;
             $user->name = $local->name;
@@ -573,7 +595,7 @@ class SearchController extends Controller
         if (!$users->filter(function ($item) use ($request) {
             return strtolower($item->name) == strtolower($request->get('q'));
         })->count()) {
-            $input = new \stdClass();
+            $input = new stdClass();
             $input->uid = 0;
             $input->name = ucwords($request->q);
             $users->prepend($input);
@@ -701,13 +723,11 @@ class SearchController extends Controller
      * @param $semesters
      * @param $tags
      * @param $presenters
-     * @param $manage
      * @return array
      */
     public
-    function performFiltering($videos, $designations = null, $semesters = null, $tags = null, $presenters = null, $manage = false): array
+    function performFiltering($videos, $designations = null, $semesters = null, $tags = null, $presenters = null): array
     {
-        $html = '';
         foreach ($videos as $key => $video) {
             $found = false;
             $tagfound = true;
@@ -743,19 +763,10 @@ class SearchController extends Controller
                 $presenterfound = true;
             }
             if ($found && $tagfound && $presenterfound) {
-                $html .= '<div class="col my-3">' . view('home.video', ['video' => $video, 'manage' => $manage])->render() . '</div>';
             } else {
                 unset($videos[$key]);
             }
         }
-        if ($html) {
-            $html .= '<div class="col"><div class="card video my-0 mx-auto"></div></div>
-                        <div class="col"><div class="card video my-0 mx-auto"></div></div>
-                        <div class="col"><div class="card video my-0 mx-auto"></div></div>';
-        } else {
-            $html .= '<h4 class="col my-3 font-weight-light">No presentations found</h4>';
-        }
-
 
         $videocourses = $this->extractCourses($videos);
         $videoterms = $this->extractTerms($videos);
@@ -764,15 +775,7 @@ class SearchController extends Controller
 
         $videos = $this->groupVideos($videos);
 
-        $coursesetlist = $individual_permissions = $playback_permissions = [];
-
-        if ($manage) {
-            list($coursesetlist, $individual_permissions, $playback_permissions) = $this->extractSettings($videos);
-        }
-
-        $html = view('home.courselist', compact('videos', 'manage', 'coursesetlist', 'individual_permissions', 'playback_permissions'))->render();
-
-        return array($html, $videocourses, $videoterms, $videopresenters, $videotags, $videos);
+        return array($videocourses, $videoterms, $videopresenters, $videotags, $videos);
     }
 
     /** Reads GET parameters from the url.

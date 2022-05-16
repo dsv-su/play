@@ -124,20 +124,46 @@
                 </h5>
             @endif
             <div class="d-flex flex-wrap">
-                @foreach ($videocourse as $video)
-                    <div class="col my-3">
-                        @include('home.video')
+                @if (isset($tagged[$key]))
+                    @foreach($tagged[$key] as $tagname => $taggedvideos)
+                        <div class="row mx-1 mt-2">
+                            <div class="col">
+                                <h3>{{$tagname ?: 'Uncategorized'}}</h3>
+                            </div>
+                        </div>
+                        <div class="row mx-1">
+                            @foreach ($taggedvideos as $key => $video)
+                                <div class="col my-3">
+                                    @include('home.video')
+                                </div>
+                            @endforeach
+                            <div class="col">
+                                <div class="card video my-0 mx-auto"></div>
+                            </div>
+                            <div class="col">
+                                <div class="card video my-0 mx-auto"></div>
+                            </div>
+                            <div class="col">
+                                <div class="card video my-0 mx-auto"></div>
+                            </div>
+                        </div>
+                    @endforeach
+                @else
+                    @foreach ($videocourse as $video)
+                        <div class="col my-3">
+                            @include('home.video')
+                        </div>
+                    @endforeach
+                    <div class="col">
+                        <div class="card video my-0 mx-auto"></div>
                     </div>
-                @endforeach
-                <div class="col">
-                    <div class="card video my-0 mx-auto border-0"></div>
-                </div>
-                <div class="col">
-                    <div class="card video my-0 mx-auto border-0"></div>
-                </div>
-                <div class="col">
-                    <div class="card video my-0 mx-auto border-0"></div>
-                </div>
+                    <div class="col">
+                        <div class="card video my-0 mx-auto"></div>
+                    </div>
+                    <div class="col">
+                        <div class="card video my-0 mx-auto"></div>
+                    </div>
+                @endif
             </div>
         </div>
     @endforeach
