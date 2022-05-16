@@ -307,7 +307,7 @@
                 var coursename = $(this).attr('data-name');
                 var fullname = $(this).attr('data-fullname');
                 if (!$('#addedCourses').find('input[value="' + courseid + '"]').length) {
-                    $('#addedCourses').append('<input type="hidden" value="' + courseid + '" name="courses[]"><span class="badge badge-pill badge-light" data-toggle="tooltip" data-title="' + fullname + '">' + coursename + ' <a class="cursor-pointer" data-id="' + courseid + '" onclick="remove($(this))"><i class="fa-solid fa-xmark"></i></a></span>');
+                    $('#addedCourses').append('<input type="hidden" value="' + courseid + '" name="courses[]"><span class="badge badge-pill badge-light"><span data-toggle="tooltip" data-title="' + fullname + '">' + coursename + ' </span><a class="cursor-pointer" data-id="' + courseid + '" onclick="remove($(this))"><i class="fa-solid fa-xmark"></i></a></span>');
                 }
                 $('#course-search').typeahead('val', '');
             });
@@ -353,7 +353,7 @@
                     hint: false,
                     autoselect: false,
                     highlight: true,
-                    minLength: 1
+                    minLength: 2
                 }, {
                     source: engine2.ttAdapter(),
                     limit: 15,
@@ -404,7 +404,7 @@
                     hint: false,
                     autoselect: false,
                     highlight: true,
-                    minLength: 1
+                    minLength: 2
                 }, {
                     source: engine.ttAdapter(),
                     limit: 15,

@@ -340,75 +340,17 @@
         $('#tag-search').typeahead('val', '');
     });
 
-    $(document).ready(sukat);
     $(document).ready(sukatuser);
-    window.addEventListener('contentChanged', event => {
-        $(sukat);
-    });
     window.addEventListener('permissionChanged', event => {
         $(sukatuser);
     });
-
-    function sukat($) {
-        /* Typeahead SUKAT user */
-        // Set the Options for "Bloodhound" suggestion engine
-        var engine = new Bloodhound({
-            remote: {
-                url: '/ldap_search?q=%QUERY%',
-                wildcard: '%QUERY%'
-            },
-            datumTokenizer: Bloodhound.tokenizers.whitespace('query'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace
-        });
-
-        $('.edit:first-child').typeahead({
-            classNames: {
-                menu: 'search_autocomplete'
-            },
-            hint: false,
-            autoselect: true,
-            highlight: true,
-            minLength: 1
-        }, {
-            source: engine.ttAdapter(),
-            limit: 10,
-            // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
-            name: 'autocomplete-items',
-            display: function (item) {
-                return item.displayname + ' (' + item.uid + ')';
-            },
-            templates: {
-                empty: [
-                    '<div class="list-group search-results-dropdown"><div class="list-group-item">Nothing found.</div></div>'
-                ],
-                header: [
-                    '<div class="list-group search-results-dropdown">'
-                ],
-                suggestion: function (data) {
-                    return '<li>' + data.displayname + ' (' + data.uid + ')' + '</li>';
-
-                }
-            }
-        }).on('keyup', function (e) {
-            $(".tt-suggestion:first-child").addClass('tt-cursor');
-            let selected = $("#user-search-text").attr('aria-activedescendant');
-            if (e.which == 13) {
-                if (selected) {
-
-                } else {
-                    $(".tt-suggestion:first-child").addClass('tt-cursor');
-                }
-            }
-        });
-        /* end typeahead */
-    }
 
     function sukatuser($) {
         /* Typeahead SUKAT user */
         // Set the Options for "Bloodhound" suggestion engine
         var engine = new Bloodhound({
             remote: {
-                url: '/ldap_search?q=%QUERY%',
+                url: '/findperson?q=%QUERY%',
                 wildcard: '%QUERY%'
             },
             datumTokenizer: Bloodhound.tokenizers.whitespace('query'),
@@ -422,24 +364,29 @@
             hint: false,
             autoselect: true,
             highlight: true,
-            minLength: 1
+            minLength: 3
         }, {
             source: engine.ttAdapter(),
-            limit: 10,
+            limit: 20,
             // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
             name: 'autocomplete-items',
             display: function (item) {
-                return item.displayname + ' (' + item.uid + ')';
+                return item.name + ' (' + item.uid + ')';
             },
             templates: {
                 empty: [
-                    '<div class="list-group search-results-dropdown"><div class="list-group-item">Nothing found.</div></div>'
+                    ''
                 ],
                 header: [
-                    '<div class="list-group search-results-dropdown">'
+                    ''
                 ],
                 suggestion: function (data) {
-                    return '<li>' + data.displayname + ' (' + data.uid + ')' + '</li>';
+                    if (data.uid) {
+                        var label = (data.role == 'DSV' ? '<span class="bagde badge-primary ml-2 px-1" style="border-radius: 4px;">DSV</span>' : (data.role == 'Student' ? '<span class="bagde badge-success mx-1 px-1" style="border-radius: 4px;">Student</span>' : ''));
+                        return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-toggle="tooltip" data-title="SU username: ' + data.uid + '" data-name="' + data.name + '" data-id="' + data.uid + '">' + data.name + label + ' <i class="fa-solid fa-plus"></i></a>';
+                    } else {
+                        return '<span></span>';
+                    }
                 }
             }
         }).on('keyup', function (e) {

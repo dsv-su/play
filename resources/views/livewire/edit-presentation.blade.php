@@ -184,7 +184,7 @@
                                     @foreach($courseids as $courseid => $names)
                                         <input type="hidden" value="{{$courseid}}" name="courseids[]">
                                         <span class="badge badge-pill badge-light mb-1"><span data-toggle="tooltip"
-                                                                                         data-title="{{$names['fullname']}}">{{$names['shortname']}}</span> <a
+                                                                                              data-title="{{$names['fullname']}}">{{$names['shortname']}}</span> <a
                                                     class="cursor-pointer" wire:click="remove_course({{$courseid}})"><i
                                                         class="fa-solid fa-xmark"></i></a></span>
                                     @endforeach
@@ -226,12 +226,21 @@
                                     <span class="font-1rem">{{__('No registered presenters')}}</span>
                                 @else
                                     @foreach($presenters as $key => $presenter)
-                                        <input type="hidden" @if ($presenter['type'] == 'sukat') value="{{$presenter['uid']}}" @else value="0" @endif name="presenteruids[]">
+                                        <input type="hidden"
+                                               @if ($presenter['type'] == 'sukat') value="{{$presenter['uid']}}"
+                                               @else value="0" @endif name="presenteruids[]">
                                         <input type="hidden" value="{{$presenter['name']}}" name="presenternames[]">
                                         <span class="badge badge-pill badge-light mb-1">
-                                            <span data-toggle="tooltip" @if ($presenter['type'] == 'sukat')  data-title="SU username: {{$presenter['uid']}}" @else data-title="External" @endif>{{$presenter['name']}}
-                                            </span>@if (isset($presenter['role']) && $presenter['role'] == 'DSV') <span class="badge badge-primary px-1" style="border-radius: 4px;">DSV</span> @endif
-                                            @if (isset($presenter['role']) && $presenter['role'] == 'Student') <span class="badge badge-success px-1" style="border-radius: 4px;">Student</span> @endif<a
+                                            <span data-toggle="tooltip"
+                                                  @if ($presenter['type'] == 'sukat')  data-title="SU username: {{$presenter['uid']}}"
+                                                  @else data-title="External" @endif>{{$presenter['name']}}
+                                            </span>@if (isset($presenter['role']) && $presenter['role'] == 'DSV')
+                                                <span class="badge badge-primary px-1"
+                                                      style="border-radius: 4px;">DSV</span>
+                                            @endif
+                                            @if (isset($presenter['role']) && $presenter['role'] == 'Student')
+                                                <span class="badge badge-success px-1" style="border-radius: 4px;">Student</span>
+                                            @endif<a
                                                     class="cursor-pointer" wire:click="remove_presenter({{$key}})"><i
                                                         class="fa-solid fa-xmark"></i></a></span>
                                     @endforeach
@@ -272,7 +281,7 @@
                     <!-- Permissions -->
                     <div class="row justify-content-between text-left">
                         <!--Video group permission settings-->
-                        <div class="form-group col-12 col-md-6 flex-column d-flex">
+                        <div class="form-group col-12 col-lg-6 flex-column d-flex">
                             <label class="form-control-label px-1"><i
                                         class="fas fa-play fa-border fa-pull-left"></i>{{ __("Playback group permissions") }}
                             </label>
@@ -288,7 +297,7 @@
                             </div>
                         </div>
                         <!-- Individual permissions -->
-                        <div class="form-group col-12 col-md-6 flex-column d-flex">
+                        <div class="form-group col-12 col-lg-6 flex-column d-flex">
                             <label class="form-control-label px-1"><i
                                         class="fas fa-user fa-border fa-pull-left"></i>{{ __("Individual permissions") }}
                                 <span class="badge badge-light">{{$ipermissions}} {{ __("Set") }}</span>
@@ -566,7 +575,7 @@
             hint: false,
             autoselect: false,
             highlight: true,
-            minLength: 1
+            minLength: 2
         }, {
             source: engine2.ttAdapter(),
             limit: 20,
@@ -666,7 +675,7 @@
         // Set the Options for "Bloodhound" suggestion engine
         var engine = new Bloodhound({
             remote: {
-                url: '/ldap_search?q=%QUERY%',
+                url: '/findperson?q=%QUERY%',
                 wildcard: '%QUERY%'
             },
             datumTokenizer: Bloodhound.tokenizers.whitespace('query'),
@@ -680,24 +689,29 @@
             hint: false,
             autoselect: true,
             highlight: true,
-            minLength: 1
+            minLength: 3
         }, {
             source: engine.ttAdapter(),
-            limit: 10,
+            limit: 20,
             // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
             name: 'autocomplete-items',
             display: function (item) {
-                return item.displayname + ' (' + item.uid + ')';
+                return item.name + ' (' + item.uid + ')';
             },
             templates: {
                 empty: [
-                    '<div class="list-group search-results-dropdown"><div class="list-group-item">Nothing found.</div></div>'
+                    ''
                 ],
                 header: [
-                    '<div class="list-group search-results-dropdown">'
+                    ''
                 ],
                 suggestion: function (data) {
-                    return '<li>' + data.displayname + ' (' + data.uid + ')' + '</li>';
+                    if (data.uid) {
+                        var label = (data.role == 'DSV' ? '<span class="bagde badge-primary ml-2 px-1" style="border-radius: 4px;">DSV</span>' : (data.role == 'Student' ? '<span class="bagde badge-success mx-1 px-1" style="border-radius: 4px;">Student</span>' : ''));
+                        return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-toggle="tooltip" data-title="SU username: ' + data.uid + '" data-name="' + data.name + '" data-id="' + data.uid + '">' + data.name + label + ' <i class="fa-solid fa-plus"></i></a>';
+                    } else {
+                        return '<span></span>';
+                    }
                 }
             }
         }).on('keyup', function (e) {
@@ -708,13 +722,6 @@
                 } else {
                     $(".tt-suggestion:first-child").addClass('tt-cursor');
                 }
-                // Disable the input after Enter
-                $(this).prop('readonly', true);
-                // Resubmit the chosen value
-                var values = $("input[name='individual_permissions[]']").map(function () {
-                    return $(this).val();
-                }).get();
-            @this.set('individuals', values);
             }
         });
         /* end typeahead */
