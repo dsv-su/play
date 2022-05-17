@@ -1,28 +1,4 @@
 <!-- Video - child view - will inherit all data available in the parent view-->
-<style>
-    .videolist .thumb {
-        min-height: 100px;
-        height: 100%;
-        max-height: 150px;
-        background-size: 102% auto;
-    }
-
-    .videolist .action {
-        text-align: right;
-    }
-
-    .videolist .thumb .icons {
-        top:0;
-        bottom: inherit;
-        left: inherit;
-        right: 0;
-    }
-
-    .videolist a:hover {
-        text-decoration: none !important;
-    }
-
-</style>
 <div class="shadow p-0 mb-3 bg-white overflow-hidden rounded videolist row mx-1 w-100 @if($video->hidden) faded @endif" id="{{$video->id}}">
     <div class="col-3 thumb my-auto"
          style="background-image: @if ($video->hidden) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); object-fit: contain; background-repeat: no-repeat; background-position: 50% 50%;">
@@ -70,10 +46,13 @@
         </a>
     </div>
 
-    <div class="col-7 info p-2 d-flex flex-column">
-        <h4 class="card-text font-1rem font-weight-bold py-2">
+    <div class="col info p-2 d-flex flex-column">
+        <div>
+        <h4 class="card-text font-1rem font-weight-bold py-2 float-left">
             <a href="{{ route('player', ['video' => $video]) }}" class="link">{{ $video->LangTitle }}</a>
         </h4>
+            <h4 class="card-text font-1rem font-weight-normal py-2 float-right">{{$video->getCreationDate()}}</h4>
+        </div>
         @if ($video->description)
             <p class="text-font-size-80">
                 {{$video->description}}</p>
@@ -101,7 +80,7 @@
     </div>
 
 
-    <div class="col-2 action p-2">
+    <div class="col-auto action p-2">
         <div id="action-icons" class="flex-column">
             <div class="my-1"><span data-placement="left" data-toggle="tooltip" title="{{__("Share presentation")}}">
                 <a href="#" data-toggle="modal" data-target="#shareModal{{$video->id}}"

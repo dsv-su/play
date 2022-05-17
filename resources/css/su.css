@@ -5275,9 +5275,30 @@ p.kill-p, .kill-p p {
     font-family: "TheSansC5-SemiBoldWeb", serif;
 }
 
+.videolist .thumb {
+    min-height: 100px;
+    height: 100%;
+    max-height: 150px;
+    background-size: 102% auto;
+}
+
+.videolist .action {
+    text-align: right;
+}
+
 .videolist .thumb .icons {
-    top: 0;
-    bottom: initial;
+    top:0;
+    bottom: inherit;
+    left: inherit;
+    right: 0;
+}
+
+.videolist h4 {
+    font-family: TheSansB2-Light,Verdana,sans-serif !important;
+}
+
+.videolist a:hover {
+    text-decoration: none !important;
 }
 
 .video #action-icons {
