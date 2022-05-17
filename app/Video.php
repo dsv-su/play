@@ -103,6 +103,11 @@ class Video extends Model implements Searchable
         return Carbon::parse(json_decode($this->presentation)->recorded)->format('Y-m-d H:i:s') ?? '';
     }
 
+    public function getCreationDate(): string
+    {
+        return Carbon::createFromTimestamp($this->creation)->format('M d, Y');
+    }
+
     public function tags(): Collection
     {
         return $this->belongsToMany(Tag::class, 'video_tags', 'video_id', 'tag_id')->get();

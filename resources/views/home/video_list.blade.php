@@ -2,36 +2,48 @@
 <style>
     .videolist .thumb {
         min-height: 100px;
+        height: 100%;
         max-height: 150px;
-        background: #002f5f;
+        background-size: 102% auto;
     }
 
     .videolist .action {
         text-align: right;
     }
 
+    .videolist .thumb .icons {
+        top:0;
+        bottom: inherit;
+        left: inherit;
+        right: 0;
+    }
+
+    .videolist a:hover {
+        text-decoration: none !important;
+    }
+
 </style>
-<div class="shadow p-3 mb-3 bg-white rounded videolist row mx-1 w-100 @if($video->hidden) faded @endif" id="{{$video->id}}">
-    <div class="col-3 thumb"
+<div class="shadow p-0 mb-3 bg-white overflow-hidden rounded videolist row mx-1 w-100 @if($video->hidden) faded @endif" id="{{$video->id}}">
+    <div class="col-3 thumb my-auto"
          style="background-image: @if ($video->hidden) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); object-fit: contain; background-repeat: no-repeat; background-position: 50% 50%;">
-        <a target="_blank" rel="noopener noreferrer" href="{{ route('player', ['video' => $video]) }}">
+        <a target="_blank" rel="noopener noreferrer" @if ($video->hidden) href="#" @else href="{{ route('player', ['video' => $video]) }}" @endif>
             <!-- Icons -->
             <div class="icons m-1">
                 <!-- Group Permissions icons-->
                 @if($video->permission_type == 'dsv')
-                    <div class="permission mx-1" data-toggle="tooltip" title="{{__("DSV students & staff playback")}}">
+                    <div class="permission d-inline-block mx-1" data-toggle="tooltip" title="{{__("DSV students & staff playback")}}">
                         <i class="fas fa-users"></i>
                     </div>
                 @elseif($video->permission_type == 'dsv_staff')
-                    <div class="permission mx-1" data-toggle="tooltip" title="{{__("DSV staff playback")}}">
+                    <div class="permission d-inline-block mx-1" data-toggle="tooltip" title="{{__("DSV staff playback")}}">
                         <i class="fas fa-house-user"></i>
                     </div>
                 @elseif($video->permission_type == 'public')
-                    <div class="permission mx-1" data-toggle="tooltip" title="{{__("Public playback")}}">
+                    <div class="permission d-inline-block mx-1" data-toggle="tooltip" title="{{__("Public playback")}}">
                         <i class="fas fa-globe"></i>
                     </div>
                 @elseif($video->permission_type == 'custom')
-                    <div class="permission mx-1" data-toggle="tooltip" title="{{__("Custom playback")}}">
+                    <div class="permission d-inline-block mx-1" data-toggle="tooltip" title="{{__("Custom playback")}}">
                         <i class="fas fa-user-lock"></i>
                     </div>
                 @elseif($video->permission_type == 'test')
@@ -43,7 +55,7 @@
 
                 <!-- Visibility icon-->
                 @if($video->hidden)
-                    <div class="visibility mx-1" data-toggle="tooltip" title="{{__('Presentation is hidden')}}">
+                    <div class="visibility d-inline-block mx-1" data-toggle="tooltip" title="{{__('Presentation is hidden')}}">
                         <i class="fas fa-eye-slash"></i>
                     </div>
                 @endif
@@ -51,21 +63,20 @@
             <!-- Visibility banner -->
             @if ($video->hidden)
                 <div class="d-flex justify-content-center h-100">
-                    <div class="d-inline alert alert-secondary m-auto" role="alert">{{ __("Hidden") }}</div>
+                    <div class="d-inline alert alert-secondary m-auto px-2 py-1" role="alert">{{ __("Hidden") }}</div>
                 </div>
             @endif
             <p class="m-1 px-1"> {{$video->duration}} </p>
         </a>
     </div>
 
-    <div class="col-7 info py-2 d-flex flex-column">
+    <div class="col-7 info p-2 d-flex flex-column">
         <h4 class="card-text font-1rem font-weight-bold py-2">
             <a href="{{ route('player', ['video' => $video]) }}" class="link">{{ $video->LangTitle }}</a>
         </h4>
         @if ($video->description)
-            <p class="ml-auto text-font-size-80">
-                {{$video->description}}
-            </p>
+            <p class="text-font-size-80">
+                {{$video->description}}</p>
         @endif
         <p class="card-text text-font-size-80 mt-auto">
             @if (!$video->video_course->isEmpty())
@@ -90,7 +101,7 @@
     </div>
 
 
-    <div class="col-2 action pr-0">
+    <div class="col-2 action p-2">
         <div id="action-icons" class="flex-column">
             <div class="my-1"><span data-placement="left" data-toggle="tooltip" title="{{__("Share presentation")}}">
                 <a href="#" data-toggle="modal" data-target="#shareModal{{$video->id}}"

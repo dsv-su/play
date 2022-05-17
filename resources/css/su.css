@@ -5275,6 +5275,11 @@ p.kill-p, .kill-p p {
     font-family: "TheSansC5-SemiBoldWeb", serif;
 }
 
+.videolist .thumb .icons {
+    top: 0;
+    bottom: initial;
+}
+
 .video #action-icons {
     position: absolute;
     display: none;
