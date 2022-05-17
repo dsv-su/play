@@ -5260,6 +5260,7 @@ p.kill-p, .kill-p p {
     word-break: break-word;
 }
 
+.videolist .thumb .icons,
 .video .card-header .icons {
     margin-bottom: -1px;
     position: absolute;
@@ -5316,6 +5317,7 @@ p.kill-p, .kill-p p {
     text-decoration: none;
 }
 
+.videolist .thumb p,
 .video .card-header p {
     margin-bottom: -1px;
     margin-left: 0;

@@ -91,6 +91,9 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     Route::get('/download_zip/{video}', 'ManualDownloadController@browserDownloadZip');
     Route::get('/download_presentation/{video}', 'ManualDownloadController@download');
 
+    //Video format
+    Route::post('/updateVideoFormat', 'AdminController@updateVideoFormat')->name('updateVideoFormat');
+
     //Admin
     Route::prefix('admin/')->group(function () {
         Route::get('/', 'AdminController@admin')->name('admin');

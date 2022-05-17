@@ -103,6 +103,9 @@
         $('#role').on('change', function() {
             document.forms['roleform'].submit();
         });
+        $('#videoformat').on('change', function() {
+            document.forms['videoformat'].submit();
+        });
     });
 
 </script>
