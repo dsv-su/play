@@ -22,6 +22,9 @@
             @endforeach
             @break
         @case('table')
+            @foreach ($videos as $key => $video)
+                @include('home.video_table')
+            @endforeach
             @break
     @endswitch
 </div>

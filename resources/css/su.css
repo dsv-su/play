@@ -5268,7 +5268,7 @@ p.kill-p, .kill-p p {
     left: 0;
     background-color: var(--dark);
     color: #ffffff;
-    font-size: 0.9em !important;
+    font-size: 0.8em !important;
     /*color: var(--red);*/
     transition: var(--ease);
    /* border-bottom-right-radius: 2px !important;*/
