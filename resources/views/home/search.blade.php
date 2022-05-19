@@ -11,8 +11,11 @@
             <div class="col-12">
                 <span class="su-theme-anchor"></span>
                 <h3 class="su-theme-header mb-4">
-                    @if ($manage) <i class="fas fa-edit fa-icon-border mr-2"></i> {{__('Manage presentations')}} @else
-                        <i class="fas fa-search fa-icon-border mr-2"></i>  {{__('Search results')}} @endif
+                    @if ($manage)
+                        <i class="fas fa-edit fa-icon-border mr-2"></i> {{__('Manage presentations')}}
+                    @else
+                        <i class="fas fa-search fa-icon-border mr-2"></i>  {{__('Search results')}}
+                    @endif
                 </h3>
             </div> <!-- col-12 -->
         </div> <!-- row no-gutters -->
@@ -29,8 +32,10 @@
                                 data-none-selected-text="{{ __('Course') }}" data-live-search="true" multiple
                                 style="width: 400px">
                             @foreach($videocourses as $designation => $name)
-                                <option value="{{$designation}}" @if (isset($filters['courses']) && in_array($designation, $filters['courses'])) selected @endif>{{$name}} @if ($designation != 'nocourse')
-                                        ({{$designation}})@endif</option>
+                                <option value="{{$designation}}"
+                                        @if (isset($filters['courses']) && in_array($designation, $filters['courses'])) selected @endif>{{$name}} @if ($designation != 'nocourse')
+                                        ({{$designation}})
+                                    @endif</option>
                             @endforeach
                         </select>
                         <select name="presenter" @if (empty($videopresenters)) disabled
@@ -38,7 +43,8 @@
                                 data-none-selected-text="{{ __('Presenter') }}" data-live-search="true" multiple
                                 style="width: 200px;">
                             @foreach($videopresenters as $username => $name)
-                                <option value="{{$username}}" @if (isset($filters['presenters']) && in_array($username, $filters['presenters'])) selected @endif>{{$name}}</option>
+                                <option value="{{$username}}"
+                                        @if (isset($filters['presenters']) && in_array($username, $filters['presenters'])) selected @endif>{{$name}}</option>
                             @endforeach
                         </select>
                         <select name="semester" @if (empty($videoterms)) disabled
@@ -46,7 +52,8 @@
                                 data-live-search="true"
                                 multiple style="width: 200px">
                             @foreach($videoterms as $term)
-                                <option value="{{$term}}" @if (isset($filters['terms']) && in_array($term, $filters['terms'])) selected @endif>{{$term}}</option>
+                                <option value="{{$term}}"
+                                        @if (isset($filters['terms']) && in_array($term, $filters['terms'])) selected @endif>{{$term}}</option>
                             @endforeach
                         </select>
                         <select name="tag" @if (empty($videotags)) disabled
@@ -54,7 +61,8 @@
                                 data-none-selected-text="{{ __('Tag') }}" data-live-search="true" multiple
                                 style="width: 200px;">
                             @foreach($videotags as $tag)
-                                <option value="{{$tag}}" @if (isset($filters['tags']) && in_array($tag, $filters['tags'])) selected @endif>{{$tag}}</option>
+                                <option value="{{$tag}}"
+                                        @if (isset($filters['tags']) && in_array($tag, $filters['tags'])) selected @endif>{{$tag}}</option>
                             @endforeach
                         </select>
                         <button type="button" class="mb-2 btn btn-outline-secondary"
@@ -67,11 +75,20 @@
                         <meta name="csrf-token" content="{{ csrf_token() }}">
                     </form>
                 @endif
+                <form id="videoformat" class="form-inline mx-3" method="post" action="{{route('updateVideoFormat')}}">
+                    @csrf
+                    <label class="my-1 mr-2" for="role">Display</label>
+                    <select class="form-control my-1 mr-sm-2 selectpicker" id="videoformat" name="videoformat">
+                        <option @if(Cookie::get('videoformat') == 'grid') selected @endif value="grid">Grid</option>
+                        <option @if(Cookie::get('videoformat') == 'list') selected @endif value="list">List</option>
+                        <option @if(Cookie::get('videoformat') == 'table') selected @endif value="table">Table</option>
+                    </select>
+                </form>
                 <div id="navigator_content">
                     @include('home.courselist')
                 </div>
             </div>
-            @else
+        @else
             <h3 class="col mt-4">{{ __("No presentations") }}</h3>
         @endif
     </div><!-- /.container -->
@@ -103,19 +120,19 @@
             let formData = new FormData();
 
             if (course && course.length) {
-                url += '&course='+course;
+                url += '&course=' + course;
                 formData.append("course", $('select[name="course"]').val());
             }
             if (presenter && presenter.length) {
-                url += '&presenter='+presenter;
+                url += '&presenter=' + presenter;
                 formData.append("presenter", $('select[name="presenter"]').val());
             }
             if (tag && tag.length) {
-                url += '&tag='+tag;
+                url += '&tag=' + tag;
                 formData.append("tag", $('select[name="tag"]').val());
             }
             if (semester && semester.length) {
-                url += '&semester='+semester;
+                url += '&semester=' + semester;
                 formData.append("semester", $('select[name="semester"]').val());
             }
 
