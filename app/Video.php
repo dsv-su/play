@@ -64,7 +64,7 @@ class Video extends Model implements Searchable
         if (Lang::locale() == 'swe') {
             return $this->title;
         } else {
-            return $this->title_en ?? $this->title;
+            return $this->title_en ?: $this->title;
         }
     }
 
