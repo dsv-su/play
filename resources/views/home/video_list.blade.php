@@ -1,8 +1,8 @@
 <!-- Video - child view - will inherit all data available in the parent view-->
 <div class="shadow p-0 mb-3 bg-white overflow-hidden rounded videolist row mx-1 w-100 @if($video->hidden) faded @endif" id="{{$video->id}}">
-    <div class="col-3 thumb my-auto"
+    <div class="col-3 thumb my-auto p-0"
          style="background-image: @if ($video->hidden) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); object-fit: contain; background-repeat: no-repeat; background-position: 50% 50%;">
-        <a target="_blank" rel="noopener noreferrer" @if ($video->hidden) href="#" @else href="{{ route('player', ['video' => $video]) }}" @endif>
+        <a target="_blank" class="d-block w-100 h-100" rel="noopener noreferrer" @if ($video->hidden) href="#" @else href="{{ route('player', ['video' => $video]) }}" @endif>
             <!-- Icons -->
             <div class="icons m-1">
                 <!-- Group Permissions icons-->
@@ -51,7 +51,7 @@
         <h4 class="card-text font-1rem font-weight-bold py-2 float-left">
             <a href="{{ route('player', ['video' => $video]) }}" class="link">{{ $video->LangTitle }}</a>
         </h4>
-            <h4 class="card-text font-1rem font-weight-normal py-2 float-right">{{$video->getCreationDate()}}</h4>
+            <h4 class="card-text text-font-size-80 font-weight-normal py-2 float-right">{{$video->getCreationDate()}}</h4>
         </div>
         @if ($video->description)
             <p class="text-font-size-80">

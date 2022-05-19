@@ -807,4 +807,11 @@ class PlayController extends Controller
     {
 
     }
+
+    public function updateVideoFormat(Request $request)
+    {
+        return back()->withInput()->cookie(
+            'videoformat', $request->videoformat, 99999999
+        );
+    }
 }

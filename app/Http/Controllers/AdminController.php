@@ -297,11 +297,4 @@ class AdminController extends Controller
         Storage::disk('public')->deleteDirectory($id);
         return redirect()->route('home');
     }
-
-    public function updateVideoFormat(Request $request)
-    {
-        return back()->withInput()->cookie(
-            'videoformat', $request->videoformat, 99999999
-        );
-    }
 }

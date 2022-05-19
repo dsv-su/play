@@ -5358,6 +5358,10 @@ p.kill-p, .kill-p p {
     font-weight: 400;
 }
 
+.videolist .thumb .icons, .videolist .thumb .visibility, .videolist .thumb p {
+    font-size: 0.7em !important;
+}
+
 /* Video card buttons */
 
 .transparent_btn {
