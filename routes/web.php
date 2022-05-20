@@ -52,11 +52,9 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     Route::get('/playlist/{id}', 'MultiplayerController@playlist');
 
     //New Manage
-    Route::middleware('administrator-manage')->group(function () {
-        Route::get('/manage_n', function () {
-            return view('manage.manage_new');
-        })->name('manage');
-    });
+    Route::get('/manage_n', function () {
+        return view('manage.manage_new');
+    })->name('manage');
 
     //Manage
     Route::get('/manage', 'SearchController@search')->name('user_manage');

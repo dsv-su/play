@@ -1,19 +1,41 @@
 <div>
+    @if(app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader')
+    <div class="container p-3 my-3">
+        <div class="d-flex justify-content-start">
+            <label for="filterSwitch">{{__("Textfilter")}}</label>
+            <div class="col">
+            <span class="custom-control custom-switch custom-switch-lg">
+                <input wire:click="filterToggle" class="custom-control-input" id="filterSwitch" name="filter" type="checkbox" @if($filterswitch == true) checked @endif>
+                <label class="custom-control-label" style="margin-top: 3px;" for="filterSwitch"></label></span>
+            </div>
+
+        </div>
+    </div>
+    @endif
+
     <!-- Filter -->
-    <div class="container align-self-center">
-        <form class="form-inline manage-filter d-flex justify-content-between" method="GET" id="manage-filter"
+    <div class="container">
+        @if($filterswitch)
+        <form wire:submit.prevent="filter" class="form-inline manage-filter d-flex justify-content-sm-start" method="GET" id="manage-filter"
               role="search">
-            <h2><span style="color:blue;">{{count($video_courses)}}</span></h2>
+
             <label for="manage-filter"
-                   class="sr-only">{{ __("Filter courses by entering a course, presenter or tag term") }}</label>
-            <input class="form-control w-50 mx-auto" type="search"
+                   class="sr-only">{{ __("Filter courses") }}</label>
+            <input class="form-control w-75 " type="search"
                    wire:model="filterTerm"
                    id="manage-filter-text" autocomplete="off"
                    aria-haspopup="true"
-                   placeholder="{{ __("Filter courses by entering a course, presenter or tag term") }}"
+                   placeholder="{{ __("Filter courses") }}"
                    style="font-size: 100% !important;"
                    aria-labelledby="manage-filter">
         </form>
+        @endif
+        @if(app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader')
+            <!-- User filter -->
+            @include('home.user_manage_filter')
+            <!-- end User filter -->
+
+        @endif
     </div>
 
     <div wire:loading wire:target="loadUncat">
@@ -22,6 +44,7 @@
     <div wire:loading wire:target="loadCourseVideos">
         @include('livewire.modals.loading_spinner')
     </div>
+
     <!-- Uncategorized -->
     <div id="accordion">
         <div class="card">
@@ -46,7 +69,6 @@
                  aria-labelledby="headingOne" data-parent="#accordion">
                 <div class="d-flex flex-wrap">
                     @foreach ($uncat_videos as $video)
-
                         <div wire:key="{{ $video->id}}" class="col my-3">
                             @include('home.video_m')
                         </div>
@@ -62,6 +84,9 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="d-flex justify-content-sm-start mt-4">
+            <h2><span class="badge badge-primary ml-2 mb-2">{{count($video_courses)}} </span> <span style="color:blue;">@if(count($video_courses)>1 or count($video_courses)==0) {{__("Courses")}} @else {{__("Course")}} @endif</span></h2>
         </div>
         <!--Courses -->
         @foreach($video_courses as $key => $video_course)
