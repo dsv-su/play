@@ -1,8 +1,10 @@
 <!-- Video - child view - will inherit all data available in the parent view-->
 <div class="shadow p-0 mb-3 bg-white overflow-hidden rounded videolist row mx-1 w-100 @if($video->hidden) faded @endif" id="{{$video->id}}">
-    <div class="col-3 thumb my-auto p-0"
-         style="background-image: @if ($video->hidden) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); object-fit: contain; background-repeat: no-repeat; background-position: 50% 50%;">
+    <div class="col-3 px-0 my-auto">
         <a target="_blank" class="d-block w-100 h-100" rel="noopener noreferrer" @if ($video->hidden) href="#" @else href="{{ route('player', ['video' => $video]) }}" @endif>
+
+        <div class="thumb"
+         style="background-image: @if ($video->hidden) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); object-fit: contain; background-repeat: no-repeat; background-position: 50% 50%;">
             <!-- Icons -->
             <div class="icons m-1">
                 <!-- Group Permissions icons-->
@@ -43,6 +45,8 @@
                 </div>
             @endif
             <p class="m-1 px-1"> {{$video->duration}} </p>
+
+    </div>
         </a>
     </div>
 

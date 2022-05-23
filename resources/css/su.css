@@ -5226,6 +5226,7 @@ p.kill-p, .kill-p p {
     font-size: inherit;
 }
 
+.videolist .thumb,
 .video .card-header {
     background: #002f5f url("../../public/images/eld_footer.png") no-repeat center;
     background-size: 102% auto;
@@ -5273,13 +5274,6 @@ p.kill-p, .kill-p p {
     transition: var(--ease);
    /* border-bottom-right-radius: 2px !important;*/
     font-family: "TheSansC5-SemiBoldWeb", serif;
-}
-
-.videolist .thumb {
-    min-height: 100px;
-    height: 100%;
-    max-height: 150px;
-    background-size: 102% auto;
 }
 
 .videolist .action {
