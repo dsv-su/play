@@ -20,7 +20,7 @@
                         <a href="{{ route('player', ['video' => $video]) }}">
                             <div class="card-header position-relative"
                                  style=" @if ($video->sources && json_decode($video->sources)[0]->poster) background-image: url({{ asset(json_decode($video->sources)[0]->poster)}}); @endif height:200px;">
-                                <div class="title">{{ $video->title }}</div>
+                                <div class="title">{{ $video->LangTitle }}</div>
                                 <p class="p-1"> {{$video->duration}} </p>
                             </div>
                         </a>

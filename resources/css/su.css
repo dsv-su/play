@@ -5260,6 +5260,7 @@ p.kill-p, .kill-p p {
     word-break: break-word;
 }
 
+.videolist .thumb .icons,
 .video .card-header .icons {
     margin-bottom: -1px;
     position: absolute;
@@ -5267,11 +5268,37 @@ p.kill-p, .kill-p p {
     left: 0;
     background-color: var(--dark);
     color: #ffffff;
-    font-size: 0.9em !important;
+    font-size: 0.8em !important;
     /*color: var(--red);*/
     transition: var(--ease);
    /* border-bottom-right-radius: 2px !important;*/
     font-family: "TheSansC5-SemiBoldWeb", serif;
+}
+
+.videolist .thumb {
+    min-height: 100px;
+    height: 100%;
+    max-height: 150px;
+    background-size: 102% auto;
+}
+
+.videolist .action {
+    text-align: right;
+}
+
+.videolist .thumb .icons {
+    top:0;
+    bottom: inherit;
+    left: inherit;
+    right: 0;
+}
+
+.videolist h4 {
+    font-family: TheSansB2-Light,Verdana,sans-serif !important;
+}
+
+.videolist a:hover {
+    text-decoration: none !important;
 }
 
 .video #action-icons {
@@ -5316,6 +5343,7 @@ p.kill-p, .kill-p p {
     text-decoration: none;
 }
 
+.videolist .thumb p,
 .video .card-header p {
     margin-bottom: -1px;
     margin-left: 0;
@@ -5328,6 +5356,10 @@ p.kill-p, .kill-p p {
     font-size: 0.9rem;
     font-family: "TheSansC5-SemiBoldWeb", serif;
     font-weight: 400;
+}
+
+.videolist .thumb .icons, .videolist .thumb .visibility, .videolist .thumb p {
+    font-size: 0.7em !important;
 }
 
 /* Video card buttons */

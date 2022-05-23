@@ -7,6 +7,7 @@ use App\CourseadminPermission;
 use App\CoursePermissions;
 use App\CoursesettingsPermissions;
 use App\CoursesettingsUsers;
+use App\CourseTag;
 use App\IndividualPermission;
 use App\Presenter;
 use App\Services\Daisy\DaisyAPI;
@@ -26,6 +27,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
+use stdClass;
 
 /**
  *
@@ -83,7 +85,7 @@ class SearchController extends Controller
 
         $filters = $this->handleUrlParams();
 
-        list ($html, $courses, $terms, $presenters, $tags, $videos) = $this->performFiltering(
+        list ($courses, $terms, $presenters, $tags, $videos) = $this->performFiltering(
             $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
         );
 
@@ -110,17 +112,24 @@ class SearchController extends Controller
         })->orderBy('creation', 'desc')->get());
 
         $filters = $this->handleUrlParams();
-        list ($html, $courses, $terms, $presenters, $tags, $videos) = $this->performFiltering(
+        list($courses, $terms, $presenters, $tags, $videos) = $this->performFiltering(
             $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
         );
 
         // Remove irrelevant course designations that could be added because of multiple course associations
         $videos = $this->removeIrrelevantDesignations($videos, $designation);
+        $tagged = [];
+        foreach ($videos as $courseid => $coursevideos) {
+            $tags = CourseTag::where('course_id', $courseid)->get();
+            if (count($tags)) {
+                $tagged[$courseid] = $this->groupByTags($tags, $coursevideos);
+            }
+        }
 
         if ($request->isMethod('get')) {
-            return view('home.navigator', compact('designation', 'videos', 'terms', 'presenters', 'tags', 'filters'));
+            return view('home.navigator', compact('designation', 'videos', 'terms', 'presenters', 'tags', 'filters', 'tagged'));
         } else {
-            return view('home.courselist', compact('videos'))->render();
+            return view('home.courselist', compact('videos', 'tagged'))->render();
         }
     }
 
@@ -222,11 +231,41 @@ class SearchController extends Controller
         if (!$data['course']) {
             abort(404);
         }
+        $tags = CourseTag::where('course_id', $courseid)->get();
         $data['latest'] = $visibility->filter(Course::find($courseid)->videos()->filter(function ($video) {
             return $video;
         }));
 
+        if (count($tags)) {
+            $data['tagged'] = $this->groupByTags($tags, $data['latest']);
+        }
+
         return view('home.index', $data);
+    }
+
+    /**
+     * @param $tags
+     * @param $videos
+     * @return array
+     */
+    public function groupByTags($tags, $videos): array
+    {
+        $tagged = [];
+        foreach ($tags as $tag) {
+            $tagname = Tag::find($tag->tag_id)->name;
+            foreach ($videos as $video) {
+                if ($video->has_tag($tag->tag_id)) {
+                    $tagged[$tagname][] = $video;
+                }
+            }
+        }
+        $temparr = array_reduce($tagged, 'array_merge', array());
+        foreach ($videos as $video) {
+            if (!in_array($video, $temparr)) {
+                $tagged['0'][] = $video;
+            }
+        }
+        return $tagged;
     }
 
     /**
@@ -235,7 +274,8 @@ class SearchController extends Controller
      * @param Request $request
      * @return Application|Factory|View|string
      */
-    public function viewByTag(VisibilityFilter $visibility, $tag, Request $request)
+    public
+    function viewByTag(VisibilityFilter $visibility, $tag, Request $request)
     {
         $tagid = Tag::where('name', $tag)->firstOrFail()->id;
         $videos = $visibility->filter(Video::with('video_tag.tag')->whereHas('video_tag.tag', function ($query) use ($tagid) {
@@ -243,7 +283,7 @@ class SearchController extends Controller
         })->orderBy('creation', 'desc')->get());
 
         $filters = $this->handleUrlParams();
-        list ($html, $courses, $terms, $presenters, $tags, $videos) = $this->performFiltering(
+        list ($courses, $terms, $presenters, $tags, $videos) = $this->performFiltering(
             $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
         );
 
@@ -260,7 +300,8 @@ class SearchController extends Controller
      * @param Request $request
      * @return Application|Factory|View|string
      */
-    public function viewByPresenter(VisibilityFilter $visibility, $username, Request $request)
+    public
+    function viewByPresenter(VisibilityFilter $visibility, $username, Request $request)
     {
         $presenter = Presenter::where('username', $username)->first() ?? Presenter::where('name', $username)->first();
         if (!$presenter) {
@@ -272,7 +313,7 @@ class SearchController extends Controller
 
         $filters = $this->handleUrlParams();
 
-        list ($html, $courses, $terms, $presenters, $tags, $videos) = $this->performFiltering(
+        list ($courses, $terms, $presenters, $tags, $videos) = $this->performFiltering(
             $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
         );
 
@@ -287,23 +328,25 @@ class SearchController extends Controller
     /** Primary method that lists all videos related to the search query (or all if $q is null)
      * @throws BindingResolutionException
      */
-    public function search($q = null)
+    public
+    function search($q = null)
     {
         $videos = $this->getVideos($q) ?? Collection::empty();
 
         $manage = \Request::is('manage');
 
         $filters = $this->handleUrlParams();
-        list ($html, $videocourses, $videoterms, $videopresenters, $videotags, $videos) = $this->performFiltering(
-            $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters'], $manage
+
+        list ($videocourses, $videoterms, $videopresenters, $videotags, $videos) = $this->performFiltering(
+            $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
         );
 
+        list($coursesetlist, $individual_permissions, $playback_permissions) = $this->extractSettings($videos);
+
         if (\Request::isMethod('get')) {
-            $coursesetlist = $individual_permissions = $playback_permissions = [];
-            list($coursesetlist, $individual_permissions, $playback_permissions) = $this->extractSettings($videos);
             return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'filters', 'coursesetlist', 'individual_permissions', 'playback_permissions'));
         } else {
-            return ['html' => $html, 'courses' => $videocourses, 'presenters' => $videopresenters, 'terms' => $videoterms, 'tags' => $videotags];
+            return ['html' => view('home.courselist', compact('videos', 'manage', 'coursesetlist', 'individual_permissions', 'playback_permissions'))->render(), 'courses' => $videocourses, 'presenters' => $videopresenters, 'terms' => $videoterms, 'tags' => $videotags];
         }
     }
 
@@ -311,7 +354,8 @@ class SearchController extends Controller
     /** Helper method for getting all videos related to the search query (or all if query is empty)
      * @throws BindingResolutionException
      */
-    public function getVideos($q)
+    public
+    function getVideos($q)
     {
         $visibility = app(VisibilityFilter::class);
         if ($q) {
@@ -372,7 +416,8 @@ class SearchController extends Controller
      * @param $videos
      * @return Collection
      */
-    public function groupVideos($videos): Collection
+    public
+    function groupVideos($videos): Collection
     {
         $groupedvideos = Collection::empty();
         foreach ($videos as $video) {
@@ -400,7 +445,8 @@ class SearchController extends Controller
      * @param $year
      * @return mixed
      */
-    public function removeIrrelevantTerms($videos, $term, $year)
+    public
+    function removeIrrelevantTerms($videos, $term, $year)
     {
         foreach ($videos as $courseid => $videocourse) {
             $course = Course::find($courseid);
@@ -416,7 +462,8 @@ class SearchController extends Controller
      * @param $designation
      * @return mixed
      */
-    public function removeIrrelevantDesignations($videos, $designation)
+    public
+    function removeIrrelevantDesignations($videos, $designation)
     {
         foreach ($videos as $courseid => $videocourse) {
             if (Course::find($courseid)->designation !== $designation) {
@@ -430,7 +477,8 @@ class SearchController extends Controller
      * @param $videos
      * @return array[]
      */
-    public function extractSettings($videos): array
+    public
+    function extractSettings($videos): array
     {
         $coursesetlist = $individual_permissions = $playback_permissions = [];
         foreach ($videos as $courseid => $videolist) {
@@ -452,7 +500,8 @@ class SearchController extends Controller
      * @param Request $request
      * @return mixed
      */
-    public function find(Request $request)
+    public
+    function find(Request $request)
     {
         $courses = Course::search($request->get('query'), null, true, true)->groupBy('designation')->orderBy('year', 'desc')->take(2)->get();
         $videos = Video::search($request->get('query'), null, true, true)->orderBy('creation', 'desc');
@@ -467,13 +516,14 @@ class SearchController extends Controller
      * @param Request $request
      * @return mixed
      */
-    public function findTag(Request $request)
+    public
+    function findTag(Request $request)
     {
         $tags = Tag::search($request->get('query'), null, true, true)->get();
         if (!$tags->filter(function ($item) use ($request) {
             return strtolower($item->name) == strtolower($request->get('query'));
         })->count()) {
-            $input = new \stdClass();
+            $input = new stdClass();
             $input->name = $request->get('query');
             $input->type = 'input';
             $tags->prepend($input);
@@ -484,15 +534,11 @@ class SearchController extends Controller
 
     /** Method for user search autocomplete suggestions
      * @param Request $request
-     * @return mixed
+     * @return Collection
      */
-    public function findPerson(Request $request)
+    public
+    function findPerson(Request $request): Collection
     {
-        $sukatusers = SukatUser::query();
-        $sukatusernames = SukatUser::query();
-
-        $string = explode(' ', $request->q);
-
         $searchterms = preg_split('/\s+/', $request->q);
         $search = '(&';
         foreach ($searchterms as $term) {
@@ -502,8 +548,14 @@ class SearchController extends Controller
 
 
         $sukatusersdsv = SukatUser::rawFilter($search)->whereContains('edupersonentitlement', 'urn:mace:swami.se:gmai:dsv-user:staff')->get();
-        $sukatusersstudents = SukatUser::rawFilter($search)->whereContains('edupersonentitlement', 'urn:mace:swami.se:gmai:dsv-user:student')->whereNotContains('edupersonentitlement', 'urn:mace:swami.se:gmai:dsv-user:staff')->get();
-        $sukatusersother = SukatUser::rawFilter($search)->whereNotContains('edupersonentitlement', 'urn:mace:swami.se:gmai:dsv-user:staff')->whereNotContains('edupersonentitlement', 'urn:mace:swami.se:gmai:dsv-user:student')->get();
+        $sukatusersstudents = SukatUser::rawFilter($search)
+            ->whereContains('edupersonentitlement', 'urn:mace:swami.se:gmai:dsv-user:student')
+            ->whereNotContains('edupersonentitlement', 'urn:mace:swami.se:gmai:dsv-user:staff')
+            ->get();
+        $sukatusersother = SukatUser::rawFilter($search)
+            ->whereNotContains('edupersonentitlement', 'urn:mace:swami.se:gmai:dsv-user:staff')
+            ->whereNotContains('edupersonentitlement', 'urn:mace:swami.se:gmai:dsv-user:student')
+            ->get();
 
         foreach ($sukatusersdsv as $su) {
             $su->role = 'DSV';
@@ -515,7 +567,7 @@ class SearchController extends Controller
 
         $users = new Collection();
         foreach ($sukatusersdsv->merge($sukatusersstudents)->merge($sukatusersother) as $su) {
-            $user = new \stdClass();
+            $user = new stdClass();
             if (!$su->uid) {
                 continue;
             }
@@ -531,17 +583,18 @@ class SearchController extends Controller
             $presenters = $presenters->where('name', 'LIKE', '%' . $term . '%');
         }
         foreach ($presenters->where('description', 'external')->get() as $local) {
-            $user = new \stdClass();
+            $user = new stdClass();
             $user->uid = 0;
             $user->local = true;
             $user->name = $local->name;
             $users->prepend($user);
         }
 
+        // We only add 'New external' if it's not already there
         if (!$users->filter(function ($item) use ($request) {
             return strtolower($item->name) == strtolower($request->get('q'));
         })->count()) {
-            $input = new \stdClass();
+            $input = new stdClass();
             $input->uid = 0;
             $input->name = ucwords($request->q);
             $users->prepend($input);
@@ -554,7 +607,8 @@ class SearchController extends Controller
      * @return mixed
      * @throws BindingResolutionException
      */
-    public function findCourse(Request $request)
+    public
+    function findCourse(Request $request)
     {
         if ($request->get('onlydesignation') !== null && $request->get('onlydesignation')) {
             $courses = Course::search($request->get('query'), null, true, true)->groupBy('designation')->orderBy('year', 'desc')->get();
@@ -589,7 +643,8 @@ class SearchController extends Controller
      * @param $videos
      * @return array
      */
-    public function extractCourses($videos): array
+    public
+    function extractCourses($videos): array
     {
         $courses = array('nocourse' => __('No course association'));
         foreach ($videos as $video) {
@@ -611,7 +666,8 @@ class SearchController extends Controller
      * @param $videos
      * @return array
      */
-    public function extractTerms($videos): array
+    public
+    function extractTerms($videos): array
     {
         $terms = array();
         foreach ($videos as $video) {
@@ -628,7 +684,8 @@ class SearchController extends Controller
      * @param $videos
      * @return array
      */
-    public function extractTags($videos): array
+    public
+    function extractTags($videos): array
     {
         $tags = array();
         foreach ($videos as $video) {
@@ -645,7 +702,8 @@ class SearchController extends Controller
      * @param $videos
      * @return array
      */
-    public function extractPresenters($videos): array
+    public
+    function extractPresenters($videos): array
     {
         $presenters = array();
         foreach ($videos as $video) {
@@ -664,12 +722,11 @@ class SearchController extends Controller
      * @param $semesters
      * @param $tags
      * @param $presenters
-     * @param $manage
      * @return array
      */
-    public function performFiltering($videos, $designations = null, $semesters = null, $tags = null, $presenters = null, $manage = false): array
+    public
+    function performFiltering($videos, $designations = null, $semesters = null, $tags = null, $presenters = null): array
     {
-        $html = '';
         foreach ($videos as $key => $video) {
             $found = false;
             $tagfound = true;
@@ -705,19 +762,10 @@ class SearchController extends Controller
                 $presenterfound = true;
             }
             if ($found && $tagfound && $presenterfound) {
-                $html .= '<div class="col my-3">' . view('home.video', ['video' => $video, 'manage' => $manage])->render() . '</div>';
             } else {
                 unset($videos[$key]);
             }
         }
-        if ($html) {
-            $html .= '<div class="col"><div class="card video my-0 mx-auto"></div></div>
-                        <div class="col"><div class="card video my-0 mx-auto"></div></div>
-                        <div class="col"><div class="card video my-0 mx-auto"></div></div>';
-        } else {
-            $html .= '<h4 class="col my-3 font-weight-light">No presentations found</h4>';
-        }
-
 
         $videocourses = $this->extractCourses($videos);
         $videoterms = $this->extractTerms($videos);
@@ -726,21 +774,14 @@ class SearchController extends Controller
 
         $videos = $this->groupVideos($videos);
 
-        $coursesetlist = $individual_permissions = $playback_permissions = [];
-
-        if ($manage) {
-            list($coursesetlist, $individual_permissions, $playback_permissions) = $this->extractSettings($videos);
-        }
-
-        $html = view('home.courselist', compact('videos', 'manage', 'coursesetlist', 'individual_permissions', 'playback_permissions'))->render();
-
-        return array($html, $videocourses, $videoterms, $videopresenters, $videotags, $videos);
+        return array($videocourses, $videoterms, $videopresenters, $videotags, $videos);
     }
 
     /** Reads GET parameters from the url.
      * @return null[]
      */
-    public function handleUrlParams(): array
+    public
+    function handleUrlParams(): array
     {
         return [
             'courses' => request('course') ? explode(',', request('course')) : null,

@@ -6,6 +6,7 @@ use App\Course;
 use App\CoursePermissions;
 use App\CoursesettingsPermissions;
 use App\CoursesettingsUsers;
+use App\CourseTag;
 use App\Permission;
 use App\Services\Daisy\DaisyAPI;
 use App\Services\Daisy\DaisyIntegration;
@@ -178,6 +179,14 @@ class ManageCourseSettingsController extends Controller
                             'permission' => $request->individual_perm_type[$key]
                         ]);
                     }
+                }
+            }
+
+            // Update tags
+            CourseTag::where(['course_id' => $course_id])->delete();
+            if (!$request->tags == null) {
+                foreach ($request->tags as $tagid) {
+                    CourseTag::updateOrcreate(['course_id' => $course_id, 'tag_id' => $tagid]);
                 }
             }
 

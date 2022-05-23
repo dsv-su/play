@@ -3,12 +3,14 @@
 namespace App;
 
 use App\Services\Filters\Visibility;
+use App\Services\Video\TitleObject;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\URL;
 use Nicolaslopezj\Searchable\SearchableTrait;
 use Spatie\Searchable\Searchable;
@@ -57,6 +59,15 @@ class Video extends Model implements Searchable
         //return $this->attributes['link'] = URL::to('/') . '/player/' . $this->id;
     }
 
+    public function getLangTitleAttribute(): string
+    {
+        if (Lang::locale() == 'swe') {
+            return $this->title;
+        } else {
+            return $this->title_en ?: $this->title;
+        }
+    }
+
     public function getThumbAttribute(): string
     {
         return  $this->base_uri() . '/' . $this->id . '/' . $this->attributes['thumb'];
@@ -90,6 +101,11 @@ class Video extends Model implements Searchable
     public function getRecordedDate(): string
     {
         return Carbon::parse(json_decode($this->presentation)->recorded)->format('Y-m-d H:i:s') ?? '';
+    }
+
+    public function getCreationDate(): string
+    {
+        return Carbon::createFromTimestamp($this->creation)->format('M d, Y');
     }
 
     public function tags(): Collection

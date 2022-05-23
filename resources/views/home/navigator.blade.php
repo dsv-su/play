@@ -37,7 +37,7 @@
     <div class="container px-0">
         @if(count($videos) > 0)
             @if (isset($presenters) || isset($terms) || isset($tags) || isset($courses))
-                <form class="form-inline mx-3">
+                <form class="form-inline mx-3" id="filters">
                     <label class="col-form-label mr-1 font-weight-light">{{__('Filter by')}}: </label>
                     @if (isset($courses))
                         <select name="course" @if (empty($courses)) disabled
@@ -92,6 +92,15 @@
                     </button>
                     <meta name="csrf-token" content="{{ csrf_token() }}">
                 </form>
+                <form id="videoformat" class="form-inline mx-3" method="post" action="{{route('updateVideoFormat')}}">
+                    @csrf
+                    <label class="my-1 mr-2" for="role">Display</label>
+                    <select class="form-control my-1 mr-sm-2 selectpicker" id="videoformat" name="videoformat">
+                        <option @if(Cookie::get('videoformat') == 'grid') selected @endif value="grid">Grid</option>
+                        <option @if(Cookie::get('videoformat') == 'list') selected @endif value="list">List</option>
+                        <option @if(Cookie::get('videoformat') == 'table') selected @endif value="table">Table</option>
+                    </select>
+                </form>
             @endif
             <div id="navigator_content">
                 @include('home.courselist')
@@ -112,7 +121,7 @@
             }
             $(this).toggleClass('expanded collapsed');
         });
-        $(document).on('change', 'select', function (e) {
+        $(document).on('change', '#filters select', function (e) {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

@@ -60,7 +60,7 @@ class AdminController extends Controller
 
     public function mediasite()
     {
-        $data['mediasite_presentations'] = MediasitePresentation::all()->where('status', '<>' ,null);
+        $data['mediasite_presentations'] = MediasitePresentation::all()->where('status', '<>', null);
         $data['mediasite_folders'] = MediasiteFolder::all();
         return view('admin.partials.mediasite', $data);
     }
@@ -73,25 +73,24 @@ class AdminController extends Controller
 
     public function emulateUser(Request $request)
     {
-        if(!$request->server('REMOTE_USER')) {
+        if (!$request->server('REMOTE_USER')) {
             //No Shib_Session_ID
-            if($request->role == 'Administrator'){
-                AdminHandler::updateOrCreate(['Shib_Session_ID' => '9999'],['override' => false]);
+            if ($request->role == 'Administrator') {
+                AdminHandler::updateOrCreate(['Shib_Session_ID' => '9999'], ['override' => false]);
             } else {
                 $adminhandler = AdminHandler::firstOrCreate(['Shib_Session_ID' => '9999']);
                 $adminhandler->override = true;
                 $adminhandler->role = $request->role;
                 $adminhandler->save();
-                if (in_array($adminhandler->role, [ 'Student','Student1', 'Student2', 'Student3'])) {
+                if (in_array($adminhandler->role, ['Student', 'Student1', 'Student2', 'Student3'])) {
                     return redirect()->route('home');
                 }
 
             }
 
-        }
-        else {
+        } else {
             //Has Shib_Session_ID
-            if($request->role == 'Administrator'){
+            if ($request->role == 'Administrator') {
                 AdminHandler::updateOrCreate(['Shib_Session_ID' => $request->server('Shib_Session_ID')], ['override' => false]);
             } else {
                 $adminhandler = AdminHandler::firstOrCreate(['Shib_Session_ID' => $request->server('Shib_Session_ID')]);
@@ -111,6 +110,7 @@ class AdminController extends Controller
 
         return view('admin.permission.form', compact('permissions', 'modify'));
     }
+
     public function adminNewPermission(Request $request)
     {
         if ($request->isMethod('post')) {
@@ -121,13 +121,12 @@ class AdminController extends Controller
                 'permission_en' => 'required',
                 'entitlement' => 'required'
             ]);
-            if($request->modify == 0){
+            if ($request->modify == 0) {
                 Permission::updateOrCreate(
                     ['scope' => $request->permission],
                     ['scope_en' => $request->permission_en, 'entitlement' => $request->entitlement]
                 );
-            }
-            else {
+            } else {
                 $permission = Permission::find($request->pid);
                 $permission->scope = $request->permission;
                 $permission->scope_en = $request->permission_en;
@@ -137,7 +136,7 @@ class AdminController extends Controller
             }
 
 
-            }
+        }
         return back()->with(['message' => 'A new permission group has been created']);
     }
 
@@ -201,7 +200,7 @@ class AdminController extends Controller
         $videos = Video::all();
         foreach ($videos as $video) {
             $contents = json_encode(json_decode($video->presentation), JSON_PRETTY_PRINT);
-            \Illuminate\Support\Facades\Storage::disk('public')->put('backup/'.$video->id.'.json', stripslashes($contents));
+            \Illuminate\Support\Facades\Storage::disk('public')->put('backup/' . $video->id . '.json', stripslashes($contents));
         }
 
         //Make zipfolder
@@ -219,8 +218,8 @@ class AdminController extends Controller
 
         $load = new ReLoadPlayStore();
         $presentations = $this->file_name;
-        foreach($presentations as $presentation) {
-            $video = json_decode(Storage::disk('public')->get('/backup/'.$presentation), true);
+        foreach ($presentations as $presentation) {
+            $video = json_decode(Storage::disk('public')->get('/backup/' . $presentation), true);
             //store
             $load->reloadstore(new Request($video));
         }
@@ -230,7 +229,7 @@ class AdminController extends Controller
     public function download_json()
     {
         if (Storage::disk('public')->exists('/backup_zip/package.zip')) {
-            return Storage::disk('public')->download( '/backup_zip/package.zip');
+            return Storage::disk('public')->download('/backup_zip/package.zip');
         } else {
             Cache::flush();
             return redirect()->action([AdminController::class, 'admin']);

@@ -48,6 +48,11 @@ class Course extends Model implements Searchable
         return $this->hasManyThrough(Video::class, VideoCourse::class, 'course_id', 'id', 'id', 'video_id')->get();
     }
 
+    public function tags(): Collection
+    {
+        return $this->belongsToMany(Tag::class, 'course_tags', 'course_id', 'tag_id')->get();
+    }
+
     public function responsible()
     {
         $daisy = new DaisyIntegration();

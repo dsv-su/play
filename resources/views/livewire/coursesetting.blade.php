@@ -110,6 +110,39 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col-12">
+                <div class="rounded border shadow p-3 my-2">
+                    <div class="row justify-content-between text-left">
+                        <!-- Course Tags -->
+                        <div class="form-group col flex-column d-flex my-1">
+                            <label class="form-control-label px-1"><i class="fa-solid fa-tags mr-2"></i>{{ __("Course tags") }}
+                            </label>
+                            <p class="font-1rem mx-1 my-2">{{__('Tags added here will be shown as course subsections. You also need to assign these tags to individual presentations so they are shown under these headings on course views.')}}</p>
+                            <div id="addedTags" class="mx-1 my-2">
+                                @if (empty($tagids))
+                                    <span class="font-1rem">{{__('No tags added')}}</span>
+                                @else
+                                    @foreach($tagids as $key => $tagid)
+                                        <input type="hidden" value="{{$tagid}}" name="tags[]">
+                                        <span class="badge badge-pill badge-light mb-1">{{\App\Tag::find($tagid)->name}} <a
+                                                    class="cursor-pointer" wire:click="remove_tag({{$key}})"><i
+                                                        class="fa-solid fa-xmark"></i></a></span>
+                                    @endforeach
+                                @endif
+                            </div>
+                            <div wire:ignore id="tag-search-form" class="flex-column d-flex">
+                                <input class="mx-1 w-100" type="search"
+                                       id="tag-search" name="q" autocomplete="off"
+                                       aria-haspopup="true"
+                                       placeholder="{{ __("Start typing to add a tag") }}"
+                                       aria-labelledby="tag-search">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-12 col-lg-6">
                 <div class="rounded border shadow p-3 my-2">
                     <div class="row justify-content-between text-left">
@@ -141,6 +174,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-12 col-lg-6">
                 <div class="rounded border shadow p-3 my-2">
                     <div class="row justify-content-between text-left">
@@ -148,8 +182,7 @@
                         <div class="form-group col flex-column d-flex my-1">
                             <label class="form-control-label px-1"><i
                                         class="fas fa-user mr-2"></i>{{ __("Individual user permissions") }}
-                                <span
-                                        class="badge badge-light">{{$ipermissions ?? 0}} {{ __("Set") }}</span>
+                                <span class="badge badge-light">{{$ipermissions ?? 0}} {{ __("Set") }}</span>
                                 <span type="button" wire:click.prevent="add_individual_perm"
                                       class="btn btn-primary px-1 py-0">{{__("Add")}} <i
                                             class="fas fa-user-plus"></i></span>
@@ -241,75 +274,83 @@
     </div>
 </div>
 <script>
-    $(document).ready(sukat);
-    $(document).ready(sukatuser);
-    window.addEventListener('contentChanged', event => {
-        $(sukat);
-    });
-    window.addEventListener('permissionChanged', event => {
-        $(sukatuser);
-    });
-
-    function sukat($) {
-        /* Typeahead SUKAT user */
+    jQuery(document).ready(function ($) {
         // Set the Options for "Bloodhound" suggestion engine
-        var engine = new Bloodhound({
+        var engine3 = new Bloodhound({
             remote: {
-                url: '/ldap_search?q=%QUERY%',
+                url: '/findtag?query=%QUERY%',
                 wildcard: '%QUERY%'
             },
             datumTokenizer: Bloodhound.tokenizers.whitespace('query'),
             queryTokenizer: Bloodhound.tokenizers.whitespace
         });
 
-        $('.edit:first-child').typeahead({
+        $("#tag-search").typeahead({
             classNames: {
                 menu: 'search_autocomplete'
             },
             hint: false,
-            autoselect: true,
+            autoselect: false,
             highlight: true,
             minLength: 1
         }, {
-            source: engine.ttAdapter(),
-            limit: 10,
+            source: engine3.ttAdapter(),
+            limit: 20,
             // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
             name: 'autocomplete-items',
             display: function (item) {
-                return item.displayname + ' (' + item.uid + ')';
+                return item.name;
             },
             templates: {
                 empty: [
-                    '<div class="list-group search-results-dropdown"><div class="list-group-item">Nothing found.</div></div>'
+                    ''
                 ],
                 header: [
-                    '<div class="list-group search-results-dropdown">'
+                    ''
                 ],
                 suggestion: function (data) {
-                    return '<li>' + data.displayname + ' (' + data.uid + ')' + '</li>';
-
+                    if (data.type == 'input') {
+                        return '<a class="badge badge-secondary d-inline-block m-1 cursor-pointer" data-id=0 data-name="' + data.name + '">{{__('New tag')}}: ' + data.name + ' <i class="fa-solid fa-plus"></i></a>';
+                    } else {
+                        if ($('#addedTags').find('input[value="' + data.id + '"]').length) {
+                            return '<span></span>';
+                        } else {
+                            return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-id=' + data.id + '>' + data.name + ' <i class="fa-solid fa-plus"></i></a>';
+                        }
+                    }
                 }
             }
         }).on('keyup', function (e) {
-            $(".tt-suggestion:first-child").addClass('tt-cursor');
-            let selected = $("#user-search-text").attr('aria-activedescendant');
-            if (e.which == 13) {
+            //$(".tt-suggestion:first-child").addClass('tt-cursor');
+            let selected = $("#tag-search").attr('aria-activedescendant');
+            if (e.which === 13) {
                 if (selected) {
-
-                } else {
-                    $(".tt-suggestion:first-child").addClass('tt-cursor');
+                    // window.location.href = $("#" + selected).find('a').prop('href');
                 }
             }
         });
-        /* end typeahead */
-    }
+    });
+
+    $(document).on('click', '#tag-search-form .tt-suggestion', function () {
+        if ($(this).attr('data-id') > 0) {
+        @this.add_tag($(this).attr('data-id'));
+        } else {
+        @this.create_tag($(this).attr('data-name'));
+        }
+        $('#tag-search').typeahead('val', '');
+    });
+
+    $(document).ready(sukatuser);
+    window.addEventListener('permissionChanged', event => {
+        $(sukatuser);
+    });
 
     function sukatuser($) {
         /* Typeahead SUKAT user */
         // Set the Options for "Bloodhound" suggestion engine
         var engine = new Bloodhound({
             remote: {
-                url: '/ldap_search?q=%QUERY%',
+                url: '/findperson?q=%QUERY%',
                 wildcard: '%QUERY%'
             },
             datumTokenizer: Bloodhound.tokenizers.whitespace('query'),
@@ -323,24 +364,29 @@
             hint: false,
             autoselect: true,
             highlight: true,
-            minLength: 1
+            minLength: 3
         }, {
             source: engine.ttAdapter(),
-            limit: 10,
+            limit: 20,
             // This will be appended to "tt-dataset-" to form the class name of the suggestion menu.
             name: 'autocomplete-items',
             display: function (item) {
-                return item.displayname + ' (' + item.uid + ')';
+                return item.name + ' (' + item.uid + ')';
             },
             templates: {
                 empty: [
-                    '<div class="list-group search-results-dropdown"><div class="list-group-item">Nothing found.</div></div>'
+                    ''
                 ],
                 header: [
-                    '<div class="list-group search-results-dropdown">'
+                    ''
                 ],
                 suggestion: function (data) {
-                    return '<li>' + data.displayname + ' (' + data.uid + ')' + '</li>';
+                    if (data.uid) {
+                        var label = (data.role == 'DSV' ? '<span class="bagde badge-primary ml-2 px-1" style="border-radius: 4px;">DSV</span>' : (data.role == 'Student' ? '<span class="bagde badge-success mx-1 px-1" style="border-radius: 4px;">Student</span>' : ''));
+                        return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-toggle="tooltip" data-title="SU username: ' + data.uid + '" data-name="' + data.name + '" data-id="' + data.uid + '">' + data.name + label + ' <i class="fa-solid fa-plus"></i></a>';
+                    } else {
+                        return '<span></span>';
+                    }
                 }
             }
         }).on('keyup', function (e) {
@@ -356,7 +402,7 @@
             }
         });
         /* end typeahead */
-        $(document).on('click', '.tt-suggestion', function () {
+        $(document).on('click', '#perm-search .tt-suggestion', function () {
             $(this).closest('.twitter-typeahead').find('input').prop('readonly', true);
         });
     }
