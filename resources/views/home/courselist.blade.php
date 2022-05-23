@@ -130,7 +130,7 @@
                 @foreach($tagged[$key] as $tagname => $taggedvideos)
                     <div class="row w-100 mx-1 mt-2">
                         <div class="col-12">
-                            <h3 class="w-100">{{$tagname ?: 'Uncategorized'}}</h3>
+                            <h4 class="w-100 mt-3">{{$tagname ?: 'Uncategorized'}}</h4>
                         </div>
                     </div>
                     @include('home.videolayout', ['videos' => $taggedvideos])

@@ -92,10 +92,18 @@ class SearchController extends Controller
         // Remove irrelevant terms that could be added because of multiple course associations
         $videos = $this->removeIrrelevantTerms($videos, $term, $year);
 
+        $tagged = [];
+        foreach ($videos as $courseid => $coursevideos) {
+            $coursetags = CourseTag::where('course_id', $courseid)->get();
+            if (count($coursetags)) {
+                $tagged[$courseid] = $this->groupByTags($coursetags, $coursevideos);
+            }
+        }
+
         if ($request->isMethod('get')) {
-            return view('home.navigator', compact('term', 'year', 'videos', 'courses', 'presenters', 'tags', 'filters'));
+            return view('home.navigator', compact('term', 'year', 'videos', 'courses', 'presenters', 'tags', 'filters', 'tagged'));
         } else {
-            return view('home.courselist', compact('videos'))->render();
+            return view('home.courselist', compact('videos', 'tagged'))->render();
         }
     }
 
@@ -120,9 +128,9 @@ class SearchController extends Controller
         $videos = $this->removeIrrelevantDesignations($videos, $designation);
         $tagged = [];
         foreach ($videos as $courseid => $coursevideos) {
-            $tags = CourseTag::where('course_id', $courseid)->get();
-            if (count($tags)) {
-                $tagged[$courseid] = $this->groupByTags($tags, $coursevideos);
+            $coursetags = CourseTag::where('course_id', $courseid)->get();
+            if (count($coursetags)) {
+                $tagged[$courseid] = $this->groupByTags($coursetags, $coursevideos);
             }
         }
 
@@ -317,10 +325,18 @@ class SearchController extends Controller
             $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
         );
 
+        $tagged = [];
+        foreach ($videos as $courseid => $coursevideos) {
+            $coursetags = CourseTag::where('course_id', $courseid)->get();
+            if (count($coursetags)) {
+                $tagged[$courseid] = $this->groupByTags($coursetags, $coursevideos);
+            }
+        }
+
         if ($request->isMethod('get')) {
-            return view('home.navigator', compact('presenter', 'videos', 'terms', 'tags', 'courses', 'filters'));
+            return view('home.navigator', compact('presenter', 'videos', 'terms', 'tags', 'courses', 'filters', 'tagged'));
         } else {
-            return view('home.courselist', compact('videos'))->render();
+            return view('home.courselist', compact('videos', 'tagged'))->render();
         }
     }
 
