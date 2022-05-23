@@ -20,7 +20,7 @@ class Manage extends Component
     public $uncat, $uncat_videos = [];
     public $videos = [];
     public $contend = [];
-    public $counter, $uncatcounter, $coursesetlist;
+    public $counter, $uncatcounter, $coursesetlist = [];
     public $individual_permissions, $playback_permissions;
     public $user_videos, $individual_videos, $courseadministrator, $video_course_ids;
     public $filter, $filterTerm;
