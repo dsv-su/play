@@ -331,11 +331,6 @@ class SearchController extends Controller
     public
     function search($q = null)
     {
-        // Redirect to new manage for administrators
-        if (app()->make('play_role') == 'Administrator') {
-            return redirect()->route('manage');
-        }
-
         $videos = $this->getVideos($q) ?? Collection::empty();
 
         $manage = \Request::is('manage');
@@ -381,6 +376,8 @@ class SearchController extends Controller
             return $visibility->filter($videos);
 
         } else {
+            /** Moved to new manage controller */
+
             if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
 
                 //If user is courseadmin, uploader or staff
@@ -549,6 +546,7 @@ class SearchController extends Controller
         }
         $search .= ')';
 
+
         $sukatusersdsv = SukatUser::rawFilter($search)->whereContains('edupersonentitlement', 'urn:mace:swami.se:gmai:dsv-user:staff')->get();
         $sukatusersstudents = SukatUser::rawFilter($search)
             ->whereContains('edupersonentitlement', 'urn:mace:swami.se:gmai:dsv-user:student')
@@ -561,6 +559,7 @@ class SearchController extends Controller
 
         foreach ($sukatusersdsv as $su) {
             $su->role = 'DSV';
+
         }
         foreach ($sukatusersstudents as $su) {
             $su->role = 'Student';
