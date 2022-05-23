@@ -121,7 +121,9 @@
             <!-- Hide tags -->
         @if (!$video->tags()->isEmpty())
             @foreach($video->tags() as $tag)
+                                @if (!$video->hasCourseDesignation($tag->name))
                 <a href="/tag/{{$tag->name}}" class="badge badge-secondary">{{$tag->name}}</a>
+                @endif
             @endforeach
         @endif
             <!---->

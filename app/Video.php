@@ -113,6 +113,15 @@ class Video extends Model implements Searchable
         return $this->belongsToMany(Tag::class, 'video_tags', 'video_id', 'tag_id')->get();
     }
 
+    public function hasCourseDesignation($designation) {
+        foreach($this->courses() as $course) {
+            if ($course->designation == $designation) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function has_tag($tag_id): bool
     {
         return $this->belongsToMany(Tag::class, 'video_tags', 'video_id', 'tag_id')->where('tag_id', $tag_id)->count()>0;
