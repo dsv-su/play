@@ -625,7 +625,7 @@ class SearchController extends Controller
             $daisy_courses_ids = [];
             if ($daisy_courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID)) {
                 $daisy_courses_ids = array_map(function ($d) {
-                    return $d[2];
+                    return $d['id'];
                 }, $daisy_courses);
             }
             foreach ($courses as $key => $course) {

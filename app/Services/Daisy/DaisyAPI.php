@@ -27,21 +27,26 @@ class DaisyAPI extends DaisyIntegration
     {
         if ($this->array_resources = json_decode($this->getResource('employee/' . $id . '/contributions?fromSemesterId=' . $this->from_year() . '1&toSemesterId=' . $this->to_year() . '2', 'json')->getBody()->getContents(), TRUE)) {
             //If user is courseadmin
-            //Sort the result after year
+            //Sort the result after id
 
             $this->resources = collect($this->array_resources)->sortBy(function ($course, $key) {
-                return $course['courseSegmentInstance']['semesterId'];
-            });
-            $this->resources = collect($this->resources)->sortBy(function ($course, $key) {
                 return $course['courseSegmentInstance']['id'];
             });
 
             foreach ($this->resources->reverse() as $course) {
-                $courselist[] = Arr::flatten($course);
+                $courselist[] = [
+                    'name' => $course['courseSegmentInstance']['name']['swedish'],
+                    'name_en' => $course['courseSegmentInstance']['name']['english'],
+                    'id' => $course['courseSegmentInstance']['id'],
+                    'semester' => $course['courseSegmentInstance']['semesterId'],
+                    'designation' => $course['courseSegmentInstance']['designation'],
+                    'responsbile' => $course['responsible']
+                ];
             }
         } else {
             return false;
         }
+
         /*
          * Returns an array
                    * [0] Coursename swedish

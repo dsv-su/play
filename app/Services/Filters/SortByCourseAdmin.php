@@ -28,13 +28,13 @@ class SortByCourseAdmin extends model
 
             foreach ($courses as $course) {
                 if ($start == 0) {
-                    $year = substr($course[3], 0, 4);
+                    $year = substr($course['semester'], 0, 4);
                 }
-                if ($year == substr($course[3], 0, 4)) {
-                    if (substr($course[3], 4) == '1') {
-                        $courselist[$year][$course[2]] = 'VT' . substr($course[3], 0, 4) . ' ' . $course[4] . ' - ' . $course[0] . ' (' . __('Course id') . ' ' . $course[2] . ')';
+                if ($year == substr($course['semester'], 0, 4)) {
+                    if (substr($course['semester'], 4) == '1') {
+                        $courselist[$year][$course['id']] = 'VT' . substr($course['semester'], 0, 4) . ' ' . $course['designation'] . ' - ' . $course['name'] . ' (' . __('Course id') . ' ' . $course['id'] . ')';
                     } else {
-                        $courselist[$year][$course[2]] = 'HT' . substr($course[3], 0, 4) . ' ' . $course[4] . ' - ' . $course[0] . ' (' . __('Course id') . ' ' . $course[2] . ')';
+                        $courselist[$year][$course['id']] = 'HT' . substr($course['semester'], 0, 4) . ' ' . $course['designation'] . ' - ' . $course['name'] . ' (' . __('Course id') . ' ' . $course['id'] . ')';
                     }
                     $start++;
                 } else {

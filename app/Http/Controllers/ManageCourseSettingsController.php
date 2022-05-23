@@ -32,41 +32,24 @@ class ManageCourseSettingsController extends Controller
         if (app()->make('play_role') == 'Administrator') {
             //Play-Administrator
             $courses = $daisy->getDaisyCourses();
-            //Group after term
-            foreach ($courses as $course) {
-                $year = substr($course['semester'], 0, 4);
-                $term = (substr($course['semester'], 4) == '1') ? 'VT' : 'HT';
-                $name = Lang::locale() == 'swe' ? $course['name'] : $course['name_en'];
-                $courselist[$term . $year][$course['id']] = $course['designation'] . ' ' . $term . $year . ' — ' . $name . ' (' . __('id') . ' ' . $course['id'] . ')';
-                $this->checkCourseSettings($course['id'], $coursesetlist, $presentations, $individual_permissions, $playback_permissions);
-            }
         } else {
             //Courseadmin
             //Get user DaisyID
             $daisyPersonID = $daisy->getDaisyPersonId(app()->make('play_username'));
-
             //Get all courses where user is courseadmin
-            if ($courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID)) {
-                /*
-                 * [0] Coursename swedish
-                 * [1] Coursename english
-                 * [2] CourseID
-                 * [4] Designation
-                 * [3] Semester in format year XXXX and term 1 spring(VT) 2 fall(HT) - e.g. 20212
-                 * [5] Courseadmin true/false
-                 */
-
-                //Group after term
-                foreach ($courses as $course) {
-                    $year = substr($course[3], 0, 4);
-                    $term = (substr($course[3], 4) == '1') ? 'VT' : 'HT';
-                    $name = Lang::locale() == 'swe' ? $course[0] : $course[1];
-                    $courselist[$term . $year][$course[2]] = $course[4] . ' ' . $term . $year . ' — ' . $name . ' (' . __('id') . ' ' . $course[2] . ')';
-                    $this->checkCourseSettings($course[2], $coursesetlist, $presentations, $individual_permissions, $playback_permissions);
-                }
-            } else {
+            $courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID);
+            if (!$courses) {
                 return 'Not a courseadmin';
             }
+        }
+        //Group after term
+        $courselist = [];
+        foreach ($courses as $course) {
+            $year = substr($course['semester'], 0, 4);
+            $term = (substr($course['semester'], 4) == '1') ? 'VT' : 'HT';
+            $name = Lang::locale() == 'swe' ? $course['name'] : $course['name_en'];
+            $courselist[$term . $year][$course['id']] = $course['designation'] . ' ' . $term . $year . ' — ' . $name . ' (' . __('id') . ' ' . $course['id'] . ')';
+            $this->checkCourseSettings($course['id'], $coursesetlist, $presentations, $individual_permissions, $playback_permissions);
         }
         return view('manage.manage_course', compact('courselist', 'coursesetlist', 'individual_permissions', 'playback_permissions', 'presentations'));
     }
