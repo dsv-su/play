@@ -21,7 +21,7 @@ class CourseAdmin
         //Get CourseAdmin courses
         $courselist = collect($this->daisy->getDaisyEmployeeResponsibleCourses($this->daisyPersonID));
         return $courselist->map(function ($item, $key) {
-            return $item['ic'];
+            return $item['id'];
         })->toArray();
     }
 }
