@@ -39,8 +39,6 @@ class Manage extends Component
         if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
             //CourseAdmin and Uploader
             $this->courseAdminManage();
-            //Load filters
-            $this->filters();
         } else {
             //Administrator
             $this->loadCourseList();
@@ -48,15 +46,8 @@ class Manage extends Component
 
     }
 
-    public function filters()
+    public function filters($videos)
     {
-        //Creates arrays for the filter functions
-        $videos = Video::whereIn('id', $this->user_videos)
-            ->orWhereIn('id', $this->individual_videos)
-            ->orWhereIn('id', $this->courseadministrator)
-            ->orWhereIn('id', $this->video_course_ids)
-            ->latest('creation')->get();
-
         foreach ($videos as $video) {
             //Presenters
             foreach ($video->presenters() as $presenter) {
@@ -79,8 +70,6 @@ class Manage extends Component
         }
         //Courses
         $this->videocourses = $this->video_courses;
-
-
     }
 
     public function filterToggle()
@@ -103,6 +92,14 @@ class Manage extends Component
                         ->get();
 
         $this->prepareRendering();
+        //Load filters
+        //Creates arrays for the filter functions
+        $videos = Video::whereIn('id', $this->user_videos)
+            ->orWhereIn('id', $this->individual_videos)
+            ->orWhereIn('id', $this->courseadministrator)
+            ->orWhereIn('id', $this->video_course_ids)
+            ->latest('creation')->get();
+        $this->filters($videos);
     }
 
     public function filter()
@@ -134,15 +131,22 @@ class Manage extends Component
             }
 
             $this->video_courses = [];
-            $this->video_courses = VideoCourse::with('course')
-                ->whereHas('video', function ($query){
-                    $query->whereIn('video_id', $this->user_videos)
-                        ->orWhereIn('video_id', $this->individual_videos)
-                        ->orWhereIn('video_id', $this->courseadministrator)
-                        ->orWhereIn('video_id', $this->video_course_ids);
-                })
-                ->whereIn('course_id', $courseids)
-                ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
+            //Query depending on user
+            if(app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
+                $this->video_courses = VideoCourse::with('course')
+                    ->whereHas('video', function ($query) {
+                        $query->whereIn('video_id', $this->user_videos)
+                            ->orWhereIn('video_id', $this->individual_videos)
+                            ->orWhereIn('video_id', $this->courseadministrator)
+                            ->orWhereIn('video_id', $this->video_course_ids);
+                    })
+                    ->whereIn('course_id', $courseids)
+                    ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
+            } else {
+                $this->video_courses = VideoCourse::with('course')
+                    ->whereIn('course_id', $courseids)
+                    ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
+            }
         }
 
         $this->courseSettings($this->video_courses);
@@ -155,7 +159,9 @@ class Manage extends Component
         } else {
             $this->coursAdminFilter();
             $this->video_courses = [];
-            $this->video_courses = VideoCourse::with('course')
+            //Query depending on user
+            if(app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
+                $this->video_courses = VideoCourse::with('course')
                     ->whereHas('video', function ($query) {
                         $query->whereIn('video_id', $this->user_videos)
                             ->orWhereIn('video_id', $this->individual_videos)
@@ -163,9 +169,16 @@ class Manage extends Component
                             ->orWhereIn('video_id', $this->video_course_ids);
                     })
                     ->whereHas('course', function ($query) use ($selected_course) {
-                        $query->whereIn('designation',  $selected_course);
+                        $query->whereIn('designation', $selected_course);
                     })
                     ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
+            } else {
+                $this->video_courses = VideoCourse::with('course')
+                    ->whereHas('course', function ($query) use ($selected_course) {
+                        $query->whereIn('designation', $selected_course);
+                    })
+                    ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
+            }
 
             $this->courseSettings($this->video_courses);
         }
@@ -182,18 +195,28 @@ class Manage extends Component
            }
             $this->coursAdminFilter();
             $this->video_courses = [];
-            $this->video_courses = VideoCourse::with('course')
-                ->whereHas('video', function ($query) {
-                    $query->whereIn('video_id', $this->user_videos)
-                        ->orWhereIn('video_id', $this->individual_videos)
-                        ->orWhereIn('video_id', $this->courseadministrator)
-                        ->orWhereIn('video_id', $this->video_course_ids);
-                })
+            //Query depending on user
+            if(app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
+                $this->video_courses = VideoCourse::with('course')
+                    ->whereHas('video', function ($query) {
+                        $query->whereIn('video_id', $this->user_videos)
+                            ->orWhereIn('video_id', $this->individual_videos)
+                            ->orWhereIn('video_id', $this->courseadministrator)
+                            ->orWhereIn('video_id', $this->video_course_ids);
+                    })
+                    ->whereHas('course', function ($query) use ($term, $year) {
+                        $query->whereIn('semester', $term)
+                            ->whereIn('year', $year);
+                    })
+                    ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
+            } else {
+                $this->video_courses = VideoCourse::with('course')
                 ->whereHas('course', function ($query) use ($term, $year) {
-                    $query->whereIn('semester',  $term)
-                        ->whereIn('year',  $year);
+                    $query->whereIn('semester', $term)
+                        ->whereIn('year', $year);
                 })
-                ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
+                    ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
+            }
 
             $this->courseSettings($this->video_courses);
         }
@@ -222,15 +245,22 @@ class Manage extends Component
             }
 
             $this->video_courses = [];
-            $this->video_courses = VideoCourse::with('course')
-                ->whereHas('video', function ($query){
-                    $query->whereIn('video_id', $this->user_videos)
-                        ->orWhereIn('video_id', $this->individual_videos)
-                        ->orWhereIn('video_id', $this->courseadministrator)
-                        ->orWhereIn('video_id', $this->video_course_ids);
-                })
-                ->whereIn('course_id', $courseids)
-                ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
+            //Query depending on user
+            if(app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
+                $this->video_courses = VideoCourse::with('course')
+                    ->whereHas('video', function ($query) {
+                        $query->whereIn('video_id', $this->user_videos)
+                            ->orWhereIn('video_id', $this->individual_videos)
+                            ->orWhereIn('video_id', $this->courseadministrator)
+                            ->orWhereIn('video_id', $this->video_course_ids);
+                    })
+                    ->whereIn('course_id', $courseids)
+                    ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
+            } else {
+                $this->video_courses = VideoCourse::with('course')
+                    ->whereIn('course_id', $courseids)
+                    ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
+            }
         }
 
         $this->courseSettings($this->video_courses);
@@ -344,6 +374,10 @@ class Manage extends Component
     {
         $this->video_courses = VideoCourse::with('course','video.video_presenter.presenter')->groupBy('course_id')->orderBy('course_id', 'desc')->get();
         $this->prepareRendering();
+        //Load filters
+        //Creates arrays for the filter functions
+        $videos = Video::all();
+        $this->filters($videos);
     }
 
     public function loadCourseVideos(VisibilityFilter $visibility, $courseid)
