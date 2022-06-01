@@ -118,10 +118,10 @@
                         <div class="form-group col flex-column d-flex my-1">
                             <label class="form-control-label px-1"><i class="fa-solid fa-tags mr-2"></i>{{ __("Course tags") }}
                             </label>
-                            <p class="font-1rem mx-1 my-2">{{__('Tags added here will be shown as course subsections. You also need to assign these tags to individual presentations so they are shown under these headings on course views.')}}</p>
+                            <p class="font-1rem mx-1 my-2">{{__("Tags added here will be shown as course subsections. You also need to assign these tags to individual presentations so they are shown under these headings on course views.")}}</p>
                             <div id="addedTags" class="mx-1 my-2">
                                 @if (empty($tagids))
-                                    <span class="font-1rem">{{__('No tags added')}}</span>
+                                    <span class="font-1rem">{{__("No tags added")}}</span>
                                 @else
                                     @foreach($tagids as $key => $tagid)
                                         <input type="hidden" value="{{$tagid}}" name="tags[]">

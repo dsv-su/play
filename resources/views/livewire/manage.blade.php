@@ -1,44 +1,41 @@
 <div>
-    @if(app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader')
-        <div class="container">
-            <div class="d-flex row justify-content-start align-items-center">
-                <div class="col-12 col-sm-auto d-flex justify-content-start ml-3 pr-0">
-                    <label class="m-0" for="filterSwitch">{{__("Textfilter")}}</label>
-                    <div class="mx-1">
-                    <span class="custom-control custom-switch custom-switch-lg">
-                        <input wire:click="filterToggle" class="custom-control-input" id="filterSwitch" name="filter"
-                               type="checkbox" @if($filterswitch == true) checked @endif>
-                        <label class="custom-control-label" style="margin-top: 3px;" for="filterSwitch"></label>
-                    </span>
-                    </div>
-                </div>
-                <div class="col-12 col-sm">
-                    @if($filterswitch)
-                        <form wire:submit.prevent="filter"
-                              class="form-inline manage-filter d-flex justify-content-sm-start"
-                              method="GET" id="manage-filter" role="search">
-                            <label for="manage-filter" class="sr-only">{{ __("Filter courses") }}</label>
-                            <input class="form-control w-75" type="search"
-                                   wire:model="filterTerm"
-                                   id="manage-filter-text" autocomplete="off"
-                                   aria-haspopup="true"
-                                   placeholder="{{ __("Filter courses") }}"
-                                   style="font-size: 100% !important;"
-                                   aria-labelledby="manage-filter">
-                        </form>
-                    @endif
+
+    <div class="container">
+        <div class="d-flex row justify-content-start align-items-center">
+            <div class="col-12 col-sm-auto d-flex justify-content-start ml-3 pr-0">
+                <label class="m-0" for="filterSwitch">{{__("Textfilter")}}</label>
+                <div class="mx-1">
+                <span class="custom-control custom-switch custom-switch-lg">
+                    <input wire:click="filterToggle" class="custom-control-input" id="filterSwitch" name="filter"
+                           type="checkbox" @if($filterswitch == true) checked @endif>
+                    <label class="custom-control-label" style="margin-top: 3px;" for="filterSwitch"></label>
+                </span>
                 </div>
             </div>
+            <div class="col-12 col-sm">
+                @if($filterswitch)
+                    <form wire:submit.prevent="filter"
+                          class="form-inline manage-filter d-flex justify-content-sm-start"
+                          method="GET" id="manage-filter" role="search">
+                        <label for="manage-filter" class="sr-only">{{ __("Filter courses") }}</label>
+                        <input class="form-control w-75" type="search"
+                               wire:model="filterTerm"
+                               id="manage-filter-text" autocomplete="off"
+                               aria-haspopup="true"
+                               placeholder="{{ __("Filter courses") }}"
+                               style="font-size: 100% !important;"
+                               aria-labelledby="manage-filter">
+                    </form>
+                @endif
+            </div>
         </div>
-    @endif
+    </div>
 
     <!-- Filter -->
     <div class="container">
-        @if(app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader')
-            <!-- User filter -->
-            @include('home.user_manage_filter')
-            <!-- end User filter -->
-        @endif
+        <!-- User filter -->
+        @include('home.user_manage_filter')
+        <!-- end User filter -->
     </div>
 
     <div wire:loading wire:target="loadUncat">
