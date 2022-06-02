@@ -12,6 +12,7 @@ use App\Services\Filters\VisibilityFilter;
 use App\Video;
 use App\VideoCourse;
 use App\VideoPresenter;
+use Illuminate\Support\Facades\Cookie;
 use Livewire\Component;
 
 class Manage extends Component
@@ -27,6 +28,7 @@ class Manage extends Component
     public $presenter, $course, $semester, $tag;
     public $videopresenters = [], $videoterms = [], $videocourses, $videotags = [];
     public $filterswitch;
+    public $videoformat = '';
     protected $queryString = ['filterTerm'];
 
     public function mount()
@@ -34,6 +36,7 @@ class Manage extends Component
         //Default settings
         $this->filterswitch = true;
         $this->uncat = false;
+        $this->videoformat = Cookie::get('videoformat');
 
         //Redirect depending on role
         if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
@@ -57,8 +60,8 @@ class Manage extends Component
             }
             //Terms
             foreach ($video->courses() as $term) {
-                if (!key_exists($term->semester.$term->year, $this->videoterms)) {
-                    $this->videoterms[$term->semester.$term->year] = $term->semester.$term->year;
+                if (!key_exists($term->semester . $term->year, $this->videoterms)) {
+                    $this->videoterms[$term->semester . $term->year] = $term->semester . $term->year;
                 }
             }
             //Tags
@@ -83,13 +86,13 @@ class Manage extends Component
         //Default setting for courseadmin or uploader
         $this->coursAdminFilter();
         $this->video_courses = VideoCourse::with('course')
-                        ->whereIn('video_id', $this->user_videos)
-                        ->orWhereIn('video_id', $this->individual_videos)
-                        ->orWhereIn('video_id', $this->courseadministrator)
-                        ->orWhereIn('video_id', $this->video_course_ids)
-                        ->groupBy('course_id')
-                        ->orderBy('course_id', 'desc')
-                        ->get();
+            ->whereIn('video_id', $this->user_videos)
+            ->orWhereIn('video_id', $this->individual_videos)
+            ->orWhereIn('video_id', $this->courseadministrator)
+            ->orWhereIn('video_id', $this->video_course_ids)
+            ->groupBy('course_id')
+            ->orderBy('course_id', 'desc')
+            ->get();
 
         $this->prepareRendering();
         //Load filters
@@ -109,14 +112,14 @@ class Manage extends Component
 
     public function updatedPresenter($selected_presenter)
     {
-        if(empty($selected_presenter)) {
+        if (empty($selected_presenter)) {
             $this->courseAdminManage();
         } else {
             //Filters presenters
             $videos_collection = [];
             $this->video_courses = [];
 
-            $videos_collection = Video::with( 'video_course.course', 'video_presenter.presenter')
+            $videos_collection = Video::with('video_course.course', 'video_presenter.presenter')
                 ->whereHas('video_presenter.presenter', function ($query) use ($selected_presenter) {
                     $query->whereIn('username', $selected_presenter);
                 })->pluck('id');
@@ -132,7 +135,7 @@ class Manage extends Component
 
             $this->video_courses = [];
             //Query depending on user
-            if(app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
+            if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
                 $this->video_courses = VideoCourse::with('course')
                     ->whereHas('video', function ($query) {
                         $query->whereIn('video_id', $this->user_videos)
@@ -154,13 +157,13 @@ class Manage extends Component
 
     public function updatedCourse($selected_course)
     {
-        if(empty($selected_course)) {
+        if (empty($selected_course)) {
             $this->courseAdminManage();
         } else {
             $this->coursAdminFilter();
             $this->video_courses = [];
             //Query depending on user
-            if(app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
+            if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
                 $this->video_courses = VideoCourse::with('course')
                     ->whereHas('video', function ($query) {
                         $query->whereIn('video_id', $this->user_videos)
@@ -186,17 +189,17 @@ class Manage extends Component
 
     public function updatedSemester($selected_semester)
     {
-        if(empty($selected_semester)) {
+        if (empty($selected_semester)) {
             $this->courseAdminManage();
         } else {
-           foreach ($selected_semester as $semester) {
-               $year[] = substr($semester, -4);
-               $term[] = substr($semester, 0, 2);
-           }
+            foreach ($selected_semester as $semester) {
+                $year[] = substr($semester, -4);
+                $term[] = substr($semester, 0, 2);
+            }
             $this->coursAdminFilter();
             $this->video_courses = [];
             //Query depending on user
-            if(app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
+            if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
                 $this->video_courses = VideoCourse::with('course')
                     ->whereHas('video', function ($query) {
                         $query->whereIn('video_id', $this->user_videos)
@@ -211,10 +214,10 @@ class Manage extends Component
                     ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
             } else {
                 $this->video_courses = VideoCourse::with('course')
-                ->whereHas('course', function ($query) use ($term, $year) {
-                    $query->whereIn('semester', $term)
-                        ->whereIn('year', $year);
-                })
+                    ->whereHas('course', function ($query) use ($term, $year) {
+                        $query->whereIn('semester', $term)
+                            ->whereIn('year', $year);
+                    })
                     ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
             }
 
@@ -224,14 +227,14 @@ class Manage extends Component
 
     public function updatedTag($selected_tag)
     {
-        if(empty($selected_tag)) {
+        if (empty($selected_tag)) {
             $this->courseAdminManage();
         } else {
             //Filters tags
             $videos_collection = [];
             $this->video_courses = [];
 
-            $videos_collection = Video::with( 'video_tag.tag')
+            $videos_collection = Video::with('video_tag.tag')
                 ->whereHas('video_tag.tag', function ($query) use ($selected_tag) {
                     $query->whereIn('name', $selected_tag);
                 })->pluck('id');
@@ -246,7 +249,7 @@ class Manage extends Component
 
             $this->video_courses = [];
             //Query depending on user
-            if(app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
+            if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
                 $this->video_courses = VideoCourse::with('course')
                     ->whereHas('video', function ($query) {
                         $query->whereIn('video_id', $this->user_videos)
@@ -316,7 +319,7 @@ class Manage extends Component
                         ->orWhere('year', 'LIKE', $filterTerm);
                 })
                 ->pluck('course_id');
-            $video_course_presenters = VideoCourse::with('course','video.video_presenter.presenter')
+            $video_course_presenters = VideoCourse::with('course', 'video.video_presenter.presenter')
                 ->whereIn('course_id', $video_course_ids)
                 ->whereHas('video.video_presenter.presenter', function ($query) use ($filterTerm) {
                     $query->where('username', 'LIKE', $filterTerm)
@@ -325,33 +328,33 @@ class Manage extends Component
                 ->pluck('course_id');
             $video_course_tags = VideoCourse::with('video.video_tag.tag')
                 ->whereIn('course_id', $video_course_ids)
-                ->WhereHas('video.video_tag.tag', function($query) use ($filterTerm) {
+                ->WhereHas('video.video_tag.tag', function ($query) use ($filterTerm) {
                     $query->where('id', 'LIKE', $filterTerm)
                         ->orwhere('name', 'LIKE', $filterTerm);
                 })
                 ->pluck('course_id');
             $this->video_courses = VideoCourse::whereIn('course_id', $video_course_courses)
-                                            ->orWhereIn('course_id', $video_course_presenters)
-                                            ->orWhereIn('course_id', $video_course_tags)
-                                            ->groupBy('course_id')
-                                            ->orderBy('course_id', 'desc')
-                                            ->get();
+                ->orWhereIn('course_id', $video_course_presenters)
+                ->orWhereIn('course_id', $video_course_tags)
+                ->groupBy('course_id')
+                ->orderBy('course_id', 'desc')
+                ->get();
 
-       } else {
+        } else {
             //Administrators
             $this->video_courses = VideoCourse::with('course', 'video.video_tag.tag', 'video.video_presenter.presenter')
-                ->whereHas('Course', function($query) use ($filterTerm) {
+                ->whereHas('Course', function ($query) use ($filterTerm) {
                     $query->where('id', 'LIKE', $filterTerm)
                         ->orwhere('name', 'LIKE', $filterTerm)->orWhere('name_en', 'like', $filterTerm)
                         ->orWhere('designation', 'LIKE', $filterTerm)
                         ->orWhere('semester', 'LIKE', $filterTerm)
                         ->orWhere('year', 'LIKE', $filterTerm);
                 })
-                ->orWhereHas('video.video_presenter.presenter', function($query) use ($filterTerm) {
+                ->orWhereHas('video.video_presenter.presenter', function ($query) use ($filterTerm) {
                     $query->where('username', 'LIKE', $filterTerm)
                         ->orwhere('name', 'LIKE', $filterTerm);
                 })
-                ->orWhereHas('video.video_tag.tag', function($query) use ($filterTerm) {
+                ->orWhereHas('video.video_tag.tag', function ($query) use ($filterTerm) {
                     $query->where('id', 'LIKE', $filterTerm)
                         ->orwhere('name', 'LIKE', $filterTerm);
                 })
@@ -372,7 +375,7 @@ class Manage extends Component
 
     public function loadCourseList()
     {
-        $this->video_courses = VideoCourse::with('course','video.video_presenter.presenter')->groupBy('course_id')->orderBy('course_id', 'desc')->get();
+        $this->video_courses = VideoCourse::with('course', 'video.video_presenter.presenter')->groupBy('course_id')->orderBy('course_id', 'desc')->get();
         $this->prepareRendering();
         //Load filters
         //Creates arrays for the filter functions
@@ -386,12 +389,13 @@ class Manage extends Component
         $this->contend[$courseid] = !$this->contend[$courseid];
 
         //Load presentations
-        if($this->videos[$courseid] == null) {
-            $this->videos[$courseid] = $visibility->filter(Video::whereHas('video_course.course', function($query) use($courseid){
+        if ($this->videos[$courseid] == null) {
+            $this->videos[$courseid] = $visibility->filter(Video::whereHas('video_course.course', function ($query) use ($courseid) {
                 $query->where('course_id', $courseid);
-            })->with('video_course.course','video_presenter.presenter')->get())->toArray();
+            })->with('video_course.course', 'video_presenter.presenter')->get());
+        } else {
+            $this->videos[$courseid] = [];
         }
-
     }
 
     public function loadUncat(VisibilityFilter $visibility)
@@ -410,7 +414,7 @@ class Manage extends Component
 
     public function courseSettings($courses)
     {
-        foreach($courses as $course) {
+        foreach ($courses as $course) {
             if ($courseSettings = CoursesettingsPermissions::where('course_id', $course->course_id)->first()) {
                 //Visibility
                 $this->coursesetlist[$course->course_id]['visibility'] = $courseSettings->visibility;
@@ -432,9 +436,9 @@ class Manage extends Component
 
     public function countPresentations($courses)
     {
-        foreach($courses as $course) {
+        foreach ($courses as $course) {
             $courseid = $course->course_id;
-            $this->counter[$course->course_id] = Video::whereHas('video_course.course', function($query) use($courseid){
+            $this->counter[$course->course_id] = Video::whereHas('video_course.course', function ($query) use ($courseid) {
                 $query->where('course_id', $courseid);
             })->count();
         }
@@ -442,10 +446,17 @@ class Manage extends Component
 
     public function collapseAll($courses)
     {
-        foreach($courses as $course) {
+        foreach ($courses as $course) {
             $this->contend[$course->course_id] = false;
             $this->videos[$course->course_id] = [];
         }
+    }
+
+    public function updatedVideoformat($videoformat)
+    {
+        Cookie::queue('videoformat', $videoformat, 999999999);
+        // Temporary solution
+        return redirect(request()->header('Referer'));
     }
 
     public function render()

@@ -3,7 +3,7 @@
      id="{{$video->id}}">
     <div class="col-12 col-sm-8 col-md info p-2">
         <!-- Group Permissions icons-->
-        <h4 class="card-text font-1rem font-weight-bold py-1 my-auto" style="line-height: 1.5em;">
+        <h4 class="card-text font-1rem py-1 my-auto" style="line-height: 1.5em;">
             @if($video->permission_type == 'dsv')
                 <span class="permission d-inline-block mx-1" data-toggle="tooltip"
                       title="{{__("DSV students & staff playback")}}">

@@ -67,22 +67,7 @@
                      class="collapse"
                  @endif
                  aria-labelledby="headingOne" data-parent="#accordion">
-                <div class="d-flex flex-wrap">
-                    @foreach ($uncat_videos as $video)
-                        <div wire:key="{{ $video->id}}" class="col my-3">
-                            @include('home.video_m')
-                        </div>
-                    @endforeach
-                    <div class="col">
-                        <div class="card video my-0 mx-auto"></div>
-                    </div>
-                    <div class="col">
-                        <div class="card video my-0 mx-auto"></div>
-                    </div>
-                    <div class="col">
-                        <div class="card video my-0 mx-auto"></div>
-                    </div>
-                </div>
+                @include('home.videolayout', ['videos' => $uncat_videos])
             </div>
         </div>
         <div class="d-flex justify-content-sm-start mt-4">
@@ -124,22 +109,7 @@
                      @endif
                      aria-labelledby="heading{{$key}}" data-parent="#accordion">
                     @include('livewire.status.coursestatusfull')
-                    <div class="d-flex flex-wrap">
-                        @foreach ($videos[$video_course->course->id] as $video)
-                            <div wire:key="{{ $video['id'] }}" class="col my-3">
-                                @include('home.video_m')
-                            </div>
-                        @endforeach
-                        <div class="col">
-                            <div class="card video my-0 mx-auto"></div>
-                        </div>
-                        <div class="col">
-                            <div class="card video my-0 mx-auto"></div>
-                        </div>
-                        <div class="col">
-                            <div class="card video my-0 mx-auto"></div>
-                        </div>
-                    </div>
+                    @include('home.videolayout', ['videos' => $videos[$video_course->course->id]])
                 </div>
             </div>
         @endforeach

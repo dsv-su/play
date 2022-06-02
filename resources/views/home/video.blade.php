@@ -1,14 +1,14 @@
 <!-- Video - child view - will inherit all data available in the parent view-->
-<div class="shadow-lg shadow-warning card video m-auto @if($video->hidden) faded @endif" id="{{$video->id}}">
-    <div id="action-icons" class="flex-column m-1">
-        <div class="" data-placement="left" data-toggle="tooltip" title="{{__("Share presentation")}}">
+<div wire:ignore class="shadow-lg shadow-warning card video m-auto @if($video->hidden) faded @endif" id="{{$video->id}}">
+    <div wire:ignore.self id="action-icons" class="flex-column m-1">
+        <div wire:ignore.self data-placement="left" data-toggle="tooltip" title="{{__("Share presentation")}}">
             <a href="#" data-toggle="modal" data-target="#shareModal{{$video->id}}"
                title="{{ __('Share presentation') }}" class="btn btn-dark btn-sm">
                 <i class="fas fa-external-link-alt fa-fw"></i>
             </a>
         </div>
         @if ($video->download)
-            <div class="dropdown" data-placement="left" data-toggle="tooltip" title="{{ __("Download presentation") }}">
+            <div wire:ignore class="dropdown" data-placement="left" data-toggle="tooltip" title="{{ __("Download presentation") }}">
                 <a href="#" data-toggle="modal" data-target="#downloadModal{{$video->id}}"
                    title="{{ __('Download presentation') }}" class="btn btn-dark btn-sm">
                     <i class="fas fa-download fa-fw"></i>
@@ -132,8 +132,8 @@
     </div>
 </div>
 <!-- Modal Share-->
-<div class="modal fade" id="shareModal{{$video->id}}" tabindex="-1" role="dialog" aria-labelledby="shareModalLabel"
-     aria-hidden="true">
+<div wire:ignore.self class="modal fade" id="shareModal{{$video->id}}" tabindex="-1" role="dialog" aria-labelledby="shareModalLabel"
+     aria-hidden="true" data-backdrop="false">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -192,8 +192,9 @@
 
 <!-- Modal download -->
 @if ($video->download)
-    <div class="modal fade" id="downloadModal{{$video->id}}" tabindex="-1" role="dialog"
+    <div wire:ignore.self class="modal fade" id="downloadModal{{$video->id}}" tabindex="-1" role="dialog"
          aria-labelledby="downloadModalLabel"
+         data-backdrop="false"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -241,8 +242,9 @@
 
 <!-- Modal delete -->
 @if ($video->delete)
-    <div class="modal fade" id="deleteModal{{$video->id}}" tabindex="-1" role="dialog"
+    <div wire:ignore.self class="modal fade" id="deleteModal{{$video->id}}" tabindex="-1" role="dialog"
          aria-labelledby="deleteModalLabel"
+         data-backdrop="false"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <form method="post" action="{{route('presentation.delete', $video->id)}}">

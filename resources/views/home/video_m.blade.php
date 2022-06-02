@@ -2,14 +2,12 @@
 <div wire:ignore.self class="shadow-lg shadow-warning card video m-auto @if(isset($video['hidden'])) faded @endif"
      id="{{$video['id']}}">
     <div wire:ignore id="action-icons" class="flex-column m-1">
-
         <div wire:ignore.self data-placement="left" data-toggle="tooltip" title="{{__("Share presentation")}}">
             <a href="#" data-toggle="modal" data-target="#shareModal{{$video['id']}}"
                title="{{ __('Share presentation') }}" class="btn btn-dark btn-sm">
                 <i class="fas fa-external-link-alt fa-fw"></i>
             </a>
         </div>
-
         @if ($video['download'])
             <div wire:ignore class="dropdown" data-placement="left" data-toggle="tooltip"
                  title="{{ __("Download presentation") }}">
@@ -19,9 +17,8 @@
                 </a>
             </div>
         @endif
-
         @if (isset($video['edit']))
-            <div class="">
+            <div>
                 <a href="{{route('presentation_edit', $video['id'])}}" data-toggle="tooltip" data-placement="left"
                    title="{{ __('Edit presentation') }}" class="btn btn-dark btn-sm">
                     <i class="far fa-edit fa-fw"></i>
@@ -37,18 +34,7 @@
                     </a>
                 </span>
             </div>
-            <!--
-                    <div class="">
-                    <form>
-                        <meta name="csrf-token" content="{{ csrf_token() }}">
-                        <a href="#" data-toggle="tooltip" data-placement="left" title="{{ __("Delete presentation") }}" class="btn btn-dark btn-sm delete">
-                            <i class="far fa-trash-alt fa-fw"></i>
-                        </a>
-                    </form>
-                </div>
-                -->
         @endif
-
     </div>
     <a target="_blank" rel="noopener noreferrer" href="{{ route('player', ['video' => $video['id']]) }}">
         <div class="card-header position-relative"
@@ -128,7 +114,6 @@
             @endif
 
             @if ($video['video_presenter'])
-
                 @foreach($video['video_presenter'] as $presenter)
                     <a href="/presenter/{{$presenter['presenter']['username']}}"
                        class="badge badge-light">{{$presenter['presenter']['name']}}</a>
@@ -171,7 +156,7 @@
                                 <a href="{{route('presentation_edit', $video['id'])}}" data-toggle="tooltip"
                                    title="{{ __('Edit presentation') }}" class="btn btn-info btn-sm">{{__('Edit')}}
                                     <i
-                                        class="far fa-edit"></i></a>
+                                            class="far fa-edit"></i></a>
                             @endif</label>
                         <p class="font-1rem">
                             {{--}}

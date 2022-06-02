@@ -52,7 +52,7 @@
 
     <div class="col info p-2 d-flex flex-column">
         <div>
-        <h4 class="card-text font-1rem font-weight-bold py-2 float-left">
+        <h4 class="card-text font-1rem py-2 float-left">
             <a href="{{ route('player', ['video' => $video]) }}" class="link">{{ $video->LangTitle }}</a>
         </h4>
             <h4 class="card-text text-font-size-80 font-weight-normal py-2 float-right">{{$video->getCreationDate()}}</h4>
