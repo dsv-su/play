@@ -1,5 +1,6 @@
 <!-- Video - child view - will inherit all data available in the parent view-->
 <!-- Stats -->
+@if($manageview ?? false)
 <div class="mr-2">
      <span data-toggle="tooltip" data-placement="left" data-title="{{__("Number of Clicks")}}">
         <a href="{{route('stats', $video->id)}}" type="button" class="btn btn-sm">
@@ -22,6 +23,7 @@
         </a>
     </span>
 </div>
+@endif
 <div class="shadow-lg shadow-warning card video m-auto @if($video->hidden) faded @endif" id="{{$video->id}}">
     <div id="action-icons" class="flex-column m-1">
         <div data-placement="left" data-toggle="tooltip" data-title="{{__("Share presentation")}}">
