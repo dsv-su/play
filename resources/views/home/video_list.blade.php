@@ -2,7 +2,6 @@
 <div class="shadow p-0 mb-3 bg-white overflow-hidden rounded videolist row mx-1 w-100 @if($video->hidden) faded @endif" id="{{$video->id}}">
     <div class="col-3 px-0 my-auto">
         <a target="_blank" class="d-block w-100 h-100" rel="noopener noreferrer" @if ($video->hidden) href="#" @else href="{{ route('player', ['video' => $video]) }}" @endif>
-
         <div class="thumb"
          style="background-image: @if ($video->hidden) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); object-fit: contain; background-repeat: no-repeat; background-position: 50% 50%;">
             <!-- Icons -->
@@ -111,16 +110,16 @@
     </div>
     <div class="col-auto action p-2">
         <div id="action-icons" class="flex-column">
-            <div class="my-1"><span data-placement="left" data-toggle="tooltip" title="{{__("Share presentation")}}">
+            <div class="my-1"><span data-placement="left" data-toggle="tooltip" data-title="{{__("Share presentation")}}">
                 <a href="#" data-toggle="modal" data-target="#shareModal{{$video->id}}"
                    title="{{ __('Share presentation') }}" class="btn btn-sm">
                     <i class="fas fa-external-link-alt fa-fw"></i>
                 </a></span>
             </div>
             @if ($video->download)
-                <div class="dropdown my-1"><span data-placement="left" data-toggle="tooltip" title="{{ __("Download presentation") }}">
+                <div class="dropdown my-1"><span data-placement="left" data-toggle="tooltip" data-title="{{ __("Download presentation") }}">
                     <a href="#" data-toggle="modal" data-target="#downloadModal{{$video->id}}"
-                       title="{{ __('Download presentation') }}" class="btn btn-sm">
+                       data-title="{{ __('Download presentation') }}" class="btn btn-sm">
                         <i class="fas fa-download fa-fw"></i>
                     </a></span>
                 </div>
@@ -128,14 +127,14 @@
             @if ($video->edit)
                 <div class="my-1">
                     <a href="{{route('presentation_edit', $video->id)}}" data-toggle="tooltip" data-placement="left"
-                       title="{{ __('Edit presentation') }}" class="btn btn-sm">
+                       data-title="{{ __('Edit presentation') }}" class="btn btn-sm">
                         <i class="far fa-edit fa-fw"></i>
                     </a>
                 </div>
             @endif
             @if ($video->delete)
                 <div class="my-1">
-                <span data-toggle="tooltip" data-placement="left" title="{{__("Delete presentation")}}">
+                <span data-toggle="tooltip" data-placement="left" data-title="{{__("Delete presentation")}}">
                     <a type="button" class="btn btn-sm" data-toggle="modal"
                        data-target="#deleteModal{{$video->id}}">
                         <i class="far fa-trash-alt fa-fw"></i>
@@ -147,8 +146,8 @@
     </div>
 </div>
 <!-- Modal Share-->
-<div class="modal fade" id="shareModal{{$video->id}}" tabindex="-1" role="dialog" aria-labelledby="shareModalLabel"
-     aria-hidden="true">
+<div wire:ignore class="modal fade" id="shareModal{{$video->id}}" tabindex="-1" role="dialog" aria-labelledby="shareModalLabel"
+     aria-hidden="true" data-backdrop="false">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -207,8 +206,9 @@
 
 <!-- Modal download -->
 @if ($video->download)
-    <div class="modal fade" id="downloadModal{{$video->id}}" tabindex="-1" role="dialog"
+    <div wire:ignore class="modal fade" id="downloadModal{{$video->id}}" tabindex="-1" role="dialog"
          aria-labelledby="downloadModalLabel"
+         data-backdrop="false"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -256,8 +256,9 @@
 
 <!-- Modal delete -->
 @if ($video->delete)
-    <div class="modal fade" id="deleteModal{{$video->id}}" tabindex="-1" role="dialog"
+    <div wire:ignore class="modal fade" id="deleteModal{{$video->id}}" tabindex="-1" role="dialog"
          aria-labelledby="deleteModalLabel"
+         data-backdrop="false"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <form method="post" action="{{route('presentation.delete', $video->id)}}">

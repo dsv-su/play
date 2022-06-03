@@ -1,5 +1,5 @@
-<div class="row mx-1">
-    @switch(Cookie::get('videoformat') ?? 'grid')
+<div wire:ignore.self class="row mx-1">
+    @switch($videoformat)
         @case('grid')
             @foreach ($videos as $key => $video)
                 <div class="col my-3">
