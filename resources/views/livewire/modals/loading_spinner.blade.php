@@ -3,10 +3,6 @@
         .modal-content {
             border-radius: 1rem
         }
-
-        .modal-content:hover {
-            box-shadow: 2px 2px 2px black
-        }
     </style>
     <div class="modal fade show" id="loadModal"
          style="display:block;"

@@ -52,7 +52,7 @@
 
     <div class="col info p-2 d-flex flex-column">
         <div>
-        <h4 class="card-text font-1rem font-weight-bold py-2 float-left">
+        <h4 class="card-text font-1rem py-2 float-left">
             <a href="{{ route('player', ['video' => $video]) }}" class="link">{{ $video->LangTitle }}</a>
         </h4>
             <h4 class="card-text text-font-size-80 font-weight-normal py-2 float-right">{{$video->getCreationDate()}}</h4>
@@ -84,8 +84,31 @@
             @endif
         </p>
     </div>
-
-
+    <!-- Stats -->
+    <div class="col-auto action p-2">
+        <div class="mr-2">
+             <span data-toggle="tooltip" data-placement="left" data-title="{{__("Number of Clicks")}}">
+                <a href="{{route('stats', $video->id)}}" type="button" class="btn btn-sm">
+                    <span style="color: Tomato;"><i class="fa-solid fa-chart-column"></i></span>
+                    @if($stats_playback[$video->id] ?? false)
+                        {{$stats_playback[$video->id]}}
+                    @else
+                        0
+                    @endif
+                </a>
+            </span>
+            <span data-toggle="tooltip" data-placement="left" data-title="{{__("Number of Downloads")}}">
+                <a href="{{route('stats', $video->id)}}" type="button" class="btn btn-sm">
+                    <span style="color: #007bff;"><i class="fa-solid fa-download"></i></span>
+                    @if($stats_download[$video->id] ?? false)
+                        {{$stats_download[$video->id]}}
+                    @else
+                        0
+                    @endif
+                </a>
+            </span>
+        </div>
+    </div>
     <div class="col-auto action p-2">
         <div id="action-icons" class="flex-column">
             <div class="my-1"><span data-placement="left" data-toggle="tooltip" title="{{__("Share presentation")}}">

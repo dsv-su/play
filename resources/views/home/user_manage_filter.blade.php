@@ -7,9 +7,13 @@
                 style="width: 400px">
             @foreach($videocourses as $designation => $video_course)
                 @if(Lang::locale() == 'swe')
-                    <option value="{{$video_course->course->designation}}">{{$video_course->course->name}} ({{$video_course->course->designation}})</option>
+                    <option value="{{$video_course->course->designation}}">{{$video_course->course->name}}
+                        ({{$video_course->course->designation}})
+                    </option>
                 @else
-                    <option value="{{$video_course->course->designation}}">{{$video_course->course->name_en}} ({{$video_course->course->designation}})</option>
+                    <option value="{{$video_course->course->designation}}">{{$video_course->course->name_en}}
+                        ({{$video_course->course->designation}})
+                    </option>
                 @endif
             @endforeach
         </select>
@@ -23,14 +27,14 @@
             @endforeach
         </select>
 
-    <select wire:model="semester" @if (empty($videoterms)) disabled
-            @endif class="form-control mx-1 selectpicker" data-none-selected-text="{{ __('Term')}}"
-            data-live-search="true"
-            multiple style="width: 200px">
-        @foreach($videoterms as $term => $semester)
-            <option value="{{$term}}">{{$semester}}</option>
-        @endforeach
-    </select>
+        <select wire:model="semester" @if (empty($videoterms)) disabled
+                @endif class="form-control mx-1 selectpicker" data-none-selected-text="{{ __('Term')}}"
+                data-live-search="true"
+                multiple style="width: 200px">
+            @foreach($videoterms as $term => $semester)
+                <option value="{{$term}}">{{$semester}}</option>
+            @endforeach
+        </select>
 
         <select wire:model="tag" @if (empty($videotags)) disabled
                 @endif class="form-control mx-1 selectpicker"
@@ -44,6 +48,15 @@
                 onclick="$('.selectpicker').selectpicker('deselectAll'); $('.selectpicker').selectpicker('refresh');">
             {{ __("Clear selection") }}
         </button>
-
+    </div>
+</form>
+<form wire:submit.prevent="selectfilters" class="form-inline d-flex mx-3" method="post">
+    <label class="my-1 mr-2" for="videoformat">{{__('Display')}}:</label>
+    <div wire:ignore>
+        <select wire:model="videoformat" class="form-control my-1 mr-sm-2 selectpicker">
+            <option @if(Cookie::get('videoformat') == 'grid') selected @endif value="grid">{{__('Grid')}}</option>
+            <option @if(Cookie::get('videoformat') == 'list') selected @endif value="list">{{__('List')}}</option>
+            <option @if(Cookie::get('videoformat') == 'table') selected @endif value="table">{{__('Table')}}</option>
+        </select>
     </div>
 </form>
