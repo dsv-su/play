@@ -147,6 +147,9 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     Route::post('/mediasiteOtherDownload', 'PlayController@mediasiteOtherDownload')->name('mediasiteOtherDownload');
     Route::post('/mediasite/prefetchPresentation', 'PlayController@prefetchPresentationDownload')->name('mediasite.prefetchPresentationDownload');
 
+    //Stats
+    Route::get('stats/{video}', 'StatsController@index')->name('stats');
+
 });
 Route::any('{query}',
     function () {

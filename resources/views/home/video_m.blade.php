@@ -1,4 +1,28 @@
 <!-- Video - child view - will inherit all data available in the parent view-->
+
+<div class="mr-2">
+     <span data-toggle="tooltip" data-placement="left" data-title="{{__("Number of Clicks")}}">
+        <a href="{{route('stats', $video['id'])}}" type="button" class="btn btn-sm">
+            <span style="color: Tomato;"><i class="fa-solid fa-chart-column"></i></span>
+            @if($stats_playback[$video['id']] ?? false)
+                {{$stats_playback[$video['id']]}}
+            @else
+                0
+            @endif
+        </a>
+    </span>
+    <span data-toggle="tooltip" data-placement="left" data-title="{{__("Number of Downloads")}}">
+        <a href="{{route('stats', $video['id'])}}" type="button" class="btn btn-sm">
+            <span style="color: #007bff;"><i class="fa-solid fa-download"></i></span>
+            @if($stats_download[$video['id']] ?? false)
+                {{$stats_download[$video['id']]}}
+            @else
+                0
+            @endif
+        </a>
+    </span>
+</div>
+
 <div wire:ignore.self class="shadow-lg shadow-warning card video m-auto @if(isset($video['hidden'])) faded @endif"
      id="{{$video['id']}}">
     <div wire:ignore id="action-icons" class="flex-column m-1">
@@ -48,8 +72,19 @@
                 </div>
                 -->
         @endif
+        {{--}}
+        <div>
+            <span data-toggle="tooltip" data-placement="left" data-title="{{__("Presentation stats")}}">
+                <a type="button" class="btn btn-dark btn-sm"
+                   href="{{route('stats', $video['id'])}}">
+                    <i class="fa-solid fa-chart-simple"></i>
+                </a>
+            </span>
+        </div>
+        {{--}}
 
     </div>
+
     <a target="_blank" rel="noopener noreferrer" href="{{ route('player', ['video' => $video['id']]) }}">
         <div class="card-header position-relative"
              style="background-image: @if (isset($video['hidden'])) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video['thumb'])}}); width: 100%; height: 0px; object-fit: contain; background-repeat: no-repeat; background-position: 50% 50%;">
@@ -286,8 +321,29 @@
         </div>
     </div>
 @endif
+<!-- Modal stats -->
+<div wire:ignore class="modal fade" id="statsModal{{$video['id']}}"
+     data-backdrop="false" tabindex="-1" role="dialog"
+     aria-labelledby="shareModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="shareModalLabel">{{__("Stats")}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
 
 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end Modal stats -->
 <script>
     $("#retype{{$video['id']}}").on('change input', function ($this) {
         var title = "{{$video['title']}}";

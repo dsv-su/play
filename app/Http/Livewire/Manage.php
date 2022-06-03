@@ -12,6 +12,7 @@ use App\Services\Filters\VisibilityFilter;
 use App\Video;
 use App\VideoCourse;
 use App\VideoPresenter;
+use App\VideoStat;
 use Livewire\Component;
 
 class Manage extends Component
@@ -27,6 +28,7 @@ class Manage extends Component
     public $presenter, $course, $semester, $tag;
     public $videopresenters = [], $videoterms = [], $videocourses, $videotags = [];
     public $filterswitch;
+    public $stats_playback = [], $stats_download = [];
     protected $queryString = ['filterTerm'];
 
     public function mount()
@@ -391,6 +393,7 @@ class Manage extends Component
                 $query->where('course_id', $courseid);
             })->with('video_course.course','video_presenter.presenter')->get())->toArray();
         }
+        $this->stats($this->videos[$courseid]);
 
     }
 
@@ -406,7 +409,6 @@ class Manage extends Component
         $this->uncat_videos = $visibility->filter(Video::doesntHave('video_course')->get());
         $this->courseSettings($this->video_courses);
     }
-
 
     public function courseSettings($courses)
     {
@@ -446,6 +448,19 @@ class Manage extends Component
             $this->contend[$course->course_id] = false;
             $this->videos[$course->course_id] = [];
         }
+    }
+
+    public function stats($videos)
+    {
+
+        foreach($videos as $video) {
+            //Playback
+            $this->stats_playback[$video['id']] = VideoStat::where('video_id', $video['id'])->pluck('playback')->first();
+            //Download
+            $this->stats_download[$video['id']] = VideoStat::where('video_id', $video['id'])->pluck('download')->first();
+        }
+
+
     }
 
     public function render()

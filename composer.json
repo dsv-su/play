@@ -10,7 +10,9 @@
     "require": {
         "php": "^7.3",
         "ext-json": "*",
+        "ext-zip": "*",
         "arcanedev/log-viewer": "~8",
+        "consoletvs/charts": "7.*",
         "directorytree/ldaprecord-laravel": "^2.1",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",
@@ -25,8 +27,7 @@
         "pbmedia/laravel-ffmpeg": "^7.1",
         "php-ffmpeg/php-ffmpeg": "^0.16.0",
         "spatie/laravel-searchable": "^1.6",
-        "tymon/jwt-auth": "^1.0",
-        "ext-zip": "*"
+        "tymon/jwt-auth": "^1.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.8",
