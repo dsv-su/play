@@ -85,6 +85,7 @@
         </p>
     </div>
     <!-- Stats -->
+    @if($manageview ?? false)
     <div class="col-auto action p-2">
         <div class="mr-2">
              <span data-toggle="tooltip" data-placement="left" data-title="{{__("Number of Clicks")}}">
@@ -109,6 +110,7 @@
             </span>
         </div>
     </div>
+    @endif
     <div class="col-auto action p-2">
         <div id="action-icons" class="flex-column">
             <div class="my-1"><span data-placement="left" data-toggle="tooltip" title="{{__("Share presentation")}}">

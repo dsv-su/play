@@ -28,7 +28,7 @@ class Manage extends Component
     public $filter, $filterTerm;
     public $presenter, $course, $semester, $tag;
     public $videopresenters = [], $videoterms = [], $videocourses, $videotags = [];
-    public $filterswitch;
+    public $filterswitch, $manageview;
     public $stats_playback = [], $stats_download = [];
     public $videoformat = '';
     protected $queryString = ['filterTerm'];
@@ -39,6 +39,7 @@ class Manage extends Component
         $this->filterswitch = true;
         $this->uncat = false;
         $this->videoformat = Cookie::get('videoformat');
+        $this->manageview = true;
 
         //Redirect depending on role
         if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {

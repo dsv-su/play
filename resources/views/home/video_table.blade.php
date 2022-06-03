@@ -60,6 +60,7 @@
         </h4>
     </div>
     <!-- Stats -->
+    @if($manageview ?? false)
     <div class="col col-sm-2 col-md-auto p-1 my-auto">
         <div class="mr-2">
              <span data-toggle="tooltip" data-placement="left" data-title="{{__("Number of Clicks")}}">
@@ -84,6 +85,7 @@
             </span>
         </div>
     </div>
+    @endif
     <div class="col col-sm-2 col-md-auto p-1 my-auto">
         <span class="card-text text-font-size-80 font-weight-normal py-2">{{$video->getCreationDate()}}</span>
     </div>
