@@ -11,6 +11,7 @@ class StatsController extends Controller
     {
         $videoid = $video->id;
         $stats = VideoStat::where('video_id', $video->id)->first();
+        return redirect()->back();
         return view('stats.presentation', compact('videoid', 'stats'));
     }
 }

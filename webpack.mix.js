@@ -32,8 +32,8 @@ mix.scripts([
     'resources/js/spinner.js',
     'node_modules/daterangepicker/moment.min.js',
     'node_modules/daterangepicker/daterangepicker.js',
-    'resources/js/download.js',
-    'node_modules/echarts/dist/echarts.min.js',
-    'node_modules/@chartisan/echarts/dist/chartisan_echarts.js'
+    'resources/js/download.js'
+    //'node_modules/echarts/dist/echarts.min.js',
+    //'node_modules/@chartisan/echarts/dist/chartisan_echarts.js'
 ], 'public/js/dsvplay.js');
 
