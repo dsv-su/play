@@ -1,3 +1,7 @@
+<div wire:loading wire:target="videoformat">
+    @include('livewire.modals.loading_spinner')
+</div>
+
 <form wire:submit.prevent="selectfilters" class="form-inline d-flex justify-content-start mx-3">
     <label class="col-form-label mr-1 font-weight-light">{{__('Filter by')}}: </label>
     <div id="for-picker" wire:ignore>
@@ -54,9 +58,9 @@
     <label class="my-1 mr-2" for="videoformat">{{__('Display')}}:</label>
     <div wire:ignore>
         <select wire:model="videoformat" class="form-control my-1 mr-sm-2 selectpicker">
-            <option @if(Cookie::get('videoformat') == 'grid') selected @endif value="grid">{{__('Grid')}}</option>
-            <option @if(Cookie::get('videoformat') == 'list') selected @endif value="list">{{__('List')}}</option>
-            <option @if(Cookie::get('videoformat') == 'table') selected @endif value="table">{{__('Table')}}</option>
+            <option @if($videoformat == 'grid') selected @endif value="grid">{{__('Grid')}}</option>
+            <option @if($videoformat == 'list') selected @endif value="list">{{__('List')}}</option>
+            <option @if($videoformat == 'table') selected @endif value="table">{{__('Table')}}</option>
         </select>
     </div>
 </form>

@@ -5295,7 +5295,7 @@ p.kill-p, .kill-p p {
     text-decoration: none !important;
 }
 
-.video #action-icons {
+.video .action-icons {
     position: absolute;
     display: none;
     top: 0;
@@ -5309,13 +5309,20 @@ p.kill-p, .kill-p p {
     z-index: 9999;
 }
 
-.video #action-icons .btn,
-.video #action-icons .btn-sm {
+.video .action-icons .btn,
+.video .action-icons .btn-sm {
     border-radius: 0 !important;
 }
 
-.video:hover #action-icons {
+.video:hover .action-icons {
     display: flex;
+}
+
+.videotable > .action-icons:first-child {
+    display: none;
+}
+.videolist > .action-icons:first-child {
+    display: none;
 }
 
 .video .fa-fw {

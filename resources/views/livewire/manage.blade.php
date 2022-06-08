@@ -2,7 +2,7 @@
 
     <div class="container">
         <div class="d-flex row justify-content-start align-items-center">
-            <div class="col-12 col-sm-auto d-flex justify-content-start ml-3 pr-0">
+            <div class="col-12 col-sm-auto d-flex justify-content-start pr-0">
                 <label class="m-0" for="filterSwitch">{{__("Textfilter")}}</label>
                 <div class="mx-1">
                 <span class="custom-control custom-switch custom-switch-lg">
@@ -32,11 +32,9 @@
     </div>
 
     <!-- Filter -->
-    <div class="container">
         <!-- User filter -->
         @include('home.user_manage_filter')
         <!-- end User filter -->
-    </div>
 
     <div wire:loading wire:target="loadUncat">
         @include('livewire.modals.loading_spinner')

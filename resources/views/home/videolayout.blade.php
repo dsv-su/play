@@ -1,9 +1,10 @@
-<div class="row mx-1">
-    @switch(Cookie::get('videoformat') ?? 'grid')
+<div wire:ignore.self class="row mx-1">
+    @switch($videoformat)
         @case('grid')
             @foreach ($videos as $key => $video)
                 <div class="col my-3">
                     @include('home.video')
+                    @include('layouts.partials.videomodals')
                 </div>
             @endforeach
             <div class="col">
@@ -19,11 +20,13 @@
         @case('list')
             @foreach ($videos as $key => $video)
                 @include('home.video_list')
+                @include('layouts.partials.videomodals')
             @endforeach
             @break
         @case('table')
             @foreach ($videos as $key => $video)
                 @include('home.video_table')
+                @include('layouts.partials.videomodals')
             @endforeach
             @break
     @endswitch
