@@ -26,9 +26,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(Charts $charts)
     {
         Paginator::useBootstrap();
-        //Bypass until php7.4
-        /*$charts->register([
+        $charts->register([
             \App\Charts\PresentationStats::class
-        ]);*/
+        ]);
     }
 }
