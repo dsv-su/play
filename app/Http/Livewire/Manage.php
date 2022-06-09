@@ -409,6 +409,7 @@ class Manage extends Component
     {
         $this->uncat = !$this->uncat;
         $this->uncat_videos = $visibility->filter(Video::doesntHave('video_course')->get());
+        $this->stats($this->uncat_videos);
     }
 
     /**
