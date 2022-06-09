@@ -25,7 +25,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
 
 class PlayController extends Controller
@@ -810,7 +812,7 @@ class PlayController extends Controller
 
     public function updateVideoFormat(Request $request)
     {
-        return back()->withInput()->cookie(
+        return Redirect::to(URL::previous() . "#title-header")->withInput()->cookie(
             'videoformat', $request->videoformat, 99999999
         );
     }
