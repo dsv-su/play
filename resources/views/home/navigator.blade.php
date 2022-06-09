@@ -96,9 +96,9 @@
                     @csrf
                     <label class="my-1 mr-2" for="role">Display</label>
                     <select class="form-control my-1 mr-sm-2 selectpicker" id="videoformat" name="videoformat">
-                        <option @if(Cookie::get('videoformat') == 'grid') selected @endif value="grid">Grid</option>
-                        <option @if(Cookie::get('videoformat') == 'list') selected @endif value="list">List</option>
-                        <option @if(Cookie::get('videoformat') == 'table') selected @endif value="table">Table</option>
+                        <option @if($videoformat == 'grid') selected @endif value="grid">Grid</option>
+                        <option @if($videoformat == 'list') selected @endif value="list">List</option>
+                        <option @if($videoformat == 'table') selected @endif value="table">Table</option>
                     </select>
                 </form>
             @endif

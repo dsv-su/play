@@ -53,7 +53,7 @@
                                                 class="link">{{ $video->title }}</a></h4>
                                 </div>
                                 @if ($video->description)
-                                    <div class="ml-auto" id="showmore">
+                                    <div class="ml-auto showmore">
                                         <a tabindex="0" class="btn btn-sm" role="button" data-toggle="popover"
                                            data-trigger="focus"
                                            data-original-title="Description"

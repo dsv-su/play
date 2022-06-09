@@ -26,6 +26,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Lang;
 use stdClass;
 
@@ -36,13 +37,6 @@ class SearchController extends Controller
 {
     /** viewBy% and filterBy% methods for viewing presentations that belong to certain entity
      * (course designation, term, category, student) and filtering the output */
-
-    /** Show presentations that belong to the given term
-     * @param VisibilityFilter $visibility
-     * @param $semester
-     * @param Request $request
-     * @return Application|Factory|View|string
-     */
 
     /*public function __construct()
     {
@@ -91,6 +85,7 @@ class SearchController extends Controller
 
         // Remove irrelevant terms that could be added because of multiple course associations
         $videos = $this->removeIrrelevantTerms($videos, $term, $year);
+        $videoformat = Cookie::get('videoformat');
 
         $tagged = [];
         foreach ($videos as $courseid => $coursevideos) {
@@ -101,9 +96,9 @@ class SearchController extends Controller
         }
 
         if ($request->isMethod('get')) {
-            return view('home.navigator', compact('term', 'year', 'videos', 'courses', 'presenters', 'tags', 'filters', 'tagged'));
+            return view('home.navigator', compact('term', 'year', 'videos', 'courses', 'presenters', 'tags', 'filters', 'tagged', 'videoformat'));
         } else {
-            return view('home.courselist', compact('videos', 'tagged'))->render();
+            return view('home.courselist', compact('videos', 'tagged', 'videoformat'))->render();
         }
     }
 
@@ -126,6 +121,7 @@ class SearchController extends Controller
 
         // Remove irrelevant course designations that could be added because of multiple course associations
         $videos = $this->removeIrrelevantDesignations($videos, $designation);
+        $videoformat = Cookie::get('videoformat');
         $tagged = [];
         foreach ($videos as $courseid => $coursevideos) {
             $coursetags = CourseTag::where('course_id', $courseid)->get();
@@ -135,9 +131,9 @@ class SearchController extends Controller
         }
 
         if ($request->isMethod('get')) {
-            return view('home.navigator', compact('designation', 'videos', 'terms', 'presenters', 'tags', 'filters', 'tagged'));
+            return view('home.navigator', compact('designation', 'videos', 'terms', 'presenters', 'tags', 'filters', 'tagged', 'videoformat'));
         } else {
-            return view('home.courselist', compact('videos', 'tagged'))->render();
+            return view('home.courselist', compact('videos', 'tagged', 'videoformat'))->render();
         }
     }
 
@@ -295,10 +291,12 @@ class SearchController extends Controller
             $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
         );
 
+        $videoformat = Cookie::get('videoformat');
+
         if ($request->isMethod('get')) {
-            return view('home.navigator', compact('tag', 'videos', 'terms', 'presenters', 'courses', 'filters'));
+            return view('home.navigator', compact('tag', 'videos', 'terms', 'presenters', 'courses', 'filters', 'videoformat'));
         } else {
-            return view('home.courselist', compact('videos'))->render();
+            return view('home.courselist', compact('videos', 'videoformat'))->render();
         }
     }
 
@@ -325,6 +323,7 @@ class SearchController extends Controller
             $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
         );
 
+        $videoformat = Cookie::get('videoformat');
         $tagged = [];
         foreach ($videos as $courseid => $coursevideos) {
             $coursetags = CourseTag::where('course_id', $courseid)->get();
@@ -334,9 +333,9 @@ class SearchController extends Controller
         }
 
         if ($request->isMethod('get')) {
-            return view('home.navigator', compact('presenter', 'videos', 'terms', 'tags', 'courses', 'filters', 'tagged'));
+            return view('home.navigator', compact('presenter', 'videos', 'terms', 'tags', 'courses', 'filters', 'tagged', 'videoformat'));
         } else {
-            return view('home.courselist', compact('videos', 'tagged'))->render();
+            return view('home.courselist', compact('videos', 'tagged', 'videoformat'))->render();
         }
     }
 
@@ -359,10 +358,12 @@ class SearchController extends Controller
 
         list($coursesetlist, $individual_permissions, $playback_permissions) = $this->extractSettings($videos);
 
+        $videoformat = Cookie::get('videoformat');
+
         if (\Request::isMethod('get')) {
-            return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'filters', 'coursesetlist', 'individual_permissions', 'playback_permissions'));
+            return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'filters', 'coursesetlist', 'individual_permissions', 'playback_permissions', 'videoformat'));
         } else {
-            return ['html' => view('home.courselist', compact('videos', 'manage', 'coursesetlist', 'individual_permissions', 'playback_permissions'))->render(), 'courses' => $videocourses, 'presenters' => $videopresenters, 'terms' => $videoterms, 'tags' => $videotags];
+            return ['html' => view('home.courselist', compact('videos', 'manage', 'coursesetlist', 'individual_permissions', 'playback_permissions', 'videoformat'))->render(), 'courses' => $videocourses, 'presenters' => $videopresenters, 'terms' => $videoterms, 'tags' => $videotags];
         }
     }
 
