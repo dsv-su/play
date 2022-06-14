@@ -5232,6 +5232,9 @@ p.kill-p, .kill-p p {
     background-size: 102% auto;
     font-size: 1rem;
     border-bottom: none;
+}
+
+.video .card-header {
     padding-top: 52.8%; /* (img-height / img-width * container-width) */ /* (853 / 1280 * 100) */
 }
 

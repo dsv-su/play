@@ -1,6 +1,6 @@
 <!-- Video - child view - will inherit all data available in the parent view-->
-<div class="shadow p-0 mb-3 bg-white overflow-hidden rounded videolist row mx-1 w-100 @if($video->hidden) faded @endif" id="{{$video->id}}">
-    <div class="col-3 px-0 my-auto">
+<div class="shadow p-0 mb-3 bg-white overflow-hidden rounded videolist row w-100 @if($video->hidden) faded @endif" id="{{$video->id}}">
+<div class="col-3 px-0 my-auto">
         <a target="_blank" class="d-block w-100 h-100" rel="noopener noreferrer" @if ($video->hidden) href="#" @else href="{{ route('player', ['video' => $video]) }}" @endif>
         <div class="thumb"
          style="background-image: @if ($video->hidden) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); object-fit: contain; background-repeat: no-repeat; background-position: 50% 50%;">
@@ -39,7 +39,7 @@
             </div>
             <!-- Visibility banner -->
             @if ($video->hidden)
-                <div class="d-flex justify-content-center h-100">
+                <div class="d-flex justify-content-center h-100" style="padding: 19%;">
                     <div class="d-inline alert alert-secondary m-auto px-2 py-1" role="alert">{{ __("Hidden") }}</div>
                 </div>
             @endif
