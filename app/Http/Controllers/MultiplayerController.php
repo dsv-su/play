@@ -102,8 +102,7 @@ class MultiplayerController extends Controller
 
         $visibility = app(VisibilityFilter::class);
 
-        $playlist = $visibility->filter(Video::whereIn('id', $videos)->orderBy('creation')->get());
-
+        $playlist = $visibility->filter(Video::whereIn('id', $videos)->where('visibility', 1)->orderBy('creation')->get());
         $course = Course::findOrFail($id);
 
         //Build json playlist
