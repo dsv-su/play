@@ -24,7 +24,7 @@ class VisibilityFilter
             }
 
             if($video->visibility == true) {
-                //Respekt presentation setting - override only if not set
+                //Respect presentation setting - override only if not set
 
                 //CourseSettings
                 $CourseSettings = new CourseSettingsFilter($video);
