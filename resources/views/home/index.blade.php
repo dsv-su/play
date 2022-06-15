@@ -43,29 +43,29 @@
             <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
                 @if (isset($my) && !$my->isEmpty())
                     <!-- Paginated tab -->
-                    {{--}}
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#my" data-toggle="tab" role="tab" aria-controls="my"
-                           title="@lang('lang.my_courses')">@lang('lang.my_courses') ({{$mypaginated->total()}})</a>
+                           title="@lang('lang.my_courses')">@lang('lang.my_courses')</a>
                     </li>
                     {{--}}
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#my" data-toggle="tab" role="tab" aria-controls="my"
                            title="@lang('lang.my_courses')">@lang('lang.my_courses') ({{$my->count()}})</a>
                     </li>
+                    {{--}}
                 @endif
                 @if (isset($active) && !$active->isEmpty())
                     <!-- Paginated tab -->
-                    {{--}}
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#active" data-toggle="tab" role="tab" aria-controls="active"
-                           title="@lang('lang.active_courses')">@lang('lang.active_courses') ({{$activepaginated->total()}})</a>
+                           title="@lang('lang.active_courses')">@lang('lang.active_courses')</a>
                     </li>
                     {{--}}
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#active" data-toggle="tab" role="tab" aria-controls="active"
                            title="@lang('lang.active_courses')">@lang('lang.active_courses') ({{$active->count()}})</a>
                     </li>
+                    {{--}}
                 @endif
                 <!-- Paginated tab -->
                 {{--}}
@@ -84,10 +84,38 @@
                 @endif
             </ul>
         @endif
+
+        <!-- Tab Contend -->
+
         <div class="tab-content" id="myTabContent">
             <!-- Content tab My -->
             @if (isset($my) && !$my->isEmpty())
                 <div id="my" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-A">
+                    <!-- Paginations status-->
+                    <section>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-3 col-sm-6 bottom-margin text-center">
+                                    <span style="font-size:40px; line-height:60px; display:block;">{{$mypaginated->currentPage()}}/{{$mypaginated->lastPage()}}</span>
+                                    <span style="font-size:12px; letter-spacing:2px; text-transform: uppercase">{{__("Page")}}</span>
+                                </div>
+                                <div class="col-md-3 col-sm-6 bottom-margin text-center">
+                                    <span style="font-size:40px; line-height:60px; display:block;">{{$mypaginated->count()}}</span>
+                                    <span style="font-size:12px; letter-spacing:2px; text-transform: uppercase">{{__("Presentations")}}</span>
+                                </div>
+
+                                <div class="col-md-3 col-sm-6 bottom-margin text-center">
+                                    <span style="font-size:40px; line-height:60px; display:block;">{{$mypaginated->total()}}</span>
+                                    <span style="font-size:12px; letter-spacing:2px; text-transform: uppercase">{{__("Total Presentations")}}</span>
+                                </div>
+                                <div class="col-md-3 col-sm-6 bottom-margin text-center">
+                                    <span style="font-size:40px; line-height:60px; display:block;">{{$mypaginated->perPage()}}</span>
+                                    <span style="font-size:12px; letter-spacing:2px; text-transform: uppercase">{{__("Showing per Page")}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- -->
                     <div class="card-deck inner">
                         @foreach ($my as $key => $video)
                             <div class="col my-3 w">
@@ -104,16 +132,41 @@
                             <div class="card video my-0 mx-auto"></div>
                         </div>
                     </div>
-                    {{--}}  Pagination for tab1 - My courses
+                    <!--  Pagination for tab1 - My courses -->
                     <div class="pagination justify-content-end">
                         {{ $mypaginated->fragment('my')->links() }}
                     </div>
-                    {{--}}
+                    <!-- -->
                 </div>
             @endif
             <!-- Content tab Active -->
             @if (isset($active) && !$active->isEmpty())
                 <div id="active" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-B">
+                    <!-- Paginations status-->
+                    <section>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-3 col-sm-6 bottom-margin text-center">
+                                    <span style="font-size:40px; line-height:60px; display:block;">{{$activepaginated->currentPage()}}/{{$activepaginated->lastPage()}}</span>
+                                    <span style="font-size:12px; letter-spacing:2px; text-transform: uppercase">{{__("Page")}}</span>
+                                </div>
+                                <div class="col-md-3 col-sm-6 bottom-margin text-center">
+                                    <span style="font-size:40px; line-height:60px; display:block;">{{$activepaginated->count()}}</span>
+                                    <span style="font-size:12px; letter-spacing:2px; text-transform: uppercase">{{__("Presentations")}}</span>
+                                </div>
+
+                                <div class="col-md-3 col-sm-6 bottom-margin text-center">
+                                    <span style="font-size:40px; line-height:60px; display:block;">{{$activepaginated->total()}}</span>
+                                    <span style="font-size:12px; letter-spacing:2px; text-transform: uppercase">{{__("Total Presentations")}}</span>
+                                </div>
+                                <div class="col-md-3 col-sm-6 bottom-margin text-center">
+                                    <span style="font-size:40px; line-height:60px; display:block;">{{$activepaginated->perPage()}}</span>
+                                    <span style="font-size:12px; letter-spacing:2px; text-transform: uppercase">{{__("Showing per Page")}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- -->
                     <div class="card-deck inner">
                         @foreach ($active as $key => $video)
                             <div class="col my-3">
@@ -130,11 +183,11 @@
                             <div class="card video my-0 mx-auto"></div>
                         </div>
                     </div>
-                    {{--}}  Pagination for tab2 - Active courses
+                    <!-- Pagination for tab2 - Active courses -->
                     <div class="pagination justify-content-end">
                         {{ $activepaginated->fragment('active')->links() }}
                     </div>
-                    {{--}}
+                    <!-- -->
                 </div>
             @endif
 
