@@ -19,9 +19,14 @@ class CourseAdmin
         //Get user DaisyID
         $this->daisyPersonID = $this->daisy->getDaisyPersonId(substr($id, 0, strpos($id, "@")));
         //Get CourseAdmin courses
-        $courselist = collect($this->daisy->getDaisyEmployeeResponsibleCourses($this->daisyPersonID));
-        return $courselist->map(function ($item, $key) {
-            return $item['id'];
-        })->toArray();
+        if($courses = $this->daisy->getDaisyEmployeeResponsibleCourses($this->daisyPersonID)) {
+            $courselist = collect($courses);
+            return $courselist->map(function ($item, $key) {
+                return $item['id'];
+            })->toArray();
+        } else {
+            return [];
+        }
+
     }
 }

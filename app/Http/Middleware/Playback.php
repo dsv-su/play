@@ -93,9 +93,10 @@ class Playback
                 $courseadmin_list = new CourseAdminList();
                 $coursesetting = new CourseSettingVisibility();
 
-                // (1) Check if user is courseAdmin
+                // Check if user is courseAdmin
+                // (1) First check if user is staff
                 if($staff->check()) {
-                    //User is courseadmin
+                    // (2) If user is staff check if user is courseadmin
                     $courseadmin = new \App\Services\Course\CourseAdmin();
                     if($courseadmin->check($_SERVER['REMOTE_USER'], $video)) {
                         return $next($request);
