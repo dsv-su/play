@@ -45,7 +45,7 @@
                     <!-- Paginated tab -->
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#my" data-toggle="tab" role="tab" aria-controls="my"
-                           title="@lang('lang.my_courses')">@lang('lang.my_courses')</a>
+                           title="@lang('lang.my_courses')">@lang('lang.my_courses') ({{$mypaginated->total()}})</a>
                     </li>
                     {{--}}
                     <li class="nav-item pb-0">
@@ -58,7 +58,7 @@
                     <!-- Paginated tab -->
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#active" data-toggle="tab" role="tab" aria-controls="active"
-                           title="@lang('lang.active_courses')">@lang('lang.active_courses')</a>
+                           title="@lang('lang.active_courses')">@lang('lang.active_courses') ({{$activepaginated->total()}})</a>
                     </li>
                     {{--}}
                     <li class="nav-item pb-0">
@@ -79,7 +79,7 @@
                 @if (isset($latest) && $latest->count())
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#all" data-toggle="tab" role="tab" aria-controls="all"
-                           title="@lang('lang.latest')">@lang('lang.latest') ({{$latest->count()}})</a>
+                           title="@lang('lang.latest')">@lang('lang.latest') ({{$latest->count()}}+)</a>
                     </li>
                 @endif
             </ul>
@@ -92,6 +92,7 @@
             @if (isset($my) && !$my->isEmpty())
                 <div id="my" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-A">
                     <!-- Paginations status-->
+                    <!--
                     <section>
                         <div class="container">
                             <div class="row">
@@ -115,6 +116,12 @@
                             </div>
                         </div>
                     </section>
+                    -->
+                    <!--  Pagination for tab1 - My courses -->
+                    <div class="pagination justify-content-center mt-4">
+                        {{ $mypaginated->fragment('my')->links() }}
+                    </div>
+                    <!-- -->
                     <!-- -->
                     <div class="card-deck inner">
                         @foreach ($my as $key => $video)
@@ -133,7 +140,7 @@
                         </div>
                     </div>
                     <!--  Pagination for tab1 - My courses -->
-                    <div class="pagination justify-content-end">
+                    <div class="pagination justify-content-center">
                         {{ $mypaginated->fragment('my')->links() }}
                     </div>
                     <!-- -->
@@ -143,6 +150,7 @@
             @if (isset($active) && !$active->isEmpty())
                 <div id="active" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-B">
                     <!-- Paginations status-->
+                    <!--
                     <section>
                         <div class="container">
                             <div class="row">
@@ -166,6 +174,12 @@
                             </div>
                         </div>
                     </section>
+                    -->
+                    <!-- Pagination for tab2 - Active courses -->
+                    <div class="pagination justify-content-center mt-4">
+                        {{ $activepaginated->fragment('active')->links() }}
+                    </div>
+                    <!-- -->
                     <!-- -->
                     <div class="card-deck inner">
                         @foreach ($active as $key => $video)
@@ -184,7 +198,7 @@
                         </div>
                     </div>
                     <!-- Pagination for tab2 - Active courses -->
-                    <div class="pagination justify-content-end">
+                    <div class="pagination justify-content-center">
                         {{ $activepaginated->fragment('active')->links() }}
                     </div>
                     <!-- -->
@@ -296,7 +310,7 @@
                     </p>
                 @endif
                 {{--}}  Pagination for tab3 - All courses
-               <div class="pagination justify-content-end">
+               <div class="pagination justify-content-center">
                    {{ $allpaginated->fragment('all')->links() }}
                </div>
                {{--}}

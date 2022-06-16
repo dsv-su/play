@@ -8230,3 +8230,12 @@ a.badge-primary:hover {
 span[type="button"] {
     -webkit-appearance: none !important;
 }
+
+.pagination a.page-link {
+    color: #002f5f!important;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #002f5f!important;
+    border-color: #002f5f!important;
+}
