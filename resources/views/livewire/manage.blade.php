@@ -32,9 +32,9 @@
     </div>
 
     <!-- Filter -->
-        <!-- User filter -->
-        @include('home.user_manage_filter')
-        <!-- end User filter -->
+    <!-- User filter -->
+    @include('home.user_manage_filter')
+    <!-- end User filter -->
 
     <div wire:loading wire:target="loadUncat">
         @include('livewire.modals.loading_spinner')
@@ -86,8 +86,8 @@
                            aria-controls="collapse{{$key}}">
                             <i class="fa mr-2"></i>
                             {{$video_course->course->designation}}
-                            {{$video_course->course->semester}}
-                            {{$video_course->course->year}}
+                            {{$video_course->course->semester}}{{$video_course->course->year}}
+                            —
                             @if(Lang::locale() == 'swe')
                                 {{$video_course->course->name}}
                             @else

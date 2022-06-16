@@ -60,7 +60,7 @@ class HomeController extends Controller
             */
             $data['mypaginated'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
                 return $query->whereIn('course_id', $courses);
-            })->latest('creation')->Paginate(24, ['*'], 'my');
+            })->latest('creation')->Paginate(24, ['*'], 'my')->onEachSide(1);
             $data['my'] = $visibility->filter($data['mypaginated']);
 
         }
@@ -77,14 +77,14 @@ class HomeController extends Controller
         */
         $data['activepaginated'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses) {
             return $query->whereIn('course_id', $active_courses);
-        })->latest('creation')->Paginate(24, ['*'], 'active');
+        })->latest('creation')->Paginate(24, ['*'], 'active')->onEachSide(1);
         $data['active'] = $visibility->filter($data['activepaginated']);
 
 
         // All courses (tab 3)
         $data['latest'] = $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->take(100)->get())->take(24);
         /*
-        $data['allpaginated'] = Video::with('category', 'video_course.course')->latest('creation')->Paginate(24, ['*'], 'all');
+        $data['allpaginated'] = Video::with('category', 'video_course.course')->latest('creation')->Paginate(24, ['*'], 'all')->onEachSide(1);
         $data['latest'] = $visibility->filter($data['allpaginated']);
         */
 

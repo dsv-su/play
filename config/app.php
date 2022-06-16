@@ -46,7 +46,7 @@ return [
     */
 
     //'debug' => (bool) env('APP_DEBUG', false),
-    'debug' => $system_config['global']['app_debug'],
+    'debug' => (bool) $system_config['global']['app_debug'],
 
     /*
     |--------------------------------------------------------------------------

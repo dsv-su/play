@@ -1,4 +1,4 @@
-<div wire:ignore.self class="row mx-1">
+<div wire:ignore.self class="row mx-3">
     @switch($videoformat)
         @case('grid')
             @foreach ($videos as $key => $video)

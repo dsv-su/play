@@ -5232,6 +5232,7 @@ p.kill-p, .kill-p p {
     background-size: 102% auto;
     font-size: 1rem;
     border-bottom: none;
+    padding-top: 52.8%;
 }
 
 .video .card-header {
@@ -8228,4 +8229,13 @@ a.badge-primary:hover {
 
 span[type="button"] {
     -webkit-appearance: none !important;
+}
+
+.pagination a.page-link {
+    color: #002f5f!important;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #002f5f!important;
+    border-color: #002f5f!important;
 }
