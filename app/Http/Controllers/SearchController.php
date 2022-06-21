@@ -85,7 +85,7 @@ class SearchController extends Controller
 
         // Remove irrelevant terms that could be added because of multiple course associations
         $videos = $this->removeIrrelevantTerms($videos, $term, $year);
-        $videoformat = Cookie::get('videoformat');
+        $videoformat = Cookie::get('videoformat') ?? 'grid';
 
         $tagged = [];
         foreach ($videos as $courseid => $coursevideos) {
@@ -121,7 +121,7 @@ class SearchController extends Controller
 
         // Remove irrelevant course designations that could be added because of multiple course associations
         $videos = $this->removeIrrelevantDesignations($videos, $designation);
-        $videoformat = Cookie::get('videoformat');
+        $videoformat = Cookie::get('videoformat') ?? 'grid';
         $tagged = [];
         foreach ($videos as $courseid => $coursevideos) {
             $coursetags = CourseTag::where('course_id', $courseid)->get();
@@ -291,7 +291,7 @@ class SearchController extends Controller
             $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
         );
 
-        $videoformat = Cookie::get('videoformat');
+        $videoformat = Cookie::get('videoformat') ?? 'grid';
 
         if ($request->isMethod('get')) {
             return view('home.navigator', compact('tag', 'videos', 'terms', 'presenters', 'courses', 'filters', 'videoformat'));
@@ -323,7 +323,7 @@ class SearchController extends Controller
             $videos, $filters['courses'], $filters['terms'], $filters['tags'], $filters['presenters']
         );
 
-        $videoformat = Cookie::get('videoformat');
+        $videoformat = Cookie::get('videoformat') ?? 'grid';
         $tagged = [];
         foreach ($videos as $courseid => $coursevideos) {
             $coursetags = CourseTag::where('course_id', $courseid)->get();
@@ -358,7 +358,7 @@ class SearchController extends Controller
 
         list($coursesetlist, $individual_permissions, $playback_permissions) = $this->extractSettings($videos);
 
-        $videoformat = Cookie::get('videoformat');
+        $videoformat = Cookie::get('videoformat') ?? 'grid';
 
         if (\Request::isMethod('get')) {
             return view('home.search', compact('videos', 'q', 'videocourses', 'videopresenters', 'videoterms', 'videotags', 'manage', 'filters', 'coursesetlist', 'individual_permissions', 'playback_permissions', 'videoformat'));

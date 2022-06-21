@@ -48,7 +48,7 @@ class Manage extends Component
         //Default settings
         $this->filterswitch = true;
         $this->uncat = false;
-        $this->videoformat = Cookie::get('videoformat');
+        $this->videoformat = Cookie::get('videoformat') ?? 'grid';
         $this->manageview = true;
 
         //Redirect depending on role
@@ -428,7 +428,7 @@ class Manage extends Component
                 })->with('video_course.course', 'video_presenter.presenter')->get());
             }
         }
-        $this->videoformat = Cookie::get('videoformat');
+        $this->videoformat = Cookie::get('videoformat') ?? 'grid';
     }
 
     /**
