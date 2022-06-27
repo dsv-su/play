@@ -116,7 +116,6 @@ class Manage extends Component
             ->groupBy('course_id')
             ->orderBy('course_id', 'desc')
             ->get();
-
         $this->prepareRendering();
         //Load filters
         //Creates arrays for the filter functions
@@ -394,7 +393,7 @@ class Manage extends Component
         if ($this->videos[$courseid] == null) {
             $this->videos[$courseid] = $visibility->filter(Video::whereHas('video_course.course', function ($query) use ($courseid) {
                 $query->where('course_id', $courseid);
-            })->with('video_course.course', 'video_presenter.presenter')->get());
+            })->with('video_course.course', 'video_presenter.presenter')->latest('creation')->get());
         } else {
             $this->videos[$courseid] = [];
         }
@@ -408,7 +407,7 @@ class Manage extends Component
     public function loadUncat(VisibilityFilter $visibility)
     {
         $this->uncat = !$this->uncat;
-        $this->uncat_videos = $visibility->filter(Video::doesntHave('video_course')->get());
+        $this->uncat_videos = $visibility->filter(Video::doesntHave('video_course')->latest('creation')->get());
         $this->stats($this->uncat_videos);
     }
 
@@ -418,14 +417,14 @@ class Manage extends Component
     public function hydrate()
     {
         $visibility = app(VisibilityFilter::class);
-        $this->uncat_videos = $visibility->filter(Video::doesntHave('video_course')->get());
+        $this->uncat_videos = $visibility->filter(Video::doesntHave('video_course')->latest('creation')->get());
         $this->courseSettings($this->video_courses);
         // Rehydrate already expanded courses since they're turned to array
         foreach ($this->videos as $courseid => $videos) {
             if (!empty($videos)) {
                 $this->videos[$courseid] = $visibility->filter(Video::whereHas('video_course.course', function ($query) use ($courseid) {
                     $query->where('course_id', $courseid);
-                })->with('video_course.course', 'video_presenter.presenter')->get());
+                })->with('video_course.course', 'video_presenter.presenter')->latest('creation')->get());
             }
         }
         $this->videoformat = Cookie::get('videoformat') ?? 'grid';
