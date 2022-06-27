@@ -92,31 +92,29 @@
             @if (isset($my) && !$my->isEmpty())
                 <div id="my" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-A">
                     <!-- Paginations status-->
-                    <!--
                     <section>
                         <div class="container">
                             <div class="row">
                                 <div class="col-md-3 col-sm-6 bottom-margin text-center">
-                                    <span style="font-size:40px; line-height:60px; display:block;">{{$mypaginated->currentPage()}}/{{$mypaginated->lastPage()}}</span>
+                                    <span style="font-size:30px; line-height:60px; display:block;">{{$mypaginated->currentPage()}}/{{$mypaginated->lastPage()}}</span>
                                     <span style="font-size:12px; letter-spacing:2px; text-transform: uppercase">{{__("Page")}}</span>
                                 </div>
                                 <div class="col-md-3 col-sm-6 bottom-margin text-center">
-                                    <span style="font-size:40px; line-height:60px; display:block;">{{$mypaginated->count()}}</span>
+                                    <span style="font-size:30px; line-height:60px; display:block;">{{$mypaginated->count()}}</span>
                                     <span style="font-size:12px; letter-spacing:2px; text-transform: uppercase">{{__("Presentations")}}</span>
                                 </div>
 
                                 <div class="col-md-3 col-sm-6 bottom-margin text-center">
-                                    <span style="font-size:40px; line-height:60px; display:block;">{{$mypaginated->total()}}</span>
+                                    <span style="font-size:30px; line-height:60px; display:block;">{{$mypaginated->total()}}</span>
                                     <span style="font-size:12px; letter-spacing:2px; text-transform: uppercase">{{__("Total Presentations")}}</span>
                                 </div>
                                 <div class="col-md-3 col-sm-6 bottom-margin text-center">
-                                    <span style="font-size:40px; line-height:60px; display:block;">{{$mypaginated->perPage()}}</span>
+                                    <span style="font-size:30px; line-height:60px; display:block;">{{$mypaginated->perPage()}}</span>
                                     <span style="font-size:12px; letter-spacing:2px; text-transform: uppercase">{{__("Showing per Page")}}</span>
                                 </div>
                             </div>
                         </div>
                     </section>
-                    -->
                     <!--  Pagination for tab1 - My courses -->
                     <div class="pagination justify-content-center mt-4">
                         {{ $mypaginated->fragment('my')->links() }}
@@ -150,31 +148,29 @@
             @if (isset($active) && !$active->isEmpty())
                 <div id="active" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-B">
                     <!-- Paginations status-->
-                    <!--
                     <section>
                         <div class="container">
                             <div class="row">
                                 <div class="col-md-3 col-sm-6 bottom-margin text-center">
-                                    <span style="font-size:40px; line-height:60px; display:block;">{{$activepaginated->currentPage()}}/{{$activepaginated->lastPage()}}</span>
+                                    <span style="font-size:30px; line-height:60px; display:block;">{{$activepaginated->currentPage()}}/{{$activepaginated->lastPage()}}</span>
                                     <span style="font-size:12px; letter-spacing:2px; text-transform: uppercase">{{__("Page")}}</span>
                                 </div>
                                 <div class="col-md-3 col-sm-6 bottom-margin text-center">
-                                    <span style="font-size:40px; line-height:60px; display:block;">{{$activepaginated->count()}}</span>
+                                    <span style="font-size:30px; line-height:60px; display:block;">{{$activepaginated->count()}}</span>
                                     <span style="font-size:12px; letter-spacing:2px; text-transform: uppercase">{{__("Presentations")}}</span>
                                 </div>
 
                                 <div class="col-md-3 col-sm-6 bottom-margin text-center">
-                                    <span style="font-size:40px; line-height:60px; display:block;">{{$activepaginated->total()}}</span>
+                                    <span style="font-size:30px; line-height:60px; display:block;">{{$activepaginated->total()}}</span>
                                     <span style="font-size:12px; letter-spacing:2px; text-transform: uppercase">{{__("Total Presentations")}}</span>
                                 </div>
                                 <div class="col-md-3 col-sm-6 bottom-margin text-center">
-                                    <span style="font-size:40px; line-height:60px; display:block;">{{$activepaginated->perPage()}}</span>
+                                    <span style="font-size:30px; line-height:60px; display:block;">{{$activepaginated->perPage()}}</span>
                                     <span style="font-size:12px; letter-spacing:2px; text-transform: uppercase">{{__("Showing per Page")}}</span>
                                 </div>
                             </div>
                         </div>
                     </section>
-                    -->
                     <!-- Pagination for tab2 - Active courses -->
                     <div class="pagination justify-content-center mt-4">
                         {{ $activepaginated->fragment('active')->links() }}
