@@ -9,6 +9,7 @@ use App\CoursesettingsUsers;
 use App\IndividualPermission;
 use App\Presenter;
 use App\Services\Filters\VisibilityFilter;
+use App\Services\Manage\UncatPresentations;
 use App\Video;
 use App\VideoCourse;
 use App\VideoPresenter;
@@ -22,11 +23,13 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cookie;
 use Livewire\Component;
+use Illuminate\Support\Str;
 
 class Manage extends Component
 {
     public $video_courses;
     public $uncat, $uncat_videos = [];
+    public $uncat_video_courses;
     public $videos = [];
     public $contend = [];
     public $counter, $uncatcounter, $coursesetlist = [];
@@ -36,6 +39,7 @@ class Manage extends Component
     public $presenter, $course, $semester, $tag;
     public $videopresenters = [], $videoterms = [], $videocourses, $videotags = [];
     public $filterswitch, $manageview;
+    public $filter_course, $filter_presenter, $filter_semester, $filter_tag;
     public $stats_playback = [], $stats_download = [];
     public $videoformat = '';
     protected $queryString = ['filterTerm'];
@@ -108,6 +112,9 @@ class Manage extends Component
     {
         //Default setting for courseadmin or uploader
         $this->courseAdminFilter();
+        //Uncat videos
+        $this->uncat_video_courses = UncatPresentations::unfiltered_uncat_video_course();
+
         $this->video_courses = VideoCourse::with('course')
             ->whereIn('video_id', $this->user_videos)
             ->orWhereIn('video_id', $this->individual_videos)
@@ -140,6 +147,8 @@ class Manage extends Component
      */
     public function updatedPresenter($selected_presenter)
     {
+        $this->filter_presenter = $selected_presenter;
+
         if (empty($selected_presenter)) {
             $this->courseAdminManage();
         } else {
@@ -162,6 +171,7 @@ class Manage extends Component
      */
     public function updatedCourse($selected_course)
     {
+        $this->filter_course = $selected_course;
         if (empty($selected_course)) {
             $this->courseAdminManage();
         } else {
@@ -197,6 +207,7 @@ class Manage extends Component
      */
     public function updatedSemester($selected_semester)
     {
+        $this->filter_semester = $selected_semester;
         if (empty($selected_semester)) {
             $this->courseAdminManage();
         } else {
@@ -239,6 +250,7 @@ class Manage extends Component
      */
     public function updatedTag($selected_tag)
     {
+        $this->filter_tag = $selected_tag;
         if (empty($selected_tag)) {
             $this->courseAdminManage();
         } else {
@@ -282,24 +294,54 @@ class Manage extends Component
         $this->video_course_ids = collect($videos_id)->flatten(1)->toArray();
     }
 
+
     /**
      * @throws BindingResolutionException
      */
     public function updatedFilterTerm()
     {
         $filterTerm = '%' . $this->filterTerm . '%';
+
+        //Uncat filter
+        if (!UncatPresentations::IsNullOrEmptyString($filterTerm) ) {
+            //Presenters
+            $uncat_presenter_id = UncatPresentations::uncat_presenter_id($filterTerm);
+            $this->uncat_video_courses = UncatPresentations::uncat_video_courses($uncat_presenter_id);
+        } else {
+            $this->uncat_video_courses = UncatPresentations::unfiltered_uncat_video_course();
+        }
+        $this->countUncatPresentations($this->uncat_video_courses);
+
         if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
 
-            //Courseadmin, Uploader or Staff
+            //Collection of ids depending on set permissions and role Courseadmin, Uploader or Staff
             $this->courseAdminFilter();
+
+            //Filter presentations
             $this->video_courses = [];
             $videos_collection = Video::whereIn('id', $this->user_videos)
                 ->orWhereIn('id', $this->individual_videos)
                 ->orWhereIn('id', $this->courseadministrator)
                 ->orWhereIn('id', $this->video_course_ids)
-                ->pluck('id');
+                ->get();
 
-            $video_course_ids = VideoCourse::whereIn('video_id', $videos_collection)->pluck('course_id');
+            $video_course_ids = VideoCourse::whereIn('video_id', $videos_collection->pluck('id'))->distinct()->pluck('course_id');
+
+            //Filter after video title
+            if(!UncatPresentations::IsNullOrEmptyString($filterTerm)) {
+                $filtered_title = $videos_collection->filter(function ($video, $key) use ($filterTerm) {
+                    $match = preg_replace("/%+/",'$1*', $filterTerm);
+                    if(Str::is(strtoupper($match), strtoupper($video->title)) or Str::is(strtoupper($match), strtoupper($video->title_en))) {
+                        return $video;
+                    }
+                });
+                $video_title_ids = $filtered_title->pluck('id');
+                $filtered_with_title = VideoCourse::whereIn('video_id', $video_title_ids)->distinct()->pluck('course_id');
+
+            } else {
+                $filtered_with_title = [];
+            }
+
             $video_course_courses = VideoCourse::with('course')
                 ->whereIn('course_id', $video_course_ids)
                 ->whereHas('course', function ($query) use ($filterTerm) {
@@ -309,7 +351,10 @@ class Manage extends Component
                         ->orWhere('semester', 'LIKE', $filterTerm)
                         ->orWhere('year', 'LIKE', $filterTerm);
                 })
+                ->distinct()
                 ->pluck('course_id');
+
+            //Presenters
             $video_course_presenters = VideoCourse::with('course', 'video.video_presenter.presenter')
                 ->whereIn('course_id', $video_course_ids)
                 ->whereHas('video.video_presenter.presenter', function ($query) use ($filterTerm) {
@@ -317,6 +362,7 @@ class Manage extends Component
                         ->orwhere('name', 'LIKE', $filterTerm);
                 })
                 ->pluck('course_id');
+            //Tags
             $video_course_tags = VideoCourse::with('video.video_tag.tag')
                 ->whereIn('course_id', $video_course_ids)
                 ->WhereHas('video.video_tag.tag', function ($query) use ($filterTerm) {
@@ -324,9 +370,12 @@ class Manage extends Component
                         ->orwhere('name', 'LIKE', $filterTerm);
                 })
                 ->pluck('course_id');
+
+            //Filter
             $this->video_courses = VideoCourse::whereIn('course_id', $video_course_courses)
                 ->orWhereIn('course_id', $video_course_presenters)
                 ->orWhereIn('course_id', $video_course_tags)
+                ->orWhereIn('course_id', $filtered_with_title)
                 ->groupBy('course_id')
                 ->orderBy('course_id', 'desc')
                 ->get();
@@ -349,6 +398,10 @@ class Manage extends Component
                     $query->where('id', 'LIKE', $filterTerm)
                         ->orwhere('name', 'LIKE', $filterTerm);
                 })
+                ->orWhereHas('video', function ($query) use ($filterTerm) {
+                    $query->where('title', 'LIKE', $filterTerm)
+                        ->orwhere('title_en','LIKE', $filterTerm);
+                })
                 ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
         }
 
@@ -362,7 +415,7 @@ class Manage extends Component
     {
         $this->collapseAll($this->video_courses);
         $this->countPresentations($this->video_courses);
-        $this->countUncatPresentations();
+        $this->countUncatPresentations($this->uncat_video_courses);
         $this->courseSettings($this->video_courses);
     }
 
@@ -371,6 +424,9 @@ class Manage extends Component
      */
     public function loadCourseList()
     {
+        //Uncat videos
+        $this->uncat_video_courses = UncatPresentations::unfiltered_uncat_video_course();
+
         $this->video_courses = VideoCourse::with('course', 'video.video_presenter.presenter')->groupBy('course_id')->orderBy('course_id', 'desc')->get();
         $this->prepareRendering();
         //Load filters
@@ -400,6 +456,7 @@ class Manage extends Component
         $this->stats($this->videos[$courseid]);
     }
 
+
     /**
      * @param VisibilityFilter $visibility
      * @return void
@@ -407,7 +464,7 @@ class Manage extends Component
     public function loadUncat(VisibilityFilter $visibility)
     {
         $this->uncat = !$this->uncat;
-        $this->uncat_videos = $visibility->filter(Video::doesntHave('video_course')->latest('creation')->get());
+        $this->uncat_videos = $visibility->filter($this->uncat_video_courses);
         $this->stats($this->uncat_videos);
     }
 
@@ -417,7 +474,7 @@ class Manage extends Component
     public function hydrate()
     {
         $visibility = app(VisibilityFilter::class);
-        $this->uncat_videos = $visibility->filter(Video::doesntHave('video_course')->latest('creation')->get());
+        $this->uncat_videos = $visibility->filter($this->uncat_video_courses);
         $this->courseSettings($this->video_courses);
         // Rehydrate already expanded courses since they're turned to array
         foreach ($this->videos as $courseid => $videos) {
@@ -454,9 +511,9 @@ class Manage extends Component
     /**
      * @return void
      */
-    public function countUncatPresentations()
+    public function countUncatPresentations($course)
     {
-        $this->uncatcounter = Video::doesntHave('video_course')->count();
+        $this->uncatcounter = $course->count();
     }
 
     /**

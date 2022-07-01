@@ -46,8 +46,7 @@
             <span class="badge badge-light mb-2">{{__("Hidden")}} <span class="badge badge-danger"><i
                             class="fas fa-eye-slash"></i></span></span>
         @endif
-        {{--}}@if ($video_course->course->id && (in_array(\App\Course::find($video_course->course->id)->userPermission(), ['edit', 'delete']))){{--}}
-        @if ($video_course->course->id)
+        @if ($video_course->course->id && (in_array(\App\Course::find($video_course->course->id)->userPermission(), ['edit', 'delete'])))
             <a class="badge badge-primary" role="button" style="max-height: 32.38px;"
                href="{{ route('course_edit', $video_course->course->id) }}">{{__("Settings")}} <i class="fas fa-cog"></i></a>
         @endif

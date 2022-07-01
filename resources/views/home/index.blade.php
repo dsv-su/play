@@ -92,6 +92,7 @@
             @if (isset($my) && !$my->isEmpty())
                 <div id="my" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-A">
                     <!-- Paginations status-->
+                    {{--}}
                     <section>
                         <div class="container">
                             <div class="row">
@@ -115,6 +116,7 @@
                             </div>
                         </div>
                     </section>
+                    {{--}}
                     <!--  Pagination for tab1 - My courses -->
                     <div class="pagination justify-content-center mt-4">
                         {{ $mypaginated->fragment('my')->links() }}
@@ -148,6 +150,7 @@
             @if (isset($active) && !$active->isEmpty())
                 <div id="active" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-B">
                     <!-- Paginations status-->
+                    {{--}}
                     <section>
                         <div class="container">
                             <div class="row">
@@ -171,6 +174,7 @@
                             </div>
                         </div>
                     </section>
+                    {{--}}
                     <!-- Pagination for tab2 - Active courses -->
                     <div class="pagination justify-content-center mt-4">
                         {{ $activepaginated->fragment('active')->links() }}

@@ -8,6 +8,7 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Cache;
 use Nicolaslopezj\Searchable\SearchableTrait;
 use Spatie\Searchable\Searchable;
 use Spatie\Searchable\SearchResult;
@@ -103,15 +104,19 @@ class Course extends Model implements Searchable
         $username = app()->make('play_username');
         $daisy_courses_ids = [];
         if (app()->make('play_role') != 'Administrator') {
-            // Show only courses that you have permission to
-            $daisy = new DaisyAPI();
-            $daisyPersonID = $daisy->getDaisyPersonId($username);
-            // Get all courses where user is courseadmin
-            if ($daisy_courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID)) {
-                $daisy_courses_ids = array_map(function ($d) {
-                    return $d['id'];
-                }, $daisy_courses);
-            }
+
+            // Use cache
+            $daisy_courses_ids = Cache::remember($username, 3600, function () use ($username){
+                // Show only courses that you have permission to
+                $daisy = new DaisyAPI();
+                $daisyPersonID = $daisy->getDaisyPersonId($username);
+                // Get all courses where user is courseadmin
+                if ($daisy_courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID)) {
+                    return array_map(function ($d) {
+                        return $d['id'];
+                    }, $daisy_courses);
+                }
+            });
         }
 
         if (in_array($this->id, $daisy_courses_ids) || app()->make('play_role') == 'Administrator') {
