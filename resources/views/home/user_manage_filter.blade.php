@@ -9,16 +9,9 @@
                 @endif class="form-control mx-1 selectpicker"
                 data-none-selected-text="{{ __('Course') }}" data-live-search="true" multiple
                 style="width: 400px">
-            @foreach($videocourses as $designation => $video_course)
-                @if(Lang::locale() == 'swe')
-                    <option value="{{$video_course->course->designation}}">{{$video_course->course->name}}
-                        ({{$video_course->course->designation}})
-                    </option>
-                @else
-                    <option value="{{$video_course->course->designation}}">{{$video_course->course->name_en}}
-                        ({{$video_course->course->designation}})
-                    </option>
-                @endif
+            @foreach($videocourses as $designation => $name)
+                <option value="{{$designation}}">{{$name}}
+                </option>
             @endforeach
         </select>
 
@@ -35,8 +28,9 @@
                 @endif class="form-control mx-1 selectpicker" data-none-selected-text="{{ __('Term')}}"
                 data-live-search="true"
                 multiple style="width: 200px">
-            @foreach($videoterms as $term => $semester)
-                <option value="{{$term}}">{{$semester}}</option>
+            {{krsort($videoterms)}}
+            @foreach($videoterms as $key => $semester)
+                <option value="{{$semester}}">{{$semester}}</option>
             @endforeach
         </select>
 

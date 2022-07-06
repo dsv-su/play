@@ -22,6 +22,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cookie;
+use Lang;
 use Livewire\Component;
 use Illuminate\Support\Str;
 
@@ -37,7 +38,7 @@ class Manage extends Component
     public $user_videos, $individual_videos, $courseadministrator, $video_course_ids;
     public $filter, $filterTerm;
     public $presenter, $course, $semester, $tag;
-    public $videopresenters = [], $videoterms = [], $videocourses, $videotags = [];
+    public $videopresenters = [], $videoterms = [], $videocourses = [], $videotags = [];
     public $filterswitch, $manageview;
     public $filter_course, $filter_presenter, $filter_semester, $filter_tag;
     public $stats_playback = [], $stats_download = [];
@@ -81,8 +82,9 @@ class Manage extends Component
             }
             //Terms
             foreach ($video->courses() as $term) {
-                if (!key_exists($term->semester . $term->year, $this->videoterms)) {
-                    $this->videoterms[$term->semester . $term->year] = $term->semester . $term->year;
+                $key = $term->year . ($term->semester == 'VT' ? 1 : 2);
+                if (!key_exists($key, $this->videoterms)) {
+                    $this->videoterms[$key] = $term->semester . $term->year;
                 }
             }
             //Tags
@@ -92,8 +94,17 @@ class Manage extends Component
                 }
             }
         }
+
+        // Sort filters
+        sort($this->videopresenters);
+        sort($this->videotags);
+
         //Courses
-        $this->videocourses = $this->video_courses;
+        foreach ($this->video_courses as $vc) {
+            if (!key_exists($vc->course->designation, $this->videocourses)) {
+                $this->videocourses[$vc->course->designation] = (Lang::locale() == 'swe') ? $vc->course->name : $vc->course->name_en . ' (' .$vc->course->designation.')';
+            }
+        }
     }
 
     /**

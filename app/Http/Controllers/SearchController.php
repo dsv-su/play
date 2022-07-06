@@ -712,6 +712,7 @@ class SearchController extends Controller
                 }
             }
         }
+        sort($tags);
         return $tags;
     }
 
@@ -730,6 +731,7 @@ class SearchController extends Controller
                 }
             }
         }
+        sort($presenters);
         return $presenters;
     }
 
