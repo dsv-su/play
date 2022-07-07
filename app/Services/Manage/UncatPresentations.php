@@ -25,11 +25,12 @@ class UncatPresentations
     {
         return Video::doesntHave('video_course')
             ->whereIn('id', $presenter_id)
+            ->orderByDesc('creation')
             ->get();
     }
 
     public static function unfiltered_uncat_video_course()
     {
-        return Video::doesntHave('video_course')->get();
+        return Video::doesntHave('video_course')->orderByDesc('creation')->get();
     }
 }

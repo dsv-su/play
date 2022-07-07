@@ -38,7 +38,7 @@ class PlayAuthenticate
             });
             //Enable role emulation
             if($adminhandler = AdminHandler::where('Shib_Session_ID', '9999')->first()) {
-                if($adminhandler->override == true) {
+                if($adminhandler->override) {
                     //Override
                     if($adminhandler->role == 'Courseadmin') {
                         app()->bind('play_role', function () use($adminhandler){
@@ -156,7 +156,7 @@ class PlayAuthenticate
                 });
                 //Enable role emulation
                 if($adminhandler = AdminHandler::where('Shib_Session_ID', $request->server('Shib_Session_ID'))->first()) {
-                    if($adminhandler->override == true) {
+                    if($adminhandler->override) {
                         //Override
                         if($adminhandler->role == 'Courseadmin') {
                             app()->bind('play_role', function () use($adminhandler){

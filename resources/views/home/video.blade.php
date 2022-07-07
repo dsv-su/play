@@ -36,7 +36,7 @@
     </div>
     <a target="_blank" rel="noopener noreferrer" href="{{ route('player', ['video' => $video]) }}">
         <div class="card-header position-relative"
-             style="background-image: @if ($video->hidden) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); width: 100%; height: 0px; object-fit: contain; background-repeat: no-repeat; background-position: 50% 50%;">
+             style="background-image: @if ($video->hidden) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); width: 100%; height: 0px; object-fit: cover; background-repeat: no-repeat; background-position: 50% 50%;">
             <!-- Icons -->
             <div class="icons m-1">
                 <!-- Group Permissions icons-->
@@ -71,11 +71,13 @@
                 @endif
             </div>
             <!-- Visibility banner -->
+            <!--
             @if ($video->hidden)
                 <div class="d-flex justify-content-center h-100">
                     <div class="d-inline alert alert-secondary m-auto" role="alert">{{ __("Hidden") }}</div>
                 </div>
             @endif
+            -->
             <p class="m-1 px-1"> {{$video->duration}} </p>
         </div>
     </a>

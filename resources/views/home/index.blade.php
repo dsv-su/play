@@ -127,6 +127,7 @@
                         @foreach ($my as $key => $video)
                             <div class="col my-3 w">
                                 @include('home.video')
+                                @include('layouts.partials.videomodals')
                             </div>
                         @endforeach
                         <div class="col">
@@ -185,6 +186,7 @@
                         @foreach ($active as $key => $video)
                             <div class="col my-3">
                                 @include('home.video')
+                                @include('layouts.partials.videomodals')
                             </div>
                         @endforeach
                         <div class="col">
@@ -274,6 +276,7 @@
                                     @foreach ($taggedvideos as $key => $video)
                                         <div class="col my-3">
                                             @include('home.video')
+                                            @include('layouts.partials.videomodals')
                                         </div>
                                     @endforeach
                                     <div class="col">
@@ -291,6 +294,7 @@
                             @foreach ($latest as $key => $video)
                                 <div class="col my-3">
                                     @include('home.video')
+                                    @include('layouts.partials.videomodals')
                                 </div>
                             @endforeach
                             <div class="col">

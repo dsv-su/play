@@ -5229,10 +5229,11 @@ p.kill-p, .kill-p p {
 .videolist .thumb,
 .video .card-header {
     background: #002f5f url("../../public/images/eld_footer.png") no-repeat center;
-    background-size: 102% auto;
+    background-size: 100% auto;
     font-size: 1rem;
     border-bottom: none;
     padding-top: 52.8%;
+    image-rendering: auto;
 }
 
 .video .card-header {
