@@ -71,13 +71,11 @@
                 @endif
             </div>
             <!-- Visibility banner -->
-            <!--
             @if ($video->hidden)
                 <div class="d-flex justify-content-center h-100">
                     <div class="d-inline alert alert-secondary m-auto" role="alert">{{ __("Hidden") }}</div>
                 </div>
             @endif
-            -->
             <p class="m-1 px-1"> {{$video->duration}} </p>
         </div>
     </a>
