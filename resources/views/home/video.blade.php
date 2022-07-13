@@ -83,7 +83,7 @@
     <div class="card-body p-1 overflow-hidden">
         <div class="d-flex align-items-start">
             <div class="">
-                <h4 class="card-text font-1rem font-weight-bold px-1 py-2">
+                <h4 class="card-text font-1rem px-1 py-2">
                     <a href="{{ route('player', ['video' => $video]) }}" class="link">{{ $video->LangTitle }}</a>
                 </h4>
             </div>
