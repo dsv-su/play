@@ -25,7 +25,7 @@
                         {{ session('error') }}
                     </div>
                 @endif
-                <h2 id="heading_download"><span class="far fa-edit fa-icon-border mr-2" aria-hidden="true"></span>Redigera presentation</h2>
+                <h2 id="heading_download"><span class="far fa-edit fa-icon mr-2" aria-hidden="true"></span>Redigera presentation</h2>
                 <p>Redigering av en befintlig presentation</p>
                     <!-- progressbar -->
                     <ul id="progressbar">

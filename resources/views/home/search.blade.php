@@ -12,9 +12,9 @@
                 <span class="su-theme-anchor"></span>
                 <h3 class="su-theme-header mb-4">
                     @if ($manage)
-                        <i class="fas fa-edit fa-icon-border mr-2"></i> {{__('Manage presentations')}}
+                        <i class="fas fa-edit fa-icon mr-2"></i> {{__('Manage presentations')}}
                     @else
-                        <i class="fas fa-search fa-icon-border mr-2"></i>  {{__('Search results')}}
+                        <i class="fas fa-search fa-icon mr-2"></i>  {{__('Search results')}}
                     @endif
                 </h3>
             </div> <!-- col-12 -->

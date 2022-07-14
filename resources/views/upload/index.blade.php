@@ -17,7 +17,7 @@
             <div class="col-12">
                 <span class="su-theme-anchor"></span>
                 <h1 class="su-theme-header mb-4">
-                    <i class="fas fa-arrow-circle-up fa-icon-border mr-2"></i>{{ __("Upload presentation") }}
+                    <i class="fas fa-arrow-circle-up fa-icon mr-2"></i>{{ __("Upload presentation") }}
                 </h1>
             </div> <!-- col-12 -->
         </div> <!-- row no-gutters -->
@@ -30,7 +30,7 @@
                     @csrf
                     <div class="rounded border shadow p-3 my-2">
                         <h5 class="mb-4">
-                            <i class="fa fa-solid fa-1 fa-icon-border mr-2"></i><label
+                            <i class="fa fa-solid fa-1 fa-icon mr-2"></i><label
                                     class="form-control-label px-1">{{ __("Information about the presentation") }}</label>
                         </h5>
 
@@ -90,7 +90,7 @@
                     <div class="rounded border shadow p-3 my-2">
                         <!-- Course -->
                         <h5 class="mb-4">
-                            <i class="fa fa-solid fa-2 fa-icon-border mr-2"></i><label
+                            <i class="fa fa-solid fa-2 fa-icon mr-2"></i><label
                                     class="form-control-label px-1">{{ __("Course association") }}</label>
                         </h5>
                         <p class="font-1rem px-1 my-0">
@@ -114,7 +114,7 @@
                     <div class="rounded border shadow p-3 my-2">
                         <!-- Presenters -->
                         <h5 class="mb-4">
-                            <i class="fa fa-solid fa-3 fa-icon-border mr-2"></i><label
+                            <i class="fa fa-solid fa-3 fa-icon mr-2"></i><label
                                     class="form-control-label px-1">{{ __("Presenters") }}</label>
                         </h5>
                         <p class="font-1rem px-1 my-0">
@@ -139,7 +139,7 @@
                     </div>
                     <div class="rounded border shadow p-3 my-2" id="tag-search-form">
                         <h5 class="mb-4">
-                            <i class="fa fa-solid fa-4 fa-icon-border mr-2"></i><label
+                            <i class="fa fa-solid fa-4 fa-icon mr-2"></i><label
                                     class="form-control-label px-1">{{ __("Tags") }}</label>
                         </h5>
                         <p class="font-1rem px-1 my-0">
@@ -158,7 +158,7 @@
                     <div class="rounded border shadow p-3 my-2">
                         <!-- Permissions -->
                         <h5 class="mb-4">
-                            <i class="fa fa-solid fa-5 fa-icon-border mr-2"></i><label
+                            <i class="fa fa-solid fa-5 fa-icon mr-2"></i><label
                                     class="form-control-label px-1">{{ __("Playback permissions") }}</label>
                         </h5>
 

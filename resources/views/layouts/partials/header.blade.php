@@ -23,7 +23,7 @@
                                 </li>
                                 <li class="mega-menu-collapse-col col">
                                     <a class="nav-link d-flex align-items-center nav-link__border-bottom" href="/semester/all">
-                                        <span class="fas fa-layer-group fa-icon-border mr-2" aria-hidden="true"></span>
+                                        <span class="fas fa-layer-group fa-icon mr-2 fa-fw" aria-hidden="true"></span>
                                         <span class="d-inline-block first-letter-capitalized level-2">@lang('lang.semester')</span>
                                     </a>
                                     @if($semesters ?? '')
@@ -37,7 +37,7 @@
                                 </li>
                                 <li class="mega-menu-collapse-col col">
                                     <a class="nav-link d-flex align-items-center nav-link__border-bottom" href="/course/all">
-                                        <span class="fas fa-address-card fa-icon-border mr-2" aria-hidden="true"></span>
+                                        <span class="fas fa-address-card fa-icon fa-fw mr-2" aria-hidden="true"></span>
                                         <span class="d-inline-block first-letter-capitalized level-2">@lang('lang.course')</span>
                                     </a>
                                     @if($designations ?? '')
@@ -56,7 +56,7 @@
                                 @if($nav_categories ?? '')
                                     <li class="mega-menu-collapse-col col">
                                         <a class="nav-link d-flex align-items-center nav-link__border-bottom" href="">
-                                            <span class="fas fa-book fa-icon-border mr-2" aria-hidden="true"></span>
+                                            <span class="fas fa-book fa-icon fa-fw mr-2" aria-hidden="true"></span>
                                             <span class="d-inline-block first-letter-capitalized level-2">@lang('lang.category')</span>
                                         </a>
                                         @if($category ?? '')
@@ -103,18 +103,18 @@
                                     <li class="mega-menu-collapse-col col">
                                         <a class="nav-link level-2 d-flex align-content-center"
                                            href="{{ route('manage') }}"><span
-                                                    class="fas fa-video fa-icon-border mr-2"
+                                                    class="fas fa-video fa-icon mr-2 fa-fw"
                                                     aria-hidden="true"></span>@lang('lang.manage_recording')</a>
 
                                         @if(app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Administrator')
                                         <a class="nav-link level-2 d-flex align-content-center"
                                            href="{{ route('manage_course') }}"><span
-                                                class="fas fa-address-card fa-icon-border mr-2"
+                                                class="fas fa-address-card fa-icon mr-2 fa-fw"
                                                 aria-hidden="true"></span>@lang('lang.manage_course')</a>
                                         @endif
                                         <a class="nav-link level-2 d-flex align-content-center"
                                            href="{{ route('user_upload') }}"><span
-                                                    class="fas fa-upload fa-icon-border mr-2"
+                                                    class="fas fa-upload fa-icon mr-2 fa-fw"
                                                     aria-hidden="true"></span>@lang('lang.manual_upload')</a>
                                     </li>
                                     <li class="mega-menu-collapse-col col">
@@ -142,18 +142,18 @@
                                     <li class="mega-menu-collapse-col col">
                                         <a class="nav-link level-2 d-flex align-content-center"
                                            href="{{route('admin')}}"><span
-                                                    class="fas fa-user-cog fa-icon-border mr-2"
+                                                    class="fas fa-user-cog fa-icon fa-fw mr-2"
                                                     aria-hidden="true"></span>Admin stats and settings</a>
                                         <a class="nav-link level-2 d-flex align-content-center"
                                            href="{{route('log-viewer::logs.list')}}"><span
-                                                    class="fas fa-bug fa-icon-border mr-2" aria-hidden="true"></span>Logs</a>
+                                                    class="fas fa-bug fa-icon fa-fw mr-2" aria-hidden="true"></span>Logs</a>
                                         <a class="nav-link level-2 d-flex align-content-center"
                                            href="{{ route('mediasiteFetch') }}"><i
-                                                    class="fas fa-sync-alt fa-icon-border mr-2"></i>Sync items from
+                                                    class="fas fa-sync-alt fa-icon fa-fw mr-2"></i>Sync items from
                                             Mediasite</a>
                                         <a class="nav-link level-2 d-flex align-content-center"
                                            href="{{ route('mediasite') }}"><i
-                                                    class="fas fa-file-download fa-icon-border mr-2"></i>Retrive from
+                                                    class="fas fa-file-download fa-icon fa-fw mr-2"></i>Retrive from
                                             Mediasite</a>
                                     </li>
                                     <li class="mega-menu-collapse-col col">
@@ -244,7 +244,7 @@
                                         <li class="nav-item">
                                             <a class="nav-link text-uppercase d-inline-block pr-0"
                                                href="/semester/all">
-                                                <span class="fas fa-layer-group fa-icon-border mr-2"
+                                                <span class="fas fa-layer-group fa-icon fa-fw mr-2"
                                                       aria-hidden="true"></span>
                                                 <span class="d-inline-block first-letter-capitalized level-3">@lang('lang.semester')</span>
                                             </a>
@@ -283,7 +283,7 @@
                                         <li class="nav-item">
                                             <a class="nav-link text-uppercase d-inline-block pr-0"
                                                href="/course/all">
-                                                <span class="fas fa-address-card fa-icon-border mr-2"
+                                                <span class="fas fa-address-card fa-icon fa-fw mr-2"
                                                       aria-hidden="true"></span>
                                                 <span class="d-inline-block text-capitalize level-2">@lang('lang.course')</span>
                                             </a>
@@ -325,7 +325,7 @@
                                             <li class="nav-item">
                                                 <a class="nav-link text-uppercase d-inline-block pr-0"
                                                    href="#">
-                                                    <span class="fas fa-book fa-icon-border mr-2"
+                                                    <span class="fas fa-book fa-icon fa-fw mr-2"
                                                           aria-hidden="true"></span>
                                                     <span class="d-inline-block first-letter-capitalized level-2">@lang('lang.category')</span>
                                                 </a>
@@ -370,7 +370,7 @@
                                         <li class="nav-item">
                                             <a class="nav-link text-capitalize d-inline-block pr-0 preventdefault"
                                                href="">
-                                                <i class="fas fa-edit fa-icon-border mr-2"></i> @lang('lang.manage')
+                                                <i class="fas fa-edit fa-icon fa-fw mr-2"></i> @lang('lang.manage')
                                             </a>
                                             <div class="float-right pt-1 pr-2">
                                                 <button type="button" data-toggle="collapse"
@@ -388,18 +388,18 @@
                                                     <ul class="main-menu-sub navbar-nav pb-4">
                                                         <li class="nav-item pl-3">
                                                             <a class="nav-link level-2" href="{{ route('manage') }}">
-                                                                <span class="fas fa-video fa-icon-border mr-2"
+                                                                <span class="fas fa-video fa-icon fa-fw mr-2"
                                                                       aria-hidden="true"></span>@lang('lang.manage_recording')
                                                             </a>
                                                             @if(app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Administrator')
                                                                 <a class="nav-link level-2"
                                                                    href="{{ route('manage_course') }}"><span
-                                                                            class="fas fa-address-card fa-icon-border mr-2"
+                                                                            class="fas fa-address-card fa-icon fa-fw mr-2"
                                                                             aria-hidden="true"></span>@lang('lang.manage_course')</a>
                                                             @endif
                                                             <a class="nav-link level-2"
                                                                href="{{ route('user_upload') }}">
-                                                                <span class="fas fa-upload fa-icon-border mr-2"
+                                                                <span class="fas fa-upload fa-icon fa-fw mr-2"
                                                                       aria-hidden="true"></span>@lang('lang.manual_upload')
                                                             </a>
                                                         </li>
@@ -412,7 +412,7 @@
                                             <li class="nav-item" style="">
                                                 <a class="nav-link text-capitalize d-inline-block pr-0 preventdefault"
                                                    href="">
-                                                    <i class="fas fa-edit fa-icon-border mr-2"></i> @lang('lang.admin')
+                                                    <i class="fas fa-edit fa-icon fa-fw mr-2"></i> @lang('lang.admin')
                                                 </a>
                                                 <div class="float-right pt-1 pr-2">
                                                     <button type="button" data-toggle="collapse"
@@ -431,21 +431,21 @@
                                                             <li class="nav-item pl-3">
                                                                 <a class="nav-link level-2"
                                                                    href="{{route('admin')}}"><span
-                                                                            class="fas fa-user-cog fa-icon-border mr-2"
+                                                                            class="fas fa-user-cog fa-icon fa-fw mr-2"
                                                                             aria-hidden="true"></span>Admin stats and
                                                                     settings</a>
                                                                 <a class="nav-link level-2"
                                                                    href="{{route('log-viewer::logs.list')}}"><span
-                                                                            class="fas fa-bug fa-icon-border mr-2"
+                                                                            class="fas fa-bug fa-icon fa-fw mr-2"
                                                                             aria-hidden="true"></span>Logs</a>
                                                                 <a class="nav-link level-2"
                                                                    href="{{ route('mediasiteFetch') }}"><i
-                                                                            class="fas fa-sync-alt fa-icon-border mr-2"></i>Sync
+                                                                            class="fas fa-sync-alt fa-icon fa-fw mr-2"></i>Sync
                                                                     items from
                                                                     Mediasite</a>
                                                                 <a class="nav-link level-2"
                                                                    href="{{ route('mediasite') }}"><i
-                                                                            class="fas fa-file-download fa-icon-border mr-2"></i>Retrive
+                                                                            class="fas fa-file-download fa-icon fa-fw mr-2"></i>Retrive
                                                                     from
                                                                     Mediasite</a>
                                                             </li>

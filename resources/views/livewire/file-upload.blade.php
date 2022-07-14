@@ -3,7 +3,7 @@
         <div class="col-lg-12 my-2">
             <div class="rounded border shadow p-3 my-2">
                 <h5 class="mb-4">
-                    <i class="fa fa-solid fa-6 fa-icon-border mr-2"></i><label class="form-control-label px-1"
+                    <i class="fa fa-solid fa-6 fa-icon mr-2"></i><label class="form-control-label px-1"
                                                                                for="custom">{{__("Upload custom thumb") }}</label>
                 </h5>
                 <p class="font-1rem px-1">
@@ -34,7 +34,7 @@
         <div class="col-lg-12 my-2">
             <div class="rounded border shadow p-3 my-2">
                 <h5 class="mb-4">
-                    <i class="fa fa-solid fa-7 fa-icon-border mr-2"></i><label
+                    <i class="fa fa-solid fa-7 fa-icon mr-2"></i><label
                             class="form-control-label px-1">{{ __("Mediafiles to be uploaded") }}</label>
                 </h5>
                 <p class="font-1rem px-1">

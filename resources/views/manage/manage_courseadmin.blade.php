@@ -6,7 +6,7 @@
             <div class="col-12">
                 <span class="su-theme-anchor"></span>
                 <h3 class="su-theme-header mb-4">
-                    <i class="fas fa-edit fa-icon-border mr-2"></i> {{__('Manage presentations')}} ({{count($videos)}})
+                    <i class="fas fa-edit fa-icon mr-2"></i> {{__('Manage presentations')}} ({{count($videos)}})
                 </h3>
             </div> <!-- col-12 -->
         </div> <!-- row no-gutters -->

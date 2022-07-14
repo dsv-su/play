@@ -6,7 +6,7 @@
                 <div>
                     <span class="su-theme-anchor"></span>
                     <h3 class="su-theme-header mb-4">
-                        <span class="far fa-clock fa-icon-border mr-2" aria-hidden="true"></span>
+                        <span class="far fa-clock fa-icon mr-2" aria-hidden="true"></span>
                         {{ __("Pending uploads") }}
                     </h3>
                 </div>

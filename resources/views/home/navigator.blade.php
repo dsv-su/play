@@ -8,10 +8,10 @@
                     <span class="su-theme-anchor"></span>
                     <h3 class="su-theme-header" id="title-header">
                         @if($term ?? '' and $year ?? '')
-                            <span class="fas fa-layer-group fa-icon-border mr-2" aria-hidden="true"></span>
+                            <span class="fas fa-layer-group fa-icon mr-2" aria-hidden="true"></span>
                             {{ __("presentations from") }} {{$term}}{{$year}}
                         @elseif($designation ?? '')
-                            <span class="fas fa-address-card fa-icon-border mr-2" aria-hidden="true"></span>
+                            <span class="fas fa-address-card fa-icon mr-2" aria-hidden="true"></span>
                             @lang('lang.course'):
                             @if (\App\Course::where('designation', $designation)->count())
                                 <i>{{(Lang::locale() == 'swe') ? \App\Course::where('designation', $designation)->latest()->first()->name : \App\Course::where('designation', $designation)->latest()->first()->name_en}}</i>
@@ -19,13 +19,13 @@
                                 <i>{{$designation}}</i>
                             @endif
                         @elseif($category ?? '')
-                            <span class="fas fa-address-card fa-icon-border mr-2" aria-hidden="true"></span>
+                            <span class="fas fa-address-card fa-icon mr-2" aria-hidden="true"></span>
                             @lang('lang.category'): <i>{{$category}}</i>
                         @elseif($tag ?? '')
-                            <span class="fas fa-address-card fa-icon-border mr-2" aria-hidden="true"></span>
+                            <span class="fas fa-address-card fa-icon mr-2" aria-hidden="true"></span>
                             @lang('lang.tag'): <i>{{$tag}}</i>
                         @elseif($presenter ?? '')
-                            <span class="fas fa-address-card fa-icon-border mr-2" aria-hidden="true"></span>
+                            <span class="fas fa-address-card fa-icon mr-2" aria-hidden="true"></span>
                             @lang('lang.presenter'): <i>{{$presenter->name}} ({{$presenter->username}})</i>
                         @endif
                     </h3>
