@@ -49,6 +49,7 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
 
     //Multiplayer
     Route::get('/player/{video}', 'MultiplayerController@player')->name('player');
+    Route::get('/course/{course}/play', 'MultiplayerController@playCourse')->name('playCourse');
     Route::get('/playlist/{id}', 'MultiplayerController@playlist');
 
     //New Manage

@@ -235,6 +235,7 @@
     "Tags added here will be shown as course subsections. You also need to assign these tags to individual presentations so they are shown under these headings on course views.": "Taggar som läggs till här kommer att visas som undersektioner till kursen. Du måste även tilldela dessa taggar till individuella presentationer för att de ska kunna visas som rubriker.",
     "Page": "Sida",
     "Total Presentations": "Totala presentationer",
-    "Showing per Page": "Visar per sida"
+    "Showing per Page": "Visar per sida",
+    "Play all": "Spela upp alla"
 
 }

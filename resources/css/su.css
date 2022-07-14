@@ -8240,3 +8240,7 @@ span[type="button"] {
     background-color: #002f5f!important;
     border-color: #002f5f!important;
 }
+
+.main-menu .fas {
+    transform: translateY(6%) !important;
+}

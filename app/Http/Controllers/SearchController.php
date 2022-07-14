@@ -112,7 +112,7 @@ class SearchController extends Controller
     {
         $videos = $visibility->filter(Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($designation) {
             return $query->where('designation', $designation);
-        })->orderBy('creation', 'desc')->get());
+        })->get());
 
         $filters = $this->handleUrlParams();
         list($courses, $terms, $presenters, $tags, $videos) = $this->performFiltering(
@@ -431,10 +431,10 @@ class SearchController extends Controller
 
     /** Group presentations by a course they belong to
      * @param $videos
-     * @return Collection
+     * @return \Illuminate\Support\Collection|\Tightenco\Collect\Support\Collection
      */
     public
-    function groupVideos($videos): Collection
+    function groupVideos($videos): \Illuminate\Support\Collection
     {
         $groupedvideos = Collection::empty();
         foreach ($videos as $video) {
@@ -453,7 +453,13 @@ class SearchController extends Controller
             }
         }
 
-        return $groupedvideos;
+        // Sort the array of videos, also sort the keys (=course ids)
+        foreach ($groupedvideos as $courseid => $videos) {
+            $groupedvideos[$courseid] = $videos->sortByDesc('creation');
+        }
+        $items = $groupedvideos->all();
+        krsort($items);
+        return collect($items);
     }
 
     /** Remove irrelevant terms that could be added because of multiple course associations

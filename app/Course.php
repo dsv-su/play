@@ -4,6 +4,7 @@ namespace App;
 
 use App\Services\Daisy\DaisyAPI;
 use App\Services\Daisy\DaisyIntegration;
+use App\Services\Filters\VisibilityFilter;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;

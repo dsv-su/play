@@ -1,6 +1,10 @@
 <div class="d-inline-block">
-    <span class="badge badge-primary ml-2 mb-2" data-toggle="tooltip"
+    <span class="badge badge-primary ml-2 mb-2"><span data-toggle="tooltip"
           data-title="{{__("Number of presentations")}}">{{$counter[$video_course->course->id]}}</span>
+                    <a target="_blank" rel="noopener noreferrer"
+                       href="{{route('playCourse', ['course' => $video_course->course->id]) }}" data-toggle="tooltip"
+                       title="{{__("Play all")}}" style="color: white;"><i
+                                class="fa-solid fa-play ml-1"></i></a></span>
 
     @if ($individual_permissions[$video_course->course->id])
         <span class="badge badge-secondary mb-2" data-toggle="tooltip"

@@ -1,7 +1,12 @@
 <div class="d-inline-block">
     <h5 class="col">
         <span class="badge badge-light">{{__("Presentations")}} <span
-                    class="badge badge-primary">{{$counter[$video_course->course->id]}}</span></span>
+                    class="badge badge-primary">{{$counter[$video_course->course->id]}}</span>
+            <span class="badge badge-primary">
+        <a target="_blank" rel="noopener noreferrer" class="text-decoration-none"
+           href="{{route('playCourse', ['course' => $video_course->course->id]) }}" style="color: white;">{{__("Play all")}}<i
+                    class="fa-solid fa-play ml-1"></i></a></span>
+        </span>
 
         @if ($individual_permissions[$video_course->course->id])
             <span class="badge badge-light mb-2">{{__("Individual permissions")}} <span

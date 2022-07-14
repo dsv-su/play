@@ -26,7 +26,6 @@ class MultiplayerController extends Controller
     }
 
     /**
-     * @param Video $video
      * @return RedirectResponse
      */
     private function base_uri()
@@ -38,6 +37,15 @@ class MultiplayerController extends Controller
         $this->system_config = parse_ini_file($this->file, true);
 
         return $this->system_config['store']['list_uri'];
+    }
+
+    public function playCourse($courseid): RedirectResponse
+    {
+        $visibility = app(VisibilityFilter::class);
+        $video_id = $visibility->filter(Video::whereHas('video_course.course', function ($query) use ($courseid) {
+            $query->where('course_id', $courseid);
+        })->orderBy('creation')->get())->first()->id;
+        return Redirect::to('multiplayer?p=' . $video_id . '&l=' . $courseid);
     }
 
     public function player(Video $video): RedirectResponse
