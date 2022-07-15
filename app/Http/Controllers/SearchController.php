@@ -394,7 +394,6 @@ class SearchController extends Controller
 
         } else {
             /** Moved to new manage controller */
-
             if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
 
                 //If user is courseadmin, uploader or staff
@@ -737,7 +736,8 @@ class SearchController extends Controller
                 }
             }
         }
-        sort($presenters);
+        array_multisort($presenters);
+
         return $presenters;
     }
 

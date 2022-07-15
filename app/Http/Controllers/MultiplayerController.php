@@ -44,7 +44,7 @@ class MultiplayerController extends Controller
         $visibility = app(VisibilityFilter::class);
         $video_id = $visibility->filter(Video::whereHas('video_course.course', function ($query) use ($courseid) {
             $query->where('course_id', $courseid);
-        })->orderBy('creation')->get())->first()->id;
+        })->where('visibility', 1)->orderBy('creation')->get())->first()->id;
         return Redirect::to('multiplayer?p=' . $video_id . '&l=' . $courseid);
     }
 
