@@ -1,5 +1,6 @@
-<div class="card video m-auto faded" id="{{$video->id}}" style="box-shadow: 0 1rem 3rem rgba(240, 173, 78, 1.5)!important;">
-<!-- hide action icons for now
+<div class="card video m-auto faded" id="{{$video->id}}"
+     style="box-shadow: 0 1rem 3rem rgba(240, 173, 78, 1.5)!important;">
+    <!-- hide action icons for now
                     <div id="action-icons" class="flex-column m-1">
                                 <div class="mb-1">
                                     <a href="{{route('presentation_edit', $video->id)}}" data-toggle="tooltip" data-placement="left"
@@ -23,16 +24,16 @@
             <div class="d-inline alert alert-secondary m-auto"
                  role="alert">{{ __("Processing") }}</div>
         </div>
-        <p class="m-1 px-1"> @if(isset($video->mediasite_folder_id)) {{\Carbon\Carbon::parse($video->duration/1000)->toTimeString()}} @else {{\Carbon\Carbon::parse($video->duration)->toTimeString()}} @endif</p>
+        <p class="m-1 px-1"> @if(isset($video->mediasite_folder_id))
+                {{\Carbon\Carbon::parse($video->duration/1000)->toTimeString()}}
+            @else
+                {{\Carbon\Carbon::parse($video->duration)->toTimeString()}}
+            @endif</p>
     </div>
     <div class="card-body p-1 overflow-hidden">
         <div class="d-flex align-items-start">
             <div class="">
-                @if(isset($upload))
-                    <h4 class="card-text font-1rem px-1 py-2">{{ $video->title_en }} ({{$video->created_at}})</h4>
-                @else
-                    <h4 class="card-text font-1rem px-1 py-2">{{ $video->title }} ({{$video->updated_at}})</h4>
-                @endif
+                <h4 class="card-text font-1rem px-1 py-2">{{ $video->LangTitle }} ({{$video->created_at}})</h4>
             </div>
             @if ($video->description)
                 <div class="ml-auto showmore">
@@ -63,13 +64,14 @@
                     <span class="badge badge-light">{{$username}}</span>
                 @endforeach
             @endif
-                <!-- Hide tags for now
+            <!-- Hide tags for now
             @if ($video->tags)
                 @foreach($video->tags as $tag)
                     <span class="badge badge-secondary">{{$tag}}</span>
+
                 @endforeach
             @endif
-                -->
+            -->
         </p>
     </div>
 </div>
