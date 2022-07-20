@@ -14,10 +14,12 @@
             <div class="d-inline-block">
                 <span class="badge badge-primary ml-2 mb-2"><span data-toggle="tooltip"
                                                                   title="{{__("Number of presentations")}}">{{count($videocourse)}}</span>
-                    <a target="_blank" rel="noopener noreferrer"
-                       href="{{route('playCourse', ['course' => $key]) }}" data-toggle="tooltip"
-                       title="{{__("Play all")}}" style="color: white;"><i
-                                class="fa-solid fa-play ml-1"></i></a></span>
+                    @if($key)
+                        <a target="_blank" rel="noopener noreferrer"
+                           href="{{route('playCourse', ['course' => $key]) }}" data-toggle="tooltip"
+                           title="{{__("Play all")}}" style="color: white;"><i
+                                    class="fa-solid fa-play ml-1"></i></a>
+                    @endif</span>
                 @if (isset($manage) && $manage && $key)
                     @if ($individual_permissions[$key])
                         <span class="badge badge-secondary mb-2" data-toggle="tooltip"
