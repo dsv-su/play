@@ -5330,6 +5330,10 @@ p.kill-p, .kill-p p {
     display: none;
 }
 
+.videotable:last-child {
+    border: none;
+}
+
 .video .fa-fw {
     width: 1em !important;
     opacity: 1 !important;

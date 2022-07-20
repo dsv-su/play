@@ -85,8 +85,8 @@
                                           placeholder="{{__("Add a description here (optional)")}}"></textarea>
                             </div>
                         </div>
-
                     </div>
+
                     <div class="rounded border shadow p-3 my-2">
                         <!-- Course -->
                         <h5 class="mb-4">
@@ -111,6 +111,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="rounded border shadow p-3 my-2">
                         <!-- Presenters -->
                         <h5 class="mb-4">
@@ -122,7 +123,6 @@
                         </p>
                         <div class="row justify-content-between text-left">
                             <div class="form-group col-12 col-lg-6 flex-column d-flex">
-                                <!-- Course association -->
                                 <div id="addedPresenters" class="mx-1 my-2">
                                     <span class="badge badge-pill badge-light" data-toggle="tooltip"
                                           data-title="SU username: {{app()->make('play_username')}}">{{app()->make('play_user')}}</span>
@@ -137,7 +137,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="rounded border shadow p-3 my-2" id="tag-search-form">
+
+                    <div class="rounded border shadow p-3 my-2">
+                        <!-- Tags -->
                         <h5 class="mb-4">
                             <i class="fa fa-solid fa-4 fa-icon mr-2"></i><label
                                     class="form-control-label px-1">{{ __("Tags") }}</label>
@@ -145,16 +147,21 @@
                         <p class="font-1rem px-1 my-0">
                             {{ __("Enter tags for the presentation") }}
                         </p>
-                        <div id="addedTags" class="mx-1 my-2">
-                        </div>
-                        <div id="tag-search-form" class="flex-column d-flex col col-md-6 p-0">
-                            <input wire:ignore class="mx-1 w-100" type="search"
-                                   id="tag-search" name="q" autocomplete="off"
-                                   aria-haspopup="true"
-                                   placeholder="{{ __("Start typing to add a tag") }}"
-                                   aria-labelledby="tag-search">
+                        <div class="row justify-content-between text-left">
+                            <div class="form-group col-12 col-lg-6 flex-column d-flex">
+                                <div id="addedTags" class="mx-1 my-2">
+                                </div>
+                                <div id="tag-search-form" class="flex-column d-flex p-0">
+                                    <input wire:ignore class="mx-1 w-100" type="search"
+                                           id="tag-search" name="q" autocomplete="off"
+                                           aria-haspopup="true"
+                                           placeholder="{{ __("Start typing to add a tag") }}"
+                                           aria-labelledby="tag-search">
+                                </div>
+                            </div>
                         </div>
                     </div>
+
                     <div class="rounded border shadow p-3 my-2">
                         <!-- Permissions -->
                         <h5 class="mb-4">
@@ -374,7 +381,7 @@
                             @else data.name_en @endif;
                             //return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-toggle="tooltip" title="' + data.name + '" data-id="' + data.id + '" data-name="' + data.designation + ' ' + data.semester + data.year + '" data-fullname="' + data.name + '">' + data.designation + ' ' + data.semester + data.year + ' <i class="fa-solid fa-plus"></i></a>';
                             // Show only designations for now since play-store can't handle course ids
-                            return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-toggle="tooltip" data-title="' + data.name + '" data-id="' + data.id + '" data-name="' + data.designation + '" data-fullname="' + data.name + '">' + data.designation + ' <i class="fa-solid fa-plus"></i></a>';
+                            return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-toggle="tooltip" data-title="' + fullname + '" data-id="' + data.id + '" data-name="' + data.designation + '" data-fullname="' + data.name + '">' + data.designation + ' <i class="fa-solid fa-plus"></i></a>';
                         }
                     }
                 }).on('keyup', function (e) {

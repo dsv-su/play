@@ -7,11 +7,14 @@ use App\MediasiteFolder;
 use App\MediasitePresentation;
 use App\Presenter;
 use App\Services\AuthHandler;
+use App\Services\Filters\VisibilityFilter;
+use App\Services\Ldap\SukatUser;
 use App\Services\Notify\PlayStoreNotify;
 use App\Tag;
 use App\UploadHandler;
 use App\Video;
 use App\VideoCourse;
+use App\VideoPresenter;
 use App\VideoTag;
 use Carbon\Carbon;
 use Exception;
@@ -815,5 +818,62 @@ class PlayController extends Controller
         return Redirect::to(URL::previous() . "#title-header")->withInput()->cookie(
             'videoformat', $request->videoformat, 99999999
         );
+    }
+
+    public function bulkEditShow(Request $request)
+    {
+        $visibility = app(VisibilityFilter::class);
+        $videos = $visibility->filter(Video::whereIn('id', $request->bulkids)->get());
+        return view('manage.bulk-edit-presentation', ['videos' => $videos]);
+    }
+
+    public function bulkEditStore(Request $request)
+    {
+        $visibility = (bool)$request->visibility;
+        $download = (bool)$request->downloadable;
+        $courseids = $request->courses ?? [];
+        $tags = $request->tags ?? [];
+        $supresenters = $request->supresenters ?? [];
+        $externalpresenters = $request->externalpresenters ?? [];
+        $videoids = $request->videos ?? [];
+        $videos = Video::whereIn('id', $videoids)->get();
+
+        foreach ($videos as $video) {
+            $video->visibility = $visibility;
+            $video->downloadable = $download;
+            foreach ($courseids as $courseid) {
+                VideoCourse::updateOrCreate(['video_id' => $video->id, 'course_id' => $courseid]);
+            }
+            foreach ($tags as $tag) {
+                $tag = Tag::firstOrCreate(['name' => $tag]);
+                VideoTag::updateOrcreate(['video_id' => $video->id, 'tag_id' => $tag->id]);
+            }
+            foreach ($externalpresenters as $externalpresenter) {
+                $presenter = Presenter::firstOrCreate([
+                    'name' => $externalpresenter,
+                    'description' => 'external'
+                ]);
+                $presenter->save();
+                VideoPresenter::create([
+                    'video_id' => $video->id,
+                    'presenter_id' => $presenter->id
+                ]);
+            }
+            foreach ($supresenters as $supresenter) {
+                $sukatpresenter = SukatUser::findBy('uid', $supresenter);
+                $presenter = Presenter::firstOrCreate([
+                    'username' => $supresenter,
+                    'description' => 'sukat'
+                ]);
+                $presenter->name = $sukatpresenter->getFirstAttribute('cn');
+                $presenter->save();
+                VideoPresenter::create([
+                    'video_id' => $video->id,
+                    'presenter_id' => $presenter->id
+                ]);
+            }
+        }
+
+        return redirect()->route('manage')->with('success', true)->with('message', __("Presentations are successfully updated"));
     }
 }

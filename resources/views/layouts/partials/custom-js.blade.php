@@ -107,5 +107,33 @@
             document.forms['videoformat'].submit();
         });
     });
+</script>
 
+<script>
+    $(document).ready(function() {
+        $("input[type='checkbox'][name='bulkedit']:checked").each(function () {
+            handleSelected($(this));
+        });
+
+        $("input[type='checkbox'][name='bulkedit']").on('change', function () {
+            handleSelected($(this));
+        });
+
+        function handleSelected(checkbox) {
+            let checked = checkbox.prop('checked');
+            let id = checkbox.attr('data-id');
+            if (checked) {
+                $('#bulkediting').append('<input type="hidden" name="bulkids[]" value=' + id + '>');
+            } else {
+                $('#bulkediting').find('input[value="'+id+'"]').remove();
+            }
+            let n = $('#bulkediting').find('input[name="bulkids[]"]').length;
+            if (n) {
+                $('#bulkediting input[type="submit"]').val('Edit '+n+' selected presentations');
+                $('#bulkediting input').show();
+            } else {
+                $('#bulkediting input').hide();
+            }
+        }
+    });
 </script>

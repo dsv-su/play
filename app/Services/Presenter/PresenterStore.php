@@ -20,13 +20,12 @@ class PresenterStore extends Model
 
     public function presenter()
     {
-        if($this->presenters) {
-            foreach ($this->presenters as $key => $this->item)
-            {
-                if($this->item) {
-                    if(! $this->db_presenter = Presenter::where('username', $this->item)->first()) {
+        if ($this->presenters) {
+            foreach ($this->presenters as $key => $this->item) {
+                if ($this->item) {
+                    if (!$this->db_presenter = Presenter::where('username', $this->item)->first()) {
                         //Stores new presenters
-                        if($this->name = SukatUser::findBy('uid', $this->item)) {
+                        if ($this->name = SukatUser::findBy('uid', $this->item)) {
                             $this->presenter = Presenter::create([
                                 'username' => $this->item,
                                 'name' => $this->name->getFirstAttribute('cn'),
@@ -44,11 +43,9 @@ class PresenterStore extends Model
                             'video_id' => $this->video->id,
                             'presenter_id' => $this->presenter->id,
                         ]);
-                    }
-                    else
-                    {
+                    } else {
                         //Updates presenters
-                        if($this->name = SukatUser::findBy('uid', $this->item)) {
+                        if ($this->name = SukatUser::findBy('uid', $this->item)) {
                             $this->db_presenter::updateOrCreate([
                                 'username' => $this->item],
                                 [
@@ -56,7 +53,7 @@ class PresenterStore extends Model
                                     'name' => $this->name->getFirstAttribute('cn'),
                                 ]);
                         }
-                        if($key == 0) {
+                        if ($key == 0) {
                             //Remove any old associations
                             VideoPresenter::where('video_id', $this->video->id)->delete();
                         }

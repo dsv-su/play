@@ -19,12 +19,13 @@ use Spatie\Searchable\SearchResult;
 class Video extends Model implements Searchable
 {
     use SearchableTrait;
+
     //UUID
     protected $primaryKey = 'id';
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected $fillable = ['presentation_id', 'title', 'title_en', 'thumb','creation','origin','notification_id', 'presenter', 'duration', 'thumb', 'category_id', 'description'];
+    protected $fillable = ['presentation_id', 'title', 'title_en', 'thumb', 'creation', 'origin', 'notification_id', 'presenter', 'duration', 'thumb', 'category_id', 'description'];
     protected $table = 'videos';
 
     //
@@ -70,7 +71,7 @@ class Video extends Model implements Searchable
 
     public function getThumbAttribute(): string
     {
-        return  $this->base_uri() . '/' . $this->id . '/' . $this->attributes['thumb'];
+        return $this->base_uri() . '/' . $this->id . '/' . $this->attributes['thumb'];
     }
 
     public function getTypeAttribute(): string
@@ -113,8 +114,9 @@ class Video extends Model implements Searchable
         return $this->belongsToMany(Tag::class, 'video_tags', 'video_id', 'tag_id')->get();
     }
 
-    public function hasCourseDesignation($designation) {
-        foreach($this->courses() as $course) {
+    public function hasCourseDesignation($designation)
+    {
+        foreach ($this->courses() as $course) {
             if ($course->designation == $designation) {
                 return true;
             }
@@ -124,7 +126,7 @@ class Video extends Model implements Searchable
 
     public function has_tag($tag_id): bool
     {
-        return $this->belongsToMany(Tag::class, 'video_tags', 'video_id', 'tag_id')->where('tag_id', $tag_id)->count()>0;
+        return $this->belongsToMany(Tag::class, 'video_tags', 'video_id', 'tag_id')->where('tag_id', $tag_id)->count() > 0;
     }
 
     public function courses(): Collection
@@ -134,7 +136,7 @@ class Video extends Model implements Searchable
 
     public function has_course($course_id): bool
     {
-        return $this->belongsToMany(Course::class, 'video_courses', 'video_id', 'course_id')->where('course_id', $course_id)->count()>0;
+        return $this->belongsToMany(Course::class, 'video_courses', 'video_id', 'course_id')->where('course_id', $course_id)->count() > 0;
     }
 
     /*public function courses(): Collection
@@ -142,7 +144,7 @@ class Video extends Model implements Searchable
         return $this->belongsToMany(Course::class, VideoCourse::class, 'video_id', 'course_id')->get();
     }*/
 
-    public function presenters():Collection
+    public function presenters(): Collection
     {
         return $this->belongsToMany(Presenter::class, 'video_presenters', 'video_id', 'presenter_id')->get();
     }
@@ -157,7 +159,8 @@ class Video extends Model implements Searchable
         return $this->hasOne(MediasitePresentation::class);
     }
 
-    public function getPresentationDate() {
+    public function getPresentationDate()
+    {
         $presentation = json_decode($this->presentation);
         if ($presentation) {
             return $presentation->creation ?? strtotime($presentation->recorded);
@@ -165,7 +168,7 @@ class Video extends Model implements Searchable
         return null;
     }
 
-    public function permissions():Collection
+    public function permissions(): Collection
     {
         return $this->belongsToMany(Permission::class, 'video_permissions', 'video_id', 'permission_id')->get();
     }
@@ -205,6 +208,23 @@ class Video extends Model implements Searchable
         $this->system_config = parse_ini_file($this->file, true);
 
         return $this->system_config['store']['list_uri'];
+    }
+
+    /**
+     * @return array
+     */
+    public function getUniqueDesignations()
+    {
+        $designations = [];
+        if (!$this->video_course->isEmpty()) {
+            foreach ($this->video_course as $vc) {
+                $designation = Course::find($vc->course_id)->designation;
+                if (!in_array($designation, $designations)) {
+                    $designations[] = $designation;
+                }
+            }
+        }
+        return $designations;
     }
 
 }

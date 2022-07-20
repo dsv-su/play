@@ -20,6 +20,15 @@
 </head>
 <body>
 @include('layouts.partials.header')
+<!-- Bulk editing -->
+<div class="position-fixed w-100 text-center" style="left: 0; right: 0; z-index: 999; top: 15%;">
+    <form class="form-inline mx-3" id="bulkediting" method="post" action="{{route('edit.bulk.show')}}">
+        @csrf
+        @method('GET')
+        <input type="submit" class="btn btn-sm btn-primary m-auto" style="display: none;" value="Download"/><br/><br/>
+    </form>
+</div>
+<!-- -->
 <main id="main-content" class="pl-pr-sm-down-0">
     <div class="container-fluid pl-pr-sm-down-0 my-5 pb-5">
         @yield('content')

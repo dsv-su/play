@@ -105,12 +105,10 @@
 
         <!-- While testing we need id -->
         <p class="card-text">
-            @if (!$video->video_course->isEmpty())
-                @foreach($video->video_course as $vc)
-                    <a href="/designation/{{\App\Course::find($vc->course_id)->designation}}"
-                       class="badge badge-primary">{{\App\Course::find($vc->course_id)->designation}}</a>
-                @endforeach
-            @endif
+            @foreach($video->getUniqueDesignations() as $designation)
+                <a href="/designation/{{$designation}}"
+                   class="badge badge-primary">{{$designation}}</a>
+            @endforeach
 
             @if (!$video->presenters()->isEmpty())
                 @foreach($video->presenters() as $presenter)
