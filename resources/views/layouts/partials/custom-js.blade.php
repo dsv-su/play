@@ -123,13 +123,15 @@
             let checked = checkbox.prop('checked');
             let id = checkbox.attr('data-id');
             if (checked) {
-                $('#bulkediting').append('<input type="hidden" name="bulkids[]" value=' + id + '>');
+                if (!$('#bulkediting').find('input[name="bulkids[]"][value="'+id+'"]').length) {
+                    $('#bulkediting').append('<input type="hidden" name="bulkids[]" value=' + id + '>');
+                }
             } else {
-                $('#bulkediting').find('input[value="'+id+'"]').remove();
+                $('#bulkediting').find('input[value="' + id + '"]').remove();
             }
             let n = $('#bulkediting').find('input[name="bulkids[]"]').length;
             if (n) {
-                $('#bulkediting input[type="submit"]').val('Edit '+n+' selected presentations');
+                $('#bulkediting input[type="submit"]').val('Edit ' + n + ' selected presentations');
                 $('#bulkediting input').show();
             } else {
                 $('#bulkediting input').hide();

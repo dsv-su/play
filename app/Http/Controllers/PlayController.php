@@ -824,6 +824,9 @@ class PlayController extends Controller
     {
         $visibility = app(VisibilityFilter::class);
         $videos = $visibility->filter(Video::whereIn('id', $request->bulkids)->get());
+        $videos = $videos->filter(function ($i) {
+            return $i->edit;
+        });
         return view('manage.bulk-edit-presentation', ['videos' => $videos]);
     }
 
@@ -838,9 +841,30 @@ class PlayController extends Controller
         $videoids = $request->videos ?? [];
         $videos = Video::whereIn('id', $videoids)->get();
 
+        $visibility = app(VisibilityFilter::class);
+        $videos = $visibility->filter($videos);
+
+        $overwritecourses = (bool)$request->overwriteCourse;
+        $overwritepresenters = (bool)$request->overwritePresenter;
+        $overwritetags = (bool)$request->overwriteTag;
+
         foreach ($videos as $video) {
             $video->visibility = $visibility;
             $video->downloadable = $download;
+
+            if ($video->delete) {
+                // Handle overwrites only if a user has delete-permission
+                if ($overwritecourses) {
+                    VideoCourse::where(['video_id' => $video->id])->delete();
+                }
+                if ($overwritepresenters) {
+                    VideoPresenter::where(['video_id' => $video->id])->delete();
+                }
+                if ($overwritetags) {
+                    VideoTag::where(['video_id' => $video->id])->delete();
+                }
+            }
+
             foreach ($courseids as $courseid) {
                 VideoCourse::updateOrCreate(['video_id' => $video->id, 'course_id' => $courseid]);
             }

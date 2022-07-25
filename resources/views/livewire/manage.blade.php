@@ -122,7 +122,7 @@
         Livewire.hook('message.processed', (message, component) => {
             $(function () {
                 $('[data-toggle="tooltip"]').tooltip();
-                $("input[type='checkbox'][name='bulkedit']:checked").each(function () {
+                $("input[type='checkbox'][name='bulkedit']").each(function () {
                     handleSelected($(this));
                 });
 
@@ -135,7 +135,9 @@
             let checked = checkbox.prop('checked');
             let id = checkbox.attr('data-id');
             if (checked) {
-                $('#bulkediting').append('<input type="hidden" name="bulkids[]" value=' + id + '>');
+                if (!$('#bulkediting').find('input[name="bulkids[]"][value="'+id+'"]').length) {
+                    $('#bulkediting').append('<input type="hidden" name="bulkids[]" value=' + id + '>');
+                }
             } else {
                 $('#bulkediting').find('input[value="' + id + '"]').remove();
             }

@@ -85,7 +85,7 @@
                             <div id="addedCourses" class="mx-1 my-2">
                             </div>
                             <div class="row justify-content-between text-left">
-                                <div class="form-group col-12 col-lg-6 flex-column d-flex">
+                                <div class="form-group col-12 col-lg-6 mb-0 flex-column d-flex">
                                     <!-- Course association -->
                                     <div id="course-search-form" class="flex-column d-flex p-0">
                                         <input class="mx-1 w-100" type="search"
@@ -95,6 +95,28 @@
                                                aria-labelledby="course-search">
                                     </div>
                                 </div>
+                                @if($video->delete)
+                                    <div class="col col-md-6 justify-content-start d-sm-flex">
+                                        <div class="form-group my-auto form-row mx-3">
+                                            <label for="overwriteCourse"
+                                                   class="col px-0 col-auto mb-0"><span class="mr-1"
+                                                                                        data-toggle="tooltip"
+                                                                                        title="{{__("This setting will override existing information")}}"><i
+                                                            class="fa-solid fa-circle-question"></i></span>{{__("Overwrite")}}
+                                            </label>
+                                            <div class="col">
+                                       <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip"
+                                             title="{{__("Switch the toggle to change")}}">
+                                        <input class="custom-control-input"
+                                               id="overwriteCourse" name="overwriteCourse"
+                                               type="checkbox">
+                                        <label class="custom-control-label" style="margin-top: 3px;"
+                                               for="overwriteCourse"></label>
+                                    </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -108,7 +130,7 @@
                             <div id="addedPresenters" class="mx-1 my-2">
                             </div>
                             <div class="row justify-content-between text-left">
-                                <div class="form-group col-12 col-lg-6 flex-column d-flex">
+                                <div class="form-group col-12 mb-0 col-lg-6 flex-column d-flex">
                                     <div id="presenter-search-form" class="flex-column d-flex p-0">
                                         <input class="mx-1 w-100" type="search"
                                                id="presenter-search" name="q" autocomplete="off"
@@ -117,6 +139,28 @@
                                                aria-labelledby="presenter-search">
                                     </div>
                                 </div>
+                                @if($video->delete)
+                                    <div class="col col-md-6 justify-content-start d-sm-flex">
+                                        <div class="form-group my-auto form-row mx-3">
+                                            <label for="overwritePresenter"
+                                                   class="col px-0 col-auto mb-0"><span class="mr-1"
+                                                                                        data-toggle="tooltip"
+                                                                                        title="{{__("This setting will override existing information")}}"><i
+                                                            class="fa-solid fa-circle-question"></i></span>{{__("Overwrite")}}
+                                            </label>
+                                            <div class="col">
+                                       <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip"
+                                             title="{{__("Switch the toggle to change")}}">
+                                        <input class="custom-control-input"
+                                               id="overwritePresenter" name="overwritePresenter"
+                                               type="checkbox">
+                                        <label class="custom-control-label" style="margin-top: 3px;"
+                                               for="overwritePresenter"></label>
+                                    </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -129,7 +173,7 @@
                             <div id="addedTags" class="mx-1 my-2">
                             </div>
                             <div class="row justify-content-between text-left">
-                                <div class="form-group col-12 col-lg-6 flex-column d-flex">
+                                <div class="form-group col-12  mb-0 col-lg-6 flex-column d-flex">
                                     <div id="tag-search-form" class="flex-column d-flex p-0">
                                         <input class="mx-1 w-100" type="search"
                                                id="tag-search" name="q" autocomplete="off"
@@ -138,6 +182,28 @@
                                                aria-labelledby="tag-search">
                                     </div>
                                 </div>
+                                @if($video->delete)
+                                    <div class="col col-md-6 justify-content-start d-sm-flex">
+                                        <div class="form-group my-auto form-row mx-3">
+                                            <label for="overwriteTag"
+                                                   class="col px-0 col-auto mb-0"><span class="mr-1"
+                                                                                        data-toggle="tooltip"
+                                                                                        title="{{__("This setting will override existing information")}}"><i
+                                                            class="fa-solid fa-circle-question"></i></span>{{__("Overwrite")}}
+                                            </label>
+                                            <div class="col">
+                                       <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip"
+                                             title="{{__("Switch the toggle to change")}}">
+                                        <input class="custom-control-input"
+                                               id="overwriteTag" name="overwriteTag"
+                                               type="checkbox">
+                                        <label class="custom-control-label" style="margin-top: 3px;"
+                                               for="overwriteTag"></label>
+                                    </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
 
