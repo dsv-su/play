@@ -116,6 +116,8 @@ class Course extends Model implements Searchable
                     return array_map(function ($d) {
                         return $d['id'];
                     }, $daisy_courses);
+                } else {
+                    return [];
                 }
             });
         }
