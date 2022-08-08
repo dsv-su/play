@@ -242,5 +242,8 @@
     "Presentations to be edited": "Presentationer valda för redigering",
     "Switch the toggle to change": "Växla för att ändra inställning",
     "Overwrite": "Skriv över",
-    "This setting will override existing information": "Den här inställningen skriver över befintlig information"
+    "This setting will override existing information": "Den här inställningen skriver över befintlig information",
+    "Number of presentations": "Antal presentationer",
+    "Edit": "Redigera",
+    "selected presentations": "valda presentationer"
 }

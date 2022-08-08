@@ -143,7 +143,7 @@
             }
             let n = $('#bulkediting').find('input[name="bulkids[]"]').length;
             if (n) {
-                $('#bulkediting input[type="submit"]').val('Edit ' + n + ' selected presentations');
+                $('#bulkediting input[type="submit"]').val("{{__("Edit")}}" + ' ' + n + ' ' + "{{__("selected presentations")}}");
                 $('#bulkediting input').show();
             } else {
                 $('#bulkediting input').hide();
