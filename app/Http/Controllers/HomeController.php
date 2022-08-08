@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\ManualPresentation;
 use App\Services\Daisy\DaisyIntegration;
 use App\Services\Filters\VisibilityFilter;
+use App\Services\Student\StudentProfile;
 use App\System;
 use App\Video;
 use App\VideoPermission;
@@ -16,32 +17,16 @@ class HomeController extends Controller
 {
     public function index(DaisyIntegration $daisy, VisibilityFilter $visibility)
     {
-
         $data['permissions'] = VideoPermission::all();
-        $courses = [];
+
         //Seconds to hold cache
         $seconds = 3600;
 
-        //For testing
-        //Fake students
-        if (in_array(app()->make('play_role'), ['Student1', 'Student2', 'Student3'])) {
-            if (app()->make('play_role') == 'Student1') {
-                $courses = [6442, 6841, 6761, 6837, 6703, 6839, 6708, 6838, 6769];
-            } elseif (app()->make('play_role') == 'Student2') {
-                $courses = [6817, 6644, 6737, 6661, 6816, 6835, 6780, 6626, 6656, 6748, 6604, 6684, 6819, 6595, 6852];
-            } elseif (app()->make('play_role') == 'Student3') {
-                $courses = [6798, 6799, 6760, 6778, 6828, 6796, 6719, 6720];
-            } // End testing
-        }
-        elseif (App::environment('production') &&
-            (app()->make('play_auth') == 'Student' && (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Student'))) {
-            // User is Student store courses in cache
-            $courses = Cache::remember(app()->make('play_username'), $seconds, function () use ($daisy){
-                return $daisy->getActiveStudentCourses(app()->make('play_username'));
-            });
+        //If user is student
+        $student = new StudentProfile($daisy, $seconds);
+        $courses = $student->Student();
 
-        }
-        elseif (App::environment('production') &&
+        if (App::environment('production') &&
             (app()->make('play_auth') == 'Administrator' or app()->make('play_auth') == 'Courseadmin' or app()->make('play_auth') == 'Staff') &&
             (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Staff')
         ) {
@@ -60,33 +45,38 @@ class HomeController extends Controller
             */
             $data['mypaginated'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
                 return $query->whereIn('course_id', $courses);
-            })->latest('creation')->Paginate(24, ['*'], 'my')->onEachSide(1);
+            })->latest('creation')->fastPaginate(24, ['*'], 'my')->onEachSide(1);
             $data['my'] = $visibility->filter($data['mypaginated']);
 
         }
 
-        // Active courses (current semester) store in cache
-        $active_courses = Cache::remember(app()->make('play_username') . '_active', $seconds, function () use ($daisy){
-            return $daisy->getActiveCourses();
+        // HT2022 Active courses store in cache
+        $active_courses_ht = Cache::remember(app()->make('play_username') . '_active_ht', $seconds, function () use ($daisy){
+            return $daisy->getActiveCoursesHT();
         });
 
-        //Active (tab2)
-        /*$data['active'] = $visibility->filter(Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses) {
-            return $query->whereIn('course_id', $active_courses);
-        })->latest('creation')->take(100)->get())->take(24);
-        */
-        $data['activepaginated'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses) {
-            return $query->whereIn('course_id', $active_courses);
-        })->latest('creation')->Paginate(24, ['*'], 'active')->onEachSide(1);
-        $data['active'] = $visibility->filter($data['activepaginated']);
+        $data['activepaginated_ht'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses_ht) {
+            return $query->whereIn('course_id', $active_courses_ht);
+        })->latest('creation')->fastPaginate(24, ['*'], 'active_ht')->onEachSide(1);
+        $data['active_ht'] = $visibility->filter($data['activepaginated_ht']);
+
+        // VT2022 Active courses store in cache
+        $active_courses_vt = Cache::remember(app()->make('play_username') . '_active_vt', $seconds, function () use ($daisy){
+            return $daisy->getActiveCoursesVT();
+        });
+
+        $data['activepaginated_vt'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses_vt) {
+            return $query->whereIn('course_id', $active_courses_vt);
+        })->latest('creation')->fastPaginate(24, ['*'], 'active_vt')->onEachSide(1);
+        $data['active_vt'] = $visibility->filter($data['activepaginated_vt']);
 
 
         // All courses (tab 3)
-        $data['latest'] = $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->take(100)->get())->take(24);
-        /*
-        $data['allpaginated'] = Video::with('category', 'video_course.course')->latest('creation')->Paginate(24, ['*'], 'all')->onEachSide(1);
+        //$data['latest'] = $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->take(100)->get())->take(24);
+
+        $data['allpaginated'] = Video::with('category', 'video_course.course')->latest('creation')->fastPaginate(24, ['*'], 'all')->onEachSide(1);
         $data['latest'] = $visibility->filter($data['allpaginated']);
-        */
+
 
         // Add placeholders for manual presentations that are currently processed
         $pending = ManualPresentation::where('user', app()->make('play_username'))->where('status', 'sent')->latest('created')->get();

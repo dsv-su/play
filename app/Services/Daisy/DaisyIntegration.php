@@ -104,15 +104,33 @@ class DaisyIntegration
     }
 
     //Method for retrieving current active courses from Daisy
-    public function getActiveCourses()
+    public function getActiveCoursesHT()
     {
-        $date = Carbon::now()->format('Y-m-d\TH:i:s');
-
-        //$this->course_result = $this->getResource("courseSegment?startDateBefore=$date&endDateAfter=$date", 'json');
+        //$date = Carbon::now()->format('Y-m-d\TH:i:s');
 
         //Retrive only course from this semester
         //Parameter 20221 should be dervied from date
-        $this->course_result = $this->getResource("courseSegment?semester=20221", 'json');
+        $this->course_result = $this->getResource('courseSegment?semester=' . $this->to_year() . '2', 'json');
+
+        $this->courses = json_decode($this->course_result->getBody()->getContents(), TRUE);
+        //Check if there exist active courses
+        if ($this->courses) {
+            foreach ($this->courses as $this->courselist) {
+                $this->list[] = $this->courselist['id'];
+            }
+        } else {
+            $this->list[] = 0;
+        }
+
+        return $this->list;
+    }
+    public function getActiveCoursesVT()
+    {
+        //$date = Carbon::now()->format('Y-m-d\TH:i:s');
+
+        //Retrive only course from this semester
+        //Parameter 20221 should be dervied from date
+        $this->course_result = $this->getResource('courseSegment?semester=' . $this->to_year() . '1', 'json');
 
         $this->courses = json_decode($this->course_result->getBody()->getContents(), TRUE);
         //Check if there exist active courses
