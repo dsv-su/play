@@ -236,6 +236,11 @@
     "Page": "Sida",
     "Total Presentations": "Totala presentationer",
     "Showing per Page": "Visar per sida",
-    "Play all": "Spela upp alla"
-
+    "Play all": "Spela upp alla",
+    "Bulk edit presentations": "Massredigera presentationer",
+    "Changes are saved upon clicking Save button at the bottom of the page.": "Ändringar sparas när du klickar på knappen Spara längst ner på sidan.",
+    "Presentations to be edited": "Presentationer valda för redigering",
+    "Switch the toggle to change": "Växla för att ändra inställning",
+    "Overwrite": "Skriv över",
+    "This setting will override existing information": "Den här inställningen skriver över befintlig information"
 }
