@@ -31,7 +31,6 @@ class VisibilityFilter
                 $CourseSettings->cast();
             }
 
-
             //CourseSettingUsers
             $CourseSettingUsers = new CourseSettingUsersFilter($video);
             $CourseSettingUsers->cast();
@@ -39,9 +38,11 @@ class VisibilityFilter
             //IndividualUsers
             $IndividualUsers = new IndividualPermissionsFilter($video);
             $IndividualUsers->cast();
+
             //CourseAdmins
             $CourseAdmins = new CourseAdminPermissionFilter($video);
             $CourseAdmins->cast();
+            
             //Admins
             $Admins = new AdminPermissionsFilter($video);
             if($Admins->cast()) {

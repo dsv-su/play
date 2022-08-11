@@ -38,11 +38,8 @@ class HomeController extends Controller
         }
 
         if (!empty($courses)) {
-            //My courses (tab 1)
-            /*$data['my'] = $visibility->filter(Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
-                return $query->whereIn('course_id', $courses);
-            })->latest('creation')->get());
-            */
+            //My courses
+
             $data['mypaginated'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
                 return $query->whereIn('course_id', $courses);
             })->latest('creation')->fastPaginate(24, ['*'], 'my')->onEachSide(1);
@@ -54,7 +51,6 @@ class HomeController extends Controller
         $active_courses_ht = Cache::remember(app()->make('play_username') . '_active_ht', $seconds, function () use ($daisy){
             return $daisy->getActiveCoursesHT();
         });
-
         $data['activepaginated_ht'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses_ht) {
             return $query->whereIn('course_id', $active_courses_ht);
         })->latest('creation')->fastPaginate(24, ['*'], 'active_ht')->onEachSide(1);
@@ -64,7 +60,6 @@ class HomeController extends Controller
         $active_courses_vt = Cache::remember(app()->make('play_username') . '_active_vt', $seconds, function () use ($daisy){
             return $daisy->getActiveCoursesVT();
         });
-
         $data['activepaginated_vt'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses_vt) {
             return $query->whereIn('course_id', $active_courses_vt);
         })->latest('creation')->fastPaginate(24, ['*'], 'active_vt')->onEachSide(1);
@@ -73,10 +68,8 @@ class HomeController extends Controller
 
         // All courses (tab 3)
         //$data['latest'] = $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->take(100)->get())->take(24);
-
         $data['allpaginated'] = Video::with('category', 'video_course.course')->latest('creation')->fastPaginate(24, ['*'], 'all')->onEachSide(1);
         $data['latest'] = $visibility->filter($data['allpaginated']);
-
 
         // Add placeholders for manual presentations that are currently processed
         $pending = ManualPresentation::where('user', app()->make('play_username'))->where('status', 'sent')->latest('created')->get();

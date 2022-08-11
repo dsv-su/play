@@ -106,10 +106,11 @@ class DaisyIntegration
     //Method for retrieving current active courses from Daisy
     public function getActiveCoursesHT()
     {
-        //$date = Carbon::now()->format('Y-m-d\TH:i:s');
+        $this->course_result = [];
+        $this->courses = [];
+        $this->list = [];
 
         //Retrive only course from this semester
-        //Parameter 20221 should be dervied from date
         $this->course_result = $this->getResource('courseSegment?semester=' . $this->to_year() . '2', 'json');
 
         $this->courses = json_decode($this->course_result->getBody()->getContents(), TRUE);
@@ -126,10 +127,11 @@ class DaisyIntegration
     }
     public function getActiveCoursesVT()
     {
-        //$date = Carbon::now()->format('Y-m-d\TH:i:s');
+        $this->course_result = [];
+        $this->courses = [];
+        $this->list = [];
 
         //Retrive only course from this semester
-        //Parameter 20221 should be dervied from date
         $this->course_result = $this->getResource('courseSegment?semester=' . $this->to_year() . '1', 'json');
 
         $this->courses = json_decode($this->course_result->getBody()->getContents(), TRUE);
