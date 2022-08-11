@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('adminhandler:truncate');
         $schedule->command('upload:clear');
         $schedule->command('download:clear');
-        //$schedule->command('update:courses')->daily();
+        $schedule->command('update:courses');
     }
 
     /**
