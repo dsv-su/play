@@ -42,10 +42,16 @@ class VisibilityFilter
             //CourseAdmins
             $CourseAdmins = new CourseAdminPermissionFilter($video);
             $CourseAdmins->cast();
-            
+
             //Admins
             $Admins = new AdminPermissionsFilter($video);
             if($Admins->cast()) {
+                return $video;
+            }
+
+            //Make hidden videos show with 'hidden' features
+            if($video->visibility == false) {
+                $video->setAttribute('hidden', true);
                 return $video;
             }
 
