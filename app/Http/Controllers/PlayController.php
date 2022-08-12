@@ -10,6 +10,7 @@ use App\Services\AuthHandler;
 use App\Services\Filters\VisibilityFilter;
 use App\Services\Ldap\SukatUser;
 use App\Services\Notify\PlayStoreNotify;
+use App\Services\Video\TitleObject;
 use App\Tag;
 use App\UploadHandler;
 use App\Video;
@@ -692,6 +693,7 @@ class PlayController extends Controller
     {
         $mps = MediasitePresentation::where('status', 'sent')->where('video_id', '')->orderBy('updated_at')->get();
         foreach ($mps as $mp) {
+            $mp->title = (new TitleObject($mp->title))->getLangTitle();
             $mp->courses = json_decode($mp->courses);
             $mp->presenters = json_decode($mp->presenters);
             $mp->tags = json_decode($mp->tags);
