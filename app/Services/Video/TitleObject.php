@@ -11,7 +11,7 @@ class TitleObject
 
     public function __construct($title)
     {
-        if (json_decode($title, true) !== NULL) {
+        if (!is_array($title) && json_decode($title, true) !== NULL) {
             $title = json_decode($title, true);
         }
         if ($this->isJson($title)) {
