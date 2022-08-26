@@ -74,8 +74,8 @@ class HomeController extends Controller
 
         // Add placeholders for manual presentations that are currently processed
         $pending = ManualPresentation::where('user', app()->make('play_username'))->where('status', 'sent')->latest('created')->get();
-        foreach ($pending as $mp) {
-            $mp->title = (new TitleObject($mp->title))->getLangTitle();
+        foreach ($pending as $pp) {
+            $pp->title = (new TitleObject(['sv' => $pp->title, 'en' => $pp->title_en]))->getLangTitle();
         }
 
         $data['upload'] = true;
