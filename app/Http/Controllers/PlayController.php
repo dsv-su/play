@@ -651,7 +651,7 @@ class PlayController extends Controller
 
                     //$p = MediasitePresentation::where('mediasite_id', $presentationid)->first();
                     $presentation->status = 'request download';
-                    $presentation->title = ['sv' => $metadata['title'], 'en' => $metadata['title']];
+                    $presentation->title = $metadata['title'];
                     $presentation->description = $metadata['description'] ?? '';
                     $presentation->presenters = $metadata['presenters'] ?? [];
                     $presentation->tags = $metadata['tags'] ?? [];
@@ -841,10 +841,13 @@ class PlayController extends Controller
         $supresenters = $request->supresenters ?? [];
         $externalpresenters = $request->externalpresenters ?? [];
         $videoids = $request->videos ?? [];
+        // Get videos from the ids
         $videos = Video::whereIn('id', $videoids)->get();
-
-        $visibility = app(VisibilityFilter::class);
-        $videos = $visibility->filter($videos);
+        $visibilityFilter = app(VisibilityFilter::class);
+        // Filter them
+        $fitleredvideos = $visibilityFilter->filter($videos)->pluck('id');
+        // Re-load them to get rid of casts and extra attributes
+        $videos = Video::whereIn('id', $fitleredvideos)->get();
 
         $overwritecourses = (bool)$request->overwriteCourse;
         $overwritepresenters = (bool)$request->overwritePresenter;
@@ -852,7 +855,7 @@ class PlayController extends Controller
 
         foreach ($videos as $video) {
             $video->visibility = $visibility;
-            $video->downloadable = $download;
+            $video->download = $download;
 
             if ($video->delete) {
                 // Handle overwrites only if a user has delete-permission
@@ -898,6 +901,7 @@ class PlayController extends Controller
                     'presenter_id' => $presenter->id
                 ]);
             }
+            $video->save();
         }
 
         return redirect()->route('manage')->with('success', true)->with('message', __("Presentations are successfully updated"));

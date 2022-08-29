@@ -22,7 +22,6 @@ class PlayStoreNotify extends Model
     {
         // type: manual | type: update | type: mediasite
         $this->presentation
-            ->makeHidden('title_en')
             ->makeHidden('status')
             ->makeHidden('user')
             ->makeHidden('user_email')
@@ -55,6 +54,9 @@ class PlayStoreNotify extends Model
         ]);
 
         $this->json['package'] = $this->presentation;
+        $this->json['package']['title'] = ['sv' => $this->presentation->title, 'en' => $this->presentation->title_en ?? $this->presentation->title];
+
+        $this->presentation->makeHidden('title_en');
 
         $this->json = $this->json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 

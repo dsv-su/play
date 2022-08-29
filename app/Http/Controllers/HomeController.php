@@ -6,6 +6,7 @@ use App\ManualPresentation;
 use App\Services\Daisy\DaisyIntegration;
 use App\Services\Filters\VisibilityFilter;
 use App\Services\Student\StudentProfile;
+use App\Services\Video\TitleObject;
 use App\System;
 use App\Video;
 use App\VideoPermission;
@@ -73,6 +74,10 @@ class HomeController extends Controller
 
         // Add placeholders for manual presentations that are currently processed
         $pending = ManualPresentation::where('user', app()->make('play_username'))->where('status', 'sent')->latest('created')->get();
+        foreach ($pending as $pp) {
+            $pp->title = (new TitleObject(['sv' => $pp->title, 'en' => $pp->title_en]))->getLangTitle();
+        }
+
         $data['upload'] = true;
         $data['pending'] = $pending;
 

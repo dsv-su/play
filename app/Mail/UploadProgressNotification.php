@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Services\Video\TitleObject;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -22,9 +23,6 @@ class UploadProgressNotification extends Mailable
     public function __construct($presentation)
     {
         $this->presentation = $presentation;
-        $this->title_array = json_decode($presentation->title['sv'], true);
-        $this->title_swedish = $this->title_array['sv'];
-        $this->title_english = $this->title_array['en'];
     }
 
     /**
