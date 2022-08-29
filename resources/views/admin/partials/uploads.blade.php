@@ -41,9 +41,9 @@
                             <td>{{$manual_presentation->id}}</td>
                             <td>{{$manual_presentation->created_at}}</td>
                             @if(Lang::locale() == 'swe')
-                                <td>{{json_decode($manual_presentation->title['sv'])->sv ?? ''}}</td>
+                                <td>{{$manual_presentation->title['sv'] ?? ''}}</td>
                             @else
-                                <td>{{json_decode($manual_presentation->title['sv'])->en ?? ''}}</td>
+                                <td>{{$manual_presentation->title['en'] ?? ''}}</td>
                             @endif
                             <td>{{$manual_presentation->local}}</td>
                             <td>{{$manual_presentation->user}}</td>

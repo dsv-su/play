@@ -21,16 +21,7 @@ class ManualPresentation extends Model
 
     public function getTitleAttribute()
     {
-        return $this->attributes['title'] = ['sv' => $this->attributes['title'], 'en' => $this->attributes['title_en']];
-    }
-
-    public function getLangTitleAttribute(): string
-    {
-        if (Lang::locale() == 'swe') {
-            return $this->title;
-        } else {
-            return $this->title_en ?: $this->title;
-        }
+        return ['sv' => $this->attributes['title'], 'en' => $this->attributes['title_en']];
     }
 
     public function setPresentersAttribute($value)
