@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Lang;
 
 class ManualPresentation extends Model
 {
@@ -21,6 +22,15 @@ class ManualPresentation extends Model
     public function getTitleAttribute()
     {
         return $this->attributes['title'] = ['sv' => $this->attributes['title'], 'en' => $this->attributes['title_en']];
+    }
+
+    public function getLangTitleAttribute(): string
+    {
+        if (Lang::locale() == 'swe') {
+            return $this->title;
+        } else {
+            return $this->title_en ?: $this->title;
+        }
     }
 
     public function setPresentersAttribute($value)
