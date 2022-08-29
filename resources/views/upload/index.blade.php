@@ -72,7 +72,7 @@
                                             class="text-danger"> *</span></label>
                                 <input class="form-control" id="title_en" name="title_en" type="text"
                                        placeholder="{{ __("Title in English") }}"
-                                       value="{{ old('title') ? old('title'): $title ?? '' }}">
+                                       value="{{ old('title_en') ? old('title'): $title_en ?? '' }}">
                                 <div class="invalid-feedback">
                                     {{__("Title in English is required")}}
                                 </div>
