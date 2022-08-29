@@ -651,7 +651,7 @@ class PlayController extends Controller
 
                     //$p = MediasitePresentation::where('mediasite_id', $presentationid)->first();
                     $presentation->status = 'request download';
-                    $presentation->title = $metadata['title'];
+                    $presentation->title = ['sv' => $metadata['title'], 'en' => $metadata['title']];
                     $presentation->description = $metadata['description'] ?? '';
                     $presentation->presenters = $metadata['presenters'] ?? [];
                     $presentation->tags = $metadata['tags'] ?? [];
