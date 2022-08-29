@@ -58,8 +58,8 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     })->name('manage');
 
     //Manage
-    Route::get('/manage', 'SearchController@search')->name('user_manage');
-    Route::post('/manage', 'SearchController@search')->name('filter_manage');
+    Route::get('/user_manage', 'SearchController@search')->name('user_manage');
+    Route::post('/filter_manage', 'SearchController@search')->name('filter_manage');
     Route::get('/manage/courses', 'ManageCourseSettingsController@index')->name('manage_course');
     Route::get('/course/{courseid}/edit', 'ManageCourseSettingsController@edit')->name('course_edit');
     Route::post('/course/{courseid}/store', 'ManageCourseSettingsController@store')->name('course_edit_store');
