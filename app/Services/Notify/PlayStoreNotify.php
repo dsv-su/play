@@ -87,6 +87,7 @@ class PlayStoreNotify extends Model
             if ($e->hasResponse()) {
 
                 //Change model status
+                $this->presentation->fresh();
                 $this->presentation->status = 'failed';
                 $this->presentation->save();
 
@@ -104,6 +105,7 @@ class PlayStoreNotify extends Model
 
         if ($this->response->getBody()) {
             //Change manualupdate status
+            $this->presentation->fresh();
             $this->presentation->status = 'sent';
             $this->presentation->save();
 
@@ -116,6 +118,7 @@ class PlayStoreNotify extends Model
             return redirect('/')->with(['message' => $message]);
         } else {
             //Change manualupdate status
+            $this->presentation->fresh();
             $this->presentation->status = 'failed';
             $this->presentation->save();
             //TODO Store error
