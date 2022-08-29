@@ -40,11 +40,7 @@
                             <td>{{$manual_presentation->status}}</td>
                             <td>{{$manual_presentation->id}}</td>
                             <td>{{$manual_presentation->created_at}}</td>
-                            @if(Lang::locale() == 'swe')
-                                <td>{{json_decode($manual_presentation->title['sv'])->sv ?? ''}}</td>
-                            @else
-                                <td>{{json_decode($manual_presentation->title['sv'])->en ?? ''}}</td>
-                            @endif
+                            <td>{{$manual_presentation->Langtitle}}</td>
                             <td>{{$manual_presentation->local}}</td>
                             <td>{{$manual_presentation->user}}</td>
                             @if($manual_presentation->status == 'failed' or $manual_presentation->status == 'stored' or $manual_presentation->status == 'sent')

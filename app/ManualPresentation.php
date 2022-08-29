@@ -19,11 +19,6 @@ class ManualPresentation extends Model
         'sources' =>  'array',
     ];
 
-    /*public function getLangTitleAttribute()
-    {
-        return $this->attributes['title'] = ['sv' => $this->attributes['title'], 'en' => $this->attributes['title_en']];
-    }*/
-
     public function getLangTitleAttribute(): string
     {
         if (Lang::locale() == 'swe') {
@@ -31,6 +26,7 @@ class ManualPresentation extends Model
         } else {
             return $this->title_en ?: $this->title;
         }
+
     }
 
     public function setPresentersAttribute($value)
