@@ -2,7 +2,6 @@
 
 namespace App\Mail;
 
-use App\Services\Video\TitleObject;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -13,7 +12,6 @@ class UploadProgressNotification extends Mailable
     use Queueable, SerializesModels;
 
     public $presentation;
-    public $title_array = [], $title_swedish, $title_english;
 
     /**
      * Create a new message instance.

@@ -119,27 +119,27 @@ class VideoApiController extends Controller
             //If manual upload - Send email to uploader
             if($video->origin == 'manual') {
                 //Retrive upload
-                $presentation = ManualPresentation::find($video->notification_id);
+                $manualpresentation = ManualPresentation::find($video->notification_id);
 
                 //Set edit/delete individual permission for uploader
                 IndividualPermission::updateOrCreate([
                     'video_id' => $video->id,
-                    'username' => $presentation->user,
+                    'username' => $manualpresentation->user,
                     'name' => 'Uploader', //This can later look up SUKAT for displayname
                     'permission' => 'delete'
                 ]);
 
                 //Send email to uploader
-                $job = (new JobUploadSuccessNotification($video, $presentation));
+                $job = (new JobUploadSuccessNotification($video, $manualpresentation));
                 // Dispatch Job and continue
                 dispatch($job);
 
                 //Update presentation status
-                $presentation->status = 'completed';
-                $presentation->save();
+                $manualpresentation->status = 'completed';
+                $manualpresentation->save();
 
                 //Remove temp storage
-                Storage::disk('public')->deleteDirectory($presentation->local);
+                Storage::disk('public')->deleteDirectory($manualpresentation->local);
             }
             return response()->json('Presentation has been created', Response::HTTP_CREATED);
         } else {
