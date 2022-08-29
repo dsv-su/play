@@ -39,6 +39,12 @@ class PlayStoreNotify extends Model
             $this->presentation
                 ->makeHidden('subtitles');
         }
+
+        //Exceptions
+        if ($type == 'manual') {
+            $this->presentation->title = ['sv' => $this->presentation['title'], 'en' => $this->presentation['title_en']];
+        }
+
         if ($type == 'update') {
             $this->presentation
                 ->makeHidden('resolution');

@@ -19,10 +19,10 @@ class ManualPresentation extends Model
         'sources' =>  'array',
     ];
 
-    public function getTitleAttribute()
+    /*public function getLangTitleAttribute()
     {
         return $this->attributes['title'] = ['sv' => $this->attributes['title'], 'en' => $this->attributes['title_en']];
-    }
+    }*/
 
     public function getLangTitleAttribute(): string
     {
