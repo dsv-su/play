@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Lang;
 
 /**
  * @mixin IdeHelperMediasitePresentation
@@ -20,5 +21,11 @@ class MediasitePresentation extends Model
     public function folder(): BelongsTo
     {
         return $this->belongsTo(MediasiteFolder::class);
+    }
+
+    public function getLangTitleAttribute(): string
+    {
+        // We need this to be the same as other presentation types, thus simply returning title attribute.
+        return $this->title;
     }
 }

@@ -689,6 +689,21 @@ class PlayController extends Controller
         return false;
     }
 
+    public function conversionQueue() {
+        $json = file_get_contents('https://play-store-prod.dsv.su.se/status/queue');
+        $queue = json_decode($json);
+        foreach ($queue as $i => $item) {
+            if ($item->type == 'cattura') {
+                $item->date = explode('--', explode('-at-', $item->title)[1]);
+                $item->time = substr($item->date[1], 5);
+                $item->date = $item->date[0];
+            } else {
+                unset($queue[$i]);
+            }
+        }
+        return view('home.pending_queue', ['queue' => $queue]);
+    }
+
     public function pendingMediasite()
     {
         $mps = MediasitePresentation::where('status', 'sent')->where('video_id', '')->orderBy('updated_at')->get();

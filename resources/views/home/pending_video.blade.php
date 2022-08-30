@@ -68,7 +68,6 @@
             @if ($video->tags)
                 @foreach($video->tags as $tag)
                     <span class="badge badge-secondary">{{$tag}}</span>
-
                 @endforeach
             @endif
             -->

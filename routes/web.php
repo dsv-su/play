@@ -37,7 +37,7 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     Route::post('/tag/{tag}', 'SearchController@viewByTag')->name('tag.filter');
     Route::get('/presenter/{presenter}', 'SearchController@viewByPresenter')->name('presenter.presentations');
     Route::post('/presenter/{presenter}', 'SearchController@viewByPresenter')->name('presenter.filter');
-    Route::get('/queue', 'PlayController@pendingMediasite')->name('mediasite.pending');
+    Route::get('/queue', 'PlayController@conversionQueue')->name('conversion.queue');
 
     // Search and autocomplete
     Route::get('/search/{q}', 'SearchController@search')->name('search');

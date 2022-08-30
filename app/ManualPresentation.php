@@ -26,7 +26,6 @@ class ManualPresentation extends Model
         } else {
             return $this->title_en ?: $this->title;
         }
-
     }
 
     public function setPresentersAttribute($value)
