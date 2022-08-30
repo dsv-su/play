@@ -2,6 +2,7 @@
 
 namespace App\Services\Notify;
 
+use App\ManualPresentation;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -87,7 +88,7 @@ class PlayStoreNotify extends Model
             if ($e->hasResponse()) {
 
                 //Change model status
-                $this->presentation->fresh();
+                $this->presentation = ManualPresentation::find($this->presentation->id);
                 $this->presentation->status = 'failed';
                 $this->presentation->save();
 
@@ -105,7 +106,7 @@ class PlayStoreNotify extends Model
 
         if ($this->response->getBody()) {
             //Change manualupdate status
-            $this->presentation->fresh();
+            $this->presentation = ManualPresentation::find($this->presentation->id);
             $this->presentation->status = 'sent';
             $this->presentation->save();
 
@@ -118,7 +119,7 @@ class PlayStoreNotify extends Model
             return redirect('/')->with(['message' => $message]);
         } else {
             //Change manualupdate status
-            $this->presentation->fresh();
+            $this->presentation = ManualPresentation::find($this->presentation->id);
             $this->presentation->status = 'failed';
             $this->presentation->save();
             //TODO Store error
@@ -180,8 +181,8 @@ class PlayStoreNotify extends Model
              * If there is an exception; Client error;
              */
             if ($e->hasResponse()) {
-
                 //Change model status
+                $this->presentation = ManualPresentation::find($this->presentation->id);
                 $this->presentation->status = 'failed';
                 $this->presentation->save();
 
@@ -193,16 +194,16 @@ class PlayStoreNotify extends Model
         }
 
         if ($this->response->getBody()) {
-
             //Change manualupdate status
+            $this->presentation = ManualPresentation::find($this->presentation->id);
             $this->presentation->status = 'notified fail';
             $this->presentation->save();
 
             return back()->withInput();
 
         } else {
-
             //Change manualupdate status
+            $this->presentation = ManualPresentation::find($this->presentation->id);
             $this->presentation->status = 'notification error';
             $this->presentation->save();
             //TODO Store error
