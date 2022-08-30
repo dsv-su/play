@@ -1,6 +1,6 @@
 Uppladdning pågår<br><br>
 
-Din presentation med titel: <b>{{ $presentation['title'] }}</b> bearbetas. Detta kan ta några minuter.
+Din presentation med titel: <b>{{ $presentation['title'] }}</b> bearbetas. Detta kan dröja från några minuter till ett par timmar.
 Du kommer att få ett e-postmeddelande när din presentation har laddats upp.
 <br><br>
 ---
@@ -12,7 +12,7 @@ Om du behöver ytterligare support, vänligen kontakta oss via <b>helpdesk@dsv.s
 <br><br><br>
 Upload in progress<br><br>
 
-Your presentation with title: <b>{{ $presentation['title_en'] }}</b> is being processed. This may take a few minutes.
+Your presentation with title: <b>{{ $presentation['title_en'] }}</b> is being processed. This can take from a few minutes to a couple of hours.
 You will receive an email once your presentation has been uploaded successfully.
 <br><br>
 
