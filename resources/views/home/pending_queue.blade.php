@@ -18,7 +18,8 @@
         <div class="d-flex mb-3 flex-wrap">
             @foreach ($queue as $item)
                 <div class="col my-3">
-                    <div class="card video m-auto faded" style="box-shadow: 0 1rem 3rem rgba(240, 173, 78, 1.5)!important;">
+                    <div class="card video m-auto faded"
+                         style="box-shadow: 0 1rem 3rem rgba(240, 173, 78, 1.5)!important;">
                         <div class="card-header position-relative">
                             <div class="d-flex justify-content-center h-100">
                                 <div class="d-inline alert alert-secondary m-auto"
@@ -28,8 +29,26 @@
                         <div class="card-body p-1 overflow-hidden">
                             <div class="d-flex align-items-start">
                                 <div>
-                                    <h4 class="card-text font-1rem px-1 pt-2">{{ $item->recorder ?? ''}}</h4>
-                                    <h4 class="card-text font-1rem px-1 pb-2">(recorded on {{$item->date ?? '' }} at {{$item->time ?? ''}})</h4>
+                                    @if ($item->type == 'cattura')
+                                        <h4 class="card-text font-1rem px-1 pt-2">{{ $item->recorder ?? ''}}</h4>
+                                        <h4 class="card-text font-1rem px-1 pb-2">(recorded on {{$item->date ?? '' }}
+                                            at {{$item->time ?? ''}})</h4>
+                                    @elseif ($item->type == 'mediasite')
+                                        <h4 class="card-text font-1rem px-1 pt-2">{{ $item->title->sv ?? ''}}</h4>
+                                        <p class="card-text">
+                                            @if ($item->courses)
+                                                @foreach($item->courses as $designation)
+                                                    <a href="/designation/{{$designation}}"
+                                                       class="badge badge-primary">{{$designation}}</a>
+                                                @endforeach
+                                            @endif
+                                            @if ($item->presenters)
+                                                @foreach($item->presenters as $username)
+                                                    <span class="badge badge-light">{{$username}}</span>
+                                                @endforeach
+                                            @endif
+                                        </p>
+                                    @endif
                                 </div>
                             </div>
                         </div>

@@ -697,6 +697,8 @@ class PlayController extends Controller
                 $item->date = explode('--', explode('-at-', $item->title)[1]);
                 $item->time = substr($item->date[1], 5);
                 $item->date = $item->date[0];
+            } elseif ($item->type == 'mediasite') {
+
             } else {
                 unset($queue[$i]);
             }
