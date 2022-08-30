@@ -445,10 +445,10 @@ class SearchController extends Controller
                     $groupedvideos[$vc->course_id]->add($video);
                 }
             } else {
-                if (!isset($groupedvideos[0])) {
-                    $groupedvideos[0] = Collection::empty();
+                if (!isset($groupedvideos[999999])) {
+                    $groupedvideos[999999] = Collection::empty();
                 }
-                $groupedvideos[0]->add($video);
+                $groupedvideos[999999]->add($video);
             }
         }
 

@@ -1,9 +1,9 @@
 @if (!$videos->isempty())
     @foreach ($videos as $key => $videocourse)
         <h3 class="col mt-4" style="line-height: 1.5em;">
-            <a class="link @if ($videos->first() !== $videocourse || (isset($manage) && $manage))collapsed @endif"
+            <a class="link"
                data-toggle="collapse"
-               href="#collapse{{$key}}" role="button" aria-expanded="false"
+               href="#collapse{{$key}}" role="button" aria-expanded="true"
                aria-controls="collapse{{$key}}">
                 <i class="fa mr-2"></i>
                 @if(Lang::locale() == 'swe')
@@ -74,7 +74,7 @@
                 @endif
             </div>
         </h3>
-        <div class="collapse @if ((isset($manage) && $manage) || $videos->first() !== $videocourse) hide @else show @endif"
+        <div class="collapse show"
              id="collapse{{$key}}">
             @if (isset($manage) && $manage)
                 <h5 class="col">

@@ -79,7 +79,7 @@
                     } else if (data.type === 'presenter') {
                         return '<li><a class="d-block w-100" href="/presenter/' + data.username + '">{{ __('Presenter') }}: ' + data.name + '</a></li>';
                     } else {
-                        return '<li><a class="d-block w-100" href="/player/' + data.id + '">Video: ' + data.title + '</a></li>';
+                        return '<li><a class="d-block w-100" href="/player/' + data.id + '">Presentation: ' + data.title + '</a></li>';
                     }
                 }
             }
