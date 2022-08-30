@@ -3,6 +3,7 @@
 namespace App\Services\Notify;
 
 use App\ManualPresentation;
+use App\MediasitePresentation;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -44,6 +45,8 @@ class PlayStoreNotify extends Model
         //Exceptions
         if ($type == 'manual') {
             $this->presentation->title = ['sv' => $this->presentation['title'], 'en' => $this->presentation['title_en']];
+        } elseif ($type == 'mediasite') {
+            $this->presentation->title = ['sv' => $this->presentation['title'], 'en' => $this->presentation['title']];
         }
 
         if ($type == 'update') {
@@ -88,7 +91,7 @@ class PlayStoreNotify extends Model
             if ($e->hasResponse()) {
 
                 //Change model status
-                $this->presentation = ManualPresentation::find($this->presentation->id);
+                $this->presentation = ($type == 'mediasite') ? MediasitePresentation::find($this->presentation->id) : ManualPresentation::find($this->presentation->id);
                 $this->presentation->status = 'failed';
                 $this->presentation->save();
 
@@ -106,7 +109,7 @@ class PlayStoreNotify extends Model
 
         if ($this->response->getBody()) {
             //Change manualupdate status
-            $this->presentation = ManualPresentation::find($this->presentation->id);
+            $this->presentation = ($type == 'mediasite') ? MediasitePresentation::find($this->presentation->id) : ManualPresentation::find($this->presentation->id);
             $this->presentation->status = 'sent';
             $this->presentation->save();
 
@@ -119,7 +122,7 @@ class PlayStoreNotify extends Model
             return redirect('/')->with(['message' => $message]);
         } else {
             //Change manualupdate status
-            $this->presentation = ManualPresentation::find($this->presentation->id);
+            $this->presentation = ($type == 'mediasite') ? MediasitePresentation::find($this->presentation->id) : ManualPresentation::find($this->presentation->id);
             $this->presentation->status = 'failed';
             $this->presentation->save();
             //TODO Store error
@@ -182,7 +185,7 @@ class PlayStoreNotify extends Model
              */
             if ($e->hasResponse()) {
                 //Change model status
-                $this->presentation = ManualPresentation::find($this->presentation->id);
+                $this->presentation = ($type == 'mediasite') ? MediasitePresentation::find($this->presentation->id) : ManualPresentation::find($this->presentation->id);
                 $this->presentation->status = 'failed';
                 $this->presentation->save();
 
@@ -195,7 +198,7 @@ class PlayStoreNotify extends Model
 
         if ($this->response->getBody()) {
             //Change manualupdate status
-            $this->presentation = ManualPresentation::find($this->presentation->id);
+            $this->presentation = ($type == 'mediasite') ? MediasitePresentation::find($this->presentation->id) : ManualPresentation::find($this->presentation->id);
             $this->presentation->status = 'notified fail';
             $this->presentation->save();
 
@@ -203,7 +206,7 @@ class PlayStoreNotify extends Model
 
         } else {
             //Change manualupdate status
-            $this->presentation = ManualPresentation::find($this->presentation->id);
+            $this->presentation = ($type == 'mediasite') ? MediasitePresentation::find($this->presentation->id) : ManualPresentation::find($this->presentation->id);
             $this->presentation->status = 'notification error';
             $this->presentation->save();
             //TODO Store error
