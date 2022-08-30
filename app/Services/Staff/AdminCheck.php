@@ -17,17 +17,17 @@ class AdminCheck
         $this->auth = $this->admin_entitlement();
     }
 
-    public function check()
+    public function check(): bool
     {
-        $server_entitlements = explode(";", $_SERVER[$this->auth_param]);
-        if(in_array($this->auth, $server_entitlements)) {
+        if (isset($_SERVER[$this->auth_param]) && in_array($this->auth, explode(";", $_SERVER[$this->auth_param]))) {
             return true;
         } else {
             return false;
         }
     }
 
-    private function admin_entitlement()
+    private
+    function admin_entitlement()
     {
         $this->file = base_path() . '/systemconfig/play.ini';
         if (!file_exists($this->file)) {
