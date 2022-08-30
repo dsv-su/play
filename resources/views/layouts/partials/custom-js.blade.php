@@ -55,14 +55,13 @@
             name: 'autocomplete-items',
             display: function (item) {
                 if (item.type === 'course') {
-                    return 'Course: ' + item.name + ' (' + item.designation + ')';
+                    return item.name + ' (' + item.designation + ')';
                 } else if (item.type === 'tag') {
-                    console.log(item);
-                    return 'Tag: ' + item.name;
+                    return item.name;
                 } else if (item.type === 'presenter') {
-                    return 'Presenter: ' + item.name;
+                    return item.name;
                 } else {
-                    return 'Presentation: ' + item.title;
+                    return item.title;
                 }
             },
             templates: {
