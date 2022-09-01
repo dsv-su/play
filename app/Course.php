@@ -30,7 +30,8 @@ class Course extends Model implements Searchable
         'columns' => [
             'name' => 5,
             'name_en' => 6,
-            'designation' => 10
+            'designation' => 10,
+            'year' => 1
         ]
     ];
     protected $appends = ['type'];

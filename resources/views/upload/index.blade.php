@@ -346,7 +346,7 @@
             jQuery(document).ready(function ($) {
                 var engine2 = new Bloodhound({
                     remote: {
-                        url: '/findcourse?query=%QUERY%&onlydesignation=true',
+                        url: '/findcourse?query=%QUERY%',
                         wildcard: '%QUERY%'
                     },
                     datumTokenizer: Bloodhound.tokenizers.whitespace('query'),
@@ -379,9 +379,9 @@
                         suggestion: function (data) {
                             var fullname = @if(Lang::locale() == 'swe') data.name
                             @else data.name_en @endif;
-                            //return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-toggle="tooltip" title="' + data.name + '" data-id="' + data.id + '" data-name="' + data.designation + ' ' + data.semester + data.year + '" data-fullname="' + data.name + '">' + data.designation + ' ' + data.semester + data.year + ' <i class="fa-solid fa-plus"></i></a>';
+                            return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-toggle="tooltip" title="' + data.name + '" data-id="' + data.id + '" data-name="' + data.designation + ' ' + data.semester + data.year + '" data-fullname="' + data.name + '">' + data.designation + ' ' + data.semester + data.year + ' <i class="fa-solid fa-plus"></i></a>';
                             // Show only designations for now since play-store can't handle course ids
-                            return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-toggle="tooltip" data-title="' + fullname + '" data-id="' + data.id + '" data-name="' + data.designation + '" data-fullname="' + data.name + '">' + data.designation + ' <i class="fa-solid fa-plus"></i></a>';
+                            //return '<a class="badge badge-light d-inline-block m-1 cursor-pointer" data-toggle="tooltip" data-title="' + fullname + '" data-id="' + data.id + '" data-name="' + data.designation + '" data-fullname="' + data.name + '">' + data.designation + ' <i class="fa-solid fa-plus"></i></a>';
                         }
                     }
                 }).on('keyup', function (e) {

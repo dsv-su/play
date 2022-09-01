@@ -633,9 +633,11 @@ class SearchController extends Controller
     function findCourse(Request $request)
     {
         if ($request->get('onlydesignation') !== null && $request->get('onlydesignation')) {
-            $courses = Course::search($request->get('query'), null, true, true)->groupBy('designation')->orderBy('year', 'desc')->get();
+            // This is not used anymore though working
+            $designations = Course::where('designation', 'like', '%'.$request->get('query').'%')->groupBy('designation')->pluck('designation');
+            $courses = Course::whereIn('designation', $designations)->orderBy('id', 'desc')->get();
         } else {
-            $courses = Course::search($request->get('query'), null, true, true)->orderBy('id', 'desc')->get();
+            $courses = Course::search($request->get('query'), null, true)->limit(20)->get();
         }
 
         // For non-admins show only courses that a user has permission to

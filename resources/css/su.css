@@ -8248,3 +8248,7 @@ span[type="button"] {
 .main-menu .fas {
     transform: translateY(6%) !important;
 }
+
+.tt-highlight {
+    font-family: "TheSansB2-Bold", Verdana, sans-serif;
+}
