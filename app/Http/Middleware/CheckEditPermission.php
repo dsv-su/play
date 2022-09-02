@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\CourseadminPermission;
 use App\CoursesettingsUsers;
 use App\Services\AuthHandler;
 use App\Video;
@@ -33,6 +34,11 @@ class CheckEditPermission
             //If user is Admin
             // This should be changed to 'play_auth' for production
             if (app()->make('play_role') == 'Administrator') {
+                return $next($request);
+            }
+
+            // Check if user is in courseadmin_permissions
+            if (CourseadminPermission::where('username', app()->make('play_username'))->where('video_id', $video->id)->whereIn('permission', ['delete', 'edit'])->count()) {
                 return $next($request);
             }
 
