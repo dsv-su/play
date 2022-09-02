@@ -632,14 +632,12 @@ class SearchController extends Controller
     public
     function findCourse(Request $request)
     {
-        $sortedcourses = collect();
-
         if ($request->get('onlydesignation') !== null && $request->get('onlydesignation')) {
             // This is not used anymore though working
             $designations = Course::where('designation', 'like', '%'.$request->get('query').'%')->groupBy('designation')->pluck('designation');
-            $sortedcourses = $courses = Course::whereIn('designation', $designations)->orderBy('id', 'desc')->get();
+            $courses = Course::whereIn('designation', $designations)->orderBy('id', 'desc')->get();
         } else {
-            $courses = Course::search($request->get('query'), null, true)->limit(20)->get();
+            $courses = Course::search($request->get('query'), null, true)->get();
         }
 
         // For non-admins show only courses that a user has permission to
@@ -664,6 +662,7 @@ class SearchController extends Controller
 
         // This first groups the search result by a designation, then sorts each groups and returns plain collection
         $grouped = $courses->groupBy('designation');
+        $sortedcourses = collect();
         foreach ($grouped as $group) {
             foreach ($group->sortByDesc('id') as $sorteditem) {
                 $sortedcourses->add($sorteditem);
