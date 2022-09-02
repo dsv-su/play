@@ -149,7 +149,8 @@ class Playback
                     if ($individuals = $video->ipermissions ?? false) {
                         foreach ($individuals as $iper) {
                             //Check if user is listed
-                            if ($iper->username == $_SERVER['REMOTE_USER']) {
+                            $username = substr($_SERVER['REMOTE_USER'], 0, strpos($_SERVER['REMOTE_USER'], "@"));
+                            if ($iper->username == $username) {
                                 //Check if user has set permissions
                                 if (in_array($iper->permission, ['read', 'edit', 'delete'])) {
                                     return $next($request);
