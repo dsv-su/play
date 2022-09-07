@@ -31,6 +31,7 @@ class FileUpload extends Component
     public $isDisabled = false;
     public $pre_uploaded_files;
     public $subtitle, $subname, $sub;
+    public $thumbcreated_after;
 
     public function mount(ManualPresentation $presentation, $permissions)
     {
@@ -126,15 +127,21 @@ class FileUpload extends Component
                     $primary_video_name = basename($filename);
 
                     //Create and store generated thumb
-                    $this->filethumbs[] = $this->createThumb($filename, ($this->presentation->duration/3), $this->presentation->duration);
+
+                    if($this->presentation->duration < 30 ) {
+                        $this->thumbcreated_after = $this->presentation->duration/3;
+                    } else {
+                        $this->thumbcreated_after = 30;
+                    }
+                    //$this->filethumbs[] = $this->createThumb($filename, ($this->presentation->duration/3), $this->presentation->duration);
+                    $this->filethumbs[] = $this->createThumb($filename, $this->thumbcreated_after, $this->presentation->duration);
                     if(!$this->custom_set) {
                         //Send empty thumb
                         //$this->presentation->thumb = 'poster/'. basename($this->filethumbs[0]);
                     }
 
-
-                    $this->genthumb[] = ceil($this->presentation->duration/3);
-
+                    //$this->genthumb[] = ceil($this->presentation->duration/3);
+                    $this->genthumb[] = ceil($this->thumbcreated_after);
 
                     //Store playAudio for primary
                     $this->source[0]['playAudio'] = true;
