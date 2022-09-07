@@ -46,8 +46,14 @@
                     <li class="nav-item pb-0">
 
                         <a class="nav-link" href="#my" data-toggle="tab" role="tab" aria-controls="my"
-                           title="@lang('lang.my_courses')">@lang('lang.my_courses') <span
-                                    class="count-label">{{$mypaginated->total()}}</span></a>
+                           title="
+                            @if(in_array(app()->make('play_role'), ['Courseadmin','Uploader', 'Staff']))
+                                @lang('lang.my_presentations')">@lang('lang.my_presentations')
+                            @else
+                                @lang('lang.my_courses')">@lang('lang.my_courses')
+                            @endif
+                            <span class="count-label">{{$mypaginated->total()}}</span>
+                        </a>
 
                     </li>
                 @endif

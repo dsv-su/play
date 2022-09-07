@@ -243,5 +243,6 @@
     "Overwrite": "Skriv över",
     "This setting will override existing information": "Den här inställningen skriver över befintlig information",
     "Number of presentations": "Antal presentationer",
-    "selected presentations": "valda presentationer"
+    "selected presentations": "valda presentationer",
+    "Recordings that are currently queued for the conversion can be found here": "Inspelningar som för närvarande står i kö för konverteringen finner du här, genom att klicka på denna länk."
 }
