@@ -637,7 +637,7 @@ class SearchController extends Controller
             $designations = Course::where('designation', 'like', '%'.$request->get('query').'%')->groupBy('designation')->pluck('designation');
             $courses = Course::whereIn('designation', $designations)->orderBy('id', 'desc')->get();
         } else {
-            $courses = Course::search($request->get('query'), null, true)->limit(20)->get();
+            $courses = Course::search($request->get('query'), null, true)->get();
         }
 
         // For non-admins show only courses that a user has permission to
@@ -660,7 +660,16 @@ class SearchController extends Controller
             }
         }
 
-        return $courses;
+        // This first groups the search result by a designation, then sorts each groups and returns plain collection
+        $grouped = $courses->groupBy('designation');
+        $sortedcourses = collect();
+        foreach ($grouped as $group) {
+            foreach ($group->sortByDesc('id') as $sorteditem) {
+                $sortedcourses->add($sorteditem);
+            }
+        }
+
+        return $sortedcourses;
     }
 
     /**
