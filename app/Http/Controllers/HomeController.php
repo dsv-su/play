@@ -2,20 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\IndividualPermission;
 use App\ManualPresentation;
 use App\Services\Daisy\DaisyIntegration;
 use App\Services\Filters\VisibilityFilter;
 use App\Services\Student\StudentProfile;
-use App\Services\Video\TitleObject;
-use App\System;
 use App\Video;
 use App\VideoPermission;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
+
     public function index(DaisyIntegration $daisy, VisibilityFilter $visibility)
     {
         $data['permissions'] = VideoPermission::all();
@@ -27,25 +26,29 @@ class HomeController extends Controller
         $student = new StudentProfile($daisy, $seconds);
         $courses = $student->Student();
 
+        //Retrive presentations with individual permissions set
+        $individual_videos = IndividualPermission::where('username', app()->make('play_username'))->pluck('video_id')->toArray();
+
         if (App::environment('production') &&
             (app()->make('play_auth') == 'Administrator' or app()->make('play_auth') == 'Courseadmin' or app()->make('play_auth') == 'Staff') &&
             (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Staff')
-        ) {
+        )
+        {
             // User is Employee store courses in cache
             $courses = Cache::remember(app()->make('play_username'), $seconds, function () use ($daisy){
                 return $daisy->getActiveEmployeeCourses(app()->make('play_username'));
             });
-
         }
 
-        if (!empty($courses)) {
-            //My courses
+        if (!empty($courses) or !empty($individual_videos)) {
+            //My courses/presentations
 
             $data['mypaginated'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
                 return $query->whereIn('course_id', $courses);
-            })->latest('creation')->fastPaginate(24, ['*'], 'my')->onEachSide(1);
+            })
+                ->orWhereIn('id', $individual_videos)
+                ->latest('creation')->fastPaginate(24, ['*'], 'my')->onEachSide(1);
             $data['my'] = $visibility->filter($data['mypaginated']);
-
         }
 
         // HT2022 Active courses store in cache
