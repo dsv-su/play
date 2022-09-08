@@ -67,7 +67,7 @@ class Coursesetting extends Component
         $this->visibility = !$this->visibility;
         //Set download to false if hidden
         if(!$this->visibility) {
-            $this->download = false;
+            $this->downloadable = false;
         } else {
             $this->download_switch_warning = false;
         }
