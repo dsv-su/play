@@ -10,7 +10,7 @@ class Coursesetting extends Component
 {
     public $course;
     public $coursesettings;
-    public $downloadable;
+    public $downloadable, $download_switch_warning;
     public $tagids = [];
     public $ipermissions;
     public $user_permission;
@@ -51,6 +51,7 @@ class Coursesetting extends Component
         }
     }
 
+    /*
     public function visibility()
     {
         $this->visibility = !$this->visibility;
@@ -59,6 +60,29 @@ class Coursesetting extends Component
     public function downloadable()
     {
         $this->downloadable = !$this->downloadable;
+    }*/
+    public function visibility()
+    {
+        //Toggles the img and presentation_hidden text
+        $this->visibility = !$this->visibility;
+        //Set download to false if hidden
+        if(!$this->visibility) {
+            $this->download = false;
+        } else {
+            $this->download_switch_warning = false;
+        }
+    }
+
+    public function downloadable()
+    {
+        //Follows the visibility setting
+        if($this->visibility) {
+            $this->downloadable = !$this->downloadable;
+        } else {
+            $this->download_switch_warning = true;
+            $this->downloadable = false;
+        }
+
     }
 
     public function add_individual_perm()

@@ -108,6 +108,7 @@
                                                type="checkbox" @if($downloadable == true) checked @endif>
                                         <label class="custom-control-label" style="margin-top: 3px;"
                                                for="downloadSwitch"></label>
+                                           @if ($download_switch_warning) <span style="color: red;">{{__("Download is only possible if visibility is set to visible")}}</span> @endif
                                     </span>
                         </div>
                         <div class="row">
