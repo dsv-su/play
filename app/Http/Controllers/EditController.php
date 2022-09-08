@@ -23,7 +23,6 @@ class EditController extends Controller
 {
     public function __construct()
     {
-        //$this->middleware(['edit-permission', 'redirect-links']); // For session history
         $this->middleware('edit-permission');
     }
 
@@ -56,8 +55,6 @@ class EditController extends Controller
         $presenters = $video->presenters();
         $individual_permissions = IndividualPermission::where('video_id', $video->id)->get();
 
-        //Needs refactoring
-        $video = $visibility->filter(Video::where('id', $video->id)->get())[0];
         // Check if a video is associated with any course where the user is a manager
         $userismanager = $video->courses()->filter(function ($course) use ($daisy_courses_ids) {
                 return in_array($course->id, $daisy_courses_ids);
@@ -213,10 +210,6 @@ class EditController extends Controller
 
         Cache::flush();
 
-        //return redirect()->route('manage')->with('success', $message);
-        return redirect()->back()->with('success', true)->with('message', __("Presentation successfully updated"));
-
-        // If redirect-links middleware is used -> Will redirect 2 links back
-        //return redirect(session('links')[2])->with('success', $message);
+        return redirect()->route('manage')->with('message', __("Presentation successfully updated"));
     }
 }

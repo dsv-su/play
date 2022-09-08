@@ -160,7 +160,7 @@
     "Set": "Inställda",
     "Edit": "Redigera",
     "The presentation is hidden and locked for playback. Accessible only by individual users with editing permissions": "Presentationen är dold och låst för uppspelning. Endast tillgänglig för enskilda användare med redigeringsbehörighet",
-    "All presentations are hidden and locked for playback. Accessible only by individual users with editing permissions": "Alla presentationer är dolda och låsta för uppspelning. Endast tillgängliga för enskilda användare med redigeringsbehörighet",
+    "Please note! Only new uploaded presentations will be hidden and locked for playback. Accessible only by individual users with editing permissions. The setting does not affect existing presentations": "Vänligen notera! Endast nya uppladdade presentationer kommer att döljas och låsas för uppspelning. Endast tillgänglig för enskilda användare med redigeringsbehörighet. Inställningen påverkar inte befintliga presentationer",
     "Custom": "Anpassad",
     "Staff": "Personal",
     "DSV staff": "DSV personal",
@@ -244,5 +244,7 @@
     "This setting will override existing information": "Den här inställningen skriver över befintlig information",
     "Number of presentations": "Antal presentationer",
     "selected presentations": "valda presentationer",
-    "Recordings that are currently queued for the conversion can be found here": "Inspelningar som för närvarande står i kö för konverteringen finner du här, genom att klicka på denna länk."
+    "Recordings that are currently queued for the conversion can be found here": "Inspelningar som för närvarande står i kö för konverteringen finner du här, genom att klicka på denna länk.",
+    "Download is only possible if visibility is set to visible": "Nedladdning är endast möjlig om synlighet är inställd på synlig",
+    "The default setting for a presentation associated with this course where no explicit setting has been specified for a presentation": "Standard inställningen för en presentation som är kopplad till denna kurs där ingen explicit inställning har angetts för en presentation"
 }

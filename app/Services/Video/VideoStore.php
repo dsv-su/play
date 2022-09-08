@@ -47,7 +47,7 @@ class VideoStore extends Model
             }
         }
 
-        //Make manual uploaded presentation default hidden
+        //Make manual uploaded presentation that are not associated to a course default hidden
         if($this->request->origin == 'manual') {
             $this->video->visibility = false;
             $this->video->save();

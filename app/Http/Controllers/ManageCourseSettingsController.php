@@ -176,8 +176,7 @@ class ManageCourseSettingsController extends Controller
             $coursesettings_permissions->save();
         }
 
-        //return redirect()->route('manage');
-        return redirect()->back()->with('success', true)->with('message', __('The course was successfully updated'));
+        return redirect()->route('manage')->with('success', true)->with('message', __('The course was successfully updated'));
     }
 
     private function updateCourse($course_id)

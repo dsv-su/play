@@ -31,7 +31,7 @@ class EditPresentation extends Component
     public $suser;
     public $course_responsible = [];
     public $visibility;
-    public $download;
+    public $download, $download_switch_warning;
     public $user_permission;
 
     public function mount($video, $permissions, $individual_permissions, $user_permission)
@@ -48,13 +48,15 @@ class EditPresentation extends Component
         $this->category = $video->category->category_name;
         $this->sources = $video->streams;
         $this->ipermissions = $individual_permissions->count();
-        if (isset($video->hidden)) {
-            $this->visibility = false;
+        $this->download_switch_warning = false;
+
+        if (!$video->visibility) {
+            $this->download = false;
         } else {
             $this->visibility = (bool)$video->fresh()->visibility;
+            $this->download = (bool)$video->download;
         }
 
-        $this->download = (bool)$video->download;
         $this->user_permission = $user_permission;
 
         foreach ($video->presenters() as $presenter) {
@@ -132,6 +134,24 @@ class EditPresentation extends Component
     {
         //Toggles the img and presentation_hidden text
         $this->visibility = !$this->visibility;
+        //Set download to false if hidden
+        if(!$this->visibility) {
+            $this->download = false;
+        } else {
+            $this->download_switch_warning = false;
+        }
+    }
+
+    public function downloadability()
+    {
+        //Follows the visibility setting
+        if($this->visibility) {
+            $this->download = !$this->download;
+        } else {
+            $this->download_switch_warning = true;
+            $this->download = false;
+        }
+
     }
 
     public function updatedCourseEdit($value)

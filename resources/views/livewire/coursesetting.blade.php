@@ -69,8 +69,7 @@
                         @endif
                     </div>
                     <div class="form-group my-auto form-row mx-3">
-                        <label for="visibilitySwitch"
-                               class="col px-0 col-auto mb-0">{{__("Visibility")}}</label>
+                        <label for="visibilitySwitch" class="col px-0 col-auto mb-0">{{__("Visibility")}}</label>
                         <div class="col">
                                     <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip"
                                           title="{{__("Switch the toggle to change")}}">
@@ -81,6 +80,10 @@
                                            for="visibilitySwitch"></label>
                                     </span>
                         </div>
+                        <div class="row">
+                            <div class="col">{{__('The default setting for a presentation associated with this course where no explicit setting has been specified for a presentation')}}</div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -106,6 +109,9 @@
                                         <label class="custom-control-label" style="margin-top: 3px;"
                                                for="downloadSwitch"></label>
                                     </span>
+                        </div>
+                        <div class="row">
+                            <div class="col">{{__('The default setting for a presentation associated with this course where no explicit setting has been specified for a presentation')}}</div>
                         </div>
                     </div>
                 </div>
@@ -257,17 +263,14 @@
                 <div class="col">
                     <div class="alert alert-warning mt-3" role="alert">
                     <span class="font-1rem">
-                        {{ __("All presentations are hidden and locked for playback. Accessible only by individual users with editing permissions") }}
+                        {{ __("Please note! Only new uploaded presentations will be hidden and locked for playback. Accessible only by individual users with editing permissions. The setting does not affect existing presentations") }}
                     </span>
                     </div>
                 </div>
             @endif
 
             <div class="col-sm-12 d-flex align-items-center">
-                <button type="submit"
-                        class="btn btn-outline-primary ml-auto d-flex font-125rem m-3">{{ __("Save") }}</button>
-                <a href="{{route('manage')}}" id="back"
-                   class="btn btn-outline-primary mr-auto d-inline-block font-125rem m-3">{{ __("Return back") }}</a>
+                <button type="submit" class="btn btn-outline-primary ml-auto d-flex font-125rem m-3">{{ __("Save") }}</button>
             </div>
 
         </div>

@@ -95,28 +95,29 @@
                                         {{implode(', ', $course)}}
                                     @endif</div>
                             </div>
-                            <div class="row"><label for="visibilitySwitch"
-                                                    class="col-4 col-lg-3 mb-0">{{__("Visibility")}}</label>
+                            <div class="row">
+                                <label for="visibilitySwitch" class="col-4 col-lg-3 mb-0">{{__("Visibility")}}</label>
                                 <div class="col">
-                                       <span class="custom-control custom-switch custom-switch-lg">
+                                       <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip"
+                                             title="{{__("Switch the toggle to change")}}">
                                         <input wire:click="visibility" class="custom-control-input"
                                                id="visibilitySwitch" name="visibility"
                                                type="checkbox" @if($visibility == true) checked @endif>
                                         <label class="custom-control-label" style="margin-top: 3px;"
                                                for="visibilitySwitch"></label>
-                                    </span>
+                                       </span>
                                 </div>
                             </div>
                             <div class="row"><label for="downloadSwitch"
                                                     class="col-4 col-lg-3 mb-0">{{__("Downloadable")}}</label>
                                 <div class="col">
-                                       <span class="custom-control custom-switch custom-switch-lg">
-                                        <input class="custom-control-input"
-                                               id="downloadSwitch" name="download"
+                                      <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip"
+                                            title="{{__("Switch the toggle to change")}}">
+                                        <input wire:click="downloadability" class="custom-control-input" id="downloadSwitch" name="download"
                                                type="checkbox" @if($download == true) checked @endif>
-                                        <label class="custom-control-label" style="margin-top: 3px;"
-                                               for="downloadSwitch"></label>
-                                    </span>
+                                        <label class="custom-control-label" style="margin-top: 3px;" for="downloadSwitch"></label>
+                                           @if ($download_switch_warning) <span style="color: red;">{{__("Download is only possible if visibility is set to visible")}}</span> @endif
+                                      </span>
                                 </div>
                             </div>
                         </div>
@@ -429,8 +430,10 @@
             <div class="col-sm-12 d-flex align-items-center">
                 <button type="submit" id="submit"
                         class="btn btn-outline-primary ml-auto d-inline-block font-125rem m-3">{{ __("Save") }}</button>
-                <a href="{{route('manage')}}" id="back"
-                   class="btn btn-outline-primary mr-auto  d-inline-block font-125rem m-3">{{ __("Return back") }}</a>
+                {{--}}
+                <a href="{{route('manage')}}" id="back" class="btn btn-outline-primary mr-auto  d-inline-block font-125rem m-3">{{ __("Return back") }}</a>
+                {{--}}
+
             </div>
 
         </div>

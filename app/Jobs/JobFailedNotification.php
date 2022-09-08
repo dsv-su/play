@@ -35,6 +35,6 @@ class JobFailedNotification implements ShouldQueue
     {
         // Send Mail
         Mail::to("ryan@dsv.su.se")->send(new FailedNotification($this->video, $this->failed));
-        Mail::to("psokolov@dsv.su.se")->send(new FailedNotification($this->video, $this->failed));
+        Mail::to("marihan@dsv.su.se")->send(new FailedNotification($this->video, $this->failed));
     }
 }

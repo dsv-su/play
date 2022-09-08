@@ -4,6 +4,7 @@ namespace App\Services\Course;
 
 use App\Course;
 use App\CourseadminPermission;
+use App\CoursesettingsPermissions;
 use App\Jobs\JobFailedNotification;
 use App\ManualPresentation;
 use App\Services\Daisy\DaisyIntegration;
@@ -139,7 +140,7 @@ class CourseStore extends Model
                                 Log::notice('Failed notification. The notification package for presentation with id: '. $this->video->id.
                                     ' Title: '. $this->video->title.' Failed du to the following error: Designation: '.$this->item.
                                     ' was unable to be found in Daisy. The presentation needs to be processed manually.');
-                                // and create a error notification to admins
+                                // and create an error notification to admins
                                 $job = (new JobFailedNotification($this->video, $this->item));
                                 dispatch($job);
                             }
@@ -208,7 +209,17 @@ class CourseStore extends Model
 
             }
 
+            //Make presentation visibility and downloadability follow default coursesettings
 
+            //Retrive all courses associated with the presentation
+            $courses = VideoCourse::where('video_id', $this->video->id)->pluck('course_id');
+            foreach ($courses as $course) {
+                if($coursesetting = CoursesettingsPermissions::where('course_id', $course)->first()) {
+                    $this->video->visibility = $coursesetting->visibility;
+                    $this->video->download = $coursesetting->downloadable;
+                    $this->video->save();
+                }
+            }
         }
 
     }

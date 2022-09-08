@@ -11,10 +11,12 @@ class PresentationPermissionsFilter extends VisibilityFilter implements \App\Int
     public function __construct(Video $video)
     {
         $this->video = $video;
+        //Retrive all the related permissions
         $this->permissions = $video->status;
     }
     public function cast()
     {
+        //Set a permission type
         foreach($this->permissions as $this->permission) {
             if($id = $this->permission->permission_id) {
                 switch($id) {

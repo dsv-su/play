@@ -12,6 +12,13 @@
         </div>
     </div>
     <!-- end Header -->
+    <div wire:ignore class="container banner-inner">
+        @if(session()->has('message'))
+            <div class="alert text-center @if (session('success')) alert-success @elseif (session('warning')) alert-warning @elseif (session('error')) alert-danger @else alert-info @endif">
+                {{ session('message') }}
+            </div>
+        @endif
+    </div>
 
     <!-- Courselist -->
     <div class="container px-0">

@@ -23,6 +23,13 @@ class VisibilityFilter
                 $CourseSettings->cast();
             }
 
+            /***
+             * This setting has been disabled allowing presentations
+             * to set visibility independent of the course setting
+             * according to issue #115
+             * 2022-09-08
+             */
+            /*
             if($video->visibility == true) {
                 //Respect presentation setting - override only if not set
 
@@ -30,6 +37,7 @@ class VisibilityFilter
                 $CourseSettings = new CourseSettingsFilter($video);
                 $CourseSettings->cast();
             }
+            */
 
             //CourseSettingUsers
             $CourseSettingUsers = new CourseSettingUsersFilter($video);
@@ -62,9 +70,25 @@ class VisibilityFilter
     public function FilterDownloadable($videos)
     {
         return $videos->filter(function ($video) {
+            /***
+             * This setting has been disabled allowing presentations
+             * to set visibility independent of the course setting
+             * according to issue #115
+             * 2022-09-08
+             */
             //CourseDownload
+            /*
             $CourseDownload = new CourseDownloadFilter($video);
             $CourseDownload->cast();
+            */
+            /***
+             * Allow only visible presentations to be downloadable
+             * this should really never happen, so it's a redundant feature
+             */
+
+            if($video->visibility == false) {
+                $video->setAttribute('download', false);
+            }
             return $video;
         });
     }
