@@ -4,7 +4,6 @@ namespace App\Services\Course;
 
 use App\Course;
 use App\CourseadminPermission;
-use App\CoursesettingsPermissions;
 use App\Jobs\JobFailedNotification;
 use App\ManualPresentation;
 use App\Services\Daisy\DaisyIntegration;
@@ -210,16 +209,8 @@ class CourseStore extends Model
             }
 
             //Make presentation visibility and downloadability follow default coursesettings
-
-            //Retrive all courses associated with the presentation
-            $courses = VideoCourse::where('video_id', $this->video->id)->pluck('course_id');
-            foreach ($courses as $course) {
-                if($coursesetting = CoursesettingsPermissions::where('course_id', $course)->first()) {
-                    $this->video->visibility = $coursesetting->visibility;
-                    $this->video->download = $coursesetting->downloadable;
-                    $this->video->save();
-                }
-            }
+            $set = new DefaultCourseSettings($this->video);
+            $set->setCourseDefaultSettings();
         }
 
     }
