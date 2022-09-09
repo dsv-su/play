@@ -95,21 +95,23 @@
                                         {{implode(', ', $course)}}
                                     @endif</div>
                             </div>
+
                             <div class="row">
                                 <label for="visibilitySwitch" class="col-4 col-lg-3 mb-0">{{__("Visibility")}}</label>
                                 <div class="col">
-                                       <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip"
-                                             title="{{__("Switch the toggle to change")}}">
-                                        <input wire:click="visibility" class="custom-control-input"
-                                               id="visibilitySwitch" name="visibility"
-                                               type="checkbox" @if($visibility == true) checked @endif>
-                                        <label class="custom-control-label" style="margin-top: 3px;"
-                                               for="visibilitySwitch"></label>
-                                       </span>
+                               <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip" title="{{__("Switch the toggle to change")}}">
+                                <input wire:click="visibility" class="custom-control-input"
+                                       id="visibilitySwitch" name="visibility"
+                                       type="checkbox" @if($visibility == true) checked @endif>
+                                <label class="custom-control-label" style="margin-top: 3px;"
+                                       for="visibilitySwitch"></label>
+                               </span>
                                 </div>
                             </div>
-                            <div class="row"><label for="downloadSwitch"
-                                                    class="col-4 col-lg-3 mb-0">{{__("Downloadable")}}</label>
+
+
+                            <div class="row">
+                                <label for="downloadSwitch" class="col-4 col-lg-3 mb-0">{{__("Downloadable")}}</label>
                                 <div class="col">
                                       <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip"
                                             title="{{__("Switch the toggle to change")}}">

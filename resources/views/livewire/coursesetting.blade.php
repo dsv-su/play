@@ -69,21 +69,24 @@
                         @endif
                     </div>
                     <div class="form-group my-auto form-row mx-3">
+
                         <label for="visibilitySwitch" class="col px-0 col-auto mb-0">{{__("Visibility")}}</label>
-                        <div class="col">
-                                    <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip"
-                                          title="{{__("Switch the toggle to change")}}">
-                                    <input wire:click="visibility" class="custom-control-input"
-                                           id="visibilitySwitch" name="visibility"
+                            <div class="col">
+                                <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip" title="{{__("Switch the toggle to change")}}">
+                                    <input wire:click="visibility" class="custom-control-input" id="visibilitySwitch" name="visibility"
                                            type="checkbox" @if($visibility == true) checked @endif>
                                     <label class="custom-control-label" style="margin-top: 3px;"
                                            for="visibilitySwitch"></label>
-                                    </span>
-                        </div>
-                        <div class="row">
-                            <div class="col">{{__('The default setting for a presentation associated with this course where no explicit setting has been specified for a presentation')}}</div>
-                        </div>
+                                    @if (!$visibility) <span style="color: red;">{{__("hidden")}}</span> @else <span style="color: blue;">{{__("synlig")}} @endif
+                                </span>
+                            </div>
 
+
+                        <div class="row">
+                            <div class="col">
+                                {{__('Choose the standard setting for presentations associated with this course. This setting will be applied to all presentations unless otherwise specified in the individual presentation.')}}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -108,16 +111,25 @@
                                                type="checkbox" @if($downloadable == true) checked @endif>
                                         <label class="custom-control-label" style="margin-top: 3px;"
                                                for="downloadSwitch"></label>
-                                           @if ($download_switch_warning) <span style="color: red;">{{__("Download is only possible if visibility is set to visible")}}</span> @endif
+                                           @if(!$downloadable) <span style="color: red;">{{__("not downloadable")}}</span> @else <span style="color: blue;">{{__("downloadable")}} @endif
+                                           @if ($download_switch_warning) <div class="row"><span style="color: red;">{{__("Download is only possible if visibility is set to visible")}}</span></div> @endif
                                     </span>
                         </div>
                         <div class="row">
-                            <div class="col">{{__('The default setting for a presentation associated with this course where no explicit setting has been specified for a presentation')}}</div>
+                            <div class="col">{{__('Choose the standard setting for presentations associated with this course. This setting will be applied to all presentations unless otherwise specified in the individual presentation.')}}</div>
                         </div>
                     </div>
                 </div>
             </div>
-
+            @if(!$visibility)
+                <div class="col">
+                    <div class="alert alert-warning mt-3" role="alert">
+                    <span class="font-1rem">
+                        {{ __("Please note! Only new uploaded presentations will be hidden (accessible only by individual users with editing permissions) and locked for playback. The setting does not affect existing presentations") }}
+                    </span>
+                    </div>
+                </div>
+            @endif
             <div class="col-12">
                 <div class="rounded border shadow p-3 my-2">
                     <div class="row justify-content-between text-left">
@@ -260,15 +272,7 @@
                 </div>
             </div>
 
-            @if(!$visibility)
-                <div class="col">
-                    <div class="alert alert-warning mt-3" role="alert">
-                    <span class="font-1rem">
-                        {{ __("Please note! Only new uploaded presentations will be hidden and locked for playback. Accessible only by individual users with editing permissions. The setting does not affect existing presentations") }}
-                    </span>
-                    </div>
-                </div>
-            @endif
+            <!-- Visi -->
 
             <div class="col-sm-12 d-flex align-items-center">
                 <button type="submit" class="btn btn-outline-primary ml-auto d-flex font-125rem m-3">{{ __("Save") }}</button>
