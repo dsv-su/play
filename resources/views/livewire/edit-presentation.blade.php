@@ -99,13 +99,13 @@
                             <div class="row">
                                 <label for="visibilitySwitch" class="col-4 col-lg-3 mb-0">{{__("Visibility")}}</label>
                                 <div class="col">
-                               <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip" title="{{__("Switch the toggle to change")}}">
-                                <input wire:click="visibility" class="custom-control-input"
-                                       id="visibilitySwitch" name="visibility"
-                                       type="checkbox" @if($visibility == true) checked @endif>
-                                <label class="custom-control-label" style="margin-top: 3px;"
-                                       for="visibilitySwitch"></label>
-                               </span>
+                                <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip" title="{{__("Switch the toggle to change")}}">
+                                    <input wire:click="visibility" class="custom-control-input" id="visibilitySwitch" name="visibility"
+                                           type="checkbox" @if($visibility == true) checked @endif>
+                                    <label class="custom-control-label" style="margin-top: 3px;"
+                                           for="visibilitySwitch"></label>
+                                    @if (!$visibility) <span style="color: red;">{{__("hidden")}}</span> @else <span style="color: blue;">{{__("visible")}} @endif
+                                </span>
                                 </div>
                             </div>
 
@@ -118,7 +118,8 @@
                                         <input wire:click="downloadability" class="custom-control-input" id="downloadSwitch" name="download"
                                                type="checkbox" @if($download == true) checked @endif>
                                         <label class="custom-control-label" style="margin-top: 3px;" for="downloadSwitch"></label>
-                                           @if ($download_switch_warning) <span style="color: red;">{{__("Download is only possible if visibility is set to visible")}}</span> @endif
+                                          @if(!$download) <span style="color: red;">{{__("not downloadable")}}</span> @else <span style="color: blue;">{{__("downloadable")}} @endif
+                                           @if ($download_switch_warning) <div class="row"><span style="color: red;">{{__("Download is only possible if visibility is set to visible")}}</span></div>  @endif
                                       </span>
                                 </div>
                             </div>
@@ -775,4 +776,5 @@
     $(document).on('mouseover', '#course-search-form .tt-suggestion', function () {
         $(this).tooltip('show');
     });
+
 </script>

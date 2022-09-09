@@ -77,7 +77,7 @@
                                            type="checkbox" @if($visibility == true) checked @endif>
                                     <label class="custom-control-label" style="margin-top: 3px;"
                                            for="visibilitySwitch"></label>
-                                    @if (!$visibility) <span style="color: red;">{{__("hidden")}}</span> @else <span style="color: blue;">{{__("synlig")}} @endif
+                                    @if (!$visibility) <span style="color: red;">{{__("hidden")}}</span> @else <span style="color: blue;">{{__("visible")}} @endif
                                 </span>
                             </div>
 

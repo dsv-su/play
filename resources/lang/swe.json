@@ -243,6 +243,8 @@
     "Overwrite": "Skriv över",
     "hidden": "dold",
     "visible": "synlig",
+    "not downloadable": "inte nerladdningsbar",
+    "downloadable": "nerladdningsbar",
     "This setting will override existing information": "Den här inställningen skriver över befintlig information",
     "Number of presentations": "Antal presentationer",
     "selected presentations": "valda presentationer",
