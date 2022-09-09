@@ -18,7 +18,7 @@ class ManageCourseSettingsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('course-admin');
+        //$this->middleware('course-admin');
     }
 
     public function index()
@@ -34,10 +34,19 @@ class ManageCourseSettingsController extends Controller
             $courses = $daisy->getDaisyCourses();
         } else {
             //Courseadmin
+
+            /*if(!app()->environment('local')) {
+                //Get user DaisyID
+                $daisyPersonID = $daisy->getDaisyPersonId(app()->make('play_username'));
+                //Get all courses where user is courseadmin
+                $courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID);
+            }*/
+
             //Get user DaisyID
             $daisyPersonID = $daisy->getDaisyPersonId(app()->make('play_username'));
             //Get all courses where user is courseadmin
             $courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID);
+
             if (!$courses) {
                 return 'Not a courseadmin';
             }

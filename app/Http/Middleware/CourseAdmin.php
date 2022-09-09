@@ -21,4 +21,9 @@ class CourseAdmin
         }
         return $next($request);
     }
+
+    private function useRegex($input) {
+        $regex = '/course/[0-9]+/edit/i';
+        return preg_match($regex, $input);
+    }
 }

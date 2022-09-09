@@ -104,31 +104,39 @@ class Course extends Model implements Searchable
      */
     public function userPermission() {
         $username = app()->make('play_username');
-        $daisy_courses_ids = [];
-        if (app()->make('play_role') != 'Administrator') {
 
-            // Use cache
-            $daisy_courses_ids = Cache::remember($username, 3600, function () use ($username){
-                // Show only courses that you have permission to
-                $daisy = new DaisyAPI();
-                $daisyPersonID = $daisy->getDaisyPersonId($username);
-                // Get all courses where user is courseadmin
-                if ($daisy_courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID)) {
-                    return array_map(function ($d) {
-                        return $d['id'];
-                    }, $daisy_courses);
-                } else {
-                    return [];
-                }
-            });
-        }
+        if(!app()->environment('local')) {
+            //If production enviroment
+            $daisy_courses_ids = [];
+            if (app()->make('play_role') != 'Administrator') {
 
-        if (in_array($this->id, $daisy_courses_ids) || app()->make('play_role') == 'Administrator') {
-            $user_permission = 'delete';
+                // Use cache
+                $daisy_courses_ids = Cache::remember($username, 3600, function () use ($username){
+                    // Show only courses that you have permission to
+                    $daisy = new DaisyAPI();
+                    $daisyPersonID = $daisy->getDaisyPersonId($username);
+                    // Get all courses where user is courseadmin
+                    if ($daisy_courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID)) {
+                        return array_map(function ($d) {
+                            return $d['id'];
+                        }, $daisy_courses);
+                    } else {
+                        return [];
+                    }
+                });
+            }
+
+            if (in_array($this->id, $daisy_courses_ids) || app()->make('play_role') == 'Administrator') {
+                $user_permission = 'delete';
+            } else {
+                $coursesettingpermission = CoursesettingsUsers::where('course_id', $this->id)->where('username', $username)->first();
+                $user_permission = $coursesettingpermission ? $coursesettingpermission->permission : '';
+            }
         } else {
             $coursesettingpermission = CoursesettingsUsers::where('course_id', $this->id)->where('username', $username)->first();
             $user_permission = $coursesettingpermission ? $coursesettingpermission->permission : '';
         }
+
 
         return $user_permission;
     }
