@@ -36,11 +36,7 @@ class HomeController extends Controller
         {
             // User is Employee store courses in cache
             $courses = Cache::remember(app()->make('play_username'), $seconds, function () use ($daisy){
-                if($lookup_course = $daisy->getActiveEmployeeCourses(app()->make('play_username'))) {
-                    return $lookup_course;
-                } else {
-                    return [];
-                }
+                return $daisy->getActiveEmployeeCourses(app()->make('play_username')) ? : [];
             });
         }
 

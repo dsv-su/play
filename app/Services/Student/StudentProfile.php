@@ -33,7 +33,7 @@ class StudentProfile
             (app()->make('play_auth') == 'Student' && (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Student'))) {
             // User is Student store courses in cache
             return Cache::remember(app()->make('play_username'), $this->seconds, function () {
-                return $this->daisy->getActiveStudentCourses(app()->make('play_username'));
+                return $this->daisy->getActiveStudentCourses(app()->make('play_username')) ? : [];
             });
         }
         return [];
