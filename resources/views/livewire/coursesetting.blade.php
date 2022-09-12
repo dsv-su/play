@@ -77,7 +77,7 @@
                                            type="checkbox" @if($visibility == true) checked @endif>
                                     <label class="custom-control-label" style="margin-top: 3px;"
                                            for="visibilitySwitch"></label>
-                                    @if (!$visibility) <span style="color: red;">{{__("hidden")}}</span> @else <span style="color: blue;">{{__("visible")}} @endif
+                                    @if (!$visibility) <span class="badge badge-danger">{{__("hidden")}}</span> @else <span class="badge badge-primary">{{__("visible")}} @endif
                                 </span>
                             </div>
 
@@ -111,7 +111,7 @@
                                                type="checkbox" @if($downloadable == true) checked @endif>
                                         <label class="custom-control-label" style="margin-top: 3px;"
                                                for="downloadSwitch"></label>
-                                           @if(!$downloadable) <span style="color: red;">{{__("not downloadable")}}</span> @else <span style="color: blue;">{{__("downloadable")}} @endif
+                                           @if(!$downloadable) <span class="badge badge-danger">{{__("not downloadable")}}</span> @else <span class="badge badge-primary">{{__("downloadable")}} @endif
                                            @if ($download_switch_warning) <div class="row"><span style="color: red;">{{__("Download is only possible if visibility is set to visible")}}</span></div> @endif
                                     </span>
                         </div>
