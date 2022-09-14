@@ -250,5 +250,7 @@
     "selected presentations": "valda presentationer",
     "Recordings that are currently queued for the conversion can be found here": "Inspelningar som för närvarande står i kö för konverteringen finner du här, genom att klicka på denna länk.",
     "Download is only possible if visibility is set to visible": "Nedladdning är endast möjlig om synlighet är inställd på synlig",
-    "Choose the standard setting for presentations associated with this course. This setting will be applied to all presentations unless otherwise specified in the individual presentation.": "Välj standardinställning för presentationer kopplade till denna kurs. Denna inställning kommer att tillämpas på alla presentationer om inte annat anges i den individuella presentationen."
+    "Choose the standard setting for presentations associated with this course. This setting will be applied to all presentations unless otherwise specified in the individual presentation.": "Välj standardinställning för presentationer kopplade till denna kurs. Denna inställning kommer att tillämpas på alla presentationer om inte annat anges i den individuella presentationen.",
+    "Default settings": "Standardinställningar",
+    "Uncategorized courses": "Okategoriserade kurser"
 }

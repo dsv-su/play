@@ -80,6 +80,7 @@ class Manage extends Component
                     $this->videopresenters[$presenter->username] = $presenter->name;
                 }
             }
+
             //Terms
             foreach ($video->courses() as $term) {
                 $key = $term->year . ($term->semester == 'VT' ? 1 : 2);
@@ -96,7 +97,7 @@ class Manage extends Component
         }
 
         // Sort filters
-        sort($this->videopresenters);
+        //sort($this->videopresenters);
         sort($this->videotags);
 
         //Courses
@@ -105,6 +106,7 @@ class Manage extends Component
                 $this->videocourses[$vc->course->designation] = (Lang::locale() == 'swe') ? $vc->course->name : $vc->course->name_en . ' (' .$vc->course->designation.')';
             }
         }
+        //dd($this->videopresenters);
     }
 
     /**
@@ -121,10 +123,11 @@ class Manage extends Component
      */
     public function courseAdminManage()
     {
-        //Default setting for courseadmin or uploader
+        //$this->updatedFilterTerm();
+        //Load presentations and courses for present user
         $this->courseAdminFilter();
         //Uncat videos
-        $this->uncat_video_courses = UncatPresentations::unfiltered_uncat_video_course();
+        $this->uncat_video_courses = UncatPresentations::my_uncat_video_course(app()->make('play_username'));
 
         $this->video_courses = VideoCourse::with('course')
             ->whereIn('video_id', $this->user_videos)
@@ -175,6 +178,11 @@ class Manage extends Component
         }
 
         $this->courseSettings($this->video_courses);
+
+        //Uncategorized presentations
+        $this->uncat_video_courses = UncatPresentations::my_uncat_video_course_presenter(app()->make('play_username'), $selected_presenter);
+        $this->prepareRendering();
+
     }
 
     /**
@@ -210,7 +218,18 @@ class Manage extends Component
             }
 
             $this->courseSettings($this->video_courses);
+            $this->prepareFilter($this->video_courses);
         }
+    }
+
+    public function prepareFilter($video_courses)
+    {
+        $courselist = $video_courses->pluck('video_id')->toArray();
+
+        $filtervideos = Video::whereIn('id', $courselist)->get();
+        
+        $this->reset('videopresenters');
+        $this->filters($filtervideos);
     }
 
     /**
@@ -276,6 +295,10 @@ class Manage extends Component
         }
 
         $this->courseSettings($this->video_courses);
+
+        //Uncategorized presentations
+        $this->uncat_video_courses = UncatPresentations::my_uncat_video_course_tag(app()->make('play_username'), $selected_tag);
+        $this->prepareRendering();
     }
 
     /**
@@ -285,16 +308,19 @@ class Manage extends Component
     {
         $videos_id = [];
         $user = Presenter::where('username', app()->make('play_username'))->first();
-        $this->user_videos = VideoPresenter::where('presenter_id', $user->id ?? 0)->pluck('video_id');
+        $this->user_videos = VideoPresenter::where('presenter_id', $user->id ?? 0)->pluck('video_id')->toArray();
 
         //Check if user is course administrator
-        $this->courseadministrator = CourseadminPermission::where('username', app()->make('play_username'))->where('permission', 'delete')->pluck('video_id');
+        $this->courseadministrator = CourseadminPermission::where('username', app()->make('play_username'))
+            ->where('permission', 'delete')
+            ->pluck('video_id')
+            ->toArray();
 
         //Check for individual permissions settings
         $this->individual_videos = IndividualPermission::where('username', app()->make('play_username'))->where(function ($query) {
             $query->where('permission', 'edit')
                 ->orWhere('permission', 'delete');
-        })->pluck('video_id');
+        })->pluck('video_id')->toArray();
 
         //Check for course individual settings
         if (count($course_user_admins = CoursesettingsUsers::where('username', app()->make('play_username'))->whereIn('permission', ['edit', 'delete'])->get()) >= 1) {
@@ -311,18 +337,21 @@ class Manage extends Component
      */
     public function updatedFilterTerm()
     {
+        //Prepare term
         $filterTerm = '%' . $this->filterTerm . '%';
 
-        //Uncat filter
-        if (!UncatPresentations::IsNullOrEmptyString($filterTerm) ) {
-            //Presenters
-            $uncat_presenter_id = UncatPresentations::uncat_presenter_id($filterTerm);
-            $this->uncat_video_courses = UncatPresentations::uncat_video_courses($uncat_presenter_id);
+        //Filters uncategorized presentations
+        if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
+            //Not administrator
+            $this->uncat_video_courses = UncatPresentations::my_uncat_video_course(app()->make('play_username'), $filterTerm);
         } else {
-            $this->uncat_video_courses = UncatPresentations::unfiltered_uncat_video_course();
+            //Administrator
+            $this->uncat_video_courses = UncatPresentations::unfiltered_uncat_video_course($filterTerm);
         }
+        //Counter for uncategorized presentations
         $this->countUncatPresentations($this->uncat_video_courses);
 
+        //Categorized presentations
         if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
 
             //Collection of ids depending on set permissions and role Courseadmin, Uploader or Staff
@@ -343,9 +372,11 @@ class Manage extends Component
                 $filtered_title = $videos_collection->filter(function ($video, $key) use ($filterTerm) {
                     $match = preg_replace("/%+/",'$1*', $filterTerm);
                     if(Str::is(strtoupper($match), strtoupper($video->title)) or Str::is(strtoupper($match), strtoupper($video->title_en))) {
-                        return $video;
+                        return $video->where('title', 'LIKE', $filterTerm)->get();
                     }
+                    return 0;
                 });
+
                 $video_title_ids = $filtered_title->pluck('id');
                 $filtered_with_title = VideoCourse::whereIn('video_id', $video_title_ids)->distinct()->pluck('course_id');
 

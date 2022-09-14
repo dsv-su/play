@@ -1,40 +1,44 @@
 <div>
-
-    <div class="container">
-        <div class="d-flex row justify-content-start align-items-center">
-            <div class="col-12 col-sm-auto d-flex justify-content-start pr-0">
-                <label class="m-0" for="filterSwitch">{{__("Textfilter")}}</label>
-                <div class="mx-1">
-                <span class="custom-control custom-switch custom-switch-lg">
-                    <input wire:click="filterToggle" class="custom-control-input" id="filterSwitch" name="filter"
-                           type="checkbox" @if($filterswitch == true) checked @endif>
-                    <label class="custom-control-label" style="margin-top: 3px;" for="filterSwitch"></label>
-                </span>
+    <div class="card border border-primary mt-3" style="border-width:3px !important; border-radius: 10px !important; padding: 25px !important; z-index: 1000; !important;">
+        <div class="container">
+            <div class="d-flex row justify-content-center align-items-start">
+                {{--}}
+                    <div class="col-12 col-sm-auto d-flex justify-content-center pr-0">
+                        <label class="m-0" for="filterSwitch">{{__("Textfilter")}}</label>
+                        <div class="mx-1">
+                            <span class="custom-control custom-switch custom-switch-lg">
+                                <input wire:click="filterToggle" class="custom-control-input" id="filterSwitch" name="filter"
+                                       type="checkbox" @if($filterswitch == true) checked @endif>
+                                <label class="custom-control-label" style="margin-top: 3px;" for="filterSwitch"></label>
+                            </span>
+                     </div>
+                </div>
+                {{--}}
+                <div class="col-12 col-sm">
+                    @if($filterswitch)
+                        <form wire:submit.prevent="filter"
+                              class="form-inline manage-filter d-flex justify-content-sm-start"
+                              method="GET" id="manage-filter" role="search">
+                            <label for="manage-filter" class="sr-only">{{ __("Filter courses") }}</label>
+                            <input class="form-control w-75" type="search"
+                                   wire:model="filterTerm"
+                                   id="manage-filter-text" autocomplete="off"
+                                   aria-haspopup="true"
+                                   placeholder="{{ __("Filter courses") }}"
+                                   style="font-size: 100% !important;"
+                                   aria-labelledby="manage-filter">
+                        </form>
+                    @endif
                 </div>
             </div>
-            <div class="col-12 col-sm">
-                @if($filterswitch)
-                    <form wire:submit.prevent="filter"
-                          class="form-inline manage-filter d-flex justify-content-sm-start"
-                          method="GET" id="manage-filter" role="search">
-                        <label for="manage-filter" class="sr-only">{{ __("Filter courses") }}</label>
-                        <input class="form-control w-75" type="search"
-                               wire:model="filterTerm"
-                               id="manage-filter-text" autocomplete="off"
-                               aria-haspopup="true"
-                               placeholder="{{ __("Filter courses") }}"
-                               style="font-size: 100% !important;"
-                               aria-labelledby="manage-filter">
-                    </form>
-                @endif
-            </div>
         </div>
+
+        <!-- Filter -->
+        <!-- User filter -->
+        @include('home.user_manage_filter')
+        <!-- end User filter -->
     </div>
 
-    <!-- Filter -->
-    <!-- User filter -->
-    @include('home.user_manage_filter')
-    <!-- end User filter -->
 
     <div wire:loading wire:target="loadUncat">
         @include('livewire.modals.loading_spinner')
@@ -44,42 +48,55 @@
     </div>
 
     <!-- Uncategorized -->
+
     <div id="accordion">
+        <!-- Disable/enable uncat counter -->
+        @if($uncatcounter != 0)
         <div class="card">
             <div id="headingOne">
-                <h3 class="col mt-4" style="line-height: 1.5em;">
-                    <a wire:click.prevent="loadUncat" @if($uncat) class="link" @else class="link collapsed"
-                       @endif role="button" data-toggle="collapse" aria-expanded="false">
+                <h2 class="col mt-4" style="line-height: 1.5em;">
+                    <span class="badge badge-primary ml-2 mb-2" data-toggle="tooltip" title="{{__("Number of presentations")}}">{{$uncatcounter}}</span>
+                    <span style="color:blue;">{{__("Uncategorized courses")}}</span>
+                </h2>
+                <div class="card border border-primary p-3">
+                    <a wire:click.prevent="loadUncat" @if($uncat) class="link" @else class="link collapsed" @endif role="button" data-toggle="collapse" aria-expanded="false">
                         <i class="fa mr-2"></i>
                         {{__("Uncategorized")}}
                     </a>
-                    <span class="badge badge-primary ml-2 mb-2" data-toggle="tooltip"
-                          title="{{__("Number of presentations")}}">{{$uncatcounter}}</span>
-                </h3>
+                </div>
+
             </div>
 
             <div id="collapseOne"
-                 @if($uncat)
-                     class="collapse show"
-                 @else
-                     class="collapse"
-                 @endif
-                 aria-labelledby="headingOne" data-parent="#accordion">
-                @include('home.videolayout', ['videos' => $uncat_videos])
+                @if($uncat)
+                    class="collapse show"
+                @else
+                    class="collapse"
+                @endif
+                    aria-labelledby="headingOne" data-parent="#accordion">
+                    @include('home.videolayout', ['videos' => $uncat_videos])
             </div>
         </div>
+        @endif
+
         <div class="d-flex justify-content-sm-start mt-4">
-            <h2><span class="badge badge-primary ml-2 mb-2">{{count($video_courses)}} </span> <span style="color:blue;">@if(count($video_courses)>1 or count($video_courses)==0)
+            <h2 class="col mt-4">
+                <span class="badge badge-primary ml-2 mb-2">{{count($video_courses)}} </span> <span style="color:blue;">
+                    @if(count($video_courses)>1 or count($video_courses)==0)
                         {{__("Courses")}}
                     @else
                         {{__("Course")}}
-                    @endif</span></h2>
+                    @endif
+                </span>
+            </h2>
         </div>
+
         <!--Courses -->
         @foreach($video_courses as $key => $video_course)
-            <div class="card">
+            <div class="card border border-primary mb-3">
+
                 <div id="heading{{$key}}">
-                    <h3 class="col mt-4" style="line-height: 1.5em;">
+                    <h4 style="text-align:left;float:left; padding: 35px 15px 0;">
                         <a wire:click.prevent="loadCourseVideos({{$video_course->course->id}})"
                            @if($contend[$video_course->course->id]) class="link" @else class="link collapsed"
                            @endif role="button" data-toggle="collapse" aria-expanded="false"
@@ -94,10 +111,13 @@
                                 {{$video_course->course->name_en}}
                             @endif
                         </a>
+                    </h4>
+                    <h5 style="text-align:right; float:right; padding: 5px 15px 0 15px;">
                         @if(!$contend[$video_course->course->id])
                             @include('livewire.status.coursestatus')
                         @endif
-                    </h3>
+                    </h5>
+                    <hr style="clear:both; border: none;">
                 </div>
                 <div id="collapse{{$key}}"
                      @if($contend[$video_course->course->id])
@@ -111,42 +131,44 @@
                 </div>
             </div>
         @endforeach
+
     </div> <!-- accordian -->
+
 </div>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+    Livewire.hook('message.processed', (message, component) => {
         $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        })
-        Livewire.hook('message.processed', (message, component) => {
-            $(function () {
-                $('[data-toggle="tooltip"]').tooltip();
-                $("input[type='checkbox'][name='bulkedit']").each(function () {
-                    handleSelected($(this));
-                });
+            $('[data-toggle="tooltip"]').tooltip();
+            $("input[type='checkbox'][name='bulkedit']").each(function () {
+            handleSelected($(this));
+            });
 
-                $("input[type='checkbox'][name='bulkedit']").on('change', function () {
-                    handleSelected($(this));
-                });
-            })
+            $("input[type='checkbox'][name='bulkedit']").on('change', function () {
+                handleSelected($(this));
+            });
         })
-        function handleSelected(checkbox) {
-            let checked = checkbox.prop('checked');
-            let id = checkbox.attr('data-id');
-            if (checked) {
-                if (!$('#bulkediting').find('input[name="bulkids[]"][value="'+id+'"]').length) {
-                    $('#bulkediting').append('<input type="hidden" name="bulkids[]" value=' + id + '>');
+    })
+    function handleSelected(checkbox) {
+        let checked = checkbox.prop('checked');
+        let id = checkbox.attr('data-id');
+        if (checked) {
+            if (!$('#bulkediting').find('input[name="bulkids[]"][value="'+id+'"]').length) {
+                $('#bulkediting').append('<input type="hidden" name="bulkids[]" value=' + id + '>');
                 }
-            } else {
-                $('#bulkediting').find('input[value="' + id + '"]').remove();
-            }
-            let n = $('#bulkediting').find('input[name="bulkids[]"]').length;
-            if (n) {
-                $('#bulkediting input[type="submit"]').val("{{__("Edit")}}" + ' ' + n + ' ' + "{{__("selected presentations")}}");
-                $('#bulkcontainer').show();
-            } else {
-                $('#bulkcontainer').hide();
+        } else {
+            $('#bulkediting').find('input[value="' + id + '"]').remove();
+        }
+        let n = $('#bulkediting').find('input[name="bulkids[]"]').length;
+        if (n) {
+            $('#bulkediting input[type="submit"]').val("{{__("Edit")}}" + ' ' + n + ' ' + "{{__("selected presentations")}}");
+            $('#bulkcontainer').show();
+        } else {
+            $('#bulkcontainer').hide();
             }
         }
     });
