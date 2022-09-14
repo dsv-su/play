@@ -47,7 +47,9 @@ class HomeController extends Controller
                 return $query->whereIn('course_id', $courses);
             })
                 ->orWhereIn('id', $individual_videos)
-                ->latest('creation')->fastPaginate(24, ['*'], 'my')->onEachSide(1);
+                //->latest('creation')->fastPaginate(24, ['*'], 'my')->onEachSide(1);
+                ->latest('creation')->Paginate(24, ['*'], 'my')->onEachSide(1);
+
             $data['my'] = $visibility->filter($data['mypaginated']);
         }
 
