@@ -145,7 +145,9 @@ class Manage extends Component
             ->orWhereIn('id', $this->courseadministrator)
             ->orWhereIn('id', $this->video_course_ids)
             ->latest('creation')->get();
+
         $this->filters($videos);
+
     }
 
     /**
@@ -227,7 +229,7 @@ class Manage extends Component
         $courselist = $video_courses->pluck('video_id')->toArray();
 
         $filtervideos = Video::whereIn('id', $courselist)->get();
-        
+
         $this->reset('videopresenters');
         $this->filters($filtervideos);
     }

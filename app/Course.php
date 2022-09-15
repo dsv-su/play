@@ -110,16 +110,22 @@ class Course extends Model implements Searchable
             // Use cache
             $daisy_courses_ids = Cache::remember($username, 3600, function () use ($username){
                 // Show only courses that you have permission to
-                $daisy = new DaisyAPI();
-                $daisyPersonID = $daisy->getDaisyPersonId($username);
-                // Get all courses where user is courseadmin
-                if ($daisy_courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID)) {
-                    return array_map(function ($d) {
-                        return $d['id'];
-                    }, $daisy_courses);
+                //Override if local
+                if(!app()->environment('local')) {
+                    $daisy = new DaisyAPI();
+                    $daisyPersonID = $daisy->getDaisyPersonId($username);
+                    // Get all courses where user is courseadmin
+                    if ($daisy_courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID)) {
+                        return array_map(function ($d) {
+                            return $d['id'];
+                        }, $daisy_courses);
+                    } else {
+                        return [];
+                    }
                 } else {
                     return [];
                 }
+
             });
         }
 

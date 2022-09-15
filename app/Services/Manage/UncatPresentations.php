@@ -63,7 +63,7 @@ class UncatPresentations
 
         //Retrive presentations where user is presenter
         $presenter = Presenter::where('username', $user)->first();
-        $presenter_videos = VideoPresenter::where('presenter_id', $presenter->id)->pluck('video_id')->toArray();
+        $presenter_videos = VideoPresenter::where('presenter_id', $presenter->id ?? 0)->pluck('video_id')->toArray();
 
         $videos_collection = Video::whereDoesntHave('video_course')
                 ->whereIn('id', $individual_videos)

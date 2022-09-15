@@ -93,8 +93,11 @@
 
         <!--Courses -->
         @foreach($video_courses as $key => $video_course)
-            <div class="card border border-primary mb-3">
-
+            <div class="card border border-primary mb-3"
+                @if ($video_course->course->id && !(in_array(\App\Course::find($video_course->course->id)->userPermission(), ['edit', 'delete'])))
+                    style="background-color: #e7ebec; !important;"
+                @endif
+                     >
                 <div id="heading{{$key}}">
                     <h4 style="text-align:left;float:left; padding: 35px 15px 0;">
                         <a wire:click.prevent="loadCourseVideos({{$video_course->course->id}})"
