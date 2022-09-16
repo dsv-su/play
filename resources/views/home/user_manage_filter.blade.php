@@ -7,6 +7,7 @@
     <div id="for-picker" wire:ignore>
         <select wire:model="course" @if (empty($videocourses)) disabled
                 @endif class="form-control mx-1 selectpicker"
+                data-container="#for-picker"
                 data-none-selected-text="{{ __('Course') }}" data-live-search="true" multiple
                 style="width: 400px">
             @foreach($videocourses as $designation => $name)
@@ -17,6 +18,7 @@
 
         <select wire:model="presenter" @if (empty($videopresenters)) disabled
                 @endif class="form-control mx-1 selectpicker"
+                data-container="#for-picker"
                 data-none-selected-text="{{ __('Presenter') }}" data-live-search="true" multiple
                 style="width: 200px;">
             @foreach($videopresenters as $username => $name)

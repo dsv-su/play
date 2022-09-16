@@ -9,6 +9,7 @@ use App\CoursesettingsUsers;
 use App\IndividualPermission;
 use App\Presenter;
 use App\Services\Filters\VisibilityFilter;
+use App\Services\Manage\LoadPresentations;
 use App\Services\Manage\UncatPresentations;
 use App\Video;
 use App\VideoCourse;
@@ -24,7 +25,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cookie;
 use Lang;
 use Livewire\Component;
-use Illuminate\Support\Str;
 
 class Manage extends Component
 {
@@ -43,6 +43,8 @@ class Manage extends Component
     public $filter_course, $filter_presenter, $filter_semester, $filter_tag;
     public $stats_playback = [], $stats_download = [];
     public $videoformat = '';
+    public $searchTerm;
+    protected $loadpresentations;
     protected $queryString = ['filterTerm'];
 
     /**
@@ -73,6 +75,7 @@ class Manage extends Component
      */
     public function filters($videos)
     {
+        //dd($this->video_courses);
         foreach ($videos as $video) {
             //Presenters
             foreach ($video->presenters() as $presenter) {
@@ -106,7 +109,6 @@ class Manage extends Component
                 $this->videocourses[$vc->course->designation] = (Lang::locale() == 'swe') ? $vc->course->name : $vc->course->name_en . ' (' .$vc->course->designation.')';
             }
         }
-        //dd($this->videopresenters);
     }
 
     /**
@@ -339,8 +341,9 @@ class Manage extends Component
      */
     public function updatedFilterTerm()
     {
-        //Prepare term
+        //Prepare
         $filterTerm = '%' . $this->filterTerm . '%';
+        $this->searchTerm = $filterTerm;
 
         //Filters uncategorized presentations
         if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
@@ -359,33 +362,22 @@ class Manage extends Component
             //Collection of ids depending on set permissions and role Courseadmin, Uploader or Staff
             $this->courseAdminFilter();
 
-            //Filter presentations
+            //Filter all presentations depending on user
             $this->video_courses = [];
             $videos_collection = Video::whereIn('id', $this->user_videos)
                 ->orWhereIn('id', $this->individual_videos)
                 ->orWhereIn('id', $this->courseadministrator)
                 ->orWhereIn('id', $this->video_course_ids)
-                ->get();
-
-            $video_course_ids = VideoCourse::whereIn('video_id', $videos_collection->pluck('id'))->distinct()->pluck('course_id');
+                ->pluck('id')->toArray();
 
             //Filter after video title
-            if(!UncatPresentations::IsNullOrEmptyString($filterTerm)) {
-                $filtered_title = $videos_collection->filter(function ($video, $key) use ($filterTerm) {
-                    $match = preg_replace("/%+/",'$1*', $filterTerm);
-                    if(Str::is(strtoupper($match), strtoupper($video->title)) or Str::is(strtoupper($match), strtoupper($video->title_en))) {
-                        return $video->where('title', 'LIKE', $filterTerm)->get();
-                    }
-                    return 0;
-                });
+            $videos_match_title = Video::whereIn('id', $videos_collection)
+                ->where('title', 'LIKE', $filterTerm)
+                ->pluck('id')->toArray();
 
-                $video_title_ids = $filtered_title->pluck('id');
-                $filtered_with_title = VideoCourse::whereIn('video_id', $video_title_ids)->distinct()->pluck('course_id');
+            $video_course_ids = VideoCourse::whereIn('video_id', $videos_collection)->distinct()->pluck('course_id');
 
-            } else {
-                $filtered_with_title = [];
-            }
-
+            //Filter course specific attributes
             $video_course_courses = VideoCourse::with('course')
                 ->whereIn('course_id', $video_course_ids)
                 ->whereHas('course', function ($query) use ($filterTerm) {
@@ -398,7 +390,7 @@ class Manage extends Component
                 ->distinct()
                 ->pluck('course_id');
 
-            //Presenters
+            //Filter after Presenters
             $video_course_presenters = VideoCourse::with('course', 'video.video_presenter.presenter')
                 ->whereIn('course_id', $video_course_ids)
                 ->whereHas('video.video_presenter.presenter', function ($query) use ($filterTerm) {
@@ -406,7 +398,7 @@ class Manage extends Component
                         ->orwhere('name', 'LIKE', $filterTerm);
                 })
                 ->pluck('course_id');
-            //Tags
+            //Filter after Tags
             $video_course_tags = VideoCourse::with('video.video_tag.tag')
                 ->whereIn('course_id', $video_course_ids)
                 ->WhereHas('video.video_tag.tag', function ($query) use ($filterTerm) {
@@ -415,11 +407,11 @@ class Manage extends Component
                 })
                 ->pluck('course_id');
 
-            //Filter
+            //Create public course list
             $this->video_courses = VideoCourse::whereIn('course_id', $video_course_courses)
                 ->orWhereIn('course_id', $video_course_presenters)
                 ->orWhereIn('course_id', $video_course_tags)
-                ->orWhereIn('course_id', $filtered_with_title)
+                ->orWhereIn('video_id', $videos_match_title)
                 ->groupBy('course_id')
                 ->orderBy('course_id', 'desc')
                 ->get();
@@ -450,6 +442,8 @@ class Manage extends Component
         }
 
         $this->courseSettings($this->video_courses);
+        $this->countPresentations($this->video_courses);
+
     }
 
     /**
@@ -488,12 +482,14 @@ class Manage extends Component
     {
         //Toggle courselist
         $this->contend[$courseid] = !$this->contend[$courseid];
+        $term = $this->searchTerm;
 
         //Load presentations
         if ($this->videos[$courseid] == null) {
-            $this->videos[$courseid] = $visibility->filter(Video::whereHas('video_course.course', function ($query) use ($courseid) {
-                $query->where('course_id', $courseid);
-            })->with('video_course.course', 'video_presenter.presenter')->latest('creation')->get());
+            //Loads presentations
+            $this->loadpresentations = new LoadPresentations();
+            $this->videos[$courseid] = $visibility->filter($this->loadpresentations->queryTitle($courseid, $term));
+
         } else {
             $this->videos[$courseid] = [];
         }
@@ -521,11 +517,12 @@ class Manage extends Component
         $this->uncat_videos = $visibility->filter($this->uncat_video_courses);
         $this->courseSettings($this->video_courses);
         // Rehydrate already expanded courses since they're turned to array
+        $term = $this->searchTerm;
         foreach ($this->videos as $courseid => $videos) {
             if (!empty($videos)) {
-                $this->videos[$courseid] = $visibility->filter(Video::whereHas('video_course.course', function ($query) use ($courseid) {
-                    $query->where('course_id', $courseid);
-                })->with('video_course.course', 'video_presenter.presenter')->latest('creation')->get());
+                $this->loadpresentations = new LoadPresentations();
+                $this->videos[$courseid] = $visibility->filter($this->loadpresentations->queryTitle($courseid, $term));
+
             }
         }
         $this->videoformat = Cookie::get('videoformat') ?? 'grid';
@@ -568,10 +565,10 @@ class Manage extends Component
     {
         foreach ($courses as $course) {
             $courseid = $course->course_id;
-            $this->counter[$course->course_id] = Video::whereHas('video_course.course', function ($query) use ($courseid) {
-                $query->where('course_id', $courseid);
-            })->count();
+            $countpresentations = new LoadPresentations();
+            $this->counter[$course->course_id] = $countpresentations->queryTitle($courseid, $this->searchTerm)->count();
         }
+
     }
 
     /**
@@ -592,7 +589,6 @@ class Manage extends Component
      */
     public function stats($videos)
     {
-
         foreach ($videos as $video) {
             //Playback
             $this->stats_playback[$video['id']] = VideoStat::where('video_id', $video['id'])->pluck('playback')->first();
