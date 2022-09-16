@@ -39,7 +39,8 @@ class Manage extends Component
     public $filter, $filterTerm;
     public $presenter, $course, $semester, $tag;
     public $videopresenters = [], $videoterms = [], $videocourses = [], $videotags = [];
-    public $filterswitch, $manageview;
+    //public $filterswitch;
+    public $manageview;
     public $filter_course, $filter_presenter, $filter_semester, $filter_tag;
     public $stats_playback = [], $stats_download = [];
     public $videoformat = '';
@@ -114,11 +115,11 @@ class Manage extends Component
     /**
      * @return void
      */
-    public function filterToggle()
+    /*public function filterToggle()
     {
         //Toggles the textfilter visibility
         $this->filterswitch = !$this->filterswitch;
-    }
+    }*/
 
     /**
      * @throws BindingResolutionException

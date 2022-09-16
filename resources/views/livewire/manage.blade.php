@@ -21,7 +21,7 @@
                               method="GET" id="manage-filter" role="search">
                             <label for="manage-filter" class="sr-only">{{ __("Filter courses") }}</label>
                             <input class="form-control w-75" type="search"
-                                   wire:model="filterTerm"
+                                   wire:model.debounce.1000ms="filterTerm"
                                    id="manage-filter-text" autocomplete="off"
                                    aria-haspopup="true"
                                    placeholder="{{ __("Filter courses") }}"
@@ -64,6 +64,9 @@
    <div wire:loading wire:target="loadCourseVideos">
        @include('livewire.modals.loading_spinner')
    </div>
+    <div wire:loading.delay wire:target="filterTerm">
+        @include('livewire.modals.loading_spinner')
+    </div>
    <!-- Uncategorized -->
 
    <div id="accordion">
