@@ -102,13 +102,13 @@
                                     </li>
                                     <li class="mega-menu-collapse-col col">
                                         <a class="nav-link level-2 d-flex align-content-center"
-                                           href="{{ route('manage') }}"><span
-                                                    class="fas fa-video fa-icon mr-2 fa-fw"
-                                                    aria-hidden="true"></span>@lang('lang.manage_recording')</a>
-
+                                           href="{{ route('manage_presentations') }}">
+                                            <span class="fas fa-video fa-icon mr-2 fa-fw" aria-hidden="true"></span>
+                                            @lang('lang.manage_recording')
+                                        </a>
                                         @if(app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Administrator')
                                         <a class="nav-link level-2 d-flex align-content-center"
-                                           href="{{ route('manage_course') }}"><span
+                                           href="{{ route('manage_courses') }}"><span
                                                 class="fas fa-address-card fa-icon mr-2 fa-fw"
                                                 aria-hidden="true"></span>@lang('lang.manage_course')</a>
                                         @endif
@@ -387,13 +387,13 @@
                                                 <div id="accordionSubMenu_Forskning">
                                                     <ul class="main-menu-sub navbar-nav pb-4">
                                                         <li class="nav-item pl-3">
-                                                            <a class="nav-link level-2" href="{{ route('manage') }}">
+                                                            <a class="nav-link level-2" href="{{ route('manage_presentations') }}">
                                                                 <span class="fas fa-video fa-icon fa-fw mr-2"
                                                                       aria-hidden="true"></span>@lang('lang.manage_recording')
                                                             </a>
                                                             @if(app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Administrator')
                                                                 <a class="nav-link level-2"
-                                                                   href="{{ route('manage_course') }}"><span
+                                                                   href="{{ route('manage_courses') }}"><span
                                                                             class="fas fa-address-card fa-icon fa-fw mr-2"
                                                                             aria-hidden="true"></span>@lang('lang.manage_course')</a>
                                                             @endif

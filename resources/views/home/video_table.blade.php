@@ -1,6 +1,5 @@
 <!-- Video - child view - will inherit all data available in the parent view-->
-<div class="videotable p-0 mb-0 bg-white overflow-hidden row mx-1 w-100 border-bottom-grey d-flex align-content-center @if($video->hidden) faded @endif"
-     id="{{$video->id}}">
+<div class="videotable p-0 mb-0 bg-white overflow-hidden row mx-1 w-100 border-bottom-grey d-flex align-content-center @if($video->hidden) faded @endif" id="{{$video->id}}">
     @if (!($bulk ?? false) && ($video->edit))
         <div class="pr-0 col-auto form-check d-flex align-items-center">
             <input class="form-check-input" type="checkbox" name="bulkedit" data-id="{{$video->id}}">

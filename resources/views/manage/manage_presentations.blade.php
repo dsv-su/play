@@ -6,7 +6,7 @@
             <div class="col-12">
                 <span class="su-theme-anchor"></span>
                 <h3 class="su-theme-header mb-4">
-                   {{__("Manage courses")}}
+                    {{__("Manage presentations")}}
                 </h3>
             </div>
         </div>
@@ -22,7 +22,7 @@
 
     <!-- Courselist -->
     <div class="container px-0">
-        <livewire:manage />
+        <livewire:manage-presentations />
     </div>
 
 @endsection

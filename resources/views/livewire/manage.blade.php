@@ -1,63 +1,53 @@
 <div>
+    <!-- Layout buttons -->
+        <span class="custom-control-inline custom-switch custom-switch" data-toggle="tooltip"
+              title="{{__("Grid layout")}}">
+            <button class="btn btn-outline-primary" wire:click="videoformat('{{$grid}}')"
+                    @if($videoformat == 'grid') style="background-color: blue; !important; color: white; !important;" @endif>
+                <i class="fa-solid fa-table-cells-large"></i>
+            </button>
+        </span>
+        <span class="custom-control-inline custom-switch custom-switch" data-toggle="tooltip"
+              title="{{__("Table layout")}}">
+            <button class="btn btn-outline-primary" wire:click="videoformat('{{$table}}')"
+                    @if($videoformat == 'table') style="background-color: blue; !important; color: white; !important;" @endif>
+                <i class="fa-solid fa-table-list"></i>
+            </button>
+        </span>
+        <span class="custom-control-inline custom-switch custom-switch" data-toggle="tooltip"
+              title="{{__("List layout")}}">
+            <button class="btn btn-outline-primary" wire:click="videoformat('{{$list}}')"
+                    @if($videoformat == 'list') style="background-color: blue; !important; color: white; !important;" @endif>
+                <i class="fa-solid fa-list"></i>
+            </button>
+        </span>
+    <!-- end layout buttons -->
     <div class="card border border-primary mt-3" style="border-width:3px !important; border-radius: 10px !important; padding: 25px !important; z-index: 1000; !important;">
         <div class="container">
             <div class="d-flex row justify-content-center align-items-start">
-                {{--}}
-                    <div class="col-12 col-sm-auto d-flex justify-content-center pr-0">
-                        <label class="m-0" for="filterSwitch">{{__("Textfilter")}}</label>
-                        <div class="mx-1">
-                            <span class="custom-control custom-switch custom-switch-lg">
-                                <input wire:click="filterToggle" class="custom-control-input" id="filterSwitch" name="filter"
-                                       type="checkbox" @if($filterswitch == true) checked @endif>
-                                <label class="custom-control-label" style="margin-top: 3px;" for="filterSwitch"></label>
-                            </span>
-                     </div>
-                </div>
-                {{--}}
                 <div class="col-12 col-sm">
-                    @if($filterswitch)
-                        <form wire:submit.prevent="filter"
-                              class="form-inline manage-filter d-flex justify-content-sm-start"
-                              method="GET" id="manage-filter" role="search">
-                            <label for="manage-filter" class="sr-only">{{ __("Filter courses") }}</label>
-                            <input class="form-control w-75" type="search"
-                                   wire:model.debounce.1000ms="filterTerm"
-                                   id="manage-filter-text" autocomplete="off"
-                                   aria-haspopup="true"
-                                   placeholder="{{ __("Filter courses") }}"
-                                   style="font-size: 100% !important;"
-                                   aria-labelledby="manage-filter">
-                        </form>
-                    @endif
+                    <form wire:submit.prevent="filter"
+                          class="form-inline manage-filter d-flex justify-content-sm-center"
+                          method="GET" id="manage-filter" role="search">
+                        <label for="manage-filter" class="sr-only">{{ __("Type to search") }}</label>
+                        <input class="form-control w-100" type="search"
+                               wire:model.debounce.1000ms="filterTerm"
+                               id="manage-filter-text" autocomplete="off"
+                               aria-haspopup="true"
+                               placeholder="{{ __("Type to search") }}"
+                               style="font-size: 100% !important;"
+                               aria-labelledby="manage-filter">
+                    </form>
                 </div>
             </div>
         </div>
 
-        <!-- Select dropwon Filter -->
-        <form wire:submit.prevent="selectfilters" class="form-inline d-flex mx-3" method="post">
-            <label class="my-1 mr-2" for="videoformat">{{__('Display')}}:</label>
-            <div wire:ignore>
-                <select wire:model="videoformat" class="form-control my-1 mr-sm-2 selectpicker">
-                    <option @if($videoformat == 'grid') selected @endif value="grid">{{__('Grid')}}</option>
-                    <option @if($videoformat == 'list') selected @endif value="list">{{__('List')}}</option>
-                    <option @if($videoformat == 'table') selected @endif value="table">{{__('Table')}}</option>
-                </select>
-            </div>
-        </form>
-        <!-- User filter -->
-    {{--}}
-            @include('home.user_manage_filter')
+        <!-- Dropdown filter -->
+        @include('livewire.filter.dropdownfilter')
+        <!-- end dropdownfilter -->
 
-            <!-- end User filter -->
-
-        <!-- Livewire dropdown -->
-
-    @include('livewire.filter.dropdownfilter')
-        <!-- en Livewire dropdown -->
-    {{--}}
    </div>
-
-
+    <!-- Loading spinners -->
    <div wire:loading wire:target="loadUncat">
        @include('livewire.modals.loading_spinner')
    </div>
@@ -67,9 +57,14 @@
     <div wire:loading.delay wire:target="filterTerm">
         @include('livewire.modals.loading_spinner')
     </div>
-   <!-- Uncategorized -->
+    <div wire:loading.delay wire:target="resetFilter">
+        @include('livewire.modals.reset_spinner')
+    </div>
+    <!-- end loading spinners -->
 
+   <!-- Uncategorized -->
    <div id="accordion">
+       {{--}}
        <!-- Disable/enable uncat counter -->
        @if($uncatcounter != 0)
        <div class="card">
@@ -94,9 +89,9 @@
                    </div>
                </div>
            </div>
-
        </div>
        @endif
+       {{--}}
 
        <div class="d-flex justify-content-sm-start mt-4">
            <h2 class="col mt-4">
