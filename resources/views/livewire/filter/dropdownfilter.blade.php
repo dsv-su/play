@@ -24,7 +24,7 @@
                 <option value="{{$username}}">{{$name}}</option>
             @endforeach
         </select>
-
+        @if($view == 'courses')
         <select wire:model="semester" @if (empty($videoterms)) disabled
                 @endif class="form-control mx-1"
                 style="width: 200px">
@@ -34,7 +34,7 @@
                 <option value="{{$semester}}">{{$semester}}</option>
             @endforeach
         </select>
-
+        @endif
         <select wire:model="tag" @if (empty($videotags)) disabled
                 @endif class="form-control mx-1"
                 style="width: 200px;">

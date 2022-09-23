@@ -16,18 +16,20 @@ class ManagePresentations extends Component
 {
     public $grid, $list, $table;
     public $videoformat = '';
-    public $videopresenters = [], $videoterms = [], $videocourses = [], $videotags = [];
+    public $videopresenters = [], $videoterms = [], $videotags = [];
+    public $presenter, $semester, $tag;
     public $view;
     public $counter, $uncatcounter;
-    public $uncat, $uncat_videos = [];
+    public $uncat_videos = [];
     public $stats_playback = [], $stats_download = [];
     public $filter, $filterTerm;
+    public $searchTerm;
+    public $presentations;
 
     public function mount()
     {
         //Initial default settings
         $this->view = 'presenters';
-        $this->uncat = false;
         $this->videoformat = Cookie::get('videoformat') ?? 'grid';
         $dropdownfilter = new DropdownFilters;
         $this->filters = $dropdownfilter->handleUrlParams();
@@ -55,17 +57,93 @@ class ManagePresentations extends Component
         }
     }
 
+    public function resetFilter()
+    {
+        $this->reset('videopresenters');
+        $this->reset('videotags');
+        //Redirect depending on role
+        if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
+            //CourseAdmin and Uploader
+            $this->uploaderManage();
+        } else {
+            //Administrator
+            $this->adminManage();
+        }
+    }
+
+    public function filters()
+    {
+        $videos = $this->uncat_video_courses;
+
+        $dropdownfilter = new DropdownFilters;
+
+        list ($courses, $this->videoterms, $this->videopresenters, $this->videotags, $this->video_courses, $this->uncat_video_courses) = $dropdownfilter->performFiltering(
+            $videos, $this->filters['courses'], $this->filters['terms'], $this->filters['tags'], $this->filters['presenters']
+        );
+
+        //Sort the filter arrays
+        $this->videopresenters = collect($this->videopresenters)->sort()->toArray();
+        sort($this->videotags);
+        $this->loadUncat();
+
+    }
+
+    public function updatedPresenter($selected_presenter)
+    {
+        //Turn into array
+        $selected_presenter = explode( ',', $selected_presenter);
+
+        $this->filter_presenter = $selected_presenter;
+
+        if (empty($selected_presenter)) {
+            //TODO
+            $this->uploaderManage();
+        } else {
+            $this->filters['presenters'] = $selected_presenter;
+            $this->filters();
+        }
+
+        //Uncategorized presentations
+        $this->uncat_video_courses = UncatPresentations::my_uncat_video_course_presenter(app()->make('play_username'), $selected_presenter);
+        $this->prepareRendering();
+
+    }
+
+    public function updatedTag($selected_tag)
+    {
+        //Turn into array
+        $selected_tag = explode( ',', $selected_tag);
+
+        $this->filter_tag = $selected_tag;
+        if (empty($selected_tag)) {
+            //TODO
+            $this->uploaderManage();
+        } else {
+            $this->filters['tags'] = $selected_tag;
+            $this->filters();
+        }
+
+        //Uncategorized presentations
+        $this->uncat_video_courses = UncatPresentations::my_uncat_video_course_tag(app()->make('play_username'), $selected_tag);
+        $this->prepareRendering();
+    }
+
     public function uploaderManage()
     {
         //Uncat videos
         $this->uncat_video_courses = UncatPresentations::my_uncat_video_course(app()->make('play_username'));
+        $this->loadUncat();
         $this->prepareRendering();
-        //$this->filters();
+        $this->filters();
     }
 
     public function adminManage()
     {
-
+        //Uncat videos
+        $this->uncat_video_courses = UncatPresentations::unfiltered_uncat_video_course();
+        $this->loadUncat();
+        $this->prepareRendering();
+        $this->filters();
     }
 
     public function updatedFilterTerm()
@@ -84,26 +162,25 @@ class ManagePresentations extends Component
         }
         //Counter for uncategorized presentations
         $this->countUncatPresentations($this->uncat_video_courses);
+        //Render filtered collection
+        $this->loadUncat();
     }
 
-    public function loadUncat(VisibilityFilter $visibility)
+    public function loadUncat()
     {
-        $this->uncat = !$this->uncat;
+        $visibility = new VisibilityFilter;
         $this->uncat_videos = $visibility->filter($this->uncat_video_courses);
         $this->stats($this->uncat_videos);
     }
 
     public function prepareRendering()
     {
-        //$this->collapseAll($this->video_courses);
-        //$this->countPresentations($this->video_courses);
-        $this->countUncatPresentations($this->uncat_video_courses);
-        //$this->courseSettings($this->video_courses);
+        $this->countUncatPresentations($this->uncat_videos);
     }
 
-    public function countUncatPresentations($course)
+    public function countUncatPresentations($presentations)
     {
-        $this->uncatcounter = $course->count();
+        $this->uncatcounter = count($presentations);
     }
 
     /**
@@ -115,6 +192,7 @@ class ManagePresentations extends Component
         Cookie::queue('videoformat', $videoformat, 999999999);
         $this->videoformat = $videoformat;
     }
+
 
     public function render()
     {

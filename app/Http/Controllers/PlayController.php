@@ -921,6 +921,6 @@ class PlayController extends Controller
             $video->save();
         }
 
-        return redirect()->route('manage')->with('success', true)->with('message', __("Presentations are successfully updated"));
+        return redirect()->route('manage_presentations')->with('success', true)->with('message', __("Presentations are successfully updated"));
     }
 }

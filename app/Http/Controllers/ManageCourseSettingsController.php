@@ -18,7 +18,7 @@ class ManageCourseSettingsController extends Controller
 {
     public function __construct()
     {
-        //$this->middleware('course-admin');
+        $this->middleware('redirect-links');
     }
 
     public function index()
@@ -185,7 +185,7 @@ class ManageCourseSettingsController extends Controller
             $coursesettings_permissions->save();
         }
 
-        return redirect()->route('manage')->with('success', true)->with('message', __('The course was successfully updated'));
+        return redirect(session('links')[2])->with('success', true)->with('message', __('The course was successfully updated'));
     }
 
     private function updateCourse($course_id)

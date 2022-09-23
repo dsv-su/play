@@ -52,15 +52,17 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     Route::get('/course/{course}/play', 'MultiplayerController@playCourse')->name('playCourse');
     Route::get('/playlist/{id}', 'MultiplayerController@playlist');
 
-    //Manage courses
-    Route::get('/manage_n', function () {
-        return view('manage.manage_new');
-    })->name('manage_courses');
+    Route::middleware('redirect-links')->group(function () {
+        //Manage courses
+        Route::get('/manage_n', function () {
+            return view('manage.manage_new');
+        })->name('manage_courses');
 
-    //Manage presentations
-    Route::get('/manage_presentations', function () {
-        return view('manage.manage_presentations');
-    })->name('manage_presentations');
+        //Manage presentations
+        Route::get('/manage_presentations', function () {
+            return view('manage.manage_presentations');
+        })->name('manage_presentations');
+    });
 
     //Manage
     Route::get('/user_manage', 'SearchController@search')->name('user_manage');

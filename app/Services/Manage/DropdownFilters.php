@@ -85,8 +85,9 @@ class DropdownFilters
         $videotags = $this->extractTags($videos);
         $videopresenters = $this->extractPresenters($videos);
         $video_courses = $this->extractVideoCourses($videos);
+        $videos_by_course = $this->groupVideos($videos);
 
-        return array($videocourses, $videoterms, $videopresenters, $videotags, $video_courses, $videos);
+        return array($videocourses, $videoterms, $videopresenters, $videotags, $video_courses, $videos, $videos_by_course);
     }
 
     /**

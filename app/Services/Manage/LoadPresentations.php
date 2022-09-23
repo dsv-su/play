@@ -16,12 +16,11 @@ class LoadPresentations
          */
 
         //Retrive presentations matching courseId
-        $videos_in_course = Video::with('video_course.course')
-            ->whereHas('video_course.course', function ($query) use ($courseid) {
+        $videos_in_course = Video::with('video_course')
+            ->whereHas('video_course', function ($query) use ($courseid) {
                 $query->where('course_id', $courseid);
             })
             ->pluck('id')->toArray();
-
 
         //If a search term exists
         if($term) {

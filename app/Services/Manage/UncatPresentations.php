@@ -39,14 +39,40 @@ class UncatPresentations
     public static function unfiltered_uncat_video_course($filterTerm = null)
     {
         $videos_collection = Video::doesntHave('video_course')->orderByDesc('creation')->get();
+
         if($filterTerm) {
-            return $filtered_title = $videos_collection->filter(function ($video, $key) use ($filterTerm) {
-                $match = preg_replace("/%+/",'$1*', $filterTerm);
-                if(Str::is(strtoupper($match), strtoupper($video->title)) or Str::is(strtoupper($match), strtoupper($video->title_en))) {
-                    return $video->where('title', 'LIKE', $filterTerm)->get();
-                }
-                return 0;
-            });
+            //Title
+            $videos_match_title = Video::doesntHave('video_course')
+                ->whereIn('id', $videos_collection->pluck('id')->toArray())
+                ->where('title', 'LIKE', $filterTerm ?? '')
+                ->orWhere('title_en', 'LIKE', $filterTerm ?? '')
+                ->pluck('id')->toArray();
+
+            //Presenter
+            $videos_match_presenter = Video::doesntHave('video_course')
+                ->whereIn('id', $videos_collection->pluck('id')->toArray())
+                ->with('video_presenter.presenter')
+                ->whereHas('video_presenter.presenter', function ($query) use ($filterTerm) {
+                    $query->where('username', 'LIKE', $filterTerm ?? '')
+                        ->orwhere('name', 'LIKE', $filterTerm ?? '');
+                })->pluck('id')->toArray();
+
+            //Tags
+            $videos_match_tag = Video::doesntHave('video_course')
+                ->whereIn('id', $videos_collection->pluck('id')->toArray())
+                ->with('video_tag.tag')
+                ->whereHas('video_tag.tag', function ($query) use ($filterTerm) {
+                    $query->where('name', 'LIKE', $filterTerm ?? '');
+                })->pluck('id')->toArray();
+
+            //Combine queries
+
+            return Video::doesntHave('video_course')
+                ->whereIn('id', $videos_match_title)
+                ->orWhereIn('id', $videos_match_presenter)
+                ->orWhereIn('id', $videos_match_tag)
+                ->latest('creation')->get();
+
         } else {
             return $videos_collection;
         }
@@ -72,13 +98,40 @@ class UncatPresentations
                 ->get();
 
         if($filterTerm) {
-            return $filtered_title = $videos_collection->filter(function ($video, $key) use ($filterTerm) {
-                $match = preg_replace("/%+/",'$1*', $filterTerm);
-                if(Str::is(strtoupper($match), strtoupper($video->title)) or Str::is(strtoupper($match), strtoupper($video->title_en))) {
-                    return $video->where('title', 'LIKE', $filterTerm)->get();
-                }
-                return 0;
-            });
+
+            //Title
+            $videos_match_title = Video::doesntHave('video_course')
+                ->whereIn('id', $videos_collection->pluck('id')->toArray())
+                ->where('title', 'LIKE', $filterTerm ?? '')
+                ->orWhere('title_en', 'LIKE', $filterTerm ?? '')
+                ->pluck('id')->toArray();
+
+            //Presenter
+            $videos_match_presenter = Video::doesntHave('video_course')
+                ->whereIn('id', $videos_collection->pluck('id')->toArray())
+                ->with('video_presenter.presenter')
+                ->whereHas('video_presenter.presenter', function ($query) use ($filterTerm) {
+                    $query->where('username', 'LIKE', $filterTerm ?? '')
+                            ->orwhere('name', 'LIKE', $filterTerm ?? '');
+            })->pluck('id')->toArray();
+
+            //Tags
+            $videos_match_tag = Video::doesntHave('video_course')
+                ->whereIn('id', $videos_collection->pluck('id')->toArray())
+                ->with('video_tag.tag')
+                ->whereHas('video_tag.tag', function ($query) use ($filterTerm) {
+                    $query->where('name', 'LIKE', $filterTerm ?? '');
+                })->pluck('id')->toArray();
+
+            //Combine queries
+
+            return Video::doesntHave('video_course')
+                ->whereIn('id', $videos_collection->pluck('id')->toArray())
+                ->whereIn('id', $videos_match_title)
+                ->orWhereIn('id', $videos_match_presenter)
+                ->orWhereIn('id', $videos_match_tag)
+                ->latest('creation')->get();
+
         } else {
             return $videos_collection;
         }
@@ -134,4 +187,5 @@ class UncatPresentations
         return Video::whereIn('id', $filtered)->get();
 
     }
+
 }

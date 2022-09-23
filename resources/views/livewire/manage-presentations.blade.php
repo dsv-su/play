@@ -59,34 +59,25 @@
     </div>
     <!-- end loading spinners -->
 
-    <div id="accordion">
-        <!-- Disable/enable uncat counter -->
-        @if($uncatcounter != 0)
-            <div class="card">
-                <div id="headingOne">
-                    <h2 class="col mt-4" style="line-height: 1.5em;">
-                        <span class="badge badge-primary ml-2 mb-2" data-toggle="tooltip" title="{{__("Number of presentations")}}">{{$uncatcounter}}</span>
-                        <span style="color:blue;">{{__("Uncategorized courses")}}</span>
-                    </h2>
-                    <div class="card border border-primary p-3">
-                        <a wire:click.prevent="loadUncat" @if($uncat) class="link" @else class="link collapsed" @endif role="button" data-toggle="collapse" aria-expanded="false">
-                            <i class="fa mr-2"></i>
-                            {{__("Uncategorized")}}
-                        </a>
-                        <div id="collapseOne"
-                             @if($uncat)
-                             class="collapse show"
-                             @else
-                             class="collapse"
-                             @endif
-                             aria-labelledby="headingOne" data-parent="#accordion">
-                            @include('home.videolayout', ['videos' => $uncat_videos])
-                        </div>
-                    </div>
-                </div>
+
+
+
+    <div class="card">
+        <div id="headingOne">
+            <h2 class="col mt-4" style="line-height: 1.5em;">
+                <span class="badge badge-primary ml-2 mb-2" data-toggle="tooltip" title="{{__("Number of presentations")}}">{{$uncatcounter}}</span>
+                <span style="color:blue;">{{__("Uncategorized courses")}}</span>
+            </h2>
+
+
+            <div>
+                @include('home.videolayout', ['videos' => $uncat_videos])
             </div>
-        @endif
+
+        </div>
     </div>
+
+
 
 
 </div>
