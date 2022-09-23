@@ -69,24 +69,62 @@ class Manage extends Component
         $this->list = 'list';
         $this->table = 'table';
 
-        //Redirect depending on role
-        if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
-            //CourseAdmin and Uploader
-            if($this->containsOnlyNull($this->filters)) {
+        if($this->checkQueryString()) {
+            $this->updatedFilterTerm();
+        } else {
+            //Redirect depending on role
+            if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
+                //CourseAdmin and Uploader
                 $this->courseAdminManage();
             } else {
-                dd('Hey');
-            }
-
-        } else {
-            //Administrator
-            if($this->containsOnlyNull($this->filters)) {
+                //Administrator
                 $this->loadCourseList();
-            } else {
-                dd('Hey');
+            }
+        }
+
+    }
+
+    public function checkQueryString()
+    {
+        foreach(array_filter($this->filters) as $filter => $value) {
+            if($filter == 'filterTerm' && !is_null($value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function injectToSession()
+    {
+        //Retrive session links array
+        $links = session()->has('links') ? session('links') : [];
+
+        //Set filters
+        $values = array_filter($this->filters);
+
+        //Current link
+        $currentLink = 'manage_n?';
+
+        //Merge current link with filters
+        foreach($values as $filter => $value) {
+            foreach($value as $key => $parameter) {
+                if ($key === 0) {
+                    $currentLink = $currentLink . $filter . '=' . $parameter;
+                } else {
+                    $currentLink = $currentLink . '&' . $filter . '=' . $parameter;
+                }
+            }
+            if(!(end($values) == $value)) {
+                $currentLink = $currentLink . '&';
             }
 
         }
+
+        //Putting it in the beginning of links array
+        array_unshift($links, $currentLink);
+
+        //Saving links array to the session
+        session(['links' => $links]);
     }
 
     public function resetFilter()
@@ -116,7 +154,7 @@ class Manage extends Component
         $dropdownfilter = new DropdownFilters;
 
         list ($this->videocourses, $this->videoterms, $this->videopresenters, $this->videotags, $this->video_courses, $this->presentations, $this->presentations_by_courseid) = $dropdownfilter->performFiltering(
-            $videos, $this->filters['courses'], $this->filters['terms'], $this->filters['tags'], $this->filters['presenters']
+            $videos, $this->filters['course'], $this->filters['term'], $this->filters['tag'], $this->filters['presenter']
         );
 
         //Sort the filter arrays
@@ -125,6 +163,7 @@ class Manage extends Component
         $this->videocourses = collect($this->videocourses)->sort()->toArray();
 
         $this->prepareRendering();
+
     }
 
     /**
@@ -162,6 +201,8 @@ class Manage extends Component
      */
     public function updatedPresenter($selected_presenter)
     {
+        $this->presenter = $selected_presenter;
+
         //Turn into array
         $selected_presenter = explode( ',', $selected_presenter);
 
@@ -170,10 +211,11 @@ class Manage extends Component
         if (empty($selected_presenter)) {
             $this->courseAdminManage();
         } else {
-            $this->filters['presenters'] = $selected_presenter;
+            $this->filters['presenter'] = $selected_presenter;
             $this->filters();
         }
 
+        $this->injectToSession();
         $this->prepareRendering();
 
     }
@@ -183,6 +225,9 @@ class Manage extends Component
      */
     public function updatedCourse($selected_course)
     {
+        $this->course = $selected_course;
+        $this->injectToSession('course', $this->course);
+
         //Turn into array
         $selected_course = explode( ',', $selected_course);
 
@@ -191,11 +236,12 @@ class Manage extends Component
         if (empty($selected_course)) {
             $this->courseAdminManage();
         } else {
-            $this->filters['courses'] = $selected_course;
+            $this->filters['course'] = $selected_course;
             $this->filters();
             //Disable uncat
             $this->uncatcounter = 0;
         }
+        $this->injectToSession();
     }
 
     /**
@@ -210,9 +256,10 @@ class Manage extends Component
         if (empty($selected_semester)) {
             $this->courseAdminManage();
         } else {
-            $this->filters['terms'] = $selected_semester;
+            $this->filters['term'] = $selected_semester;
             $this->filters();
         }
+        $this->injectToSession();
     }
 
     /**
@@ -227,10 +274,10 @@ class Manage extends Component
         if (empty($selected_tag)) {
             $this->courseAdminManage();
         } else {
-            $this->filters['tags'] = $selected_tag;
+            $this->filters['tag'] = $selected_tag;
             $this->filters();
         }
-
+        $this->injectToSession();
         $this->prepareRendering();
     }
 
@@ -363,7 +410,12 @@ class Manage extends Component
             $this->presentations = Video::whereIn('id', $this->video_courses->pluck('video_id')->toArray())->get();
         }
 
+
+        //Querystring
+        $this->filters['filterTerm'] = explode( ',', $this->filterTerm);
         $this->filters();
+        $this->injectToSession();
+
         $this->courseSettings($this->video_courses);
 
     }
@@ -408,6 +460,7 @@ class Manage extends Component
             //Loads presentations
             $this->loadpresentations = new LoadPresentations();
             $load = new DropdownFilters();
+
             if(!empty($term)) {
                 $this->videos[$courseid] = $visibility->filter($this->loadpresentations->queryTitle($courseid, $term));
             } else {
@@ -464,7 +517,6 @@ class Manage extends Component
             //Group permissions
             $this->playback_permissions[$course->course_id] = CoursePermissions::where('course_id', $course->course_id)->first();
         }
-
     }
 
     /**

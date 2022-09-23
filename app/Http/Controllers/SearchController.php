@@ -38,11 +38,11 @@ class SearchController extends Controller
     /** viewBy% and filterBy% methods for viewing presentations that belong to certain entity
      * (course designation, term, category, student) and filtering the output */
 
-    /*public function __construct()
+    public function __construct()
     {
         //For session history
         $this->middleware('redirect-links');
-    }*/
+    }
 
     /**
      * @param VisibilityFilter $visibility

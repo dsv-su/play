@@ -23,10 +23,11 @@ class DropdownFilters
     public function handleUrlParams(): array
     {
         return [
-            'courses' => request('course') ? explode(',', request('course')) : null,
-            'presenters' => request('presenter') ? explode(',', request('presenter')) : null,
-            'terms' => request('semester') ? explode(',', request('semester')) : null,
-            'tags' => request('tag') ? explode(',', request('tag')) : null
+            'course' => request('course') ? explode(',', request('course')) : null,
+            'presenter' => request('presenter') ? explode(',', request('presenter')) : null,
+            'term' => request('semester') ? explode(',', request('semester')) : null,
+            'tag' => request('tag') ? explode(',', request('tag')) : null,
+            'filterTerm' => request('filterTerm') ? explode(',', request('filterTerm')) : null
         ];
     }
 

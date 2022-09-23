@@ -26,6 +26,8 @@ class ManagePresentations extends Component
     public $searchTerm;
     public $presentations;
 
+    protected $queryString = ['filterTerm', 'presenter', 'tag'];
+
     public function mount()
     {
         //Initial default settings
@@ -37,24 +39,62 @@ class ManagePresentations extends Component
         $this->list = 'list';
         $this->table = 'table';
 
-        //Redirect depending on role
-        if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
-            //Uploader
-            if($this->containsOnlyNull($this->filters)) {
+        if($this->checkQueryString()) {
+            $this->updatedFilterTerm();
+        } else {
+            //Redirect depending on role
+            if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
+                //Uploader
                 $this->uploaderManage();
             } else {
-                dd('Hey');
-            }
-
-        } else {
-            //Administrator
-            if($this->containsOnlyNull($this->filters)) {
+                //Administrator
                 $this->adminManage();
-            } else {
-                dd('Hey');
+            }
+        }
+
+    }
+
+    public function checkQueryString()
+    {
+        foreach(array_filter($this->filters) as $filter => $value) {
+            if($filter == 'filterTerm' && !is_null($value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function injectToSession()
+    {
+        //Retrive session links array
+        $links = session()->has('links') ? session('links') : [];
+
+        //Set filters
+        $values = array_filter($this->filters);
+
+        //Current link
+        $currentLink = 'manage_presentations?';
+
+        //Merge current link with filters
+        foreach($values as $filter => $value) {
+            foreach($value as $key => $parameter) {
+                if ($key === 0) {
+                    $currentLink = $currentLink . $filter . '=' . $parameter;
+                } else {
+                    $currentLink = $currentLink . '&' . $filter . '=' . $parameter;
+                }
+            }
+            if(!(end($values) == $value)) {
+                $currentLink = $currentLink . '&';
             }
 
         }
+
+        //Putting it in the beginning of links array
+        array_unshift($links, $currentLink);
+
+        //Saving links array to the session
+        session(['links' => $links]);
     }
 
     public function resetFilter()
@@ -78,7 +118,7 @@ class ManagePresentations extends Component
         $dropdownfilter = new DropdownFilters;
 
         list ($courses, $this->videoterms, $this->videopresenters, $this->videotags, $this->video_courses, $this->uncat_video_courses) = $dropdownfilter->performFiltering(
-            $videos, $this->filters['courses'], $this->filters['terms'], $this->filters['tags'], $this->filters['presenters']
+            $videos, $this->filters['course'], $this->filters['term'], $this->filters['tag'], $this->filters['presenter']
         );
 
         //Sort the filter arrays
@@ -99,12 +139,13 @@ class ManagePresentations extends Component
             //TODO
             $this->uploaderManage();
         } else {
-            $this->filters['presenters'] = $selected_presenter;
+            $this->filters['presenter'] = $selected_presenter;
             $this->filters();
         }
 
         //Uncategorized presentations
         $this->uncat_video_courses = UncatPresentations::my_uncat_video_course_presenter(app()->make('play_username'), $selected_presenter);
+        $this->injectToSession();
         $this->prepareRendering();
 
     }
@@ -119,12 +160,13 @@ class ManagePresentations extends Component
             //TODO
             $this->uploaderManage();
         } else {
-            $this->filters['tags'] = $selected_tag;
+            $this->filters['tag'] = $selected_tag;
             $this->filters();
         }
 
         //Uncategorized presentations
         $this->uncat_video_courses = UncatPresentations::my_uncat_video_course_tag(app()->make('play_username'), $selected_tag);
+        $this->injectToSession();
         $this->prepareRendering();
     }
 
@@ -133,8 +175,8 @@ class ManagePresentations extends Component
         //Uncat videos
         $this->uncat_video_courses = UncatPresentations::my_uncat_video_course(app()->make('play_username'));
         $this->loadUncat();
-        $this->prepareRendering();
         $this->filters();
+        $this->prepareRendering();
     }
 
     public function adminManage()
@@ -142,8 +184,8 @@ class ManagePresentations extends Component
         //Uncat videos
         $this->uncat_video_courses = UncatPresentations::unfiltered_uncat_video_course();
         $this->loadUncat();
-        $this->prepareRendering();
         $this->filters();
+        $this->prepareRendering();
     }
 
     public function updatedFilterTerm()
@@ -160,6 +202,12 @@ class ManagePresentations extends Component
             //Administrator
             $this->uncat_video_courses = UncatPresentations::unfiltered_uncat_video_course($filterTerm);
         }
+
+        //Querystring
+        $this->filters['filterTerm'] = explode( ',', $this->filterTerm);
+        $this->filters();
+        $this->injectToSession();
+
         //Counter for uncategorized presentations
         $this->countUncatPresentations($this->uncat_video_courses);
         //Render filtered collection

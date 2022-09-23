@@ -8,8 +8,6 @@ use App\Tag;
 use App\Video;
 use App\VideoPresenter;
 use App\VideoTag;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 
 class UncatPresentations
 {
@@ -17,24 +15,6 @@ class UncatPresentations
     {
         return ($str === '%%' || trim($str) === '% %');
     }
-
-    /*public static function uncat_presenter_id($filterTerm): \Illuminate\Support\Collection
-    {
-        return Video::with('video_presenter.presenter')
-            ->whereHas('video_presenter.presenter', function ($query) use ($filterTerm) {
-                $query->where('name', 'LIKE', $filterTerm)
-                    ->orwhere('name', 'LIKE', $filterTerm);
-            })
-            ->pluck('id');
-    }
-
-    public static function uncat_video_courses($presenter_id)
-    {
-        return Video::doesntHave('video_course')
-            ->whereIn('id', $presenter_id)
-            ->orderByDesc('creation')
-            ->get();
-    }*/
 
     public static function unfiltered_uncat_video_course($filterTerm = null)
     {
@@ -135,7 +115,6 @@ class UncatPresentations
         } else {
             return $videos_collection;
         }
-
     }
 
     public static function my_uncat_video_course_presenter($user, $selected_presenter = [])
@@ -160,7 +139,6 @@ class UncatPresentations
 
         $filtered = VideoPresenter::whereIn('video_id', $videos_collection)->whereIn('presenter_id', $selected)->pluck('video_id')->toArray();
         return Video::whereIn('id', $filtered)->get();
-
     }
 
     public static function my_uncat_video_course_tag($user, $selected_tag = [])

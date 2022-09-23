@@ -17,10 +17,13 @@ class RedirectLinks
     public function handle(Request $request, Closure $next)
     {
         $links = session()->has('links') ? session('links') : [];
+
         // Store current URI
         $currentLink = request()->path();
+
         // Putting it in the beginning of links array
         array_unshift($links, $currentLink);
+
         // Saving links array to the session
         session(['links' => $links]);
 
