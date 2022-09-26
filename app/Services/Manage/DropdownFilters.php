@@ -6,6 +6,7 @@ use App\CourseadminPermission;
 use App\CoursesettingsUsers;
 use App\IndividualPermission;
 use App\Presenter;
+use App\Services\Filters\VisibilityFilter;
 use App\Video;
 use App\VideoCourse;
 use App\VideoPresenter;
@@ -269,7 +270,7 @@ class DropdownFilters
     {
         return $videos->filter(function ($video, $key) use($course_id) {
             foreach($video->courses() as $course) {
-                if($course->id == $course_id) {
+                if($course->id === $course_id) {
                     return $video;
                 }
             }

@@ -439,7 +439,9 @@ class Manage extends Component
 
         //Load filters
         //Creates arrays for the filter functions
-        $this->presentations = Video::all();
+        //$this->presentations = Video::all();
+        //Speed up the query
+        $this->presentations = Video::select('id')->with('video_course')->get();
         $this->filters();
         $this->prepareRendering();
     }
@@ -453,21 +455,12 @@ class Manage extends Component
     {
         //Toggle courselist
         $this->contend[$courseid] = !$this->contend[$courseid];
-        $term = $this->searchTerm;
 
         //Load presentations
         if ($this->videos[$courseid] == null) {
             //Loads presentations
-            $this->loadpresentations = new LoadPresentations();
             $load = new DropdownFilters();
-
-            if(!empty($term)) {
-                $this->videos[$courseid] = $visibility->filter($this->loadpresentations->queryTitle($courseid, $term));
-            } else {
-                $this->videos[$courseid] = $visibility->filter($load->loadVideos($this->presentations, $courseid));
-            }
-
-
+            $this->videos[$courseid] = $visibility->filter($load->loadVideos($this->presentations, $courseid));
         } else {
             $this->videos[$courseid] = [];
         }
@@ -483,17 +476,11 @@ class Manage extends Component
         $visibility = app(VisibilityFilter::class);
         $this->courseSettings($this->video_courses);
         // Rehydrate already expanded courses since they're turned to array
-        $term = $this->searchTerm;
         foreach ($this->videos as $courseid => $videos) {
-            if (!empty($videos)) {
-                if(!empty($term)) {
-                    $this->loadpresentations = new LoadPresentations();
-                    $this->videos[$courseid] = $visibility->filter($this->loadpresentations->queryTitle($courseid, $term));
-                } else {
-                    $load = new DropdownFilters();
-                    $this->videos[$courseid] = $visibility->filter($load->loadVideos($this->presentations, $courseid));
-                }
 
+            if (!empty($videos)) {
+                $load = new DropdownFilters();
+                $this->videos[$courseid] = $visibility->filter($load->loadVideos($this->presentations, $courseid));
             }
         }
         $this->videoformat = Cookie::get('videoformat') ?? 'grid';
