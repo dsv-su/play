@@ -117,14 +117,16 @@ class CourseNav extends Model
     {
         return Cache::remember($username . '_semesters', $seconds = 3600, function () use($username){
             $daisy = app(DaisyIntegration::class);
-            $courses = $daisy->getActiveStudentCourses($username);
             $semester = [];
-            foreach ($courses as $courseid) {
-                $course = Course::find($courseid);
-                if ($course) {
-                    $semester[] = $course->semester . $course->year;
+            if($courses = $daisy->getActiveStudentCourses($username)) {
+                foreach ($courses as $courseid) {
+                    $course = Course::find($courseid);
+                    if ($course) {
+                        $semester[] = $course->semester . $course->year;
+                    }
                 }
             }
+
             if (!empty($semester)) {
                 return array_unique($semester);
             } else {
