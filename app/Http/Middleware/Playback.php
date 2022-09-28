@@ -126,13 +126,17 @@ class Playback
                     }
                 }
 
+                /***
+                 * Disabled
+                 *
                 // (4) Check if Course visibility allows playback
                 if ($coursesetting->check($video)) {
 
-                    // (5) Check if Presentation visibility allows playback
-                    if ($video->visibility) {
-                        return $next($request);
-                    }
+                }
+                */
+                // (5) Check if Presentation visibility allows playback
+                if ($video->visibility) {
+                    return $next($request);
                 }
 
                 return redirect()->route('home');
