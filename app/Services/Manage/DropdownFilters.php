@@ -24,11 +24,11 @@ class DropdownFilters
     public function handleUrlParams(): array
     {
         return [
-            'course' => request('course') ? explode(',', request('course')) : null,
-            'presenter' => request('presenter') ? explode(',', request('presenter')) : null,
-            'term' => request('semester') ? explode(',', request('semester')) : null,
-            'tag' => request('tag') ? explode(',', request('tag')) : null,
-            'filterTerm' => request('filterTerm') ? explode(',', request('filterTerm')) : null
+            'course' => request('course') ? request('course') : null,
+            'presenter' => request('presenter') ? request('presenter') : null,
+            'term' => request('term') ? request('term') : null,
+            'tag' => request('tag') ? request('tag') : null,
+            'filterTerm' => request('filterTerm') ? request('filterTerm') : null
         ];
     }
 
@@ -82,37 +82,13 @@ class DropdownFilters
             }
         }
 
-        $videocourses = $this->extractCourses($videos);
         $videoterms = $this->extractTerms($videos);
         $videotags = $this->extractTags($videos);
         $videopresenters = $this->extractPresenters($videos);
         $video_courses = $this->extractVideoCourses($videos);
         $videos_by_course = $this->groupVideos($videos);
 
-        return array($videocourses, $videoterms, $videopresenters, $videotags, $video_courses, $videos, $videos_by_course);
-    }
-
-    /**
-     * @param $videos
-     * @return array
-     */
-    public function extractCourses($videos): array
-    {
-        //$courses = array('nocourse' => __('No course association'));
-        $courses = [];
-        foreach ($videos as $video) {
-            foreach ($video->courses() as $course) {
-                if (!in_array($course->name, $courses)) {
-                    if (Lang::locale() == 'swe') {
-                        $courses[$course->designation] = $course->designation. ' - '. $course->name;
-                    } else {
-                        $courses[$course->designation] = $course->designation. ' - '. $course->name_en;
-                    }
-
-                }
-            }
-        }
-        return $courses;
+        return array($videoterms, $videopresenters, $videotags, $video_courses, $videos, $videos_by_course);
     }
 
     /**

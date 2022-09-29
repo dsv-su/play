@@ -209,8 +209,7 @@ class EditController extends Controller
         }
 
         Cache::flush();
-        //return redirect()->route('manage')->with('message', __("Presentation successfully updated"));
-        //return redirect()->route('manage_courses')->with('message', __("Presentation successfully updated"));
+
         return redirect(session('links')[2])->with('message', __("Presentation successfully updated"));
     }
 }

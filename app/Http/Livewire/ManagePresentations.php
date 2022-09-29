@@ -9,6 +9,7 @@ use App\VideoStat;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cookie;
 use Livewire\Component;
 
@@ -25,11 +26,15 @@ class ManagePresentations extends Component
     public $filter, $filterTerm;
     public $searchTerm;
     public $presentations;
+    public $page;
 
     protected $queryString = ['filterTerm', 'presenter', 'tag'];
 
-    public function mount()
+    public function mount($page)
     {
+        //Redirect
+        $this->page = $page;
+
         //Initial default settings
         $this->view = 'presenters';
         $this->videoformat = Cookie::get('videoformat') ?? 'grid';
@@ -79,15 +84,23 @@ class ManagePresentations extends Component
         foreach($values as $filter => $value) {
             foreach($value as $key => $parameter) {
                 if ($key === 0) {
-                    $currentLink = $currentLink . $filter . '=' . $parameter;
-                } else {
-                    $currentLink = $currentLink . '&' . $filter . '=' . $parameter;
+                    if($filter != 'filterTerm') {
+                        $currentLink = $currentLink . $filter . '['. $key.']'. '=' . $parameter;
+                    } else {
+                        $currentLink = $currentLink . $filter . '=' . $parameter;
+                    }
+                }
+                else {
+                    if($filter != 'filterTerm') {
+                        $currentLink = $currentLink . '&' . $filter . '[' . $key . ']' . '=' . $parameter;
+                    } else {
+                        $currentLink = $currentLink . '&' . $filter . '=' . $parameter;
+                    }
                 }
             }
             if(!(end($values) == $value)) {
                 $currentLink = $currentLink . '&';
             }
-
         }
 
         //Putting it in the beginning of links array
@@ -95,6 +108,12 @@ class ManagePresentations extends Component
 
         //Saving links array to the session
         session(['links' => $links]);
+    }
+
+    public function resetDropdown()
+    {
+        $this->reset('videopresenters');
+        $this->reset('videotags');
     }
 
     public function resetFilter()
@@ -117,57 +136,46 @@ class ManagePresentations extends Component
 
         $dropdownfilter = new DropdownFilters;
 
-        list ($courses, $this->videoterms, $this->videopresenters, $this->videotags, $this->video_courses, $this->uncat_video_courses) = $dropdownfilter->performFiltering(
+        list ($this->videoterms, $x, $this->videotags, $this->video_courses, $this->uncat_video_courses, $x) = $dropdownfilter->performFiltering(
             $videos, $this->filters['course'], $this->filters['term'], $this->filters['tag'], $this->filters['presenter']
         );
 
         //Sort the filter arrays
         $this->videopresenters = collect($this->videopresenters)->sort()->toArray();
         sort($this->videotags);
+        $this->injectToSession();
         $this->loadUncat();
 
     }
 
     public function updatedPresenter($selected_presenter)
     {
-        //Turn into array
-        $selected_presenter = explode( ',', $selected_presenter);
-
+        $this->presenter = $selected_presenter;
         $this->filter_presenter = $selected_presenter;
+        $this->filters['presenter'] = $selected_presenter;
 
-        if (empty($selected_presenter)) {
-            //TODO
-            $this->uploaderManage();
-        } else {
-            $this->filters['presenter'] = $selected_presenter;
-            $this->filters();
-        }
+        $this->filters();
 
         //Uncategorized presentations
         $this->uncat_video_courses = UncatPresentations::my_uncat_video_course_presenter(app()->make('play_username'), $selected_presenter);
-        $this->injectToSession();
-        $this->prepareRendering();
 
+        $this->prepareRendering();
+        return redirect(session('links')[0]);
     }
 
     public function updatedTag($selected_tag)
     {
-        //Turn into array
-        $selected_tag = explode( ',', $selected_tag);
-
+        $this->tag = $selected_tag;
         $this->filter_tag = $selected_tag;
-        if (empty($selected_tag)) {
-            //TODO
-            $this->uploaderManage();
-        } else {
-            $this->filters['tag'] = $selected_tag;
-            $this->filters();
-        }
+        $this->filters['tag'] = $selected_tag;
+
+        $this->filters();
 
         //Uncategorized presentations
         $this->uncat_video_courses = UncatPresentations::my_uncat_video_course_tag(app()->make('play_username'), $selected_tag);
-        $this->injectToSession();
+
         $this->prepareRendering();
+        return redirect(session('links')[0]);
     }
 
     public function uploaderManage()
@@ -175,8 +183,10 @@ class ManagePresentations extends Component
         //Uncat videos
         $this->uncat_video_courses = UncatPresentations::my_uncat_video_course(app()->make('play_username'));
         $this->loadUncat();
+        $this->createPresenterSelect();
         $this->filters();
         $this->prepareRendering();
+
     }
 
     public function adminManage()
@@ -184,10 +194,31 @@ class ManagePresentations extends Component
         //Uncat videos
         $this->uncat_video_courses = UncatPresentations::unfiltered_uncat_video_course();
         $this->loadUncat();
+        $this->createPresenterSelect();
         $this->filters();
         $this->prepareRendering();
     }
 
+    public function createPresenterSelect()
+    {
+        if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
+            $videos = UncatPresentations::my_uncat_video_course(app()->make('play_username'));
+            foreach($videos as $video) {
+                foreach ($video->presenters() as $presenter) {
+                    $this->videopresenters[$presenter->username] = $presenter->name;
+                }
+            }
+
+        } else {
+            $videos = UncatPresentations::unfiltered_uncat_video_course();
+            foreach($videos as $video) {
+                foreach ($video->presenters() as $presenter) {
+                    $this->videopresenters[$presenter->username] = $presenter->name;
+                }
+            }
+        }
+
+    }
     public function updatedFilterTerm()
     {
         //Prepare
@@ -204,9 +235,8 @@ class ManagePresentations extends Component
         }
 
         //Querystring
-        $this->filters['filterTerm'] = explode( ',', $this->filterTerm);
+        $this->filters['filterTerm'] = Arr::wrap($this->filterTerm);
         $this->filters();
-        $this->injectToSession();
 
         //Counter for uncategorized presentations
         $this->countUncatPresentations($this->uncat_video_courses);

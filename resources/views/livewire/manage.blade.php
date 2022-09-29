@@ -22,7 +22,6 @@
 
         <!-- Dropdown filter -->
         @include('livewire.filter.dropdownfilter')
-        <!-- end dropdownfilter -->
 
    </div>
     <!-- Loading spinners -->
@@ -71,6 +70,7 @@
                            {{$video_course->course->designation}}
                            {{$video_course->course->semester}}{{$video_course->course->year}}
                            —
+                           [{{$video_course->course->id}}]
                            @if(Lang::locale() == 'swe')
                                {{$video_course->course->name}}
                            @else

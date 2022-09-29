@@ -57,7 +57,6 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
         Route::get('/manage_n', function () {
             return view('manage.manage_new');
         })->name('manage_courses');
-
         //Manage presentations
         Route::get('/manage_presentations', function () {
             return view('manage.manage_presentations');

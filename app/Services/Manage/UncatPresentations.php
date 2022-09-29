@@ -117,6 +117,22 @@ class UncatPresentations
         }
     }
 
+    public static function videopresenters($user)
+    {
+        //Retrive presentations with individual permissions set
+        $individual_videos = IndividualPermission::where('username', $user)->pluck('video_id')->toArray();
+
+        //Retrive presentations where user is presenter
+        $presenter = Presenter::where('username', $user)->first();
+        $presenter_videos = VideoPresenter::where('presenter_id', $presenter->id ?? 0)->pluck('video_id')->toArray();
+
+        $videos_collection = Video::whereDoesntHave('video_course')
+            ->whereIn('id', $individual_videos)
+            ->orwhereDoesntHave('video_course')->WhereIn('id', $presenter_videos)
+            ->orderByDesc('creation')
+            ->get();
+        return $videos_collection;
+    }
     public static function my_uncat_video_course_presenter($user, $selected_presenter = [])
     {
         /**

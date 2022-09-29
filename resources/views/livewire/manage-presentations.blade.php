@@ -21,8 +21,8 @@
         </div>
 
         <!-- Dropdown filter -->
-    @include('livewire.filter.dropdownfilter')
-    <!-- end dropdownfilter -->
+        @include('livewire.filter.dropdownfilter')
+
 
     </div>
     <!-- Loading spinners -->
