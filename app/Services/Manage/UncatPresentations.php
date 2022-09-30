@@ -45,12 +45,19 @@ class UncatPresentations
                     $query->where('name', 'LIKE', $filterTerm ?? '');
                 })->pluck('id')->toArray();
 
+            //Description
+            $videos_match_description = Video::doesntHave('video_course')
+                ->whereIn('id', $videos_collection->pluck('id')->toArray())
+                ->where('description', 'LIKE', $filterTerm ?? '')
+                ->pluck('id')->toArray();
+
             //Combine queries
 
             return Video::doesntHave('video_course')
                 ->whereIn('id', $videos_match_title)
                 ->orWhereIn('id', $videos_match_presenter)
                 ->orWhereIn('id', $videos_match_tag)
+                ->orWhereIn('id', $videos_match_description)
                 ->latest('creation')->get();
 
         } else {
@@ -103,6 +110,12 @@ class UncatPresentations
                     $query->where('name', 'LIKE', $filterTerm ?? '');
                 })->pluck('id')->toArray();
 
+            //Description
+            $videos_match_description = Video::doesntHave('video_course')
+                ->whereIn('id', $videos_collection->pluck('id')->toArray())
+                ->where('description', 'LIKE', $filterTerm ?? '')
+                ->pluck('id')->toArray();
+
             //Combine queries
 
             return Video::doesntHave('video_course')
@@ -110,6 +123,7 @@ class UncatPresentations
                 ->whereIn('id', $videos_match_title)
                 ->orWhereIn('id', $videos_match_presenter)
                 ->orWhereIn('id', $videos_match_tag)
+                ->orWhereIn('id', $videos_match_description)
                 ->latest('creation')->get();
 
         } else {

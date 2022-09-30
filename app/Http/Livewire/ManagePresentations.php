@@ -114,20 +114,13 @@ class ManagePresentations extends Component
     {
         $this->reset('videopresenters');
         $this->reset('videotags');
+        $this->presenter = [];
+        $this->tag = [];
     }
 
-    public function resetFilter()
+    public function filter()
     {
-        $this->reset('videopresenters');
-        $this->reset('videotags');
-        //Redirect depending on role
-        if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
-            //CourseAdmin and Uploader
-            $this->uploaderManage();
-        } else {
-            //Administrator
-            $this->adminManage();
-        }
+        $this->updatedFilterTerm();
     }
 
     public function filters()
@@ -270,7 +263,6 @@ class ManagePresentations extends Component
         Cookie::queue('videoformat', $videoformat, 999999999);
         $this->videoformat = $videoformat;
     }
-
 
     public function render()
     {

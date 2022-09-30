@@ -24,7 +24,6 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cookie;
-use Lang;
 use Livewire\Component;
 
 class Manage extends Component
@@ -199,6 +198,11 @@ class Manage extends Component
         $this->prepareRendering();
     }
 
+    public function filter()
+    {
+        $this->updatedFilterTerm();
+    }
+
     /**
      * @throws BindingResolutionException
      */
@@ -315,11 +319,6 @@ class Manage extends Component
                 ->orWhereIn('id', $this->video_course_ids)
                 ->pluck('id')->toArray();
 
-            //Filter after video title
-            $videos_match_title = Video::whereIn('id', $videos_collection)
-                ->where('title', 'LIKE', $filterTerm)
-                ->pluck('id')->toArray();
-
             $video_course_ids = VideoCourse::whereIn('video_id', $videos_collection)->distinct()->pluck('course_id');
 
             //Filter course specific attributes
@@ -334,6 +333,12 @@ class Manage extends Component
                 })
                 ->distinct()
                 ->pluck('course_id');
+
+            //Filter after video title or description
+            $videos_match_title = Video::whereIn('id', $videos_collection)
+                ->where('title', 'LIKE', $filterTerm)
+                ->orWhere('description', 'LIKE', $filterTerm)
+                ->pluck('id')->toArray();
 
             //Filter after Presenters
             $video_course_presenters = VideoCourse::with('course', 'video.video_presenter.presenter')
@@ -388,7 +393,8 @@ class Manage extends Component
                 })
                 ->orWhereHas('video', function ($query) use ($filterTerm) {
                     $query->where('title', 'LIKE', $filterTerm)
-                        ->orwhere('title_en','LIKE', $filterTerm);
+                        ->orwhere('title_en','LIKE', $filterTerm)
+                        ->orWhere('description', 'LIKE', $filterTerm);
                 })
                 ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
 

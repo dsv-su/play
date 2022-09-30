@@ -22,7 +22,6 @@
 
     <!-- Courselist -->
     <div class="container px-0">
-        {{--}}<livewire:manage-presentations />{{--}}
         @livewire('manage-presentations',['page'=> session('links')[0]])
     </div>
 
