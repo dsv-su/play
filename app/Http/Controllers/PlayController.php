@@ -694,9 +694,15 @@ class PlayController extends Controller
         $queue = json_decode($json);
         foreach ($queue as $i => $item) {
             if ($item->type == 'cattura') {
-                $item->date = explode('--', explode('-at-', $item->title)[1]);
-                $item->time = substr($item->date[1], 5);
-                $item->date = $item->date[0];
+                if(str_contains($item->title, '--')) {
+                    $item->date = explode('--', explode('-at-', $item->title)[1]);
+                    $item->time = substr($item->date[0], 5);
+                    $item->date = $item->date[0];
+                } else {
+                    $item->date = 'Unknown';
+                    $item->time = 'Unknown';
+                    $item->date = 'Unknown';
+                }
             } elseif ($item->type == 'mediasite') {
 
             } else {
