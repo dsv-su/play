@@ -28,6 +28,7 @@
                 @include('home.video_table')
                 @include('layouts.partials.videomodals')
             @endforeach
-            @break
+        @break
     @endswitch
 </div>
+

@@ -1,6 +1,6 @@
 <div>
     @include('livewire.layoutbuttons')
-    <div class="card border border-primary mt-3" style="border-width:3px !important; border-radius: 10px !important; padding: 25px !important; z-index: 1000; !important;">
+    <div class="card border border-primary mt-3" style="border-width:3px !important; border-radius: 10px !important; padding: 25px !important; z-index: 900; !important;">
         <div class="container">
             <div class="d-flex row justify-content-center align-items-start">
                 <div class="col-12 col-sm">
@@ -23,7 +23,6 @@
         <!-- Dropdown filter -->
         @include('livewire.filter.dropdownfilter')
 
-
     </div>
     <!-- Loading spinners -->
     <div wire:loading wire:target="loadUncat">
@@ -37,16 +36,21 @@
     </div>
     <!-- end loading spinners -->
 
-
-
-
     <div class="card">
         <div id="headingOne">
             <h2 class="col mt-4" style="line-height: 1.5em;">
                 <span class="badge badge-primary ml-2 mb-2" data-toggle="tooltip" title="{{__("Number of presentations")}}">{{$uncatcounter}}</span>
                 <span style="color:blue;">{{__("Uncategorized courses")}}</span>
             </h2>
-
+            <!-- Check all -->
+            <div class="form-check">
+                <input wire:click="checkAll" type="checkbox" class="check" id="checkAll"
+                       @if($allChecked) checked
+                > {{__("Uncheck All")}}
+                @else
+                    > {{__("Check All")}}
+                @endif
+            </div>
 
             <div>
                 @include('home.videolayout', ['videos' => $uncat_videos])
@@ -54,10 +58,6 @@
 
         </div>
     </div>
-
-
-
-
 </div>
 
 <script>

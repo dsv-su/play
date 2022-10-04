@@ -1,6 +1,6 @@
 <div>
     @include('livewire.layoutbuttons')
-    <div class="card border border-primary mt-3" style="border-width:3px !important; border-radius: 10px !important; padding: 25px !important; z-index: 1000; !important;">
+    <div class="card border border-primary mt-3" style="border-width:3px !important; border-radius: 10px !important; padding: 25px !important; z-index: 900; !important;">
         <div class="container">
             <div class="d-flex row justify-content-center align-items-start">
                 <div class="col-12 col-sm">
@@ -70,7 +70,6 @@
                            {{$video_course->course->designation}}
                            {{$video_course->course->semester}}{{$video_course->course->year}}
                            —
-                           [{{$video_course->course->id}}]
                            @if(Lang::locale() == 'swe')
                                {{$video_course->course->name}}
                            @else
@@ -93,6 +92,18 @@
                     @endif
                     aria-labelledby="heading{{$key}}" data-parent="#accordion">
                    @include('livewire.status.coursestatusfull')
+
+                    <!-- Check all -->
+                   <div class="form-check">
+                       <input wire:click="checkAll({{ $video_course->course->id }})"
+                              type="checkbox" class="check" id="checkAll"
+                              @if($allChecked) checked
+                                > {{__("Uncheck All")}}
+                                @else
+                                > {{__("Check All")}}
+                                @endif
+                   </div>
+
                    @include('home.videolayout', ['videos' => $videos[$video_course->course->id]])
                </div>
            </div>
@@ -117,6 +128,7 @@
            $("input[type='checkbox'][name='bulkedit']").on('change', function () {
                handleSelected($(this));
            });
+
        })
    })
    function handleSelected(checkbox) {

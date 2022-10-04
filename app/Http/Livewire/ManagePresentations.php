@@ -27,6 +27,7 @@ class ManagePresentations extends Component
     public $searchTerm;
     public $presentations;
     public $page;
+    public $checkAll, $checked_videos, $allChecked;
 
     protected $queryString = ['filterTerm', 'presenter', 'tag'];
 
@@ -37,6 +38,7 @@ class ManagePresentations extends Component
 
         //Initial default settings
         $this->view = 'presenters';
+        $this->allChecked = false;
         $this->videoformat = Cookie::get('videoformat') ?? 'grid';
         $dropdownfilter = new DropdownFilters;
         $this->filters = $dropdownfilter->handleUrlParams();
@@ -71,6 +73,8 @@ class ManagePresentations extends Component
 
     public function injectToSession()
     {
+        $path = 'manage_presentations';
+
         //Retrive session links array
         $links = session()->has('links') ? session('links') : [];
 
@@ -78,7 +82,7 @@ class ManagePresentations extends Component
         $values = array_filter($this->filters);
 
         //Current link
-        $currentLink = 'manage_presentations?';
+        $currentLink = $path . '?';
 
         //Merge current link with filters
         foreach($values as $filter => $value) {
@@ -103,11 +107,13 @@ class ManagePresentations extends Component
             }
         }
 
+
         //Putting it in the beginning of links array
         array_unshift($links, $currentLink);
 
         //Saving links array to the session
         session(['links' => $links]);
+
     }
 
     public function resetDropdown()
@@ -244,6 +250,17 @@ class ManagePresentations extends Component
         $this->stats($this->uncat_videos);
     }
 
+    public function checkAll(VisibilityFilter $visibility)
+    {
+        $this->allChecked = !$this->allChecked;
+
+        if($this->allChecked) {
+            $this->checked_videos = $visibility->filter($this->uncat_video_courses)->pluck('id')->toArray();
+        } else {
+            $this->checked_videos = [];
+        }
+    }
+
     public function prepareRendering()
     {
         $this->countUncatPresentations($this->uncat_videos);
@@ -262,6 +279,11 @@ class ManagePresentations extends Component
     {
         Cookie::queue('videoformat', $videoformat, 999999999);
         $this->videoformat = $videoformat;
+    }
+
+    public function hydrate()
+    {
+        $this->loadUncat();
     }
 
     public function render()

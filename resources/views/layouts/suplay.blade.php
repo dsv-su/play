@@ -21,7 +21,7 @@
 <body>
 @include('layouts.partials.header')
 <!-- Bulk editing -->
-<div class="position-fixed text-center" id="bulkcontainer" style="left: 50%; transform: translateX(-50%); z-index: 999; top: 15%; display: none;">
+<div class="position-fixed text-center" id="bulkcontainer" style="left: 50%; transform: translateX(-50%); z-index: 999; top: 20%; display: none;">
     <form class="form-inline mx-3" id="bulkediting" method="post" action="{{route('edit.bulk.show')}}">
         @csrf
         @method('GET')

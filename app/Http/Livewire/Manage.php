@@ -48,6 +48,7 @@ class Manage extends Component
     public $presentations, $presentations_by_courseid;
     public $grid, $list, $table;
     public $page;
+    public $checkAll, $checked_videos, $allChecked;
 
     protected $dropdownfilter;
     protected $queryString = ['filterTerm', 'presenter', 'course', 'term', 'tag'];
@@ -62,9 +63,9 @@ class Manage extends Component
 
         //Default settings
         $this->view = 'courses';
-        //$this->uncat = false;
         $this->videoformat = Cookie::get('videoformat') ?? 'grid';
         $this->manageview = true;
+        $this->allChecked = false;
         $dropdownfilter = new DropdownFilters;
         $this->filters = $dropdownfilter->handleUrlParams();
         $this->grid = 'grid';
@@ -98,6 +99,8 @@ class Manage extends Component
 
     public function injectToSession()
     {
+        $path = 'manage_n';
+
         //Retrive session links array
         $links = session()->has('links') ? session('links') : [];
 
@@ -105,7 +108,7 @@ class Manage extends Component
         $values = array_filter($this->filters);
 
         //Current link
-        $currentLink = 'manage_n?';
+        $currentLink = $path . '?';
 
         //Merge current link with filters
         foreach($values as $filter => $value) {
@@ -483,6 +486,16 @@ class Manage extends Component
         $this->stats($this->videos[$courseid]);
     }
 
+    public function checkAll(VisibilityFilter $visibility, $courseid)
+    {
+        $this->allChecked = !$this->allChecked;
+        if($this->allChecked) {
+            $load = new DropdownFilters();
+            $this->checked_videos = $visibility->filter($load->loadVideos($this->presentations, $courseid))->pluck('id')->toArray();
+        } else {
+            $this->checked_videos = [];
+        }
+    }
 
     /**
      * @return void

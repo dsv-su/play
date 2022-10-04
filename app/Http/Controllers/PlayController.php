@@ -37,6 +37,15 @@ use Illuminate\View\View;
 class PlayController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('redirect-links')->except([
+            'myVideos','myVideosFilter', 'getUserCoursesWithVideos',
+            'getFilterableItems', 'mediasiteFetch', 'mediasite',
+            'getTopParent', 'deleteEmptyFolders', 'removeDeletedVideos'
+        ]);
+    }
+
     public function myVideos()
     {
         //--> This should be refactored
@@ -927,6 +936,6 @@ class PlayController extends Controller
             $video->save();
         }
 
-        return redirect()->route('manage_presentations')->with('success', true)->with('message', __("Presentations are successfully updated"));
+        return redirect(session('links')[2])->with('message', __("Presentations are successfully updated"));
     }
 }
