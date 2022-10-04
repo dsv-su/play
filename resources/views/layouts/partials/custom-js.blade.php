@@ -39,7 +39,6 @@
                 wildcard: '%QUERY%'
             }
         });
-
         $("#header-main-search-text").typeahead({
             classNames: {
                 menu: 'search_autocomplete'

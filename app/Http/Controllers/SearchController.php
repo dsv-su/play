@@ -346,6 +346,7 @@ class SearchController extends Controller
     public
     function search($q = null)
     {
+        $q = trim($q);
         $videos = $this->getVideos($q) ?? Collection::empty();
 
         $manage = \Request::is('manage');

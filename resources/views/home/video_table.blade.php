@@ -4,7 +4,7 @@
         <div class="pr-0 col-auto form-check d-flex align-items-center">
             <input class="form-check-input check" type="checkbox" name="bulkedit"
                    data-id="{{$video->id}}"
-                   @if ($checked_videos)
+                   @if ($checked_videos ?? false)
                         @if(in_array($video->id, $checked_videos)) checked
                         @endif
                     @endif>
