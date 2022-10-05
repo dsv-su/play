@@ -32,14 +32,13 @@
     jQuery(document).ready(function ($) {
         // Set the Options for "Bloodhound" suggestion engine
         var engine = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace('query'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
             remote: {
                 url: '/find?query=%QUERY%',
                 wildcard: '%QUERY%'
-            },
-            datumTokenizer: Bloodhound.tokenizers.whitespace('query'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace
+            }
         });
-
         $("#header-main-search-text").typeahead({
             classNames: {
                 menu: 'search_autocomplete'
@@ -79,7 +78,7 @@
                     } else if (data.type === 'presenter') {
                         return '<li><a class="d-block w-100" href="/presenter/' + data.username + '">{{ __('Presenter') }}: ' + data.name + '</a></li>';
                     } else {
-                        return '<li><a class="d-block w-100" href="/player/' + data.id + '">Presentation: ' + data.title + '</a></li>';
+                        return '<li><a target="_blank" rel="noopener noreferrer" class="d-block w-100" href="/player/' + data.id + '">Presentation: ' + data.title + '</a></li>';
                     }
                 }
             }
