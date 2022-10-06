@@ -92,18 +92,18 @@
                     @endif
                     aria-labelledby="heading{{$key}}" data-parent="#accordion">
                    @include('livewire.status.coursestatusfull')
-
-                    <!-- Check all -->
-                   <div class="form-check">
-                       <input wire:click="checkAll({{ $video_course->course->id }})"
-                              type="checkbox" class="check" id="checkAll"
-                              @if($allChecked) checked
-                                > {{__("Uncheck All")}}
-                                @else
-                                > {{__("Check All")}}
-                                @endif
-                   </div>
-
+                   @if($videoformat == 'table')
+                       <!-- Check all -->
+                       <div class="form-check">
+                           <input wire:click="checkAll({{ $video_course->course->id }})"
+                                  type="checkbox" class="check" id="checkAll"
+                                  @if($allChecked) checked
+                                    > {{__("Uncheck All")}}
+                                    @else
+                                    > {{__("Check All")}}
+                                    @endif
+                       </div>
+                   @endif
                    @include('home.videolayout', ['videos' => $videos[$video_course->course->id]])
                </div>
            </div>

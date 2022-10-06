@@ -40,18 +40,19 @@
         <div id="headingOne">
             <h2 class="col mt-4" style="line-height: 1.5em;">
                 <span class="badge badge-primary ml-2 mb-2" data-toggle="tooltip" title="{{__("Number of presentations")}}">{{$uncatcounter}}</span>
-                <span style="color:blue;">{{__("Uncategorized courses")}}</span>
+                <span style="color:blue;">{{__("Uncategorized presentations")}}</span>
             </h2>
-            <!-- Check all -->
-            <div class="form-check">
-                <input wire:click="checkAll" type="checkbox" class="check" id="checkAll"
-                       @if($allChecked) checked
-                > {{__("Uncheck All")}}
-                @else
-                    > {{__("Check All")}}
-                @endif
-            </div>
-
+            @if($videoformat == 'table')
+                <!-- Check all -->
+                <div class="form-check">
+                    <input wire:click="checkAll" type="checkbox" class="check" id="checkAll"
+                           @if($allChecked) checked
+                    > {{__("Uncheck All")}}
+                    @else
+                        > {{__("Check All")}}
+                    @endif
+                </div>
+            @endif
             <div>
                 @include('home.videolayout', ['videos' => $uncat_videos])
             </div>

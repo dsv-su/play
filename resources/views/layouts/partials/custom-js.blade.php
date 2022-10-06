@@ -88,6 +88,8 @@
             if (e.which === 13) {
                 if (selected) {
                     window.location.href = $("#" + selected).find('a').prop('href');
+                    // or open a new window:
+                    //window.open($("#" + selected).find('a').prop('href'));
                 } else {
               //      $(".tt-suggestion:first-child").addClass('tt-cursor');
              //       window.location.href = $(".tt-suggestion:first-child").find('a').prop('href');

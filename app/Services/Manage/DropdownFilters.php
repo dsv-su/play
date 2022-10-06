@@ -105,6 +105,10 @@ class DropdownFilters
                 }
             }
         }
+        /*Sorting
+         * $terms = collect($terms)->sortByDesc(function($item){
+            return $item;
+        })->values()->toArray();*/
         return $terms;
     }
 
