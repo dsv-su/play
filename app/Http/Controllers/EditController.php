@@ -23,7 +23,7 @@ class EditController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('edit-permission');
+        $this->middleware(['edit-permission', 'redirect-links']);
     }
 
     public function show(Video $video, VisibilityFilter $visibility)
@@ -210,6 +210,6 @@ class EditController extends Controller
 
         Cache::flush();
 
-        return redirect()->route('manage')->with('message', __("Presentation successfully updated"));
+        return redirect(session('links')[2])->with('message', __("Presentation successfully updated"));
     }
 }

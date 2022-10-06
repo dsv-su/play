@@ -52,15 +52,21 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     Route::get('/course/{course}/play', 'MultiplayerController@playCourse')->name('playCourse');
     Route::get('/playlist/{id}', 'MultiplayerController@playlist');
 
-    //New Manage
-    Route::get('/manage_n', function () {
-        return view('manage.manage_new');
-    })->name('manage');
+    Route::middleware('redirect-links')->group(function () {
+        //Manage courses
+        Route::get('/manage_n', function () {
+            return view('manage.manage_new');
+        })->name('manage_courses');
+        //Manage presentations
+        Route::get('/manage_presentations', function () {
+            return view('manage.manage_presentations');
+        })->name('manage_presentations');
+    });
 
     //Manage
     Route::get('/user_manage', 'SearchController@search')->name('user_manage');
     Route::post('/filter_manage', 'SearchController@search')->name('filter_manage');
-    Route::get('/manage/courses', 'ManageCourseSettingsController@index')->name('manage_course');
+    //Route::get('/manage/courses', 'ManageCourseSettingsController@index')->name('manage_course');
     Route::get('/course/{courseid}/edit', 'ManageCourseSettingsController@edit')->name('course_edit');
     Route::post('/course/{courseid}/store', 'ManageCourseSettingsController@store')->name('course_edit_store');
     Route::get('/edit/bulk/', 'PlayController@bulkEditShow')->name('edit.bulk.show');

@@ -7,6 +7,12 @@ use App\VideoStat;
 
 class StatsController extends Controller
 {
+    public function __construct()
+    {
+        //For session history
+        $this->middleware('redirect-links');
+    }
+
     public function index(Video $video)
     {
         $videoid = $video->id;
