@@ -2,14 +2,20 @@
 @if (!($bulk ?? false) && ($video->edit))
     <div class="pr-0 col-auto form-check d-flex align-items-center">
         <div data-placement="top" data-toggle="tooltip" data-title="{{__("Select for bulkedit")}}">
-        <label class="form-control-label px-1">{{__("Select")}}</label>
+            <label class="form-control-label px-1">{{__("Select")}}</label>
         </div>
         <input class="form-check-input check" type="checkbox" name="bulkedit"
                data-id="{{$video->id}}"
                @if ($checked_videos ?? false)
-               @if(in_array($video->id, $checked_videos)) checked
-            @endif
-            @endif>
+                    @if(in_array($video->id, $checked_videos)) checked
+                    @endif
+               @endif>
+    </div>
+@else
+    <div class="pr-0 col-auto form-check d-flex align-items-center">
+        <div>
+            <label class="form-control-label px-1"> </label>
+        </div>
     </div>
 @endif
 <div class="shadow-lg shadow-warning card video m-auto @if($video->hidden) faded @endif" id="{{$video->id}}">

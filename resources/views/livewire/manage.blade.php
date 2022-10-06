@@ -102,7 +102,7 @@
                                 @else
                                 > {{__("Check All")}}
                                 @endif
-                       </div>
+                   </div>
 
                    @include('home.videolayout', ['videos' => $videos[$video_course->course->id]])
                </div>
