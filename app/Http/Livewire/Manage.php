@@ -72,19 +72,7 @@ class Manage extends Component
         $this->list = 'list';
         $this->table = 'table';
 
-        if($this->checkQueryString()) {
-            $this->updatedFilterTerm();
-        } else {
-            //Redirect depending on role
-            if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
-                //CourseAdmin and Uploader
-                $this->courseAdminManage();
-            } else {
-                //Administrator
-                $this->loadCourseList();
-            }
-        }
-
+        $this->updatedFilterTerm();
     }
 
     public function checkQueryString()
