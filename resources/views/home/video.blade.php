@@ -1,4 +1,17 @@
 <!-- Video - child view - will inherit all data available in the parent view-->
+@if (!($bulk ?? false) && ($video->edit))
+    <div class="pr-0 col-auto form-check d-flex align-items-center">
+        <div data-placement="top" data-toggle="tooltip" data-title="{{__("Select for bulkedit")}}">
+        <label class="form-control-label px-1">{{__("Select")}}</label>
+        </div>
+        <input class="form-check-input check" type="checkbox" name="bulkedit"
+               data-id="{{$video->id}}"
+               @if ($checked_videos ?? false)
+               @if(in_array($video->id, $checked_videos)) checked
+            @endif
+            @endif>
+    </div>
+@endif
 <div class="shadow-lg shadow-warning card video m-auto @if($video->hidden) faded @endif" id="{{$video->id}}">
     <div class="flex-column m-1 action-icons">
         <div data-placement="left" data-toggle="tooltip" data-title="{{__("Share presentation")}}">
@@ -130,27 +143,28 @@
         <!-- Stats -->
         @if($manageview ?? false)
             <div class="text-right">
-     <span data-toggle="tooltip" data-placement="left" data-title="{{__("Number of Clicks")}}">
-        <a href="{{route('stats', $video->id)}}" type="button" class="btn btn-sm px-1">
-            <span style="color: Tomato;"><i class="fa-solid fa-chart-column"></i></span>
-            @if($stats_playback[$video->id] ?? false)
-                {{$stats_playback[$video->id]}}
-            @else
-                0
-            @endif
-        </a>
-    </span>
+                 <span data-toggle="tooltip" data-placement="left" data-title="{{__("Number of Clicks")}}">
+                    <a href="{{route('stats', $video->id)}}" type="button" class="btn btn-sm px-1">
+                        <span style="color: Tomato;"><i class="fa-solid fa-chart-column"></i></span>
+                        @if($stats_playback[$video->id] ?? false)
+                            {{$stats_playback[$video->id]}}
+                        @else
+                            0
+                        @endif
+                    </a>
+                </span>
                 <span data-toggle="tooltip" data-placement="left" data-title="{{__("Number of Downloads")}}">
-        <a href="{{route('stats', $video->id)}}" type="button" class="btn btn-sm px-1">
-            <span style="color: #007bff;"><i class="fa-solid fa-download"></i></span>
-            @if($stats_download[$video->id] ?? false)
-                {{$stats_download[$video->id]}}
-            @else
-                0
-            @endif
-        </a>
-    </span>
+                    <a href="{{route('stats', $video->id)}}" type="button" class="btn btn-sm px-1">
+                        <span style="color: #007bff;"><i class="fa-solid fa-download"></i></span>
+                        @if($stats_download[$video->id] ?? false)
+                            {{$stats_download[$video->id]}}
+                        @else
+                            0
+                        @endif
+                    </a>
+                </span>
             </div>
         @endif
     </div>
 </div>
+

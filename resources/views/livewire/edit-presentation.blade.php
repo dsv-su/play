@@ -286,8 +286,8 @@
                     <div class="row justify-content-between text-left">
                         <!--Video group permission settings-->
                         <div class="form-group col-12 col-lg-6 flex-column d-flex">
-                            <label class="form-control-label px-1"><i
-                                        class="fas fa-play fa-border fa-pull-left"></i>{{ __("Playback group permissions") }}
+                            <label class="form-control-label px-1"><i class="fas fa-play fa-border fa-pull-left"></i>
+                                {{ __("Playback group permissions") }}
                             </label>
                             <div id="video_perm">
                                 <select class="form-group form-control" name="video_permission" style="margin: 5px 0px;"

@@ -1,4 +1,17 @@
 <!-- Video - child view - will inherit all data available in the parent view-->
+@if (!($bulk ?? false) && ($video->edit))
+    <div class="pr-0 col-auto form-check d-flex align-items-center">
+        <div data-placement="top" data-toggle="tooltip" data-title="{{__("Select for bulkedit")}}">
+            <label class="form-control-label px-1">{{__("Select")}}</label>
+        </div>
+        <input class="form-check-input check" type="checkbox" name="bulkedit"
+               data-id="{{$video->id}}"
+               @if ($checked_videos ?? false)
+               @if(in_array($video->id, $checked_videos)) checked
+            @endif
+            @endif>
+    </div>
+@endif
 <div class="shadow px-0 mx-0 mb-3 bg-white overflow-hidden rounded videolist row w-100 @if($video->hidden) faded @endif"
      id="{{$video->id}}">
     <div class="col-4 col-md-3 px-0 my-auto">

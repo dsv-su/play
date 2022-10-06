@@ -257,5 +257,7 @@
     "Resetting filters - please wait": "Återställer filter - vänligen vänta",
     "Type to search": "Skriv för att söka",
     "Check All": "Markera alla",
-    "Uncheck All": "Avmarkera alla"
+    "Uncheck All": "Avmarkera alla",
+    "Select": "Välj",
+    "Select for bulkedit": "Välj för massredigering"
 }
