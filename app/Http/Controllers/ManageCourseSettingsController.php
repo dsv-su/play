@@ -57,7 +57,8 @@ class ManageCourseSettingsController extends Controller
             $year = substr($course['semester'], 0, 4);
             $term = (substr($course['semester'], 4) == '1') ? 'VT' : 'HT';
             $name = Lang::locale() == 'swe' ? $course['name'] : $course['name_en'];
-            $courselist[$term . $year][$course['id']] = $course['designation'] . ' ' . $term . $year . ' — ' . $name . ' (' . __('id') . ' ' . $course['id'] . ')';
+            //$courselist[$term . $year][$course['id']] = $course['designation'] . ' ' . $term . $year . ' — ' . $name . ' (' . __('id') . ' ' . $course['id'] . ')';
+            $courselist[$term . $year][$course['id']] = $course['designation'] . ' ' . $term . $year . ' — ' . $name;
             $this->checkCourseSettings($course['id'], $coursesetlist, $presentations, $individual_permissions, $playback_permissions);
         }
         return view('manage.manage_course', compact('courselist', 'coursesetlist', 'individual_permissions', 'playback_permissions', 'presentations'));

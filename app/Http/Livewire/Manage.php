@@ -369,7 +369,7 @@ class Manage extends Component
             $this->video_courses = VideoCourse::with('course', 'video.video_tag.tag', 'video.video_presenter.presenter')
                 ->whereHas('Course', function ($query) use ($filterTerm) {
                     $query->where('id', 'LIKE', $filterTerm)
-                        ->orwhere('name', 'LIKE', $filterTerm)->orWhere('name_en', 'like', $filterTerm)
+                        ->orwhere('name', 'LIKE', $filterTerm)->orWhere('name_en', 'LIKE', $filterTerm)
                         ->orWhere('designation', 'LIKE', $filterTerm)
                         ->orWhere('semester', 'LIKE', $filterTerm)
                         ->orWhere('year', 'LIKE', $filterTerm);
@@ -389,7 +389,9 @@ class Manage extends Component
                 })
                 ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
 
-            $this->presentations = Video::whereIn('id', $this->video_courses->pluck('video_id')->toArray())->get();
+
+            $videos_in_courses = VideoCourse::whereIn('course_id', $this->video_courses->pluck('course_id')->toArray())->pluck('video_id')->toArray();
+            $this->presentations = Video::whereIn('id', $videos_in_courses)->get();
         }
 
 
@@ -450,7 +452,7 @@ class Manage extends Component
         //Speed up the query
         $this->presentations = Video::select('id')->with('video_course')->get();
         $this->filters();
-        $this->prepareRendering();
+        //$this->prepareRendering();
     }
 
     /**
