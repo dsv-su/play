@@ -1,22 +1,24 @@
 <!-- Video - child view - will inherit all data available in the parent view-->
-@if (!($bulk ?? false) && ($video->edit))
-    <div class="pr-0 col-auto form-check d-flex align-items-center">
-        <div data-placement="top" data-toggle="tooltip" data-title="{{__("Select for bulkedit")}}">
-            <label class="form-control-label px-1">{{__("Select")}}</label>
+@if($view ?? false)
+    @if (!($bulk ?? false) && ($video->edit))
+        <div class="pr-0 col-auto form-check d-flex align-items-center">
+            <div data-placement="top" data-toggle="tooltip" data-title="{{__("Select for bulkedit")}}">
+                <label class="form-control-label px-1">{{__("Select")}}</label>
+            </div>
+            <input class="form-check-input check" type="checkbox" name="bulkedit"
+                   data-id="{{$video->id}}"
+                   @if ($checked_videos ?? false)
+                        @if(in_array($video->id, $checked_videos)) checked
+                        @endif
+                   @endif>
         </div>
-        <input class="form-check-input check" type="checkbox" name="bulkedit"
-               data-id="{{$video->id}}"
-               @if ($checked_videos ?? false)
-                    @if(in_array($video->id, $checked_videos)) checked
-                    @endif
-               @endif>
-    </div>
-@else
-    <div class="pr-0 col-auto form-check d-flex align-items-center">
-        <div>
-            <label class="form-control-label px-1"> </label>
+    @else
+        <div class="pr-0 col-auto form-check d-flex align-items-center">
+            <div>
+                <label class="form-control-label px-1"> </label>
+            </div>
         </div>
-    </div>
+    @endif
 @endif
 <div class="shadow-lg shadow-warning card video m-auto @if($video->hidden) faded @endif" id="{{$video->id}}">
     <div class="flex-column m-1 action-icons">
