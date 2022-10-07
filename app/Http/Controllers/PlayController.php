@@ -139,7 +139,8 @@ class PlayController extends Controller
                 'Accept' => 'application/json',
                 'sfapikey' => $system->mediasite->sfapikey,
             ],
-            'auth' => [$system->mediasite->username, $system->mediasite->password]
+            'auth' => [$system->mediasite->username, $system->mediasite->password],
+            'verify' => false
         ]);
         $url = $system->mediasite->url;
         $this->getMediasiteFolders($mediasite, $url);
@@ -488,7 +489,8 @@ class PlayController extends Controller
                 'Accept' => 'application/json',
                 'sfapikey' => $system->mediasite->sfapikey,
             ],
-            'auth' => [$system->mediasite->username, $system->mediasite->password]
+            'auth' => [$system->mediasite->username, $system->mediasite->password],
+            'verify' => false
         ]);
         $url = $system->mediasite->url;
 
@@ -532,7 +534,8 @@ class PlayController extends Controller
                 'Accept' => 'application/json',
                 'sfapikey' => $system->mediasite->sfapikey,
             ],
-            'auth' => [$system->mediasite->username, $system->mediasite->password]
+            'auth' => [$system->mediasite->username, $system->mediasite->password],
+            'verify' => false
         ]);
         $url = $system->mediasite->url;
 
