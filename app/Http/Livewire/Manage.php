@@ -10,6 +10,7 @@ use App\IndividualPermission;
 use App\Presenter;
 use App\Services\Filters\VisibilityFilter;
 use App\Services\Manage\DropdownFilters;
+use App\Services\Manage\InitFilters;
 use App\Services\Manage\LoadPresentations;
 use App\Video;
 use App\VideoCourse;
@@ -24,6 +25,7 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class Manage extends Component
@@ -45,11 +47,11 @@ class Manage extends Component
     public $videoformat = '';
     public $searchTerm;
     public $filters;
-    public $presentations, $presentations_by_courseid;
     public $grid, $list, $table;
     public $page;
     public $checkAll, $checked_videos, $allChecked;
 
+    public $presentations, $presentations_by_courseid;
     protected $dropdownfilter;
     protected $queryString = ['filterTerm', 'presenter', 'course', 'term', 'tag'];
 
@@ -79,6 +81,16 @@ class Manage extends Component
     {
         foreach(array_filter($this->filters) as $filter => $value) {
             if($filter == 'filterTerm' && !is_null($value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function checkActiveFilter()
+    {
+        foreach(array_filter($this->filters) as $filter) {
+            if($filter) {
                 return true;
             }
         }
@@ -156,7 +168,6 @@ class Manage extends Component
         krsort($this->videoterms);
         $this->injectToSession();
         $this->prepareRendering();
-
     }
 
     /**
@@ -366,6 +377,8 @@ class Manage extends Component
 
         } else {
             //Administrators
+            DB::disableQueryLog();
+
             $this->video_courses = VideoCourse::with('course', 'video.video_tag.tag', 'video.video_presenter.presenter')
                 ->whereHas('Course', function ($query) use ($filterTerm) {
                     $query->where('id', 'LIKE', $filterTerm)
@@ -389,9 +402,8 @@ class Manage extends Component
                 })
                 ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
 
-
-            $videos_in_courses = VideoCourse::whereIn('course_id', $this->video_courses->pluck('course_id')->toArray())->pluck('video_id')->toArray();
-            $this->presentations = Video::whereIn('id', $videos_in_courses)->get();
+                $videos_in_courses = VideoCourse::whereIn('course_id', $this->video_courses->pluck('course_id')->toArray())->pluck('video_id')->toArray();
+                $this->presentations = Video::with('video_course')->whereIn('id', $videos_in_courses)->get();
         }
 
 
