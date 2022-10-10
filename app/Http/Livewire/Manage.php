@@ -51,7 +51,7 @@ class Manage extends Component
     public $page;
     public $checkAll, $checked_videos, $allChecked;
 
-    public $presentations, $presentations_by_courseid;
+    public $presentations = [], $presentations_by_courseid;
     protected $dropdownfilter;
     protected $queryString = ['filterTerm', 'presenter', 'course', 'term', 'tag'];
 
@@ -155,7 +155,6 @@ class Manage extends Component
     public function filters()
     {
         $videos = $this->presentations;
-
         $dropdownfilter = new DropdownFilters;
 
         list ($this->videoterms, $this->videopresenters, $this->videotags, $this->video_courses, $this->presentations, $this->presentations_by_courseid) = $dropdownfilter->performFiltering(
@@ -315,16 +314,16 @@ class Manage extends Component
 
             //Filter all presentations depending on user
             $this->video_courses = [];
-            $videos_collection = Video::whereIn('id', $this->user_videos)
+            $videos_collection = Video::select('id')->whereIn('id', $this->user_videos)
                 ->orWhereIn('id', $this->individual_videos)
                 ->orWhereIn('id', $this->courseadministrator)
                 ->orWhereIn('id', $this->video_course_ids)
                 ->pluck('id')->toArray();
 
-            $video_course_ids = VideoCourse::whereIn('video_id', $videos_collection)->distinct()->pluck('course_id');
+            $video_course_ids = VideoCourse::select('course_id')->whereIn('video_id', $videos_collection)->distinct()->pluck('course_id');
 
             //Filter course specific attributes
-            $video_course_courses = VideoCourse::with('course')
+            $video_course_courses = VideoCourse::select('course_id')->with('course')
                 ->whereIn('course_id', $video_course_ids)
                 ->whereHas('course', function ($query) use ($filterTerm) {
                     $query->where('id', 'LIKE', $filterTerm)
@@ -339,11 +338,12 @@ class Manage extends Component
             //Filter after video title or description
             $videos_match_title = Video::whereIn('id', $videos_collection)
                 ->where('title', 'LIKE', $filterTerm)
+                ->orwhere('title_en', 'LIKE', $filterTerm)
                 ->orWhere('description', 'LIKE', $filterTerm)
                 ->pluck('id')->toArray();
 
             //Filter after Presenters
-            $video_course_presenters = VideoCourse::with('course', 'video.video_presenter.presenter')
+            $video_course_presenters = VideoCourse::select('course_id', 'video_id')->with('course', 'video.video_presenter.presenter')
                 ->whereIn('course_id', $video_course_ids)
                 ->whereHas('video.video_presenter.presenter', function ($query) use ($filterTerm) {
                     $query->where('username', 'LIKE', $filterTerm)
@@ -352,7 +352,7 @@ class Manage extends Component
                 ->pluck('video_id');
 
             //Filter after Tags
-            $video_course_tags = VideoCourse::with('video.video_tag.tag')
+            $video_course_tags = VideoCourse::select('course_id', 'video_id')->with('video.video_tag.tag')
                 ->whereIn('course_id', $video_course_ids)
                 ->WhereHas('video.video_tag.tag', function ($query) use ($filterTerm) {
                     $query->where('id', 'LIKE', $filterTerm)
@@ -361,7 +361,7 @@ class Manage extends Component
                 ->pluck('video_id');
 
             //Create public course list
-            $this->video_courses = VideoCourse::whereIn('course_id', $video_course_courses)
+            $this->video_courses = VideoCourse::select('course_id', 'video_id')->whereIn('course_id', $video_course_courses)
                 ->orWhereIn('video_id', $video_course_presenters)
                 ->orWhereIn('video_id', $video_course_tags)
                 ->orWhereIn('video_id', $videos_match_title)
@@ -369,7 +369,7 @@ class Manage extends Component
                 ->orderBy('course_id', 'desc')
                 ->get();
 
-            $this->presentations = Video::whereIn('id', $videos_collection)
+            $this->presentations = Video::select('id')->whereIn('id', $videos_collection)
                 ->WhereIn('id', $videos_match_title)
                 ->orWhereIn('id', $video_course_presenters)
                 ->orWhereIn('id', $video_course_tags)
@@ -377,9 +377,8 @@ class Manage extends Component
 
         } else {
             //Administrators
-            DB::disableQueryLog();
 
-            $this->video_courses = VideoCourse::with('course', 'video.video_tag.tag', 'video.video_presenter.presenter')
+            $this->video_courses = VideoCourse::select('course_id')->with('course', 'video.video_tag.tag', 'video.video_presenter.presenter')
                 ->whereHas('Course', function ($query) use ($filterTerm) {
                     $query->where('id', 'LIKE', $filterTerm)
                         ->orwhere('name', 'LIKE', $filterTerm)->orWhere('name_en', 'LIKE', $filterTerm)
@@ -388,30 +387,32 @@ class Manage extends Component
                         ->orWhere('year', 'LIKE', $filterTerm);
                 })
                 ->orWhereHas('video.video_presenter.presenter', function ($query) use ($filterTerm) {
-                    $query->where('username', 'LIKE', $filterTerm)
+                    $query->select('username', 'name')
+                        ->where('username', 'LIKE', $filterTerm)
                         ->orwhere('name', 'LIKE', $filterTerm);
                 })
                 ->orWhereHas('video.video_tag.tag', function ($query) use ($filterTerm) {
-                    $query->where('id', 'LIKE', $filterTerm)
+                    $query->select('id', 'name')
+                        ->where('id', 'LIKE', $filterTerm)
                         ->orwhere('name', 'LIKE', $filterTerm);
                 })
                 ->orWhereHas('video', function ($query) use ($filterTerm) {
-                    $query->where('title', 'LIKE', $filterTerm)
+                    $query->select('id', 'title', 'title_en', 'description')
+                        ->where('id', 'LIKE', $filterTerm)
+                        ->orwhere('title', 'LIKE', $filterTerm)
                         ->orwhere('title_en','LIKE', $filterTerm)
                         ->orWhere('description', 'LIKE', $filterTerm);
                 })
                 ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
 
-                $videos_in_courses = VideoCourse::whereIn('course_id', $this->video_courses->pluck('course_id')->toArray())->pluck('video_id')->toArray();
-                $this->presentations = Video::with('video_course')->whereIn('id', $videos_in_courses)->get();
-        }
 
+                $videos_in_courses = VideoCourse::select('course_id', 'video_id')->whereIn('course_id', $this->video_courses->pluck('course_id')->toArray())->pluck('video_id')->toArray();
+                $this->presentations = Video::select('id')->whereIn('id', $videos_in_courses)->with('video_course')->select('id')->get();
+        }
 
         //Querystring
         $this->filters['filterTerm'] = Arr::wrap($this->filterTerm);
         $this->filters();
-
-        $this->courseSettings($this->video_courses);
 
     }
 
@@ -449,22 +450,6 @@ class Manage extends Component
         $this->countPresentations($this->video_courses);
         $this->courseSettings($this->video_courses);
         $this->createCourseSelect();
-    }
-
-    /**
-     * @return void
-     */
-    public function loadCourseList()
-    {
-        $this->video_courses = VideoCourse::with('course', 'video.video_presenter.presenter')->groupBy('course_id')->orderBy('course_id', 'desc')->get();
-
-        //Load filters
-        //Creates arrays for the filter functions
-        //$this->presentations = Video::all();
-        //Speed up the query
-        $this->presentations = Video::select('id')->with('video_course')->get();
-        $this->filters();
-        //$this->prepareRendering();
     }
 
     /**
@@ -599,60 +584,6 @@ class Manage extends Component
     public function render()
     {
         return view('livewire.manage');
-    }
-
-    /**
-     * @param Collection $videos_collection
-     * @return void
-     * @throws BindingResolutionException
-     */
-    private function getVideoCourses(Collection $videos_collection): void
-    {
-        /***
-         * Returns a colletion of Video Courses from a collection of Videos
-         * the returned collection is returned in the public variable
-         * $this->video_courses
-         */
-
-        $video_course_ids = VideoCourse::whereIn('video_id', $videos_collection)->pluck('course_id');
-
-        $courseids = [];
-        foreach ($video_course_ids as $course_id) {
-            if (!key_exists($course_id, $courseids)) {
-                $courseids[$course_id] = $course_id;
-            }
-        }
-
-        $this->video_courses = [];
-        //Query depending on user
-        if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
-            $this->video_courses = VideoCourse::with('course')
-                ->whereHas('video', function ($query) {
-                    $query->whereIn('video_id', $this->user_videos)
-                        ->orWhereIn('video_id', $this->individual_videos)
-                        ->orWhereIn('video_id', $this->courseadministrator)
-                        ->orWhereIn('video_id', $this->video_course_ids);
-                })
-                ->whereIn('course_id', $courseids)
-                ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
-        } else {
-            $this->video_courses = VideoCourse::with('course')
-                ->whereIn('course_id', $courseids)
-                ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
-        }
-    }
-
-    private function getVideos(Collection $video_courses_collection, $presenter = null)
-    {
-        /***
-         * Returns a colletion of Videos from a collection of Video_Courses
-         */
-        $courselist = $video_courses_collection->pluck('course_id')->toArray();
-        $getvideos = new LoadPresentations();
-        foreach ($courselist as $course) {
-                $videos[] = $getvideos->queryTitle($course, $presenter)->pluck('id')->toArray();
-            }
-        return collect($videos ?? [])->flatten(1)->toArray();
     }
 
     private function containsOnlyNull($filterarray)
