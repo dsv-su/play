@@ -48,7 +48,7 @@ class Manage extends Component
     public $searchTerm;
     public $filters;
     public $grid, $list, $table;
-    public $page;
+    public $page, $admin;
     public $checkAll, $checked_videos, $allChecked;
 
     public $presentations = [], $presentations_by_courseid;
@@ -64,6 +64,7 @@ class Manage extends Component
         $this->page = $page;
 
         //Default settings
+        $this->admin = false;
         $this->view = 'courses';
         $this->videoformat = Cookie::get('videoformat') ?? 'grid';
         $this->manageview = true;
@@ -377,8 +378,15 @@ class Manage extends Component
 
         } else {
             //Administrators
-
-            $this->video_courses = VideoCourse::select('course_id')->with('course', 'video.video_tag.tag', 'video.video_presenter.presenter')
+            $this->admin = true;
+            
+            $this->video_courses = VideoCourse::select('course_id')->with(['course' => function($query) {
+                $query->select('id', 'name', 'designation', 'semester', 'year');
+            }, 'video.video_tag.tag' => function($query) {
+                $query->select('name');
+            }, 'video.video_presenter.presenter' => function($query) {
+                $query->select('username', 'name');
+            }])
                 ->whereHas('Course', function ($query) use ($filterTerm) {
                     $query->where('id', 'LIKE', $filterTerm)
                         ->orwhere('name', 'LIKE', $filterTerm)->orWhere('name_en', 'LIKE', $filterTerm)
@@ -392,9 +400,9 @@ class Manage extends Component
                         ->orwhere('name', 'LIKE', $filterTerm);
                 })
                 ->orWhereHas('video.video_tag.tag', function ($query) use ($filterTerm) {
-                    $query->select('id', 'name')
-                        ->where('id', 'LIKE', $filterTerm)
-                        ->orwhere('name', 'LIKE', $filterTerm);
+                    $query->select('name')
+                        //->where('id', 'LIKE', $filterTerm)
+                        ->where('name', 'LIKE', $filterTerm);
                 })
                 ->orWhereHas('video', function ($query) use ($filterTerm) {
                     $query->select('id', 'title', 'title_en', 'description')
@@ -403,11 +411,12 @@ class Manage extends Component
                         ->orwhere('title_en','LIKE', $filterTerm)
                         ->orWhere('description', 'LIKE', $filterTerm);
                 })
-                ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
+                ->distinct()->groupBy('course_id')->orderBy('course_id', 'desc')->get();
 
 
-                $videos_in_courses = VideoCourse::select('course_id', 'video_id')->whereIn('course_id', $this->video_courses->pluck('course_id')->toArray())->pluck('video_id')->toArray();
+                $videos_in_courses = VideoCourse::select('course_id', 'video_id')->whereIn('course_id', $this->video_courses->pluck('course_id'))->pluck('video_id')->toArray();
                 $this->presentations = Video::select('id')->whereIn('id', $videos_in_courses)->with('video_course')->select('id')->get();
+
         }
 
         //Querystring

@@ -52,10 +52,16 @@
         @endif
     </fieldset>
     <!-- Course Settings button -->
-        @if ($video_course->course->id && (in_array(\App\Course::find($video_course->course->id)->userPermission(), ['edit', 'delete'])))
-            <a class="badge badge-primary" role="button" style="max-height: 32.38px;" data-toggle="tooltip" data-title="{{__("Course settings")}}"
-               href="{{ route('course_edit', $video_course->course->id) }}">{{__("Settings")}} <i
-                    class="fas fa-cog"></i></a>
+        @if($admin)
+        <a class="badge badge-primary" role="button" style="max-height: 32.38px;" data-toggle="tooltip" data-title="{{__("Course settings")}}"
+           href="{{ route('course_edit', $video_course->course->id) }}">{{__("Settings")}} <i
+                class="fas fa-cog"></i></a>
+        @else
+            @if ($video_course->course->id && (in_array(\App\Course::find($video_course->course->id)->userPermission(), ['edit', 'delete'])))
+                <a class="badge badge-primary" role="button" style="max-height: 32.38px;" data-toggle="tooltip" data-title="{{__("Course settings")}}"
+                   href="{{ route('course_edit', $video_course->course->id) }}">{{__("Settings")}} <i
+                        class="fas fa-cog"></i></a>
+            @endif
         @endif
 
 

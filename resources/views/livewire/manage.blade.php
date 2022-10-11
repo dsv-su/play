@@ -55,11 +55,15 @@
 
        @foreach($video_courses as $key => $video_course)
             <!-- Grey out background for non-editible courses -->
+            @if($admin)
+                    <div class="card border border-primary mb-3">
+            @else
            <div class="card border border-primary mb-3"
                @if ($video_course->course->id && !(in_array(\App\Course::find($video_course->course->id)->userPermission(), ['edit', 'delete'])))
                    style="background-color: #e7ebec; !important;"
                @endif
                     >
+           @endif
                <div id="heading{{$key}}">
                    <h4 style="text-align:left;float:left; padding: 35px 15px 0;">
                        <a wire:click.prevent="loadCourseVideos({{$video_course->course->id}})"
@@ -91,8 +95,9 @@
                         class="collapse"
                     @endif
                     aria-labelledby="heading{{$key}}" data-parent="#accordion">
-                   @include('livewire.status.coursestatusfull')
-
+                    @if($contend[$video_course->course->id])
+                        @include('livewire.status.coursestatusfull')
+                    @endif
                    <!-- Check all -->
                    <div class="form-check">
                        <input wire:click="checkAll({{ $video_course->course->id }})"
@@ -103,8 +108,9 @@
                                 > {{__("Check All")}}
                                 @endif
                    </div>
-
-                   @include('home.videolayout', ['videos' => $videos[$video_course->course->id]])
+                   @if($contend[$video_course->course->id])
+                        @include('home.videolayout', ['videos' => $videos[$video_course->course->id]])
+                   @endif
                </div>
            </div>
        @endforeach
