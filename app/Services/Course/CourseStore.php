@@ -136,9 +136,9 @@ class CourseStore extends Model
                                 $this->cid = $this->course->id;
                             } else {
                                 //Log message
-                                Log::notice('Failed notification. The notification package for presentation with id: '. $this->video->id.
-                                    ' Title: '. $this->video->title.' Failed du to the following error: Designation: '.$this->item.
-                                    ' was unable to be found in Daisy. The presentation needs to be processed manually.');
+                                Log::notice('Failed course association. The notification package for presentation with id: '. $this->video->id.
+                                    ' Title: '. $this->video->title.' Failed associating the presentation with the specified course due to the following error: Designation: '.$this->item.
+                                    ' was unable to be found in Daisy. The presentation needs to be associated manually.');
                                 // and create an error notification to admins
                                 $job = (new JobFailedNotification($this->video, $this->item));
                                 dispatch($job);

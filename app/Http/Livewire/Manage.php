@@ -385,43 +385,54 @@ class Manage extends Component
             //Administrators
             $this->admin = true;
 
-            $this->video_courses = VideoCourse::select('course_id', 'video_id')->with(['course' => function($query) {
-                $query->select('id', 'name','name_en', 'designation', 'semester', 'year');
-            }, 'video.video_tag.tag' => function($query) {
-                $query->select('name');
-            }, 'video.video_presenter.presenter' => function($query) {
-                $query->select('username', 'name');
-            }])
-                ->whereHas('Course', function ($query) use ($filterTerm) {
+            //Filter course specific attributes
+            $video_course_courses = VideoCourse::select('course_id')->with('course')
+                ->whereHas('course', function ($query) use ($filterTerm) {
                     $query->where('id', 'LIKE', $filterTerm)
-                        ->orwhere('name', 'LIKE', $filterTerm)->orWhere('name_en', 'LIKE', $filterTerm)
+                        ->orwhere('name', 'LIKE', $filterTerm)->orWhere('name_en', 'like', $filterTerm)
                         ->orWhere('designation', 'LIKE', $filterTerm)
                         ->orWhere('semester', 'LIKE', $filterTerm)
                         ->orWhere('year', 'LIKE', $filterTerm);
                 })
-                ->orWhereHas('video.video_presenter.presenter', function ($query) use ($filterTerm) {
-                    $query->select('username', 'name')
-                        ->where('username', 'LIKE', $filterTerm)
+                ->distinct()
+                ->pluck('course_id');
+
+            //Filter after video title or description
+            $videos_match_title = Video::where('title', 'LIKE', $filterTerm)
+                ->orwhere('title_en', 'LIKE', $filterTerm)
+                ->orWhere('description', 'LIKE', $filterTerm)
+                ->pluck('id')->toArray();
+
+            //Filter after Presenters
+            $video_course_presenters = VideoCourse::select('course_id', 'video_id')->with('course', 'video.video_presenter.presenter')
+                ->whereHas('video.video_presenter.presenter', function ($query) use ($filterTerm) {
+                    $query->where('username', 'LIKE', $filterTerm)
                         ->orwhere('name', 'LIKE', $filterTerm);
                 })
-                ->orWhereHas('video.video_tag.tag', function ($query) use ($filterTerm) {
-                    $query->select('name')
-                        //->where('id', 'LIKE', $filterTerm)
-                        ->where('name', 'LIKE', $filterTerm);
-                })
-                ->orWhereHas('video', function ($query) use ($filterTerm) {
-                    $query->select('id', 'title', 'title_en', 'description')
-                        ->where('id', 'LIKE', $filterTerm)
-                        ->orwhere('title', 'LIKE', $filterTerm)
-                        ->orwhere('title_en','LIKE', $filterTerm)
-                        ->orWhere('description', 'LIKE', $filterTerm);
-                })
-                ->distinct()->groupBy('course_id')->orderBy('course_id', 'desc')->get();
+                ->pluck('video_id');
 
-                $videos_in_courses = VideoCourse::select('course_id', 'video_id')->whereIn('course_id', $this->video_courses->pluck('course_id'))->pluck('video_id')->toArray();
-                $this->reset('video_courses');
-                $this->presentations = Video::select('id')->whereIn('id', $videos_in_courses)->with('video_course')->select('id')->get();
+            //Filter after Tags
+            $video_course_tags = VideoCourse::select('course_id', 'video_id')->with('video.video_tag.tag')
+                ->WhereHas('video.video_tag.tag', function ($query) use ($filterTerm) {
+                    $query->where('id', 'LIKE', $filterTerm)
+                        ->orwhere('name', 'LIKE', $filterTerm);
+                })
+                ->pluck('video_id');
 
+            //Create public course list
+            $this->video_courses = VideoCourse::select('course_id', 'video_id')->whereIn('course_id', $video_course_courses)
+                ->orWhereIn('video_id', $video_course_presenters)
+                ->orWhereIn('video_id', $video_course_tags)
+                ->orWhereIn('video_id', $videos_match_title)
+                ->groupBy('course_id')
+                ->orderBy('course_id', 'desc')
+                ->get();
+
+            $this->presentations = Video::select('id')->with('video_course')
+                ->whereIn('id', $videos_match_title)
+                ->orWhereIn('id', $video_course_presenters)
+                ->orWhereIn('id', $video_course_tags)
+                ->get();
         }
 
         //Querystring
