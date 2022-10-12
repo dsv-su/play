@@ -52,7 +52,7 @@
                </span>
            </h2>
        </div>
-
+       @if($show_course_list)
        @foreach($video_courses as $key => $video_course)
             <!-- Grey out background for non-editible courses -->
             @if($admin)
@@ -114,7 +114,7 @@
                </div>
            </div>
        @endforeach
-
+       @endif
    </div> <!-- accordian -->
 
 </div>

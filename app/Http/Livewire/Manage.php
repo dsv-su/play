@@ -48,7 +48,7 @@ class Manage extends Component
     public $searchTerm;
     public $filters;
     public $grid, $list, $table;
-    public $page, $admin;
+    public $page, $admin, $show_course_list;
     public $checkAll, $checked_videos, $allChecked;
 
     public $presentations = [], $presentations_by_courseid;
@@ -65,6 +65,7 @@ class Manage extends Component
 
         //Default settings
         $this->admin = false;
+        $this->show_course_list = true;
         $this->view = 'courses';
         $this->videoformat = Cookie::get('videoformat') ?? 'grid';
         $this->manageview = true;
@@ -156,6 +157,7 @@ class Manage extends Component
     public function filters()
     {
         $videos = $this->presentations;
+
         $dropdownfilter = new DropdownFilters;
 
         list ($this->videoterms, $this->videopresenters, $this->videotags, $this->video_courses, $this->presentations, $this->presentations_by_courseid) = $dropdownfilter->performFiltering(
@@ -230,7 +232,6 @@ class Manage extends Component
         $this->filter_course = $selected_course;
         $this->filters['course'] = $selected_course;
 
-        //$this->uncatcounter = 0;
         $this->filters();
 
         return redirect(session('links')[0]);
@@ -376,12 +377,16 @@ class Manage extends Component
                 ->orWhereIn('id', $video_course_tags)
                 ->get();
 
+            //Querystring
+            $this->filters['filterTerm'] = Arr::wrap($this->filterTerm);
+            $this->filters();
+
         } else {
             //Administrators
             $this->admin = true;
-            
-            $this->video_courses = VideoCourse::select('course_id')->with(['course' => function($query) {
-                $query->select('id', 'name', 'designation', 'semester', 'year');
+
+            $this->video_courses = VideoCourse::select('course_id', 'video_id')->with(['course' => function($query) {
+                $query->select('id', 'name','name_en', 'designation', 'semester', 'year');
             }, 'video.video_tag.tag' => function($query) {
                 $query->select('name');
             }, 'video.video_presenter.presenter' => function($query) {
@@ -413,8 +418,8 @@ class Manage extends Component
                 })
                 ->distinct()->groupBy('course_id')->orderBy('course_id', 'desc')->get();
 
-
                 $videos_in_courses = VideoCourse::select('course_id', 'video_id')->whereIn('course_id', $this->video_courses->pluck('course_id'))->pluck('video_id')->toArray();
+                $this->reset('video_courses');
                 $this->presentations = Video::select('id')->whereIn('id', $videos_in_courses)->with('video_course')->select('id')->get();
 
         }
@@ -500,7 +505,7 @@ class Manage extends Component
     {
         $visibility = app(VisibilityFilter::class);
         $this->courseSettings($this->video_courses);
-        $this->createCourseSelect($this->video_courses);
+        $this->createCourseSelect();
         // Rehydrate already expanded courses since they're turned to array
         foreach ($this->videos as $courseid => $videos) {
 
@@ -540,7 +545,7 @@ class Manage extends Component
     {
         foreach ($courses as $course) {
             //Count presentations
-            $this->counter[$course->course_id] = count($this->presentations_by_courseid[$course->course_id]);
+            $this->counter[$course->course_id] = count($this->presentations_by_courseid[$course->course_id] ?? []);
         }
     }
 
@@ -598,5 +603,10 @@ class Manage extends Component
     private function containsOnlyNull($filterarray)
     {
         return empty(array_filter($filterarray, function ($a) { return $a != null;}));
+    }
+
+    public static function IsNullOrEmptyString($str): bool
+    {
+        return ($str === '%%' || trim($str) === '% %');
     }
 }

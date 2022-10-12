@@ -40,53 +40,64 @@ class DropdownFilters
      * @param $presenters
      * @return array
      */
-    public function performFiltering($videos, $designations = null, $semesters = null, $tags = null, $presenters = null): array
+    public function performFiltering($videos = null, $designations = null, $semesters = null, $tags = null, $presenters = null): array
     {
-        foreach ($videos as $key => $video) {
-            $found = false;
-            $tagfound = true;
-            $presenterfound = false;
-            if ($designations || $semesters) {
-                foreach ($video->courses() as $course) {
-                    if ((!$semesters || in_array($course->semester . $course->year, $semesters)) && (!$designations || in_array($course->designation, $designations))) {
+        if($videos) {
+            foreach ($videos as $key => $video) {
+                $found = false;
+                $tagfound = true;
+                $presenterfound = false;
+                if ($designations || $semesters) {
+                    foreach ($video->courses() as $course) {
+                        if ((!$semesters || in_array($course->semester . $course->year, $semesters)) && (!$designations || in_array($course->designation, $designations))) {
+                            $found = true;
+                        }
+                    }
+                    if ($designations && in_array('nocourse', $designations) && $video->courses()->isEmpty()) {
                         $found = true;
                     }
-                }
-                if ($designations && in_array('nocourse', $designations) && $video->courses()->isEmpty()) {
+                } else {
                     $found = true;
                 }
-            } else {
-                $found = true;
-            }
-            if ($tags) {
-                foreach ($tags as $tag) {
-                    if (!in_array($tag, array_map(function ($t) {
-                        return $t['name'];
-                    }, $video->tags()->toArray()))) {
-                        $tagfound = false;
+                if ($tags) {
+                    foreach ($tags as $tag) {
+                        if (!in_array($tag, array_map(function ($t) {
+                            return $t['name'];
+                        }, $video->tags()->toArray()))) {
+                            $tagfound = false;
+                        }
                     }
                 }
-            }
-            if ($presenters) {
-                foreach ($video->presenters() as $presenter) {
-                    if (in_array($presenter->username, $presenters)) {
-                        $presenterfound = true;
+                if ($presenters) {
+                    foreach ($video->presenters() as $presenter) {
+                        if (in_array($presenter->username, $presenters)) {
+                            $presenterfound = true;
+                        }
                     }
+                } else {
+                    $presenterfound = true;
                 }
-            } else {
-                $presenterfound = true;
-            }
-            if ($found && $tagfound && $presenterfound) {
-            } else {
-                unset($videos[$key]);
+                if ($found && $tagfound && $presenterfound) {
+                } else {
+                    unset($videos[$key]);
+                }
             }
         }
+
 
         $videoterms = $this->extractTerms($videos);
         $videotags = $this->extractTags($videos);
         $videopresenters = $this->extractPresenters($videos);
-        $video_courses = $this->extractVideoCourses($videos);
-        $videos_by_course = $this->groupVideos($videos);
+        if($videos) {
+            $video_courses = $this->extractVideoCourses($videos);
+            $videos_by_course = $this->groupVideos($videos);
+        } else {
+            $video_courses = [];
+            $videos_by_course = [];
+        }
+
+
+
 
         return array($videoterms, $videopresenters, $videotags, $video_courses, $videos, $videos_by_course);
     }
@@ -98,13 +109,16 @@ class DropdownFilters
     public function extractTerms($videos): array
     {
         $terms = array();
-        foreach ($videos as $video) {
-            foreach ($video->courses() as $course) {
-                if (!in_array($course->semester . $course->year, $terms)) {
-                    $terms[] = $course->semester . $course->year;
+        if($videos) {
+            foreach ($videos as $video) {
+                foreach ($video->courses() as $course) {
+                    if (!in_array($course->semester . $course->year, $terms)) {
+                        $terms[] = $course->semester . $course->year;
+                    }
                 }
             }
         }
+
         /*Sorting
          * $terms = collect($terms)->sortByDesc(function($item){
             return $item;
@@ -119,14 +133,17 @@ class DropdownFilters
     public function extractTags($videos): array
     {
         $tags = array();
-        foreach ($videos as $video) {
-            foreach ($video->tags() as $tag) {
-                if (!in_array($tag->name, $tags)) {
-                    $tags[] = $tag->name;
+        if($videos) {
+            foreach ($videos as $video) {
+                foreach ($video->tags() as $tag) {
+                    if (!in_array($tag->name, $tags)) {
+                        $tags[] = $tag->name;
+                    }
                 }
             }
+            sort($tags);
         }
-        sort($tags);
+
         return $tags;
     }
 
@@ -137,14 +154,16 @@ class DropdownFilters
     public function extractPresenters($videos): array
     {
         $presenters = array();
-        foreach ($videos as $video) {
-            foreach ($video->presenters() as $presenter) {
-                if (!key_exists($presenter->username, $presenters)) {
-                    $presenters[$presenter->username] = $presenter->name;
+        if($videos) {
+            foreach ($videos as $video) {
+                foreach ($video->presenters() as $presenter) {
+                    if (!key_exists($presenter->username, $presenters)) {
+                        $presenters[$presenter->username] = $presenter->name;
+                    }
                 }
             }
+            array_multisort($presenters);
         }
-        array_multisort($presenters);
 
         return $presenters;
     }
@@ -156,35 +175,39 @@ class DropdownFilters
          * the returned collection is returned in the public variable
          * $this->video_courses
          */
+        if($videos_collection) {
+            $this->courseAdminFilter();
+            $video_ids = $videos_collection->pluck('id')->toArray();
+            $v_course_ids = VideoCourse::whereIn('video_id', $video_ids)->pluck('course_id');
 
-        $this->courseAdminFilter();
-        $video_ids = $videos_collection->pluck('id')->toArray();
-        $v_course_ids = VideoCourse::whereIn('video_id', $video_ids)->pluck('course_id');
-
-        $courseids = [];
-        foreach ($v_course_ids as $course_id) {
-            if (!key_exists($course_id, $courseids)) {
-                $courseids[$course_id] = $course_id;
+            $courseids = [];
+            foreach ($v_course_ids as $course_id) {
+                if (!key_exists($course_id, $courseids)) {
+                    $courseids[$course_id] = $course_id;
+                }
             }
+
+            $this->video_courses = [];
+            //Query depending on user
+            if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
+                return VideoCourse::with('course')
+                    ->whereHas('video', function ($query) {
+                        $query->whereIn('video_id', $this->user_videos)
+                            ->orWhereIn('video_id', $this->individual_videos)
+                            ->orWhereIn('video_id', $this->courseadministrator)
+                            ->orWhereIn('video_id', $this->video_course_ids);
+                    })
+                    ->whereIn('course_id', $courseids)
+                    ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
+            } else {
+                return VideoCourse::with('course')
+                    ->whereIn('course_id', $courseids)
+                    ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
+            }
+        } else {
+            return [];
         }
 
-        $this->video_courses = [];
-        //Query depending on user
-        if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
-            return VideoCourse::with('course')
-                ->whereHas('video', function ($query) {
-                    $query->whereIn('video_id', $this->user_videos)
-                        ->orWhereIn('video_id', $this->individual_videos)
-                        ->orWhereIn('video_id', $this->courseadministrator)
-                        ->orWhereIn('video_id', $this->video_course_ids);
-                })
-                ->whereIn('course_id', $courseids)
-                ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
-        } else {
-            return VideoCourse::with('course')
-                ->whereIn('course_id', $courseids)
-                ->groupBy('course_id')->orderBy('course_id', 'desc')->get();
-        }
     }
 
     public function courseAdminFilter()
