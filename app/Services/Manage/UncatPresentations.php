@@ -21,10 +21,11 @@ class UncatPresentations
         $videos_collection = Video::doesntHave('video_course')->orderByDesc('creation')->get();
 
         if($filterTerm) {
-            //Title
+            //Id and Title
             $videos_match_title = Video::doesntHave('video_course')
                 ->whereIn('id', $videos_collection->pluck('id')->toArray())
-                ->where('title', 'LIKE', $filterTerm ?? '')
+                ->where('id', 'LIKE', $filterTerm ?? '')
+                ->orwhere('title', 'LIKE', $filterTerm ?? '')
                 ->orWhere('title_en', 'LIKE', $filterTerm ?? '')
                 ->pluck('id')->toArray();
 
@@ -89,7 +90,8 @@ class UncatPresentations
             //Title
             $videos_match_title = Video::doesntHave('video_course')
                 ->whereIn('id', $videos_collection->pluck('id')->toArray())
-                ->where('title', 'LIKE', $filterTerm ?? '')
+                ->where('id', 'LIKE', $filterTerm ?? '')
+                ->orwhere('title', 'LIKE', $filterTerm ?? '')
                 ->orWhere('title_en', 'LIKE', $filterTerm ?? '')
                 ->pluck('id')->toArray();
 
