@@ -170,7 +170,7 @@ class DropdownFilters
 
     public function extractVideoCourses(\Illuminate\Support\Collection $videos_collection, $unfiltered_videos = [], $filterTerm)
     {
-        $filterTerm = implode($filterTerm);
+        $filterTerm = implode($filterTerm ?? []);
         $filterTerm = '%' . $filterTerm . '%';
 
         //Extract ids from collection

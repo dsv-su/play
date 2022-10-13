@@ -136,7 +136,7 @@ class ManagePresentations extends Component
         $dropdownfilter = new DropdownFilters;
 
         list ($this->videoterms, $x, $this->videotags, $this->video_courses, $this->uncat_video_courses, $x) = $dropdownfilter->performFiltering(
-            $videos, $this->filters['course'], $this->filters['term'], $this->filters['tag'], $this->filters['presenter']
+            $videos, $unfiltered_videos = [], $this->filters['course'], $this->filters['term'], $this->filters['tag'], $this->filters['presenter'], $term = []
         );
 
         //Sort the filter arrays
