@@ -51,7 +51,7 @@ class Manage extends Component
 
     public $presentations = [], $presentations_by_courseid;
     protected $dropdownfilter;
-    protected $search_query;
+    protected $search_query, $user_collection;
     protected $queryString = ['filterTerm', 'presenter', 'course', 'term', 'tag'];
 
     /**
@@ -164,9 +164,9 @@ class Manage extends Component
         $dropdownfilter = new DropdownFilters;
 
         list ($this->videoterms, $this->videopresenters, $this->videotags, $this->video_courses, $this->presentations, $this->presentations_by_courseid) = $dropdownfilter->performFiltering(
-            $videos, $this->filters['course'], $this->filters['term'], $this->filters['tag'], $this->filters['presenter'], $this->filters['filterTerm']
+            $videos, $this->user_collection, $this->filters['course'], $this->filters['term'], $this->filters['tag'], $this->filters['presenter'], $this->filters['filterTerm']
         );
-
+       
         //Sort the filter arrays
         $this->videopresenters = collect($this->videopresenters)->sort()->toArray();
         sort($this->videotags);
@@ -325,6 +325,9 @@ class Manage extends Component
                 ->orWhereIn('id', $this->video_course_ids)
                 ->pluck('id')->toArray();
 
+            //Pass collection
+            $this->user_collection = $videos_collection;
+
             $video_course_ids = VideoCourse::select('course_id')->whereIn('video_id', $videos_collection)->distinct()->pluck('course_id');
 
             //Filter after video title or description
@@ -366,6 +369,10 @@ class Manage extends Component
         } else {
             //Administrators
             $this->admin = true;
+
+            $videos_collection = Video::select('id')->pluck('id')->toArray();
+            //Pass collection
+            $this->user_collection = $videos_collection;
 
             //Filter after video title or description
             $videos_match_title = Video::where('title', 'LIKE', $filterTerm)

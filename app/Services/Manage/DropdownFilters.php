@@ -40,7 +40,7 @@ class DropdownFilters
      * @param $presenters
      * @return array
      */
-    public function performFiltering($videos = null, $designations = null, $semesters = null, $tags = null, $presenters = null, $filterTerm = null): array
+    public function performFiltering($videos = null, $unfiltered_videos = null, $designations = null, $semesters = null, $tags = null, $presenters = null, $filterTerm = null): array
     {
         if($videos) {
             foreach ($videos as $key => $video) {
@@ -89,7 +89,7 @@ class DropdownFilters
         $videotags = $this->extractTags($videos);
         $videopresenters = $this->extractPresenters($videos);
         if($videos) {
-            $video_courses = $this->extractVideoCourses($videos , $filterTerm);
+            $video_courses = $this->extractVideoCourses($videos , $unfiltered_videos, $filterTerm);
             $videos_by_course = $this->groupVideos($videos);
         } else {
             $video_courses = [];
@@ -168,7 +168,7 @@ class DropdownFilters
         return $presenters;
     }
 
-    public function extractVideoCourses(\Illuminate\Support\Collection $videos_collection, $filterTerm)
+    public function extractVideoCourses(\Illuminate\Support\Collection $videos_collection, $unfiltered_videos, $filterTerm)
     {
         $filterTerm = implode($filterTerm);
         $filterTerm = '%' . $filterTerm . '%';
@@ -182,6 +182,7 @@ class DropdownFilters
         //Filter and query course specific attributes
         return VideoCourse::with('course')
             ->whereIn('course_id', $video_course_ids)
+            ->orwhereIn('video_id', $unfiltered_videos)
             ->whereHas('course', function ($query) use ($filterTerm) {
                 $query->where('id', 'LIKE', $filterTerm)
                     ->orWhere('name', 'LIKE', $filterTerm)
