@@ -170,7 +170,7 @@ class DropdownFilters
 
     public function extractVideoCourses(\Illuminate\Support\Collection $videos_collection, $filterTerm)
     {
-
+        $filterTerm = '%' . $filterTerm . '%';
         //Extract ids from collection
         $video_ids = $videos_collection->pluck('id')->toArray();
 
@@ -191,33 +191,6 @@ class DropdownFilters
             ->groupBy('course_id')->orderBy('course_id', 'desc')
             ->get();
 
-    }
-
-    public function courseAdminFilter()
-    {
-        $videos_id = [];
-        $user = Presenter::where('username', app()->make('play_username'))->first();
-        $this->user_videos = VideoPresenter::where('presenter_id', $user->id ?? 0)->pluck('video_id')->toArray();
-
-        //Check if user is course administrator
-        $this->courseadministrator = CourseadminPermission::where('username', app()->make('play_username'))
-            ->where('permission', 'delete')
-            ->pluck('video_id')
-            ->toArray();
-
-        //Check for individual permissions settings
-        $this->individual_videos = IndividualPermission::where('username', app()->make('play_username'))->where(function ($query) {
-            $query->where('permission', 'edit')
-                ->orWhere('permission', 'delete');
-        })->pluck('video_id')->toArray();
-
-        //Check for course individual settings
-        if (count($course_user_admins = CoursesettingsUsers::where('username', app()->make('play_username'))->whereIn('permission', ['edit', 'delete'])->get()) >= 1) {
-            foreach ($course_user_admins as $course_user_admin) {
-                $videos_id[] = VideoCourse::where('course_id', $course_user_admin->course_id)->pluck('video_id');
-            }
-        }
-        $this->video_course_ids = collect($videos_id)->flatten(1)->toArray();
     }
 
     /** Group presentations by a course they belong to
