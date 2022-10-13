@@ -10,8 +10,6 @@ use App\IndividualPermission;
 use App\Presenter;
 use App\Services\Filters\VisibilityFilter;
 use App\Services\Manage\DropdownFilters;
-use App\Services\Manage\InitFilters;
-use App\Services\Manage\LoadPresentations;
 use App\Video;
 use App\VideoCourse;
 use App\VideoPresenter;
@@ -53,6 +51,7 @@ class Manage extends Component
 
     public $presentations = [], $presentations_by_courseid;
     protected $dropdownfilter;
+    protected $search_query;
     protected $queryString = ['filterTerm', 'presenter', 'course', 'term', 'tag'];
 
     /**
@@ -156,14 +155,19 @@ class Manage extends Component
      */
     public function filters()
     {
-        $videos = $this->presentations;
+        if($this->search_query) {
+            $videos = $this->search_query;
+        } else {
+            $videos = $this->presentations;
+        }
+
 
         $dropdownfilter = new DropdownFilters;
 
         list ($this->videoterms, $this->videopresenters, $this->videotags, $this->video_courses, $this->presentations, $this->presentations_by_courseid) = $dropdownfilter->performFiltering(
-            $videos, $this->filters['course'], $this->filters['term'], $this->filters['tag'], $this->filters['presenter']
+            $videos, $this->filters['course'], $this->filters['term'], $this->filters['tag'], $this->filters['presenter'], $this->filters['filterTerm']
         );
-
+        //dd($this->video_courses);
         //Sort the filter arrays
         $this->videopresenters = collect($this->videopresenters)->sort()->toArray();
         sort($this->videotags);
@@ -324,19 +328,6 @@ class Manage extends Component
 
             $video_course_ids = VideoCourse::select('course_id')->whereIn('video_id', $videos_collection)->distinct()->pluck('course_id');
 
-            //Filter course specific attributes
-            $video_course_courses = VideoCourse::select('course_id')->with('course')
-                ->whereIn('course_id', $video_course_ids)
-                ->whereHas('course', function ($query) use ($filterTerm) {
-                    $query->where('id', 'LIKE', $filterTerm)
-                        ->orwhere('name', 'LIKE', $filterTerm)->orWhere('name_en', 'like', $filterTerm)
-                        ->orWhere('designation', 'LIKE', $filterTerm)
-                        ->orWhere('semester', 'LIKE', $filterTerm)
-                        ->orWhere('year', 'LIKE', $filterTerm);
-                })
-                ->distinct()
-                ->pluck('course_id');
-
             //Filter after video title or description
             $videos_match_title = Video::whereIn('id', $videos_collection)
                 ->where('title', 'LIKE', $filterTerm)
@@ -362,16 +353,8 @@ class Manage extends Component
                 })
                 ->pluck('video_id');
 
-            //Create public course list
-            $this->video_courses = VideoCourse::select('course_id', 'video_id')->whereIn('course_id', $video_course_courses)
-                ->orWhereIn('video_id', $video_course_presenters)
-                ->orWhereIn('video_id', $video_course_tags)
-                ->orWhereIn('video_id', $videos_match_title)
-                ->groupBy('course_id')
-                ->orderBy('course_id', 'desc')
-                ->get();
-
-            $this->presentations = Video::select('id')->whereIn('id', $videos_collection)
+            $this->search_query = Video::select('id')->with('video_course.course', 'video_tag.tag', 'video_presenter.presenter')
+                ->whereIn('id', $videos_collection)
                 ->WhereIn('id', $videos_match_title)
                 ->orWhereIn('id', $video_course_presenters)
                 ->orWhereIn('id', $video_course_tags)
@@ -384,18 +367,6 @@ class Manage extends Component
         } else {
             //Administrators
             $this->admin = true;
-
-            //Filter course specific attributes
-            $video_course_courses = VideoCourse::select('course_id')->with('course')
-                ->whereHas('course', function ($query) use ($filterTerm) {
-                    $query->where('id', 'LIKE', $filterTerm)
-                        ->orwhere('name', 'LIKE', $filterTerm)->orWhere('name_en', 'like', $filterTerm)
-                        ->orWhere('designation', 'LIKE', $filterTerm)
-                        ->orWhere('semester', 'LIKE', $filterTerm)
-                        ->orWhere('year', 'LIKE', $filterTerm);
-                })
-                ->distinct()
-                ->pluck('course_id');
 
             //Filter after video title or description
             $videos_match_title = Video::where('title', 'LIKE', $filterTerm)
@@ -419,16 +390,7 @@ class Manage extends Component
                 })
                 ->pluck('video_id');
 
-            //Create public course list
-            $this->video_courses = VideoCourse::select('course_id', 'video_id')->whereIn('course_id', $video_course_courses)
-                ->orWhereIn('video_id', $video_course_presenters)
-                ->orWhereIn('video_id', $video_course_tags)
-                ->orWhereIn('video_id', $videos_match_title)
-                ->groupBy('course_id')
-                ->orderBy('course_id', 'desc')
-                ->get();
-
-            $this->presentations = Video::select('id')->with('video_course')
+            $this->search_query = Video::select('id')->with('video_course.course', 'video_tag.tag', 'video_presenter.presenter')
                 ->whereIn('id', $videos_match_title)
                 ->orWhereIn('id', $video_course_presenters)
                 ->orWhereIn('id', $video_course_tags)
@@ -455,7 +417,10 @@ class Manage extends Component
                 ->get();
         } else {
             //Administrator
-            $videocourses = VideoCourse::with('course', 'video.video_presenter.presenter')->groupBy('course_id')->orderBy('course_id', 'desc')->get();
+            $videocourses = VideoCourse::with('course')
+                ->groupBy('course_id')
+                ->orderBy('course_id', 'desc')
+                ->get();
         }
         foreach($videocourses as $vc) {
             if(\Illuminate\Support\Facades\Lang::locale() == 'swe') {
@@ -535,16 +500,16 @@ class Manage extends Component
     public function courseSettings($courses)
     {
         foreach ($courses as $course) {
-            if ($courseSettings = CoursesettingsPermissions::where('course_id', $course->course_id)->first()) {
+            if ($courseSettings = CoursesettingsPermissions::select('visibility','downloadable')->where('course_id', $course->course_id)->first()) {
                 //Visibility
                 $this->coursesetlist[$course->course_id]['visibility'] = $courseSettings->visibility;
                 //Downloadable
                 $this->coursesetlist[$course->course_id]['downloadable'] = $courseSettings->downloadable;
             }
             //Individual users
-            $this->individual_permissions[$course->course_id] = CoursesettingsUsers::where('course_id', $course->course_id)->count();
+            $this->individual_permissions[$course->course_id] = CoursesettingsUsers::select('id')->where('course_id', $course->course_id)->count();
             //Group permissions
-            $this->playback_permissions[$course->course_id] = CoursePermissions::where('course_id', $course->course_id)->first();
+            $this->playback_permissions[$course->course_id] = CoursePermissions::select('id')->where('course_id', $course->course_id)->first();
         }
     }
 
@@ -580,9 +545,9 @@ class Manage extends Component
     {
         foreach ($videos as $video) {
             //Playback
-            $this->stats_playback[$video['id']] = VideoStat::where('video_id', $video['id'])->pluck('playback')->first();
+            $this->stats_playback[$video['id']] = VideoStat::select('playback')->where('video_id', $video['id'])->pluck('playback')->first();
             //Download
-            $this->stats_download[$video['id']] = VideoStat::where('video_id', $video['id'])->pluck('download')->first();
+            $this->stats_download[$video['id']] = VideoStat::select('download')->where('video_id', $video['id'])->pluck('download')->first();
         }
     }
 
