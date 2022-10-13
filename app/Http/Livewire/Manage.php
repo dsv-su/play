@@ -51,7 +51,7 @@ class Manage extends Component
 
     public $presentations = [], $presentations_by_courseid;
     protected $dropdownfilter;
-    protected $search_query, $user_collection;
+    protected $search_query, $user_collection = [];
     protected $queryString = ['filterTerm', 'presenter', 'course', 'term', 'tag'];
 
     /**
@@ -161,12 +161,18 @@ class Manage extends Component
             $videos = $this->presentations;
         }
 
+        if(count($this->search_query ?? []) == count($this->user_collection ?? [])) {
+            $uc = $this->user_collection;
+        } else {
+            $uc = [];
+        }
+
         $dropdownfilter = new DropdownFilters;
 
         list ($this->videoterms, $this->videopresenters, $this->videotags, $this->video_courses, $this->presentations, $this->presentations_by_courseid) = $dropdownfilter->performFiltering(
-            $videos, $this->user_collection, $this->filters['course'], $this->filters['term'], $this->filters['tag'], $this->filters['presenter'], $this->filters['filterTerm']
+            $videos, $uc, $this->filters['course'], $this->filters['term'], $this->filters['tag'], $this->filters['presenter'], $this->filters['filterTerm']
         );
-       
+        //dd($this->search_query, $this->video_courses, $this->presentations, $this->user_collection);
         //Sort the filter arrays
         $this->videopresenters = collect($this->videopresenters)->sort()->toArray();
         sort($this->videotags);

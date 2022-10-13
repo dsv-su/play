@@ -168,7 +168,7 @@ class DropdownFilters
         return $presenters;
     }
 
-    public function extractVideoCourses(\Illuminate\Support\Collection $videos_collection, $unfiltered_videos, $filterTerm)
+    public function extractVideoCourses(\Illuminate\Support\Collection $videos_collection, $unfiltered_videos = [], $filterTerm)
     {
         $filterTerm = implode($filterTerm);
         $filterTerm = '%' . $filterTerm . '%';
