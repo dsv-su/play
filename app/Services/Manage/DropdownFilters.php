@@ -172,7 +172,7 @@ class DropdownFilters
     {
         $filterTerm = implode($filterTerm);
         $filterTerm = '%' . $filterTerm . '%';
-        
+
         //Extract ids from collection
         $video_ids = $videos_collection->pluck('id')->toArray();
 
@@ -182,7 +182,7 @@ class DropdownFilters
         //Filter and query course specific attributes
         return VideoCourse::with('course')
             ->whereIn('course_id', $video_course_ids)
-            ->orwhereHas('course', function ($query) use ($filterTerm) {
+            ->whereHas('course', function ($query) use ($filterTerm) {
                 $query->where('id', 'LIKE', $filterTerm)
                     ->orWhere('name', 'LIKE', $filterTerm)
                     ->orWhere('name_en', 'like', $filterTerm)

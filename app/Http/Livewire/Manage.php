@@ -161,13 +161,12 @@ class Manage extends Component
             $videos = $this->presentations;
         }
 
-
         $dropdownfilter = new DropdownFilters;
 
         list ($this->videoterms, $this->videopresenters, $this->videotags, $this->video_courses, $this->presentations, $this->presentations_by_courseid) = $dropdownfilter->performFiltering(
             $videos, $this->filters['course'], $this->filters['term'], $this->filters['tag'], $this->filters['presenter'], $this->filters['filterTerm']
         );
-        //dd($this->video_courses);
+
         //Sort the filter arrays
         $this->videopresenters = collect($this->videopresenters)->sort()->toArray();
         sort($this->videotags);
