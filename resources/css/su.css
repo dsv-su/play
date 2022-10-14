@@ -5300,6 +5300,10 @@ p.kill-p, .kill-p p {
     text-decoration: none !important;
 }
 
+.video .play-icon {
+    display: none;
+}
+
 .video .action-icons {
     position: absolute;
     display: none;
@@ -5317,6 +5321,11 @@ p.kill-p, .kill-p p {
 .video .action-icons .btn,
 .video .action-icons .btn-sm {
     border-radius: 0 !important;
+}
+
+.video:hover .play-icon {
+    display: inline-block;
+    color: white;
 }
 
 .video:hover .action-icons {

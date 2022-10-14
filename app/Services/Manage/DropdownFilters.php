@@ -11,6 +11,7 @@ use App\Video;
 use App\VideoCourse;
 use App\VideoPresenter;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 
 class DropdownFilters
@@ -89,14 +90,12 @@ class DropdownFilters
         $videotags = $this->extractTags($videos);
         $videopresenters = $this->extractPresenters($videos);
         if($videos) {
-            $video_courses = $this->extractVideoCourses($videos , $unfiltered_videos, $filterTerm);
+            $video_courses = $this->extractVideoCourses($videos , $filterTerm, $unfiltered_videos);
             $videos_by_course = $this->groupVideos($videos);
         } else {
             $video_courses = [];
             $videos_by_course = [];
         }
-
-
 
 
         return array($videoterms, $videopresenters, $videotags, $video_courses, $videos, $videos_by_course);
@@ -168,31 +167,45 @@ class DropdownFilters
         return $presenters;
     }
 
-    public function extractVideoCourses(\Illuminate\Support\Collection $videos_collection, $unfiltered_videos = [], $filterTerm)
+    public function extractVideoCourses(\Illuminate\Support\Collection $videos_collection, $filterTerm, $unfiltered_videos = [])
     {
-        $filterTerm = implode($filterTerm ?? []);
-        $filterTerm = '%' . $filterTerm . '%';
-
         //Extract ids from collection
         $video_ids = $videos_collection->pluck('id')->toArray();
 
-        //Extract and filter Video_Courses
-        $video_course_ids = VideoCourse::select('course_id')->distinct()->whereIn('video_id', $video_ids)->pluck('course_id');
+        //Check filterTerm
 
-        //Filter and query course specific attributes
-        return VideoCourse::with('course')
-            ->whereIn('course_id', $video_course_ids)
-            ->orwhereIn('video_id', $unfiltered_videos)
-            ->whereHas('course', function ($query) use ($filterTerm) {
-                $query->where('id', 'LIKE', $filterTerm)
-                    ->orWhere('name', 'LIKE', $filterTerm)
-                    ->orWhere('name_en', 'like', $filterTerm)
-                    ->orWhere('designation', 'LIKE', $filterTerm)
-                    ->orWhere('semester', 'LIKE', $filterTerm)
-                    ->orWhere('year', 'LIKE', $filterTerm);
-            })
-            ->groupBy('course_id')->orderBy('course_id', 'desc')
-            ->get();
+        if(!empty($filterTerm))  {
+
+            //Text query
+            $filterTerm = implode($filterTerm ?? []);
+            $filterTerm = '%' . $filterTerm . '%';
+
+            //Extract and filter Video_Courses
+            $video_course_ids = VideoCourse::select('course_id')->distinct()->whereIn('video_id', $video_ids)->pluck('course_id');
+
+            return VideoCourse::with('course')
+                ->whereIn('course_id', $video_course_ids)
+                ->orwhereIn('video_id', $unfiltered_videos)
+                ->whereHas('course', function ($query) use ($filterTerm) {
+                    $query->where('id', 'LIKE', $filterTerm)
+                        ->orWhere('name', 'LIKE', $filterTerm)
+                        ->orWhere('name_en', 'like', $filterTerm)
+                        ->orWhere('designation', 'LIKE', $filterTerm)
+                        ->orWhere('semester', 'LIKE', $filterTerm)
+                        ->orWhere('year', 'LIKE', $filterTerm);
+                })
+                ->groupBy('course_id')->orderBy('course_id', 'desc')
+                ->get();
+
+        } else {
+
+            //Dropdown query
+            return VideoCourse::with('course')
+                ->whereIn('video_id', $video_ids)
+                ->distinct()
+                ->groupBy('course_id')->orderBy('course_id', 'desc')
+                ->get();
+        }
 
     }
 

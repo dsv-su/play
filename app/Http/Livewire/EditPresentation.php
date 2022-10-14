@@ -193,16 +193,14 @@ class EditPresentation extends Component
 
     }
 
-    public
-    function updatedIndividuals($value)
+    public function updatedIndividuals($value)
     {
         //Checks if input is a valid sukat user
         //Not implemented
         $this->suser = preg_filter("/[^(]*\(([^)]+)\)[^()]*/", "$1", $value);
     }
 
-    public
-    function add_individual_perm()
+    public function add_individual_perm()
     {
         $this->individuals[] = '';
         $this->individuals_permission[] = '';
@@ -210,15 +208,13 @@ class EditPresentation extends Component
         $this->dispatchBrowserEvent('permissionChanged');
     }
 
-    public
-    function getDateAttribute($date)
+    public function getDateAttribute($date)
     {
         $this->date = Carbon::createFromTimestamp($date)->format('d/m/Y');
         return $this->date;
     }
 
-    public
-    function add_presenter($uid, $name)
+    public function add_presenter($uid, $name)
     {
         if (!count(array_filter($this->presenters, function ($item) use ($uid, $name) {
             return $item['uid'] == $uid && $item['name'] = $name;
@@ -238,14 +234,12 @@ class EditPresentation extends Component
         }
     }
 
-    public
-    function remove_presenter($index)
+    public function remove_presenter($index)
     {
         array_splice($this->presenters, $index, 1);
     }
 
-    public
-    function remove_user($index)
+    public function remove_user($index)
     {
         array_splice($this->individuals, $index, 1);
         $this->ipermissions = $this->ipermissions - 1;
@@ -287,8 +281,7 @@ class EditPresentation extends Component
         array_splice($this->tagids, $index, 1);
     }
 
-    public
-    function render()
+    public function render()
     {
         return view('livewire.edit-presentation');
     }

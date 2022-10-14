@@ -155,11 +155,7 @@ class Manage extends Component
      */
     public function filters()
     {
-        if($this->search_query) {
-            $videos = $this->search_query;
-        } else {
-            $videos = $this->presentations;
-        }
+        $videos = $this->search_query;
 
         if(count($this->search_query ?? []) == count($this->user_collection ?? [])) {
             $uc = $this->user_collection;
@@ -172,7 +168,7 @@ class Manage extends Component
         list ($this->videoterms, $this->videopresenters, $this->videotags, $this->video_courses, $this->presentations, $this->presentations_by_courseid) = $dropdownfilter->performFiltering(
             $videos, $uc, $this->filters['course'], $this->filters['term'], $this->filters['tag'], $this->filters['presenter'], $this->filters['filterTerm']
         );
-        //dd($this->search_query, $this->video_courses, $this->presentations, $this->user_collection);
+
         //Sort the filter arrays
         $this->videopresenters = collect($this->videopresenters)->sort()->toArray();
         sort($this->videotags);
@@ -368,10 +364,6 @@ class Manage extends Component
                 ->orWhereIn('id', $video_course_tags)
                 ->get();
 
-            //Querystring
-            $this->filters['filterTerm'] = Arr::wrap($this->filterTerm);
-            $this->filters();
-
         } else {
             //Administrators
             $this->admin = true;
@@ -381,26 +373,27 @@ class Manage extends Component
             $this->user_collection = $videos_collection;
 
             //Filter after video title or description
-            $videos_match_title = Video::where('title', 'LIKE', $filterTerm)
+            $videos_match_title = Video::select(['id', 'title', 'title_en', 'description'])->where('title', 'LIKE', $filterTerm)
                 ->orwhere('title_en', 'LIKE', $filterTerm)
                 ->orWhere('description', 'LIKE', $filterTerm)
                 ->pluck('id')->toArray();
 
             //Filter after Presenters
-            $video_course_presenters = VideoCourse::select('course_id', 'video_id')->with('course', 'video.video_presenter.presenter')
-                ->whereHas('video.video_presenter.presenter', function ($query) use ($filterTerm) {
-                    $query->where('username', 'LIKE', $filterTerm)
-                        ->orwhere('name', 'LIKE', $filterTerm);
-                })
-                ->pluck('video_id');
+            $video_course_presenters = DB::table('presenters')
+                ->join('video_presenters', 'presenters.id', '=', 'video_presenters.presenter_id')
+                ->join('videos', 'video_presenters.video_id', '=', 'videos.id')
+                ->select('videos.id','presenters.username', 'presenters.name')
+                ->where('username', 'LIKE', $filterTerm)
+                ->orwhere('name', 'LIKE', $filterTerm)
+                ->pluck('id');
 
             //Filter after Tags
-            $video_course_tags = VideoCourse::select('course_id', 'video_id')->with('video.video_tag.tag')
-                ->WhereHas('video.video_tag.tag', function ($query) use ($filterTerm) {
-                    $query->where('id', 'LIKE', $filterTerm)
-                        ->orwhere('name', 'LIKE', $filterTerm);
-                })
-                ->pluck('video_id');
+            $video_course_tags = DB::table('tags')
+                ->join('video_tags', 'tags.id', '=', 'video_tags.tag_id')
+                ->join('videos', 'video_tags.video_id', '=', 'videos.id')
+                ->select('videos.id', 'tags.name')
+                ->where('name', 'LIKE', $filterTerm)
+                ->pluck('id');
 
             $this->search_query = Video::select('id')->with('video_course.course', 'video_tag.tag', 'video_presenter.presenter')
                 ->whereIn('id', $videos_match_title)

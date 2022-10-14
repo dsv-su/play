@@ -57,7 +57,7 @@
     </div>
     <a target="_blank" rel="noopener noreferrer" href="{{ route('player', ['video' => $video]) }}">
         <div class="card-header position-relative"
-             style="background-image: @if ($video->hidden) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); width: 100%; height: 0px; object-fit: cover; background-repeat: no-repeat; background-position: 50% 50%;">
+             style="background-image: @if ($video->hidden) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); width: 100%; height: 0; object-fit: cover; background-repeat: no-repeat; background-position: 50% 50%;">
             <!-- Icons -->
             <div class="icons m-1">
                 <!-- Group Permissions icons-->
@@ -96,6 +96,16 @@
                 <div class="d-flex justify-content-center h-100">
                     <div class="d-inline alert alert-secondary m-auto" role="alert">{{ __("Hidden") }}</div>
                 </div>
+            {{--}}
+            @else
+            <!-- Play icon -->
+            <div class="d-flex justify-content-center h-100">
+                <div class="d-inline alert m-auto">
+                    <!--<i class="fa-regular fa-circle-play fa-3x play-icon"></i>-->
+                    <i class="fa-solid fa-play fa-3x play-icon"></i>
+                </div>
+            </div>
+            {{--}}
             @endif
             <p class="m-1 px-1"> {{$video->duration}} </p>
         </div>
@@ -105,7 +115,7 @@
         <div class="d-flex align-items-start">
             <div class="">
                 <h4 class="card-text font-1rem px-1 py-2">
-                    <a href="{{ route('player', ['video' => $video]) }}" class="link">{{ $video->LangTitle }}</a>
+                    <a target="_blank" rel="noopener noreferrer" href="{{ route('player', ['video' => $video]) }}" class="link">{{ $video->LangTitle }}</a>
                 </h4>
             </div>
             @if ($video->description)
