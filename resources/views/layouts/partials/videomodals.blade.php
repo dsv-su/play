@@ -20,7 +20,7 @@
                 </div>
                 <div class="form-group">
                     <label for="embedCode">{{__("Embed ilearn")}}</label>
-                    <textarea readonly class="form-control text-muted" rows="5" id="embedCode"><a target="_blank" href="{{ route('player', ['video' => $video]) }}"><img src="{{ asset($video->thumb)}}" width="560" height="315"></a></textarea>
+                    <textarea readonly class="form-control text-muted" rows="8" id="embedCode"><div style="position: relative;"><a target="_blank" href="{{ route('player', ['video' => $video]) }}"><div style="position: absolute; top: 130px; left: 255px; display: inline-block;color: white;"><i class="fa fa-play fa-5x" aria-hidden="true"></i></div><img src="{{ asset($video->thumb)}}" width="560" height="315"></a></div></textarea>
                     <small id="embbedCodeHelp"
                            class="form-text text-muted">{{ __("Use this embed code to insert the video in iLearn") }}</small>
                 </div>
