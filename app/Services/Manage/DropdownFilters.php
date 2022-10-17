@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Lang;
 class DropdownFilters
 {
     protected $user_videos, $courseadministrator, $individual_videos, $video_course_ids;
-
+    protected $vc;
 
     /** Reads GET parameters from the url.
      * @return null[]
@@ -84,7 +84,6 @@ class DropdownFilters
                 }
             }
         }
-
 
         $videoterms = $this->extractTerms($videos);
         $videotags = $this->extractTags($videos);
@@ -252,4 +251,19 @@ class DropdownFilters
             return 0;
         });
     }
+
+    public function loadVideosafterCoursid($course_id)
+    {
+        return Video::with([
+            'video_course' => function($query) {
+            $query->select('id', 'video_id', 'course_id');
+            },
+            'video_course.course' => function ($query) {
+            $query->select('id', 'name', 'name_en', 'designation');
+            }])
+            ->WhereHas('video_course.course', function ($query) use ($course_id) {
+                $query->where('id', $course_id);
+            })
+            ->get();
 }
+    }

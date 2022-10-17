@@ -41,7 +41,7 @@ class SearchController extends Controller
     public function __construct()
     {
         //For session history
-        $this->middleware('redirect-links')->except(['find', 'findTag']);
+        $this->middleware('redirect-links')->except(['find', 'findTag', 'findPerson', 'findCourse']);
     }
 
     /**

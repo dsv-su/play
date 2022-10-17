@@ -64,10 +64,8 @@ class InitFilters
     {
         $terms = array();
         foreach ($videocourses as $vc) {
-            foreach (Video::find($vc->video_id)->courses() as $course) {
-                if (!in_array($course->semester . $course->year, $terms)) {
-                    $terms[] = $course->semester . $course->year;
-                }
+            if (!in_array($vc->course->semester . $vc->course->year, $terms)) {
+                $terms[] = $vc->course->semester . $vc->course->year;
             }
         }
         /*Sorting
