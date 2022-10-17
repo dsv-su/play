@@ -210,6 +210,13 @@ class EditController extends Controller
 
         Cache::flush();
 
-        return redirect(session('links')[2])->with('message', __("Presentation successfully updated"));
+        //return redirect(session('links')[2])->with('message', __("Presentation successfully updated"));
+
+        if(count(session('links') ?? []) <= 3) {
+            return redirect()->route('home')->with('message', __("Presentation successfully updated"));
+        } else {
+            return redirect(session('links')[2])->with('message', __("Presentation successfully updated"));
+        }
+
     }
 }

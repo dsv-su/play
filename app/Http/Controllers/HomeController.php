@@ -15,6 +15,11 @@ use Illuminate\Support\Facades\Cache;
 class HomeController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('redirect-links');
+    }
+
     public function index(DaisyIntegration $daisy, VisibilityFilter $visibility)
     {
         $data['permissions'] = VideoPermission::all();

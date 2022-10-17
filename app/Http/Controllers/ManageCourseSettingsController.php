@@ -186,7 +186,12 @@ class ManageCourseSettingsController extends Controller
             $coursesettings_permissions->save();
         }
 
-        return redirect(session('links')[2])->with('success', true)->with('message', __('The course was successfully updated'));
+        if(count(session('links') ?? []) <= 3) {
+            return redirect()->route('home')->with('success', true)->with('message', __('The course was successfully updated'));
+        } else {
+            return redirect(session('links')[2])->with('success', true)->with('message', __('The course was successfully updated'));
+        }
+
     }
 
     private function updateCourse($course_id)
