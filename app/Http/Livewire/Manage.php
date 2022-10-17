@@ -180,7 +180,7 @@ class Manage extends Component
 
             //Init state
             $this->adminInit = true;
-            $this->createAdminSelect();
+            //$this->createAdminSelect();
 
         } else {
             $this->adminInit = false;
@@ -399,7 +399,7 @@ class Manage extends Component
                 $this->video_courses = VideoCourse::select('id','course_id')->groupBy('course_id')->distinct()->with('course','video.video_tag.tag')->orderBy('course_id', 'desc')->get();
 
                 //Disable courselist
-                //$this->show_course_list = false;
+                $this->show_course_list = false;
 
 
             } else {
