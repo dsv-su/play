@@ -509,17 +509,23 @@ class Manage extends Component
         $this->presentations_by_courseid = [];
         foreach($vcs as $vc) {
             //Tags
-            foreach($vc->video->video_tag as $vt) {
-                if (!in_array($vt->tag->name, $this->videotags)) {
-                    $this->videotags[] = $vt->tag->name;
+            if($vc->video->video_tag) {
+                foreach($vc->video->video_tag as $vt) {
+                    if (!in_array($vt->tag->name, $this->videotags)) {
+                        $this->videotags[] = $vt->tag->name;
+                    }
                 }
             }
+
             //Presenter
-            foreach($vc->video->video_presenter as $vp) {
-                if (!in_array($vp->presenter->username, $this->videopresenters)) {
-                    $this->videopresenters[$vp->presenter->username] = $vp->presenter->name;
+            if($vc->video->video_presenter) {
+                foreach($vc->video->video_presenter as $vp) {
+                    if (!in_array($vp->presenter->username, $this->videopresenters)) {
+                        $this->videopresenters[$vp->presenter->username] = $vp->presenter->name;
+                    }
                 }
             }
+
             //Semesters
             if (!in_array($vc->course->semester . $vc->course->year, $this->videoterms)) {
                 $this->videoterms[] = $vc->course->semester . $vc->course->year;
