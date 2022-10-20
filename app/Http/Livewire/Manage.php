@@ -180,7 +180,7 @@ class Manage extends Component
 
             //Init state
             $this->adminInit = true;
-            //$this->createAdminSelect();
+            $this->createAdminSelect();
 
         } else {
             $this->adminInit = false;
@@ -505,7 +505,6 @@ class Manage extends Component
             }
         ])
             ->get();
-
         $this->presentations_by_courseid = [];
         foreach($vcs as $vc) {
             //Tags
