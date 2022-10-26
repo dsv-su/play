@@ -52,11 +52,15 @@
                                                    href="{{route('manual_admin_erase', $manual_presentation->id)}}">Erase</a>
                                 </td>
                             @elseif($manual_presentation->status == 'pending')
-                                <td><a role="button" class="btn btn-warning btn-sm"
+                                <td>
+                                    <a role="button" class="btn btn-warning btn-sm"
                                        href="{{route('manual_admin_erase', $manual_presentation->id)}}">Erase</a>
+                                    <a role="button" class="btn btn-danger btn-sm"
+                                       href="{{route('upload_store', $manual_presentation->id)}}">Resend</a>
                                 </td>
                             @elseif($manual_presentation->status == 'notified')
-                                <td><a role="button" class="btn btn-info btn-sm"
+                                <td>
+                                    <a role="button" class="btn btn-info btn-sm"
                                        href="{{route('manual_admin_unregister', $manual_presentation->id)}}">Unregister</a>
                                 </td>
                             @elseif($manual_presentation->status == 'sent' or $manual_presentation->status == 'init')
