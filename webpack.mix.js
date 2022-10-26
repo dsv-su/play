@@ -26,7 +26,7 @@ mix.copy('node_modules/@fortawesome/fontawesome-free/webfonts/*', 'public/webfon
 mix.scripts([
     //'resources/js/app.js',
     'node_modules/jquery/dist/jquery.min.js',
-    'node_modules/@popperjs/core/dist/umd/popper.min.js',
+    //'node_modules/@popperjs/core/dist/umd/popper.min.js',
     'node_modules/bootstrap/dist/js/bootstrap.bundle.js',
     'resources/js/su.js',
     'node_modules/corejs-typeahead/dist/typeahead.bundle.js',
