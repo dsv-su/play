@@ -40,7 +40,12 @@
         <div id="headingOne">
             <h2 class="col mt-4" style="line-height: 1.5em;">
                 <span class="badge badge-primary ml-2 mb-2" data-toggle="tooltip" title="{{__("Number of presentations")}}">{{$uncatcounter}}</span>
-                <span style="color:blue;">{{__("Uncategorized presentations")}}</span>
+                @if($admin)
+                    <span style="color:blue;">{{__("Uncategorized presentations")}}</span>
+                @else
+                    <span style="color:blue;">{{__("Presentations")}}</span>
+                @endif
+
             </h2>
             <!-- Check all -->
             <div class="form-check">

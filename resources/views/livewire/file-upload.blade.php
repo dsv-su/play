@@ -49,7 +49,6 @@
                         </p>
                         <div class="form-group">
                             <input type="file" class="form-control-file"
-                                   onchange="if(this.files[0].size > '100000000'){ event.stopImmediatePropagation(); alert('File uploads larger than 100MB are currently not supported. Please contact Helpdesk!') }"
                                    wire:model="files" id="{{ rand() }}" accept="video/*" multiple/>
 
                             @error('files.*')

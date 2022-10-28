@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Services\Filters\VisibilityFilter;
 use App\Services\Manage\DropdownFilters;
+use App\Services\Manage\MyPresentations;
 use App\Services\Manage\UncatPresentations;
 use App\VideoStat;
 use Illuminate\Contracts\Foundation\Application;
@@ -28,6 +29,7 @@ class ManagePresentations extends Component
     public $presentations;
     public $page;
     public $checkAll, $checked_videos, $allChecked;
+    public $admin;
 
     protected $queryString = ['filterTerm', 'presenter', 'tag'];
 
@@ -53,9 +55,11 @@ class ManagePresentations extends Component
             if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
                 //Uploader
                 $this->uploaderManage();
+                $this->admin = false;
             } else {
                 //Administrator
                 $this->adminManage();
+                $this->admin = true;
             }
         }
 
@@ -155,8 +159,13 @@ class ManagePresentations extends Component
 
         $this->filters();
 
-        //Uncategorized presentations
-        $this->uncat_video_courses = UncatPresentations::my_uncat_video_course_presenter(app()->make('play_username'), $selected_presenter);
+        //Filter presentations
+        if($this->admin) {
+            $this->uncat_video_courses = UncatPresentations::my_uncat_video_course_presenter(app()->make('play_username'), $selected_presenter);
+        } else {
+            $this->uncat_video_courses = MyPresentations::my_uncat_video_course_presenter(app()->make('play_username'), $selected_presenter);
+        }
+
 
         $this->prepareRendering();
         return redirect(session('links')[0]);
@@ -170,8 +179,12 @@ class ManagePresentations extends Component
 
         $this->filters();
 
-        //Uncategorized presentations
-        $this->uncat_video_courses = UncatPresentations::my_uncat_video_course_tag(app()->make('play_username'), $selected_tag);
+        //Filter presentations
+        if($this->admin) {
+            $this->uncat_video_courses = UncatPresentations::my_uncat_video_course_tag(app()->make('play_username'), $selected_tag);
+        } else {
+            $this->uncat_video_courses = MyPresentations::my_uncat_video_course_tag(app()->make('play_username'), $selected_tag);
+        }
 
         $this->prepareRendering();
         return redirect(session('links')[0]);
@@ -179,8 +192,8 @@ class ManagePresentations extends Component
 
     public function uploaderManage()
     {
-        //Uncat videos
-        $this->uncat_video_courses = UncatPresentations::my_uncat_video_course(app()->make('play_username'));
+        //Users presentations
+        $this->uncat_video_courses = MyPresentations::my_uncat_video_course(app()->make('play_username'));
         $this->loadUncat();
         $this->createPresenterSelect();
         $this->filters();
@@ -190,7 +203,7 @@ class ManagePresentations extends Component
 
     public function adminManage()
     {
-        //Uncat videos
+        //Uncat presentations
         $this->uncat_video_courses = UncatPresentations::unfiltered_uncat_video_course();
         $this->loadUncat();
         $this->createPresenterSelect();
@@ -201,7 +214,7 @@ class ManagePresentations extends Component
     public function createPresenterSelect()
     {
         if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
-            $videos = UncatPresentations::my_uncat_video_course(app()->make('play_username'));
+            $videos = MyPresentations::my_uncat_video_course(app()->make('play_username'));
             foreach($videos as $video) {
                 foreach ($video->presenters() as $presenter) {
                     $this->videopresenters[$presenter->username] = $presenter->name;
@@ -224,10 +237,10 @@ class ManagePresentations extends Component
         $filterTerm = '%' . $this->filterTerm . '%';
         $this->searchTerm = $filterTerm;
 
-        //Filters uncategorized presentations
+        //Filters presentations through text input
         if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
             //Not administrator
-            $this->uncat_video_courses = UncatPresentations::my_uncat_video_course(app()->make('play_username'), $filterTerm);
+            $this->uncat_video_courses = MyPresentations::my_uncat_video_course(app()->make('play_username'), $filterTerm);
         } else {
             //Administrator
             $this->uncat_video_courses = UncatPresentations::unfiltered_uncat_video_course($filterTerm);
