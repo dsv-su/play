@@ -8,63 +8,61 @@ use App\Tag;
 use App\Video;
 use App\VideoPresenter;
 use App\VideoTag;
+use Illuminate\Support\Facades\DB;
 
 class MyPresentations
 {
     public static function IsNullOrEmptyString($str): bool
     {
-        return ($str === '%%' || trim($str) === '% %');
+        return ($str === '%%' || trim($str) === '% %' || $str == null);
     }
 
-    /*public static function unfiltered_uncat_video_course($filterTerm = null)
+    public static function unfiltered_uncat_video_course($filterTerm = null)
     {
-        $videos_collection = Video::doesntHave('video_course')->orderByDesc('creation')->get();
+        /***
+         * Administrator Manage
+         **/
 
-        if($filterTerm) {
+        if(self::IsNullOrEmptyString($filterTerm)) {
+
+            return Video::orderByDesc('creation')
+                ->take(100)->get();
+
+        } else {
+
             //Id and Title
-            $videos_match_title = Video::doesntHave('video_course')
-                ->whereIn('id', $videos_collection->pluck('id')->toArray())
-                ->where('id', 'LIKE', $filterTerm ?? '')
+            $videos_match_title = Video::where('id', 'LIKE', $filterTerm ?? '')
                 ->orwhere('title', 'LIKE', $filterTerm ?? '')
                 ->orWhere('title_en', 'LIKE', $filterTerm ?? '')
                 ->pluck('id')->toArray();
 
             //Presenter
-            $videos_match_presenter = Video::doesntHave('video_course')
-                ->whereIn('id', $videos_collection->pluck('id')->toArray())
-                ->with('video_presenter.presenter')
+            $videos_match_presenter = Video::with('video_presenter.presenter')
                 ->whereHas('video_presenter.presenter', function ($query) use ($filterTerm) {
                     $query->where('username', 'LIKE', $filterTerm ?? '')
                         ->orwhere('name', 'LIKE', $filterTerm ?? '');
                 })->pluck('id')->toArray();
 
             //Tags
-            $videos_match_tag = Video::doesntHave('video_course')
-                ->whereIn('id', $videos_collection->pluck('id')->toArray())
-                ->with('video_tag.tag')
+            $videos_match_tag = Video::with('video_tag.tag')
                 ->whereHas('video_tag.tag', function ($query) use ($filterTerm) {
                     $query->where('name', 'LIKE', $filterTerm ?? '');
                 })->pluck('id')->toArray();
 
             //Description
-            $videos_match_description = Video::doesntHave('video_course')
-                ->whereIn('id', $videos_collection->pluck('id')->toArray())
-                ->where('description', 'LIKE', $filterTerm ?? '')
+            $videos_match_description = Video::where('description', 'LIKE', $filterTerm ?? '')
                 ->pluck('id')->toArray();
 
             //Combine queries
 
-            return Video::doesntHave('video_course')
-                ->whereIn('id', $videos_match_title)
+            return Video::whereIn('id', $videos_match_title)
                 ->orWhereIn('id', $videos_match_presenter)
                 ->orWhereIn('id', $videos_match_tag)
                 ->orWhereIn('id', $videos_match_description)
                 ->latest('creation')->get();
-
-        } else {
-            return $videos_collection;
         }
-    }*/
+
+    }
 
     public static function my_uncat_video_course($user, $filterTerm = null)
     {
@@ -85,7 +83,7 @@ class MyPresentations
             ->orderByDesc('creation')
             ->get();
 
-        if($filterTerm) {
+        if(!self::IsNullOrEmptyString($filterTerm)) {
 
             //Title
             $videos_match_title = Video::with('video_course')

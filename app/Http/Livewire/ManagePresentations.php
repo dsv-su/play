@@ -6,6 +6,7 @@ use App\Services\Filters\VisibilityFilter;
 use App\Services\Manage\DropdownFilters;
 use App\Services\Manage\MyPresentations;
 use App\Services\Manage\UncatPresentations;
+use App\Video;
 use App\VideoStat;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
@@ -27,16 +28,18 @@ class ManagePresentations extends Component
     public $filter, $filterTerm;
     public $searchTerm;
     public $presentations;
-    public $page;
+    //public $page;
     public $checkAll, $checked_videos, $allChecked;
     public $admin;
+    public $uncat_video_courses;
+    public $admin_total;
 
     protected $queryString = ['filterTerm', 'presenter', 'tag'];
 
-    public function mount($page)
+    public function mount()
     {
         //Redirect
-        $this->page = $page;
+        //$this->page = $page;
 
         //Initial default settings
         $this->view = 'presenters';
@@ -54,12 +57,12 @@ class ManagePresentations extends Component
             //Redirect depending on role
             if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
                 //Uploader
-                $this->uploaderManage();
                 $this->admin = false;
+                $this->uploaderManage();
             } else {
                 //Administrator
-                $this->adminManage();
                 $this->admin = true;
+                $this->adminManage();
             }
         }
 
@@ -135,19 +138,20 @@ class ManagePresentations extends Component
 
     public function filters()
     {
-        $videos = $this->uncat_video_courses;
+        if(!$this->admin) {
+            $videos = $this->uncat_video_courses;
+            $dropdownfilter = new DropdownFilters;
 
-        $dropdownfilter = new DropdownFilters;
+            list ($this->videoterms, $x, $this->videotags, $this->video_courses, $this->uncat_video_courses, $x) = $dropdownfilter->performFiltering(
+                $videos, $unfiltered_videos = [], $this->filters['course'], $this->filters['term'], $this->filters['tag'], $this->filters['presenter'], $term = []
+            );
 
-        list ($this->videoterms, $x, $this->videotags, $this->video_courses, $this->uncat_video_courses, $x) = $dropdownfilter->performFiltering(
-            $videos, $unfiltered_videos = [], $this->filters['course'], $this->filters['term'], $this->filters['tag'], $this->filters['presenter'], $term = []
-        );
-
-        //Sort the filter arrays
-        $this->videopresenters = collect($this->videopresenters)->sort()->toArray();
-        sort($this->videotags);
-        $this->injectToSession();
-        $this->loadUncat();
+            //Sort the filter arrays
+            $this->videopresenters = collect($this->videopresenters)->sort()->toArray();
+            sort($this->videotags);
+            $this->injectToSession();
+            $this->loadUncat();
+        }
 
     }
 
@@ -203,11 +207,14 @@ class ManagePresentations extends Component
 
     public function adminManage()
     {
-        //Uncat presentations
-        $this->uncat_video_courses = UncatPresentations::unfiltered_uncat_video_course();
+        //Presentations
+        $this->uncat_video_courses = MyPresentations::unfiltered_uncat_video_course();
+        $this->admin_total = Video::count();
+
         $this->loadUncat();
-        $this->createPresenterSelect();
-        $this->filters();
+        //Disabled while refactoring
+        //$this->createPresenterSelect();
+        //$this->filters();
         $this->prepareRendering();
     }
 
@@ -222,7 +229,9 @@ class ManagePresentations extends Component
             }
 
         } else {
-            $videos = UncatPresentations::unfiltered_uncat_video_course();
+
+            $videos = MyPresentations::unfiltered_uncat_video_course();
+
             foreach($videos as $video) {
                 foreach ($video->presenters() as $presenter) {
                     $this->videopresenters[$presenter->username] = $presenter->name;
@@ -239,19 +248,27 @@ class ManagePresentations extends Component
 
         //Filters presentations through text input
         if (app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff') {
+
             //Not administrator
             $this->uncat_video_courses = MyPresentations::my_uncat_video_course(app()->make('play_username'), $filterTerm);
+
+            //Count presentations
+            $this->countUncatPresentations($this->uncat_video_courses);
+
         } else {
+
             //Administrator
-            $this->uncat_video_courses = UncatPresentations::unfiltered_uncat_video_course($filterTerm);
+            $this->admin = true;
+            $this->uncat_video_courses = MyPresentations::unfiltered_uncat_video_course($filterTerm);
+
+            //Count presentations
+            $this->countUncatPresentations($this->uncat_video_courses);
         }
 
         //Querystring
         $this->filters['filterTerm'] = Arr::wrap($this->filterTerm);
         $this->filters();
 
-        //Counter for uncategorized presentations
-        $this->countUncatPresentations($this->uncat_video_courses);
         //Render filtered collection
         $this->loadUncat();
     }
