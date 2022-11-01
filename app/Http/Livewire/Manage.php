@@ -412,8 +412,9 @@ class Manage extends Component
                 $this->user_collection = $videos_collection;
 
                 //Filter after video title or description
-                $videos_match_title = Video::select(['id', 'title', 'title_en', 'description'])->where('title', 'LIKE', $filterTerm)
-                    ->orwhere('title_en', 'LIKE', $filterTerm)
+                $videos_match_title = Video::select(['id', 'title', 'title_en', 'description'])->where('id', 'LIKE', $filterTerm)
+                    ->orWhere('title', 'LIKE', $filterTerm)
+                    ->orWhere('title_en', 'LIKE', $filterTerm)
                     ->orWhere('description', 'LIKE', $filterTerm)
                     ->pluck('id')->toArray();
 
