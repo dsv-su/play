@@ -22,7 +22,7 @@ class ManagePresentations extends Component
     public $grid, $list, $table;
     public $videoformat = '';
     public $videopresenters = [], $videoterms = [], $videotags = [];
-    public $presenter, $semester, $term, $tag;
+    public $presenter, $semester, $term, $tag, $filter_presenter, $filter_term, $filter_tag;
     public $view;
     public $counter, $uncatcounter;
     public $uncat_videos = [];
@@ -36,7 +36,7 @@ class ManagePresentations extends Component
     public $uncat_video_courses;
     public $admin_total;
 
-    protected $queryString = ['filterTerm', 'presenter', 'tag'];
+    protected $queryString = ['filterTerm', 'presenter', 'tag', 'term'];
 
     public function mount($page)
     {
@@ -136,9 +136,8 @@ class ManagePresentations extends Component
     public function resetDropdown()
     {
         $this->reset('videopresenters');
+        $this->reset('videoterms');
         $this->reset('videotags');
-        $this->presenter = [];
-        $this->tag = [];
     }
 
     public function filter()
@@ -158,6 +157,7 @@ class ManagePresentations extends Component
         //Sort the filter arrays
         $this->videopresenters = collect($this->videopresenters)->sort()->toArray();
         sort($this->videotags);
+        krsort($this->videoterms);
         $this->injectToSession();
         $this->loadUncat();
     }
@@ -273,7 +273,7 @@ class ManagePresentations extends Component
                     $this->videoterms[] = $term->course->semester . $term->course->year;
                 }
             }
-            $this->videoterms = collect($this->videoterms)->sort()->toArray();
+            //$this->videoterms = collect($this->videoterms)->sort()->toArray();
         }
     }
 
