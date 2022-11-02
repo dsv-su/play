@@ -2,10 +2,12 @@
 
 namespace App\Services\Manage;
 
+use App\Course;
 use App\IndividualPermission;
 use App\Presenter;
 use App\Tag;
 use App\Video;
+use App\VideoCourse;
 use App\VideoPresenter;
 use App\VideoTag;
 use Illuminate\Support\Facades\DB;
@@ -17,49 +19,97 @@ class MyPresentations
         return ($str === '%%' || trim($str) === '% %' || $str == null);
     }
 
-    public static function unfiltered_uncat_video_course($filterTerm = null)
+    public static function unfiltered_uncat_video_course($dropdownfilter = null, $filterTerm = null)
     {
         /***
          * Administrator Manage
          **/
 
+        $videos_collection = [];
+
+        if($videos_collection = self::filterHandler($dropdownfilter)) {
+            $videos_collection = $videos_collection->pluck('id')->toArray();
+        }
+
         if(self::IsNullOrEmptyString($filterTerm)) {
 
             return Video::orderByDesc('creation')
-                ->take(100)->get();
+                ->take(10)->get();
 
         } else {
 
-            //Id and Title
-            $videos_match_title = Video::where('id', 'LIKE', $filterTerm ?? '')
-                ->orwhere('title', 'LIKE', $filterTerm ?? '')
-                ->orWhere('title_en', 'LIKE', $filterTerm ?? '')
-                ->pluck('id')->toArray();
+            if($videos_collection) {
+                //Dropdown collection exist
+                //Id and Title
+                $videos_match_title = Video::whereIn('id', $videos_collection)
+                    ->where('id', 'LIKE', $filterTerm ?? '')
+                    ->orwhere('title', 'LIKE', $filterTerm ?? '')
+                    ->orWhere('title_en', 'LIKE', $filterTerm ?? '')
+                    ->pluck('id')->toArray();
 
-            //Presenter
-            $videos_match_presenter = Video::with('video_presenter.presenter')
-                ->whereHas('video_presenter.presenter', function ($query) use ($filterTerm) {
-                    $query->where('username', 'LIKE', $filterTerm ?? '')
-                        ->orwhere('name', 'LIKE', $filterTerm ?? '');
-                })->pluck('id')->toArray();
+                //Presenter
+                $videos_match_presenter = Video::whereIn('id', $videos_collection)
+                    ->with('video_presenter.presenter')
+                    ->whereHas('video_presenter.presenter', function ($query) use ($filterTerm) {
+                        $query->where('username', 'LIKE', $filterTerm ?? '')
+                            ->orwhere('name', 'LIKE', $filterTerm ?? '');
+                    })->pluck('id')->toArray();
 
-            //Tags
-            $videos_match_tag = Video::with('video_tag.tag')
-                ->whereHas('video_tag.tag', function ($query) use ($filterTerm) {
-                    $query->where('name', 'LIKE', $filterTerm ?? '');
-                })->pluck('id')->toArray();
+                //Tags
+                $videos_match_tag = Video::whereIn('id', $videos_collection)
+                    ->with('video_tag.tag')
+                    ->whereHas('video_tag.tag', function ($query) use ($filterTerm) {
+                        $query->where('name', 'LIKE', $filterTerm ?? '');
+                    })->pluck('id')->toArray();
 
-            //Description
-            $videos_match_description = Video::where('description', 'LIKE', $filterTerm ?? '')
-                ->pluck('id')->toArray();
+                //Description
+                $videos_match_description = Video::whereIn('id', $videos_collection)
+                    ->where('description', 'LIKE', $filterTerm ?? '')
+                    ->pluck('id')->toArray();
 
-            //Combine queries
+                //Combine queries
 
-            return Video::whereIn('id', $videos_match_title)
-                ->orWhereIn('id', $videos_match_presenter)
-                ->orWhereIn('id', $videos_match_tag)
-                ->orWhereIn('id', $videos_match_description)
-                ->latest('creation')->get();
+                return Video::whereIn('id', $videos_collection)
+                    ->whereIn('id', $videos_match_title)
+                    ->orWhereIn('id', $videos_match_presenter)
+                    ->orWhereIn('id', $videos_match_tag)
+                    ->orWhereIn('id', $videos_match_description)
+                    ->latest('creation')->get();
+
+            } else {
+
+                //Id and Title
+                $videos_match_title = Video::where('id', 'LIKE', $filterTerm ?? '')
+                    ->orwhere('title', 'LIKE', $filterTerm ?? '')
+                    ->orWhere('title_en', 'LIKE', $filterTerm ?? '')
+                    ->pluck('id')->toArray();
+
+                //Presenter
+                $videos_match_presenter = Video::with('video_presenter.presenter')
+                    ->whereHas('video_presenter.presenter', function ($query) use ($filterTerm) {
+                        $query->where('username', 'LIKE', $filterTerm ?? '')
+                            ->orwhere('name', 'LIKE', $filterTerm ?? '');
+                    })->pluck('id')->toArray();
+
+                //Tags
+                $videos_match_tag = Video::with('video_tag.tag')
+                    ->whereHas('video_tag.tag', function ($query) use ($filterTerm) {
+                        $query->where('name', 'LIKE', $filterTerm ?? '');
+                    })->pluck('id')->toArray();
+
+                //Description
+                $videos_match_description = Video::where('description', 'LIKE', $filterTerm ?? '')
+                    ->pluck('id')->toArray();
+
+                //Combine queries
+
+                return Video::whereIn('id', $videos_match_title)
+                    ->orWhereIn('id', $videos_match_presenter)
+                    ->orWhereIn('id', $videos_match_tag)
+                    ->orWhereIn('id', $videos_match_description)
+                    ->latest('creation')->get();
+            }
+
         }
 
     }
@@ -197,6 +247,58 @@ class MyPresentations
 
         return Video::whereIn('id', $filtered)->get();
 
+    }
+
+    public static function adminPresenter($selected_presenter = [])
+    {
+        $selected = Presenter::whereIn('username', $selected_presenter)->pluck('id')->toArray();
+        $filtered = VideoPresenter::whereIn('presenter_id', $selected)->pluck('video_id')->toArray();
+        return Video::whereIn('id', $filtered)->get();
+
+    }
+
+    public static function adminTerm($selected_term = [])
+    {
+        $term = array_map(function($semester) { return substr($semester, 0, 2); }, $selected_term );
+        $year = array_map(function($year) { return substr($year, 2, 4); }, $selected_term );
+
+        $selected = Course::whereIn('semester', $term)->whereIn('year', $year)->pluck('id')->toArray();
+        $filtered = VideoCourse::whereIn('course_id', $selected)->pluck('video_id')->toArray();
+        return Video::whereIn('id', $filtered)->get();
+
+    }
+
+    public static function adminTag($selected_tag = [])
+    {
+        $selected = Tag::whereIn('name', $selected_tag)->pluck('id')->toArray();
+        $filtered = VideoTag::whereIn('tag_id', $selected)->pluck('video_id')->toArray();
+        return Video::whereIn('id', $filtered)->get();
+
+    }
+
+    public static function filterHandler($filters)
+    {
+        if($filters) {
+            foreach(array_filter($filters) as $key => $filter) {
+                if($filter) {
+                    switch($key) {
+                        case('presenter'):
+                            return self::adminPresenter($filter);
+                            break;
+
+                        case('tag'):
+                            return self::adminTag($filter);
+                            break;
+
+                        case('term');
+                            return self::adminTerm($filter);
+                            break;
+                    }
+
+                }
+            }
+        }
+        return false;
     }
 
 }

@@ -707,6 +707,6 @@ class Manage extends Component
 
     public function IsNullOrEmptyString($str): bool
     {
-        return ($str === '%%' || trim($str) === '% %');
+        return ($str === '%%' || trim($str) === '% %' || $str == null);
     }
 }
