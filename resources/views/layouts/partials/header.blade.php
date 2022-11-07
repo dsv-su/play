@@ -176,7 +176,6 @@
                 @endif
             </div>
             <!-- Lang localization -->
-
             <div class="align-middle ml-auto my-auto">
                 <nav class="navbar navbar-expand-lg container">
                     <div class="collapse navbar-collapse" id="navbarToggler">
@@ -209,6 +208,30 @@
                 </nav>
             </div>
             <!-- end Lang localization -->
+            <!-- Help manual -->
+            <div class="align-middle ml-auto my-auto">
+                <span class="badge badge-primary ml-2 mb-2" data-toggle="tooltip" title="{{__("Help")}}">
+                    <a @if(app()->make('play_faq') == false)
+                       href="{{route('faq')}}"
+                       @else
+                       href="{{ app()->make('play_faq_url') }}"
+                        @endif
+                        >
+                        {{--}}
+                        <i class="fa-solid fa-question"></i>
+                        {{--}}
+                        <button type="button" class="hamburger animated fadeInLeft is-closed">
+                            <span class="hamb-top"></span>
+                            <span class="hamb-middle"></span>
+                            <span class="hamb-bottom"></span>
+                        </button>
+
+                    </a>
+                </span>
+            </div>
+            <div class="align-middle my-auto">
+                {{__("Help")}}
+            </div>
         </nav>
 
         <nav class="d-lg-none d-flex align-items-center ml-auto" aria-label="Huvudmeny">

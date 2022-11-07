@@ -23,6 +23,8 @@ Route::get('/presentation/{id}', 'MultiplayerController@presentation')->middlewa
 //Protected routes
 Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     Route::get('/', 'HomeController@index')->name('home');
+
+    //Language
     Route::get('lang/{lang}', 'LocalizationController@index')->name('language');
 
     //View
@@ -100,6 +102,9 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
 
     //Video format
     Route::post('/updateVideoFormat', 'PlayController@updateVideoFormat')->name('updateVideoFormat');
+
+    //FAQ
+    Route::get('/faq', 'FAQController@index')->name('faq');
 
     //Admin
     Route::prefix('admin/')->group(function () {
