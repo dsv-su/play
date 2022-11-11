@@ -387,6 +387,7 @@ class Manage extends Component
                 ->WhereIn('id', $videos_match_title)
                 ->orWhereIn('id', $video_course_presenters)
                 ->orWhereIn('id', $video_course_tags)
+                ->latest('creation')
                 ->get();
 
         } else {
@@ -439,6 +440,7 @@ class Manage extends Component
                     ->whereIn('id', $videos_match_title)
                     ->orWhereIn('id', $video_course_presenters)
                     ->orWhereIn('id', $video_course_tags)
+                    ->latest('creation')
                     ->get();
                 //end filter
             }
