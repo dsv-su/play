@@ -4,4 +4,6 @@
     <p class="lead-light txt-blok-3">{{__("DSVPLAY is a platform where DSV students and staff can upload, edit, search and play recordings of lectures and seminars held at SU or own produced material. In the platform these are called presentations.")}}
     </p>
 </article>
+<br>
+<br>
 

@@ -9,4 +9,5 @@
         <li>{{__("COURSE ADMIN: navigate & play, upload, edit presentation settings and edit course settings")}}</li>
     </ul>
 </article>
-
+<br>
+<br>
