@@ -262,5 +262,16 @@
     "Select for bulkedit": "Välj för massredigering",
     "of": "av",
     "Help": "Hjälp",
-    "Here we have collected instructions on some of the most important functions.": "Här har vi samlat instruktioner om några av de viktigaste funktionerna."
+    "Manual and guides": "Manual och guider",
+    "Here we have collected instructions on some of the most important functions.": "Här har vi samlat instruktioner om några av de viktigaste funktionerna.",
+    "What is DSVPlay?": "Vad är DSVPlay?",
+    "DSVPLAY is a platform where DSV students and staff can upload, edit, search and play recordings of lectures and seminars held at SU or own produced material. In the platform these are called presentations.": "DSVPLAY är en plattform där DSV-studenter och personal kan ladda upp, redigera, söka och spela upp inspelningar av föreläsningar och seminarier som hålls på SU eller egenproducerat material. I plattformen kallas det för presentationer.",
+    "Language": "Språk",
+    "On the top right of the header on the start page you can choose whether the page is displayed in Swedish or English.": "Längst upp till höger i navigationen på startsidan kan du välja om sidan ska visas på svenska eller engelska.",
+    "Roles and permissions": "Roller och behörigheter",
+    "When you log in the DSVPLAY platform will know what your role is. There are four different roles for DSVPLAY users with varying permissions:": "När du loggar in kommer DSVPLAY-plattformen att veta vad din roll är. Det finns fyra olika roller för DSVPLAY-användare med olika behörigheter:",
+    "STUDENT: navigate & play": "STUDENT: navigera och spela upp",
+    "STAFF: navigate & play": "PERSONAL: navigera och spela upp",
+    "UPLOADER: navigate & play, upload and edit presentation settings": "UPPLADDARE: navigera och spela upp, ladda upp och redigera presentationsinställningar",
+    "COURSE ADMIN: navigate & play, upload, edit presentation settings and edit course settings": "KURSADMIN: navigera och spela upp, ladda upp, redigera presentationsinställningar och redigera kursinställningar"
 }

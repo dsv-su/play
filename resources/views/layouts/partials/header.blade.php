@@ -217,11 +217,9 @@
                        href="{{ app()->make('play_faq_url') }}"
                         @endif
                         >
-                        {{--}}
-                        <i class="fa-solid fa-question"></i>
-                        {{--}}
+
                         <button type="button" class="hamburger animated fadeInLeft is-closed">
-                            <span class="hamb-top"></span>
+                            <span class="hamb-top"><i class="fa-solid fa-angle-right fa-2x"></i></span>
                             <span class="hamb-middle"></span>
                             <span class="hamb-bottom"></span>
                         </button>
@@ -229,9 +227,11 @@
                     </a>
                 </span>
             </div>
+
             <div class="align-middle my-auto">
                 {{__("Help")}}
             </div>
+
         </nav>
 
         <nav class="d-lg-none d-flex align-items-center ml-auto" aria-label="Huvudmeny">

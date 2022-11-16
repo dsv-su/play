@@ -486,7 +486,7 @@ button:focus {
     margin: 0 auto;
     float: none;
     display: table;
-    color: blue;
+    /*color: blue;*/
 }
 .ed {
     padding: 8px 15px;
