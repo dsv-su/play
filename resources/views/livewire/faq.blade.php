@@ -29,6 +29,11 @@
                 @include('faq.rap')
             @endif
 
+            <!-- Navigate -->
+            @if($navigate)
+                @include('faq.navigate')
+            @endif
+
             @if($admin)
             <article class="main-article webb2021-article main-column-left js-anchor-links-headers-container col-12 col-lg-8 main-column-padding-right">
 

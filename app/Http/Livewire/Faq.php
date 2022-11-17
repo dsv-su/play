@@ -28,11 +28,11 @@ class Faq extends Component
     {
         switch($url) {
             case($this->url_routes['start']):
-                $this->start = true;
-                $this->wiplay = true;
+                $this->start = false;
+                $this->wiplay = false;
                 $this->navigate = true;
-                $this->language = true;
-                $this->rap = true;
+                $this->language = false;
+                $this->rap = false;
                 break;
             case($this->url_routes['search']):
                 $this->search = true;
@@ -53,7 +53,7 @@ class Faq extends Component
 
     public function wiplay()
     {
-        $this->start = false;
+        $this->start = true;
         $this->wiplay = true;
         $this->navigate = false;
         $this->language = false;
