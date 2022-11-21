@@ -8,6 +8,7 @@ function downloadPresentation(video, resolution) {
         Livewire.emit('doClose');
         window.location = '/download_zip/'+video;
     });
+    // Download
     $.get('/download/'+video+'?res='+resolution, function(data){
         $(".result").html(data);
     });
