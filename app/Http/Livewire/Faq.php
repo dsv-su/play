@@ -9,6 +9,7 @@ class Faq extends Component
     public $start, $wiplay, $language, $rap, $navigate, $search, $upload, $download, $manage, $admin;
     public $intended, $url_routes;
     public $toggle;
+    public $role_staff, $role_admin;
 
     public function mount()
     {
@@ -20,8 +21,25 @@ class Faq extends Component
             'download' => '/download'
         ];
 
+        //Check role
+        $this->checkRole();
+
         //Activate intended page
         $this->activatePage($this->intended);
+    }
+
+    public function checkRole()
+    {
+        if(app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff' or app()->make('play_role') == 'Administrator') {
+            $this->role_staff = true;
+        } else {
+            $this->role_staff = false;
+        }
+
+        //For admins
+        if(app()->make('play_role') == 'Administrator') {
+            $this->role_admin = true;
+        }
     }
 
     public function activatePage($url)

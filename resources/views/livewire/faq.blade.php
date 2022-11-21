@@ -34,6 +34,10 @@
                 @include('faq.navigate')
             @endif
 
+            <div class="webb2021-article-info">
+                <p>{{__("Last updated:")}} 2022-11-17</p>
+            </div>
+
             @if($admin)
             <article class="main-article webb2021-article main-column-left js-anchor-links-headers-container col-12 col-lg-8 main-column-padding-right">
 

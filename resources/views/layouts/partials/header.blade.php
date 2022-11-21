@@ -211,23 +211,25 @@
             <!-- Help manual -->
             <div class="align-middle ml-auto my-auto">
                 <span class="badge badge-primary ml-2 mb-2" data-toggle="tooltip" title="{{__("Help")}}">
-                    <a @if(app()->make('play_faq') == false)
-                       href="{{route('faq')}}"
-                       @else
-                       href="{{ app()->make('play_faq_url') }}"
-                        @endif
-                        >
+                    <a @if(app()->make('play_faq') == false) href="{{route('faq')}}" @else href="{{ app()->make('play_faq_url') }}" @endif >
                         <button type="button" class="hamburger animated fadeInLeft is-closed">
-                            <span class="hamb-top moving-left"><i class="fa-solid fa-angle-right fa-2x"></i></span>
+                            <span class="hamb-top moving-left">
+                                <i class="fa-solid fa-angle-right fa-2x"></i>
+                                <div class="align-middle" style="position:absolute; bottom:8px; left:32px;">
+                                    {{__("Help")}}
+                                </div>
+                            </span>
                             <span class="hamb-middle"></span>
                             <span class="hamb-bottom"></span>
                         </button>
                     </a>
                 </span>
             </div>
+            {{--}}
             <div class="align-middle my-auto">
                 {{__("Help")}}
             </div>
+            {{--}}
         </nav>
 
         <nav class="d-lg-none d-flex align-items-center ml-auto" aria-label="Huvudmeny">

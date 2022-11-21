@@ -1,12 +1,8 @@
 body {
     position: relative;
     overflow-x: hidden;
-    /*background-color: #CFD8DC;*/
-
 }
 
-/*body,
-html { height: 100%;} */
 .nav .open > a,
 .nav .open > a:hover,
 .nav .open > a:focus {background-color: transparent;}
@@ -47,7 +43,6 @@ html { height: 100%;} */
     display: none;
 }
 
-
 #wrapper.toggled #sidebar-wrapper {
     width: 220px;
 }
@@ -57,12 +52,10 @@ html { height: 100%;} */
     padding-top: 70px;
 }
 
-
 #wrapper.toggled #page-content-wrapper {
     position: absolute;
     margin-right: -220px;
 }
-
 
 /*-------------------------------*/
 /*     Sidebar nav styles        */
@@ -78,7 +71,7 @@ html { height: 100%;} */
     margin: 0;
     padding: 0;
     list-style: none;
-    background: #ffffff;
+    /*background: #ffffff;*/
 }
 
 .sidebar-nav li {
@@ -87,7 +80,6 @@ html { height: 100%;} */
     display: inline-block;
     width: 100%;
 }
-
 
 .sidebar-nav li:before {
     position: absolute;
@@ -166,7 +158,7 @@ html { height: 100%;} */
     height: 65px;
     position: relative;
     color: #000000;
-    background: #ffffff;
+    /*background: #ffffff;*/
     padding-top: 1em;
     border: #1a1a1a;
 }
@@ -184,7 +176,7 @@ html { height: 100%;} */
     text-align: center;
     font-size: 1em;
     color: #000000;
-    background: #ffffff;
+    /*background: #ffffff;*/
 }
 
 .sidebar-nav .dropdown-menu {
@@ -194,7 +186,7 @@ html { height: 100%;} */
     margin: 0;
     border-radius: 0;
     border: none;
-    background-color: #ffffff;
+    /*background-color: #ffffff;*/
     box-shadow: none;
 }
 
@@ -215,7 +207,6 @@ html { height: 100%;} */
 .nav.sidebar-nav .dropdown li a::before {
     font-size: smaller;
 }
-
 
 /*
 a[href*="#navigate"]::before {
@@ -365,7 +356,7 @@ a[href*="#followme"]::before {
 }
 
 .moving-left:hover i {
-    transform: translateX(10px);
+    transform: translateX(16px);
     -webkit-transition: all .35s ease-in-out;
 }
 /*-------------------------------*/
@@ -381,7 +372,7 @@ a[href*="#followme"]::before {
     left: 0;
     right: 0;
     bottom: 0;
-    background: #fffff;
+    background: #ffffff;
     z-index: 1;
 }
 
