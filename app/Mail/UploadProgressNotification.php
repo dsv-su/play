@@ -30,7 +30,7 @@ class UploadProgressNotification extends Mailable
      */
     public function build()
     {
-        return $this->from('play@dsv.su.se', 'DSVPlay')->subject("[DSVPlay] Upload in Progress")
+        return $this->from('noreply@dsv.su.se', 'DSVPlay')->subject("[DSVPlay] Upload in Progress")
             ->view('emails.upload_progress');
     }
 }

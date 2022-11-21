@@ -30,7 +30,7 @@ class UploadSuccessNotification extends Mailable
      */
     public function build()
     {
-        return $this->from('play@dsv.su.se', 'DSVPlay')->subject("[DSVPlay] Upload success")
+        return $this->from('noreply@dsv.su.se', 'DSVPlay')->subject("[DSVPlay] Upload success")
             ->view('emails.upload_success');
     }
 }
