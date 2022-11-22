@@ -6,7 +6,7 @@
             </div>
         </div>
 
-
+        <li><a wire:click="start" style="cursor: pointer;">{{__("Overview")}}</a></li>
         <li class="dropdown">
             <a href="#play" class="dropdown-toggle" data-toggle="dropdown">DSVPlay <span class="caret"></span></a>
             <ul class="dropdown-menu su-background__light" role="menu">

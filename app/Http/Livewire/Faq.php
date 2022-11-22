@@ -46,7 +46,7 @@ class Faq extends Component
     {
         switch($url) {
             case($this->url_routes['start']):
-                $this->start = false;
+                $this->start = true;
                 $this->wiplay = false;
                 $this->navigate = true;
                 $this->language = false;
@@ -67,6 +67,15 @@ class Faq extends Component
     public function hydrate()
     {
         $this->toggle = true;
+    }
+
+    public function start()
+    {
+        $this->start = true;
+        $this->wiplay = false;
+        $this->navigate = false;
+        $this->language = false;
+        $this->rap = false;
     }
 
     public function wiplay()

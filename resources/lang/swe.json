@@ -261,9 +261,11 @@
     "Select": "Välj",
     "Select for bulkedit": "Välj för massredigering",
     "of": "av",
+    "Show upload progress": "Visa uppladdningsförlopp",
     "Help": "Hjälp",
     "Last updated:": "Senast uppdaterad:",
     "Other subjects": "Andra ämnen",
+    "Overview": "Översikt",
     "Manual and guides": "Manual och guider",
     "Here we have collected instructions on some of the most important functions.": "Här har vi samlat instruktioner om några av de viktigaste funktionerna.",
     "What is DSVPlay?": "Vad är DSVPlay?",
@@ -291,5 +293,7 @@
     "Click on the semester or course to see all related presentations.": "Klicka på terminen eller kursen för att se alla relaterade presentationer.",
     "Second, you can use the SEARCH function by writing either the presenter, the course, the title of the presentation or keywords (a keyword is a term that defines what your content is about) related to the presentation. You get suggestions for search results organized by courses, tags, presenters and presentations.": "För det andra kan du använda SÖK-funktionen genom att skriva antingen presentatören, kursen, titeln på presentationen eller nyckelord (ett nyckelord är en term som definierar vad ditt innehåll handlar om) relaterade till presentationen. Du får förslag på sökresultat organiseras av kurser, taggar, presentatörer och presentationer.",
     "Once you’ve found the presentation you are looking for, click on the matching thumbnail to play it.": "När du har hittat presentationen du letar efter klickar du på den matchande miniatyren för att spela upp den.",
-    "See image below for a description of the different elements of the presentation thumbnail.": "Se bilden nedan för en beskrivning av de olika elementen i miniatyren."
+    "See image below for a description of the different elements of the presentation thumbnail.": "Se bilden nedan för en beskrivning av de olika elementen i miniatyren.",
+    "Your role is:": "Din roll är:"
+
 }

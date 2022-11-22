@@ -175,6 +175,16 @@
                     @endif
                 @endif
             </div>
+            <!-- Conversion queue -->
+            @if (in_array(app()->make('play_role'), ['Administrator', 'Staff', 'Uploader', 'Courseadmin']) && !Request::is('queue'))
+                <div class="align-middle ml-auto my-auto">
+                    <span class="badge badge-primary ml-2 mb-2" data-toggle="tooltip" title="{{__("Show upload progress")}}">
+                        <div class="col d-flex align-items-center justify-content-center">
+                            <a href={{route('conversion.queue')}}><i class="fa-solid fa-arrow-up-from-bracket"></i></a>
+                        </div>
+                    </span>
+                </div>
+            @endif
             <!-- Lang localization -->
             <div class="align-middle ml-auto my-auto">
                 <nav class="navbar navbar-expand-lg container">
@@ -488,4 +498,6 @@
         </nav>
     </div>
 </header>
+{{--}}
 @include('layouts.partials.redirect_play2')
+{{--}}
