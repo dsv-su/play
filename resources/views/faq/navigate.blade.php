@@ -7,19 +7,19 @@
         <!-- Staff -->
         @if(App::isLocale('en'))
             <!-- English -->
-            <img class="w-auto" src="{{asset('images/manual/nav1.png')}}" alt="Play Tabs on landing page" style="border: 1px solid #000; padding: 0;">
+            <img class="w-75" src="{{asset('images/manual/nav1.png')}}" alt="Play Tabs on landing page" style="border: 1px solid #000; padding: 0;">
         @else
             <!-- Swedish -->
-            <img class="w-auto" src="{{asset('images/manual/nav1swe.png')}}" alt="Play Tabs on landing page" style="border: 1px solid #000; padding: 0;">
+            <img class="w-75" src="{{asset('images/manual/nav1swe.png')}}" alt="Play Tabs on landing page" style="border: 1px solid #000; padding: 0;">
         @endif
     @else
         <!-- Student -->
         @if(App::isLocale('en'))
             <!-- English -->
-            <img class="w-auto" src="{{asset('images/manual/nav1s.png')}}" alt="Play Tabs on landing page" style="border: 1px solid #000; padding: 0;">
+            <img class="w-75" src="{{asset('images/manual/nav1s.png')}}" alt="Play Tabs on landing page" style="border: 1px solid #000; padding: 0;">
         @else
             <!-- Swedish -->
-            <img class="w-auto" src="{{asset('images/manual/nav1s_swe.png')}}" alt="Play Tabs on landing page" style="border: 1px solid #000; padding: 0;">
+            <img class="w-75" src="{{asset('images/manual/nav1s_swe.png')}}" alt="Play Tabs on landing page" style="border: 1px solid #000; padding: 0;">
         @endif
     @endif
     <br><br>

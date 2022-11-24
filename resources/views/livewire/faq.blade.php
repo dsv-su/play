@@ -9,31 +9,38 @@
             <h1>{{$intended}}</h1>
             {{--}}
 
-            <!-- Manual and guides -->
+            <!-- Overview -->
             @if($start)
                 @include('faq.start')
             @endif
-
             <!-- What is play -->
             @if($wiplay)
                 @include('faq.wiplay')
             @endif
-
             <!-- Language -->
             @if($language)
                 @include('faq.language')
             @endif
-
             <!-- Roles and permissions -->
             @if($rap)
                 @include('faq.rap')
             @endif
-
             <!-- Navigate -->
             @if($navigate)
                 @include('faq.navigate')
             @endif
-
+            <!-- Player -->
+            @if($player)
+                @include('faq.player')
+            @endif
+            <!-- Upload -->
+            @if($upload)
+                @include('faq.upload')
+            @endif
+            <!-- Download -->
+            @if($download)
+                @include('faq.download')
+            @endif
 
             @if($admin)
             <article class="main-article webb2021-article main-column-left js-anchor-links-headers-container col-12 col-lg-8 main-column-padding-right">

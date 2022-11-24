@@ -7,9 +7,11 @@ use Livewire\Component;
 class Faq extends Component
 {
     public $start, $wiplay, $language, $rap, $navigate, $search, $upload, $download, $manage, $admin;
+    public $player;
     public $intended, $url_routes;
     public $toggle;
     public $role_staff, $role_admin;
+    protected $queryString = ['start', 'wiplay', 'language', 'rap', 'navigate', 'player', 'upload', 'download'];
 
     public function mount()
     {
@@ -51,6 +53,9 @@ class Faq extends Component
                 $this->navigate = true;
                 $this->language = false;
                 $this->rap = false;
+                $this->player = false;
+                $this->upload = false;
+                $this->download = false;
                 break;
             case($this->url_routes['search']):
                 $this->search = true;
@@ -76,6 +81,9 @@ class Faq extends Component
         $this->navigate = false;
         $this->language = false;
         $this->rap = false;
+        $this->player = false;
+        $this->upload = false;
+        $this->download = false;
     }
 
     public function wiplay()
@@ -85,6 +93,9 @@ class Faq extends Component
         $this->navigate = false;
         $this->language = false;
         $this->rap = false;
+        $this->player = false;
+        $this->upload = false;
+        $this->download = false;
     }
 
     public function language()
@@ -94,6 +105,9 @@ class Faq extends Component
         $this->navigate = false;
         $this->language = true;
         $this->rap = false;
+        $this->player = false;
+        $this->upload = false;
+        $this->download = false;
     }
 
     public function rap()
@@ -103,6 +117,9 @@ class Faq extends Component
         $this->navigate = false;
         $this->language = false;
         $this->rap = true;
+        $this->player = false;
+        $this->upload = false;
+        $this->download = false;
     }
 
     public function navigate()
@@ -112,6 +129,45 @@ class Faq extends Component
         $this->navigate = true;
         $this->language = false;
         $this->rap = false;
+        $this->player = false;
+        $this->upload = false;
+        $this->download = false;
+    }
+
+    public function player()
+    {
+        $this->player = true;
+        $this->start = false;
+        $this->wiplay = false;
+        $this->navigate = false;
+        $this->language = false;
+        $this->rap = false;
+        $this->upload = false;
+        $this->download = false;
+    }
+
+    public function upload()
+    {
+        $this->start = false;
+        $this->wiplay = false;
+        $this->navigate = false;
+        $this->language = false;
+        $this->rap = false;
+        $this->player = false;
+        $this->upload = true;
+        $this->download = false;
+    }
+
+    public function download()
+    {
+        $this->start = false;
+        $this->wiplay = false;
+        $this->navigate = false;
+        $this->language = false;
+        $this->rap = false;
+        $this->player = false;
+        $this->upload = false;
+        $this->download = true;
     }
 
     public function render()

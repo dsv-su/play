@@ -5,7 +5,6 @@
                 <a href="#">{{__("Other subjects")}}</a>
             </div>
         </div>
-
         <li><a wire:click="start" style="cursor: pointer;">{{__("Overview")}}</a></li>
         <li class="dropdown">
             <a href="#play" class="dropdown-toggle" data-toggle="dropdown">DSVPlay <span class="caret"></span></a>
@@ -15,12 +14,13 @@
                 <li><a wire:click="rap" style="cursor: pointer;">{{__("Roles and permissions")}}</a></li>
             </ul>
         </li>
-
-
         <li><a wire:click="navigate" style="cursor: pointer;">{{__("Navigate")}}</a></li>
+        <li><a wire:click="player" style="cursor: pointer;">{{__("The player")}}</a></li>
+        <li><a wire:click="upload" style="cursor: pointer;">{{__("Upload")}}</a></li>
+        <li><a wire:click="download" style="cursor: pointer;">{{__("Download")}}</a></li>
+        <!--
         <li><a href="#search">{{__("Search")}}</a></li>
-        <li><a href="#upload">{{__("Upload")}}</a></li>
-        <li><a href="#download">{{__("Download")}}</a></li>
+        -->
 
         <!-- Manage for staff -->
         @if($role_staff)
