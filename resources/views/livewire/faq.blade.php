@@ -37,9 +37,29 @@
             @if($upload)
                 @include('faq.upload')
             @endif
+            <!-- Edit presentation -->
+            @if($edit)
+                @include('faq.edit')
+            @endif
             <!-- Download -->
             @if($download)
                 @include('faq.download')
+            @endif
+            <!-- Manage presentation -->
+            @if($manage_presentations)
+                @include('faq.manage_presentations')
+            @endif
+            <!-- Manage courses -->
+            @if($manage_courses)
+                @include('faq.manage_courses')
+            @endif
+            <!-- Search Semester -->
+            @if($semester)
+                @include('faq.semester')
+            @endif
+            <!-- Search Course -->
+            @if($designation)
+                @include('faq.designation')
             @endif
 
             @if($admin)
@@ -50,7 +70,7 @@
             @endif
 
             <div class="webb2021-article-info">
-                <p>{{__("Last updated:")}} 2022-11-22</p>
+                <p>{{__("Last updated:")}} 2022-11-28</p>
             </div>
 
         </div>

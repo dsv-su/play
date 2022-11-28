@@ -1,4 +1,4 @@
-<h2 id="lang">{{__("The player")}}</h2>
+<h2 id="player">{{__("The player")}}</h2>
 <span class="su-theme-anchor mb-4"></span>
 <article class="main-article webb2021-article main-column-left js-anchor-links-headers-container col-12 col-lg-8 main-column-padding-right">
     <p>{{__("The player will open automatically once you click on the presentation thumbnail. Up to four windows will be displayed, one big window and three smaller ones, displaying different streams for the same presentation (depending on the recording cameras in the recording room). Switch between the windows by clicking on the stream that you want to display in the big window.")}}</p>

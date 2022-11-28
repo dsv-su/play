@@ -1,4 +1,4 @@
-<h2 id="lang">{{__("Navigate and Play")}}</h2>
+<h2 id="navigate">{{__("Navigate and Play")}}</h2>
 <span class="su-theme-anchor mb-4"></span>
 <article class="main-article webb2021-article main-column-left js-anchor-links-headers-container col-12 col-lg-8 main-column-padding-right">
     <p>{{__("First, there are tabs on the start page to help you find what you are looking for:")}}</p>

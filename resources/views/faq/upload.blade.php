@@ -1,4 +1,4 @@
-<h2 id="lang">{{__("Upload presentation")}}</h2>
+<h2 id="upload">{{__("Upload presentation")}}</h2>
 <span class="su-theme-anchor mb-4"></span>
 <!-- Note -->
 <aside class="main-article-aside col-12 col-lg-6 d-none d-lg-block no-print">

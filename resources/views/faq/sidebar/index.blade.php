@@ -17,8 +17,8 @@
         <li><a wire:click="navigate" style="cursor: pointer;">{{__("Navigate")}}</a></li>
         <li><a wire:click="player" style="cursor: pointer;">{{__("The player")}}</a></li>
         <li><a wire:click="upload" style="cursor: pointer;">{{__("Upload")}}</a></li>
-        <li><a wire:click="download" style="cursor: pointer;">{{__("Download")}}</a></li>
         <!--
+        <li><a wire:click="download" style="cursor: pointer;">{{__("Download")}}</a></li>
         <li><a href="#search">{{__("Search")}}</a></li>
         -->
 
@@ -27,8 +27,9 @@
         <li class="dropdown">
             <a href="#manage" class="dropdown-toggle" data-toggle="dropdown">{{__("Manage")}}<span class="caret"></span></a>
             <ul class="dropdown-menu animated fadeInLeft" role="menu">
-                <li><a href="#presentations">{{__("Manage presentations")}}</a></li>
-                <li><a href="#courses">{{__("Manage courses")}}</a></li>
+                <li><a wire:click="manage_presentations" style="cursor: pointer;">{{__("Manage presentations")}}</a></li>
+                <li><a wire:click="edit" style="cursor: pointer;">{{__("Edit presentation")}}</a></li>
+                <li><a wire:click="manage_courses" style="cursor: pointer;">{{__("Manage courses")}}</a></li>
             </ul>
         </li>
         @endif
