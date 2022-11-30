@@ -18,6 +18,7 @@
             </div>
         </div>
     </div>
+
     @if (in_array(app()->make('play_role'), ['Administrator', 'Staff', 'Uploader', 'Courseadmin']) && !Request::is('queue'))
         <div class="container mt-1">
             <div class="row no-gutters">
