@@ -50,12 +50,18 @@ class EditPresentation extends Component
         $this->ipermissions = $individual_permissions->count();
         $this->download_switch_warning = false;
 
-        if (!$video->visibility) {
-            $this->download = false;
+        //Visibility
+        if($video->visibility) {
+            $this->visibility = 'visible';
         } else {
-            $this->visibility = (bool)$video->fresh()->visibility;
-            $this->download = (bool)$video->download;
+            $this->visibility = 'private';
         }
+        //Unlisted
+        if($video->unlisted) {
+            $this->visibility = 'unlisted';
+        }
+
+        $this->download = $video->download;
 
         $this->user_permission = $user_permission;
 
@@ -130,12 +136,21 @@ class EditPresentation extends Component
         return $this->system_config['store']['list_uri'];
     }
 
-    public function visibility()
+    public function updatedVisibility($state)
     {
-        //Toggles the img and presentation_hidden text
-        $this->visibility = !$this->visibility;
+        switch($state) {
+            case('visible'):
+                $this->visibility = 'visible';
+                break;
+            case('private'):
+                $this->visibility = 'private';
+                break;
+            case('unlisted'):
+                $this->visibility = 'unlisted';
+                break;
+        }
         //Set download to false if hidden
-        if(!$this->visibility) {
+        if($this->visibility == 'private') {
             $this->download = false;
         } else {
             $this->download_switch_warning = false;

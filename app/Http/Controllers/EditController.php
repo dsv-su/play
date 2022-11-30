@@ -192,10 +192,21 @@ class EditController extends Controller
             }
 
             //Update visibility
-            if ($request->visibility) {
-                $video->visibility = true;
-            } else {
-                $video->visibility = false;
+            if ($request->video_visibility) {
+                switch($request->video_visibility) {
+                    case('visible'):
+                        $video->visibility = true;
+                        $video->unlisted = false;
+                        break;
+                    case('private'):
+                        $video->visibility = false;
+                        $video->unlisted = false;
+                        break;
+                    case('unlisted'):
+                        $video->visibility = false;
+                        $video->unlisted = true;
+                        break;
+                }
             }
 
             //Update visibility

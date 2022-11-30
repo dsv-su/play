@@ -34,10 +34,7 @@ class HomeController extends Controller
         //Retrive presentations with individual permissions set
         $individual_videos = IndividualPermission::where('username', app()->make('play_username'))->pluck('video_id')->toArray();
 
-        if (App::environment('production') &&
-            (app()->make('play_auth') == 'Administrator' or app()->make('play_auth') == 'Courseadmin' or app()->make('play_auth') == 'Staff') &&
-            (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Staff')
-        )
+        if (App::environment('production') && $this->staff())
         {
             // User is Employee store courses in cache
             $courses = Cache::remember(app()->make('play_username'), $seconds, function () use ($daisy){
@@ -46,15 +43,25 @@ class HomeController extends Controller
         }
 
         if (!empty($courses) or !empty($individual_videos)) {
+
             //My courses/presentations
+            if ($this->administrator()) {
+                //Administrator full visibility
+                $data['mypaginated'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
+                    return $query->whereIn('course_id', $courses);
+                })
+                    ->orWhereIn('id', $individual_videos)
+                    ->latest('creation')->Paginate(24, ['*'], 'my')->onEachSide(1);
+            } else {
+                //Non administrator restricted visibility
+                $data['mypaginated'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
+                    return $query->whereIn('course_id', $courses)->where('visibility', true);
+                })
+                    ->orWhereIn('id', $individual_videos)
+                    ->latest('creation')->Paginate(24, ['*'], 'my')->onEachSide(1);
+            }
 
-            $data['mypaginated'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
-                return $query->whereIn('course_id', $courses);
-            })
-                ->orWhereIn('id', $individual_videos)
-                //->latest('creation')->fastPaginate(24, ['*'], 'my')->onEachSide(1);
-                ->latest('creation')->Paginate(24, ['*'], 'my')->onEachSide(1);
-
+            //Filter
             $data['my'] = $visibility->filter($data['mypaginated']);
         }
 
@@ -62,24 +69,52 @@ class HomeController extends Controller
         $active_courses_ht = Cache::remember(app()->make('play_username') . '_active_ht', $seconds, function () use ($daisy){
             return $daisy->getActiveCoursesHT();
         });
-        $data['activepaginated_ht'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses_ht) {
-            return $query->whereIn('course_id', $active_courses_ht);
-        })->latest('creation')->fastPaginate(24, ['*'], 'active_ht')->onEachSide(1);
+
+        if($this->administrator()) {
+            //Administrator full visibility
+            $data['activepaginated_ht'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses_ht) {
+                return $query->whereIn('course_id', $active_courses_ht);
+            })->latest('creation')->fastPaginate(24, ['*'], 'active_ht')->onEachSide(1);
+        } else {
+            //Non administrator restricted visibility
+            $data['activepaginated_ht'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses_ht) {
+                return $query->whereIn('course_id', $active_courses_ht)->where('visibility', true);
+            })->latest('creation')->fastPaginate(24, ['*'], 'active_ht')->onEachSide(1);
+        }
+
+        //Filter
         $data['active_ht'] = $visibility->filter($data['activepaginated_ht']);
 
         // VT2022 Active courses store in cache
         $active_courses_vt = Cache::remember(app()->make('play_username') . '_active_vt', $seconds, function () use ($daisy){
             return $daisy->getActiveCoursesVT();
         });
-        $data['activepaginated_vt'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses_vt) {
-            return $query->whereIn('course_id', $active_courses_vt);
-        })->latest('creation')->fastPaginate(24, ['*'], 'active_vt')->onEachSide(1);
+
+        if($this->administrator()) {
+            //Administrator full visibility
+            $data['activepaginated_vt'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses_vt) {
+                return $query->whereIn('course_id', $active_courses_vt);
+            })->latest('creation')->fastPaginate(24, ['*'], 'active_vt')->onEachSide(1);
+        } else {
+            //Non administrator restricted visibility
+            $data['activepaginated_vt'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses_vt) {
+                return $query->whereIn('course_id', $active_courses_vt)->where('visibility', true);
+            })->latest('creation')->fastPaginate(24, ['*'], 'active_vt')->onEachSide(1);
+        }
+
+        //Filter
         $data['active_vt'] = $visibility->filter($data['activepaginated_vt']);
 
-
         // All courses (tab 3)
-        //$data['latest'] = $visibility->filter(Video::with('category', 'video_course.course')->latest('creation')->take(100)->get())->take(24);
-        $data['allpaginated'] = Video::with('category', 'video_course.course')->latest('creation')->fastPaginate(24, ['*'], 'all')->onEachSide(1);
+        if($this->administrator()) {
+            //Administrator full visibility
+            $data['allpaginated'] = Video::with('category', 'video_course.course')->latest('creation')->fastPaginate(24, ['*'], 'all')->onEachSide(1);
+        } else {
+            //Non administrator restricted visibility
+            $data['allpaginated'] = Video::with('category', 'video_course.course')->where('visibility', true)->latest('creation')->fastPaginate(24, ['*'], 'all')->onEachSide(1);
+        }
+
+        //Filter
         $data['latest'] = $visibility->filter($data['allpaginated']);
 
         // Add placeholders for manual presentations that are currently processed
@@ -89,6 +124,23 @@ class HomeController extends Controller
         $data['pending'] = $pending;
 
         return view('home.index', $data);
+    }
+
+    public function staff()
+    {
+        if((app()->make('play_auth') == 'Administrator' or app()->make('play_auth') == 'Courseadmin' or app()->make('play_auth') == 'Staff') &&
+            (app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Staff')){
+            return true;
+        }
+        return false;
+    }
+
+    public function administrator()
+    {
+        if((app()->make('play_auth') == 'Administrator' and app()->make('play_role') == 'Administrator')) {
+            return true;
+        }
+        return false;
     }
 
 }

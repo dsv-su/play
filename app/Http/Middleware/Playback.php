@@ -139,6 +139,11 @@ class Playback
                     return $next($request);
                 }
 
+                // (6) Check if Presentation is unlisted and allows playback
+                if ($video->unlisted) {
+                    return $next($request);
+                }
+
                 return redirect()->route('home');
 
             } else {
