@@ -262,7 +262,7 @@
     "Select for bulkedit": "Välj för massredigering",
     "of": "av",
     "Presentation is unlisted": "Presentationen är olistad",
-    "Unlisted": "Olistad"
+    "Unlisted": "Olistad",
     "Show upload progress": "Visa uppladdningsförlopp",
     "Help": "Hjälp",
     "Last updated:": "Senast uppdaterad:",
@@ -350,5 +350,11 @@
     "The buttons called 'hidden' can be used to hide streams that should not be visible.": "Knapparna som kallas 'dolda' kan användas för att dölja strömmar som inte ska vara synliga.",
     "Save your settings and edits by clicking the 'save' button on the bottom of the page.": "Spara dina inställningar och ändringar genom att klicka på knappen 'spara' längst ned på sidan.",
     "Search presentations after semester": "Sök presentationer efter termin",
-    "Search presentations after course": "Sök presentationer efter kurs"
+    "Search presentations after course": "Sök presentationer efter kurs",
+    "Presentation unlisted": "Presentationen är olistad",
+    "unlisted": "olistad",
+    "The presentation is visible, searchable and playable.": "Presentationen är synlig, sökbar och spelbar.",
+    "The presentation is hidden, not searchable or playable.": "Presentationen är dold, inte sökbar eller spelbar.",
+    "The presentation is hidden, not searchable but playable with a direct link.": "Presentationen är dold, inte sökbar utan spelbar med en direktlänk.",
+    "Private": "Privat"
 }

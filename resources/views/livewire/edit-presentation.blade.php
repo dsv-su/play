@@ -121,9 +121,9 @@
                                 <label for="visibilitySwitch" class="col-4 col-lg-3 mb-0">{{__("Visibility")}} V:{{$visibility}}</label>
                                 <div class="col">
                                     <select wire:model="visibility" class="w-50form-group form-control" name="video_visibility" style="margin: 5px 0;">
-                                        <option value="visible">Visible</option>
-                                        <option value="private">Private</option>
-                                        <option value="unlisted">Unlisted</option>
+                                        <option value="visible">{{__("Visible")}}</option>
+                                        <option value="private">{{__("Private")}}</option>
+                                        <option value="unlisted">{{__("Unlisted")}}</option>
                                     </select>
                                 </div>
 
