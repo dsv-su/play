@@ -118,7 +118,7 @@
                             </div>
 
                             <div class="row">
-                                <label for="visibilitySwitch" class="col-4 col-lg-3 mb-0">{{__("Visibility")}} V:{{$visibility}}</label>
+                                <label for="visibilitySwitch" class="col-4 col-lg-3 mb-0">{{__("Visibility")}}</label>
                                 <div class="col">
                                     <select wire:model="visibility" class="w-50form-group form-control" name="video_visibility" style="margin: 5px 0;">
                                         <option value="visible">{{__("Visible")}}</option>

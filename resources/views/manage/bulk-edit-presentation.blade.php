@@ -42,20 +42,26 @@
                             <div class="row">
                                 <div class="col-12 col-sm-6 justify-content-center d-sm-flex">
                                     <div class="form-group my-auto form-row mx-3">
-                                        <label for="visibilitySwitch"
-                                               class="col px-0 col-auto mb-0">{{__("Visibility")}}</label>
+                                        {{--}}
+                                        <label for="visibilitySwitch" class="col px-0 col-auto mb-0">{{__("Visibility")}}</label>
                                         <div class="col">
-                                    <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip"
-                                          title="{{__("Switch the toggle to change")}}">
-                                    <input class="custom-control-input"
-                                           id="visibilitySwitch" name="visibility"
-                                           type="checkbox">
-                                    <label class="custom-control-label" style="margin-top: 3px;"
-                                           for="visibilitySwitch"></label>
-                                    </span>
+                                            <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip" title="{{__("Switch the toggle to change")}}">
+                                            <input class="custom-control-input" id="visibilitySwitch" name="visibility" type="checkbox">
+                                            <label class="custom-control-label" style="margin-top: 3px;" for="visibilitySwitch"></label>
+                                            </span>
+                                        </div>
+                                        {{--}}
+                                        <label for="visibilitySwitch" class="col px-0 col-auto mb-0">{{__("Visibility")}} </label>
+                                        <div class="col">
+                                            <select class="form-group form-control" name="video_visibility" style="margin: -5px 0;">
+                                                <option value="visible">{{__("Visible")}}</option>
+                                                <option value="private">{{__("Private")}}</option>
+                                                <option value="unlisted">{{__("Unlisted")}}</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="col col-md-6 justify-content-center d-sm-flex">
                                     <div class="form-group my-auto form-row mx-3">
                                         <label for="downloadSwitch"

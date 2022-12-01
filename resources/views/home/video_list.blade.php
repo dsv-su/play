@@ -51,9 +51,13 @@
 
                     <!-- Visibility icon-->
                     @if($video->hidden)
-                        <div class="visibility d-inline-block mx-1" data-toggle="tooltip"
-                             title="{{__('Presentation is hidden')}}">
+                        <div class="visibility d-inline-block mx-1" data-toggle="tooltip" title="{{__('Presentation is hidden')}}">
                             <i class="fas fa-eye-slash"></i>
+                        </div>
+                    @endif
+                    @if($video->unlisted)
+                        <div class="visibility d-inline-block mx-1" data-toggle="tooltip" title="{{__("Presentation is unlisted")}}">
+                            <i class="fa-solid fa-key"></i>
                         </div>
                     @endif
                 </div>
