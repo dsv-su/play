@@ -51,19 +51,22 @@
                                 </div>
                             @endif
                             @if($visibility == 'private')
-                                <div class="d-flex justify-content-center h-50">
-                                    <div id="presentation_hidden" class="alert alert-secondary m-auto" role="alert">{{ __("Presentation hidden") }}</div>
-                                </div>
-                                    {{__("Status: ")}}<span class="badge badge-danger">{{__("hidden")}}</span>
+                                <img id="presentation" src="{{$thumb}}?{{ rand() }}" style="max-width: 300px; opacity: 0.2;" class="w-100">
+                                <br>
+                                {{__("Status: ")}}<span class="badge badge-danger">{{__("hidden")}}</span>
                                 <br>
                                 <div class="rounded border su-background__light p-3 my-2">
                                     {{__("The presentation is hidden, not searchable or playable.")}}
                                 </div>
                             @endif
                             @if($visibility == 'unlisted')
+                                {{--}}
                                 <div class="d-flex justify-content-center h-50">
                                     <div id="presentation_hidden" class="alert alert-secondary m-auto" role="alert">{{ __("Presentation unlisted") }}</div>
                                 </div>
+                                {{--}}
+                                <img id="presentation" src="{{$thumb}}?{{ rand() }}" style="max-width: 300px; opacity: 0.2;" class="w-100">
+                                <br>
                                 {{__("Status: ")}}<span class="badge badge-warning">{{__("unlisted")}}</span>
                                 <br>
                                 <div class="rounded border su-background__light p-3 my-2">
