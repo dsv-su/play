@@ -9,14 +9,14 @@
         <li class="dropdown">
             <a href="#play" class="dropdown-toggle" data-toggle="dropdown">DSVPlay <span class="caret"></span></a>
             <ul class="dropdown-menu su-background__light" role="menu">
-                <li><a wire:click="wiplay" style="cursor: pointer;">{{__("What is DSVPlay?")}}</a></li>
-                <li><a wire:click="language" style="cursor: pointer;">{{__("Language")}}</a></li>
-                <li><a wire:click="rap" style="cursor: pointer;">{{__("Roles and permissions")}}</a></li>
+                <li><a wire:click="wiplay" style="cursor: pointer;@if($wiplay) color:blue; font-weight: bolder;@endif">{{__("What is DSVPlay?")}}</a></li>
+                <li><a wire:click="language" style="cursor: pointer;@if($language) color:blue; font-weight: bolder;@endif">{{__("Language")}}</a></li>
+                <li><a wire:click="rap" style="cursor: pointer;@if($rap) color:blue; font-weight: bolder;@endif">{{__("Roles and permissions")}}</a></li>
             </ul>
         </li>
-        <li><a wire:click="navigate" style="cursor: pointer;">{{__("Navigate")}}</a></li>
-        <li><a wire:click="player" style="cursor: pointer;">{{__("The player")}}</a></li>
-        <li><a wire:click="upload" style="cursor: pointer;">{{__("Upload")}}</a></li>
+        <li><a wire:click="navigate" style="cursor: pointer;@if($navigate) color:blue; font-weight: bolder;@endif">{{__("Navigate")}}</a></li>
+        <li><a wire:click="player" style="cursor: pointer;@if($player) color:blue; font-weight: bolder;@endif">{{__("The player")}}</a></li>
+        <li><a wire:click="upload" style="cursor: pointer;@if($upload) color:blue; font-weight: bolder; @endif">{{__("Upload")}}</a></li>
         <!--
         <li><a wire:click="download" style="cursor: pointer;">{{__("Download")}}</a></li>
         <li><a href="#search">{{__("Search")}}</a></li>
@@ -27,9 +27,9 @@
         <li class="dropdown">
             <a href="#manage" class="dropdown-toggle" data-toggle="dropdown">{{__("Manage")}}<span class="caret"></span></a>
             <ul class="dropdown-menu animated fadeInLeft" role="menu">
-                <li><a wire:click="manage_presentations" style="cursor: pointer;">{{__("Manage presentations")}}</a></li>
-                <li><a wire:click="edit" style="cursor: pointer;">{{__("Edit presentation")}}</a></li>
-                <li><a wire:click="manage_courses" style="cursor: pointer;">{{__("Manage courses")}}</a></li>
+                <li><a wire:click="manage_presentations" style="cursor: pointer;@if($manage_presentations) color:blue; font-weight: bolder;@endif">{{__("Manage presentations")}}</a></li>
+                <li><a wire:click="edit" style="cursor: pointer;@if($edit) color:blue; font-weight: bolder;@endif">{{__("Edit presentation")}}</a></li>
+                <li><a wire:click="manage_courses" style="cursor: pointer;@if($manage_courses) color:blue; font-weight: bolder;@endif">{{__("Manage courses")}}</a></li>
             </ul>
         </li>
         @endif
