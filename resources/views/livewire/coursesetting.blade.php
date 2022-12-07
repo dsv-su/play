@@ -61,15 +61,15 @@
             </div>
             <div class="col-12 col-md-6">
                 <div class="rounded border shadow p-3 my-2 d-flex align-items-center justify-content-center">
-                    <div class="form-group form-row my-auto py-3 mx-3">
-                        @if($visibility == true)
+                    <div class="form-group form-row my-auto py-3 mx-2">
+                        @if($visibility == 'visible')
                             <i class="far fa-eye fa-3x"></i>
                         @else
                             <i class="far fa-eye-slash fa-3x"></i>
                         @endif
                     </div>
                     <div class="form-group my-auto form-row mx-3">
-
+                        {{--}}
                         <label for="visibilitySwitch" class="col px-0 col-auto mb-0">{{__("Visibility")}}</label>
                             <div class="col">
                                 <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip" title="{{__("Switch the toggle to change")}}">
@@ -80,8 +80,17 @@
                                     @if (!$visibility) <span class="badge badge-danger">{{__("hidden")}}</span> @else <span class="badge badge-primary">{{__("visible")}} @endif
                                 </span>
                             </div>
-
-
+                        {{--}}
+                        <div class="row">
+                            <label for="visibilitySwitch" class="col">{{__("Visibility")}}</label>
+                            <div class="col">
+                                <select wire:model="visibility" class="form-group form-control" name="video_visibility" >
+                                    <option value="visible">{{__("Visible")}}</option>
+                                    <option value="private">{{__("Private")}}</option>
+                                    <option value="unlisted">{{__("Unlisted")}}</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col">
                                 {{__('Choose the standard setting for presentations associated with this course. This setting will be applied to all presentations unless otherwise specified in the individual presentation.')}}
@@ -100,28 +109,39 @@
                             <i class="fas fa-times fa-3x"></i>
                         @endif
                     </div>
-                    <div class="form-group my-auto form-row mx-3">
-                        <label for="downloadSwitch"
-                               class="col px-0 col-auto mb-0">{{__("Downloadable")}}</label>
-                        <div class="col">
-                                       <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip"
-                                             title="{{__("Switch the toggle to change")}}">
+                    <div class="form-group my-auto form-row mx-2">
+                        <div class="row">
+                            <label for="downloadSwitch" class="col">{{__("Downloadable")}}</label>
+
+                            <div class="col">
+                                    <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip"
+                                        title="{{__("Switch the toggle to change")}}">
                                         <input wire:click="downloadable" class="custom-control-input"
                                                id="downloadSwitch" name="downloadable"
                                                type="checkbox" @if($downloadable == true) checked @endif>
-                                        <label class="custom-control-label" style="margin-top: 3px;"
-                                               for="downloadSwitch"></label>
-                                           @if(!$downloadable) <span class="badge badge-danger">{{__("not downloadable")}}</span> @else <span class="badge badge-primary">{{__("downloadable")}} @endif
-                                           @if ($download_switch_warning) <div class="row"><span style="color: red;">{{__("Download is only possible if visibility is set to visible")}}</span></div> @endif
-                                    </span>
+                                        <label class="custom-control-label" style="margin-top: 3px;" for="downloadSwitch"></label>
+                                        </span>
+
+                                       @if(!$downloadable)
+                                           <span class="badge badge-danger">{{__("not downloadable")}}</span>
+                                       @else
+                                           <span class="badge badge-primary">{{__("downloadable")}}</span>
+                                       @endif
+
+                                       @if ($download_switch_warning)
+                                           <span style="color: red;">{{__("Download is only possible if visibility is set to visible")}}</span>
+                                       @endif
+                            </div>
+
                         </div>
+
                         <div class="row">
                             <div class="col">{{__('Choose the standard setting for presentations associated with this course. This setting will be applied to all presentations unless otherwise specified in the individual presentation.')}}</div>
                         </div>
                     </div>
                 </div>
             </div>
-            @if(!$visibility)
+            @if($visibility == 'private')
                 <div class="col">
                     <div class="alert alert-warning mt-3" role="alert">
                     <span class="font-1rem">
@@ -273,13 +293,14 @@
             </div>
 
             <!-- Visi -->
-
+            {{--}}
             <div class="col-sm-12 d-flex align-items-center">
                 <button type="submit" class="btn btn-outline-primary ml-auto d-flex font-125rem m-3">{{ __("Save") }}</button>
             </div>
-
+            {{--}}
         </div>
     </div>
+    @include('livewire.bar.save')
 </div>
 <script>
     jQuery(document).ready(function ($) {

@@ -159,14 +159,14 @@ class EditPresentation extends Component
 
     public function downloadability()
     {
-        //Follows the visibility setting
-        if($this->visibility) {
+        //Follows the visibility setting - disabled
+        /*if($this->visibility == 'visible') {
             $this->download = !$this->download;
         } else {
             $this->download_switch_warning = true;
             $this->download = false;
-        }
-
+        }*/
+        $this->download = !$this->download;
     }
 
     public function updatedCourseEdit($value)

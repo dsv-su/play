@@ -1,15 +1,19 @@
+html {
+    width: 100%;
+}
+
 div.play_savebar {
     position: fixed;
-    display: flex;
-    justify-content: center;
+    display: block;
+    left: -5px;
     bottom: 5px;
-    width: 100%;
     font-size: 30px;
-    z-index: 5;
+    z-index: 2;
+    margin: auto;
 }
 
 .bar {
-    width: 1200px;
-    border-radius: 6px;
-    outline: 3px solid blue;
+    width: calc(100vw - 6px);
+    border-radius: 2px;
+    outline: 2px solid blue;
 }

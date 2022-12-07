@@ -7,7 +7,7 @@
                 <div class="d-flex row no-gutters">
                     <div class="col-md-4 border-right">
                         <div class="d-flex flex-column align-items-center">
-                            <span class="d-block" id="bulk">Bulk edit</span>
+                            <span class="d-block" id="bulk">{{__("Bulk edit")}}</span>
                         </div>
                     </div>
                     <div class="col-md-8">
@@ -17,7 +17,6 @@
                             <input type="submit" class="btn btn-lg btn-outline-primary m-auto"><br><br>
                         </form>
                     </div>
-
 
                 </div>
             </div>

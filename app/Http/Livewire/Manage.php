@@ -626,9 +626,11 @@ class Manage extends Component
     public function courseSettings($courses)
     {
         foreach ($courses as $course) {
-            if ($courseSettings = CoursesettingsPermissions::select('visibility','downloadable')->where('course_id', $course->course_id)->first()) {
+            if ($courseSettings = CoursesettingsPermissions::select('visibility', 'unlisted', 'downloadable')->where('course_id', $course->course_id)->first()) {
                 //Visibility
                 $this->coursesetlist[$course->course_id]['visibility'] = $courseSettings->visibility;
+                //Unlisted
+                $this->coursesetlist[$course->course_id]['unlisted'] = $courseSettings->unlisted;
                 //Downloadable
                 $this->coursesetlist[$course->course_id]['downloadable'] = $courseSettings->downloadable;
             }

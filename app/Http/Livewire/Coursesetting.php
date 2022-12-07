@@ -20,13 +20,25 @@ class Coursesetting extends Component
     public function mount($course, $coursesettings_permissions, $individual_permissions, $permissions, $user_permission)
     {
         $this->course = $course;
+
         if ($coursesettings_permissions) {
-            $this->visibility = $coursesettings_permissions->visibility;
+            //
+            if($coursesettings_permissions->visibility) {
+                $this->visibility = 'visible';
+            } else {
+                $this->visibility = 'private';
+            }
+
             $this->downloadable = $coursesettings_permissions->downloadable;
             $this->ipermissions = $individual_permissions->count();
         } else {
-            $this->visibility = true;
+            $this->visibility = 'visible';
             $this->downloadable = false;
+        }
+
+        //Unlisted
+        if($coursesettings_permissions->unlisted) {
+            $this->visibility = 'unlisted';
         }
 
         //Individual Permissions
@@ -51,23 +63,22 @@ class Coursesetting extends Component
         }
     }
 
-    /*
-    public function visibility()
+    public function updatedVisibility($state)
     {
-        $this->visibility = !$this->visibility;
-    }
-
-    public function downloadable()
-    {
-        $this->downloadable = !$this->downloadable;
-    }*/
-    public function visibility()
-    {
-        //Toggles the img and presentation_hidden text
-        $this->visibility = !$this->visibility;
+        switch($state) {
+            case('visible'):
+                $this->visibility = 'visible';
+                break;
+            case('private'):
+                $this->visibility = 'private';
+                break;
+            case('unlisted'):
+                $this->visibility = 'unlisted';
+                break;
+        }
         //Set download to false if hidden
-        if(!$this->visibility) {
-            $this->downloadable = false;
+        if($this->visibility == 'private') {
+            $this->download = false;
         } else {
             $this->download_switch_warning = false;
         }
@@ -75,14 +86,14 @@ class Coursesetting extends Component
 
     public function downloadable()
     {
-        //Follows the visibility setting
-        if($this->visibility) {
+        //Follows the visibility setting -disabled
+        /*if($this->visibility == 'visible') {
             $this->downloadable = !$this->downloadable;
         } else {
             $this->download_switch_warning = true;
             $this->downloadable = false;
-        }
-
+        }*/
+        $this->downloadable = !$this->downloadable;
     }
 
     public function add_individual_perm()

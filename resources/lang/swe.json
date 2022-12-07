@@ -357,5 +357,6 @@
     "The presentation is hidden, not searchable or playable.": "Presentationen är dold, inte sökbar eller spelbar.",
     "The presentation is hidden, not searchable but playable with a direct link.": "Presentationen är dold, inte sökbar utan spelbar med en direktlänk.",
     "Private": "Privat",
-    "Presentation is private": "Presentationen är privat"
+    "Presentation is private": "Presentationen är privat",
+    "Bulk edit": "Massredigera"
 }

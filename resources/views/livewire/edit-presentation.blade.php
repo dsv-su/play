@@ -129,7 +129,6 @@
                                         <option value="unlisted">{{__("Unlisted")}}</option>
                                     </select>
                                 </div>
-
                             </div>
                             {{--}}
                             <div class="row">
@@ -464,19 +463,15 @@
                     @endforeach
                 </div>
             </div>
-
+            {{--}}
             <div class="col-sm-12 d-flex align-items-center">
-                {{--}}
-                <button type="submit" id="submit"
-                        class="btn btn-outline-primary ml-auto d-inline-block font-125rem m-3">{{ __("Save") }}</button>
-
+                <button type="submit" id="submit" class="btn btn-outline-primary ml-auto d-inline-block font-125rem m-3">{{ __("Save") }}</button>
                 <a href="{{route('manage')}}" id="back" class="btn btn-outline-primary mr-auto  d-inline-block font-125rem m-3">{{ __("Return back") }}</a>
-                {{--}}
-                @include('livewire.bar.save')
             </div>
-
+            {{--}}
         </div>
     </div>
+    @include('livewire.bar.save')
 </div>
 
 <script>

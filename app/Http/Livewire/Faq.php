@@ -95,7 +95,7 @@ class Faq extends Component
                 $this->designation = true;
                 break;
             case stristr($url, $this->url_routes['course']):
-                $this->designation = true;
+                //$this->designation = true;
                 break;
         }
 

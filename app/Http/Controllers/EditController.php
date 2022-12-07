@@ -245,7 +245,6 @@ class EditController extends Controller
 
     public function bulkEditStore(Request $request)
     {
-        //$visibility = (bool)$request->visibility;
         $visibility = $request->video_visibility;
         $download = (bool)$request->downloadable;
         $courseids = $request->courses ?? [];
@@ -266,7 +265,6 @@ class EditController extends Controller
         $overwritetags = (bool)$request->overwriteTag;
 
         foreach ($videos as $video) {
-            //$video->visibility = $visibility;
             switch($visibility) {
                 case('visible'):
                     $video->visibility = true;
