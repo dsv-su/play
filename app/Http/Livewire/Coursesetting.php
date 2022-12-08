@@ -36,7 +36,7 @@ class Coursesetting extends Component
             if($coursesettings_permissions->unlisted) {
                 $this->visibility = 'unlisted';
             }
-            
+
         } else {
             $this->visibility = 'visible';
             $this->downloadable = false;

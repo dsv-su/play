@@ -219,6 +219,7 @@
             </div>
             <!-- end Lang localization -->
             <!-- Help manual -->
+
             <div class="align-middle ml-auto my-auto">
                 <span class="badge badge-primary ml-2 mb-2" data-toggle="tooltip" title="{{__("Help")}}">
                     <a @if(app()->make('play_faq') == false) href="{{route('faq')}}" @else href="{{ app()->make('play_faq_url') }}" @endif >
@@ -235,11 +236,7 @@
                     </a>
                 </span>
             </div>
-            {{--}}
-            <div class="align-middle my-auto">
-                {{__("Help")}}
-            </div>
-            {{--}}
+
         </nav>
 
         <nav class="d-lg-none d-flex align-items-center ml-auto" aria-label="Huvudmeny">

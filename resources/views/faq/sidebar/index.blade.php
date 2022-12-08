@@ -46,7 +46,7 @@
             </ul>
         </li>
         @endif
-        <li><a href="#admin"></a></li>
+        <li><a target="_blank" rel="noopener noreferrer" href="https://releasenotes.blogs.dsv.su.se/archives/category/play">Releasenotes</a></li>
 
 
     </ul>
