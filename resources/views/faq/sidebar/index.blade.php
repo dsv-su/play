@@ -46,8 +46,10 @@
             </ul>
         </li>
         @endif
-        <li><a target="_blank" rel="noopener noreferrer" href="https://releasenotes.blogs.dsv.su.se/archives/category/play">Releasenotes</a></li>
-
-
+        @if(Lang::locale() == 'swe')
+            <li><a target="_blank" rel="noopener noreferrer" href="https://releasenotes.blogs.dsv.su.se/archives/category/play">{{__("Release notes")}}</a></li>
+        @else
+            <li><a target="_blank" rel="noopener noreferrer" href="https://releasenotes.blogs.dsv.su.se/en/archives/category/play-en">{{__("Release notes")}}</a></li>
+        @endif
     </ul>
 </nav>
