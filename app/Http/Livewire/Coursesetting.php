@@ -31,15 +31,18 @@ class Coursesetting extends Component
 
             $this->downloadable = $coursesettings_permissions->downloadable;
             $this->ipermissions = $individual_permissions->count();
+
+            //Unlisted
+            if($coursesettings_permissions->unlisted) {
+                $this->visibility = 'unlisted';
+            }
+            
         } else {
             $this->visibility = 'visible';
             $this->downloadable = false;
         }
 
-        //Unlisted
-        if($coursesettings_permissions->unlisted) {
-            $this->visibility = 'unlisted';
-        }
+
 
         //Individual Permissions
         foreach ($this->course->userpermissions as $this->ip) {
