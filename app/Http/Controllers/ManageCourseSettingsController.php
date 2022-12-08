@@ -113,14 +113,25 @@ class ManageCourseSettingsController extends Controller
     {
         if ($request->isMethod('post')) {
             $coursesettings_permissions = CoursesettingsPermissions::firstOrNew(['course_id' => $course_id]);
+
             //Store
             $coursesettings_permissions->course_id = $course_id;
-            //Visibility
-            if ($request->visibility) {
-                $coursesettings_permissions->visibility = true;
-            } else {
-                $coursesettings_permissions->visibility = false;
+            $visibility = $request->video_visibility;
+            switch($visibility) {
+                case('visible'):
+                    $coursesettings_permissions->visibility = true;
+                    $coursesettings_permissions->unlisted = false;
+                    break;
+                case('private'):
+                    $coursesettings_permissions->visibility = false;
+                    $coursesettings_permissions->unlisted = false;
+                    break;
+                case('unlisted'):
+                    $coursesettings_permissions->visibility = false;
+                    $coursesettings_permissions->unlisted = true;
+                    break;
             }
+
             //Downloadable
             if ($request->downloadable) {
                 $coursesettings_permissions->downloadable = true;

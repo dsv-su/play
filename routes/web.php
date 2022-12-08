@@ -23,6 +23,8 @@ Route::get('/presentation/{id}', 'MultiplayerController@presentation')->middlewa
 //Protected routes
 Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     Route::get('/', 'HomeController@index')->name('home');
+
+    //Language
     Route::get('lang/{lang}', 'LocalizationController@index')->name('language');
 
     //View
@@ -69,8 +71,8 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     //Route::get('/manage/courses', 'ManageCourseSettingsController@index')->name('manage_course');
     Route::get('/course/{courseid}/edit', 'ManageCourseSettingsController@edit')->name('course_edit');
     Route::post('/course/{courseid}/store', 'ManageCourseSettingsController@store')->name('course_edit_store');
-    Route::get('/edit/bulk/', 'PlayController@bulkEditShow')->name('edit.bulk.show');
-    Route::post('/edit/bulk/', 'PlayController@bulkEditStore')->name('edit.bulk.store');
+    Route::get('/edit/bulk/', 'EditController@bulkEditShow')->name('edit.bulk.show');
+    Route::post('/edit/bulk/', 'EditController@bulkEditStore')->name('edit.bulk.store');
     Route::get('/edit/{video}', 'EditController@show')->name('presentation_edit');
     Route::post('/edit/{video}', 'EditController@edit')->name('editpresentation');
     Route::post('/delete/{id}', 'ManagePresentationController@delete')->name('presentation.delete');
@@ -100,6 +102,9 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
 
     //Video format
     Route::post('/updateVideoFormat', 'PlayController@updateVideoFormat')->name('updateVideoFormat');
+
+    //FAQ
+    Route::get('/faq', 'FAQController@index')->name('faq');
 
     //Admin
     Route::prefix('admin/')->group(function () {

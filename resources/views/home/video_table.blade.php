@@ -44,10 +44,14 @@
 
                     <!-- Visibility icon-->
                     @if($video->hidden)
-                        <span class="visibility d-inline-block mx-1" data-toggle="tooltip"
-                              title="{{__('Presentation is hidden')}}">
-                <i class="fas fa-eye-slash"></i>
-            </span>
+                        <span class="visibility d-inline-block mx-1" data-toggle="tooltip" title="{{__('Presentation is hidden')}}">
+                            <i class="fas fa-eye-slash"></i>
+                        </span>
+                    @endif
+                    @if($video->unlisted)
+                        <span class="visibility d-inline-block mx-1" data-toggle="tooltip" title="{{__("Presentation is unlisted")}}">
+                            <i class="fa-solid fa-key"></i>
+                        </span>
                     @endif
                     <a href="{{ route('player', ['video' => $video]) }}" class="link">{{ $video->LangTitle }}</a>
                     <span class="badge badge-light">{{$video->duration}}</span>

@@ -41,61 +41,63 @@
             <h2 class="col mt-4" style="line-height: 1.5em;">
                 <span class="badge badge-primary ml-2 mb-2" data-toggle="tooltip" title="{{__("Number of presentations")}}">{{$uncatcounter}}</span>
                 @if($admin)
-                    <span style="color:blue;">{{__("Uncategorized presentations")}}</span>
+                    <span style="color:blue;">{{__("Presentations")}} {{__("of")}} {{$admin_total}}</span>
                 @else
                     <span style="color:blue;">{{__("Presentations")}}</span>
                 @endif
 
             </h2>
-            <!-- Check all -->
-            <div class="form-check">
-                <input wire:click="checkAll" type="checkbox" class="check" id="checkAll"
-                       @if($allChecked) checked> {{__("Uncheck All")}}
-                       @else > {{__("Check All")}}
-                       @endif
-            </div>
-            <div>
-                @include('home.videolayout', ['videos' => $uncat_videos])
-            </div>
 
-        </div>
-    </div>
+
+<!-- Check all -->
+<div class="form-check">
+    <input wire:click="checkAll" type="checkbox" class="check" id="checkAll"
+           @if($allChecked) checked> {{__("Uncheck All")}}
+           @else > {{__("Check All")}}
+           @endif
+</div>
+<div>
+    @include('home.videolayout', ['videos' => $uncat_videos])
+</div>
+
+</div>
+</div>
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        })
-        Livewire.hook('message.processed', (message, component) => {
-            $(function () {
-                $('[data-toggle="tooltip"]').tooltip();
-                $("input[type='checkbox'][name='bulkedit']").each(function () {
-                    handleSelected($(this));
-                });
-
-                $("input[type='checkbox'][name='bulkedit']").on('change', function () {
-                    handleSelected($(this));
-                });
-            })
-        })
-        function handleSelected(checkbox) {
-            let checked = checkbox.prop('checked');
-            let id = checkbox.attr('data-id');
-            if (checked) {
-                if (!$('#bulkediting').find('input[name="bulkids[]"][value="'+id+'"]').length) {
-                    $('#bulkediting').append('<input type="hidden" name="bulkids[]" value=' + id + '>');
-                }
-            } else {
-                $('#bulkediting').find('input[value="' + id + '"]').remove();
-            }
-            let n = $('#bulkediting').find('input[name="bulkids[]"]').length;
-            if (n) {
-                $('#bulkediting input[type="submit"]').val("{{__("Edit")}}" + ' ' + n + ' ' + "{{__("selected presentations")}}");
-                $('#bulkcontainer').show();
-            } else {
-                $('#bulkcontainer').hide();
-            }
-        }
+document.addEventListener("DOMContentLoaded", () => {
+$(function () {
+$('[data-toggle="tooltip"]').tooltip()
+})
+Livewire.hook('message.processed', (message, component) => {
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+    $("input[type='checkbox'][name='bulkedit']").each(function () {
+        handleSelected($(this));
     });
+
+    $("input[type='checkbox'][name='bulkedit']").on('change', function () {
+        handleSelected($(this));
+    });
+})
+})
+function handleSelected(checkbox) {
+let checked = checkbox.prop('checked');
+let id = checkbox.attr('data-id');
+if (checked) {
+    if (!$('#bulkediting').find('input[name="bulkids[]"][value="'+id+'"]').length) {
+        $('#bulkediting').append('<input type="hidden" name="bulkids[]" value=' + id + '>');
+    }
+} else {
+    $('#bulkediting').find('input[value="' + id + '"]').remove();
+}
+let n = $('#bulkediting').find('input[name="bulkids[]"]').length;
+if (n) {
+    $('#bulkediting input[type="submit"]').val("{{__("Edit")}}" + ' ' + n + ' ' + "{{__("selected presentations")}}");
+    $('#bulkcontainer').show();
+} else {
+    $('#bulkcontainer').hide();
+}
+}
+});
 </script>

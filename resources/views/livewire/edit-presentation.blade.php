@@ -41,28 +41,52 @@
                 <div class="rounded border shadow p-3 my-2">
                     <div class="row justify-content-between text-left">
                         <div class="form-group col-md-6 col-lg-4 mx-auto text-center">
-                            @if($visibility)
-                                <img id="presentation" src="{{$thumb}}?{{ rand() }}" style="max-width: 300px;"
-                                     class="w-100">
+                            @if($visibility == 'visible')
+                                <img id="presentation" src="{{$thumb}}?{{ rand() }}" style="max-width: 300px;" class="w-100">
+                                <br>
+                                {{__("Status: ")}}<span class="badge badge-primary">{{__("visible")}}</span>
+                                <br>
+                                <div class="rounded border su-background__light p-3 my-2">
+                                    {{__("The presentation is visible, searchable and playable.")}}
+                                </div>
                             @endif
-                            <div class="d-flex justify-content-center h-100">
-                                @if(!$visibility)
-                                    <div id="presentation_hidden" class="alert alert-secondary m-auto"
-                                         role="alert">{{ __("Presentation hidden") }}</div>
+                            @if($visibility == 'private')
+                                <img id="presentation" src="{{$thumb}}?{{ rand() }}" style="max-width: 300px; opacity: 0.2;" class="w-100">
+                                <br>
+                                {{__("Status: ")}}<span class="badge badge-danger">{{__("hidden")}}</span>
+                                <br>
+                                <div class="rounded border su-background__light p-3 my-2">
+                                    {{__("The presentation is hidden, not searchable or playable.")}}
+                                </div>
+                            @endif
+                            @if($visibility == 'unlisted')
+                                {{--}}
+                                <div class="d-flex justify-content-center h-50">
+                                    <div id="presentation_hidden" class="alert alert-secondary m-auto" role="alert">{{ __("Presentation unlisted") }}</div>
+                                </div>
+                                {{--}}
+                                <img id="presentation" src="{{$thumb}}?{{ rand() }}" style="max-width: 300px; opacity: 0.2;" class="w-100">
+                                <br>
+                                {{__("Status: ")}}<span class="badge badge-warning">{{__("unlisted")}}</span>
+                                <br>
+                                <div class="rounded border su-background__light p-3 my-2">
+                                    {{__("The presentation is hidden, not searchable but playable with a direct link.")}}
+                                </div>
+                            @endif
+
+
+                                {{--}}
+                                <div class="rounded border shadow p-3 my-2">
+                                @if($editt)
+                                <div class="flex justify-center">
+                                    <img src="{{$editt->temporaryUrl}}?{{ rand() }}" width="90%">
+                                </div>
                                 @endif
-                            </div>
-                            {{--}}
-                            <div class="rounded border shadow p-3 my-2">
-                            @if($editt)
-                            <div class="flex justify-center">
-                                <img src="{{$editt->temporaryUrl}}?{{ rand() }}" width="90%">
-                            </div>
-                            @endif
-                            <small>Upload new thumb</small>
-                            <input type="file" class="form-control form-control-sm" wire:model="editt">
-                                @error('editt') <span class="error">{{ $message }}</span> @enderror
-                            </div>
-                            {{--}}
+                                <small>Upload new thumb</small>
+                                <input type="file" class="form-control form-control-sm" wire:model="editt">
+                                    @error('editt') <span class="error">{{ $message }}</span> @enderror
+                                </div>
+                                {{--}}
                         </div>
 
                         <div class="form-group col-md-6 col-lg-8 px-md-3 mb-0">
@@ -99,16 +123,26 @@
                             <div class="row">
                                 <label for="visibilitySwitch" class="col-4 col-lg-3 mb-0">{{__("Visibility")}}</label>
                                 <div class="col">
-                                <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip" title="{{__("Switch the toggle to change")}}">
-                                    <input wire:click="visibility" class="custom-control-input" id="visibilitySwitch" name="visibility"
-                                           type="checkbox" @if($visibility == true) checked @endif>
-                                    <label class="custom-control-label" style="margin-top: 3px;"
-                                           for="visibilitySwitch"></label>
-                                    @if (!$visibility) <span class="badge badge-danger">{{__("hidden")}}</span> @else <span class="badge badge-primary">{{__("visible")}} @endif
-                                </span>
+                                    <select wire:model="visibility" class="w-50form-group form-control" name="video_visibility" style="margin: 5px 0;">
+                                        <option value="visible">{{__("Visible")}}</option>
+                                        <option value="private">{{__("Private")}}</option>
+                                        <option value="unlisted">{{__("Unlisted")}}</option>
+                                    </select>
                                 </div>
                             </div>
-
+                            {{--}}
+                            <div class="row">
+                                <label for="visibilitySwitch" class="col-4 col-lg-3 mb-0">{{__("Visibility")}}</label>
+                                <div class="col">
+                                    <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip" title="{{__("Switch the toggle to change")}}">
+                                        <input wire:click="visibility" class="custom-control-input" id="visibilitySwitch" name="visibility"
+                                               type="checkbox" @if($visibility == true) checked @endif>
+                                        <label class="custom-control-label" style="margin-top: 3px;" for="visibilitySwitch"></label>
+                                        @if (!$visibility) <span class="badge badge-danger">{{__("hidden")}}</span> @else <span class="badge badge-primary">{{__("visible")}} </span>@endif
+                                    </span>
+                                </div>
+                            </div>
+                            {{--}}
 
                             <div class="row">
                                 <label for="downloadSwitch" class="col-4 col-lg-3 mb-0">{{__("Downloadable")}}</label>
@@ -429,18 +463,15 @@
                     @endforeach
                 </div>
             </div>
-
+            {{--}}
             <div class="col-sm-12 d-flex align-items-center">
-                <button type="submit" id="submit"
-                        class="btn btn-outline-primary ml-auto d-inline-block font-125rem m-3">{{ __("Save") }}</button>
-                {{--}}
+                <button type="submit" id="submit" class="btn btn-outline-primary ml-auto d-inline-block font-125rem m-3">{{ __("Save") }}</button>
                 <a href="{{route('manage')}}" id="back" class="btn btn-outline-primary mr-auto  d-inline-block font-125rem m-3">{{ __("Return back") }}</a>
-                {{--}}
-
             </div>
-
+            {{--}}
         </div>
     </div>
+    @include('livewire.bar.save')
 </div>
 
 <script>

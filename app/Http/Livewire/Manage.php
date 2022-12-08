@@ -387,6 +387,7 @@ class Manage extends Component
                 ->WhereIn('id', $videos_match_title)
                 ->orWhereIn('id', $video_course_presenters)
                 ->orWhereIn('id', $video_course_tags)
+                ->latest('creation')
                 ->get();
 
         } else {
@@ -412,8 +413,9 @@ class Manage extends Component
                 $this->user_collection = $videos_collection;
 
                 //Filter after video title or description
-                $videos_match_title = Video::select(['id', 'title', 'title_en', 'description'])->where('title', 'LIKE', $filterTerm)
-                    ->orwhere('title_en', 'LIKE', $filterTerm)
+                $videos_match_title = Video::select(['id', 'title', 'title_en', 'description'])->where('id', 'LIKE', $filterTerm)
+                    ->orWhere('title', 'LIKE', $filterTerm)
+                    ->orWhere('title_en', 'LIKE', $filterTerm)
                     ->orWhere('description', 'LIKE', $filterTerm)
                     ->pluck('id')->toArray();
 
@@ -438,6 +440,7 @@ class Manage extends Component
                     ->whereIn('id', $videos_match_title)
                     ->orWhereIn('id', $video_course_presenters)
                     ->orWhereIn('id', $video_course_tags)
+                    ->latest('creation')
                     ->get();
                 //end filter
             }
@@ -623,9 +626,11 @@ class Manage extends Component
     public function courseSettings($courses)
     {
         foreach ($courses as $course) {
-            if ($courseSettings = CoursesettingsPermissions::select('visibility','downloadable')->where('course_id', $course->course_id)->first()) {
+            if ($courseSettings = CoursesettingsPermissions::select('visibility', 'unlisted', 'downloadable')->where('course_id', $course->course_id)->first()) {
                 //Visibility
                 $this->coursesetlist[$course->course_id]['visibility'] = $courseSettings->visibility;
+                //Unlisted
+                $this->coursesetlist[$course->course_id]['unlisted'] = $courseSettings->unlisted;
                 //Downloadable
                 $this->coursesetlist[$course->course_id]['downloadable'] = $courseSettings->downloadable;
             }
@@ -706,6 +711,6 @@ class Manage extends Component
 
     public function IsNullOrEmptyString($str): bool
     {
-        return ($str === '%%' || trim($str) === '% %');
+        return ($str === '%%' || trim($str) === '% %' || $str == null);
     }
 }

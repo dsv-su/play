@@ -51,6 +51,12 @@
             <span class="badge badge-light mb-2">{{__("Hidden")}} <span class="badge badge-danger"><i
                             class="fas fa-eye-slash"></i></span></span>
         @endif
+        @if(!key_exists($video_course->course->id, $coursesetlist) || $coursesetlist[$video_course->course->id]['unlisted'] == true)
+            <span class="badge badge-light mb-2">{{__("Unlisted")}}
+                <span class="badge badge-success" data-toggle="tooltip" data-title="{{__("Unlisted")}}"><i class="fa-solid fa-key"></i></span>
+            </span>
+        @endif
+
         @if($admin)
             <a class="badge badge-primary" role="button" style="max-height: 32.38px;"
                href="{{ route('course_edit', $video_course->course->id) }}">{{__("Settings")}} <i class="fas fa-cog"></i></a>

@@ -50,6 +50,10 @@
         @else
             <span class="badge badge-danger" data-toggle="tooltip" data-title="{{__("Hidden")}}"><i class="fas fa-eye-slash"></i></span>
         @endif
+    <!-- Unlisted -->
+        @if(!key_exists($video_course->course->id, $coursesetlist) || $coursesetlist[$video_course->course->id]['unlisted'] == true)
+            <span class="badge badge-success" data-toggle="tooltip" data-title="{{__("Unlisted")}}"><i class="fa-solid fa-key"></i></span>
+        @endif
     </fieldset>
     <!-- Course Settings button -->
         @if($admin)

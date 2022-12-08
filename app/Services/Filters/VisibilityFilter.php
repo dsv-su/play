@@ -58,10 +58,12 @@ class VisibilityFilter
             }
 
             //Make hidden videos show with 'hidden' features
+            /*
             if($video->visibility == false) {
                 $video->setAttribute('hidden', true);
                 return $video;
             }
+            */
 
             return $video->visibility;
         });

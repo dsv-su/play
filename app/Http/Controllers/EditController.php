@@ -9,7 +9,9 @@ use App\Permission;
 use App\Presenter;
 use App\Services\Daisy\DaisyAPI;
 use App\Services\Filters\VisibilityFilter;
+use App\Services\Ldap\SukatUser;
 use App\Stream;
+use App\Tag;
 use App\Video;
 use App\VideoCourse;
 use App\VideoPermission;
@@ -23,7 +25,8 @@ class EditController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['edit-permission', 'redirect-links']);
+        $this->middleware('redirect-links');
+        $this->middleware('edit-permission')->except(['bulkEditShow','bulkEditStore']);
     }
 
     public function show(Video $video, VisibilityFilter $visibility)
@@ -192,10 +195,21 @@ class EditController extends Controller
             }
 
             //Update visibility
-            if ($request->visibility) {
-                $video->visibility = true;
-            } else {
-                $video->visibility = false;
+            if ($request->video_visibility) {
+                switch($request->video_visibility) {
+                    case('visible'):
+                        $video->visibility = true;
+                        $video->unlisted = false;
+                        break;
+                    case('private'):
+                        $video->visibility = false;
+                        $video->unlisted = false;
+                        break;
+                    case('unlisted'):
+                        $video->visibility = false;
+                        $video->unlisted = true;
+                        break;
+                }
             }
 
             //Update visibility
@@ -218,5 +232,103 @@ class EditController extends Controller
             return redirect(session('links')[2])->with('message', __("Presentation successfully updated"));
         }
 
+    }
+
+    public function bulkEditShow(Request $request)
+    {
+        $visibility = app(VisibilityFilter::class);
+        $videos = $visibility->filter(Video::whereIn('id', $request->bulkids)->get());
+        $videos = $videos->filter(function ($i) {
+            return $i->edit;
+        });
+        return view('manage.bulk-edit-presentation', ['videos' => $videos]);
+    }
+
+    public function bulkEditStore(Request $request)
+    {
+        $visibility = $request->video_visibility;
+        $download = (bool)$request->downloadable;
+        $courseids = $request->courses ?? [];
+        $tags = $request->tags ?? [];
+        $supresenters = $request->supresenters ?? [];
+        $externalpresenters = $request->externalpresenters ?? [];
+        $videoids = $request->videos ?? [];
+        // Get videos from the ids
+        $videos = Video::whereIn('id', $videoids)->get();
+        $visibilityFilter = app(VisibilityFilter::class);
+        // Filter them
+        $fitleredvideos = $visibilityFilter->filter($videos)->pluck('id');
+        // Re-load them to get rid of casts and extra attributes
+        $videos = Video::whereIn('id', $fitleredvideos)->get();
+
+        $overwritecourses = (bool)$request->overwriteCourse;
+        $overwritepresenters = (bool)$request->overwritePresenter;
+        $overwritetags = (bool)$request->overwriteTag;
+
+        foreach ($videos as $video) {
+            switch($visibility) {
+                case('visible'):
+                    $video->visibility = true;
+                    $video->unlisted = false;
+                    break;
+                case('private'):
+                    $video->visibility = false;
+                    $video->unlisted = false;
+                    break;
+                case('unlisted'):
+                    $video->visibility = false;
+                    $video->unlisted = true;
+                    break;
+            }
+            $video->download = $download;
+
+            if ($video->delete) {
+                // Handle overwrites only if a user has delete-permission
+                if ($overwritecourses) {
+                    VideoCourse::where(['video_id' => $video->id])->delete();
+                }
+                if ($overwritepresenters) {
+                    VideoPresenter::where(['video_id' => $video->id])->delete();
+                }
+                if ($overwritetags) {
+                    VideoTag::where(['video_id' => $video->id])->delete();
+                }
+            }
+
+            foreach ($courseids as $courseid) {
+                VideoCourse::updateOrCreate(['video_id' => $video->id, 'course_id' => $courseid]);
+            }
+            foreach ($tags as $tag) {
+                $tag = Tag::firstOrCreate(['name' => $tag]);
+                VideoTag::updateOrcreate(['video_id' => $video->id, 'tag_id' => $tag->id]);
+            }
+            foreach ($externalpresenters as $externalpresenter) {
+                $presenter = Presenter::firstOrCreate([
+                    'name' => $externalpresenter,
+                    'description' => 'external'
+                ]);
+                $presenter->save();
+                VideoPresenter::create([
+                    'video_id' => $video->id,
+                    'presenter_id' => $presenter->id
+                ]);
+            }
+            foreach ($supresenters as $supresenter) {
+                $sukatpresenter = SukatUser::findBy('uid', $supresenter);
+                $presenter = Presenter::firstOrCreate([
+                    'username' => $supresenter,
+                    'description' => 'sukat'
+                ]);
+                $presenter->name = $sukatpresenter->getFirstAttribute('cn');
+                $presenter->save();
+                VideoPresenter::create([
+                    'video_id' => $video->id,
+                    'presenter_id' => $presenter->id
+                ]);
+            }
+            $video->save();
+        }
+
+        return redirect(session('links')[2])->with('message', __("Presentations are successfully updated"));
     }
 }

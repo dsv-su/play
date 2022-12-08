@@ -27,7 +27,7 @@
                 <option value="{{$username}}">{{$name}}</option>
             @endforeach
         </select>
-        @if($view == 'courses')
+
         <select wire:model="term" @if (empty($videoterms)) disabled
                 @endif class="form-control mx-1 selectpicker"
                 data-none-selected-text="{{ __('Term')}}"
@@ -38,7 +38,7 @@
                 <option value="{{$semester}}">{{$semester}}</option>
             @endforeach
         </select>
-        @endif
+
         <select wire:model="tag" @if (empty($videotags)) disabled
                 @endif class="form-control mx-1 selectpicker"
                 data-none-selected-text="{{ __('Tag') }}" data-live-search="true" multiple

@@ -84,17 +84,22 @@
                 @endif
                 <!-- end Group Permission -->
 
-                <!-- Visibility icon-->
+                <!-- Visibility icons-->
                 @if($video->hidden)
-                    <div class="visibility mx-1" data-toggle="tooltip" title="{{__('Presentation is hidden')}}">
+                    <div class="visibility mx-1" data-toggle="tooltip" title="{{__("Presentation is private")}}">
                         <i class="fas fa-eye-slash"></i>
+                    </div>
+                @endif
+                @if($video->unlisted)
+                    <div class="visibility mx-1" data-toggle="tooltip" title="{{__("Presentation is unlisted")}}">
+                        <i class="fa-solid fa-key"></i>
                     </div>
                 @endif
             </div>
             <!-- Visibility banner -->
             @if ($video->hidden)
                 <div class="d-flex justify-content-center h-100">
-                    <div class="d-inline alert alert-secondary m-auto" role="alert">{{ __("Hidden") }}</div>
+                    <div class="d-inline alert alert-secondary m-auto" role="alert">{{ __("Private") }}</div>
                 </div>
             {{--}}
             @else
@@ -106,6 +111,11 @@
                 </div>
             </div>
             {{--}}
+            @endif
+            @if ($video->unlisted)
+                <div class="d-flex justify-content-center h-100">
+                    <div class="d-inline alert alert-secondary m-auto" role="alert">{{ __("Unlisted") }}</div>
+                </div>
             @endif
             <p class="m-1 px-1"> {{$video->duration}} </p>
         </div>

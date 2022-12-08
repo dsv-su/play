@@ -3,13 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\AdminHandler;
-use App\Course;
 use App\ManualPresentation;
 use App\MediasiteFolder;
 use App\MediasitePresentation;
 use App\Permission;
 use App\Presentation;
-use App\Services\Cattura\CheckCatturaRecorderStatus;
 use App\Services\DownloadPackageZip;
 use App\Services\Notify\PlayStoreNotify;
 use App\Services\ReLoadPlayStore;
@@ -17,7 +15,6 @@ use App\Video;
 use App\VideoPermission;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Storage;
 
@@ -76,7 +73,7 @@ class AdminController extends Controller
         if (!$request->server('REMOTE_USER')) {
             //No Shib_Session_ID
             if ($request->role == 'Administrator') {
-                AdminHandler::updateOrCreate(['Shib_Session_ID' => '9999'], ['override' => false]);
+                $adminhandler = AdminHandler::updateOrCreate(['Shib_Session_ID' => '9999'], ['override' => false]);
             } else {
                 $adminhandler = AdminHandler::firstOrCreate(['Shib_Session_ID' => '9999']);
                 $adminhandler->override = true;
