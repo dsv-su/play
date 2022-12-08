@@ -25,7 +25,8 @@ class EditController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['edit-permission', 'redirect-links']);
+        $this->middleware('redirect-links');
+        $this->middleware('edit-permission')->except(['bulkEditShow','bulkEditStore']);
     }
 
     public function show(Video $video, VisibilityFilter $visibility)

@@ -7,7 +7,7 @@ use Livewire\Component;
 class Faq extends Component
 {
     public $start, $wiplay, $language, $rap, $navigate, $upload, $download, $manage_presentations, $manage_courses;
-    public $edit, $player, $semester, $designation;
+    public $edit, $player, $semester, $designation, $edit_course, $queue;
     public $admin;
     public $intended, $url_routes;
     public $toggle;
@@ -27,7 +27,9 @@ class Faq extends Component
             'manage_courses' => '/manage_n',
             'semester' => '/semester/',
             'designation' => '/designation/',
-            'course' => '/course/'
+            'nav_course' => 'course/all',
+            'course' => 'course/',
+            'queue' => '/queue'
         ];
 
         //Check role
@@ -81,6 +83,12 @@ class Faq extends Component
             case($this->url_routes['manage_courses']):
                 $this->manage_courses = true;
                 break;
+            case($this->url_routes['nav_course']):
+                $this->designation = true;
+                break;
+            case($this->url_routes['queue']):
+                $this->queue = true;
+                break;
 
         }
         //Check parameter in URL
@@ -95,7 +103,7 @@ class Faq extends Component
                 $this->designation = true;
                 break;
             case stristr($url, $this->url_routes['course']):
-                //$this->designation = true;
+                $this->edit_course = true;
                 break;
         }
 
@@ -121,6 +129,8 @@ class Faq extends Component
         $this->manage_courses = false;
         $this->semester = false;
         $this->designation = false;
+        $this->edit_course = false;
+        $this->queue = false;
     }
 
     public function wiplay()
@@ -138,6 +148,8 @@ class Faq extends Component
         $this->manage_courses = false;
         $this->semester = false;
         $this->designation = false;
+        $this->edit_course = false;
+        $this->queue = false;
     }
 
     public function language()
@@ -155,6 +167,8 @@ class Faq extends Component
         $this->manage_courses = false;
         $this->semester = false;
         $this->designation = false;
+        $this->edit_course = false;
+        $this->queue = false;
     }
 
     public function rap()
@@ -172,6 +186,8 @@ class Faq extends Component
         $this->manage_courses = false;
         $this->semester = false;
         $this->designation = false;
+        $this->edit_course = false;
+        $this->queue = false;
     }
 
     public function navigate()
@@ -189,6 +205,8 @@ class Faq extends Component
         $this->manage_courses = false;
         $this->semester = false;
         $this->designation = false;
+        $this->edit_course = false;
+        $this->queue = false;
     }
 
     public function player()
@@ -206,6 +224,8 @@ class Faq extends Component
         $this->manage_courses = false;
         $this->semester = false;
         $this->designation = false;
+        $this->edit_course = false;
+        $this->queue = false;
     }
 
     public function upload()
@@ -223,6 +243,8 @@ class Faq extends Component
         $this->manage_courses = false;
         $this->semester = false;
         $this->designation = false;
+        $this->edit_course = false;
+        $this->queue = false;
     }
 
     public function download()
@@ -240,6 +262,8 @@ class Faq extends Component
         $this->manage_courses = false;
         $this->semester = false;
         $this->designation = false;
+        $this->edit_course = false;
+        $this->queue = false;
     }
 
     public function edit()
@@ -257,6 +281,8 @@ class Faq extends Component
         $this->manage_courses = false;
         $this->semester = false;
         $this->designation = false;
+        $this->edit_course = false;
+        $this->queue = false;
     }
 
     public function manage_presentations()
@@ -274,6 +300,8 @@ class Faq extends Component
         $this->manage_courses = false;
         $this->semester = false;
         $this->designation = false;
+        $this->edit_course = false;
+        $this->queue = false;
     }
 
     public function manage_courses()
@@ -291,6 +319,27 @@ class Faq extends Component
         $this->manage_courses = true;
         $this->semester = false;
         $this->designation = false;
+        $this->edit_course = false;
+        $this->queue = false;
+    }
+
+    public function edit_course()
+    {
+        $this->start = false;
+        $this->wiplay = false;
+        $this->navigate = false;
+        $this->language = false;
+        $this->rap = false;
+        $this->player = false;
+        $this->upload = false;
+        $this->download = false;
+        $this->edit = false;
+        $this->manage_presentations = false;
+        $this->manage_courses = true;
+        $this->semester = false;
+        $this->designation = false;
+        $this->edit_course = true;
+        $this->queue = false;
     }
 
     public function render()

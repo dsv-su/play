@@ -53,6 +53,10 @@
             @if($manage_courses)
                 @include('faq.manage_courses')
             @endif
+            <!-- Edit course -->
+            @if($edit_course)
+                @include('faq.edit_course')
+            @endif
             <!-- Search Semester -->
             @if($semester)
                 @include('faq.semester')
@@ -60,6 +64,10 @@
             <!-- Search Course -->
             @if($designation)
                 @include('faq.designation')
+            @endif
+            <!-- Conversion queue -->
+            @if($queue)
+                @include('faq.queue')
             @endif
 
             @if($admin)
