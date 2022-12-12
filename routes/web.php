@@ -164,6 +164,14 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     //Stats
     Route::get('stats/{video}', 'StatsController@index')->name('stats');
 
+    //Chunkupload
+    //Media library routes
+    Route::get('/medialibrary', [App\Http\Controllers\MediaLibraryController::class, 'mediaLibrary'])->name('media-library');
+
+    //FILE UPLOADS CONTROLER
+    Route::post('medialibrary/upload', [App\Http\Controllers\UploaderController::class, 'upload'])->name('file-upload');
+    Route::post('medialibrary/delete', [App\Http\Controllers\UploaderController::class, 'delete'])->name('file-delete');
+
 });
 Route::any('{query}',
     function () {

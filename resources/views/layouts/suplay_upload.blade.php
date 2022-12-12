@@ -11,7 +11,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" href="{{ asset('./images/favicon.ico') }}">
     <link rel="stylesheet" href="{{asset('./css/dsvplay.css')}}">
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
     <script src="{{asset('./js/dsvplay.js')}}"></script>
+
     <!-- Laravel Livewire -->
     @livewireStyles
     @livewireScripts
@@ -26,5 +28,7 @@
     </div>
 </main>
 @include('layouts.partials.footer')
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+<script src="{{ asset('js/file_upload.js') }}" defer></script>
 </body>
 </html>

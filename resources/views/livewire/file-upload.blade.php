@@ -58,6 +58,24 @@
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+                        <div wire:ignore.self class="form-group">
+                            <?php
+                            $ts = time();
+                            $date = date("Y-m-d");
+                            ?>
+
+
+                            <div id="uploaderHolder">
+                                <form action="{{ route('file-upload') }}" class="dropzone" id="datanodeupload">
+                                    <input type="file" name="file"  style="display: none;">
+                                    <input type="hidden" name="dataTS" id="dataTS" value="{{ $ts }}">
+                                    <input type="hidden" name="dataDATE" id="dataDATE" value="{{ $date }}">
+                                    @csrf
+                                </form>
+                            </div>
+                        </div>
+
+
                     </div>
                     <div class="form-group col-md-6 flex-column d-flex">
                         <!-- Subtitles file-->
@@ -224,4 +242,10 @@
         $('#outofrangeModal').modal('show');
     });
 </script>
-
+<script>
+    var home_url = "{{env('APP_URL') }}";
+    var deleteAction = '{{ route("file-delete") }}';
+    var generalTS =  document.getElementById('dataTS').value;
+    var generalDATE = document.getElementById('dataDATE').value;
+    var token = '{!! csrf_token() !!}';
+</script>

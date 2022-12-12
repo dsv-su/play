@@ -1,5 +1,5 @@
 <?php
-
+/*
 declare(strict_types = 1);
 
 namespace App\Charts;
@@ -19,7 +19,7 @@ class PresentationStats extends BaseChart
      * It must always return an instance of Chartisan
      * and never a string or an array.
      */
-
+/*
     public function handler(Request $request): Chartisan
     {
         $id = $request->id;
@@ -37,4 +37,4 @@ class PresentationStats extends BaseChart
             ->dataset('Clicks', $count);
     }
 }
-
+*/
