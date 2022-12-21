@@ -100,7 +100,7 @@ class AdminController extends Controller
                 } else {
                     $adminhandler->role = 'Student';
                 }
-                
+
                 $adminhandler->save();
             }
             else {
@@ -135,7 +135,7 @@ class AdminController extends Controller
                 $person = $daisy->getDaisyEmployee($userID);
 
                 //Update AdminHandler
-                $adminhandler = AdminHandler::firstOrCreate(['Shib_Session_ID' => '9999']);
+                $adminhandler = AdminHandler::firstOrCreate(['Shib_Session_ID' => $request->server('Shib_Session_ID')]);
                 $adminhandler->override = true;
                 $adminhandler->custom = true;
                 $adminhandler->username = $userID;
