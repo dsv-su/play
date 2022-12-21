@@ -236,7 +236,7 @@
                     </a>
                 </span>
             </div>
-            
+
         </nav>
 
         <nav class="d-lg-none d-flex align-items-center ml-auto" aria-label="Huvudmeny">

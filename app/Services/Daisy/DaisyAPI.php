@@ -12,6 +12,36 @@ class DaisyAPI extends DaisyIntegration
     {
         //Loader
     }
+    public function checkifEmployee($id)
+    {
+        //Checks if user is employee only by a daisy lookup
+        $this->array_resource = json_decode($this->getResource('employee', 'json')->getBody()->getContents(), TRUE);
+        //return $this->array_resource;
+        $this->employees_id = collect($this->array_resource)->map(function ($item, $key) {
+            return $item['person']['id'];
+        });
+        foreach($this->employees_id as $this->employe_id) {
+            if($id == $this->employe_id) {
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    public function getDaisyEmployee($username)
+    {
+        //Retrives user info from Daisy
+        //$this->array_resource = json_decode($this->getResource('employee/username/' . $username . '@su.se', 'json')->getBody()->getContents(), TRUE);
+        $this->array_resource = json_decode($this->getResource('person/username/' . $username . '@su.se', 'json')->getBody()->getContents(), TRUE);
+        return $this->array_resource;
+    }
+
+    public function getDaisyPerson($id)
+    {
+        $this->array_resource = json_decode($this->getResource('person/' . $id . '/settings', 'json')->getBody()->getContents(), TRUE);
+        return $this->array_resource;
+    }
 
     public function checkCourseAdmin($id)
     {
