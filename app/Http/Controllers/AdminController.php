@@ -100,13 +100,8 @@ class AdminController extends Controller
                 } else {
                     $adminhandler->role = 'Student';
                 }
-
-                //dd($person['email']);
-
-
+                
                 $adminhandler->save();
-
-
             }
             else {
                 $adminhandler = AdminHandler::firstOrCreate(['Shib_Session_ID' => '9999']);
@@ -125,10 +120,41 @@ class AdminController extends Controller
         } else {
             //Has Shib_Session_ID
             if ($request->role == 'Administrator') {
-                AdminHandler::updateOrCreate(['Shib_Session_ID' => $request->server('Shib_Session_ID')], ['override' => false]);
-            } else {
+                AdminHandler::updateOrCreate(['Shib_Session_ID' => $request->server('Shib_Session_ID')], ['override' => false, 'custom' => false, 'user' => '', 'username' => '']);
+            }
+            elseif ($request->role == 'custom') {
+                //Strip domain suffix
+                if (strpos($request->custom, '@') !== false) {
+                    $userID = substr($request->custom, 0, strpos($request->custom, "@"));
+                } else {
+                    $userID = $request->custom;
+                }
+
+                //Store user info
+                $daisy = new DaisyAPI();
+                $person = $daisy->getDaisyEmployee($userID);
+
+                //Update AdminHandler
+                $adminhandler = AdminHandler::firstOrCreate(['Shib_Session_ID' => '9999']);
+                $adminhandler->override = true;
+                $adminhandler->custom = true;
+                $adminhandler->username = $userID;
+                $adminhandler->user = $person['firstName'] . ' ' . $person['lastName'];
+                //Check if user is employee or student
+                if($daisy->checkifEmployee($person['id'])) {
+                    $adminhandler->role = 'Courseadmin';
+                } else {
+                    $adminhandler->role = 'Student';
+                }
+
+                $adminhandler->save();
+            }
+            else {
                 $adminhandler = AdminHandler::firstOrCreate(['Shib_Session_ID' => $request->server('Shib_Session_ID')]);
                 $adminhandler->override = true;
+                $adminhandler->custom = false;
+                $adminhandler->user = '';
+                $adminhandler->username = '';
                 $adminhandler->role = $request->role;
                 $adminhandler->save();
             }
