@@ -169,7 +169,7 @@ class PlayAuthenticate
                 if($adminhandler = AdminHandler::where('Shib_Session_ID', $request->server('Shib_Session_ID'))->first()) {
                     if($adminhandler->override) {
                         //Override
-                        if($adminhandler->role == 'Courseadmin') {
+                        if($adminhandler->role == 'Courseadmin' && $adminhandler->custom == false) {
                             app()->bind('play_role', function () use($adminhandler){
                                 return $adminhandler->role;
                             });
@@ -211,6 +211,17 @@ class PlayAuthenticate
                             });
                             app()->bind('play_username', function() {
                                 return 'stud3333'; //TestStudent username 3
+                            });
+                        }
+                        elseif ($adminhandler->role == 'Courseadmin' && $adminhandler->custom == true) {
+                            app()->bind('play_role', function () use($adminhandler){
+                                return $adminhandler->role;
+                            });
+                            app()->bind('play_user', function() use($adminhandler){
+                                return $adminhandler->user;
+                            });
+                            app()->bind('play_username', function() use($adminhandler){
+                                return $adminhandler->username;
                             });
                         }
                         else {
