@@ -30,7 +30,7 @@ class DaisyIntegration
         } catch (ClientException $e) {
             app()->make('init')->check_system();
             report($e);
-            abort(510);
+            abort(404);
         }
     }
 
