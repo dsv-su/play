@@ -177,7 +177,7 @@ class PlayAuthenticate
                                 return 'CourseAdmin'; //Courseadmin
                             });
                             app()->bind('play_username', function() {
-                                return 'andan'; //Courseadmin
+                                return 'gwett'; //Courseadmin
                             });
                         }
                         elseif($adminhandler->role == 'Student1') {
