@@ -57,7 +57,16 @@
 
                     </li>
                 @endif
-                <!-- HT 2022 -->
+                <!-- VT 2023 -->
+                @if (isset($active_vt) && !$active_vt->isEmpty())
+                    <!-- Paginated tab -->
+                        <li class="nav-item pb-0">
+                            <a class="nav-link" href="#active_vt" data-toggle="tab" role="tab" aria-controls="active_vt"
+                               title="@lang('lang.active_courses_vt')">@lang('lang.active_courses_vt') <span
+                                    class="count-label">{{$activepaginated_vt->total()}}</span></a>
+                        </li>
+                @endif
+                <!-- HT 2023 -->
                 @if (isset($active_ht) && !$active_ht->isEmpty())
                     <!-- Paginated tab -->
                     <li class="nav-item pb-0">
@@ -66,15 +75,16 @@
                                     class="count-label">{{$activepaginated_ht->total()}}</span></a>
                     </li>
                 @endif
-                <!-- VT 2022 -->
-                @if (isset($active_vt) && !$active_vt->isEmpty())
+                <!-- HT 2022 -->
+                @if (isset($previous_ht) && !$previous_ht->isEmpty())
                     <!-- Paginated tab -->
-                    <li class="nav-item pb-0">
-                        <a class="nav-link" href="#active_vt" data-toggle="tab" role="tab" aria-controls="active_vt"
-                           title="@lang('lang.active_courses_vt')">@lang('lang.active_courses_vt') <span
-                                    class="count-label">{{$activepaginated_vt->total()}}</span></a>
-                    </li>
+                        <li class="nav-item pb-0">
+                            <a class="nav-link" href="#previous_ht" data-toggle="tab" role="tab" aria-controls="previous_ht"
+                               title="@lang('lang.previous_courses_ht')">@lang('lang.previous_courses_ht') <span
+                                    class="count-label">{{$previouspaginated_ht->total()}}</span></a>
+                        </li>
                 @endif
+
                 <!-- Paginated tab -->
 
                 @if (isset($latest) && !isset($course) && $allpaginated->total())
@@ -102,38 +112,11 @@
             <!-- Content tab My -->
             @if (isset($my) && !$my->isEmpty())
                 <div id="my" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-A">
-                    <!-- Paginations status-->
-                    {{--}}
-                    <section>
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-3 col-sm-6 bottom-margin text-center">
-                                    <span style="font-size:30px; line-height:60px; display:block;">{{$mypaginated->currentPage()}}/{{$mypaginated->lastPage()}}</span>
-                                    <span style="font-size:12px; letter-spacing:2px; text-transform: uppercase">{{__("Page")}}</span>
-                                </div>
-                                <div class="col-md-3 col-sm-6 bottom-margin text-center">
-                                    <span style="font-size:30px; line-height:60px; display:block;">{{$mypaginated->count()}}</span>
-                                    <span style="font-size:12px; letter-spacing:2px; text-transform: uppercase">{{__("Presentations")}}</span>
-                                </div>
-
-                                <div class="col-md-3 col-sm-6 bottom-margin text-center">
-                                    <span style="font-size:30px; line-height:60px; display:block;">{{$mypaginated->total()}}</span>
-                                    <span style="font-size:12px; letter-spacing:2px; text-transform: uppercase">{{__("Total Presentations")}}</span>
-                                </div>
-                                <div class="col-md-3 col-sm-6 bottom-margin text-center">
-                                    <span style="font-size:30px; line-height:60px; display:block;">{{$mypaginated->perPage()}}</span>
-                                    <span style="font-size:12px; letter-spacing:2px; text-transform: uppercase">{{__("Showing per Page")}}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                    {{--}}
                     <!--  Pagination for tab1 - My courses -->
                     <div class="pagination justify-content-center mt-4">
                         {{ $mypaginated->fragment('my')->links() }}
                     </div>
-                    <!-- -->
-                    <!-- -->
+
                     <div class="card-deck inner">
                         @foreach ($my as $key => $video)
                             <div class="col my-3 w">
@@ -159,11 +142,11 @@
                 </div>
             @endif
 
-            <!-- Content HT 2022 Active -->
+            <!-- Content HT 2023 Active -->
             @if (isset($active_ht) && !$active_ht->isEmpty())
                 <div id="active_ht" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-B">
 
-                    <!-- Pagination for HT2022 - Active courses -->
+                    <!-- Pagination for HT2023  Active courses -->
                     <div class="pagination justify-content-center mt-4">
                         {{ $activepaginated_ht->fragment('active_ht')->links() }}
                     </div>
@@ -185,47 +168,21 @@
                             <div class="card video my-0 mx-auto"></div>
                         </div>
                     </div>
-                    <!-- Pagination for tab2 - Active courses -->
+                    <!-- Pagination for tab2  Active courses -->
                     <div class="pagination justify-content-center">
                         {{ $activepaginated_ht->fragment('active_ht')->links() }}
                     </div>
                     <!-- -->
                 </div>
             @endif
-            <!-- Content VT 2022 Active -->
-            @if (isset($active_vt) && !$active_vt->isEmpty())
-                <div id="active_vt" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-B">
-                    <!-- Paginations status-->
-                    {{--}}
-                    <section>
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-3 col-sm-6 bottom-margin text-center">
-                                    <span style="font-size:30px; line-height:60px; display:block;">{{$activepaginated->currentPage()}}/{{$activepaginated->lastPage()}}</span>
-                                    <span style="font-size:12px; letter-spacing:2px; text-transform: uppercase">{{__("Page")}}</span>
-                                </div>
-                                <div class="col-md-3 col-sm-6 bottom-margin text-center">
-                                    <span style="font-size:30px; line-height:60px; display:block;">{{$activepaginated->count()}}</span>
-                                    <span style="font-size:12px; letter-spacing:2px; text-transform: uppercase">{{__("Presentations")}}</span>
-                                </div>
 
-                                <div class="col-md-3 col-sm-6 bottom-margin text-center">
-                                    <span style="font-size:30px; line-height:60px; display:block;">{{$activepaginated->total()}}</span>
-                                    <span style="font-size:12px; letter-spacing:2px; text-transform: uppercase">{{__("Total Presentations")}}</span>
-                                </div>
-                                <div class="col-md-3 col-sm-6 bottom-margin text-center">
-                                    <span style="font-size:30px; line-height:60px; display:block;">{{$activepaginated->perPage()}}</span>
-                                    <span style="font-size:12px; letter-spacing:2px; text-transform: uppercase">{{__("Showing per Page")}}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                    {{--}}
-                    <!-- Pagination for tab2 - Active courses -->
+            <!-- Content VT 2023 Active -->
+            @if (isset($active_vt) && !$active_vt->isEmpty())
+                <div id="active_vt" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-C">
+                    <!-- Pagination for tab2  Active courses -->
                     <div class="pagination justify-content-center mt-4">
                         {{ $activepaginated_vt->fragment('active_vt')->links() }}
                     </div>
-                    <!-- -->
                     <!-- -->
                     <div class="card-deck inner">
                         @foreach ($active_vt as $key => $video)
@@ -244,7 +201,7 @@
                             <div class="card video my-0 mx-auto"></div>
                         </div>
                     </div>
-                    <!-- Pagination for tab2 - Active courses -->
+                    <!-- Pagination for tab2  Active courses -->
                     <div class="pagination justify-content-center">
                         {{ $activepaginated_vt->fragment('active_vt')->links() }}
                     </div>
@@ -252,8 +209,41 @@
                 </div>
             @endif
 
+            <!-- Content HT 2022 Previous -->
+            @if (isset($previous_ht) && !$previous_ht->isEmpty())
+                <div id="previous_ht" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-D">
+
+                    <!-- Pagination for HT2022  Previous courses -->
+                    <div class="pagination justify-content-center mt-4">
+                        {{ $previouspaginated_ht->fragment('previous_ht')->links() }}
+                    </div>
+                    <!-- -->
+                    <div class="card-deck inner">
+                        @foreach ($previous_ht as $key => $video)
+                            <div class="col my-3">
+                                @include('home.video')
+                                @include('layouts.partials.videomodals')
+                            </div>
+                        @endforeach
+                        <div class="col">
+                            <div class="card video my-0 mx-auto"></div>
+                        </div>
+                        <div class="col">
+                            <div class="card video my-0 mx-auto"></div>
+                        </div>
+                        <div class="col">
+                            <div class="card video my-0 mx-auto"></div>
+                        </div>
+                    </div>
+                    <!-- Pagination for tab2  Previous courses -->
+                    <div class="pagination justify-content-center">
+                        {{ $previouspaginated_ht->fragment('previous_ht')->links() }}
+                    </div>
+                    <!-- -->
+                </div>
+        @endif
             <!-- Content tab All -->
-            <div id="all" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-C">
+            <div id="all" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-E">
                 @if ((isset($latest) && $latest->count()) || isset($pending) && $pending->count())
                     @if (isset($courses) || isset($terms) || isset($presenters) || isset($tags))
                         <form class="form-inline">

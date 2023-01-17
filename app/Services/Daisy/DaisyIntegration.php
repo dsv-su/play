@@ -125,6 +125,7 @@ class DaisyIntegration
 
         return $this->list;
     }
+
     public function getActiveCoursesVT()
     {
         $this->course_result = [];
@@ -146,6 +147,53 @@ class DaisyIntegration
 
         return $this->list;
     }
+
+    //
+    //Retrieve previous year courses from Daisy
+    public function getPreviousYearCoursesHT()
+    {
+        $this->course_result = [];
+        $this->courses = [];
+        $this->list = [];
+
+        //Retrive only course from this semester
+        $this->course_result = $this->getResource('courseSegment?semester=' . ($this->to_year() - 1) . '2', 'json');
+
+        $this->courses = json_decode($this->course_result->getBody()->getContents(), TRUE);
+        //Check if there exist active courses
+        if ($this->courses) {
+            foreach ($this->courses as $this->courselist) {
+                $this->list[] = $this->courselist['id'];
+            }
+        } else {
+            $this->list[] = 0;
+        }
+
+        return $this->list;
+    }
+
+    public function getPreviousYearCoursesVT()
+    {
+        $this->course_result = [];
+        $this->courses = [];
+        $this->list = [];
+
+        //Retrive only course from this semester
+        $this->course_result = $this->getResource('courseSegment?semester=' . ($this->to_year() - 1). '1', 'json');
+
+        $this->courses = json_decode($this->course_result->getBody()->getContents(), TRUE);
+        //Check if there exist active courses
+        if ($this->courses) {
+            foreach ($this->courses as $this->courselist) {
+                $this->list[] = $this->courselist['id'];
+            }
+        } else {
+            $this->list[] = 0;
+        }
+
+        return $this->list;
+    }
+    //
 
     //Method for retrieving Students active courses from Daisy with UserID
     public function getActiveStudentCourses($username)
@@ -206,6 +254,7 @@ class DaisyIntegration
     public function init($start_date = null)
     {
         $this->endpoints = array(
+            'courseSegment?semester=20231',
             'courseSegment?semester=20222',
             'courseSegment?semester=20221',
             'courseSegment?semester=20212',

@@ -218,7 +218,7 @@ class CourseStore extends Model
     public function convertYear($timestamp)
     {
         $this->creation = Carbon::createFromTimestamp($timestamp)->toObject();
-        if($this->creation->month == 1 && $this->creation->day < 17) {
+        if($this->creation->month == 1 && $this->creation->day < 16) {
             $this->creation->year = $this->creation->year - 1;
         }
         return $this->creation->year;
@@ -228,7 +228,7 @@ class CourseStore extends Model
     {
         $this->creation = Carbon::createFromTimestamp($timestamp)->toObject();
         if (in_array($this->creation->month, [1, 2, 3, 4, 5, 6])) {
-            if($this->creation->month == 1 && $this->creation->day < 17 ) {
+            if($this->creation->month == 1 && $this->creation->day < 16 ) {
                 return 'HT';
             } else {
                 return 'VT';
@@ -243,7 +243,7 @@ class CourseStore extends Model
     {
         $this->creation = Carbon::createFromTimestamp($timestamp)->toObject();
         if (in_array($this->creation->month, [1, 2, 3, 4, 5, 6])) {
-            if($this->creation->month == 1 && $this->creation->day < 17 ) {
+            if($this->creation->month == 1 && $this->creation->day < 16 ) {
                 return '2';
             } else {
                 return '1';
