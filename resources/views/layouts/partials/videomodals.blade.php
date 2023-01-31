@@ -18,7 +18,10 @@
                 </div>
                 <div class="form-group">
                     <label for="embedCode">{{__("Embed ilearn")}}</label>
-                    <textarea readonly class="form-control text-muted" rows="4" id="embedCode"><div style="position: relative;"><a target="_blank" href="{{ route('player', ['video' => $video]) }}"><div style="position: absolute; top: 130px; left: 255px; display: inline-block;color: white;"><i class="fa fa-play fa-5x" aria-hidden="true"></i></div><img src="{{ asset($video->thumb)}}" width="560" height="315"></a></div></textarea>
+                    <div class="textarea-container">
+                        <button class="btn btn-outline btn-sm textarea-container button" onclick="copyToClipboard(embedCode.value)"><i class="fa-regular fa-clipboard"></i></button>
+                        <textarea readonly class="form-control text-muted" rows="4" id="embedCode"><div style="position: relative;"><a target="_blank" href="{{ route('player', ['video' => $video]) }}"><div style="position: absolute; top: 130px; left: 255px; display: inline-block;color: white;"><i class="fa fa-play fa-5x" aria-hidden="true"></i></div><img src="{{ asset($video->thumb)}}" width="560" height="315"></a></div></textarea>
+                    </div>
                     <small id="embbedCodeHelp"
                            class="form-text text-muted">{{ __("Use this embed code to insert the video in iLearn") }}</small>
                 </div>
@@ -163,4 +166,24 @@
         alert('You need to manually type it in!')
         return false;
     });
+</script>
+<script>
+    function copyToClipboard(text){
+        if(navigator.clipboard){
+            navigator.clipboard.writeText(text)
+            return //codes below wont be executed
+        }
+        const textArea = document.createElement("textarea")
+        textArea.value = text
+
+        document.body.appendChild(textArea)
+
+        textArea.focus()
+        textArea.select()
+
+        document.execCommand('copy')
+
+        document.body.removeChild(textArea)
+    }
+
 </script>
