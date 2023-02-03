@@ -1,6 +1,6 @@
 <div>
     @include('livewire.layoutbuttons')
-    <div class="card border border-primary mt-3" style="border-width:3px !important; border-radius: 10px !important; padding: 25px !important; z-index: 900; !important;">
+    <div class="card border border-primary mt-3" style="border-width:3px !important; border-radius: 10px !important; padding: 25px !important; z-index: auto; !important;">
         <div class="container">
             <div class="d-flex row justify-content-center align-items-start">
                 <div class="col-12 col-sm">

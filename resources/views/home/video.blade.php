@@ -172,7 +172,7 @@
         @if($manageview ?? false)
             <div class="text-right">
                  <span data-toggle="tooltip" data-placement="left" data-title="{{__("Number of Clicks")}}">
-                    <a href="{{route('stats', $video->id)}}" type="button" class="btn btn-sm px-1">
+                    <a {{--}}href="{{route('stats', $video->id)}}" {{--}} type="button" class="btn btn-sm px-1">
                         <span style="color: Tomato;"><i class="fa-solid fa-chart-column"></i></span>
                         @if($stats_playback[$video->id] ?? false)
                             {{$stats_playback[$video->id]}}
@@ -182,7 +182,7 @@
                     </a>
                 </span>
                 <span data-toggle="tooltip" data-placement="left" data-title="{{__("Number of Downloads")}}">
-                    <a href="{{route('stats', $video->id)}}" type="button" class="btn btn-sm px-1">
+                    <a {{--}} href="{{route('stats', $video->id)}}" {{--}} type="button" class="btn btn-sm px-1">
                         <span style="color: #007bff;"><i class="fa-solid fa-download"></i></span>
                         @if($stats_download[$video->id] ?? false)
                             {{$stats_download[$video->id]}}

@@ -212,15 +212,17 @@
                                 @endif
                             </div>
                         </div>
-
+                        {{--}}
                         <div class="col-sm-12 d-flex align-items-center">
                             <button type="submit" id="submit"
                                     class="btn btn-outline-primary ml-auto d-inline-block font-125rem m-3">{{ __("Save") }}</button>
                             <a href="{{url()->previous()}}" id="back"
                                class="btn btn-outline-primary mr-auto  d-inline-block font-125rem m-3">{{ __("Return back") }}</a>
                         </div>
-
+                        {{--}}
+                        @include('livewire.bar.save')
                     </div>
+
                 </div>
         </form>
     </div>

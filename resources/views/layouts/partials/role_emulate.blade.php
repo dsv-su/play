@@ -18,5 +18,13 @@
         <option @if(app()->make('play_role') == 'Student1') selected @endif value="Student1">Student 1</option>
         <option @if(app()->make('play_role') == 'Student2') selected @endif value="Student2">Student 2</option>
         <option @if(app()->make('play_role') == 'Student3') selected @endif value="Student3">Student 3</option>
+        <option @if(app()->make('play_role') == 'custom') selected @endif value="custom">Custom</option>
     </select>
+    <div id="customuser" style="display: none;">
+        <div class="form-group form-group-sm">
+            <input type="text" class="form-control" name="custom" placeholder="Custom user">
+            <button type="button" onclick="submit()" class="btn btn-sm btn-outline-light" style="margin-left: 20px;">Change</button>
+        </div>
+
+    </div>
 </form>

@@ -81,7 +81,7 @@
                 <div class="col col-sm-2 col-md-auto p-1 my-auto">
                     <div class="mr-2">
              <span data-toggle="tooltip" data-placement="left" data-title="{{__("Number of Clicks")}}">
-                <a href="{{route('stats', $video->id)}}" type="button" class="btn btn-sm">
+                <a {{--}}href="{{route('stats', $video->id)}}" {{--}} type="button" class="btn btn-sm">
                     <span style="color: Tomato;"><i class="fa-solid fa-chart-column"></i></span>
                     @if($stats_playback[$video->id] ?? false)
                         {{$stats_playback[$video->id]}}
@@ -91,7 +91,7 @@
                 </a>
             </span>
                         <span data-toggle="tooltip" data-placement="left" data-title="{{__("Number of Downloads")}}">
-                <a href="{{route('stats', $video->id)}}" type="button" class="btn btn-sm">
+                <a {{--}} href="{{route('stats', $video->id)}}" {{--}} type="button" class="btn btn-sm">
                     <span style="color: #007bff;"><i class="fa-solid fa-download"></i></span>
                     @if($stats_download[$video->id] ?? false)
                         {{$stats_download[$video->id]}}

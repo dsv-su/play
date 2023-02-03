@@ -100,8 +100,19 @@
 </script>
 <script>
     $(document).ready(function() {
+        /*
         $('#role').on('change', function() {
             document.forms['roleform'].submit();
+        });
+        */
+        $('#role').on('change', function() {
+            if($(this).val()==="custom") {
+                $("#customuser").show()
+            }
+            else {
+                document.forms['roleform'].submit();
+            }
+
         });
         $('#videoformat').on('change', function() {
             document.forms['videoformat'].submit();

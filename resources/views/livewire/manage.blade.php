@@ -1,6 +1,6 @@
 <div>
     @include('livewire.layoutbuttons')
-    <div class="card border border-primary mt-3" style="border-width:3px !important; border-radius: 10px !important; padding: 25px !important; z-index: 2;">
+    <div class="card border border-primary mt-3" style="border-width:3px !important; border-radius: 10px !important; padding: 25px !important; z-index: auto;">
         <div class="container">
             <div class="d-flex row justify-content-center align-items-start">
                 <div class="col-12 col-sm">
@@ -56,11 +56,11 @@
        @foreach($video_courses as $key => $video_course)
             <!-- Grey out background for non-editible courses -->
             @if($admin)
-                    <div class="card border border-primary mb-3">
+                    <div class="card border border-primary mb-3" style="z-index: auto;">
             @else
            <div class="card border border-primary mb-3"
                @if ($video_course->course->id && !(in_array(\App\Course::find($video_course->course->id)->userPermission(), ['edit', 'delete'])))
-                   style="background-color: #e7ebec; !important;"
+                   style="background-color: #e7ebec; !important; z-index: auto;"
                @endif
                     >
            @endif

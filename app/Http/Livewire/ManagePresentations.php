@@ -24,6 +24,7 @@ class ManagePresentations extends Component
     public $videopresenters = [], $videoterms = [], $videotags = [];
     public $presenter, $semester, $term, $tag, $filter_presenter, $filter_term, $filter_tag;
     public $view;
+    public $manageview;
     public $counter, $uncatcounter;
     public $uncat_videos = [];
     public $stats_playback = [], $stats_download = [];
@@ -45,6 +46,7 @@ class ManagePresentations extends Component
 
         //Initial default settings
         $this->view = 'presenters';
+        $this->manageview = true;
         $this->allChecked = false;
         $this->videoformat = Cookie::get('videoformat') ?? 'grid';
         $dropdownfilter = new DropdownFilters;

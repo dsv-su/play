@@ -358,5 +358,7 @@
     "The presentation is hidden, not searchable but playable with a direct link.": "Presentationen är dold, inte sökbar utan spelbar med en direktlänk.",
     "Private": "Privat",
     "Presentation is private": "Presentationen är privat",
-    "Bulk edit": "Massredigera"
+    "Bulk edit": "Massredigera",
+    "Presentations from lecture halls or mediasite currently queued for conversion": "Presentationer från föreläsningssalar eller play2(Mediasite) som för närvarande står i kö för konvertering",
+    "Click on the icon to copy to clipboard": "Klicka på ikonen för att kopiera till urklipp"
 }
