@@ -47,6 +47,7 @@
                         <p class="font-1rem px-1">
                             {{ __("Select one or drag and drop up to 4 files at a time into the box below") }}
                         </p>
+                        {{--}}
                         <div class="form-group">
                             <input type="file" class="form-control-file"
                                    wire:model="files" id="{{ rand() }}" accept="video/*" multiple/>
@@ -58,19 +59,21 @@
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+                        {{--}}
                         <div wire:ignore.self class="form-group">
                             <?php
                             $ts = time();
                             $date = date("Y-m-d");
                             ?>
 
-
                             <div id="uploaderHolder">
                                 <form action="{{ route('file-upload') }}" class="dropzone" id="datanodeupload">
+                                    <div class="previews"></div>
                                     <input type="file" name="file"  style="display: none;">
                                     <input type="hidden" name="dataTS" id="dataTS" value="{{ $ts }}">
                                     <input type="hidden" name="dataDATE" id="dataDATE" value="{{ $date }}">
                                     @csrf
+                                    <div class="dz-message" data-dz-message><span>{{__('Drop media files here or click to upload')}}</span></div>
                                 </form>
                             </div>
                         </div>

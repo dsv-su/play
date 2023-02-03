@@ -14,13 +14,6 @@ use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
 class UploaderController extends Controller
 {
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-
-
-    /**
      * Handles the file upload
      *
      * @param Request $request
@@ -69,7 +62,7 @@ class UploaderController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     protected function saveFile(UploadedFile $file, Request $request) {
-        //$user_obj = auth()->user();
+
         $fileName = $this->createFilename($file);
 
         // Get file mime type
@@ -79,14 +72,14 @@ class UploaderController extends Controller
         $folderDATE = $request->dataDATE;
 
         $folder  = $folderDATE;
-        $filePath = "public/upload/medialibrary/rd/{$folder}/";
+        $filePath = "public/uploadtest/{$folder}/";
         $finalPath = storage_path("app/".$filePath);
 
         $fileSize = $file->getSize();
         // move the file name
         $file->move($finalPath, $fileName);
 
-        $url_base = 'storage/upload/medialibrary/'.'rd'."/{$folderDATE}/".$fileName;
+        $url_base = 'storage/uploadtest/'."/{$folderDATE}/".$fileName;
 
         return response()->json([
             'path' => $filePath,
@@ -120,9 +113,11 @@ class UploaderController extends Controller
      */
     public function delete (Request $request){
 
+
         //$user_obj = auth()->user();
 
         $file = $request->filename;
+
 
         //delete timestamp from filename
         $temp_arr = explode('_', $file);
@@ -131,7 +126,7 @@ class UploaderController extends Controller
 
         $dir = $request->date;
 
-        $filePath = "public/upload/medialibrary/rd/{$dir}/";
+        $filePath = "public/uploadtest/{$dir}/";
         $finalPath = storage_path("app/".$filePath);
 
         if ( unlink($finalPath.$file) ){
