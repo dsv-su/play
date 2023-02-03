@@ -68,12 +68,13 @@
 
                             <div id="uploaderHolder">
                                 <form action="{{ route('file-upload') }}" class="dropzone" id="datanodeupload">
-                                    <div class="previews"></div>
                                     <input type="file" name="file"  style="display: none;">
+                                    <input type="hidden" name="localdir"  id="localdir" value="{{ $dirname }}">
                                     <input type="hidden" name="dataTS" id="dataTS" value="{{ $ts }}">
                                     <input type="hidden" name="dataDATE" id="dataDATE" value="{{ $date }}">
                                     @csrf
                                     <div class="dz-message" data-dz-message><span>{{__('Drop media files here or click to upload')}}</span></div>
+
                                 </form>
                             </div>
                         </div>
@@ -245,10 +246,15 @@
         $('#outofrangeModal').modal('show');
     });
 </script>
+
 <script>
     var home_url = "{{env('APP_URL') }}";
     var deleteAction = '{{ route("file-delete") }}';
-    var generalTS =  document.getElementById('dataTS').value;
-    var generalDATE = document.getElementById('dataDATE').value;
+    var dir =  document.getElementById('localdir').value;
+    //var generalTS =  document.getElementById('dataTS').value;
+    //var generalDATE = document.getElementById('dataDATE').value;
     var token = '{!! csrf_token() !!}';
+</script>
+<script>
+    Dropzone.discover();
 </script>

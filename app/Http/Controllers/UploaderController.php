@@ -69,17 +69,15 @@ class UploaderController extends Controller
         $mime_original = $file->getMimeType();
         $mime = str_replace('/', '-', $mime_original);
 
-        $folderDATE = $request->dataDATE;
-
-        $folder  = $folderDATE;
-        $filePath = "public/uploadtest/{$folder}/";
+        $folder  = $request->localdir . '/video/';
+        $filePath = "public/{$folder}";
         $finalPath = storage_path("app/".$filePath);
 
         $fileSize = $file->getSize();
         // move the file name
         $file->move($finalPath, $fileName);
 
-        $url_base = 'storage/uploadtest/'."/{$folderDATE}/".$fileName;
+        $url_base = 'storage/'."/{$folder}".$fileName;
 
         return response()->json([
             'path' => $filePath,
@@ -97,11 +95,6 @@ class UploaderController extends Controller
         $extension = $file->getClientOriginalExtension();
         $filename = str_replace(".".$extension, "", $file->getClientOriginalName()); // Filename without extension
 
-        //delete timestamp from file name
-        $temp_arr = explode('_', $filename);
-        if ( isset($temp_arr[0]) ) unset($temp_arr[0]);
-        $filename = implode('_', $temp_arr);
-
         //here you can manipulate with file name e.g. HASHED
         return $filename.".".$extension;
     }
@@ -113,20 +106,10 @@ class UploaderController extends Controller
      */
     public function delete (Request $request){
 
-
-        //$user_obj = auth()->user();
-
         $file = $request->filename;
 
-
-        //delete timestamp from filename
-        $temp_arr = explode('_', $file);
-        if ( isset($temp_arr[0]) ) unset($temp_arr[0]);
-        $file = implode('_', $temp_arr);
-
-        $dir = $request->date;
-
-        $filePath = "public/uploadtest/{$dir}/";
+        $dir = $request->localdir;
+        $filePath = "public/{$dir}/video/";
         $finalPath = storage_path("app/".$filePath);
 
         if ( unlink($finalPath.$file) ){

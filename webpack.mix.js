@@ -20,7 +20,8 @@ mix.sass('resources/scss/dsv.scss','public/css')
         'node_modules/bootstrap-select/dist/css/bootstrap-select.min.css',
         'node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css',
         'node_modules/@fortawesome/fontawesome-free/css/all.css',
-        'node_modules/daterangepicker/daterangepicker.css'
+        'node_modules/daterangepicker/daterangepicker.css',
+        'node_modules/dropzone/dist/dropzone.css'
     ], 'public/css/all.css')
     .combine(['public/css/dsv.css', 'public/css/all.css'], 'public/css/dsvplay.css')
 
@@ -38,6 +39,7 @@ mix.scripts([
     'node_modules/daterangepicker/moment.min.js',
     'node_modules/daterangepicker/daterangepicker.js',
     'resources/js/download.js',
-    'node_modules/echarts/dist/echarts.min.js',
-    'node_modules/@chartisan/echarts/dist/chartisan_echarts.js'
+    'node_modules/dropzone/dist/dropzone-min.js'
+    //'node_modules/echarts/dist/echarts.min.js',
+    //'node_modules/@chartisan/echarts/dist/chartisan_echarts.js'
 ], 'public/js/dsvplay.js');

@@ -9,20 +9,20 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" href="{{ asset('./images/favicon.ico') }}">
     <link rel="stylesheet" href="{{asset('./css/dsvplay.css')}}">
 
-    <!-- For testing -> remove in production -->
-    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
-    <!-- end -->
-
+    <!-- JS -->
     <script src="{{asset('./js/dsvplay.js')}}"></script>
+    <script src="{{ asset('js/file_upload.js') }}"></script>
 
     <!-- Laravel Livewire -->
     @livewireStyles
     @livewireScripts
+
     <title>DSVPlay</title>
     @include('layouts.partials.custom-js')
 </head>
@@ -34,11 +34,6 @@
     </div>
 </main>
 @include('layouts.partials.footer')
-
-<!-- For testing -> remove in production -->
-<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js" defer></script>
-<!-- end -->
-
-<script src="{{ asset('js/file_upload.js') }}" defer></script>
 </body>
+
 </html>
