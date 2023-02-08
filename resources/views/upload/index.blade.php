@@ -24,10 +24,10 @@
     </div>
 
     <div class="container px-3 px-sm-0">
-        <div class="row">
-            <div class="col-lg-12">
-                <form class="needs-validation" method="post" action="{{route('upload_step1', $presentation->id)}}">
-                    @csrf
+        <form class="needs-validation" method="post" action="{{route('upload_step1', $presentation->id)}}">
+                @csrf
+            <div class="row">
+                <div class="col-lg-12">
                     <div class="rounded border shadow p-3 my-2">
                         <h5 class="mb-4">
                             <i class="fa fa-solid fa-1 fa-icon mr-2"></i><label
@@ -86,7 +86,10 @@
                             </div>
                         </div>
                     </div>
-
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
                     <div class="rounded border shadow p-3 my-2">
                         <!-- Course -->
                         <h5 class="mb-4">
@@ -111,7 +114,10 @@
                             </div>
                         </div>
                     </div>
-
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
                     <div class="rounded border shadow p-3 my-2">
                         <!-- Presenters -->
                         <h5 class="mb-4">
@@ -128,7 +134,7 @@
                                           data-title="SU username: {{app()->make('play_username')}}">{{app()->make('play_user')}}</span>
                                 </div>
                                 <div id="presenter-search-form" class="flex-column d-flex p-0">
-                                    <input wire:ignore class="mx-1 w-100" type="search"
+                                    <input class="mx-1 w-100" type="search"
                                            id="presenter-search" name="q" autocomplete="off"
                                            aria-haspopup="true"
                                            placeholder="{{ __("Start typing to add a presenter") }}"
@@ -137,7 +143,10 @@
                             </div>
                         </div>
                     </div>
-
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
                     <div class="rounded border shadow p-3 my-2">
                         <!-- Tags -->
                         <h5 class="mb-4">
@@ -152,7 +161,7 @@
                                 <div id="addedTags" class="mx-1 my-2">
                                 </div>
                                 <div id="tag-search-form" class="flex-column d-flex p-0">
-                                    <input wire:ignore class="mx-1 w-100" type="search"
+                                    <input class="mx-1 w-100" type="search"
                                            id="tag-search" name="q" autocomplete="off"
                                            aria-haspopup="true"
                                            placeholder="{{ __("Start typing to add a tag") }}"
@@ -161,7 +170,10 @@
                             </div>
                         </div>
                     </div>
-
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
                     <div class="rounded border shadow p-3 my-2">
                         <!-- Permissions -->
                         <h5 class="mb-4">
@@ -191,75 +203,137 @@
                             <!-- Custom permissions -->
                             @if(!old('video_permission'))
                                 <div id="video_perm" class="form-group col-sm-6 mb-0" hidden>
-                                    @else
-                                        <div id="video_perm" class="form-group col-sm-6 mb-0">
-                                            @endif
+                                @else
+                                <div id="video_perm" class="form-group col-sm-6 mb-0">
+                            @endif
 
-                                            <select class="form-control selectpicker" data-dropup-auto="false"
-                                                    name="video_permission">
-                                                @foreach($permissions as $permission)
-                                                    @if(!old('video_permission'))
-                                                        @if(Lang::locale() == 'swe')
-                                                            <option value="{{$permission->id}}">{{$permission->id}}
-                                                                : {{$permission->scope}}</option>
-                                                        @else
-                                                            <option value="{{$permission->id}}">{{$permission->id}}
-                                                                : {{$permission->scope_en}}</option>
-                                                        @endif
-                                                    @else
-                                                        @if(Lang::locale() == 'swe')
-                                                            <option value="{{$permission->id}}" {{ old('video_permission') == $permission->id  ? 'selected':''}}>{{$permission->id}}
-                                                                : {{$permission->scope}}</option>
-                                                        @else
-                                                            <option value="{{$permission->id}}" {{ old('video_permission') == $permission->id  ? 'selected':''}}>{{$permission->id}}
-                                                                : {{$permission->scope_en}}</option>
-                                                        @endif
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
+                                    <select class="form-control selectpicker" data-dropup-auto="false"
+                                            name="video_permission">
+                                        @foreach($permissions as $permission)
+                                            @if(!old('video_permission'))
+                                                @if(Lang::locale() == 'swe')
+                                                    <option value="{{$permission->id}}">{{$permission->id}}
+                                                        : {{$permission->scope}}</option>
+                                                @else
+                                                    <option value="{{$permission->id}}">{{$permission->id}}
+                                                        : {{$permission->scope_en}}</option>
+                                                @endif
+                                            @else
+                                                @if(Lang::locale() == 'swe')
+                                                    <option value="{{$permission->id}}" {{ old('video_permission') == $permission->id  ? 'selected':''}}>{{$permission->id}}
+                                                        : {{$permission->scope}}</option>
+                                                @else
+                                                    <option value="{{$permission->id}}" {{ old('video_permission') == $permission->id  ? 'selected':''}}>{{$permission->id}}
+                                                        : {{$permission->scope_en}}</option>
+                                                @endif
+                                            @endif
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <input type="hidden" name="prepopulate" value="1">
-                                <!-- Policy -->
-                                <!-- Disabled until PO agree on a suitable text -->
-                                {{--}}
-                                <div class="col alert alert-warning" role="alert">
-                                    <label class="form-control-label px-1">{{ __("DSV Disclaimer") }}</label>
-                                    <p class="px-1 font-1rem">
-                                        {{ __("Materials uploaded to DSVPlay may be subject to posted limitations on usage, reproduction and/or dissemination. You are responsible for adhering to such limitations if you upload materials.") }}
-                                    </p>
-                                    <div class="row justify-content-center">
-                                        <div class="form-group flex-column d-flex">
-                                            <label class="form-control-label px-1">
-                                                <input type="checkbox" name="disclaimer"> {{ __("I understand") }}<span
-                                                        class="text-danger"> *</span>
-                                            </label>
-                                            <div><small class="text-danger">{{ $errors->first('disclaimer') }}</small></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {{--}}
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
+
+            <div class="row">
+                <div class="col-lg-12 my-2">
+                    <div class="rounded border shadow p-3 my-2">
+                        <h5 class="mb-4">
+                            <i class="fa fa-solid fa-6 fa-icon mr-2"></i><label class="form-control-label px-1"
+                                                                                for="custom">{{__("Upload custom thumb") }}</label>
+                        </h5>
+                        <p class="font-1rem px-1">
+                            {{ __("If you want, you can upload a custom image to represent your presentation.") }}
+                        </p>
+                        <div class="row justify-content-between text-left">
+                            <div class="col-6 col-sm-6 my-2 d-flex align-items-center">
+                                <div class="my-auto">
+                                    <input type="file" class="form-control-file" id="custom">
+                                    @error('custom') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-6 my-2 d-flex align-items-center">
+                                <!-- -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <!-- Upload bar -->
+                <div class="container-fluid px-2 play_savebar">
+                    <div class="bar p-3 su-header-container__primary">
+                        <div class="d-flex row no-gutters justify-content-end">
+                            <div class="col-md-4">
+                                <div class="d-flex flex-row" id="bulkediting">
+                                    <button type="submit" id="submit" class="btn btn-lg btn-outline-light m-auto">{{ __("Upload") }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end upload bar -->
+        </form>
+            <div class="row">
+                <div class="col-lg-12 my-2">
+                    <div class="rounded border shadow p-3 my-2">
+                        <h5 class="mb-4">
+                            <i class="fa fa-solid fa-7 fa-icon mr-2"></i><label
+                                class="form-control-label px-1">{{ __("Mediafiles to be uploaded") }}</label>
+                        </h5>
+                        <p class="font-1rem px-1">
+                            {{ __("Up to 4 media files per presentation can be uploaded.") }} {{ __("Each uploaded file should be the same length.") }}
+                        </p>
+                        <div class="row justify-content-between text-left">
+                            <div class="form-group col-md-6 flex-column d-flex">
+                                <label class="form-control-label px-1">{{ __("Files to upload") }}<span
+                                        class="text-danger"> *</span></label>
+                                <div class="form-group">
+
+                                    <div id="uploaderHolder">
+                                        <form action="{{ route('file-upload') }}" class="dropzone" id="datanodeupload">
+                                            <input type="file" name="file"  style="display: none;">
+                                            <input type="hidden" name="localdir"  id="localdir" value="{{ $presentation->local }}">
+                                            @csrf
+                                            <div class="dz-message" data-dz-message>
+                                                <span>{{__('Drop files here or click to upload')}}</span>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-6 flex-column d-flex">
+                                <!-- Subtitles file-->
+                                <label class="form-control-label px-1">{{ __("Add a subtitle file") }} <span
+                                        class="badge badge-warning">{{ __("Testing in progress") }}</span></label>
+                                <p class="font-1rem px-1">
+                                    {{ __("Select one or drag and drop a WebVTT (.vtt) file into the box below") }}
+                                </p>
+
+                                {{--}}@if(!$sub){{--}}
+
+                                    <div class="form-group">
+                                        <input type="file" class="form-control-file" accept="text/vtt"/>
+                                        @error('subtitle')
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                {{--}}
+                                @else
+                                    <label class="form-control-label px-1">{{ __("A subtitle file has been added") }}</label>
+                                @endif
+                                {{--}}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!--/col-9-->
 
-            @livewire('file-upload', [
-            'presentation' => $presentation,
-            'permissions' => $permissions
-            ])
-
-
-            {{--}}
-                    <div class="row justify-content-center">
-                        <div class="form-group col-sm-4">
-                            <button id="submit" type="submit"
-                                    class="btn-block btn btn-outline-primary">{{ __("Upload") }}</button>
-                        </div>
-                    </div>
-            {{--}}
-        </div>
 
         <!-- Modal spinners -->
         <div class="modal fade" id="loadtoserver" tabindex="-1" role="dialog" aria-labelledby="loadMeLabel">
@@ -277,8 +351,17 @@
             </div>
         </div>
 
+
+
         <script src="{{ asset('./js/upload.js') }}"></script>
+
         <script>
+            Dropzone.discover();
+            var home_url = "{{env('APP_URL') }}";
+            var deleteAction = '{{ route("file-delete") }}';
+            var dir =  document.getElementById('localdir').value;
+            var token = '{!! csrf_token() !!}';
+
             function remove(el) {
                 var type = el.closest('div').attr('id');
                 if (type == 'addedTags') {
@@ -542,5 +625,6 @@
                 });
             });
         </script>
+
 
 @endsection

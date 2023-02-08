@@ -86,6 +86,10 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     //Upload
     Route::get('/upload', 'UploadController@upload')->name('user_upload');
     Route::get('/upload/pending', 'UploadController@pending_uploads')->name('pending_uploads');
+    //Chunkupload
+    Route::post('chunk/upload', [App\Http\Controllers\UploadController::class, 'chunkupload'])->name('file-upload');
+    Route::post('chunk/delete', [App\Http\Controllers\UploadController::class, 'chunkdelete'])->name('file-delete');
+
     Route::get('file-upload', function () {
         return view('default');
     });
@@ -163,10 +167,6 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
 
     //Stats
     Route::get('stats/{video}', 'StatsController@index')->name('stats');
-
-    //Chunkupload
-    Route::post('medialibrary/upload', [App\Http\Controllers\UploaderController::class, 'upload'])->name('file-upload');
-    Route::post('medialibrary/delete', [App\Http\Controllers\UploaderController::class, 'delete'])->name('file-delete');
 
 });
 Route::any('{query}',
