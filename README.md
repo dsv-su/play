@@ -89,6 +89,12 @@ Requirements are best determined using Server Requirements page of corresponding
               privateKey=
               pk-password=
 
+              [nfs]
+              disk=                                   ; Name the disk e.g. play-store
+              root=                                   ; The folder intended for uploads
+              chunks=                                 ; Name of the chunks folder
+              storage=                                ; Name of the final upload folder
+      
               [store]
               base_uri=                               ; Base-Uri storage server
               notify_uri=                             ; Notify Uri storage server

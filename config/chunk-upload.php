@@ -1,4 +1,10 @@
 <?php
+
+$file = base_path().'/systemconfig/play.ini';
+if (!file_exists($file)) {
+    $file = base_path().'/systemconfig/play.ini.example';
+}
+$system_config = parse_ini_file($file, true);
 /**
  * @see https://github.com/pionl/laravel-chunk-upload
  */
@@ -13,8 +19,8 @@ return [
          */
         //'chunks' => 'chunks',
         //'disk' => 'local',
-        'chunks' => 'chunks',
-        'disk' => 'public',
+        'chunks' => $system_config['nfs']['chunks'],
+        'disk' => $system_config['nfs']['disk'],
     ],
     'clear' => [
         /*

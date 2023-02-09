@@ -38,7 +38,7 @@ Dropzone.options.datanodeupload =
                     console.log("File has been successfully removed!!");
                 },
                 error: function(e) {
-                    console.log(e);
+                    console.log(name, e);
                 }
             });
             var fileRef;

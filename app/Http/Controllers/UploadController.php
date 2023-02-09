@@ -16,6 +16,7 @@ use App\Tag;
 use App\VideoPermission;
 use Carbon\Carbon;
 use DateTime;
+use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Pion\Laravel\ChunkUpload\Exceptions\UploadFailedException;
@@ -151,7 +152,7 @@ class UploadController extends Controller
 
             //Update model
             $manualPresentation->status = 'pending';
-            $manualPresentation->base = '/data0/incoming/' . $manualPresentation->local;
+            $manualPresentation->base = '/data0/'. $this->storage() . '/' . $manualPresentation->local;
             $manualPresentation->title = $request->title;
             $manualPresentation->title_en = $request->title_en;
             $manualPresentation->description = $request->description ?? '';
@@ -171,19 +172,24 @@ class UploadController extends Controller
     public function store($id)
     {
         $presentation = ManualPresentation::find($id);
-/*
+
         //Send email to uploader
         $job = (new JobUploadProgressNotification($presentation));
 
         // Dispatch Job and continue
         dispatch($job);
 
+        /***
+         * Disabled SFTP upload to server
+         */
+        /*
         $upload = new SftpPlayStore($presentation);
         $upload->sftpVideo();
         $upload->sftpSubtitle();
         //$upload->sftpImage(); -> disabled
         $upload->sftpPoster();
-*/
+        */
+
         // Moved to api -> the files are stored until upload is completed
         //Remove temp storage
         //Storage::disk('public')->deleteDirectory($presentation->local);
@@ -194,7 +200,7 @@ class UploadController extends Controller
 
         // Send notify
         $notify = new PlayStoreNotify($presentation);
-        return $notify->sendSuccess('manual');
+        $notify->sendSuccess('manual');
 
         return redirect('/');
     }
@@ -228,8 +234,9 @@ class UploadController extends Controller
 
             // save the file and return any response you need, current example uses `move` function. If you are
             // not using move, you need to manually delete the file by unlink($save->getFile()->getPathname())
-
-            return $this->saveFile($save->getFile(), $request);
+            $this->saveFile($save->getFile(), $request);
+            return unlink($save->getFile()->getPathname());
+            //return $this->saveFile($save->getFile(), $request);
         }
 
         //Current progress
@@ -258,22 +265,17 @@ class UploadController extends Controller
         $mime = str_replace('/', '-', $mime_original);
 
         $folder  = $request->localdir . '/video/';
-
-        $filePath = "public/{$folder}";
-        $finalPath = storage_path("app/".$filePath);
+        $finalPath = '/' . $this->storage() . '/' . $folder;
 
         $fileSize = $file->getSize();
-        // move the file name
-        $file->move($finalPath, $fileName);
-
+        Storage::disk('play-store')->putFileAs($finalPath, $file, $fileName);
 
         // Update status in model
         $this->metadata($request);
         $this->addFilesCount($request);
 
-
         return response()->json([
-            'path' => $filePath,
+            'path' => $finalPath,
             'name' => $fileName,
             'mime_type' => $mime
         ]);
@@ -302,16 +304,16 @@ class UploadController extends Controller
         $file = $request->filename;
         $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', $file);
         $dir = $request->localdir;
-        $filePath = "public/{$dir}/video/";
-        $posterPath = "public/{$dir}/poster/";
-        $finalFilePath = storage_path("app/".$filePath);
-        $finalPosterPath = storage_path("app/".$posterPath);
 
-        if ( unlink($finalFilePath.$file) ){
+        $filePath = $this->storage() . "/{$dir}/video/";
+        $posterPath = $this->storage() . "/{$dir}/poster/";
+        $finalFilePath = $filePath;
+        $finalPosterPath = $posterPath;
+
+        if (Storage::disk('play-store')->delete($finalFilePath.$file) ){
 
             //Unlink poster
-            unlink($finalPosterPath.$thumb_name.'.png');
-
+            Storage::disk('play-store')->delete($finalPosterPath . $thumb_name.'.png');
             //Update file status in model
             $this->metadata($request);
             $this->deleteFilesCount($request);
@@ -328,10 +330,9 @@ class UploadController extends Controller
 
     public function DurationVideo($directory, $filename)
     {
-        $media = new DetermineDurationVideo($directory);
-        //Retrive filename
-        $stream = basename($filename);
-        return $media->duration($stream);
+        $video = $filename;
+        $media = FFMpeg::fromDisk('play-store')->open($video);
+        return $media->getDurationInSeconds();
     }
 
     public function createThumb($directory, $video, $seconds, $streamduration)
@@ -342,11 +343,11 @@ class UploadController extends Controller
         //Create thumb and store in folder
         do {
             try {
-                FFMpeg::fromDisk('public')
+                FFMpeg::fromDisk('play-store')
                     ->open($video)
                     ->getFrameFromSeconds($seconds)
                     ->export()
-                    ->toDisk('public')
+                    ->toDisk('play-store')
                     ->save($directory.'/poster/'.$thumb_name.'.png');
                 $seconds++;
                 if($seconds > $streamduration) {
@@ -360,19 +361,18 @@ class UploadController extends Controller
         }
         while (!\Illuminate\Support\Facades\Storage::disk('public')->exists($directory.'/poster/'.$thumb_name.'.png'));
 
-        //Store thumb path
-        $this->filethumbsname[] = $directory.'/poster/'.$thumb_name.'.png';
-
         return Storage::disk('public')->url($directory.'/poster/'.$thumb_name.'.png');
     }
 
     protected function metadata(Request $request)
     {
+        $finalPath = $this->storage() . '/'. $request->localdir;
+        $videoPath = $finalPath . '/video/';
         //Updates the source attribute after each added/deleted video
         $presentation = ManualPresentation::where('local', $request->localdir)->first();
         $presentation->sources = [];
         //Update video source
-        foreach (\Illuminate\Support\Facades\Storage::disk('public')->files($presentation->local . '/video/') as $key => $filename) {
+        foreach (\Illuminate\Support\Facades\Storage::disk('play-store')->files($videoPath) as $key => $filename) {
             //Set time in sec for thumb generation
             if($presentation->duration < 30 ) {
                 $thumbcreated_after = $presentation->duration/3;
@@ -380,8 +380,14 @@ class UploadController extends Controller
                 //Fallback
                 $thumbcreated_after = 30;
             }
+
+            //Add duration
+            if($key ==  0 ) {
+                $presentation->duration = $this->DurationVideo($videoPath, $filename);
+            }
+
             //Create thumb for uploaded video
-            $this->createThumb($request->localdir, $filename, $thumbcreated_after, $presentation->duration);
+            $this->createThumb($finalPath, $filename, $thumbcreated_after, $presentation->duration);
 
             //Add video source
             $this->source[$key]['video'] = 'video/'. basename($filename);
@@ -395,9 +401,8 @@ class UploadController extends Controller
                 $this->source[$key]['playAudio'] = false;
             } else {
                 $this->source[$key]['playAudio'] = true;
-                //Store duration
-                $presentation->duration = $this->DurationVideo($request->localdir, $filename);
             }
+
             $presentation->sources = $this->source;
 
         }
@@ -431,5 +436,16 @@ class UploadController extends Controller
     public function tag_search(Request $request)
     {
         return Tag::where('name', 'LIKE', $request->tag . '%')->get();
+    }
+
+    private function storage()
+    {
+        $this->file = base_path() . '/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            $this->file = base_path() . '/systemconfig/play.ini.example';
+        }
+        $this->system_config = parse_ini_file($this->file, true);
+
+        return $this->system_config['nfs']['storage'];
     }
 }
