@@ -21,7 +21,6 @@
         "laravel/framework": "^8.0",
         "laravel/tinker": "^2.0",
         "league/flysystem-cached-adapter": "^1.1",
-        "league/flysystem-sftp": "^1.0",
         "livewire/livewire": "^2.4",
         "nicolaslopezj/searchable": "1.*",
         "pbmedia/laravel-ffmpeg": "^7.1",

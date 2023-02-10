@@ -15,12 +15,12 @@ return [
      */
     'storage' => [
         /*
-         * Returns the folder name of the chunks. The location is in storage/app/{folder_name}
+         * Returns the folder name of the chunks.
          */
         //'chunks' => 'chunks',
         //'disk' => 'local',
         'chunks' => $system_config['nfs']['chunks'],
-        'disk' => $system_config['nfs']['disk'],
+        'disk' => 'play-store',
     ],
     'clear' => [
         /*

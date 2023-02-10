@@ -84,7 +84,7 @@ class UploadController extends Controller
     public function step1($id, Request $request)
     {
         if ($request->isMethod('post')) {
-
+            dd($request->all());
             //Second validation
             $this->validate($request, [
                 'title' => 'required',
@@ -174,10 +174,10 @@ class UploadController extends Controller
         $presentation = ManualPresentation::find($id);
 
         //Send email to uploader
-        $job = (new JobUploadProgressNotification($presentation));
+        /*$job = (new JobUploadProgressNotification($presentation));
 
         // Dispatch Job and continue
-        dispatch($job);
+        dispatch($job);*/
 
         /***
          * Disabled SFTP upload to server
@@ -200,7 +200,7 @@ class UploadController extends Controller
 
         // Send notify
         $notify = new PlayStoreNotify($presentation);
-        $notify->sendSuccess('manual');
+        return $notify->sendSuccess('manual');
 
         return redirect('/');
     }
@@ -271,7 +271,7 @@ class UploadController extends Controller
         Storage::disk('play-store')->putFileAs($finalPath, $file, $fileName);
 
         // Update status in model
-        $this->metadata($request);
+        //$this->metadata($request);
         $this->addFilesCount($request);
 
         return response()->json([
@@ -291,6 +291,10 @@ class UploadController extends Controller
         $extension = $file->getClientOriginalExtension();
         $filename = str_replace(".".$extension, "", $file->getClientOriginalName()); // Filename without extension
 
+        //Generate a unique name
+        //$filename = $file->hashName();
+
+        //We use the original name
         return $filename.".".$extension;
     }
 
@@ -315,7 +319,7 @@ class UploadController extends Controller
             //Unlink poster
             Storage::disk('play-store')->delete($finalPosterPath . $thumb_name.'.png');
             //Update file status in model
-            $this->metadata($request);
+            //$this->metadata($request);
             $this->deleteFilesCount($request);
             return response()->json([
                 'status' => 'ok'
@@ -328,7 +332,7 @@ class UploadController extends Controller
         }
     }
 
-    public function DurationVideo($directory, $filename)
+    public function DurationVideo($filename)
     {
         $video = $filename;
         $media = FFMpeg::fromDisk('play-store')->open($video);
@@ -373,17 +377,17 @@ class UploadController extends Controller
         $presentation->sources = [];
         //Update video source
         foreach (\Illuminate\Support\Facades\Storage::disk('play-store')->files($videoPath) as $key => $filename) {
+            //Add duration
+            if($key ==  0 ) {
+                $presentation->duration = $this->DurationVideo($filename);
+            }
+
             //Set time in sec for thumb generation
             if($presentation->duration < 30 ) {
                 $thumbcreated_after = $presentation->duration/3;
             } else {
                 //Fallback
                 $thumbcreated_after = 30;
-            }
-
-            //Add duration
-            if($key ==  0 ) {
-                $presentation->duration = $this->DurationVideo($videoPath, $filename);
             }
 
             //Create thumb for uploaded video

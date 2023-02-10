@@ -9,6 +9,19 @@ Dropzone.options.datanodeupload =
         chunkSize: 10000000,  // chunk size 10,000,000 bytes (~10MB)
         retryChunks: true,   // retry chunks on failure
         retryChunksLimit: 5, // retry maximum of 5 times
+        init: function() {
+            var bt = document.getElementById('submit');
+            this.on("addedfile", file => {
+                //Upload files status
+                Livewire.emit('fileAdded')
+                //Check number of files before enabling submit button
+                if(this.files.length > 0) {
+                    bt.disabled = false;
+                }
+                console.log("A file has been added:"+file.name);
+            });
+        },
+
         maxfilesexceeded: function(file) {
             alert("Maximum files uploadlimit reached");
             this.removeFile(file);
@@ -24,6 +37,9 @@ Dropzone.options.datanodeupload =
         timeout: 0,
         removedfile: function(file) {
             var name = file.upload.filename;
+            var bt = document.getElementById('submit');
+            //Upload files status
+            Livewire.emit('fileRemoved')
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -42,20 +58,14 @@ Dropzone.options.datanodeupload =
                 }
             });
             var fileRef;
+            //Check number of files before enabling submit button
+            if(this.files.length > 0) {
+                bt.disabled = false;
+            } else {
+                bt.disabled = true;
+            }
             return (fileRef = file.previewElement) != null ?
                 fileRef.parentNode.removeChild(file.previewElement) : void 0;
         }
-
-        /*success: function(file, response)
-        {
-            //Select the preview element
-            var previewImg = file.previewElement.querySelector('img');
-
-            var newImagePath = file.name;
-            newImagePath = "images/su_template.gif";
-            previewImg.src = newImagePath;
-
-        }*/
-
     };
 

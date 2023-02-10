@@ -266,7 +266,7 @@
                         <div class="d-flex row no-gutters justify-content-end">
                             <div class="col-md-4">
                                 <div class="d-flex flex-row" id="bulkediting">
-                                    <button type="submit" id="submit" class="btn btn-lg btn-outline-light m-auto">{{ __("Upload") }}</button>
+                                    <button type="submit" id="submit" class="btn btn-lg btn-outline-light m-auto" disabled>{{ __("Upload") }}</button>
                                 </div>
                             </div>
                         </div>
@@ -284,10 +284,15 @@
                         <p class="font-1rem px-1">
                             {{ __("Up to 4 media files per presentation can be uploaded.") }} {{ __("Each uploaded file should be the same length.") }}
                         </p>
+
                         <div class="row justify-content-between text-left">
                             <div class="form-group col-md-6 flex-column d-flex">
+
+                                @livewire('uploadstatus', ['presentation' => $presentation ])
+
                                 <label class="form-control-label px-1">{{ __("Files to upload") }}<span
-                                        class="text-danger"> *</span></label>
+                                        class="text-danger"> *</span> Files </label>
+
                                 <div class="form-group">
 
                                     <div id="uploaderHolder">
@@ -305,9 +310,13 @@
                             </div>
 
                             <div class="form-group col-md-6 flex-column d-flex">
+                                <div class="rounded border p-3 my-2">
+                                    {{__('Automatic subtitling: ')}} <span class="badge badge-secondary">Disabled</span>
+                                </div>
                                 <!-- Subtitles file-->
                                 <label class="form-control-label px-1">{{ __("Add a subtitle file") }} <span
                                         class="badge badge-warning">{{ __("Testing in progress") }}</span></label>
+
                                 <p class="font-1rem px-1">
                                     {{ __("Select one or drag and drop a WebVTT (.vtt) file into the box below") }}
                                 </p>
@@ -325,6 +334,8 @@
                                     <label class="form-control-label px-1">{{ __("A subtitle file has been added") }}</label>
                                 @endif
                                 {{--}}
+
+
 
                             </div>
                         </div>
@@ -625,6 +636,5 @@
                 });
             });
         </script>
-
 
 @endsection
