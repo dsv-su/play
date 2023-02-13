@@ -235,31 +235,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="row">
-                <div class="col-lg-12 my-2">
-                    <div class="rounded border shadow p-3 my-2">
-                        <h5 class="mb-4">
-                            <i class="fa fa-solid fa-6 fa-icon mr-2"></i><label class="form-control-label px-1"
-                                                                                for="custom">{{__("Upload custom thumb") }}</label>
-                        </h5>
-                        <p class="font-1rem px-1">
-                            {{ __("If you want, you can upload a custom image to represent your presentation.") }}
-                        </p>
-                        <div class="row justify-content-between text-left">
-                            <div class="col-6 col-sm-6 my-2 d-flex align-items-center">
-                                <div class="my-auto">
-                                    <input type="file" class="form-control-file" id="custom">
-                                    @error('custom') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
-                            </div>
-                            <div class="col-6 col-sm-6 my-2 d-flex align-items-center">
-                                <!-- -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
                 <!-- Upload bar -->
                 <div class="container-fluid px-2 play_savebar">
                     <div class="bar p-3 su-header-container__primary">
@@ -274,6 +249,55 @@
                 </div>
                 <!-- end upload bar -->
         </form>
+            <div class="row">
+                <div class="col-lg-12 my-2">
+                    <div class="rounded border shadow p-3 my-2">
+                        <h5 class="mb-4">
+                            <i class="fa fa-solid fa-6 fa-icon mr-2"></i><label class="form-control-label px-1"
+                                                                                for="custom">{{__("Upload custom thumb") }}</label>
+                        </h5>
+                        <p class="font-1rem px-1">
+                            {{ __("If you want, you can upload a custom image to represent your presentation.") }}
+                        </p>
+                        {{--}}
+                        <div class="row justify-content-between text-left">
+                            <div class="col-6 col-sm-6 my-2 d-flex align-items-center">
+                                <div class="my-auto">
+                                    <input type="file" class="form-control-file" id="custom">
+                                    @error('custom') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-6 my-2 d-flex align-items-center">
+                                <!-- -->
+                            </div>
+                        </div>
+                        {{--}}
+                    <!-- Custom thumb -->
+                        <div class="row justify-content-between text-left">
+                            <div class="col-3 col-sm-3 my-2 d-flex align-items-center">
+                                <div class="my-auto">
+                                    <div id="customThumbHolder">
+                                        <form action="{{ route('thumb-upload') }}" class="dropzone" id="customthumbupload">
+                                            <input type="file" name="thumb"  style="display: none;">
+                                            <input type="hidden" name="thumbdir"  id="thumbdir" value="{{ $presentation->local }}">
+                                            @csrf
+                                            <div class="dz-message" data-dz-message>
+                                                <span>{{__('Drop a picture here or click to browse')}}</span>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+
+
             <div class="row">
                 <div class="col-lg-12 my-2">
                     <div class="rounded border shadow p-3 my-2">
@@ -335,9 +359,8 @@
                                 @endif
                                 {{--}}
 
-
-
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -370,7 +393,9 @@
             Dropzone.discover();
             var home_url = "{{env('APP_URL') }}";
             var deleteAction = '{{ route("file-delete") }}';
+            var deleteThumb = '{{ route("thumb-delete") }}';
             var dir =  document.getElementById('localdir').value;
+            var thumbdir =  document.getElementById('thumbdir').value;
             var token = '{!! csrf_token() !!}';
 
             function remove(el) {
@@ -626,6 +651,7 @@
                     $('#creationdate').removeClass('is-invalid');
                 }
                 if (errors) {
+                    window.scrollTo(0, 0);
                     return false;
                 }
                 $('form').submit();

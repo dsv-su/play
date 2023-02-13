@@ -12,6 +12,9 @@ use App\Services\Ffmpeg\DetermineDurationVideo;
 use App\Services\Ldap\SukatUser;
 use App\Services\Notify\PlayStoreNotify;
 use App\Services\Store\SftpPlayStore;
+use App\Services\Upload\Metadata;
+use App\Services\Upload\PresentationDuration;
+use App\Services\Upload\StreamThumb;
 use App\Tag;
 use App\VideoPermission;
 use Carbon\Carbon;
@@ -84,14 +87,12 @@ class UploadController extends Controller
     public function step1($id, Request $request)
     {
         if ($request->isMethod('post')) {
-            dd($request->all());
+
             //Second validation
             $this->validate($request, [
                 'title' => 'required',
                 'title_en' => 'required',
                 'created' => 'required',
-                //Disabled for now
-                //'disclaimer' => 'required',
             ]);
 
             //Retrived the upload
@@ -194,6 +195,10 @@ class UploadController extends Controller
         //Remove temp storage
         //Storage::disk('public')->deleteDirectory($presentation->local);
 
+        //Create thumbs and metadata
+        $metadata = new Metadata();
+        $metadata->create($presentation);
+
         //Change manualupdate status
         $presentation->status = 'stored';
         $presentation->save();
@@ -209,8 +214,6 @@ class UploadController extends Controller
      * Handles the file upload
      *
      * @param Request $request
-     *
-     * @return \Illuminate\Http\JsonResponse
      *
      * @throws UploadMissingFileException
      * @throws UploadFailedException
@@ -232,11 +235,9 @@ class UploadController extends Controller
         //Check if the upload has finished (in chunk mode it will send smaller files)
         if ($save->isFinished()) {
 
-            // save the file and return any response you need, current example uses `move` function. If you are
-            // not using move, you need to manually delete the file by unlink($save->getFile()->getPathname())
-            $this->saveFile($save->getFile(), $request);
+            $this->saveFile($save->getFile(), $request, 'video');
             return unlink($save->getFile()->getPathname());
-            //return $this->saveFile($save->getFile(), $request);
+
         }
 
         //Current progress
@@ -256,23 +257,32 @@ class UploadController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function saveFile(UploadedFile $file, Request $request) {
+    protected function saveFile(UploadedFile $file, Request $request, $type) {
 
         $fileName = $this->createFilename($file);
 
         // Get file mime type
         $mime_original = $file->getMimeType();
         $mime = str_replace('/', '-', $mime_original);
+        if($type == 'video') {
+            $folder  = $request->localdir . '/video/';
+        } else {
+            //Thumb
+            $folder  = $request->thumbdir . '/poster/';
+            $presentation = ManualPresentation::where('local', $request->thumbdir)->first();
+            $presentation->thumb = 'poster/' . $fileName;
+            $presentation->save();
+        }
 
-        $folder  = $request->localdir . '/video/';
         $finalPath = '/' . $this->storage() . '/' . $folder;
 
         $fileSize = $file->getSize();
         Storage::disk('play-store')->putFileAs($finalPath, $file, $fileName);
 
         // Update status in model
-        //$this->metadata($request);
-        $this->addFilesCount($request);
+        if($type == 'video') {
+            $this->addFilesCount($request);
+        }
 
         return response()->json([
             'path' => $finalPath,
@@ -281,6 +291,34 @@ class UploadController extends Controller
         ]);
     }
 
+    public function thumbupload(Request $request)
+    {
+        //Create the file receiver
+        $receiver = new FileReceiver("thumb", $request, HandlerFactory::classFromRequest($request));
+
+        // Check if the upload is success, throw exception or return response
+        if ($receiver->isUploaded() === false) {
+            throw new UploadMissingFileException();
+        }
+
+        //Receive the file
+        $save = $receiver->receive();
+
+        //Check if the upload has finished (in chunk mode it will send smaller files)
+        if ($save->isFinished()) {
+            $this->saveFile($save->getFile(), $request, 'thumb');
+            return unlink($save->getFile()->getPathname());
+        }
+
+        //Current progress
+        /** @var AbstractHandler $handler */
+        $handler = $save->handler();
+
+        return response()->json([
+            "done" => $handler->getPercentageDone(),
+            'status' => true
+        ]);
+    }
 
     /**
      * Create unique filename for uploaded file
@@ -316,10 +354,9 @@ class UploadController extends Controller
 
         if (Storage::disk('play-store')->delete($finalFilePath.$file) ){
 
-            //Unlink poster
+            //Unlink related poster
             Storage::disk('play-store')->delete($finalPosterPath . $thumb_name.'.png');
-            //Update file status in model
-            //$this->metadata($request);
+
             $this->deleteFilesCount($request);
             return response()->json([
                 'status' => 'ok'
@@ -332,85 +369,24 @@ class UploadController extends Controller
         }
     }
 
-    public function DurationVideo($filename)
-    {
-        $video = $filename;
-        $media = FFMpeg::fromDisk('play-store')->open($video);
-        return $media->getDurationInSeconds();
-    }
+    public function thumbdelete(Request $request){
 
-    public function createThumb($directory, $video, $seconds, $streamduration)
-    {
-        $base = basename($video);
-        $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', $base);
-        //Generate thumb
-        //Create thumb and store in folder
-        do {
-            try {
-                FFMpeg::fromDisk('play-store')
-                    ->open($video)
-                    ->getFrameFromSeconds($seconds)
-                    ->export()
-                    ->toDisk('play-store')
-                    ->save($directory.'/poster/'.$thumb_name.'.png');
-                $seconds++;
-                if($seconds > $streamduration) {
-                    break; //Stops the loop -> TODO we should add a message to say that the thumb will be generated on play-store instead
-                }
-            } catch (EncodingException $exception) {
-                $command = $exception->getCommand();
-                $errorLog = $exception->getErrorOutput();
-            }
+        $file = $request->filename;
+        $dir = $request->localdir;
 
+        $posterPath = $this->storage() . "/{$dir}/poster/";
+        $finalPosterPath = $posterPath;
+
+        if (Storage::disk('play-store')->delete($finalPosterPath . $file) ){
+            return response()->json([
+                'status' => 'ok'
+            ], 200);
         }
-        while (!\Illuminate\Support\Facades\Storage::disk('public')->exists($directory.'/poster/'.$thumb_name.'.png'));
-
-        return Storage::disk('public')->url($directory.'/poster/'.$thumb_name.'.png');
-    }
-
-    protected function metadata(Request $request)
-    {
-        $finalPath = $this->storage() . '/'. $request->localdir;
-        $videoPath = $finalPath . '/video/';
-        //Updates the source attribute after each added/deleted video
-        $presentation = ManualPresentation::where('local', $request->localdir)->first();
-        $presentation->sources = [];
-        //Update video source
-        foreach (\Illuminate\Support\Facades\Storage::disk('play-store')->files($videoPath) as $key => $filename) {
-            //Add duration
-            if($key ==  0 ) {
-                $presentation->duration = $this->DurationVideo($filename);
-            }
-
-            //Set time in sec for thumb generation
-            if($presentation->duration < 30 ) {
-                $thumbcreated_after = $presentation->duration/3;
-            } else {
-                //Fallback
-                $thumbcreated_after = 30;
-            }
-
-            //Create thumb for uploaded video
-            $this->createThumb($finalPath, $filename, $thumbcreated_after, $presentation->duration);
-
-            //Add video source
-            $this->source[$key]['video'] = 'video/'. basename($filename);
-
-            //Add poster source
-            $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($filename));
-            $this->source[$key]['poster'] = 'poster/'. $thumb_name . '.png';
-
-            //Add playAudio default setting
-            if($key > 0 ) {
-                $this->source[$key]['playAudio'] = false;
-            } else {
-                $this->source[$key]['playAudio'] = true;
-            }
-
-            $presentation->sources = $this->source;
-
+        else{
+            return response()->json([
+                'status' => 'error'
+            ], 403);
         }
-        $presentation->save();
     }
 
     protected function addFilesCount(Request $request): void
