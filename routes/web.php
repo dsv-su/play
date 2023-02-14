@@ -90,6 +90,8 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     Route::post('chunk/delete', [App\Http\Controllers\UploadController::class, 'chunkdelete'])->name('file-delete');
     Route::post('thumb/upload', [App\Http\Controllers\UploadController::class, 'thumbupload'])->name('thumb-upload');
     Route::post('thumb/delete', [App\Http\Controllers\UploadController::class, 'thumbdelete'])->name('thumb-delete');
+    Route::post('subtitle/upload', [App\Http\Controllers\UploadController::class, 'subtitleupload'])->name('subtitle-upload');
+    Route::post('subtitle/delete', [App\Http\Controllers\UploadController::class, 'subtitledelete'])->name('subtitle-delete');
 
     Route::get('file-upload', function () {
         return view('default');

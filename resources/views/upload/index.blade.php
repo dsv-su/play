@@ -105,7 +105,7 @@
                                 <div id="addedCourses" class="mx-1 my-2">
                                 </div>
                                 <div id="course-search-form" class="flex-column d-flex p-0">
-                                    <input wire:ignore class="mx-1 w-100" type="search"
+                                    <input class="mx-1 w-100" type="search"
                                            id="course-search" name="q" autocomplete="off"
                                            aria-haspopup="true"
                                            placeholder="{{ __("Start typing to add a course") }}"
@@ -259,19 +259,6 @@
                         <p class="font-1rem px-1">
                             {{ __("If you want, you can upload a custom image to represent your presentation.") }}
                         </p>
-                        {{--}}
-                        <div class="row justify-content-between text-left">
-                            <div class="col-6 col-sm-6 my-2 d-flex align-items-center">
-                                <div class="my-auto">
-                                    <input type="file" class="form-control-file" id="custom">
-                                    @error('custom') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
-                            </div>
-                            <div class="col-6 col-sm-6 my-2 d-flex align-items-center">
-                                <!-- -->
-                            </div>
-                        </div>
-                        {{--}}
                     <!-- Custom thumb -->
                         <div class="row justify-content-between text-left">
                             <div class="col-3 col-sm-3 my-2 d-flex align-items-center">
@@ -289,10 +276,6 @@
                                 </div>
                             </div>
                         </div>
-
-
-
-
                     </div>
                 </div>
             </div>
@@ -318,7 +301,6 @@
                                         class="text-danger"> *</span> Files </label>
 
                                 <div class="form-group">
-
                                     <div id="uploaderHolder">
                                         <form action="{{ route('file-upload') }}" class="dropzone" id="datanodeupload">
                                             <input type="file" name="file"  style="display: none;">
@@ -329,7 +311,6 @@
                                             </div>
                                         </form>
                                     </div>
-
                                 </div>
                             </div>
 
@@ -341,26 +322,18 @@
                                 <label class="form-control-label px-1">{{ __("Add a subtitle file") }} <span
                                         class="badge badge-warning">{{ __("Testing in progress") }}</span></label>
 
-                                <p class="font-1rem px-1">
-                                    {{ __("Select one or drag and drop a WebVTT (.vtt) file into the box below") }}
-                                </p>
-
-                                {{--}}@if(!$sub){{--}}
-
-                                    <div class="form-group">
-                                        <input type="file" class="form-control-file" accept="text/vtt"/>
-                                        @error('subtitle')
-                                        <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                {{--}}
-                                @else
-                                    <label class="form-control-label px-1">{{ __("A subtitle file has been added") }}</label>
-                                @endif
-                                {{--}}
-
+                                <!-- Subtitle -->
+                                <div id="subtitleHolder">
+                                    <form action="{{ route('subtitle-upload') }}" class="dropzone" id="subtitleupload">
+                                        <input type="file" name="subtitle"  style="display: none;">
+                                        <input type="hidden" name="subtitledir"  id="subtitledir" value="{{ $presentation->local }}">
+                                        @csrf
+                                        <div class="dz-message" data-dz-message>
+                                            <span>{{ __("Drop a WebVTT (.vtt) file or click to upload") }}</span>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -386,7 +359,6 @@
         </div>
 
 
-
         <script src="{{ asset('./js/upload.js') }}"></script>
 
         <script>
@@ -394,8 +366,10 @@
             var home_url = "{{env('APP_URL') }}";
             var deleteAction = '{{ route("file-delete") }}';
             var deleteThumb = '{{ route("thumb-delete") }}';
+            var deleteSubtitle = '{{ route("subtitle-delete") }}';
             var dir =  document.getElementById('localdir').value;
             var thumbdir =  document.getElementById('thumbdir').value;
+            var subtitledir =  document.getElementById('subtitledir').value;
             var token = '{!! csrf_token() !!}';
 
             function remove(el) {

@@ -15,8 +15,10 @@ class Metadata
 
         $finalPath = $this->storage() . '/'. $presentation->local;
         $videoPath = $finalPath . '/video/';
+        $subtitlePath = $finalPath . '/subtitle/';
         //Creates the source attribute
         $presentation->sources = [];
+        //Adds source and created thumbs
         foreach (\Illuminate\Support\Facades\Storage::disk('play-store')->files($videoPath) as $key => $filename) {
 
             //Add duration
@@ -53,6 +55,12 @@ class Metadata
             $presentation->sources = $this->source;
 
         }
+
+        //Subtitle
+        if($subtitles = \Illuminate\Support\Facades\Storage::disk('play-store')->files($subtitlePath)) {
+            $presentation->subtitles = 'subtitle/' . basename($subtitles[0]);
+        }
+
         return $presentation->save();
     }
 

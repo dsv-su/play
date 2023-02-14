@@ -17,8 +17,10 @@
 
     <!-- JS -->
     <script src="{{asset('./js/dsvplay.js')}}"></script>
+    <!-- Dropzone settings -->
     <script src="{{ asset('js/file_upload.js') }}"></script>
     <script src="{{ asset('js/thumb_upload.js') }}"></script>
+    <script src="{{ asset('js/subtitle_upload.js') }}"></script>
 
     <!-- Laravel Livewire -->
     @livewireStyles

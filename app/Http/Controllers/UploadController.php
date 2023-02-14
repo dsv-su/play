@@ -3,23 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Course;
-use App\CoursesettingsUsers;
 use App\Jobs\JobUploadProgressNotification;
 use App\ManualPresentation;
 use App\Permission;
-use App\Services\Daisy\DaisyAPI;
-use App\Services\Ffmpeg\DetermineDurationVideo;
 use App\Services\Ldap\SukatUser;
 use App\Services\Notify\PlayStoreNotify;
 use App\Services\Store\SftpPlayStore;
 use App\Services\Upload\Metadata;
-use App\Services\Upload\PresentationDuration;
-use App\Services\Upload\StreamThumb;
 use App\Tag;
 use App\VideoPermission;
 use Carbon\Carbon;
-use DateTime;
-use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Pion\Laravel\ChunkUpload\Exceptions\UploadFailedException;
@@ -27,8 +20,6 @@ use Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException;
 use Pion\Laravel\ChunkUpload\Handler\AbstractHandler;
 use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
 use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
-use ProtoneMedia\LaravelFFMpeg\Exporters\EncodingException;
-use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 use Storage;
 
 class UploadController extends Controller
@@ -119,8 +110,6 @@ class UploadController extends Controller
             //Courses
             if ($request->courses) {
                 foreach ($request->courses as $course) {
-                    //$courses[] = $course;
-                    //Switching to courseID. To be enabled after play-store api has been modified
                     $daisy_courses[] = (int)$course;
                     $courses[] = Course::find($course)->designation;
 
@@ -264,14 +253,19 @@ class UploadController extends Controller
         // Get file mime type
         $mime_original = $file->getMimeType();
         $mime = str_replace('/', '-', $mime_original);
-        if($type == 'video') {
-            $folder  = $request->localdir . '/video/';
-        } else {
-            //Thumb
-            $folder  = $request->thumbdir . '/poster/';
-            $presentation = ManualPresentation::where('local', $request->thumbdir)->first();
-            $presentation->thumb = 'poster/' . $fileName;
-            $presentation->save();
+        switch($type) {
+            case('video'):
+                $folder  = $request->localdir . '/video/';
+                break;
+            case('thumb'):
+                $folder  = $request->thumbdir . '/poster/';
+                $presentation = ManualPresentation::where('local', $request->thumbdir)->first();
+                $presentation->thumb = 'poster/' . $fileName;
+                $presentation->save();
+                break;
+            case('subtitle'):
+                $folder  = $request->subtitledir . '/subtitle/';
+                break;
         }
 
         $finalPath = '/' . $this->storage() . '/' . $folder;
@@ -304,7 +298,7 @@ class UploadController extends Controller
         //Receive the file
         $save = $receiver->receive();
 
-        //Check if the upload has finished (in chunk mode it will send smaller files)
+        //Check if the upload has finished
         if ($save->isFinished()) {
             $this->saveFile($save->getFile(), $request, 'thumb');
             return unlink($save->getFile()->getPathname());
@@ -378,6 +372,58 @@ class UploadController extends Controller
         $finalPosterPath = $posterPath;
 
         if (Storage::disk('play-store')->delete($finalPosterPath . $file) ){
+            return response()->json([
+                'status' => 'ok'
+            ], 200);
+        }
+        else{
+            return response()->json([
+                'status' => 'error'
+            ], 403);
+        }
+    }
+
+    public function subtitleupload(Request $request)
+    {
+        //Create the file receiver
+        $receiver = new FileReceiver("subtitle", $request, HandlerFactory::classFromRequest($request));
+
+        // Check if the upload is success, throw exception or return response
+        if ($receiver->isUploaded() === false) {
+            throw new UploadMissingFileException();
+        }
+
+        //Receive the file
+        $save = $receiver->receive();
+
+        //Check if the upload has finished
+        if ($save->isFinished()) {
+            $this->saveFile($save->getFile(), $request, 'subtitle');
+            return unlink($save->getFile()->getPathname());
+        }
+
+        //Current progress
+        /** @var AbstractHandler $handler */
+        $handler = $save->handler();
+
+        return response()->json([
+            "done" => $handler->getPercentageDone(),
+            'status' => true
+        ]);
+    }
+
+    public function subtitledelete(Request $request)
+    {
+        $file = $request->filename;
+        $dir = $request->localdir;
+
+        $posterPath = $this->storage() . "/{$dir}/subtitle/";
+        $finalSubtitlePath = $posterPath;
+
+        if (Storage::disk('play-store')->delete($finalSubtitlePath . $file) ){
+            //Also delete subtitle directory
+            Storage::deleteDirectory($finalSubtitlePath);
+
             return response()->json([
                 'status' => 'ok'
             ], 200);
