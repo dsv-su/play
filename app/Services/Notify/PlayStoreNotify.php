@@ -69,7 +69,7 @@ class PlayStoreNotify extends Model
         $this->json = $this->json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
         //
-        return $this->json;
+        //return $this->json;
         //
 
         $this->client = new Client(['base_uri' => $this->uri()]);

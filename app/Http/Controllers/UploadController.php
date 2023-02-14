@@ -164,10 +164,10 @@ class UploadController extends Controller
         $presentation = ManualPresentation::find($id);
 
         //Send email to uploader
-        /*$job = (new JobUploadProgressNotification($presentation));
+        $job = (new JobUploadProgressNotification($presentation));
 
         // Dispatch Job and continue
-        dispatch($job);*/
+        dispatch($job);
 
         /***
          * Disabled SFTP upload to server
@@ -194,7 +194,7 @@ class UploadController extends Controller
 
         // Send notify
         $notify = new PlayStoreNotify($presentation);
-        return $notify->sendSuccess('manual');
+        $notify->sendSuccess('manual');
 
         return redirect('/');
     }
