@@ -219,7 +219,7 @@ class AdminController extends Controller
     public function admin_erase($id)
     {
         $manual = ManualPresentation::find($id);
-        Storage::disk('public')->deleteDirectory($manual->local);
+        Storage::disk('play-store')->deleteDirectory($this->storage(). '/' . $manual->local);
         ManualPresentation::destroy($id);
         return back()->withInput();
     }
@@ -233,7 +233,7 @@ class AdminController extends Controller
         $notify->sendFail('manual');
 
         //Remove temp storage
-        Storage::disk('public')->deleteDirectory($presentation->local);
+        Storage::disk('play-store')->deleteDirectory($this->storage(). '/'  . $presentation->local);
 
         return back()->withInput();
     }
@@ -356,5 +356,16 @@ class AdminController extends Controller
          */
         Storage::disk('public')->deleteDirectory($id);
         return redirect()->route('home');
+    }
+
+    private function storage()
+    {
+        $this->file = base_path() . '/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            $this->file = base_path() . '/systemconfig/play.ini.example';
+        }
+        $this->system_config = parse_ini_file($this->file, true);
+
+        return $this->system_config['nfs']['storage'];
     }
 }
