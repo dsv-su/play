@@ -325,7 +325,7 @@ class AdminController extends Controller
          * ->to be removed
          */
         //Remove temp storage in dev
-        Storage::disk('public')->deleteDirectory($id);
+        Storage::disk('play-store')->deleteDirectory($this->storage() . '/' . $id);
         $data['manual_presentations'] = ManualPresentation::all();
         $data['presentations'] = Presentation::all();
         $data['videos'] = Video::all();
@@ -354,7 +354,7 @@ class AdminController extends Controller
          * Dev testing
          * ->to be removed
          */
-        Storage::disk('public')->deleteDirectory($id);
+        Storage::disk('play-store')->deleteDirectory($this->storage() . '/' . $id);
         return redirect()->route('home');
     }
 
