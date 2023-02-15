@@ -227,7 +227,8 @@ class UploadController extends Controller
             $this->saveFile($save->getFile(), $request, 'video');
             // Update status in model
             $this->addFilesCount($request);
-            return unlink($save->getFile()->getPathname());
+            //return unlink($save->getFile()->getPathname());
+            return true;
 
         }
 

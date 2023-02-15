@@ -7,7 +7,7 @@ Dropzone.options.datanodeupload =
         chunking: true,      // enable chunking
         forceChunking: true, // forces chunking when file.size < chunkSize
         parallelChunkUploads: true, // allows chunks to be uploaded in parallel (this is independent of the parallelUploads option)
-        chunkSize: 10000000,  // chunk size 10,000,000 bytes (~10MB)
+        chunkSize: 20000000,  // chunk size 20,000,000 bytes (~20MB)
         retryChunks: true,   // retry chunks on failure
         retryChunksLimit: 5, // retry maximum of 5 times
 
@@ -15,11 +15,18 @@ Dropzone.options.datanodeupload =
             var bt = document.getElementById('submit');
             this.on("complete", function(file) {
                 Livewire.emit('fileAdded')
+                console.log("A file has been added:"+file.name);
+            });
+            this.on("processing", function() {
+                console.log("A upload file process has started");
+                bt.disabled = true;
+            });
+            this.on("queuecomplete", function() {
                 //Check number of files before enabling submit button
                 if(this.files.length > 0) {
                     bt.disabled = false;
                 }
-                console.log("A file has been added:"+file.name);
+                console.log("The queue has finished:");
             });
         },
 
