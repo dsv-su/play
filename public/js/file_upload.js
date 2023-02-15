@@ -10,10 +10,10 @@ Dropzone.options.datanodeupload =
         chunkSize: 10000000,  // chunk size 10,000,000 bytes (~10MB)
         retryChunks: true,   // retry chunks on failure
         retryChunksLimit: 5, // retry maximum of 5 times
+
         init: function() {
             var bt = document.getElementById('submit');
-            this.on("addedfile", file => {
-                //Upload files status
+            this.on("complete", function(file) {
                 Livewire.emit('fileAdded')
                 //Check number of files before enabling submit button
                 if(this.files.length > 0) {
@@ -24,8 +24,11 @@ Dropzone.options.datanodeupload =
         },
 
         maxfilesexceeded: function(file) {
+            var bt = document.getElementById('submit');
             alert("Maximum files uploadlimit reached");
-            this.removeFile(file);
+            if(this.files.length > 4) {
+                bt.disabled = true;
+            }
         },
 
         renameFile: function(file) {

@@ -225,6 +225,8 @@ class UploadController extends Controller
         if ($save->isFinished()) {
 
             $this->saveFile($save->getFile(), $request, 'video');
+            // Update status in model
+            $this->addFilesCount($request);
             return unlink($save->getFile()->getPathname());
 
         }
@@ -272,11 +274,6 @@ class UploadController extends Controller
 
         $fileSize = $file->getSize();
         Storage::disk('play-store')->putFileAs($finalPath, $file, $fileName);
-
-        // Update status in model
-        if($type == 'video') {
-            $this->addFilesCount($request);
-        }
 
         return response()->json([
             'path' => $finalPath,
@@ -358,8 +355,8 @@ class UploadController extends Controller
         }
         else{
             return response()->json([
-                'status' => 'error'
-            ], 403);
+                'status' => 'File missing'
+            ], 200);
         }
     }
 
@@ -378,8 +375,8 @@ class UploadController extends Controller
         }
         else{
             return response()->json([
-                'status' => 'error'
-            ], 403);
+                'status' => 'Thumb removed'
+            ], 200);
         }
     }
 
@@ -430,8 +427,8 @@ class UploadController extends Controller
         }
         else{
             return response()->json([
-                'status' => 'error'
-            ], 403);
+                'status' => 'File removed'
+            ], 200);
         }
     }
 
