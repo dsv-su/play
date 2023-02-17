@@ -1,3 +1,7 @@
+.dropzone .dz-preview .dz-error-message {
+    top: 150px!important;
+}
+
 .textarea-container {
     position: relative;
 }

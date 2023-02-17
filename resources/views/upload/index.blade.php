@@ -240,8 +240,8 @@
                     <div class="bar p-3 su-header-container__primary">
                         <div class="d-flex row no-gutters justify-content-end">
                             <div class="col-md-4">
-                                <div class="d-flex flex-row" id="bulkediting">
-                                    <button type="submit" id="submit" class="btn btn-lg btn-outline-light m-auto" disabled>{{ __("Upload") }}</button>
+                                <div class="d-flex flex-row">
+                                    <button type="submit" id="submit" class="btn btn-lg btn-light btn-block m-auto" disabled><strong>{{ __("UPLOAD") }}</strong></button>
                                 </div>
                             </div>
                         </div>
@@ -307,7 +307,7 @@
                                             <input type="hidden" name="localdir"  id="localdir" value="{{ $presentation->local }}">
                                             @csrf
                                             <div class="dz-message" data-dz-message>
-                                                <span>{{__('Drop files here or click to upload')}}</span>
+                                                <span>{{__('Drop files here or click to browse')}}</span>
                                             </div>
                                         </form>
                                     </div>
@@ -316,7 +316,7 @@
 
                             <div class="form-group col-md-6 flex-column d-flex">
                                 <div class="rounded border p-3 my-2">
-                                    {{__('Automatic subtitling: ')}} <span class="badge badge-secondary">Disabled</span>
+                                    {{__('Automatic subtitling')}}: <span class="badge badge-secondary">Disabled</span>
                                 </div>
                                 <!-- Subtitles file-->
                                 <label class="form-control-label px-1">{{ __("Add a subtitle file") }} <span
@@ -329,7 +329,7 @@
                                         <input type="hidden" name="subtitledir"  id="subtitledir" value="{{ $presentation->local }}">
                                         @csrf
                                         <div class="dz-message" data-dz-message>
-                                            <span>{{ __("Drop a WebVTT (.vtt) file or click to upload") }}</span>
+                                            <span>{{ __("Drop a WebVTT (.vtt) file here or click to browse") }}</span>
                                         </div>
                                     </form>
                                 </div>
