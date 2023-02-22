@@ -69,6 +69,10 @@
             @if($queue)
                 @include('faq.queue')
             @endif
+            <!-- Logs -->
+            @if($logs)
+                @include('faq.logs')
+            @endif
 
             @if($admin)
             <article class="main-article webb2021-article main-column-left js-anchor-links-headers-container col-12 col-lg-8 main-column-padding-right">
@@ -78,7 +82,7 @@
             @endif
 
             <div class="webb2021-article-info">
-                <p>{{__("Last updated:")}} 2022-11-28</p>
+                <p>{{__("Last updated:")}} 2023-02-22</p>
             </div>
 
         </div>

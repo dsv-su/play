@@ -269,7 +269,7 @@
     "Other subjects": "Andra ämnen",
     "Overview": "Översikt",
     "Manual and guides": "Manual och guider",
-    "Here we have collected instructions on some of the most important functions.": "Här har vi samlat instruktioner om några av de viktigaste funktionerna.",
+    "Here we have collected instructions on some of the most important functions. This manual replaces the previously published quick start manual in pdf format.": "Här har vi samlat instruktioner om några av de viktigaste funktionerna. Denna manual ersätter den tidigare publicerade snabbstartsmanualen i pdf-format.",
     "What is DSVPlay?": "Vad är DSVPlay?",
     "DSVPLAY is a platform where DSV students and staff can upload, edit, search and play recordings of lectures and seminars held at SU or own produced material. In the platform these are called presentations.": "DSVPLAY är en plattform där DSV-studenter och personal kan ladda upp, redigera, söka och spela upp inspelningar av föreläsningar och seminarier som hålls på SU eller egenproducerat material. I plattformen kallas det för presentationer.",
     "Language": "Språk",
@@ -366,5 +366,6 @@
     "Uploaded files": "Uppladdade filer",
     "Automatic subtitling": "Automatisk undertextning",
     "Drop a WebVTT (.vtt) file here or click to browse": "Släpp en WebVTT (.vtt)-fil här eller klicka för att bläddra",
-    "UPLOAD": "LADDA UPP"
+    "UPLOAD": "LADDA UPP",
+    "Note!": "Notera!"
 }

@@ -7,12 +7,15 @@ use Livewire\Component;
 class Faq extends Component
 {
     public $start, $wiplay, $language, $rap, $navigate, $upload, $download, $manage_presentations, $manage_courses;
-    public $edit, $player, $semester, $designation, $edit_course, $queue;
+    public $edit, $player, $semester, $designation, $edit_course, $queue, $logs;
     public $admin;
     public $intended, $url_routes;
     public $toggle;
     public $role_staff, $role_admin;
-    protected $queryString = ['start', 'wiplay', 'language', 'rap', 'navigate', 'player', 'upload', 'download', 'edit', 'manage_presentations', 'manage_courses', 'semester'];
+    protected $queryString = ['start', 'wiplay', 'language', 'rap',
+        'navigate', 'player', 'upload', 'download',
+        'edit', 'manage_presentations', 'manage_courses', 'semester',
+        'logs'];
 
     public function mount()
     {
@@ -57,7 +60,7 @@ class Faq extends Component
     {
         switch($url) {
             case($this->url_routes['start']):
-                $this->start = true;
+                $this->start = false;
                 $this->wiplay = false;
                 $this->navigate = true;
                 $this->language = false;
@@ -131,11 +134,12 @@ class Faq extends Component
         $this->designation = false;
         $this->edit_course = false;
         $this->queue = false;
+        $this->logs = false;
     }
 
     public function wiplay()
     {
-        $this->start = true;
+        $this->start = false;
         $this->wiplay = true;
         $this->navigate = false;
         $this->language = false;
@@ -150,6 +154,7 @@ class Faq extends Component
         $this->designation = false;
         $this->edit_course = false;
         $this->queue = false;
+        $this->logs = false;
     }
 
     public function language()
@@ -169,6 +174,7 @@ class Faq extends Component
         $this->designation = false;
         $this->edit_course = false;
         $this->queue = false;
+        $this->logs = false;
     }
 
     public function rap()
@@ -188,6 +194,7 @@ class Faq extends Component
         $this->designation = false;
         $this->edit_course = false;
         $this->queue = false;
+        $this->logs = false;
     }
 
     public function navigate()
@@ -207,6 +214,7 @@ class Faq extends Component
         $this->designation = false;
         $this->edit_course = false;
         $this->queue = false;
+        $this->logs = false;
     }
 
     public function player()
@@ -226,6 +234,7 @@ class Faq extends Component
         $this->designation = false;
         $this->edit_course = false;
         $this->queue = false;
+        $this->logs = false;
     }
 
     public function upload()
@@ -245,6 +254,7 @@ class Faq extends Component
         $this->designation = false;
         $this->edit_course = false;
         $this->queue = false;
+        $this->logs = false;
     }
 
     public function download()
@@ -264,6 +274,7 @@ class Faq extends Component
         $this->designation = false;
         $this->edit_course = false;
         $this->queue = false;
+        $this->logs = false;
     }
 
     public function edit()
@@ -283,6 +294,7 @@ class Faq extends Component
         $this->designation = false;
         $this->edit_course = false;
         $this->queue = false;
+        $this->logs = false;
     }
 
     public function manage_presentations()
@@ -302,6 +314,7 @@ class Faq extends Component
         $this->designation = false;
         $this->edit_course = false;
         $this->queue = false;
+        $this->logs = false;
     }
 
     public function manage_courses()
@@ -321,6 +334,7 @@ class Faq extends Component
         $this->designation = false;
         $this->edit_course = false;
         $this->queue = false;
+        $this->logs = false;
     }
 
     public function edit_course()
@@ -340,6 +354,27 @@ class Faq extends Component
         $this->designation = false;
         $this->edit_course = true;
         $this->queue = false;
+        $this->logs = false;
+    }
+
+    public function logs()
+    {
+        $this->start = false;
+        $this->wiplay = false;
+        $this->navigate = false;
+        $this->language = false;
+        $this->rap = false;
+        $this->player = false;
+        $this->upload = false;
+        $this->download = false;
+        $this->edit = false;
+        $this->manage_presentations = false;
+        $this->manage_courses = false;
+        $this->semester = false;
+        $this->designation = false;
+        $this->edit_course = false;
+        $this->queue = false;
+        $this->logs = true;
     }
 
     public function render()
