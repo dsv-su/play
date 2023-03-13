@@ -48,6 +48,7 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     Route::get('/findtag', 'SearchController@findTag')->name('tag.find');
     Route::get('/findcourse', 'SearchController@findCourse')->name('course.find');
     Route::get('/findperson', 'SearchController@findPerson')->name('person.find');
+    Route::get('/finduser', [App\Http\Controllers\AdminController::class, 'findUser']);
 
     //Multiplayer
     Route::get('/player/{video}', 'MultiplayerController@player')->name('player');

@@ -19,6 +19,9 @@
                 <h1 class="su-theme-header mb-4">
                     <i class="fas fa-arrow-circle-up fa-icon mr-2"></i>{{ __("Upload presentation") }}
                 </h1>
+                <p class="font-1rem px-1">
+                    {{ __("Fill out the form below and click the upload button when you're done to upload your presentation") }}
+                </p>
             </div> <!-- col-12 -->
         </div> <!-- row no-gutters -->
     </div>
@@ -241,7 +244,10 @@
                         <div class="d-flex row no-gutters justify-content-end">
                             <div class="col-md-4">
                                 <div class="d-flex flex-row">
-                                    <button type="submit" id="submit" class="btn btn-lg btn-light btn-block m-auto" disabled><strong>{{ __("UPLOAD") }}</strong></button>
+                                    <p class="font-1rem px-1">
+                                        {{ __("Click the upload button when you're done to upload your presentation") }} <i class="fa-solid fa-arrow-right-long"></i>
+                                    </p>
+                                    <button type="submit" id="submit" class="btn btn-lg btn-light m-auto" disabled><strong>{{ __("UPLOAD") }}</strong></button>
                                 </div>
                             </div>
                         </div>

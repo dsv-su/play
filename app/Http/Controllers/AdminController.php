@@ -8,23 +8,27 @@ use App\MediasiteFolder;
 use App\MediasitePresentation;
 use App\Permission;
 use App\Presentation;
+use App\Presenter;
 use App\Services\Daisy\DaisyAPI;
 use App\Services\DownloadPackageZip;
+use App\Services\Ldap\SukatUser;
 use App\Services\Notify\PlayStoreNotify;
 use App\Services\ReLoadPlayStore;
 use App\Video;
 use App\VideoPermission;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Storage;
+use stdClass;
 
 class AdminController extends Controller
 {
     public function __construct()
     {
         $this->middleware('entitlements');
-        $this->middleware('play-admin')->except('emulateUser');
+        $this->middleware('play-admin')->except(['emulateUser', 'findUser']);
         //New admin2
         $this->middleware('playauth:api');
         $this->middleware('play-store-status:api');
@@ -161,6 +165,54 @@ class AdminController extends Controller
         }
 
         return back()->withInput();
+    }
+
+    /** Method for user search autocomplete suggestions
+     * @param Request $request
+     * @return Collection
+     */
+    public function findUser(Request $request): Collection
+    {
+        $searchterms = preg_split('/\s+/', $request->custom);
+        $search = '(&';
+        foreach ($searchterms as $term) {
+            $search .= "(|(givenName=$term*)(sn=$term*))";
+        }
+        $search .= ')';
+
+
+        $sukatusersdsv = SukatUser::rawFilter($search)->whereContains('edupersonentitlement', 'urn:mace:swami.se:gmai:dsv-user:staff')->get();
+
+        //Students
+        /*$sukatusersstudents = SukatUser::rawFilter($search)
+            ->whereContains('edupersonentitlement', 'urn:mace:swami.se:gmai:dsv-user:student')
+            ->whereNotContains('edupersonentitlement', 'urn:mace:swami.se:gmai:dsv-user:staff')
+            ->get();
+        */
+        foreach ($sukatusersdsv as $su) {
+            $su->role = 'DSV';
+
+        }
+
+        /*foreach ($sukatusersstudents as $su) {
+            $su->role = 'Student';
+        }
+        */
+
+        $users = new Collection();
+        //foreach ($sukatusersdsv->merge($sukatusersstudents) as $su) {
+        foreach ($sukatusersdsv as $su) {
+            $user = new stdClass();
+            if (!$su->uid) {
+                continue;
+            }
+            $user->uid = $su->uid[0];
+            $user->name = $su->displayName[0];
+            $user->role = $su->role;
+            $users->add($user);
+        }
+
+        return $users->take(20);
     }
 
     public function addPermission()
