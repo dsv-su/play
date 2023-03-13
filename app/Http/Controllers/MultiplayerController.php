@@ -10,7 +10,6 @@ use App\StreamResolution;
 use App\Video;
 use App\VideoCourse;
 use App\VideoStat;
-use hisorange\BrowserDetect\Facade as Browser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Redirect;
@@ -141,10 +140,6 @@ class MultiplayerController extends Controller
 
     public function multiplayer()
     {
-        //Device detection
-        //Uncomment to restrict access to ios devices
-        //abort_if(Browser::isMac() && Browser::isMobile(), 412, 'Sorry, no support for IOS Devices');
-
         return view('player.index');
     }
 }

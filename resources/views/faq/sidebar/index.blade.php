@@ -40,16 +40,18 @@
             <a href="#admin" class="dropdown-toggle" data-toggle="dropdown">Administrator <span class="caret"></span></a>
             <ul class="dropdown-menu animated fadeInLeft" role="menu">
                 <li><a href="#stats">Statistics and settings</a></li>
-                <li><a href="#logs">Logs</a></li>
+                <li><a wire:click="logs" style="cursor: pointer;@if($logs) color:blue; font-weight: bolder;@endif">Logs</a></li>
                 <li><a href="#sync">Sync items from Mediasite</a></li>
                 <li><a href="#retrive">Retrive from Mediasite</a></li>
             </ul>
         </li>
         @endif
+
         @if(Lang::locale() == 'swe')
             <li><a target="_blank" rel="noopener noreferrer" href="https://releasenotes.blogs.dsv.su.se/archives/category/play">{{__("Release notes")}}</a></li>
         @else
             <li><a target="_blank" rel="noopener noreferrer" href="https://releasenotes.blogs.dsv.su.se/en/archives/category/play-en">{{__("Release notes")}}</a></li>
         @endif
+
     </ul>
 </nav>

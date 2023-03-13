@@ -48,6 +48,7 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     Route::get('/findtag', 'SearchController@findTag')->name('tag.find');
     Route::get('/findcourse', 'SearchController@findCourse')->name('course.find');
     Route::get('/findperson', 'SearchController@findPerson')->name('person.find');
+    Route::get('/finduser', [App\Http\Controllers\AdminController::class, 'findUser']);
 
     //Multiplayer
     Route::get('/player/{video}', 'MultiplayerController@player')->name('player');
@@ -84,8 +85,15 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     Route::post('/store_permission/{id}', 'ManagePresentationController@storePermission')->name('store_permission');
 
     //Upload
-    Route::get('/upload', 'UploadController@upload')->name('user_upload');
-    Route::get('/upload/pending', 'UploadController@pending_uploads')->name('pending_uploads');
+    Route::get('/upload', [App\Http\Controllers\UploadController::class, 'upload'])->name('user_upload');
+    Route::get('/upload/pending', [App\Http\Controllers\UploadController::class, 'pending_uploads'])->name('pending_uploads');
+    Route::post('chunk/upload', [App\Http\Controllers\UploadController::class, 'chunkupload'])->name('file-upload');
+    Route::post('chunk/delete', [App\Http\Controllers\UploadController::class, 'chunkdelete'])->name('file-delete');
+    Route::post('thumb/upload', [App\Http\Controllers\UploadController::class, 'thumbupload'])->name('thumb-upload');
+    Route::post('thumb/delete', [App\Http\Controllers\UploadController::class, 'thumbdelete'])->name('thumb-delete');
+    Route::post('subtitle/upload', [App\Http\Controllers\UploadController::class, 'subtitleupload'])->name('subtitle-upload');
+    Route::post('subtitle/delete', [App\Http\Controllers\UploadController::class, 'subtitledelete'])->name('subtitle-delete');
+
     Route::get('file-upload', function () {
         return view('default');
     });

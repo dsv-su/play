@@ -55,6 +55,11 @@ username=
 privateKey=
 pk-password=
 
+[nfs]
+root=                                   ; The folder intended for uploads
+chunks=chunks                           ; Name of the chunks folder
+storage=incoming                        ; Name of the final upload folder
+
 [store]
 base_uri=                               ; Base-Uri storage server
 notify_uri=                             ; Notify Uri storage server

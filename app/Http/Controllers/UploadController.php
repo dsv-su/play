@@ -3,25 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Course;
-use App\CoursesettingsUsers;
 use App\Jobs\JobUploadProgressNotification;
 use App\ManualPresentation;
 use App\Permission;
-use App\Services\Daisy\DaisyAPI;
 use App\Services\Ldap\SukatUser;
 use App\Services\Notify\PlayStoreNotify;
 use App\Services\Store\SftpPlayStore;
+use App\Services\Upload\Metadata;
 use App\Tag;
 use App\VideoPermission;
 use Carbon\Carbon;
-use DateTime;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
-use Monolog\DateTimeImmutable;
+use Illuminate\Http\UploadedFile;
+use Pion\Laravel\ChunkUpload\Exceptions\UploadFailedException;
+use Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException;
+use Pion\Laravel\ChunkUpload\Handler\AbstractHandler;
+use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
+use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
 use Storage;
 
 class UploadController extends Controller
 {
+    protected $sourse = [];
 
     public function init_upload()
     {
@@ -54,7 +57,7 @@ class UploadController extends Controller
         $permissions = Permission::all();
 
         if ($request->old('prepopulate')) {
-            $presentation = ManualPresentation::where('user', app()->make('play_username'))->latest()->first();
+            $presentation =  ManualPresentation::where('user', app()->make('play_username'))->latest()->first();
         } else {
             $presentation = $this->init_upload();
         }
@@ -81,8 +84,6 @@ class UploadController extends Controller
                 'title' => 'required',
                 'title_en' => 'required',
                 'created' => 'required',
-                //Disabled for now
-                //'disclaimer' => 'required',
             ]);
 
             //Retrived the upload
@@ -109,8 +110,6 @@ class UploadController extends Controller
             //Courses
             if ($request->courses) {
                 foreach ($request->courses as $course) {
-                    //$courses[] = $course;
-                    //Switching to courseID. To be enabled after play-store api has been modified
                     $daisy_courses[] = (int)$course;
                     $courses[] = Course::find($course)->designation;
 
@@ -143,7 +142,7 @@ class UploadController extends Controller
 
             //Update model
             $manualPresentation->status = 'pending';
-            $manualPresentation->base = '/data0/incoming/' . $manualPresentation->local;
+            $manualPresentation->base = '/data0/'. $this->storage() . '/' . $manualPresentation->local;
             $manualPresentation->title = $request->title;
             $manualPresentation->title_en = $request->title_en;
             $manualPresentation->description = $request->description ?? '';
@@ -170,15 +169,24 @@ class UploadController extends Controller
         // Dispatch Job and continue
         dispatch($job);
 
+        /***
+         * Disabled SFTP upload to server
+         */
+        /*
         $upload = new SftpPlayStore($presentation);
         $upload->sftpVideo();
         $upload->sftpSubtitle();
         //$upload->sftpImage(); -> disabled
         $upload->sftpPoster();
+        */
 
         // Moved to api -> the files are stored until upload is completed
         //Remove temp storage
         //Storage::disk('public')->deleteDirectory($presentation->local);
+
+        //Create thumbs and metadata
+        $metadata = new Metadata();
+        $metadata->create($presentation);
 
         //Change manualupdate status
         $presentation->status = 'stored';
@@ -189,6 +197,254 @@ class UploadController extends Controller
         $notify->sendSuccess('manual');
 
         return redirect('/');
+    }
+
+    /**
+     * Handles the file upload
+     *
+     * @param Request $request
+     *
+     * @throws UploadMissingFileException
+     * @throws UploadFailedException
+     */
+
+    public function chunkupload(Request $request)
+    {
+        //Create the file receiver
+        $receiver = new FileReceiver("file", $request, HandlerFactory::classFromRequest($request));
+
+        // Check if the upload is success, throw exception or return response
+        if ($receiver->isUploaded() === false) {
+            throw new UploadMissingFileException();
+        }
+
+        //Receive the file
+        $save = $receiver->receive();
+
+        //Check if the upload has finished (in chunk mode it will send smaller files)
+        if ($save->isFinished()) {
+
+            $this->saveFile($save->getFile(), $request, 'video');
+            // Update status in model
+            $this->addFilesCount($request);
+            //return unlink($save->getFile()->getPathname());
+            return true;
+
+        }
+
+        //Current progress
+        /** @var AbstractHandler $handler */
+        $handler = $save->handler();
+
+        return response()->json([
+            "done" => $handler->getPercentageDone(),
+            'status' => true
+        ]);
+    }
+
+    /**
+     * Saves the file
+     *
+     * @param UploadedFile $file
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function saveFile(UploadedFile $file, Request $request, $type) {
+
+        $fileName = $this->createFilename($file);
+
+        // Get file mime type
+        $mime_original = $file->getMimeType();
+        $mime = str_replace('/', '-', $mime_original);
+        switch($type) {
+            case('video'):
+                $folder  = $request->localdir . '/video/';
+                break;
+            case('thumb'):
+                $folder  = $request->thumbdir . '/poster/';
+                $presentation = ManualPresentation::where('local', $request->thumbdir)->first();
+                $presentation->thumb = 'poster/' . $fileName;
+                $presentation->save();
+                break;
+            case('subtitle'):
+                $folder  = $request->subtitledir . '/subtitle/';
+                break;
+        }
+
+        $finalPath = '/' . $this->storage() . '/' . $folder;
+
+        $fileSize = $file->getSize();
+        Storage::disk('play-store')->putFileAs($finalPath, $file, $fileName);
+
+        return response()->json([
+            'path' => $finalPath,
+            'name' => $fileName,
+            'mime_type' => $mime
+        ]);
+    }
+
+    public function thumbupload(Request $request)
+    {
+        //Create the file receiver
+        $receiver = new FileReceiver("thumb", $request, HandlerFactory::classFromRequest($request));
+
+        // Check if the upload is success, throw exception or return response
+        if ($receiver->isUploaded() === false) {
+            throw new UploadMissingFileException();
+        }
+
+        //Receive the file
+        $save = $receiver->receive();
+
+        //Check if the upload has finished
+        if ($save->isFinished()) {
+            $this->saveFile($save->getFile(), $request, 'thumb');
+            return unlink($save->getFile()->getPathname());
+        }
+
+        //Current progress
+        /** @var AbstractHandler $handler */
+        $handler = $save->handler();
+
+        return response()->json([
+            "done" => $handler->getPercentageDone(),
+            'status' => true
+        ]);
+    }
+
+    /**
+     * Create unique filename for uploaded file
+     * @param UploadedFile $file
+     * @return string
+     */
+    protected function createFilename(UploadedFile $file) {
+        $extension = $file->getClientOriginalExtension();
+        $filename = str_replace(".".$extension, "", $file->getClientOriginalName()); // Filename without extension
+
+        //Generate a unique name
+        //$filename = $file->hashName();
+
+        //We use the original name
+        return $filename.".".$extension;
+    }
+
+    /**
+     * Delete uploaded file WEB ROUTE
+     * @param Request request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function chunkdelete(Request $request){
+
+        $file = $request->filename;
+        $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', $file);
+        $dir = $request->localdir;
+
+        $filePath = $this->storage() . "/{$dir}/video/";
+        $posterPath = $this->storage() . "/{$dir}/poster/";
+        $finalFilePath = $filePath;
+        $finalPosterPath = $posterPath;
+
+        if (Storage::disk('play-store')->delete($finalFilePath.$file) ){
+
+            //Unlink related poster
+            Storage::disk('play-store')->delete($finalPosterPath . $thumb_name.'.png');
+
+            $this->deleteFilesCount($request);
+            return response()->json([
+                'status' => 'ok'
+            ], 200);
+        }
+        else{
+            return response()->json([
+                'status' => 'File missing'
+            ], 200);
+        }
+    }
+
+    public function thumbdelete(Request $request){
+
+        $file = $request->filename;
+        $dir = $request->localdir;
+
+        $posterPath = $this->storage() . "/{$dir}/poster/";
+        $finalPosterPath = $posterPath;
+
+        if (Storage::disk('play-store')->delete($finalPosterPath . $file) ){
+            return response()->json([
+                'status' => 'ok'
+            ], 200);
+        }
+        else{
+            return response()->json([
+                'status' => 'Thumb removed'
+            ], 200);
+        }
+    }
+
+    public function subtitleupload(Request $request)
+    {
+        //Create the file receiver
+        $receiver = new FileReceiver("subtitle", $request, HandlerFactory::classFromRequest($request));
+
+        // Check if the upload is success, throw exception or return response
+        if ($receiver->isUploaded() === false) {
+            throw new UploadMissingFileException();
+        }
+
+        //Receive the file
+        $save = $receiver->receive();
+
+        //Check if the upload has finished
+        if ($save->isFinished()) {
+            $this->saveFile($save->getFile(), $request, 'subtitle');
+            return unlink($save->getFile()->getPathname());
+        }
+
+        //Current progress
+        /** @var AbstractHandler $handler */
+        $handler = $save->handler();
+
+        return response()->json([
+            "done" => $handler->getPercentageDone(),
+            'status' => true
+        ]);
+    }
+
+    public function subtitledelete(Request $request)
+    {
+        $file = $request->filename;
+        $dir = $request->localdir;
+
+        $posterPath = $this->storage() . "/{$dir}/subtitle/";
+        $finalSubtitlePath = $posterPath;
+
+        if (Storage::disk('play-store')->delete($finalSubtitlePath . $file) ){
+            //Also delete subtitle directory
+            Storage::deleteDirectory($finalSubtitlePath);
+
+            return response()->json([
+                'status' => 'ok'
+            ], 200);
+        }
+        else{
+            return response()->json([
+                'status' => 'File removed'
+            ], 200);
+        }
+    }
+
+    protected function addFilesCount(Request $request): void
+    {
+        $presentation = ManualPresentation::where('local', $request->localdir)->first();
+        $presentation->files++;
+        $presentation->save();
+    }
+
+    protected function deleteFilesCount(Request $request): void
+    {
+        $presentation = ManualPresentation::where('local', $request->localdir)->first();
+        $presentation->files--;
+        $presentation->save();
     }
 
     public function ldap_search(Request $request)
@@ -204,5 +460,16 @@ class UploadController extends Controller
     public function tag_search(Request $request)
     {
         return Tag::where('name', 'LIKE', $request->tag . '%')->get();
+    }
+
+    private function storage()
+    {
+        $this->file = base_path() . '/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            $this->file = base_path() . '/systemconfig/play.ini.example';
+        }
+        $this->system_config = parse_ini_file($this->file, true);
+
+        return $this->system_config['nfs']['storage'];
     }
 }
