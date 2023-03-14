@@ -2,6 +2,7 @@
 
 namespace App\Services\Presenter;
 
+use App\IndividualPermission;
 use App\Presenter;
 use App\Services\Ldap\SukatUser;
 use App\VideoPresenter;
@@ -26,12 +27,21 @@ class PresenterStore extends Model
                     if (!$this->db_presenter = Presenter::where('username', $this->item)->first()) {
                         //Stores new presenters
                         if ($this->name = SukatUser::findBy('uid', $this->item)) {
+                            //Presenter found in SUKAT
                             $this->presenter = Presenter::create([
                                 'username' => $this->item,
                                 'name' => $this->name->getFirstAttribute('cn'),
                                 'description' => 'sukat',
                             ]);
+                            //Add edit-permission for presenter
+                            IndividualPermission::create([
+                                'video_id' => $this->video->id,
+                                'username' => $this->item,
+                                'name' => $this->name->getFirstAttribute('cn'),
+                                'permission' => 'edit',
+                            ]);
                         } else {
+                            //External presenter
                             $this->presenter = Presenter::create([
                                 'name' => $this->item,
                                 //'username' => $this->item,
@@ -46,11 +56,22 @@ class PresenterStore extends Model
                     } else {
                         //Updates presenters
                         if ($this->name = SukatUser::findBy('uid', $this->item)) {
+                            //Update presenter
                             $this->db_presenter::updateOrCreate([
                                 'username' => $this->item],
                                 [
                                     'username' => $this->item,
                                     'name' => $this->name->getFirstAttribute('cn'),
+                                ]);
+                            //Update edit-permission
+                            IndividualPermission::updateOrCreate([
+                                'video_id' => $this->video->id,
+                                'username' => $this->item],
+                                [
+                                    'video_id' => $this->video->id,
+                                    'username' => $this->item,
+                                    'name' => $this->name->getFirstAttribute('cn'),
+                                    'permission' => 'edit',
                                 ]);
                         }
                         if ($key == 0) {
