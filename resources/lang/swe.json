@@ -367,5 +367,7 @@
     "Automatic subtitling": "Automatisk undertextning",
     "Drop a WebVTT (.vtt) file here or click to browse": "Släpp en WebVTT (.vtt)-fil här eller klicka för att bläddra",
     "UPLOAD": "LADDA UPP",
-    "Note!": "Notera!"
+    "Note!": "Notera!",
+    "Fill out the form below and click the upload button when you're done to upload your presentation": "Fyll i formuläret nedan och klicka på uppladdningsknappen när du är klar för att ladda upp din presentation",
+    "Click the upload button when you're done to upload your presentation": "Klicka på uppladdningsknappen när du är klar för att ladda upp din presentation"
 }
