@@ -124,10 +124,10 @@ class VideoApiController extends Controller
                 //Set edit/delete individual permission for uploader
                 IndividualPermission::updateOrCreate([
                     'video_id' => $video->id,
-                    'username' => $manualpresentation->user,
-                    'name' => 'Uploader', //This can later look up SUKAT for displayname
-                    'permission' => 'delete'
-                ]);
+                    'username' => $manualpresentation->user],
+                    ['name' => 'Uploader', //This can later look up SUKAT for displayname
+                    'permission' => 'delete']
+                );
 
                 //Send email to uploader
                 $job = (new JobUploadSuccessNotification($video, $manualpresentation));
