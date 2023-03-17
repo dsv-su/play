@@ -151,24 +151,30 @@ class Playback
                 //Not associated to a course
                 if ($video->visibility) {
                     return $next($request);
-                } else {
+                }
 
-                    //Check individual settings
-                    //Check if individual permissions has been set for presentation
-                    if ($individuals = $video->ipermissions ?? false) {
-                        foreach ($individuals as $iper) {
-                            //Check if user is listed
-                            $username = substr($_SERVER['REMOTE_USER'], 0, strpos($_SERVER['REMOTE_USER'], "@"));
-                            if ($iper->username == $username) {
-                                //Check if user has set permissions
-                                if (in_array($iper->permission, ['read', 'edit', 'delete'])) {
-                                    return $next($request);
-                                }
+                //Check individual settings
+                //Check if individual permissions has been set for presentation
+                if ($individuals = $video->ipermissions ?? false) {
+                    foreach ($individuals as $iper) {
+                        //Check if user is listed
+                        $username = substr($_SERVER['REMOTE_USER'], 0, strpos($_SERVER['REMOTE_USER'], "@"));
+                        if ($iper->username == $username) {
+                            //Check if user has set permissions
+                            if (in_array($iper->permission, ['read', 'edit', 'delete'])) {
+                                return $next($request);
                             }
                         }
                     }
-                    return redirect()->route('home');
                 }
+
+                // Check if Presentation is unlisted and allows playback
+                if ($video->unlisted) {
+                    return $next($request);
+                }
+                
+                return redirect()->route('home');
+
             }
             //End Shibboleth
         }
