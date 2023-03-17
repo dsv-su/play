@@ -40,10 +40,12 @@ class Playback
 
         //Check if user is through SU SSO
         if (!$request->server('REMOTE_USER')) {
+
             //Local dev enviroment
             if ($system->global->app_env == 'local') {
                 return $next($request);
             }
+
             //If Shibboleth session is missing
 
             //Check if video is public
@@ -74,6 +76,10 @@ class Playback
                 if ($coursesetting->check($video)) {
                     return $next($request);
                 }
+            }
+
+            if ($video->unlisted) {
+                return $next($request);
             }
 
             return redirect()->route('home');
@@ -172,7 +178,7 @@ class Playback
                 if ($video->unlisted) {
                     return $next($request);
                 }
-                
+
                 return redirect()->route('home');
 
             }
