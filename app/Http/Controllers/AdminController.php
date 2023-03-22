@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\AdminHandler;
+use App\Jobs\JobUploadFailedNotification;
 use App\ManualPresentation;
 use App\MediasiteFolder;
 use App\MediasitePresentation;
@@ -273,6 +274,19 @@ class AdminController extends Controller
         $manual = ManualPresentation::find($id);
         Storage::disk('play-store')->deleteDirectory($this->storage(). '/' . $manual->local);
         ManualPresentation::destroy($id);
+        return back()->withInput();
+    }
+
+    public function admin_cancel($id)
+    {
+        //Notifies user
+        $manual = ManualPresentation::find($id);
+        Storage::disk('play-store')->deleteDirectory($this->storage(). '/' . $manual->local);
+        $job = (new JobUploadFailedNotification($manual));
+
+        // Dispatch Job and continue
+        dispatch($job);
+
         return back()->withInput();
     }
 

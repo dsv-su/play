@@ -55,6 +55,8 @@
                                 <td>
                                     <a role="button" class="btn btn-warning btn-sm"
                                        href="{{route('manual_admin_erase', $manual_presentation->id)}}">Erase</a>
+                                    <a role="button" class="btn btn-info btn-sm"
+                                       href="{{route('manual_admin_cancel', $manual_presentation->id)}}">Notify user</a>
                                     <a role="button" class="btn btn-danger btn-sm"
                                        href="{{route('upload_store', $manual_presentation->id)}}">Resend</a>
                                 </td>

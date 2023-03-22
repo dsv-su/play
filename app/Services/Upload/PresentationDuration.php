@@ -9,7 +9,12 @@ class PresentationDuration
     public function duration($filename)
     {
         $video = $filename;
-        $media = FFMpeg::fromDisk('play-store')->open($video);
+        try {
+            $media = FFMpeg::fromDisk('play-store')->open($video);
+        } catch (\Throwable $e) {
+            report($e);
+        }
+
         return $media->getDurationInSeconds();
     }
 }

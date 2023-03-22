@@ -2,6 +2,7 @@
 
 namespace App\Services\Upload;
 
+use App\Jobs\JobUploadFailedNotification;
 use App\ManualPresentation;
 
 class Metadata
@@ -23,8 +24,16 @@ class Metadata
 
             //Add duration
             if($key ==  0 ) {
-                $presentation->duration = $Determine->duration($filename);
-                $presentation->save();
+                if($presentation->duration = $Determine->duration($filename)) {
+                    $presentation->save();
+                } else {
+                    //Something went wrong - Send email to uploader
+                    $job = (new JobUploadFailedNotification($presentation));
+
+                    // Dispatch Job and continue
+                    dispatch($job);
+                }
+
             }
 
             //Set time in sec for thumb generation
