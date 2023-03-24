@@ -51,8 +51,8 @@ return [
 
         'local' => [
             'driver' => 'local',
-            //'root' => storage_path('app'),
-            'root' => $system_config['nfs']['root'],
+            'root' => storage_path('app'),
+            //'root' => $system_config['nfs']['root'],
         ],
 
         'public' => [
