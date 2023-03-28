@@ -129,6 +129,11 @@ class VideoApiController extends Controller
                     'permission' => 'delete']
                 );
 
+                //Set visibility
+                $video->visibility = $manualpresentation->visibility;
+                $video->unlisted = $manualpresentation->unlisted;
+                $video->save();
+
                 //Send email to uploader
                 $job = (new JobUploadSuccessNotification($video, $manualpresentation));
                 // Dispatch Job and continue

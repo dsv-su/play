@@ -140,6 +140,22 @@ class UploadController extends Controller
                 $video_permissions->save();
             }
 
+            //Set visibility
+            switch($request->video_visibility) {
+                case('visible'):
+                    $manualPresentation->visibility = true;
+                    $manualPresentation->unlisted = false;
+                    break;
+                case('private'):
+                    $manualPresentation->visibility = false;
+                    $manualPresentation->unlisted = false;
+                    break;
+                case('unlisted'):
+                    $manualPresentation->visibility = false;
+                    $manualPresentation->unlisted = true;
+                    break;
+            }
+
             //Update model
             $manualPresentation->status = 'pending';
             $manualPresentation->base = '/data0/'. $this->storage() . '/' . $manualPresentation->local;

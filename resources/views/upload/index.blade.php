@@ -28,314 +28,273 @@
 
     <div class="container px-3 px-sm-0">
         <form class="needs-validation" method="post" action="{{route('upload_step1', $presentation->id)}}">
-                @csrf
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="rounded border shadow p-3 my-2">
-                        <h5 class="mb-4">
-                            <i class="fa fa-solid fa-1 fa-icon mr-2"></i><label
-                                    class="form-control-label px-1">{{ __("Information about the presentation") }}</label>
-                        </h5>
+        @csrf
+        <!-- 1 -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="rounded border shadow p-3 my-2">
+                    <h5 class="mb-4">
+                        <i class="fa fa-solid fa-1 fa-icon mr-2"></i><label
+                                class="form-control-label px-1">{{ __("Information about the presentation") }}</label>
+                    </h5>
 
-                        <p class="font-1rem px-1">
-                            {{ __("Enter the title of the presentation and the date of recording. If the recording date is unknown, you can enter today's date. Description is optional.") }}
-                        </p>
+                    <p class="font-1rem px-1">
+                        {{ __("Enter the title of the presentation and the date of recording. If the recording date is unknown, you can enter today's date. Description is optional.") }}
+                    </p>
 
-                        <div class="row justify-content-between text-left">
-                            <!-- Title -->
-                            <div class="form-group col-sm-6 flex-column d-flex">
-                                <label for="title" class="form-control-label px-1">{{ __("Title in Swedish") }}
-                                    <span class="text-danger"> *</span></label>
-                                <input class="form-control" id="title" name="title" type="text"
-                                       placeholder="{{ __("Title in Swedish") }}"
-                                       value="{{ old('title') ? old('title'): $title ?? '' }}">
-                                <div class="invalid-feedback">
-                                    {{__("Title is required")}}
-                                </div>
-                                <div><small class="text-danger">{{ $errors->first('title') }}</small></div>
+                    <div class="row justify-content-between text-left">
+                        <!-- Title -->
+                        <div class="form-group col-sm-6 flex-column d-flex">
+                            <label for="title" class="form-control-label px-1">{{ __("Title in Swedish") }}
+                                <span class="text-danger"> *</span></label>
+                            <input class="form-control" id="title" name="title" type="text"
+                                   placeholder="{{ __("Title in Swedish") }}"
+                                   value="{{ old('title') ? old('title'): $title ?? '' }}">
+                            <div class="invalid-feedback">
+                                {{__("Title is required")}}
                             </div>
-
-                            <!-- CreationDate -->
-                            <div class="form-group col-sm-6 flex-column d-flex">
-                                <label for="creationdate"
-                                       class="form-control-label px-1">{{ __("Recording date") }}<span
-                                            class="text-danger"> *</span></label>
-                                <input id="creationdate" class="datepicker form-control" name="created" type="text"
-                                       autocomplete="off" data-provide="datepicker" data-date-autoclose="true"
-                                       data-date-today-highlight="true" required>
-                                <div class="invalid-feedback">
-                                    {{__('Recording date is required')}}
-                                </div>
-                                <div><small class="text-danger">{{ $errors->first('created') }}</small></div>
-                            </div>
+                            <div><small class="text-danger">{{ $errors->first('title') }}</small></div>
                         </div>
-                        <div class="row justify-content-between text-left">
-                            <div class="form-group col-sm-6 flex-column d-flex">
-                                <label for="title_en" class="form-control-label px-1">{{ __("Title in English") }}<span
-                                            class="text-danger"> *</span></label>
-                                <input class="form-control" id="title_en" name="title_en" type="text"
-                                       placeholder="{{ __("Title in English") }}"
-                                       value="{{ old('title_en') ? old('title'): $title_en ?? '' }}">
-                                <div class="invalid-feedback">
-                                    {{__("Title in English is required")}}
-                                </div>
-                                <div><small class="text-danger">{{ $errors->first('title_en') }}</small></div>
+                        <!-- Title english-->
+                        <div class="form-group col-sm-6 flex-column d-flex">
+                            <label for="title_en" class="form-control-label px-1">{{ __("Title in English") }}<span
+                                    class="text-danger"> *</span></label>
+                            <input class="form-control" id="title_en" name="title_en" type="text"
+                                   placeholder="{{ __("Title in English") }}"
+                                   value="{{ old('title_en') ? old('title'): $title_en ?? '' }}">
+                            <div class="invalid-feedback">
+                                {{__("Title in English is required")}}
                             </div>
+                            <div><small class="text-danger">{{ $errors->first('title_en') }}</small></div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-between text-left">
+                        <!-- CreationDate -->
+                        <div class="form-group col-sm-6 flex-column d-flex">
+                            <label for="creationdate"
+                                   class="form-control-label px-1">{{ __("Recording date") }}<span
+                                    class="text-danger"> *</span></label>
+                            <input id="creationdate" class="datepicker form-control" name="created" type="text"
+                                   autocomplete="off" data-provide="datepicker" data-date-autoclose="true"
+                                   data-date-today-highlight="true" required>
+                            <div class="invalid-feedback">
+                                {{__('Recording date is required')}}
+                            </div>
+                            <div><small class="text-danger">{{ $errors->first('created') }}</small></div>
+                        </div>
 
-                            <div class="form-group col-12 col-lg-6 flex-column d-flex">
-                                <label for="description" class="form-control-label px-1">{{ __("Description") }}</label>
-                                <textarea id="description" name="description" class="form-control"
-                                          placeholder="{{__("Add a description here (optional)")}}"></textarea>
+                        <div class="form-group col-12 col-lg-6 flex-column d-flex">
+                            <label for="description" class="form-control-label px-1">{{ __("Description") }}</label>
+                            <textarea id="description" name="description" class="form-control"
+                                      placeholder="{{__("Add a description here (optional)")}}"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 2 -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="rounded border shadow p-3 my-2">
+                    <!-- Course -->
+                    <h5 class="mb-4">
+                        <i class="fa fa-solid fa-2 fa-icon mr-2"></i><label
+                                class="form-control-label px-1">{{ __("Course association") }}</label>
+                    </h5>
+                    <p class="font-1rem px-1 my-0">
+                        {{ __("Here you specify whether the presentation should be associated with one or more courses. If you do not want the presentation to be associated with a course or want to complete at a later time, leave the field blank.") }}
+                    </p>
+                    <div class="row justify-content-between text-left">
+                        <div class="form-group col-12 col-lg-6 flex-column d-flex">
+                            <!-- Course association -->
+                            <div id="addedCourses" class="mx-1 my-2">
+                            </div>
+                            <div id="course-search-form" class="flex-column d-flex p-0">
+                                <input class="mx-1 w-100" type="search"
+                                       id="course-search" name="q" autocomplete="off"
+                                       aria-haspopup="true"
+                                       placeholder="{{ __("Start typing to add a course") }}"
+                                       aria-labelledby="course-search">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="rounded border shadow p-3 my-2">
-                        <!-- Course -->
-                        <h5 class="mb-4">
-                            <i class="fa fa-solid fa-2 fa-icon mr-2"></i><label
-                                    class="form-control-label px-1">{{ __("Course association") }}</label>
-                        </h5>
-                        <p class="font-1rem px-1 my-0">
-                            {{ __("Here you specify whether the presentation should be associated with one or more courses. If you do not want the presentation to be associated with a course or want to complete at a later time, leave the field blank.") }}
-                        </p>
-                        <div class="row justify-content-between text-left">
-                            <div class="form-group col-12 col-lg-6 flex-column d-flex">
-                                <!-- Course association -->
-                                <div id="addedCourses" class="mx-1 my-2">
-                                </div>
-                                <div id="course-search-form" class="flex-column d-flex p-0">
-                                    <input class="mx-1 w-100" type="search"
-                                           id="course-search" name="q" autocomplete="off"
-                                           aria-haspopup="true"
-                                           placeholder="{{ __("Start typing to add a course") }}"
-                                           aria-labelledby="course-search">
-                                </div>
+        </div>
+        <!-- 3 -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="rounded border shadow p-3 my-2">
+                    <!-- Presenters -->
+                    <h5 class="mb-4">
+                        <i class="fa fa-solid fa-3 fa-icon mr-2"></i><label
+                                class="form-control-label px-1">{{ __("Presenters") }}</label>
+                    </h5>
+                    <p class="font-1rem px-1 my-0">
+                        {{ __("Add the presenters for this presentation. The uploader is listed as presenter by default.") }}
+                    </p>
+                    <div class="row justify-content-between text-left">
+                        <div class="form-group col-12 col-lg-6 flex-column d-flex">
+                            <div id="addedPresenters" class="mx-1 my-2">
+                                <span class="badge badge-pill badge-light" data-toggle="tooltip"
+                                      data-title="SU username: {{app()->make('play_username')}}">{{app()->make('play_user')}}</span>
+                            </div>
+                            <div id="presenter-search-form" class="flex-column d-flex p-0">
+                                <input class="mx-1 w-100" type="search"
+                                       id="presenter-search" name="q" autocomplete="off"
+                                       aria-haspopup="true"
+                                       placeholder="{{ __("Start typing to add a presenter") }}"
+                                       aria-labelledby="presenter-search">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="rounded border shadow p-3 my-2">
-                        <!-- Presenters -->
-                        <h5 class="mb-4">
-                            <i class="fa fa-solid fa-3 fa-icon mr-2"></i><label
-                                    class="form-control-label px-1">{{ __("Presenters") }}</label>
-                        </h5>
-                        <p class="font-1rem px-1 my-0">
-                            {{ __("Add the presenters for this presentation. The uploader is listed as presenter by default.") }}
-                        </p>
-                        <div class="row justify-content-between text-left">
-                            <div class="form-group col-12 col-lg-6 flex-column d-flex">
-                                <div id="addedPresenters" class="mx-1 my-2">
-                                    <span class="badge badge-pill badge-light" data-toggle="tooltip"
-                                          data-title="SU username: {{app()->make('play_username')}}">{{app()->make('play_user')}}</span>
-                                </div>
-                                <div id="presenter-search-form" class="flex-column d-flex p-0">
-                                    <input class="mx-1 w-100" type="search"
-                                           id="presenter-search" name="q" autocomplete="off"
-                                           aria-haspopup="true"
-                                           placeholder="{{ __("Start typing to add a presenter") }}"
-                                           aria-labelledby="presenter-search">
-                                </div>
+        </div>
+        <!-- 4 -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="rounded border shadow p-3 my-2">
+                    <!-- Tags -->
+                    <h5 class="mb-4">
+                        <i class="fa fa-solid fa-4 fa-icon mr-2"></i><label
+                                class="form-control-label px-1">{{ __("Tags") }}</label>
+                    </h5>
+                    <p class="font-1rem px-1 my-0">
+                        {{ __("Enter tags for the presentation") }}
+                    </p>
+                    <div class="row justify-content-between text-left">
+                        <div class="form-group col-12 col-lg-6 flex-column d-flex">
+                            <div id="addedTags" class="mx-1 my-2">
+                            </div>
+                            <div id="tag-search-form" class="flex-column d-flex p-0">
+                                <input class="mx-1 w-100" type="search"
+                                       id="tag-search" name="q" autocomplete="off"
+                                       aria-haspopup="true"
+                                       placeholder="{{ __("Start typing to add a tag") }}"
+                                       aria-labelledby="tag-search">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="rounded border shadow p-3 my-2">
-                        <!-- Tags -->
-                        <h5 class="mb-4">
-                            <i class="fa fa-solid fa-4 fa-icon mr-2"></i><label
-                                    class="form-control-label px-1">{{ __("Tags") }}</label>
-                        </h5>
-                        <p class="font-1rem px-1 my-0">
-                            {{ __("Enter tags for the presentation") }}
-                        </p>
-                        <div class="row justify-content-between text-left">
-                            <div class="form-group col-12 col-lg-6 flex-column d-flex">
-                                <div id="addedTags" class="mx-1 my-2">
-                                </div>
-                                <div id="tag-search-form" class="flex-column d-flex p-0">
-                                    <input class="mx-1 w-100" type="search"
-                                           id="tag-search" name="q" autocomplete="off"
-                                           aria-haspopup="true"
-                                           placeholder="{{ __("Start typing to add a tag") }}"
-                                           aria-labelledby="tag-search">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="rounded border shadow p-3 my-2">
-                        <!-- Permissions -->
-                        <h5 class="mb-4">
-                            <i class="fa fa-solid fa-5 fa-icon mr-2"></i><label
-                                    class="form-control-label px-1">{{ __("Playback permissions") }}</label>
-                        </h5>
+        </div>
+        <!-- 5 -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="rounded border shadow p-3 my-2">
+                    <!-- Permissions -->
+                    <h5 class="mb-4">
+                        <i class="fa fa-solid fa-5 fa-icon mr-2"></i><label
+                                class="form-control-label px-1">{{ __("Playback permissions") }}</label>
+                    </h5>
 
-                        <p class="px-1 font-1rem mb-0">
-                            {{ __("All uploaded presentations are accessible to DSV Students and Staff unless otherwise specified with the 'Custom' alternative.") }}
-                        </p>
-                        <div class="row mb-2 justify-content-between text-left">
-                            <div class="form-group col-sm-6 mb-0 flex-column d-flex">
-                                <select name="permission" class="form-control permission selectpicker"
-                                        data-dropup-auto="false" id="permission">
-                                    @if(!old('permission'))
-                                        <option value="false" selected>@lang('lang.public')</option>
-                                        <option value="true">@lang('lang.private')</option>
+                    <p class="px-1 font-1rem mb-0">
+                        {{ __("All uploaded presentations are accessible to DSV Students and Staff unless otherwise specified with the 'Custom' alternative.") }}
+                    </p>
+                    <div class="row mb-2 justify-content-between text-left">
+                        <div class="form-group col-sm-6 mb-0 flex-column d-flex">
+                            <select name="permission" class="form-control permission selectpicker"
+                                    data-dropup-auto="false" id="permission">
+                                @if(!old('permission'))
+                                    <option value="false" selected>@lang('lang.public')</option>
+                                    <option value="true">@lang('lang.private')</option>
+                                @else
+                                    @if(old('permission') == true)
+                                        <option value="true" selected>@lang('lang.private')</option>
                                     @else
-                                        @if(old('permission') == true)
-                                            <option value="true" selected>@lang('lang.private')</option>
-                                        @else
-                                            <option value="false" selected>@lang('lang.public')</option>
-                                        @endif
+                                        <option value="false" selected>@lang('lang.public')</option>
                                     @endif
+                                @endif
+                            </select>
+                        </div>
+                        <!-- Custom permissions -->
+                        @if(!old('video_permission'))
+                            <div id="video_perm" class="form-group col-sm-6 mb-0" hidden>
+                            @else
+                            <div id="video_perm" class="form-group col-sm-6 mb-0">
+                        @endif
+
+                                <select class="form-control selectpicker" data-dropup-auto="false"
+                                        name="video_permission">
+                                    @foreach($permissions as $permission)
+                                        @if(!old('video_permission'))
+                                            @if(Lang::locale() == 'swe')
+                                                <option value="{{$permission->id}}">{{$permission->id}}
+                                                    : {{$permission->scope}}</option>
+                                            @else
+                                                <option value="{{$permission->id}}">{{$permission->id}}
+                                                    : {{$permission->scope_en}}</option>
+                                            @endif
+                                        @else
+                                            @if(Lang::locale() == 'swe')
+                                                <option value="{{$permission->id}}" {{ old('video_permission') == $permission->id  ? 'selected':''}}>{{$permission->id}}
+                                                    : {{$permission->scope}}</option>
+                                            @else
+                                                <option value="{{$permission->id}}" {{ old('video_permission') == $permission->id  ? 'selected':''}}>{{$permission->id}}
+                                                    : {{$permission->scope_en}}</option>
+                                            @endif
+                                        @endif
+                                    @endforeach
                                 </select>
                             </div>
-                            <!-- Custom permissions -->
-                            @if(!old('video_permission'))
-                                <div id="video_perm" class="form-group col-sm-6 mb-0" hidden>
-                                @else
-                                <div id="video_perm" class="form-group col-sm-6 mb-0">
-                            @endif
-
-                                    <select class="form-control selectpicker" data-dropup-auto="false"
-                                            name="video_permission">
-                                        @foreach($permissions as $permission)
-                                            @if(!old('video_permission'))
-                                                @if(Lang::locale() == 'swe')
-                                                    <option value="{{$permission->id}}">{{$permission->id}}
-                                                        : {{$permission->scope}}</option>
-                                                @else
-                                                    <option value="{{$permission->id}}">{{$permission->id}}
-                                                        : {{$permission->scope_en}}</option>
-                                                @endif
-                                            @else
-                                                @if(Lang::locale() == 'swe')
-                                                    <option value="{{$permission->id}}" {{ old('video_permission') == $permission->id  ? 'selected':''}}>{{$permission->id}}
-                                                        : {{$permission->scope}}</option>
-                                                @else
-                                                    <option value="{{$permission->id}}" {{ old('video_permission') == $permission->id  ? 'selected':''}}>{{$permission->id}}
-                                                        : {{$permission->scope_en}}</option>
-                                                @endif
-                                            @endif
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <input type="hidden" name="prepopulate" value="1">
+                            <input type="hidden" name="prepopulate" value="1">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 6 -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="rounded border shadow p-3 my-2">
+                    <!-- Visibility -->
+                    <h5 class="mb-4">
+                        <i class="fa fa-solid fa-6 fa-icon mr-2"></i><label
+                            class="form-control-label px-1">{{ __("Presentation visibility") }}</label>
+                    </h5>
+                    <livewire:uploadvisibility />
+                </div>
+            </div>
+        </div>
+        <!-- Upload bar -->
+        <div class="container-fluid px-2 play_savebar">
+            <div class="bar p-3 su-header-container__primary">
+                <div class="d-flex row no-gutters justify-content-end">
+                    <div class="col-md-4">
+                        <div class="d-flex flex-row">
+                            <p class="font-1rem px-1">
+                                {{ __("Click the upload button when you're done to upload your presentation") }} <i class="fa-solid fa-arrow-right-long"></i>
+                            </p>
+                            <button type="submit" id="submit" class="btn btn-lg btn-light m-auto" disabled><strong>{{ __("UPLOAD") }}</strong></button>
                         </div>
                     </div>
                 </div>
             </div>
-                <!-- Upload bar -->
-                <div class="container-fluid px-2 play_savebar">
-                    <div class="bar p-3 su-header-container__primary">
-                        <div class="d-flex row no-gutters justify-content-end">
-                            <div class="col-md-4">
-                                <div class="d-flex flex-row">
-                                    <p class="font-1rem px-1">
-                                        {{ __("Click the upload button when you're done to upload your presentation") }} <i class="fa-solid fa-arrow-right-long"></i>
-                                    </p>
-                                    <button type="submit" id="submit" class="btn btn-lg btn-light m-auto" disabled><strong>{{ __("UPLOAD") }}</strong></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end upload bar -->
+        </div>
+        <!-- end upload bar -->
         </form>
-            <div class="row">
-                <div class="col-lg-12 my-2">
-                    <div class="rounded border shadow p-3 my-2">
-                        <h5 class="mb-4">
-                            <i class="fa fa-solid fa-6 fa-icon mr-2"></i><label class="form-control-label px-1"
-                                                                                for="custom">{{__("Upload custom thumb") }}</label>
-                        </h5>
-                        <p class="font-1rem px-1">
-                            {{ __("If you want, you can upload a custom image to represent your presentation.") }}
-                        </p>
-                    <!-- Custom thumb -->
-                        <div class="row justify-content-between text-left">
-                            <div class="col-3 col-sm-3 my-2 d-flex align-items-center">
-                                <div class="my-auto">
-                                    <div id="customThumbHolder">
-                                        <form action="{{ route('thumb-upload') }}" class="dropzone" id="customthumbupload">
-                                            <input type="file" name="thumb"  style="display: none;">
-                                            <input type="hidden" name="thumbdir"  id="thumbdir" value="{{ $presentation->local }}">
-                                            @csrf
-                                            <div class="dz-message" data-dz-message>
-                                                <span>{{__('Drop a picture here or click to browse')}}</span>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="row">
-                <div class="col-lg-12 my-2">
-                    <div class="rounded border shadow p-3 my-2">
-                        <h5 class="mb-4">
-                            <i class="fa fa-solid fa-7 fa-icon mr-2"></i><label
-                                class="form-control-label px-1">{{ __("Mediafiles to be uploaded") }}</label>
-                        </h5>
-                        <p class="font-1rem px-1">
-                            {{ __("Up to 4 media files per presentation can be uploaded.") }} {{ __("Each uploaded file should be the same length.") }}
-                        </p>
-
-                        <div class="row justify-content-between text-left">
-                            <div class="form-group col-md-6 flex-column d-flex">
-
-                                @livewire('uploadstatus', ['presentation' => $presentation ])
-
-                                <label class="form-control-label px-1">{{ __("Files to upload") }}<span
-                                        class="text-danger"> *</span> Files </label>
-
-                                <div class="form-group">
-                                    <div id="uploaderHolder">
-                                        <form action="{{ route('file-upload') }}" class="dropzone" id="datanodeupload">
-                                            <input type="file" name="file"  style="display: none;">
-                                            <input type="hidden" name="localdir"  id="localdir" value="{{ $presentation->local }}">
-                                            @csrf
-                                            <div class="dz-message" data-dz-message>
-                                                <span>{{__('Drop files here or click to browse')}}</span>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-md-6 flex-column d-flex">
-                                <div class="rounded border p-3 my-2">
-                                    {{__('Automatic subtitling')}}: <span class="badge badge-secondary">Disabled</span>
-                                </div>
-                                <!-- Subtitles file-->
-                                <label class="form-control-label px-1">{{ __("Add a subtitle file") }} <span
-                                        class="badge badge-warning">{{ __("Testing in progress") }}</span></label>
-
-                                <!-- Subtitle -->
-                                <div id="subtitleHolder">
-                                    <form action="{{ route('subtitle-upload') }}" class="dropzone" id="subtitleupload">
-                                        <input type="file" name="subtitle"  style="display: none;">
-                                        <input type="hidden" name="subtitledir"  id="subtitledir" value="{{ $presentation->local }}">
+        <!-- 7 -->
+        <div class="row">
+            <div class="col-lg-12 my-2">
+                <div class="rounded border shadow p-3 my-2">
+                    <h5 class="mb-4">
+                        <i class="fa fa-solid fa-7 fa-icon mr-2"></i><label class="form-control-label px-1"
+                                                                            for="custom">{{__("Upload custom thumb") }}</label>
+                    </h5>
+                    <p class="font-1rem px-1">
+                        {{ __("If you want, you can upload a custom image to represent your presentation.") }}
+                    </p>
+                <!-- Custom thumb -->
+                    <div class="row justify-content-between text-left">
+                        <div class="col-3 col-sm-3 my-2 d-flex align-items-center">
+                            <div class="my-auto">
+                                <div id="customThumbHolder">
+                                    <form action="{{ route('thumb-upload') }}" class="dropzone" id="customthumbupload">
+                                        <input type="file" name="thumb"  style="display: none;">
+                                        <input type="hidden" name="thumbdir"  id="thumbdir" value="{{ $presentation->local }}">
                                         @csrf
                                         <div class="dz-message" data-dz-message>
-                                            <span>{{ __("Drop a WebVTT (.vtt) file here or click to browse") }}</span>
+                                            <span>{{__('Drop a picture here or click to browse')}}</span>
                                         </div>
                                     </form>
                                 </div>
@@ -344,11 +303,69 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <!-- 8 -->
+        <div class="row">
+            <div class="col-lg-12 my-2">
+                <div class="rounded border shadow p-3 my-2">
+                    <h5 class="mb-4">
+                        <i class="fa fa-solid fa-8 fa-icon mr-2"></i><label
+                            class="form-control-label px-1">{{ __("Mediafiles to be uploaded") }}</label>
+                    </h5>
+                    <p class="font-1rem px-1">
+                        {{ __("Up to 4 media files per presentation can be uploaded.") }} {{ __("Each uploaded file should be the same length.") }}
+                    </p>
 
-            <!--/col-9-->
+                    <div class="row justify-content-between text-left">
+                        <div class="form-group col-md-6 flex-column d-flex">
+
+                            @livewire('uploadstatus', ['presentation' => $presentation ])
+
+                            <label class="form-control-label px-1">{{ __("Files to upload") }}<span
+                                    class="text-danger"> *</span> Files </label>
+
+                            <div class="form-group">
+                                <div id="uploaderHolder">
+                                    <form action="{{ route('file-upload') }}" class="dropzone" id="datanodeupload">
+                                        <input type="file" name="file"  style="display: none;">
+                                        <input type="hidden" name="localdir"  id="localdir" value="{{ $presentation->local }}">
+                                        @csrf
+                                        <div class="dz-message" data-dz-message>
+                                            <span>{{__('Drop files here or click to browse')}}</span>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-6 flex-column d-flex">
+                            <div class="rounded border p-3 my-2">
+                                {{__('Automatic subtitling')}}: <span class="badge badge-secondary">Disabled</span>
+                            </div>
+                            <!-- Subtitles file-->
+                            <label class="form-control-label px-1">{{ __("Add a subtitle file") }} <span
+                                    class="badge badge-warning">{{ __("Testing in progress") }}</span></label>
+
+                            <!-- Subtitle -->
+                            <div id="subtitleHolder">
+                                <form action="{{ route('subtitle-upload') }}" class="dropzone" id="subtitleupload">
+                                    <input type="file" name="subtitle"  style="display: none;">
+                                    <input type="hidden" name="subtitledir"  id="subtitledir" value="{{ $presentation->local }}">
+                                    @csrf
+                                    <div class="dz-message" data-dz-message>
+                                        <span>{{ __("Drop a WebVTT (.vtt) file here or click to browse") }}</span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- end container -->
 
 
-        <!-- Modal spinners -->
+    <!-- Modal spinners -->
         <div class="modal fade" id="loadtoserver" tabindex="-1" role="dialog" aria-labelledby="loadMeLabel">
             <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
                 <div class="modal-content">
