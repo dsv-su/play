@@ -19,9 +19,13 @@ class StaffCheck
 
     public function check()
     {
-        $server_entitlements = explode(";", $_SERVER[$this->auth_param]);
-        if(in_array($this->auth, $server_entitlements)) {
-            return true;
+        if($_SERVER[$this->auth_param] ?? false) {
+            $server_entitlements = explode(";", $_SERVER[$this->auth_param]);
+            if(in_array($this->auth, $server_entitlements)) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
