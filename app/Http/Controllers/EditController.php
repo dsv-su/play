@@ -187,9 +187,14 @@ class EditController extends Controller
 
             //Update streams
             $streams = Stream::where('video_id', $video->id)->get();
-            // dump($request->hidden);
+
             foreach ($streams as $key => $stream) {
-                $stream->audio = ($request->audio == $key);
+                if($request->audio == null) {
+                    //If audio has been disabled
+                    $stream->audio = 0;
+                } else {
+                    $stream->audio = ($request->audio == $key);
+                }
                 $stream->hidden = (isset($request->hidden)) ? in_array($key, $request->hidden) : 0;
                 $stream->save();
             }
