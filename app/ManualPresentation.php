@@ -9,14 +9,16 @@ use Illuminate\Support\Facades\Lang;
 class ManualPresentation extends Model
 {
     use HasFactory;
-    protected $fillable = ['status', 'user','base', 'title', 'title_en', 'creation', 'presenters', 'courses','daisy_courses', 'tags', 'thumb','permission', 'entitlement', 'sources', 'description'];
+    protected $fillable = ['status', 'user','upload_dir', 'subtitles', 'title', 'title_en', 'creation', 'presenters', 'courses','daisy_courses', 'tags', 'thumb','permission', 'entitlement', 'sources', 'generate_subtitles', 'description'];
 
     protected $casts = [
         'presenters' => 'array',
         'tags' => 'array',
+        'subtitles' => 'array',
         'courses' => 'array',
         'daisy_courses' => 'array',
         'sources' =>  'array',
+        'generate_subtitles' =>  'array',
     ];
 
     public function getLangTitleAttribute(): string

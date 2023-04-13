@@ -34,7 +34,7 @@ class UploadController extends Controller
         $file->user = app()->make('play_username');
         $file->user_email = app()->make('play_email');
         $file->local = Carbon::now()->toDateString('Y-m-d') . '_' . rand(1, 999);
-        $file->base = '-';
+        $file->upload_dir = '-';
         $file->title = '';
         $file->title_en = '';
         $file->presenters = [];
@@ -45,6 +45,7 @@ class UploadController extends Controller
         $file->created = now()->format('Y-m-d');
         $file->duration = 0;
         $file->sources = [];
+        $file->generate_subtitles = [];
         $file->save();
         $file->local = $file->local . $file->id;
         $file->save();
@@ -158,7 +159,7 @@ class UploadController extends Controller
 
             //Update model
             $manualPresentation->status = 'pending';
-            $manualPresentation->base = '/data0/'. $this->storage() . '/' . $manualPresentation->local;
+            $manualPresentation->upload_dir = '/data0/'. $this->storage() . '/' . $manualPresentation->local;
             $manualPresentation->title = $request->title;
             $manualPresentation->title_en = $request->title_en;
             $manualPresentation->description = $request->description ?? '';
@@ -210,7 +211,7 @@ class UploadController extends Controller
 
         // Send notify
         $notify = new PlayStoreNotify($presentation);
-        $notify->sendSuccess('manual');
+        $notify->sendSuccess('default');
 
         return redirect('/');
     }

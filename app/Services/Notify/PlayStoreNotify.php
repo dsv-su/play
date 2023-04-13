@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 
 class PlayStoreNotify extends Model
 {
+
     protected $json, $client, $headers, $response, $title;
     private $file, $system_config;
 
@@ -22,13 +23,16 @@ class PlayStoreNotify extends Model
 
     public function sendSuccess(string $type)
     {
-        // type: manual | type: update | type: mediasite
+        // type: default | type: mediasite
+
         $this->presentation
             ->makeHidden('title_en')
             ->makeHidden('status')
             ->makeHidden('user')
             ->makeHidden('user_email')
             ->makeHidden('local')
+            ->makeHidden('visibility')
+            ->makeHidden('unlisted')
             ->makeHidden('files')
             ->makeHidden('permission')
             ->makeHidden('entitlement')
@@ -43,7 +47,7 @@ class PlayStoreNotify extends Model
         }
 
         //Exceptions
-        if ($type == 'manual') {
+        if ($type == 'default') {
             $this->presentation->title = ['sv' => $this->presentation['title'], 'en' => $this->presentation['title_en']];
         } elseif ($type == 'mediasite') {
             $this->presentation->title = ['sv' => $this->presentation['title'], 'en' => $this->presentation['title']];
@@ -137,7 +141,7 @@ class PlayStoreNotify extends Model
             ->makeHidden('id')
             ->makeHidden('status')
             ->makeHidden('user')
-            ->makeHidden('base')
+            ->makeHidden('upload_dir')
             ->makeHidden('local')
             ->makeHidden('title')
             ->makeHidden('presenters')
@@ -160,7 +164,7 @@ class PlayStoreNotify extends Model
         ]);
         $this->json['package'] = Collection::make([
             'message' => $this->presentation->status,
-            'base' => $this->presentation->base
+            'upload_dir' => $this->presentation->upload_dir
         ]);
 
         $this->json = $this->json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);

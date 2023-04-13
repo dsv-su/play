@@ -4,10 +4,12 @@ namespace App\Services\Upload;
 
 use App\Jobs\JobUploadFailedNotification;
 use App\ManualPresentation;
+use Illuminate\Support\Collection;
 
 class Metadata
 {
     protected $sourse = [];
+    protected $gsubtitles = [];
 
     public function create(ManualPresentation $presentation)
     {
@@ -47,18 +49,26 @@ class Metadata
             //Create thumb for uploaded video
             $thumburl = $Thumb->create($finalPath, $filename, $thumbcreated_after);
 
-            //Add video source
-            $this->source[$key]['video'] = 'video/'. basename($filename);
+            //Sources
 
-            //Add poster source
             $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($filename));
-            $this->source[$key]['poster'] = 'poster/'. $thumb_name . '.png';
+            //Add video source
 
-            //Add playAudio default setting
-            if($key > 0 ) {
-                $this->source[$key]['playAudio'] = false;
-            } else {
-                $this->source[$key]['playAudio'] = true;
+            foreach(\Illuminate\Support\Facades\Storage::disk('play-store')->files($videoPath) as $stream => $f) {
+                if($stream == 0) {
+                    $this->source['main'] = Collection::make([
+                        'video' => 'video/'. basename($filename),
+                        'poster' => 'poster/'. $thumb_name . '.png',
+                        'playAudio' => true,
+                    ]);
+                } else {
+                    $this->source['camera'.$stream] = Collection::make([
+                        'video' => 'video/'. basename($filename),
+                        'poster' => 'poster/'. $thumb_name . '.png',
+                        'playAudio' => false,
+                    ]);
+                }
+
             }
 
             $presentation->sources = $this->source;
@@ -69,6 +79,13 @@ class Metadata
         if($subtitles = \Illuminate\Support\Facades\Storage::disk('play-store')->files($subtitlePath)) {
             $presentation->subtitles = 'subtitle/' . basename($subtitles[0]);
         }
+
+        //Subtitle generation
+        $this->gsubtitles['Generated'] = Collection::make([
+            'type' => 'whisper',
+            'source' => 'main'
+        ]);
+        $presentation->generate_subtitles = $this->gsubtitles;
 
         return $presentation->save();
     }
