@@ -26,6 +26,7 @@ class PlayStoreNotify extends Model
         // type: default | type: mediasite
 
         $this->presentation
+            ->makeHidden('id')
             ->makeHidden('title_en')
             ->makeHidden('status')
             ->makeHidden('user')
@@ -112,6 +113,9 @@ class PlayStoreNotify extends Model
         }
 
         if ($this->response->getBody()) {
+            //Log
+            $this->presentation->log = $this->response->getBody();
+
             //Change manualupdate status
             $this->presentation = ($type == 'mediasite') ? MediasitePresentation::find($this->presentation->id) : ManualPresentation::find($this->presentation->id);
             $this->presentation->status = 'sent';
