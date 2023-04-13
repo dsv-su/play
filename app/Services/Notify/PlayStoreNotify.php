@@ -14,6 +14,7 @@ class PlayStoreNotify extends Model
 {
 
     protected $json, $client, $headers, $response, $title;
+    protected $log;
     private $file, $system_config;
 
     public function __construct(Model $model)
@@ -29,7 +30,10 @@ class PlayStoreNotify extends Model
             ->makeHidden('id')
             ->makeHidden('title_en')
             ->makeHidden('status')
+
             ->makeHidden('log')
+            ->makeHidden('duration')
+
             ->makeHidden('user')
             ->makeHidden('user_email')
             ->makeHidden('local')
@@ -113,9 +117,9 @@ class PlayStoreNotify extends Model
             unset($this->presentation->slides);
         }
 
-        if ($this->response->getBody()) {
+        if ($this->log = $this->response->getBody()) {
             //Log
-            $this->presentation->log = $this->response->getBody();
+            $this->presentation->log = $this->log;
 
             //Change manualupdate status
             $this->presentation = ($type == 'mediasite') ? MediasitePresentation::find($this->presentation->id) : ManualPresentation::find($this->presentation->id);
