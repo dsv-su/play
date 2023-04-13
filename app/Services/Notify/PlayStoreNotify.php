@@ -29,6 +29,7 @@ class PlayStoreNotify extends Model
             ->makeHidden('id')
             ->makeHidden('title_en')
             ->makeHidden('status')
+            ->makeHidden('log')
             ->makeHidden('user')
             ->makeHidden('user_email')
             ->makeHidden('local')
