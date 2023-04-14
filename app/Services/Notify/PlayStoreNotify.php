@@ -51,6 +51,11 @@ class PlayStoreNotify extends Model
             $this->presentation
                 ->makeHidden('subtitles');
         }
+        //Check if description has been uploaded
+        if(!$this->presentation->description) {
+            $this->presentation
+                ->makeHidden('description');
+        }
 
         //Exceptions
         if ($type == 'default') {
@@ -81,7 +86,7 @@ class PlayStoreNotify extends Model
         $this->json = $this->json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
         //
-        return $this->json;
+        //return $this->json;
         //
 
         $this->client = new Client(['base_uri' => $this->uri()]);
@@ -119,7 +124,7 @@ class PlayStoreNotify extends Model
             unset($this->presentation->slides);
         }
 
-        if ($this->log = $this->response->getBody()) {
+        if ($this->log = $this->response->getHeader()) {
             //Log
             $this->presentation->log = $this->log;
 
