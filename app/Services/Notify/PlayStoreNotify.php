@@ -124,7 +124,7 @@ class PlayStoreNotify extends Model
             unset($this->presentation->slides);
         }
 
-        if ($this->log = $this->response->getHeader()) {
+        if ($this->log = $this->response->getBody()) {
             //Log
             $this->presentation->log = $this->log;
 
