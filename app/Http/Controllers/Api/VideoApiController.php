@@ -9,6 +9,7 @@ use App\IndividualPermission;
 use App\Jobs\JobUploadSuccessNotification;
 use App\Mail\ErrorAlert;
 use App\ManualPresentation;
+use App\Services\Api\CatchAll;
 use App\Services\Course\CourseStore;
 use App\Services\PermissionHandler\PermissionHandler;
 use App\Services\Presenter\PresenterStore;
@@ -55,6 +56,18 @@ class VideoApiController extends Controller
         $payload = auth()->payload();
 
         if ($payload->get('per') == 'store') {
+
+            //Log incoming
+            try {
+                $incoming = new CatchAll($request);
+                $incoming->catch();
+
+            } catch (\Exception $e) {
+                report($e);
+                return response()->json(['error' => 'Something went wrong while logging', 'message' => $e->getMessage()], 400);
+            }
+            return response()->json('Logged');
+
             //Start transaction
             DB::beginTransaction();
 

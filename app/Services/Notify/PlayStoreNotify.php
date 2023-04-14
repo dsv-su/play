@@ -34,6 +34,9 @@ class PlayStoreNotify extends Model
             ->makeHidden('log')
             ->makeHidden('duration')
 
+            //Disable subtitle generation
+            ->makeHidden('generate_subtitles')
+
             ->makeHidden('user')
             ->makeHidden('user_email')
             ->makeHidden('local')
@@ -73,8 +76,8 @@ class PlayStoreNotify extends Model
             $this->presentation->makeHidden('video_id')->makeHidden('mediasite_folder_id');
         }
 
+        /* Remove
         //Make json wrapper
-        /*
         $this->json = Collection::make([
             'status' => 'success',
             'type' => $type
@@ -126,7 +129,7 @@ class PlayStoreNotify extends Model
 
         if ($this->log = $this->response->getBody()) {
             //Log
-            $this->presentation->log = $this->log;
+            $this->presentation->log = json_encode($this->log, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
             //Change manualupdate status
             $this->presentation = ($type == 'mediasite') ? MediasitePresentation::find($this->presentation->id) : ManualPresentation::find($this->presentation->id);
