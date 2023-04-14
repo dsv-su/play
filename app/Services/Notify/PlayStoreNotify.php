@@ -69,17 +69,19 @@ class PlayStoreNotify extends Model
         }
 
         //Make json wrapper
+        /*
         $this->json = Collection::make([
             'status' => 'success',
             'type' => $type
         ]);
 
         $this->json['package'] = $this->presentation;
-
+        */
+        $this->json = $this->presentation;
         $this->json = $this->json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
         //
-        //return $this->json;
+        return $this->json;
         //
 
         $this->client = new Client(['base_uri' => $this->uri()]);
