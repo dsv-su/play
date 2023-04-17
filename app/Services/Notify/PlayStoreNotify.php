@@ -37,6 +37,8 @@ class PlayStoreNotify extends Model
             //Disable subtitle generation
             ->makeHidden('generate_subtitles')
             ->makeHidden('courses')
+            ->makeHidden('tags')
+            ->makeHidden('thumb')
 
             ->makeHidden('user')
             ->makeHidden('user_email')
