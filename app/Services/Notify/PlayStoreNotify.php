@@ -36,6 +36,7 @@ class PlayStoreNotify extends Model
 
             //Disable subtitle generation
             ->makeHidden('generate_subtitles')
+            ->makeHidden('courses')
 
             ->makeHidden('user')
             ->makeHidden('user_email')
@@ -128,8 +129,8 @@ class PlayStoreNotify extends Model
         }
 
         if ($this->log = $this->response->getBody()) {
-            //Log
-            $this->presentation->log = json_encode($this->log, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+            //Log response
+            $this->presentation->log = json_decode($this->response->getBody()->getContents(), true);
 
             //Change manualupdate status
             $this->presentation = ($type == 'mediasite') ? MediasitePresentation::find($this->presentation->id) : ManualPresentation::find($this->presentation->id);

@@ -19,7 +19,6 @@ class ManualPresentation extends Model
         'daisy_courses' => 'array',
         'sources' =>  'array',
         'generate_subtitles' =>  'array',
-        'log' =>  'array',
     ];
 
     public function getLangTitleAttribute(): string
