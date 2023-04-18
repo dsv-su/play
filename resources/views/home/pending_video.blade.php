@@ -53,24 +53,28 @@
         </div>
 
         <p class="card-text">
-            @if ($video->courses)
-                @foreach($video->courses as $designation)
-                    <a href="/designation/{{$designation}}"
-                       class="badge badge-primary">{{$designation}}</a>
-                @endforeach
+            @if($video->state)
+                @if ($video->courses ?? false)
+                    @foreach($video->courses as $designation)
+                        <a href="/designation/{{$designation}}"
+                           class="badge badge-primary">{{$designation}}</a>
+                    @endforeach
+                @endif
+
+                @if ($video->presenters ?? false)
+                    @foreach($video->presenters as $username)
+                        <span class="badge badge-light">{{$username}}</span>
+                    @endforeach
+                @endif
             @endif
-            @if ($video->presenters)
-                @foreach($video->presenters as $username)
-                    <span class="badge badge-light">{{$username}}</span>
-                @endforeach
-            @endif
-            <!-- Hide tags for now
+            <!-- Hide tags for now -->
+            {{--}}
             @if ($video->tags)
                 @foreach($video->tags as $tag)
                     <span class="badge badge-secondary">{{$tag}}</span>
                 @endforeach
             @endif
-            -->
+            {{--}}
         </p>
     </div>
 </div>

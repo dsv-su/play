@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ApiLog extends Model
 {
     use HasFactory;
-    //protected $fillable = ['catch'];
+    protected $fillable = ['pk_id'];
 /*
     protected $casts = [
         'catch' =>  'array'

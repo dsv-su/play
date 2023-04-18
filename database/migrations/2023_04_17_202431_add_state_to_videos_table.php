@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateApiLogsTable extends Migration
+class AddStateToVideosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,9 @@ class CreateApiLogsTable extends Migration
      */
     public function up()
     {
-        Schema::create('api_logs', function (Blueprint $table) {
-            $table->id();
-            $table->json('catch')->nullable();
-            $table->string('jobid')->nullable();
-            $table->uuid('pk_id')->nullable();
-            $table->timestamps();
+        Schema::table('videos', function (Blueprint $table) {
+            $table->boolean('state')->default(true)->after('duration');
+            $table->json('sources')->nullable()->change();
         });
     }
 
@@ -29,6 +26,8 @@ class CreateApiLogsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('api_logs');
+        Schema::table('videos', function (Blueprint $table) {
+            $table->dropColumn('state');
+        });
     }
 }

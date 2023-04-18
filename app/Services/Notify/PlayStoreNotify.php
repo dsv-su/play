@@ -105,7 +105,7 @@ class PlayStoreNotify extends Model
             $uri = ($type == 'mediasite') ? $this->mediasite_uri() : $this->uri();
             $this->response = $this->client->request('POST', $uri, [
                 'headers' => $this->headers,
-                'body' => $this->json
+                'body' => json_encode($this->json)
             ]);
         } catch (\Exception $e) {
             /**
@@ -144,6 +144,14 @@ class PlayStoreNotify extends Model
             } else {
                 $message = 'Processing the presentation';
             }
+            //Try and fail
+            dd(
+                json_decode($this->response->getBody()->getContents(), true),
+                $this->response->getHeader('content-type')[0],
+                json_encode($this->request->getBody(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
+            );
+
+
 
             return redirect('/')->with(['message' => $message]);
         } else {

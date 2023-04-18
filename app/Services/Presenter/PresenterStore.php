@@ -15,7 +15,7 @@ class PresenterStore extends Model
 
     public function __construct($request, $video)
     {
-        $this->presenters = $request->presenters;
+        $this->presenters = $request->input('package.presenters');
         $this->video = $video;
     }
 

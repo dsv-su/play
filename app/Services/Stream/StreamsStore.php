@@ -12,7 +12,11 @@ class StreamsStore extends Model
 
     public function __construct($request, $video)
     {
+        /*
         $this->streams = $request->sources;
+        $this->video = $video;
+        */
+        $this->streams = $request->input('package.sources');
         $this->video = $video;
     }
 

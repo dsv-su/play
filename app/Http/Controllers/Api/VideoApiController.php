@@ -57,109 +57,125 @@ class VideoApiController extends Controller
 
         if ($payload->get('per') == 'store') {
 
-            //Log incoming
-            try {
-                $incoming = new CatchAll($request);
-                $incoming->catch();
+            //Notification has valid token
 
-            } catch (\Exception $e) {
-                report($e);
-                return response()->json(['error' => 'Something went wrong while logging', 'message' => $e->getMessage()], 400);
-            }
-            return response()->json('Logged');
+            if ($request->type == 'success') {
 
-            //Start transaction
-            DB::beginTransaction();
+                //Successful notification
+                //Start transaction
+                DB::beginTransaction();
 
-            //Check if video exist
-            if (! $presentation = Video::find($request->id)) {
-                try {
-                    //Store video
-                    $video = new VideoStore($request);
-                    $video = $video->presentation();
-                    //Set video permissions
-                    $permission = new PermissionHandler($request, $video);
-                    $permission->setPermission();
-                    //Store presenter
-                    $presenter = new PresenterStore($request, $video);
-                    $presenter->presenter();
-                    //Store course
-                    $course = new CourseStore($request, $video);
-                    $course->course();
-                    //Store tags
-                    $tags = new TagsStore($request, $video);
-                    $tags->tags();
-                    //Store streams
-                    $streams = new StreamsStore($request, $video);
-                    $streams->streams();
-                } catch (\Exception $e) {
-                    DB::rollback(); // Something went wrong
-                    report($e);
-                    return response()->json(['error' => 'Something went wrong while creating', 'message' => $e->getMessage()], 400);
+                //Check if video exist
+                if (! $presentation = Video::find($request->input('package.pkg_id'))) {
+                    try {
+                        //Store video
+                        $video = new VideoStore($request);
+                        $video = $video->presentation();
+
+                        //Set video permissions
+                        //$permission = new PermissionHandler($request, $video);
+                        //$permission->setPermission();
+
+                        //Store presenter
+                        $presenter = new PresenterStore($request, $video);
+                        $presenter->presenter();
+                        //Store course
+                        //$course = new CourseStore($request, $video);
+                        //$course->course();
+                        //Store tags
+                        $tags = new TagsStore($request, $video);
+                        $tags->tags();
+                        //Store streams
+                        //$streams = new StreamsStore($request, $video);
+                        //$streams->streams();
+
+                    } catch (\Exception $e) {
+                        DB::rollback(); // Something went wrong
+                        report($e);
+                        return response()->json(['error' => 'Something went wrong while creating', 'message' => $e->getMessage()], 400);
+                    }
+                } else {
+                    try {
+                        //Update existing video
+                        $video = new VideoUpdate($presentation, $request);
+                        $video = $video->presentation_update();
+                        //Set video permissions
+                        //$permission = new PermissionHandler($request, $video);
+                        //$permission->setPermission();
+                        //Store presenter
+                        $presenter = new PresenterStore($request, $video);
+                        $presenter->presenter();
+                        //Store course
+                        //$course = new CourseStore($request, $video);
+                        //$course->course();
+                        //Store tags
+                        $tags = new TagsStore($request, $video);
+                        $tags->tags();
+                        //Store streams
+                        //$streams = new StreamsStore($request, $video);
+                        //$streams->streams();
+                    } catch (\Exception $e) {
+                        DB::rollback(); // Something went wrong
+                        report($e);
+                        return response()->json(['error' => 'Something went wrong while updating', 'message' => $e->getMessage()], 400);
+                    }
+
+                    DB::commit();   // Successfully updated
+                    return response()->json('Presentation has been updated', Response::HTTP_CREATED);
                 }
+
+                DB::commit();   // Successfully stored
+
+                //If manual upload - Send email to uploader
+                //TODO
+                /*
+                if($video->origin == 'manual') {
+                    //Retrive upload
+                    $manualpresentation = ManualPresentation::find($video->notification_id);
+
+                    //Set edit/delete individual permission for uploader
+                    IndividualPermission::updateOrCreate([
+                        'video_id' => $video->id,
+                        'username' => $manualpresentation->user],
+                        ['name' => 'Uploader', //This can later look up SUKAT for displayname
+                        'permission' => 'delete']
+                    );
+
+                    //Set visibility
+                    $video->visibility = $manualpresentation->visibility;
+                    $video->unlisted = $manualpresentation->unlisted;
+                    $video->save();
+
+                    //Send email to uploader
+                    $job = (new JobUploadSuccessNotification($video, $manualpresentation));
+                    // Dispatch Job and continue
+                    dispatch($job);
+
+                    //Update presentation status
+                    $manualpresentation->status = 'completed';
+                    $manualpresentation->save();
+
+                    //Remove temp storage
+                    Storage::disk('public')->deleteDirectory($manualpresentation->local);
+                }
+                */
+                return response()->json('Presentation has been created', Response::HTTP_CREATED);
             } else {
+
+                // Error notification
+                // Log incoming
                 try {
-                    //Update existing video
-                    $video = new VideoUpdate($presentation, $request);
-                    $video = $video->presentation_update();
-                    //Set video permissions
-                    $permission = new PermissionHandler($request, $video);
-                    $permission->setPermission();
-                    //Store presenter
-                    $presenter = new PresenterStore($request, $video);
-                    $presenter->presenter();
-                    //Store course
-                    $course = new CourseStore($request, $video);
-                    $course->course();
-                    //Store tags
-                    $tags = new TagsStore($request, $video);
-                    $tags->tags();
-                    //Store streams
-                    $streams = new StreamsStore($request, $video);
-                    $streams->streams();
+                    $incoming = new CatchAll($request);
+                    $incoming->catch();
+
                 } catch (\Exception $e) {
-                    DB::rollback(); // Something went wrong
                     report($e);
-                    return response()->json(['error' => 'Something went wrong while updating', 'message' => $e->getMessage()], 400);
+                    return response()->json(['error' => 'Something went wrong while logging', 'message' => $e->getMessage()], 400);
                 }
-
-                DB::commit();   // Successfully updated
-                return response()->json('Presentation has been updated', Response::HTTP_CREATED);
+                return response()->json('Logged');
             }
 
-            DB::commit();   // Successfully stored
 
-            //If manual upload - Send email to uploader
-            if($video->origin == 'manual') {
-                //Retrive upload
-                $manualpresentation = ManualPresentation::find($video->notification_id);
-
-                //Set edit/delete individual permission for uploader
-                IndividualPermission::updateOrCreate([
-                    'video_id' => $video->id,
-                    'username' => $manualpresentation->user],
-                    ['name' => 'Uploader', //This can later look up SUKAT for displayname
-                    'permission' => 'delete']
-                );
-
-                //Set visibility
-                $video->visibility = $manualpresentation->visibility;
-                $video->unlisted = $manualpresentation->unlisted;
-                $video->save();
-
-                //Send email to uploader
-                $job = (new JobUploadSuccessNotification($video, $manualpresentation));
-                // Dispatch Job and continue
-                dispatch($job);
-
-                //Update presentation status
-                $manualpresentation->status = 'completed';
-                $manualpresentation->save();
-
-                //Remove temp storage
-                Storage::disk('public')->deleteDirectory($manualpresentation->local);
-            }
-            return response()->json('Presentation has been created', Response::HTTP_CREATED);
         } else {
             return response()->json(['error' => 'Unauthorized'], 401);
         }

@@ -12,7 +12,7 @@ class TagsStore extends Model
 
     public function __construct($request, $video)
     {
-        $this->tags = $request->tags;
+        $this->tags = $request->input('package.tags');
         $this->video = $video;
     }
 

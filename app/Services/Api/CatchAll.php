@@ -18,6 +18,9 @@ class CatchAll
     {
         $this->api = new ApiLog;
         $this->api->catch = json_encode($this->request->all(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        $this->api->jobid = $this->request->jobid;
+        $this->api->pk_id = $this->request->input('package.pkg_id');
+
         $this->api->save();
 
         return response()->json('Logged');
