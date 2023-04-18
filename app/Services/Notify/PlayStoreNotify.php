@@ -39,6 +39,7 @@ class PlayStoreNotify extends Model
             ->makeHidden('courses')
             ->makeHidden('tags')
             ->makeHidden('thumb')
+            ->makeHidden('subtitles')
 
             ->makeHidden('user')
             ->makeHidden('user_email')
@@ -148,7 +149,7 @@ class PlayStoreNotify extends Model
             dd(
                 json_decode($this->response->getBody()->getContents(), true),
                 $this->response->getHeader('content-type')[0],
-                json_encode($this->request->getBody(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
+                $this->request->getResponse()->getBody()
             );
 
 
