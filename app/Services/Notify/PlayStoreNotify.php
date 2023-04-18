@@ -38,7 +38,6 @@ class PlayStoreNotify extends Model
             ->makeHidden('generate_subtitles')
             ->makeHidden('courses')
             ->makeHidden('tags')
-            ->makeHidden('thumb')
             ->makeHidden('subtitles')
 
             ->makeHidden('user')
@@ -147,9 +146,9 @@ class PlayStoreNotify extends Model
             }
             //Try and fail
             dd(
-                json_decode($this->response->getBody()->getContents(), true),
+                (string) $this->response->getBody(),
                 $this->response->getHeader('content-type')[0],
-                $this->request->getResponse()->getBody()
+                $this->response->getBody()->getContents()
             );
 
 
