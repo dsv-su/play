@@ -22,7 +22,7 @@ class PermissionHandler extends Model
         //Check if video or notification exists
 
         //If there is a notification id
-        if($this->notification_id) {
+        /*if($this->notification_id) {
             if(! $this->video_permission = VideoPermission::where('notification_id', $this->notification_id)->first()) {
                 //No permissions exist with a notification_id -> store notification_id and set default permission
                 $this->permission = VideoPermission::create([
@@ -37,7 +37,7 @@ class PermissionHandler extends Model
                 $this->video_permission->video_id = $this->video->id;
                 $this->video_permission->save();
             }
-        }
+        }*/
 
         //If there exist a permission setting with uuid
         if(!$this->video_permission = VideoPermission::where('video_id', $this->video->id)->first()) {

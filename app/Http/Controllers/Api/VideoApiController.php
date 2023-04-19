@@ -73,8 +73,8 @@ class VideoApiController extends Controller
                         $video = $video->presentation();
 
                         //Set video permissions
-                        //$permission = new PermissionHandler($request, $video);
-                        //$permission->setPermission();
+                        $permission = new PermissionHandler($request, $video);
+                        $permission->setPermission();
 
                         //Store presenter
                         $presenter = new PresenterStore($request, $video);
@@ -100,8 +100,8 @@ class VideoApiController extends Controller
                         $video = new VideoUpdate($presentation, $request);
                         $video = $video->presentation_update();
                         //Set video permissions
-                        //$permission = new PermissionHandler($request, $video);
-                        //$permission->setPermission();
+                        $permission = new PermissionHandler($request, $video);
+                        $permission->setPermission();
                         //Store presenter
                         $presenter = new PresenterStore($request, $video);
                         $presenter->presenter();

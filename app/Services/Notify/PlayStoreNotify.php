@@ -4,6 +4,7 @@ namespace App\Services\Notify;
 
 use App\ManualPresentation;
 use App\MediasitePresentation;
+use App\VideoPermission;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -30,16 +31,8 @@ class PlayStoreNotify extends Model
             ->makeHidden('id')
             ->makeHidden('title_en')
             ->makeHidden('status')
-
-            ->makeHidden('log')
-            ->makeHidden('duration')
-
-            //Disable subtitle generation
-            ->makeHidden('generate_subtitles')
-            ->makeHidden('courses')
-            ->makeHidden('tags')
-            ->makeHidden('subtitles')
-
+            ->makeHidden('uuid')
+            ->makeHidden('autogenerate_subtitles')
             ->makeHidden('user')
             ->makeHidden('user_email')
             ->makeHidden('local')
@@ -51,6 +44,24 @@ class PlayStoreNotify extends Model
             ->makeHidden('daisy_courses')
             ->makeHidden('created_at')
             ->makeHidden('updated_at');
+
+        //Conditions
+        //Courses
+        if(empty($this->presentation->courses)) {
+            $this->presentation->makeHidden('courses');
+        }
+        //Tags
+        if(empty($this->presentation->tags)) {
+            $this->presentation->makeHidden('tags');
+        }
+        //Subs
+        if(empty($this->presentation->subtitles)) {
+            $this->presentation->makeHidden('subtitles');
+        }
+        //Autogenerate subs
+        if(!$this->presentation->autogenerate_subtitles) {
+            $this->presentation->makeHidden('generate_subtitles');
+        }
 
         //Check if subtitles has been uploaded
         if(!$this->presentation->subtitles) {
@@ -92,7 +103,7 @@ class PlayStoreNotify extends Model
         $this->json = $this->json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
         //
-        //return $this->json;
+        return $this->json;
         //
 
         $this->client = new Client(['base_uri' => $this->uri()]);
@@ -132,7 +143,7 @@ class PlayStoreNotify extends Model
 
         if ($this->log = $this->response->getBody()) {
             //Log response
-            $this->presentation->log = json_decode($this->response->getBody()->getContents(), true);
+            $this->presentation->uuid = (string) $this->response->getBody();
 
             //Change manualupdate status
             $this->presentation = ($type == 'mediasite') ? MediasitePresentation::find($this->presentation->id) : ManualPresentation::find($this->presentation->id);
@@ -144,14 +155,11 @@ class PlayStoreNotify extends Model
             } else {
                 $message = 'Processing the presentation';
             }
-            //Try and fail
-            dd(
-                (string) $this->response->getBody(),
-                $this->response->getHeader('content-type')[0],
-                $this->response->getBody()->getContents()
-            );
 
-
+            //Update VideoPremissions
+            $videopermissions = VideoPermission::where('notification_id', $this->presentation->id)->first();
+            $videopermissions->video_id = $this->presentation->uuid;
+            $videopermissions->save();
 
             return redirect('/')->with(['message' => $message]);
         } else {

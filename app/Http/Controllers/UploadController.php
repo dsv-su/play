@@ -131,11 +131,13 @@ class UploadController extends Controller
             $video_permissions = new VideoPermission();
             if ($request->permission == 'false') {
                 $video_permissions->notification_id = $manualPresentation->id;
+                $video_permissions->video_id = $manualPresentation->uuid;
                 $video_permissions->permission_id = $request->video_permission;
                 $video_permissions->type = 'public';
                 $video_permissions->save();
             } else {
                 $video_permissions->notification_id = $manualPresentation->id;
+                $video_permissions->video_id = $manualPresentation->uuid;
                 $video_permissions->permission_id = $request->video_permission;
                 $video_permissions->type = 'private';
                 $video_permissions->save();
@@ -179,13 +181,13 @@ class UploadController extends Controller
     public function store($id)
     {
         $presentation = ManualPresentation::find($id);
-
+/*
         //Send email to uploader
         $job = (new JobUploadProgressNotification($presentation));
 
         // Dispatch Job and continue
         dispatch($job);
-
+*/
         /***
          * Disabled SFTP upload to server
          */
@@ -211,7 +213,7 @@ class UploadController extends Controller
 
         // Send notify
         $notify = new PlayStoreNotify($presentation);
-        $notify->sendSuccess('default');
+return        $notify->sendSuccess('default');
 
         return redirect('/');
     }

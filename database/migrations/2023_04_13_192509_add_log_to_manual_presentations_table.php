@@ -14,7 +14,8 @@ class AddLogToManualPresentationsTable extends Migration
     public function up()
     {
         Schema::table('manual_presentations', function (Blueprint $table) {
-            $table->json('log')->nullable()->after('upload_dir');
+            $table->uuid('uuid')->after('id');
+            $table->boolean('autogenerate_subtitles')->default(false)->after('subtitles');
         });
     }
 
@@ -26,7 +27,8 @@ class AddLogToManualPresentationsTable extends Migration
     public function down()
     {
         Schema::table('manual_presentations', function (Blueprint $table) {
-            //
+            $table->dropColumn('uuid');
+            $table->dropColumn('autogenerate_subtitles');
         });
     }
 }
