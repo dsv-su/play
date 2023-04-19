@@ -157,9 +157,20 @@ class PlayStoreNotify extends Model
             }
 
             //Update VideoPremissions
-            $videopermissions = VideoPermission::where('notification_id', $this->presentation->id)->first();
-            $videopermissions->video_id = (string) $this->response->getBody() ?? null;
-            $videopermissions->save();
+            if((string) $this->response->getBody() == nullOrEmptyString()) {
+                if (App::isLocale('swe')) {
+                    $message = 'Något gick fel med uppladdningen';
+                } else {
+                    $message = 'Something went wrong with the upload';
+                }
+                $this->presentation->status = 'failed';
+                $this->presentation->save();
+
+            } else {
+                $videopermissions = VideoPermission::where('notification_id', $this->presentation->id)->first();
+                $videopermissions->video_id = (string) $this->response->getBody();
+                $videopermissions->save();
+            }
 
             return redirect('/')->with(['message' => $message]);
         } else {
