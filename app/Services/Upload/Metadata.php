@@ -55,7 +55,7 @@ class Metadata
             //Add video source
 
             foreach(\Illuminate\Support\Facades\Storage::disk('play-store')->files($videoPath) as $stream => $f) {
-                if($stream == 0) {
+                /*if($stream == 0) {
                     $this->source['main'] = Collection::make([
                         'video' => 'video/'. basename($filename),
                         'poster' => 'poster/'. $thumb_name . '.png',
@@ -67,8 +67,20 @@ class Metadata
                         'poster' => 'poster/'. $thumb_name . '.png',
                         'playAudio' => false,
                     ]);
+                }*/
+                if($stream == 0) {
+                    $this->source['main'] = [
+                        'video' => 'video/'. basename($filename),
+                        'poster' => 'poster/'. $thumb_name . '.png',
+                        'playAudio' => true,
+                    ];
+                } else {
+                    $this->source['camera'.$stream] = [
+                        'video' => 'video/'. basename($filename),
+                        'poster' => 'poster/'. $thumb_name . '.png',
+                        'playAudio' => false,
+                    ];
                 }
-
             }
 
             $presentation->sources = $this->source;
@@ -77,7 +89,12 @@ class Metadata
 
         //Subtitle
         if($subtitles = \Illuminate\Support\Facades\Storage::disk('play-store')->files($subtitlePath)) {
-            $presentation->subtitles = 'subtitle/' . basename($subtitles[0]);
+            /*$presentation->subtitles = Collection::make([
+                'English' => 'subtitle/' . basename($subtitles[0])
+            ]);*/
+            $presentation->subtitles = [
+                'English' => 'subtitle/' . basename($subtitles[0])
+            ];
         }
 
         //Subtitle generation
