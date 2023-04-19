@@ -157,7 +157,7 @@ class PlayStoreNotify extends Model
             }
 
             //Update VideoPremissions
-            if((string) $this->response->getBody() == nullOrEmptyString()) {
+            if(empty( (string) $this->response->getBody()) ) {
                 if (App::isLocale('swe')) {
                     $message = 'Något gick fel med uppladdningen';
                 } else {
