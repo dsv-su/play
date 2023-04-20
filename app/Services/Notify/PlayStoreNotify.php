@@ -101,8 +101,8 @@ class PlayStoreNotify extends Model
         $this->json['package'] = $this->presentation;
         */
         $this->json = $this->presentation;
-        //$this->json = $this->json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-        $this->json = $this->json->toJson();
+        $this->json = $this->json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
         //
         //return $this->json;
         //
@@ -117,7 +117,8 @@ class PlayStoreNotify extends Model
             $uri = ($type == 'mediasite') ? $this->mediasite_uri() : $this->uri();
             $this->response = $this->client->request('POST', $uri, [
                 'headers' => $this->headers,
-                'body' => json_encode($this->json)
+                //'body' => json_encode($this->json)
+                'body' => $this->json
             ]);
         } catch (\Exception $e) {
             /**
@@ -142,9 +143,7 @@ class PlayStoreNotify extends Model
             unset($this->presentation->slides);
         }
 
-        if ($this->log = $this->response->getBody()) {
-            //Log response
-            $this->presentation->uuid = (string) $this->response->getBody();
+        if (!empty($this->presentation->uuid = (string) $this->response->getBody())) {
 
             //Change manualupdate status
             $this->presentation = ($type == 'mediasite') ? MediasitePresentation::find($this->presentation->id) : ManualPresentation::find($this->presentation->id);
@@ -158,29 +157,23 @@ class PlayStoreNotify extends Model
             }
 
             //Update VideoPremissions
-            if(!empty( (string) $this->response->getBody()) ) {
-                if (App::isLocale('swe')) {
-                    $message = 'Något gick fel med uppladdningen';
-                } else {
-                    $message = 'Something went wrong with the upload';
-                }
-                $this->presentation->status = 'failed';
-                $this->presentation->save();
-
-            } else {
-                $videopermissions = VideoPermission::where('notification_id', $this->presentation->id)->first();
-                $videopermissions->video_id = (string) $this->response->getBody();
-                $videopermissions->save();
-            }
+            $videopermissions = VideoPermission::where('notification_id', $this->presentation->id)->first();
+            $videopermissions->video_id = (string) $this->response->getBody();
+            $videopermissions->save();
 
             return redirect('/')->with(['message' => $message]);
         } else {
             //Change manualupdate status
             $this->presentation = ($type == 'mediasite') ? MediasitePresentation::find($this->presentation->id) : ManualPresentation::find($this->presentation->id);
+            if (App::isLocale('swe')) {
+                $message = 'Något gick fel med uppladdningen';
+            } else {
+                $message = 'Something went wrong with the upload';
+            }
             $this->presentation->status = 'failed';
             $this->presentation->save();
-            //TODO Store error
-            return $this->response->getBody();
+
+            return redirect('/')->with(['message' => $message]);
         }
     }
 
