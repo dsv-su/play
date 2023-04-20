@@ -32,6 +32,7 @@ class PlayStoreNotify extends Model
             ->makeHidden('title_en')
             ->makeHidden('status')
             ->makeHidden('uuid')
+            ->makeHidden('duration')
             ->makeHidden('autogenerate_subtitles')
             ->makeHidden('user')
             ->makeHidden('user_email')
@@ -100,8 +101,8 @@ class PlayStoreNotify extends Model
         $this->json['package'] = $this->presentation;
         */
         $this->json = $this->presentation;
-        $this->json = $this->json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-
+        //$this->json = $this->json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        $this->json = $this->json->toJson();
         //
         //return $this->json;
         //
