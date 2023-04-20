@@ -40,7 +40,7 @@ class PermissionHandler extends Model
         }*/
 
         //If there exist a permission setting with uuid
-        if(!$this->video_permission = VideoPermission::where('video_id', $this->video->id)->first()) {
+        if(!$this->video_permission = VideoPermission::where('reference_id', $this->video->id)->first()) {
             //No permissions exist -> set default permission
             $this->permission = VideoPermission::create([
                 'video_id' => $this->video->id,

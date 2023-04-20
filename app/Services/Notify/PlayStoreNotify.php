@@ -91,15 +91,6 @@ class PlayStoreNotify extends Model
             $this->presentation->makeHidden('video_id')->makeHidden('mediasite_folder_id');
         }
 
-        /* Remove
-        //Make json wrapper
-        $this->json = Collection::make([
-            'status' => 'success',
-            'type' => $type
-        ]);
-
-        $this->json['package'] = $this->presentation;
-        */
         $this->json = $this->presentation;
         $this->json = $this->json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
@@ -117,7 +108,6 @@ class PlayStoreNotify extends Model
             $uri = ($type == 'mediasite') ? $this->mediasite_uri() : $this->uri();
             $this->response = $this->client->request('POST', $uri, [
                 'headers' => $this->headers,
-                //'body' => json_encode($this->json)
                 'body' => $this->json
             ]);
         } catch (\Exception $e) {
@@ -143,10 +133,11 @@ class PlayStoreNotify extends Model
             unset($this->presentation->slides);
         }
 
-        if (!empty($this->presentation->uuid = (string) $this->response->getBody())) {
+        if (!empty( $this->presentation->uuid = (string) $this->response->getBody() ) ) {
 
             //Change manualupdate status
             $this->presentation = ($type == 'mediasite') ? MediasitePresentation::find($this->presentation->id) : ManualPresentation::find($this->presentation->id);
+            $this->presentation->uuid = (string) $this->response->getBody();
             $this->presentation->status = 'sent';
             $this->presentation->save();
 
@@ -156,9 +147,9 @@ class PlayStoreNotify extends Model
                 $message = 'Processing the presentation';
             }
 
-            //Update VideoPremissions
+            //Update VideoPermissions
             $videopermissions = VideoPermission::where('notification_id', $this->presentation->id)->first();
-            $videopermissions->video_id = (string) $this->response->getBody();
+            $videopermissions->reference_id = (string) $this->response->getBody();
             $videopermissions->save();
 
             return redirect('/')->with(['message' => $message]);
