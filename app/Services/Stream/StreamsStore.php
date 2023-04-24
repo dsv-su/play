@@ -12,10 +12,6 @@ class StreamsStore extends Model
 
     public function __construct($request, $video)
     {
-        /*
-        $this->streams = $request->sources;
-        $this->video = $video;
-        */
         $this->streams = $request->input('package.sources');
         $this->video = $video;
     }
@@ -25,23 +21,25 @@ class StreamsStore extends Model
         if(count($this->streams)>0) {
             foreach ($this->streams as $key => $source) {
                 if ($source) {
-                    $stream = Stream::firstOrNew([
-                        'video_id' => $this->video->id,
-                        'name' => $source['name'] ?? $key,
-                        'poster' => $source['poster'],
-                        'audio' => $source['playAudio']
+                    $stream = Stream::updateOrCreate([
+                        'video_id' => $this->video->id, 'name' => $key ?? ''],
+                        [
+                        'poster' => $source['poster'] ?? '',
+                        'audio' => $source['playAudio'] ?? false
                     ]);
-                    $stream->save();
-                    foreach ($source['video'] as $resolution => $url) {
-                        $streamresolution = StreamResolution::firstOrNew([
-                            'stream_id' => $stream->id,
-                            'resolution' => $resolution,
-                            'filename' => $url
-                        ]);
-                        $streamresolution->save();
+
+                    if($source['video'] ?? false) {
+                        foreach ($source['video'] as $resolution => $url) {
+                            $streamresolution = StreamResolution::updateOrCreate([
+                                'resolution' => $resolution],
+                                ['stream_id' => $stream->id,
+                                'filename' => $url
+                            ]);
+                        }
                     }
                 } //end check
             } // end foreach
+
         } else {
             //Remove any old associations
             $streams = Stream::where('video_id', $this->video->id)->get();

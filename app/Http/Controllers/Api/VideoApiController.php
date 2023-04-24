@@ -7,10 +7,8 @@ use App\Http\Requests\PresentationRequest;
 use App\Http\Resources\Presentation\PresentationResource;
 use App\IndividualPermission;
 use App\Jobs\JobUploadSuccessNotification;
-use App\Mail\ErrorAlert;
 use App\ManualPresentation;
 use App\Services\Api\CatchAll;
-use App\Services\Course\CourseStore;
 use App\Services\Course\CourseStoreOrUpdate;
 use App\Services\PermissionHandler\PermissionHandler;
 use App\Services\Presenter\PresenterStore;
@@ -23,7 +21,6 @@ use App\Video;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -72,25 +69,21 @@ class VideoApiController extends Controller
                         //Store video
                         $video = new VideoStore($request);
                         $video = $video->presentation();
-
                         //Set video permissions
                         $permission = new PermissionHandler($request, $video);
                         $permission->setPermission();
-
                         //Store presenter
                         $presenter = new PresenterStore($request, $video);
                         $presenter->presenter();
                         //Store course
-                        //$course = new CourseStore($request, $video);
-                        //$course->course();
                         $course = new CourseStoreOrUpdate($request, $video);
                         $course->store();
                         //Store tags
                         $tags = new TagsStore($request, $video);
                         $tags->tags();
                         //Store streams
-                        //$streams = new StreamsStore($request, $video);
-                        //$streams->streams();
+                        $streams = new StreamsStore($request, $video);
+                        $streams->streams();
 
                     } catch (\Exception $e) {
                         DB::rollback(); // Something went wrong
@@ -109,16 +102,14 @@ class VideoApiController extends Controller
                         $presenter = new PresenterStore($request, $video);
                         $presenter->presenter();
                         //Store course
-                        //$course = new CourseStore($request, $video);
-                        //$course->course();
                         $course = new CourseStoreOrUpdate($request, $video);
                         $course->store();
                         //Store tags
                         $tags = new TagsStore($request, $video);
                         $tags->tags();
                         //Store streams
-                        //$streams = new StreamsStore($request, $video);
-                        //$streams->streams();
+                        $streams = new StreamsStore($request, $video);
+                        $streams->streams();
                     } catch (\Exception $e) {
                         DB::rollback(); // Something went wrong
                         report($e);
