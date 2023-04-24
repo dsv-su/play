@@ -20,13 +20,12 @@ class PermissionHandler extends Model
     public function setPermission()
     {
         //If there exist a permission setting with uuid
-        if(!$this->video_permission = VideoPermission::where('reference_id', $this->request->jobid)->first()) {
+        if(!$this->video_permission = VideoPermission::where('jobid', $this->request->jobid)->first()) {
             //No permissions exist -> set default permission
-            $this->permission = VideoPermission::create([
-                'video_id' => $this->video->id,
-                'permission_id' => 1,
-                'type' => 'public',
-            ]);
+            $this->permission = VideoPermission::updateOrCreate(
+                ['video_id' => $this->video->id],
+                ['permission_id' => 1, 'type' => 'public']
+            );
         } else {
                 // A permission exist -> update
                 $this->video_permission->video_id = $this->video->id;

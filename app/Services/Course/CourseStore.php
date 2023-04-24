@@ -12,6 +12,9 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
+/***
+ * This class is used with the old pipeline - now deprecated
+ */
 
 class CourseStore extends Model
 {

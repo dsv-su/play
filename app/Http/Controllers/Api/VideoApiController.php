@@ -11,6 +11,7 @@ use App\Mail\ErrorAlert;
 use App\ManualPresentation;
 use App\Services\Api\CatchAll;
 use App\Services\Course\CourseStore;
+use App\Services\Course\CourseStoreOrUpdate;
 use App\Services\PermissionHandler\PermissionHandler;
 use App\Services\Presenter\PresenterStore;
 use App\Services\Stream\StreamsStore;
@@ -82,6 +83,8 @@ class VideoApiController extends Controller
                         //Store course
                         //$course = new CourseStore($request, $video);
                         //$course->course();
+                        $course = new CourseStoreOrUpdate($request, $video);
+                        $course->store();
                         //Store tags
                         $tags = new TagsStore($request, $video);
                         $tags->tags();
@@ -108,6 +111,8 @@ class VideoApiController extends Controller
                         //Store course
                         //$course = new CourseStore($request, $video);
                         //$course->course();
+                        $course = new CourseStoreOrUpdate($request, $video);
+                        $course->store();
                         //Store tags
                         $tags = new TagsStore($request, $video);
                         $tags->tags();
@@ -127,11 +132,7 @@ class VideoApiController extends Controller
                 DB::commit();   // Successfully stored
 
                 //If manual upload - Send email to uploader
-                //TODO
-                /*
-                if($video->origin == 'manual') {
-                    //Retrive upload
-                    $manualpresentation = ManualPresentation::find($video->notification_id);
+                if($manualpresentation = ManualPresentation::where('jobid', $request->jobid)->first()) {
 
                     //Set edit/delete individual permission for uploader
                     IndividualPermission::updateOrCreate([
@@ -158,7 +159,7 @@ class VideoApiController extends Controller
                     //Remove temp storage
                     Storage::disk('public')->deleteDirectory($manualpresentation->local);
                 }
-                */
+
                 return response()->json('Presentation has been created', Response::HTTP_CREATED);
             } else {
 

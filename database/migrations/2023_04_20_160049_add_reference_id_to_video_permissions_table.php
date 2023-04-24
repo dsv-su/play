@@ -14,7 +14,7 @@ class AddReferenceIdToVideoPermissionsTable extends Migration
     public function up()
     {
         Schema::table('video_permissions', function (Blueprint $table) {
-            $table->uuid('reference_id')->nullable()->after('notification_id');
+            $table->uuid('jobid')->nullable()->after('notification_id');
         });
     }
 
@@ -26,7 +26,7 @@ class AddReferenceIdToVideoPermissionsTable extends Migration
     public function down()
     {
         Schema::table('video_permissions', function (Blueprint $table) {
-            $table->dropColumn('reference_id');
+            $table->dropColumn('jobid');
         });
     }
 }

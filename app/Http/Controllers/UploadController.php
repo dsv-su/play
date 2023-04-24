@@ -15,6 +15,7 @@ use App\VideoPermission;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Str;
 use Pion\Laravel\ChunkUpload\Exceptions\UploadFailedException;
 use Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException;
 use Pion\Laravel\ChunkUpload\Handler\AbstractHandler;
@@ -112,8 +113,11 @@ class UploadController extends Controller
             if ($request->courses) {
                 foreach ($request->courses as $course) {
                     $daisy_courses[] = (int)$course;
-                    $courses[] = Course::find($course)->designation;
-
+                    $course = Course::find($course);
+                    $courses[] = \Illuminate\Support\Collection::make([
+                        'designation' => $course->designation,
+                        'semester' => Str::lower($course->semester) . substr($course->year, 2)
+                    ]);
                 }
             } else {
                 $courses = [];

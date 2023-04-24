@@ -31,7 +31,7 @@ class PlayStoreNotify extends Model
             ->makeHidden('id')
             ->makeHidden('title_en')
             ->makeHidden('status')
-            ->makeHidden('uuid')
+            ->makeHidden('jobid')
             ->makeHidden('duration')
             ->makeHidden('autogenerate_subtitles')
             ->makeHidden('user')
@@ -133,11 +133,11 @@ class PlayStoreNotify extends Model
             unset($this->presentation->slides);
         }
 
-        if (!empty( $this->presentation->uuid = (string) $this->response->getBody() ) ) {
+        if (!empty( $this->presentation->jobid = (string) $this->response->getBody() ) ) {
 
             //Change manualupdate status
             $this->presentation = ($type == 'mediasite') ? MediasitePresentation::find($this->presentation->id) : ManualPresentation::find($this->presentation->id);
-            $this->presentation->uuid = (string) $this->response->getBody();
+            $this->presentation->jobid = (string) $this->response->getBody();
             $this->presentation->status = 'sent';
             $this->presentation->save();
 
@@ -149,7 +149,7 @@ class PlayStoreNotify extends Model
 
             //Update VideoPermissions
             $videopermissions = VideoPermission::where('notification_id', $this->presentation->id)->first();
-            $videopermissions->reference_id = (string) $this->response->getBody();
+            $videopermissions->jobid = (string) $this->response->getBody();
             $videopermissions->save();
 
             return redirect('/')->with(['message' => $message]);
