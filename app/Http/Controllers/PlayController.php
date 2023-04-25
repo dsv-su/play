@@ -702,6 +702,10 @@ class PlayController extends Controller
     }
 
     public function conversionQueue() {
+        /***
+         * Deprecated in new pipeline
+         */
+
         $json = file_get_contents('https://play-store-prod.dsv.su.se/status/queue');
         $queue = json_decode($json);
         foreach ($queue as $i => $item) {

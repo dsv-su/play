@@ -176,6 +176,8 @@
                 @endif
             </div>
             <!-- Conversion queue -->
+            {{--}}
+            <!-- Deprecated in new pipeline -->
             @if (in_array(app()->make('play_role'), ['Administrator', 'Staff', 'Uploader', 'Courseadmin']) && !Request::is('queue'))
                 <div class="align-middle ml-auto my-auto">
                     <span class="badge badge-primary ml-2 mb-2" data-toggle="tooltip" title="{{__("Show upload progress")}}">
@@ -185,6 +187,7 @@
                     </span>
                 </div>
             @endif
+            {{--}}
             <!-- Lang localization -->
             <div class="align-middle ml-auto my-auto">
                 <nav class="navbar navbar-expand-lg container">

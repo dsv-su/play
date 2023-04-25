@@ -132,11 +132,10 @@ class HomeController extends Controller
         //Filter
         $data['latest'] = $visibility->filter($data['allpaginated']);
 
-        // Add placeholders for manual presentations that are currently processed
-        $pending = ManualPresentation::where('user', app()->make('play_username'))->where('status', 'sent')->latest('created')->get();
+        // Add placeholders for presentations that are currently processed
         $processing = Video::with('category', 'video_course.course')->where('state', false)->latest('creation')->get();
         $data['upload'] = true;
-        $data['pending'] = $pending->merge($processing);
+        $data['pending'] = $processing;
 
         return view('home.index', $data);
     }

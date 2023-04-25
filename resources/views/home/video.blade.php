@@ -125,7 +125,10 @@
         <div class="d-flex align-items-start">
             <div class="">
                 <h4 class="card-text font-1rem px-1 py-2">
-                    <a target="_blank" rel="noopener noreferrer" href="{{ route('player', ['video' => $video]) }}" class="link">{{ $video->LangTitle }}</a>
+                    <div data-placement="auto" data-toggle="tooltip" data-title="{{$video->LangTitle}}">
+                        <a target="_blank" rel="noopener noreferrer" href="{{ route('player', ['video' => $video]) }}" class="link">{{ Str::limit($video->LangTitle, 27) }}</a>
+                    </div>
+
                 </h4>
             </div>
             @if ($video->description)

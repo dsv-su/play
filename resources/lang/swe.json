@@ -198,6 +198,7 @@
     "Public playback": "Publik uppspelning",
     "Custom playback": "Anpassad uppspelning",
     "Some of the uploaded presentations are being processed now. You can see them under \"All presentations\" tab.": "Några av de uppladdade presentationerna bearbetas nu. Du kan se dem under fliken \"Alla presentationer\".",
+    "Some of the uploaded presentations are being processed now.": "Några av de uppladdade presentationerna bearbetas nu.",
     "Expand all": "Expandera alla",
     "Collapse all": "Kollapsa alla",
     "Playback": "Uppspelning",
@@ -371,5 +372,6 @@
     "Fill out the form below and click the upload button when you're done to upload your presentation": "Fyll i formuläret nedan och klicka på uppladdningsknappen när du är klar för att ladda upp din presentation",
     "Click the upload button when you're done to upload your presentation": "Klicka på uppladdningsknappen när du är klar för att ladda upp din presentation",
     "Presentation visibility": "Presentationens synlighet",
-    "Specify the visibility of the presentation: visible, private or unlisted.": "Ange presentationens synlighet: synlig, privat eller olistad."
+    "Specify the visibility of the presentation: visible, private or unlisted.": "Ange presentationens synlighet: synlig, privat eller olistad.",
+    "Processing": "Bearbetar"
 }
