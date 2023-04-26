@@ -116,8 +116,8 @@ class VideoApiController extends Controller
                         return response()->json(['error' => 'Something went wrong while updating', 'message' => $e->getMessage()], 400);
                     }
 
-                    DB::commit();   // Successfully updated
-                    return response()->json('Presentation has been updated', Response::HTTP_CREATED);
+                    // Successfully updated
+
                 }
 
                 DB::commit();   // Successfully stored
@@ -154,7 +154,7 @@ class VideoApiController extends Controller
                     }
                 }
 
-                return response()->json('Presentation has been created', Response::HTTP_CREATED);
+                return response()->json('Presentation has been updated', Response::HTTP_CREATED);
             } else {
 
                 // Error notification
