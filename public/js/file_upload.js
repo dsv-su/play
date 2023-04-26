@@ -39,9 +39,24 @@ Dropzone.options.datanodeupload =
         },
 
         renameFile: function(file) {
-            var dt = new Date();
+            /*var dt = new Date();
             var time = dt.getTime();
-            return time+"_"+file.name;
+            return time+"_"+file.name;*/
+
+            var filenameextension = file.name.replace(/^.*[\\\/]/, '');
+            var filename = filenameextension.substring(0, filenameextension.lastIndexOf('.'));
+            var ext = filenameextension.split('.').pop();
+
+            var hash = 0, i, chr;
+            if (filename.length === 0) return hash;
+            for (i = 0; i < filename.length; i++) {
+                chr = filename.charCodeAt(i);
+                hash = ((hash << 5) - hash) + chr;
+                hash |= 0; // Convert to 32bit integer
+            }
+            return (hash * -1) + '.' + ext;
+
+
         },
         acceptedFiles: "video/*",
         addRemoveLinks: true,

@@ -23,7 +23,7 @@
             <div class="d-flex align-items-start">
                 <div class="">
                     <h4 class="card-text font-1rem px-1 py-2">{{ Str::limit($video->LangTitle, 25) }} </h4>
-                    <p class="card-text badge badge-light">{{$video->created_at}})</p>
+                    <p class="card-text badge badge-light">{{$video->created_at}}</p>
                 </div>
                 @if ($video->description)
                     <div class="ml-auto showmore">

@@ -15,6 +15,7 @@ use App\VideoPermission;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Pion\Laravel\ChunkUpload\Exceptions\UploadFailedException;
 use Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException;
@@ -342,10 +343,7 @@ class UploadController extends Controller
         $extension = $file->getClientOriginalExtension();
         $filename = str_replace(".".$extension, "", $file->getClientOriginalName()); // Filename without extension
 
-        //Generate a unique name
-        //$filename = $file->hashName();
-
-        //We use the original name
+        //We use the original hashed name
         return $filename.".".$extension;
     }
 
@@ -364,6 +362,7 @@ class UploadController extends Controller
         $posterPath = $this->storage() . "/{$dir}/poster/";
         $finalFilePath = $filePath;
         $finalPosterPath = $posterPath;
+
 
         if (Storage::disk('play-store')->delete($finalFilePath.$file) ){
 

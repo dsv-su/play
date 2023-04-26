@@ -55,28 +55,16 @@ class Metadata
             //Add video source
 
             foreach(\Illuminate\Support\Facades\Storage::disk('play-store')->files($videoPath) as $stream => $f) {
-                /*if($stream == 0) {
-                    $this->source['main'] = Collection::make([
-                        'video' => 'video/'. basename($filename),
-                        'poster' => 'poster/'. $thumb_name . '.png',
-                        'playAudio' => true,
-                    ]);
-                } else {
-                    $this->source['camera'.$stream] = Collection::make([
-                        'video' => 'video/'. basename($filename),
-                        'poster' => 'poster/'. $thumb_name . '.png',
-                        'playAudio' => false,
-                    ]);
-                }*/
+                $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($f));
                 if($stream == 0) {
                     $this->source['main'] = [
-                        'video' => 'video/'. basename($filename),
+                        'video' => 'video/'. basename($f),
                         'poster' => 'poster/'. $thumb_name . '.png',
                         'playAudio' => true,
                     ];
                 } else {
                     $this->source['camera'.$stream] = [
-                        'video' => 'video/'. basename($filename),
+                        'video' => 'video/'. basename($f),
                         'poster' => 'poster/'. $thumb_name . '.png',
                         'playAudio' => false,
                     ];
