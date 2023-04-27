@@ -1,11 +1,11 @@
-<style>
-    @keyframes rotate {
-        100% {
-            transform: rotate(1turn);
-        }
-    }
-</style>
 <div class="pending_box">
+    <style>
+        @keyframes rotate {
+            100% {
+                transform: rotate(1turn);
+            }
+        }
+    </style>
     <div class="card video m-auto faded" id="{{$video->id}}">
         <div class="card-header position-relative"
              style="background-image: @if ($video->hidden) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); width: 100%; height: 0; object-fit: cover; background-repeat: no-repeat; background-position: 50% 50%;">
@@ -42,11 +42,8 @@
                 @endif
             </div>
 
-            <p class="card-text">
-
-
-            </p>
         </div>
     </div>
 </div>
+
 

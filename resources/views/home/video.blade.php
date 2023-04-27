@@ -20,9 +20,9 @@
         </div>
     @endif
 @endif
-<div class="shadow-lg shadow-warning card video m-auto @if($video->hidden) faded @endif" id="{{$video->id}}">
+<div wire:ignore class="shadow-lg shadow-warning card video m-auto @if($video->hidden) faded @endif" id="{{$video->id}}">
     <div class="flex-column m-1 action-icons">
-        <div data-placement="left" data-toggle="tooltip" data-title="{{__("Share presentation")}}">
+       <div data-placement="left" data-toggle="tooltip" data-title="{{__("Share presentation")}}">
             <a href="#" data-toggle="modal" data-target="#shareModal{{$video->id}}"
                title="{{ __('Share presentation') }}" class="btn btn-dark btn-sm">
                 <i class="fas fa-external-link-alt fa-fw"></i>
@@ -147,13 +147,14 @@
             @endif
         </div>
 
-        <!-- While testing we need id -->
-        <p class="card-text">
-            @foreach($video->getUniqueDesignations() as $designation)
-                <a href="/designation/{{$designation}}"
-                   class="badge badge-primary">{{$designation}}</a>
-            @endforeach
 
+        <p class="card-text">
+            @if (!$video->courses()->isEmpty())
+                @foreach($video->getUniqueDesignations() as $designation)
+                    <a href="/designation/{{$designation}}"
+                       class="badge badge-primary">{{$designation}}</a>
+                @endforeach
+            @endif
             @if (!$video->presenters()->isEmpty())
                 @foreach($video->presenters() as $presenter)
                     <a href="/presenter/{{$presenter->username}}" class="badge badge-light">{{$presenter->name}}</a>
@@ -175,7 +176,7 @@
         @if($manageview ?? false)
             <div class="text-right">
                  <span data-toggle="tooltip" data-placement="left" data-title="{{__("Number of Clicks")}}">
-                    <a {{--}}href="{{route('stats', $video->id)}}" {{--}} type="button" class="btn btn-sm px-1">
+                    <a {{--}}href="{{route('stats', $video->id)}}" {{--}} href="#" type="button" class="btn btn-sm px-1">
                         <span style="color: Tomato;"><i class="fa-solid fa-chart-column"></i></span>
                         @if($stats_playback[$video->id] ?? false)
                             {{$stats_playback[$video->id]}}
@@ -185,7 +186,7 @@
                     </a>
                 </span>
                 <span data-toggle="tooltip" data-placement="left" data-title="{{__("Number of Downloads")}}">
-                    <a {{--}} href="{{route('stats', $video->id)}}" {{--}} type="button" class="btn btn-sm px-1">
+                    <a {{--}} href="{{route('stats', $video->id)}}" {{--}} href="#" type="button" class="btn btn-sm px-1">
                         <span style="color: #007bff;"><i class="fa-solid fa-download"></i></span>
                         @if($stats_download[$video->id] ?? false)
                             {{$stats_download[$video->id]}}

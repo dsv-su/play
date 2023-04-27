@@ -339,13 +339,10 @@
                         </div>
 
                         <div class="form-group col-md-6 flex-column d-flex">
-                            <div class="rounded border p-3 my-2">
-                                {{__('Automatic subtitling')}}: <span class="badge badge-secondary">Disabled</span>
-                            </div>
-                            <!-- Subtitles file-->
-                            <label class="form-control-label px-1">{{ __("Add a subtitle file") }} <span
-                                    class="badge badge-warning">{{ __("Testing in progress") }}</span></label>
 
+                            @livewire('autosubtitles', ['presentation' => $presentation ])
+
+                            {{--}}
                             <!-- Subtitle -->
                             <div id="subtitleHolder">
                                 <form action="{{ route('subtitle-upload') }}" class="dropzone" id="subtitleupload">
@@ -357,6 +354,8 @@
                                     </div>
                                 </form>
                             </div>
+                            {{--}}
+
                         </div>
                     </div>
                 </div>

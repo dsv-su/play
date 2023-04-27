@@ -478,10 +478,6 @@ button:focus {
     outline-width: 0
 }
 
-.modal {
-   /* background-image: linear-gradient(rgba(104,199,255,1) 0%, rgba(255,255,255,1) 90%) */
-}
-
 .counter {
     background-color: #f5f5f5;
     padding: 20px 0;

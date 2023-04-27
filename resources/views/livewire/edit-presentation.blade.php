@@ -130,20 +130,7 @@
                                     </select>
                                 </div>
                             </div>
-                            {{--}}
-                            <div class="row">
-                                <label for="visibilitySwitch" class="col-4 col-lg-3 mb-0">{{__("Visibility")}}</label>
-                                <div class="col">
-                                    <span class="custom-control custom-switch custom-switch-lg" data-toggle="tooltip" title="{{__("Switch the toggle to change")}}">
-                                        <input wire:click="visibility" class="custom-control-input" id="visibilitySwitch" name="visibility"
-                                               type="checkbox" @if($visibility == true) checked @endif>
-                                        <label class="custom-control-label" style="margin-top: 3px;" for="visibilitySwitch"></label>
-                                        @if (!$visibility) <span class="badge badge-danger">{{__("hidden")}}</span> @else <span class="badge badge-primary">{{__("visible")}} </span>@endif
-                                    </span>
-                                </div>
-                            </div>
-                            {{--}}
-
+                            <!-- Download switch -->
                             <div class="row">
                                 <label for="downloadSwitch" class="col-4 col-lg-3 mb-0">{{__("Downloadable")}}</label>
                                 <div class="col">
@@ -152,12 +139,14 @@
                                         <input wire:click="downloadability" class="custom-control-input" id="downloadSwitch" name="download"
                                                type="checkbox" @if($download == true) checked @endif>
                                         <label class="custom-control-label" style="margin-top: 3px;" for="downloadSwitch"></label>
-                                          @if(!$download) <span class="badge badge-danger">{{__("not downloadable")}}</span> @else <span class="badge badge-primary">{{__("downloadable")}} @endif
+                                          @if(!$download) <span class="badge badge-danger">{{__("not downloadable")}}</span> @else <span class="badge badge-primary">{{__("downloadable")}} @endif </span>
                                            @if ($download_switch_warning) <div class="row"><span style="color: red;">{{__("Download is only possible if visibility is set to visible")}}</span></div>  @endif
                                       </span>
                                 </div>
                             </div>
+
                         </div>
+
                     </div>
                 </div>
             </div>

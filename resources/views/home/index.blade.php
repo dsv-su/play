@@ -241,7 +241,7 @@
                     </div>
                     <!-- -->
                 </div>
-        @endif
+            @endif
             <!-- Content tab All -->
             <div id="all" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-E">
                 @if ((isset($latest) && $latest->count()) || isset($pending) && $pending->count())
@@ -350,6 +350,7 @@
                                 <div class="card video my-0 mx-auto"></div>
                             </div>
                         @endif
+
                     </div>
                 @else
                     <p class="my-3">
