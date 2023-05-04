@@ -94,7 +94,7 @@ class PlayStoreNotify extends Model
         $this->json = $this->presentation;
         $this->json = $this->json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
-        //
+        // Sucess
         //return $this->json;
         //
 
@@ -203,7 +203,7 @@ class PlayStoreNotify extends Model
 
         $this->json = $this->json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
-        //
+        // Fail
         //return $this->json;
         //
 
