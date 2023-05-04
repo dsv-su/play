@@ -69,6 +69,7 @@ class MultiplayerController extends Controller
 
         // Construct Presentation json from DB
         $presentation = array();
+        $videosource = array();
         $presentation['id'] = $video->id;
         $presentation['title'] = $video->title;
         $presentation['thumb'] = $video->thumb;
