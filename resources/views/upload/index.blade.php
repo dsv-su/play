@@ -342,19 +342,28 @@
 
                             @livewire('autosubtitles', ['presentation' => $presentation ])
 
-                            {{--}}
-                            <!-- Subtitle -->
-                            <div id="subtitleHolder">
-                                <form action="{{ route('subtitle-upload') }}" class="dropzone" id="subtitleupload">
-                                    <input type="file" name="subtitle"  style="display: none;">
-                                    <input type="hidden" name="subtitledir"  id="subtitledir" value="{{ $presentation->local }}">
-                                    @csrf
-                                    <div class="dz-message" data-dz-message>
-                                        <span>{{ __("Drop a WebVTT (.vtt) file here or click to browse") }}</span>
-                                    </div>
-                                </form>
+
+                        <!-- Subtitle -->
+                        <div id="subtitleHolder">
+                            <label class="form-control-label px-1">{{ __("Add a subtitle file") }}</label>
+                            <form action="{{ route('subtitle-upload') }}" class="dropzone" id="subtitleupload">
+                                <input type="file" name="subtitle"  style="display: none;">
+                                <input type="hidden" name="subtitledir"  id="subtitledir" value="{{ $presentation->local }}">
+                                @csrf
+                                <div class="dz-message" data-dz-message>
+                                    <span>{{ __("Drop a WebVTT (.vtt) file here or click to browse") }}</span>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- Auto subtile generation info -->
+                        <div id="autoHolder" style="display: none;">
+                            <label class="form-control-label px-1">{{ __("Autogeneration of subtitles") }}</label>
+                            <div class="rounded border su-background__light p-3 my-2">
+                                {{ __('The processing time for a presentation with auto-generated subtitles is longer. You will receive an email when processing is complete. Since the subtitles are auto-generated, you should check the subtitles yourself and edit if necessary.') }}
                             </div>
-                            {{--}}
+                        </div>
+
+
 
                         </div>
                     </div>
@@ -658,5 +667,21 @@
                 });
             });
         </script>
+
+    <script>
+        let holder = document.getElementById('subtitleHolder');
+        let holderinfo = document.getElementById('autoHolder');
+        window.addEventListener('contentChanged', e => {
+            if(e.detail.autosubs) {
+                holder.style.display = 'none';
+                holderinfo.style.display = 'block';
+            }
+            else {
+                holder.style.display = 'block';
+                holderinfo.style.display = 'none';
+            }
+
+        })
+    </script>
 
 @endsection

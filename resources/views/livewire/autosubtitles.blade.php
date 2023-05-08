@@ -7,19 +7,4 @@
             @if(!$subtitles) <span class="badge badge-danger">{{__("off")}}</span> @else <span class="badge badge-primary">{{__("on")}} @endif </span>
         </span>
     </div>
-    <!-- Subtitles file-->
-    @if(!$subtitles)
-        <label class="form-control-label px-1">{{ __("Add a subtitle file") }}</label>
-        <!-- Subtitle -->
-        <div wire:ignore id="subtitleHolder">
-            <form action="{{ route('subtitle-upload') }}" class="dropzone" id="subtitleupload">
-                <input type="file" name="subtitle"  style="display: none;">
-                <input type="hidden" name="subtitledir"  id="subtitledir" value="{{ $presentation->local }}">
-                @csrf
-                <div class="dz-message" data-dz-message>
-                    <span>{{ __("Drop a WebVTT (.vtt) file here or click to browse") }}</span>
-                </div>
-            </form>
-        </div>
-    @endif
 </div>

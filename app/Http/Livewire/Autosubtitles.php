@@ -21,7 +21,7 @@ class Autosubtitles extends Component
         $this->subtitles = !$this->subtitles;
         $this->presentation->autogenerate_subtitles = $this->subtitles;
         $this->presentation->save();
-
+        $this->dispatchBrowserEvent('contentChanged', ['autosubs' => $this->subtitles]);
     }
 
     public function render()

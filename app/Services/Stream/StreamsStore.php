@@ -30,11 +30,15 @@ class StreamsStore extends Model
 
                     if($source['video'] ?? false) {
                         foreach ($source['video'] as $resolution => $url) {
-                            $streamresolution = StreamResolution::updateOrCreate([
-                                'resolution' => $resolution],
-                                ['stream_id' => $stream->id,
+                            $streamresolution = StreamResolution::updateOrCreate(
+                                [
+                                'stream_id' => $stream->id,
+                                'resolution' => $resolution
+                                ],
+                                [
                                 'filename' => $url
-                            ]);
+                                ]
+                            );
                         }
                     }
                 } //end check

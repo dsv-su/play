@@ -373,5 +373,8 @@
     "Click the upload button when you're done to upload your presentation": "Klicka på uppladdningsknappen när du är klar för att ladda upp din presentation",
     "Presentation visibility": "Presentationens synlighet",
     "Specify the visibility of the presentation: visible, private or unlisted.": "Ange presentationens synlighet: synlig, privat eller olistad.",
-    "Processing": "Bearbetar"
+    "Processing": "Bearbetar",
+    "off": "av",
+    "on": "på",
+    "The processing time for a presentation with auto-generated subtitles is longer. You will receive an email when processing is complete. Since the subtitles are auto-generated, you should check the subtitles yourself and edit if necessary.": "Bearbetningstiden för en presentation med automatiskt genererad undertext är längre. Du kommer att få ett e-postmeddelande när bearbetningen är klar. Eftersom undertexterna är automatiskt genererade bör du själv kontrollera undertexterna och redigera vid behov."
 }
