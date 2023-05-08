@@ -376,5 +376,6 @@
     "Processing": "Bearbetar",
     "off": "av",
     "on": "på",
-    "The processing time for a presentation with auto-generated subtitles is longer. You will receive an email when processing is complete. Since the subtitles are auto-generated, you should check the subtitles yourself and edit if necessary.": "Bearbetningstiden för en presentation med automatiskt genererad undertext är längre. Du kommer att få ett e-postmeddelande när bearbetningen är klar. Eftersom undertexterna är automatiskt genererade bör du själv kontrollera undertexterna och redigera vid behov."
+    "The processing time for a presentation with auto-generated subtitles is longer. You will receive an email when processing is complete. Since the subtitles are auto-generated, you should check the subtitles yourself and edit if necessary.": "Bearbetningstiden för en presentation med automatiskt genererad undertext är längre. Du kommer att få ett e-postmeddelande när bearbetningen är klar. Eftersom undertexterna är automatiskt genererade bör du själv kontrollera undertexterna och redigera vid behov.",
+    "Subtitles": "Undertextning"
 }

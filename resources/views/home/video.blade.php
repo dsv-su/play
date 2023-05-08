@@ -95,6 +95,12 @@
                         <i class="fa-solid fa-key"></i>
                     </div>
                 @endif
+                <!-- CC -->
+                @if($video->subtitles)
+                    <div class="visibility mx-1" data-toggle="tooltip" title="{{__("Subtitles")}}">
+                        <i class="fa-regular fa-closed-captioning"></i>
+                    </div>
+                @endif
             </div>
             <!-- Visibility banner -->
             @if ($video->hidden)
