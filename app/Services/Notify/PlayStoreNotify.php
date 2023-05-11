@@ -163,7 +163,12 @@ class PlayStoreNotify extends Model
             }
 
             //Update VideoPermissions
-            $videopermissions = VideoPermission::where('notification_id', $this->presentation->id)->first();
+            if($type == 'edit') {
+                $videopermissions = VideoPermission::where('video_id', $this->presentation->pkg_id)->first();
+            } else {
+                $videopermissions = VideoPermission::where('notification_id', $this->presentation->id)->first();
+            }
+
             $videopermissions->jobid = (string) $this->response->getBody();
             $videopermissions->save();
 
