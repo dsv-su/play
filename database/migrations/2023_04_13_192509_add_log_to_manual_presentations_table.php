@@ -15,6 +15,8 @@ class AddLogToManualPresentationsTable extends Migration
     {
         Schema::table('manual_presentations', function (Blueprint $table) {
             $table->uuid('jobid')->after('id');
+            $table->uuid('pkg_id')->after('jobid');
+            $table->string('type')->after('status');
             $table->boolean('autogenerate_subtitles')->default(false)->after('subtitles');
         });
     }
@@ -28,6 +30,8 @@ class AddLogToManualPresentationsTable extends Migration
     {
         Schema::table('manual_presentations', function (Blueprint $table) {
             $table->dropColumn('jobid');
+            $table->dropColumn('pkg_id');
+            $table->dropColumn('type');
             $table->dropColumn('autogenerate_subtitles');
         });
     }

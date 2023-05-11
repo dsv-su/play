@@ -25,12 +25,13 @@ class PlayStoreNotify extends Model
 
     public function sendSuccess(string $type)
     {
-        // type: default | type: mediasite
+        // type: default | type: edit | type: mediasite
 
         $this->presentation
             ->makeHidden('id')
             ->makeHidden('title_en')
             ->makeHidden('status')
+            ->makeHidden('type')
             ->makeHidden('jobid')
             ->makeHidden('duration')
             ->makeHidden('autogenerate_subtitles')
@@ -47,6 +48,18 @@ class PlayStoreNotify extends Model
             ->makeHidden('updated_at');
 
         //Conditions
+        //Pkg_id
+        if(empty($this->presentation->pkg_id)) {
+            $this->presentation->makeHidden('pkg_id');
+        }
+        //upload_dir
+        if(empty($this->presentation->upload_dir)) {
+            $this->presentation->makeHidden('upload_dir');
+        }
+        //Presenters
+        if(empty($this->presentation->presenters)) {
+            $this->presentation->makeHidden('presenters');
+        }
         //Courses
         if(empty($this->presentation->courses)) {
             $this->presentation->makeHidden('courses');
@@ -76,15 +89,17 @@ class PlayStoreNotify extends Model
         }
 
         //Exceptions
-        if ($type == 'default') {
+        if ($type == 'default' or $type == 'edit') {
             $this->presentation->title = ['sv' => $this->presentation['title'], 'en' => $this->presentation['title_en']];
         } elseif ($type == 'mediasite') {
             $this->presentation->title = ['sv' => $this->presentation['title'], 'en' => $this->presentation['title']];
         }
 
-        if ($type == 'update') {
+        if ($type == 'edit') {
+            //For now
             $this->presentation
-                ->makeHidden('resolution');
+                ->makeHidden('thumb')
+                ->makeHidden('sources');
         }
 
         if ($type == 'mediasite') {
@@ -94,7 +109,7 @@ class PlayStoreNotify extends Model
         $this->json = $this->presentation;
         $this->json = $this->json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
-        // Sucess
+        // Success
         //return $this->json;
         //
 

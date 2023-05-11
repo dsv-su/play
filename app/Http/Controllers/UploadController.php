@@ -36,7 +36,7 @@ class UploadController extends Controller
         $file->user = app()->make('play_username');
         $file->user_email = app()->make('play_email');
         $file->local = Carbon::now()->toDateString('Y-m-d') . '_' . rand(1, 999);
-        $file->upload_dir = '-';
+        $file->upload_dir = '';
         $file->title = '';
         $file->title_en = '';
         $file->presenters = [];
@@ -91,6 +91,7 @@ class UploadController extends Controller
 
             //Retrived the upload
             $manualPresentation = ManualPresentation::find($id);
+            $manualPresentation->type = 'manual';
 
             //Presenters
             //Add current user in array

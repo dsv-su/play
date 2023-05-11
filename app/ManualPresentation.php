@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Lang;
 class ManualPresentation extends Model
 {
     use HasFactory;
-    protected $fillable = ['status', 'user','upload_dir', 'uuid', 'subtitles', 'title', 'title_en', 'creation', 'presenters', 'courses','daisy_courses', 'tags', 'thumb','permission', 'entitlement', 'sources', 'generate_subtitles', 'description'];
+    protected $fillable = ['status', 'type', 'user','upload_dir', 'jobid', 'video_id', 'subtitles', 'title', 'title_en', 'creation', 'presenters', 'courses','daisy_courses', 'tags', 'thumb','permission', 'entitlement', 'sources', 'autogenerate_subtitles', 'description'];
 
     protected $casts = [
         'presenters' => 'array',
