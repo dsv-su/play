@@ -11,12 +11,13 @@ use App\Video;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use phpDocumentor\Reflection\Types\Null_;
 
 class EditPackage
 {
-    protected $video;
+    protected $video, $gsubtitles;
 
     public function __construct(Video $video)
     {
@@ -65,18 +66,25 @@ class EditPackage
             $presentation->tags = $tags;
         }
 
-
         $presentation->save();
 
         //Send to backend
         //Create thumbs and metadata
         $metadata = new Metadata();
         $metadata->create($presentation);
+
         //Change status
         $presentation->status = 'stored';
         $presentation->save();
         // Send notify
         $notify = new PlayStoreNotify($presentation);
         $notify->sendSuccess('edit');
+
+        //Update video state
+        $this->video->state = 0;
+        $this->video->save();
+
+        //Send notification to editor
+
     }
 }

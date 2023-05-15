@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\ManualPresentation;
+use Illuminate\Support\Collection;
 use Livewire\Component;
 
 class EditAutosubtitles extends Component
@@ -22,6 +23,7 @@ class EditAutosubtitles extends Component
         $this->presentation->save();
         $this->dispatchBrowserEvent('contentChanged', ['autosubs' => $this->subtitles]);
     }
+
 
     public function render()
     {

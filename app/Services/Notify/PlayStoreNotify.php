@@ -58,15 +58,18 @@ class PlayStoreNotify extends Model
         }
         //Presenters
         if(empty($this->presentation->presenters)) {
-            $this->presentation->makeHidden('presenters');
+            //$this->presentation->makeHidden('presenters');
+            $this->presentation->presenters = [];
         }
         //Courses
         if(empty($this->presentation->courses)) {
-            $this->presentation->makeHidden('courses');
+            //$this->presentation->makeHidden('courses');
+            $this->presentation->courses = [];
         }
         //Tags
         if(empty($this->presentation->tags)) {
-            $this->presentation->makeHidden('tags');
+            //$this->presentation->makeHidden('tags');
+            $this->presentation->tags = [];
         }
         //Subs
         if(empty($this->presentation->subtitles)) {
@@ -168,9 +171,11 @@ class PlayStoreNotify extends Model
             } else {
                 $videopermissions = VideoPermission::where('notification_id', $this->presentation->id)->first();
             }
-
             $videopermissions->jobid = (string) $this->response->getBody();
             $videopermissions->save();
+
+
+
 
             return redirect('/')->with(['message' => $message]);
         } else {
