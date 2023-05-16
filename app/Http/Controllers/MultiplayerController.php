@@ -108,11 +108,14 @@ class MultiplayerController extends Controller
 
         //Add subtitles
         if($video->subtitles) {
+            $subs = [];
             $subtitles = json_decode($video->subtitles, true);
             foreach($subtitles as $key => $subtitle) {
                 $subs[$key] = $this->base_uri() . '/' . $video->id . '/' . $subtitle;
             }
-            $presentation['subtitles'] = $subs;
+            if(!empty($subs)) {
+                $presentation['subtitles'] = $subs;
+            }
         }
 
         //Add valid token
