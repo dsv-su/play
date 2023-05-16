@@ -9,11 +9,10 @@
         'user_permission' => $user_permission
         ])
     </form>
+    @if(!json_decode($video->subtitles))
     <div class="container px-3 px-sm-0">
         <div class="col-sm-12">
-
             <div class="rounded border shadow p-3 my-2">
-
                     @livewire('edit-autosubtitles', [
                     'video' => $video,
                     'presentation' => $editHandler])
@@ -37,14 +36,10 @@
                             </div>
                         </div>
                     </div>
-
-
             </div>
-
-
         </div>
     </div>
-
+    @endif
 
 
     <script>

@@ -245,9 +245,9 @@ class EditController extends Controller
         $backend->sendBackend($request);
 
         if(count(session('links') ?? []) <= 3) {
-            return redirect()->route('home')->with('message', __("Presentation successfully updated"));
+            return redirect()->route('home')->with('message', __("Processing the update"));
         } else {
-            return redirect(session('links')[2])->with('message', __("Presentation successfully updated"));
+            return redirect(session('links')[2])->with('message', __("Processing the update"));
         }
 
     }
