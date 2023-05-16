@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PresentationRequest;
 use App\Http\Resources\Presentation\PresentationResource;
 use App\IndividualPermission;
+use App\Jobs\JobEditNotification;
 use App\Jobs\JobUploadSuccessNotification;
 use App\ManualPresentation;
 use App\Services\Api\CatchAll;
@@ -125,33 +126,47 @@ class VideoApiController extends Controller
                 //If manual upload - Send email to uploader
                 if($manualpresentation = ManualPresentation::where('jobid', $request->jobid)->first()) {
 
-                    //Set origin
-                    $video->origin = 'manual';
-
                     //Set edit/delete individual permission for uploader
                     IndividualPermission::updateOrCreate([
                         'video_id' => $video->id,
                         'username' => $manualpresentation->user],
                         ['name' => 'Uploader', //This can later look up SUKAT for displayname
-                        'permission' => 'delete']
+                            'permission' => 'delete']
                     );
 
-                    //Set visibility
-                    $video->visibility = $manualpresentation->visibility;
-                    $video->unlisted = $manualpresentation->unlisted;
-                    $video->save();
+                    switch ($manualpresentation->type) {
+                        case('manual'):
+                            $video->origin = 'manual';
 
-                    //Send email to uploader when processing is done
-                    if($video->state) {
-                        $job = (new JobUploadSuccessNotification($video, $manualpresentation));
-                        // Dispatch success email and continue
-                        dispatch($job);
-                        //Update presentation status
-                        $manualpresentation->status = 'completed';
-                        $manualpresentation->save();
-                        //Remove temp storage
-                        Storage::disk('public')->deleteDirectory($manualpresentation->local);
+                            //Set visibility
+                            $video->visibility = $manualpresentation->visibility;
+                            $video->unlisted = $manualpresentation->unlisted;
+                            $video->save();
+
+                            //Send email to uploader when processing is done
+                            if($video->state) {
+                                $job = (new JobUploadSuccessNotification($video, $manualpresentation));
+                                // Dispatch success email and continue
+                                dispatch($job);
+                                //Update presentation status
+                                $manualpresentation->status = 'completed';
+                                $manualpresentation->save();
+                                //Remove temp storage
+                                Storage::disk('public')->deleteDirectory($manualpresentation->local);
+                            }
+                            break;
+                        case('edit'):
+                            $video->origin = 'edited';
+                            $video->save();
+
+                            if($video->state) {
+                                $job = (new JobEditNotification($video, $manualpresentation));
+                                // Dispatch edit email and continue
+                                dispatch($job);
+                            }
+                            break;
                     }
+
                 }
 
                 return response()->json('Presentation has been updated', Response::HTTP_CREATED);
