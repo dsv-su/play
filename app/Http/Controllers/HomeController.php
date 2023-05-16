@@ -50,14 +50,14 @@ class HomeController extends Controller
                 $data['mypaginated'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
                     return $query->whereIn('course_id', $courses)->where('state', true);
                 })
-                    ->orWhereIn('id', $individual_videos)
+                    ->orWhereIn('id', $individual_videos)->where('state', true)
                     ->latest('creation')->Paginate(24, ['*'], 'my')->onEachSide(1);
             } else {
                 //Non administrator restricted visibility
                 $data['mypaginated'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
                     return $query->whereIn('course_id', $courses)->where('visibility', true)->where('state', true);
                 })
-                    ->orWhereIn('id', $individual_videos)
+                    ->orWhereIn('id', $individual_videos)->where('state', true)
                     ->latest('creation')->Paginate(24, ['*'], 'my')->onEachSide(1);
             }
 
