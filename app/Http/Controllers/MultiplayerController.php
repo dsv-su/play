@@ -107,7 +107,7 @@ class MultiplayerController extends Controller
         }
 
         //Add subtitles
-        if($video->subtitles) {
+        if(json_decode($video->subtitles)) {
             $subs = [];
             $subtitles = json_decode($video->subtitles, true);
             foreach($subtitles as $key => $subtitle) {
