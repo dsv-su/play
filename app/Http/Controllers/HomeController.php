@@ -48,14 +48,14 @@ class HomeController extends Controller
             if ($this->administrator()) {
                 //Administrator full visibility
                 $data['mypaginated'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
-                    return $query->whereIn('course_id', $courses);
+                    return $query->whereIn('course_id', $courses)->where('state', true);
                 })
                     ->orWhereIn('id', $individual_videos)
                     ->latest('creation')->Paginate(24, ['*'], 'my')->onEachSide(1);
             } else {
                 //Non administrator restricted visibility
                 $data['mypaginated'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
-                    return $query->whereIn('course_id', $courses)->where('visibility', true);
+                    return $query->whereIn('course_id', $courses)->where('visibility', true)->where('state', true);
                 })
                     ->orWhereIn('id', $individual_videos)
                     ->latest('creation')->Paginate(24, ['*'], 'my')->onEachSide(1);
@@ -78,21 +78,21 @@ class HomeController extends Controller
         if($this->administrator()) {
             //Administrator full visibility
             $data['activepaginated_ht'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses_ht) {
-                return $query->whereIn('course_id', $active_courses_ht);
+                return $query->whereIn('course_id', $active_courses_ht)->where('state', true);
             })->latest('creation')->fastPaginate(24, ['*'], 'active_ht')->onEachSide(1);
 
             $data['previouspaginated_ht'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($previous_courses_ht) {
-                return $query->whereIn('course_id', $previous_courses_ht);
+                return $query->whereIn('course_id', $previous_courses_ht)->where('state', true);
             })->latest('creation')->fastPaginate(24, ['*'], 'previous_ht')->onEachSide(1);
 
         } else {
             //Non administrator restricted visibility
             $data['activepaginated_ht'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses_ht) {
-                return $query->whereIn('course_id', $active_courses_ht)->where('visibility', true);
+                return $query->whereIn('course_id', $active_courses_ht)->where('visibility', true)->where('state', true);
             })->latest('creation')->fastPaginate(24, ['*'], 'active_ht')->onEachSide(1);
 
             $data['previouspaginated_ht'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($previous_courses_ht) {
-                return $query->whereIn('course_id', $previous_courses_ht)->where('visibility', true);
+                return $query->whereIn('course_id', $previous_courses_ht)->where('visibility', true)->where('state', true);
             })->latest('creation')->fastPaginate(24, ['*'], 'previous_ht')->onEachSide(1);
         }
 
@@ -108,12 +108,12 @@ class HomeController extends Controller
         if($this->administrator()) {
             //Administrator full visibility
             $data['activepaginated_vt'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses_vt) {
-                return $query->whereIn('course_id', $active_courses_vt);
+                return $query->whereIn('course_id', $active_courses_vt)->where('state', true);
             })->latest('creation')->fastPaginate(24, ['*'], 'active_vt')->onEachSide(1);
         } else {
             //Non administrator restricted visibility
             $data['activepaginated_vt'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses_vt) {
-                return $query->whereIn('course_id', $active_courses_vt)->where('visibility', true);
+                return $query->whereIn('course_id', $active_courses_vt)->where('visibility', true)->where('state', true);
             })->latest('creation')->fastPaginate(24, ['*'], 'active_vt')->onEachSide(1);
         }
 
