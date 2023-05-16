@@ -73,18 +73,19 @@ class EditPackage
         $metadata = new Metadata();
         $metadata->create($presentation);
 
-        //Change status
+        //Change packethandler status
         $presentation->status = 'stored';
         $presentation->save();
-        // Send notify
-        $notify = new PlayStoreNotify($presentation);
-        $notify->sendSuccess('edit');
 
-        //Update video state
+        //Change video state
         $this->video->state = 0;
         $this->video->save();
 
         //Send notification to editor
+
+        // Send notify
+        $notify = new PlayStoreNotify($presentation);
+        $notify->sendSuccess('edit');
 
     }
 }

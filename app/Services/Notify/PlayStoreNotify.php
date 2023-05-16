@@ -174,8 +174,9 @@ class PlayStoreNotify extends Model
             $videopermissions->jobid = (string) $this->response->getBody();
             $videopermissions->save();
 
-
-
+            if($type == 'edit') {
+                return true;
+            }
 
             return redirect('/')->with(['message' => $message]);
         } else {
