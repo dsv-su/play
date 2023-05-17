@@ -76,6 +76,7 @@ class MultiplayerController extends Controller
 
         $streams = Stream::where('video_id', $video->id)->where('hidden', 0)->get();
 
+        //Deprecated in the updated player
         /*foreach ($streams as $key => $stream) {
             $presentation['sources'][] = [
                 'poster' => $this->base_uri() .'/' . $video->id . '/' .$stream->poster,
@@ -96,15 +97,17 @@ class MultiplayerController extends Controller
                 $videosource[$resolution->resolution] = $this->base_uri() .'/'. $video->id . '/' . $resolution->filename;
             }
             $build = \Illuminate\Support\Collection::make([
-                    'video' => \Illuminate\Support\Collection::make($videosource),
-                    'poster' => $this->base_uri() . '/' . $video->id . '/' . $stream->poster,
-                    'playAudio' => (bool)$stream->audio
-                    ]);
-
-            $presentation['sources'] = \Illuminate\Support\Collection::make([
-                $stream->name => $build
+                'video' => \Illuminate\Support\Collection::make($videosource),
+                'poster' => $this->base_uri() . '/' . $video->id . '/' . $stream->poster,
+                'playAudio' => (bool)$stream->audio
             ]);
+
+            $buildsource[$stream->name] = $build;
+
         }
+        $presentation['sources'] = \Illuminate\Support\Collection::make($buildsource);
+
+
 
         //Add subtitles
         if(json_decode($video->subtitles)) {
