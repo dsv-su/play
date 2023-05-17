@@ -4,6 +4,7 @@ namespace App\Services\Upload;
 
 use App\Jobs\JobUploadFailedNotification;
 use App\ManualPresentation;
+use App\Stream;
 use Illuminate\Support\Collection;
 
 class Metadata
@@ -86,10 +87,19 @@ class Metadata
         }
 
         //Subtitle generation
-        $this->gsubtitles['Generated'] = Collection::make([
-            'type' => 'whisper',
-            'source' => 'main'
-        ]);
+        if($presentation->pkg_id) {
+            $stream = Stream::where('video_id', $presentation->pkg_id)->where('audio', true)->first();
+            $this->gsubtitles['Generated'] = Collection::make([
+                'type' => 'whisper',
+                'source' => $stream->name
+            ]);
+        } else {
+            $this->gsubtitles['Generated'] = Collection::make([
+                'type' => 'whisper',
+                'source' => 'main'
+            ]);
+        }
+
         $presentation->generate_subtitles = $this->gsubtitles;
 
         return $presentation->save();
