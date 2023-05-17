@@ -123,7 +123,7 @@ class HomeController extends Controller
         // All courses (tab 3)
         if($this->administrator()) {
             //Administrator full visibility
-            $data['allpaginated'] = Video::with('category', 'video_course.course')->latest('creation')->fastPaginate(24, ['*'], 'all')->onEachSide(1);
+            $data['allpaginated'] = Video::with('category', 'video_course.course')->where('state', true)->latest('creation')->fastPaginate(24, ['*'], 'all')->onEachSide(1);
         } else {
             //Non administrator restricted visibility
             $data['allpaginated'] = Video::with('category', 'video_course.course')->where('visibility', true)->where('state', true)->latest('creation')->fastPaginate(24, ['*'], 'all')->onEachSide(1);
