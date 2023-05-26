@@ -99,10 +99,6 @@ class PlayStoreNotify extends Model
         }
 
         if ($type == 'edit') {
-            $this->presentation
-                ->makeHidden('thumb');
-            $this->presentation->thumb = '';
-
             //For now
             $this->presentation
                 ->makeHidden('sources');
