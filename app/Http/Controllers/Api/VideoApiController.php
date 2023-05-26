@@ -163,6 +163,9 @@ class VideoApiController extends Controller
                                 $job = (new JobEditNotification($video, $manualpresentation));
                                 // Dispatch edit email and continue
                                 dispatch($job);
+                                //Update presentation status
+                                $manualpresentation->status = 'completed';
+                                $manualpresentation->save();
                             }
                             break;
                     }

@@ -11,8 +11,9 @@
              style="background-image: @if ($video->hidden) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); width: 100%; height: 0; object-fit: cover; background-repeat: no-repeat; background-position: 50% 50%;">
             <div class="d-flex justify-content-center h-100">
                 <div class="d-inline alert alert-secondary m-auto"
-                     role="alert">{{ __("Processing") }}</div>
+                     role="alert"><span style="color: blue;">{{ __("Processing") }}</span></div>
             </div>
+
             <p class="m-1 px-1"> @if(isset($video->mediasite_folder_id))
                     {{\Carbon\Carbon::parse($video->duration/1000)->toTimeString()}}
                 @else
@@ -23,7 +24,6 @@
             <div class="d-flex align-items-start">
                 <div class="">
                     <h4 class="card-text font-1rem px-1 py-2">{{ Str::limit($video->LangTitle, 25) }} </h4>
-                    <p class="card-text badge badge-light">{{$video->created_at}}</p>
                 </div>
                 @if ($video->description)
                     <div class="ml-auto showmore">
@@ -41,7 +41,21 @@
                     </div>
                 @endif
             </div>
-
+            <!-- Relations -->
+            <p class="card-text">
+                @if (!$video->courses()->isEmpty())
+                    @foreach($video->getUniqueDesignations() as $designation)
+                        <a href="/designation/{{$designation}}"
+                           class="badge badge-primary">{{$designation}}</a>
+                    @endforeach
+                @endif
+                @if (!$video->presenters()->isEmpty())
+                    @foreach($video->presenters() as $presenter)
+                        <a href="/presenter/{{$presenter->username}}" class="badge badge-light">{{$presenter->name}}</a>
+                    @endforeach
+                @endif
+            </p>
+            <!-- end relations -->
         </div>
     </div>
 </div>

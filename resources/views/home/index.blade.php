@@ -82,15 +82,7 @@
                         <a class="nav-link" href="#all" data-toggle="tab" role="tab" aria-controls="all"
                            title="@lang('lang.latest')">@lang('lang.latest') <span
                                     class="count-label">{{$allpaginated->total()}}</span>
-                            @if($pending->count())
-                            <div class="la-line-scale la-dark la-sm">
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                            </div>
-                            @endif
+                            @livewire('pending-presentations')
                         </a>
                     </li>
                 @endif
@@ -300,14 +292,9 @@
                         </div>
                     @endif
 
+
                     <div class="card-deck inner">
-                        @if (isset($pending) && $pending->count())
-                            @foreach ($pending as $key => $video)
-                                <div class="col my-3">
-                                    @include('home.pending_video')
-                                </div>
-                            @endforeach
-                        @endif
+                        @livewire('pending-video')
                         @if (isset($tagged) && $tagged)
                             @foreach($tagged as $tagname => $taggedvideos)
                                 <div class="row mx-1 mt-2">
