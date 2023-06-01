@@ -57,7 +57,7 @@
     </div>
     <a target="_blank" rel="noopener noreferrer" href="{{ route('player', ['video' => $video]) }}">
         <div class="card-header position-relative"
-             style="background-image: @if ($video->hidden) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); width: 100%; height: 0; object-fit: cover; background-repeat: no-repeat; background-position: 50% 50%;">
+             style="background-image: @if ($video->hidden) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb . '?'. time())}}); width: 100%; height: 0; object-fit: cover; background-repeat: no-repeat; background-position: 50% 50%;">
             <!-- Icons -->
             <div class="icons m-1">
                 <!-- Group Permissions icons-->
