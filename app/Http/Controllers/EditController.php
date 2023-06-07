@@ -5,15 +5,12 @@ namespace App\Http\Controllers;
 use App\Course;
 use App\CoursesettingsUsers;
 use App\IndividualPermission;
-use App\ManualPresentation;
 use App\Permission;
 use App\Presenter;
 use App\Services\Daisy\DaisyAPI;
 use App\Services\Filters\VisibilityFilter;
 use App\Services\Ldap\SukatUser;
-use App\Services\Notify\PlayStoreNotify;
 use App\Services\PacketHandler\EditPackage;
-use App\Services\Upload\Metadata;
 use App\Stream;
 use App\Tag;
 use App\Video;
@@ -259,6 +256,16 @@ class EditController extends Controller
         $videos = $videos->filter(function ($i) {
             return $i->edit;
         });
+
+        //Initiate for each selected video a editprocess
+        foreach ($videos as $video) {
+            //Init new ManualPresentation instance
+            $editHandler = (new UploadController())->init_upload();
+            $editHandler->pkg_id = $video->id;
+            $editHandler->save();
+        }
+
+
         return view('manage.bulk-edit-presentation', ['videos' => $videos]);
     }
 
@@ -345,6 +352,11 @@ class EditController extends Controller
                 ]);
             }
             $video->save();
+
+            //Create notify package
+
+            $backend = new EditPackage($video);
+            $backend->sendBulkBackend($request);
         }
 
         return redirect(session('links')[2])->with('message', __("Presentations are successfully updated"));
