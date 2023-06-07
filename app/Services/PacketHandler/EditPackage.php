@@ -95,7 +95,7 @@ class EditPackage
         $presentation->title = $this->video->title;
         $presentation->title_en = $this->video->title_en;
         $presentation->description = $this->video->description;
-        $presentation->created = $this->video->creation;
+        $presentation->created = (int)$this->video->creation;
 
         //Video presenters (exkluded external)
         if(!empty($request->supresenters)) {
