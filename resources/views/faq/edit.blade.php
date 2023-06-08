@@ -34,7 +34,9 @@
                 <br>
                 <p>{{__("Apart from the settings that were stored during the upload process, there are some extra settings to choose here:")}}</p>
                 <ul>
-                    <li>{{__("Visibility: switch the button 'on' if you want the presentation to be visible and searchable and 'off' if you want it to be hidden and not playable.")}}</li>
+                    <li>{{__("Visible: When the presentation is set to visible, it is visible in the platform, it can be found via a search and played by users (depending on the rights setting that has been set).")}}</li>
+                    <li>{{__("Private: When the presentation is set to private, it is not visible in the platform, it cannot be found via a search and cannot be played by users, only you as the owner can play the presentation.")}}</li>
+                    <li>{{__("Unlisted: When the presentation is set to unlisted, it is not visible in the platform, it cannot be found through a search, but it can be played by users who have a direct link to the presentation.")}}</li>
                     <li>{{__("Downloadable: switch the button 'on' if you want users to be able to download the presentation and 'off' if you do not want the presentation to be downloadable.")}}</li>
                 </ul>
                 <br>

@@ -201,21 +201,17 @@
                     <li>
                         {{__("All files uploaded for one and the same presentation should be equally long.")}}
                     </li>
-                    <li>
-                        {{__("A thumbnail for each file will be automatically generated and can be regenerated or custom uploaded if necessary in the previous step.")}}
-                    </li>
-                    <li>
-                        {{__("Add a subtitle file for the presentation")}}
-                    </li>
+
                 </ul>
-                <p>{{__("Click “browse” to choose the files you want to upload. In the window that pops up, select the files and click “open” or drag and drop them into the upload box.")}}</p>
-                <p>{{__("In the upload box you will see the automatically generated thumbnails for each of the files. Under each thumbnail the timecode in seconds for the image used for the thumbnail is displayed. To edit, change the timecode to the image you want to use for the thumbnail and click “regenerate”.")}}</p>
+                <p>{{__("The upload view has been updated with new ‘dropzone’- areas; boxes where the files to be uploaded, both custom thumb, video or a subtitle file, can be dragged into. Alternatively, files can be selected for upload by clicking into the box to open the file manager for browsing. The upload now takes place in a different way, which makes it possible to upload larger files in a shorter time.")}}</p>
+
                 <br>
                 <p>{{__("When all files are chosen and thumbnails are finished, confirm by clicking the “upload” button at the bottom. You will receive a confirmation email informing you that the upload is in progress. Once the upload is complete you will receive another email.")}}</p>
-                <p>{{__("To keep a check on the status you can click on the icon for the conversion progress queue which you find in the header.")}}</p>
-                <br>
-                <img class="w-10" src="{{asset('images/manual/upload8.png')}}" alt="Upload form" style="border: 1px solid #000; padding: 0;">
                 <br><br>
+                <h3>{{__("Add or generate subtitles for the presentation")}}</h3>
+                <p>{{__("You can automatically generate subtitles for your presentation by switching the toggle switch on. Subtitles will be generated with Whisper released by OpenAI, an automatic speech recognition system to generate subtitles. If you would rather upload your own subtitle file, you can leave the toggle switch off and upload the subtitle file in the box.")}}</p>
+
+
             </article>
 
         </div>
