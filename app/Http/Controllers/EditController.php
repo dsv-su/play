@@ -237,7 +237,7 @@ class EditController extends Controller
 
         //Create notify package
         $backend = new EditPackage($video);
-return        $backend->sendBackend($request);
+        $backend->sendBackend($request);
 
         if(count(session('links') ?? []) <= 3) {
             return redirect()->route('home')->with('message', __("Processing the update"));
