@@ -255,7 +255,10 @@
                                     @foreach($presenters as $key => $presenter)
                                         <input type="hidden"
                                                @if ($presenter['type'] == 'sukat') value="{{$presenter['uid']}}"
-                                               @else value="0" @endif name="presenteruids[]">
+                                               @else value="{{$presenter['name']}}" @endif name="presenteruids[]">
+                                        <input type="hidden"
+                                               @if ($presenter['type'] == 'sukat') value="sukat"
+                                               @else value="external" @endif name="presenterorigin[]">
                                         <input type="hidden" value="{{$presenter['name']}}" name="presenternames[]">
                                         <span class="badge badge-pill badge-light mb-1">
                                             <span data-toggle="tooltip"

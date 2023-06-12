@@ -102,9 +102,7 @@ class EditController extends Controller
             if ($request->presenteruids && $request->presenternames) {
                 foreach ($request->presenteruids as $key => $uid) {
                     $name = $request->presenternames[$key];
-                    //   $username = preg_filter("/[^(]*\(([^)]+)\)[^()]*/", "$1", $presenter);
-                    //   $name = trim(preg_replace("/\([^)]+\)/", "", $presenter));
-                    if (!$uid || strpos($uid, 'external') !== false) {
+                    if ($request->presenterorigin[$key] == 'external') {
                         $presenter = Presenter::firstOrCreate([
                             'name' => $name,
                             'description' => 'external'
@@ -239,7 +237,7 @@ class EditController extends Controller
 
         //Create notify package
         $backend = new EditPackage($video);
-        $backend->sendBackend($request);
+return        $backend->sendBackend($request);
 
         if(count(session('links') ?? []) <= 3) {
             return redirect()->route('home')->with('message', __("Processing the update"));
