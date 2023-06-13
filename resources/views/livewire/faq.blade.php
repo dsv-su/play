@@ -82,7 +82,7 @@
             @endif
 
             <div class="webb2021-article-info">
-                <p>{{__("Last updated:")}} 2023-02-22</p>
+                <p>{{__("Last updated:")}} 2023-06-13</p>
             </div>
 
         </div>
