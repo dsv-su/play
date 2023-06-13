@@ -4,21 +4,21 @@
         <div class="row no-gutters">
             <div class="col d-flex align-items-center justify-content-center">
                 <div class="webb2021-article p-0 p-lg-2 d-inline-block">
-                    <a href="https://play2.dsv.su.se"><i
-                                class="fa-solid fa-share-from-square"></i> {{__("If you are missing presentations, click here to reach the old site!")}}
+                    <a href="https://play2.dsv.su.se">
+                        {{__("DSVPlay upgrade! The upgrade will take place on Thursday, June 15 between 10 and 12. During the update, there will be a short break in dsvplay.")}}
                     </a>
                 </div>
-                <!--
+                {{--}}
                 <div class="h-100 d-flex align-items-center">
                     <button class="button-remove-style js-alert-banner-dismiss-btn h-100 p-1" type="button" data-dismiss="alert"  aria-label="{{__('Close')}}">
                         <span class="far fa-times-circle" aria-hidden="true"> </span>
                     </button>
                 </div>
-                -->
+                {{--}}
             </div>
         </div>
     </div>
-
+    {{--}}
     @if (in_array(app()->make('play_role'), ['Administrator', 'Staff', 'Uploader', 'Courseadmin']) && !Request::is('queue'))
         <div class="container mt-1">
             <div class="row no-gutters">
@@ -30,4 +30,5 @@
             </div>
         </div>
     @endif
+    {{--}}
 </section>
