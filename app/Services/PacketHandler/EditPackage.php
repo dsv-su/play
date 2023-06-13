@@ -10,6 +10,7 @@ use App\Tag;
 use App\Video;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class EditPackage
@@ -102,6 +103,11 @@ class EditPackage
             $presentation->presenters = $request->supresenters;
         } else {
             $presentation->presenters = null;
+        }
+
+        //External preseneters
+        if(!empty($request->externalpresenters)) {
+            $presentation->presenters = array_merge($presentation->presenters,$request->externalpresenters);
         }
 
 
