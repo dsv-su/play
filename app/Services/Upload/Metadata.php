@@ -80,22 +80,40 @@ class Metadata
         if($subtitles = \Illuminate\Support\Facades\Storage::disk('play-store')->files($subtitlePath)) {
             switch($presentation->sublanguage) {
                 case('english'):
-                    $presentation->subtitles = [
-                        'English' => 'subtitle/' . basename($subtitles[0]),
-                        'Generated' => null
-                    ];
+                    if($presentation->type == 'manual') {
+                        $presentation->subtitles = [
+                            'English' => 'subtitle/' . basename($subtitles[0])
+                        ];
+                    } else {
+                        $presentation->subtitles = [
+                            'English' => 'subtitle/' . basename($subtitles[0]),
+                            'Generated' => ''
+                        ];
+                    }
                     break;
                 case('swedish'):
-                    $presentation->subtitles = [
-                        'Svenska' => 'subtitle/' . basename($subtitles[0]),
-                        'Generated' => ''
-                    ];
+                    if($presentation->type == 'manual') {
+                        $presentation->subtitles = [
+                            'Svenska' => 'subtitle/' . basename($subtitles[0])
+                        ];
+                    } else {
+                        $presentation->subtitles = [
+                            'Svenska' => 'subtitle/' . basename($subtitles[0]),
+                            'Generated' => ''
+                        ];
+                    }
                     break;
                 default:
-                    $presentation->subtitles = [
-                        'Svenska' => 'subtitle/' . basename($subtitles[0]),
-                        'Generated' => ''
-                    ];
+                    if($presentation->type == 'manual') {
+                        $presentation->subtitles = [
+                            'Svenska' => 'subtitle/' . basename($subtitles[0])
+                        ];
+                    } else {
+                        $presentation->subtitles = [
+                            'Svenska' => 'subtitle/' . basename($subtitles[0]),
+                            'Generated' => ''
+                        ];
+                    }
             }
             //Add reference to upload dir
             $presentation->upload_dir = '/data0/'. $this->storage() . '/' . $presentation->local;
