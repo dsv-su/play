@@ -78,9 +78,6 @@ class Metadata
 
         //Subtitle
         if($subtitles = \Illuminate\Support\Facades\Storage::disk('play-store')->files($subtitlePath)) {
-            /*$presentation->subtitles = Collection::make([
-                'English' => 'subtitle/' . basename($subtitles[0])
-            ]);*/
             switch($presentation->sublanguage) {
                 case('english'):
                     $presentation->subtitles = [
@@ -97,7 +94,8 @@ class Metadata
                         'Swedish' => 'subtitle/' . basename($subtitles[0])
                     ];
             }
-
+            //Add reference to upload dir
+            $presentation->upload_dir = '/data0/'. $this->storage() . '/' . $presentation->local;
 
         }
 
