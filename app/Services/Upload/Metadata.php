@@ -81,17 +81,20 @@ class Metadata
             switch($presentation->sublanguage) {
                 case('english'):
                     $presentation->subtitles = [
-                        'English' => 'subtitle/' . basename($subtitles[0])
+                        'English' => 'subtitle/' . basename($subtitles[0]),
+                        'Generated' => null
                     ];
                     break;
                 case('swedish'):
                     $presentation->subtitles = [
-                        'Swedish' => 'subtitle/' . basename($subtitles[0])
+                        'Svenska' => 'subtitle/' . basename($subtitles[0]),
+                        'Generated' => null
                     ];
                     break;
                 default:
                     $presentation->subtitles = [
-                        'Swedish' => 'subtitle/' . basename($subtitles[0])
+                        'Svenska' => 'subtitle/' . basename($subtitles[0]),
+                        'Generated' => null
                     ];
             }
             //Add reference to upload dir
