@@ -88,13 +88,13 @@ class Metadata
                 case('swedish'):
                     $presentation->subtitles = [
                         'Svenska' => 'subtitle/' . basename($subtitles[0]),
-                        'Generated' => null
+                        'Generated' => ''
                     ];
                     break;
                 default:
                     $presentation->subtitles = [
                         'Svenska' => 'subtitle/' . basename($subtitles[0]),
-                        'Generated' => null
+                        'Generated' => ''
                     ];
             }
             //Add reference to upload dir
