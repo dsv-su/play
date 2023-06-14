@@ -160,6 +160,23 @@ class ManualDownloadController extends Controller
         return true;
     }
 
+    public function subtitle(Video $video, Request $request)
+    {
+        //Create local storage directory
+        \Storage::disk('public')->makeDirectory('subtitles/'.$video->id);
+        //Create token
+        $file = new DownloadResource($video, new TicketPermissionHandler($video));
+
+        foreach(json_decode($video->subtitles, true) as $lang => $sub) {
+            if($lang == $request['lang']) {
+                $path = 'subtitles/'.$video->id.'/'. $sub;
+                $file->getFile($path, $this->base_uri() . '/' . $video->id . '/' . $sub);
+            }
+
+        }
+        return \Illuminate\Support\Facades\Storage::disk('public')->download($path);
+    }
+
     private function package($presentation)
     {
         $video = Video::find($presentation->id);

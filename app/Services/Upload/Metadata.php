@@ -81,9 +81,24 @@ class Metadata
             /*$presentation->subtitles = Collection::make([
                 'English' => 'subtitle/' . basename($subtitles[0])
             ]);*/
-            $presentation->subtitles = [
-                'English' => 'subtitle/' . basename($subtitles[0])
-            ];
+            switch($presentation->sublanguage) {
+                case('english'):
+                    $presentation->subtitles = [
+                        'English' => 'subtitle/' . basename($subtitles[0])
+                    ];
+                    break;
+                case('swedish'):
+                    $presentation->subtitles = [
+                        'Swedish' => 'subtitle/' . basename($subtitles[0])
+                    ];
+                    break;
+                default:
+                    $presentation->subtitles = [
+                        'Swedish' => 'subtitle/' . basename($subtitles[0])
+                    ];
+            }
+
+
         }
 
         //Subtitle generation

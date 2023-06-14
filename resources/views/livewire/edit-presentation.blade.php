@@ -144,7 +144,17 @@
                                       </span>
                                 </div>
                             </div>
-
+                            <!-- Subtitle -->
+                            <div class="row">
+                                <label class="col-4 col-lg-3 mb-0">{{ __("Subtitles:") }}</label>
+                                <div class="col">
+                                    @if(json_decode($video->subtitles))
+                                        @foreach(json_decode($video->subtitles, true) as $key => $sub)
+                                            {{$key}} <a href="{{route('download-subtitle-file', [$video, 'lang' => $key])}}"><i class="fa-solid fa-file-arrow-down"></i></a>
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </div>
                         </div>
 
                     </div>

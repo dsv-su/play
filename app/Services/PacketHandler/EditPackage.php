@@ -64,6 +64,9 @@ class EditPackage
             $presentation->tags = $tags;
         }
 
+        //Subtitle language
+        $presentation->sublanguage = $request->subtitle_language;
+
         $presentation->save();
 
         //Send to backend

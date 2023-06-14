@@ -109,6 +109,7 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     Route::get('/download/{video}', 'ManualDownloadController@start');
     Route::get('/download_zip/{video}', 'ManualDownloadController@browserDownloadZip');
     Route::get('/download_presentation/{video}', 'ManualDownloadController@download');
+    Route::get('/download/subtitlefile/{video}', [App\Http\Controllers\ManualDownloadController::class, 'subtitle'])->name('download-subtitle-file');
 
     //Video format
     Route::post('/updateVideoFormat', 'PlayController@updateVideoFormat')->name('updateVideoFormat');

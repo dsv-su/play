@@ -34,6 +34,7 @@ class PlayStoreNotify extends Model
             ->makeHidden('type')
             ->makeHidden('jobid')
             ->makeHidden('duration')
+            ->makeHidden('sublanguage')
             ->makeHidden('autogenerate_subtitles')
             ->makeHidden('user')
             ->makeHidden('user_email')

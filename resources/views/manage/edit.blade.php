@@ -8,14 +8,28 @@
         'individual_permissions' => $individual_permissions,
         'user_permission' => $user_permission
         ])
-    </form>
-    @if(!json_decode($video->subtitles))
+
+
     <div class="container px-3 px-sm-0">
         <div class="col-sm-12">
             <div class="rounded border shadow p-3 my-2">
+                <div class="row justify-content-between text-left">
                     @livewire('edit-autosubtitles', [
                     'video' => $video,
                     'presentation' => $editHandler])
+                <!--Language toggle-->
+                    <div id="sublanguageHolder" class="col">
+                        <div class="form-group col-12 col-md-6 flex-column d-flex">
+                            <label for="subtitleLanguage" >{{__("Subtitle language:")}}</label>
+                            <select class="w-50 form-group form-control" name="subtitle_language" style="margin: 5px 0;">
+                                <option value="english">{{__("English")}}</option>
+                                <option value="swedish">{{__("Swedish")}}</option>
+                            </select>
+                        </div>
+                    </div>
+    </form>
+                <!-- end language toggle -->
+                </div>
                     <div class="form-group col-md-6 flex-column d-flex">
                         <div id="subtitleHolder">
                             <label class="form-control-label px-1">{{ __("Add a subtitle file") }}</label>
@@ -39,8 +53,6 @@
             </div>
         </div>
     </div>
-    @endif
-
 
     <script>
         Dropzone.discover();
@@ -50,14 +62,17 @@
 
         let holder = document.getElementById('subtitleHolder');
         let holderinfo = document.getElementById('autoHolder');
+        let holderlanguage = document.getElementById('sublanguageHolder');
         window.addEventListener('contentChanged', e => {
             if(e.detail.autosubs) {
                 holder.style.display = 'none';
                 holderinfo.style.display = 'block';
+                holderlanguage.style.display = 'none';
             }
             else {
                 holder.style.display = 'block';
                 holderinfo.style.display = 'none';
+                holderlanguage.style.display = 'block';
             }
 
         })
