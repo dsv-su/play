@@ -6,6 +6,7 @@ use App\IndividualPermission;
 use App\ManualPresentation;
 use App\Services\Daisy\DaisyIntegration;
 use App\Services\Filters\VisibilityFilter;
+use App\Services\Pending\Pending;
 use App\Services\Student\StudentProfile;
 use App\Video;
 use App\VideoPermission;
@@ -48,16 +49,16 @@ class HomeController extends Controller
             if ($this->administrator()) {
                 //Administrator full visibility
                 $data['mypaginated'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
-                    return $query->whereIn('course_id', $courses);
+                    return $query->whereIn('course_id', $courses)->where('state', true);
                 })
-                    ->orWhereIn('id', $individual_videos)
+                    ->orWhereIn('id', $individual_videos)->where('state', true)
                     ->latest('creation')->Paginate(24, ['*'], 'my')->onEachSide(1);
             } else {
                 //Non administrator restricted visibility
                 $data['mypaginated'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($courses) {
-                    return $query->whereIn('course_id', $courses)->where('visibility', true);
+                    return $query->whereIn('course_id', $courses)->where('visibility', true)->where('state', true);
                 })
-                    ->orWhereIn('id', $individual_videos)
+                    ->orWhereIn('id', $individual_videos)->where('state', true)
                     ->latest('creation')->Paginate(24, ['*'], 'my')->onEachSide(1);
             }
 
@@ -78,21 +79,21 @@ class HomeController extends Controller
         if($this->administrator()) {
             //Administrator full visibility
             $data['activepaginated_ht'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses_ht) {
-                return $query->whereIn('course_id', $active_courses_ht);
+                return $query->whereIn('course_id', $active_courses_ht)->where('state', true);
             })->latest('creation')->fastPaginate(24, ['*'], 'active_ht')->onEachSide(1);
 
             $data['previouspaginated_ht'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($previous_courses_ht) {
-                return $query->whereIn('course_id', $previous_courses_ht);
+                return $query->whereIn('course_id', $previous_courses_ht)->where('state', true);
             })->latest('creation')->fastPaginate(24, ['*'], 'previous_ht')->onEachSide(1);
 
         } else {
             //Non administrator restricted visibility
             $data['activepaginated_ht'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses_ht) {
-                return $query->whereIn('course_id', $active_courses_ht)->where('visibility', true);
+                return $query->whereIn('course_id', $active_courses_ht)->where('visibility', true)->where('state', true);
             })->latest('creation')->fastPaginate(24, ['*'], 'active_ht')->onEachSide(1);
 
             $data['previouspaginated_ht'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($previous_courses_ht) {
-                return $query->whereIn('course_id', $previous_courses_ht)->where('visibility', true);
+                return $query->whereIn('course_id', $previous_courses_ht)->where('visibility', true)->where('state', true);
             })->latest('creation')->fastPaginate(24, ['*'], 'previous_ht')->onEachSide(1);
         }
 
@@ -108,12 +109,12 @@ class HomeController extends Controller
         if($this->administrator()) {
             //Administrator full visibility
             $data['activepaginated_vt'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses_vt) {
-                return $query->whereIn('course_id', $active_courses_vt);
+                return $query->whereIn('course_id', $active_courses_vt)->where('state', true);
             })->latest('creation')->fastPaginate(24, ['*'], 'active_vt')->onEachSide(1);
         } else {
             //Non administrator restricted visibility
             $data['activepaginated_vt'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($active_courses_vt) {
-                return $query->whereIn('course_id', $active_courses_vt)->where('visibility', true);
+                return $query->whereIn('course_id', $active_courses_vt)->where('visibility', true)->where('state', true);
             })->latest('creation')->fastPaginate(24, ['*'], 'active_vt')->onEachSide(1);
         }
 
@@ -123,20 +124,14 @@ class HomeController extends Controller
         // All courses (tab 3)
         if($this->administrator()) {
             //Administrator full visibility
-            $data['allpaginated'] = Video::with('category', 'video_course.course')->latest('creation')->fastPaginate(24, ['*'], 'all')->onEachSide(1);
+            $data['allpaginated'] = Video::with('category', 'video_course.course')->where('state', true)->latest('creation')->fastPaginate(24, ['*'], 'all')->onEachSide(1);
         } else {
             //Non administrator restricted visibility
-            $data['allpaginated'] = Video::with('category', 'video_course.course')->where('visibility', true)->latest('creation')->fastPaginate(24, ['*'], 'all')->onEachSide(1);
+            $data['allpaginated'] = Video::with('category', 'video_course.course')->where('visibility', true)->where('state', true)->latest('creation')->fastPaginate(24, ['*'], 'all')->onEachSide(1);
         }
 
         //Filter
         $data['latest'] = $visibility->filter($data['allpaginated']);
-
-        // Add placeholders for manual presentations that are currently processed
-        $pending = ManualPresentation::where('user', app()->make('play_username'))->where('status', 'sent')->latest('created')->get();
-
-        $data['upload'] = true;
-        $data['pending'] = $pending;
 
         return view('home.index', $data);
     }

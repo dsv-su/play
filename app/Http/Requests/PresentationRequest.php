@@ -23,7 +23,7 @@ class PresentationRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        /*return [
             'id' => 'required',
             'title' => 'required',
             'thumb' => 'required',
@@ -31,6 +31,7 @@ class PresentationRequest extends FormRequest
             'presenters' => 'array',
             'courses' => 'array',
             'streams' => 'array'
-        ];
+        ];*/
+        return [];
     }
 }

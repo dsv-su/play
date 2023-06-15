@@ -285,6 +285,10 @@
     -webkit-animation: spin 1s ease-in-out infinite;
 }
 
+.pending_loader {
+
+}
+
 .grey-bg {
     background-color: #F5F7FA;
 }
@@ -472,10 +476,6 @@ button:focus {
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
     outline-width: 0
-}
-
-.modal {
-   /* background-image: linear-gradient(rgba(104,199,255,1) 0%, rgba(255,255,255,1) 90%) */
 }
 
 .counter {

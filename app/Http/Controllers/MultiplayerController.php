@@ -69,8 +69,15 @@ class MultiplayerController extends Controller
 
         // Construct Presentation json from DB
         $presentation = array();
+        $videosource = array();
+        $presentation['id'] = $video->id;
+        $presentation['title'] = $video->title;
+        $presentation['thumb'] = $video->thumb;
+
         $streams = Stream::where('video_id', $video->id)->where('hidden', 0)->get();
-        foreach ($streams as $key => $stream) {
+
+        //Deprecated in the updated player
+        /*foreach ($streams as $key => $stream) {
             $presentation['sources'][] = [
                 'poster' => $this->base_uri() .'/' . $video->id . '/' .$stream->poster,
                 'playAudio' => (bool) $stream->audio,
@@ -80,15 +87,38 @@ class MultiplayerController extends Controller
             foreach ($resolutions as $resolution) {
                 $presentation['sources'][$key]['video'][$resolution->resolution] = $this->base_uri() .'/'. $video->id . '/' . $resolution->filename;
             }
-        }
+        }*/
 
-        $presentation['id'] = $video->id;
-        $presentation['title'] = $video->title;
-        $presentation['thumb'] = $video->thumb;
+        //New presentation structure
+        foreach ($streams as $key => $stream) {
+            $resolutions = StreamResolution::where('stream_id', $stream->id)->get();
+
+            foreach ($resolutions as $resolution) {
+                $videosource[$resolution->resolution] = $this->base_uri() .'/'. $video->id . '/' . $resolution->filename;
+            }
+            $build = \Illuminate\Support\Collection::make([
+                'video' => \Illuminate\Support\Collection::make($videosource),
+                'poster' => $this->base_uri() . '/' . $video->id . '/' . $stream->poster,
+                'playAudio' => (bool)$stream->audio
+            ]);
+
+            $buildsource[$stream->name] = $build;
+
+        }
+        $presentation['sources'] = \Illuminate\Support\Collection::make($buildsource);
+
+
 
         //Add subtitles
-        if($video->subtitles) {
-            $presentation['subtitles'] = $this->base_uri() .'/' . $video->id . '/subtitle.vtt';
+        if(json_decode($video->subtitles)) {
+            $subs = [];
+            $subtitles = json_decode($video->subtitles, true);
+            foreach($subtitles as $key => $subtitle) {
+                $subs[$key] = $this->base_uri() . '/' . $video->id . '/' . $subtitle;
+            }
+            if(!empty($subs)) {
+                $presentation['subtitles'] = $subs;
+            }
         }
 
         //Add valid token

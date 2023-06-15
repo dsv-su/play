@@ -20,9 +20,9 @@
         </div>
     @endif
 @endif
-<div class="shadow-lg shadow-warning card video m-auto @if($video->hidden) faded @endif" id="{{$video->id}}">
+<div wire:ignore class="shadow-lg shadow-warning card video m-auto @if($video->hidden) faded @endif" id="{{$video->id}}">
     <div class="flex-column m-1 action-icons">
-        <div data-placement="left" data-toggle="tooltip" data-title="{{__("Share presentation")}}">
+       <div data-placement="left" data-toggle="tooltip" data-title="{{__("Share presentation")}}">
             <a href="#" data-toggle="modal" data-target="#shareModal{{$video->id}}"
                title="{{ __('Share presentation') }}" class="btn btn-dark btn-sm">
                 <i class="fas fa-external-link-alt fa-fw"></i>
@@ -57,7 +57,7 @@
     </div>
     <a target="_blank" rel="noopener noreferrer" href="{{ route('player', ['video' => $video]) }}">
         <div class="card-header position-relative"
-             style="background-image: @if ($video->hidden) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); width: 100%; height: 0; object-fit: cover; background-repeat: no-repeat; background-position: 50% 50%;">
+             style="background-image: @if ($video->hidden) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb . '?'. time())}}); width: 100%; height: 0; object-fit: cover; background-repeat: no-repeat; background-position: 50% 50%;">
             <!-- Icons -->
             <div class="icons m-1">
                 <!-- Group Permissions icons-->
@@ -95,6 +95,12 @@
                         <i class="fa-solid fa-key"></i>
                     </div>
                 @endif
+                <!-- CC -->
+                @if(json_decode($video->subtitles))
+                    <div class="visibility mx-1" data-toggle="tooltip" title="{{__("Subtitles")}}">
+                        <i class="fa-regular fa-closed-captioning"></i>
+                    </div>
+                @endif
             </div>
             <!-- Visibility banner -->
             @if ($video->hidden)
@@ -125,7 +131,10 @@
         <div class="d-flex align-items-start">
             <div class="">
                 <h4 class="card-text font-1rem px-1 py-2">
-                    <a target="_blank" rel="noopener noreferrer" href="{{ route('player', ['video' => $video]) }}" class="link">{{ $video->LangTitle }}</a>
+                    <div data-placement="auto" data-toggle="tooltip" data-title="{{$video->LangTitle}}">
+                        <a target="_blank" rel="noopener noreferrer" href="{{ route('player', ['video' => $video]) }}" class="link">{{ Str::limit($video->LangTitle, 27) }}</a>
+                    </div>
+
                 </h4>
             </div>
             @if ($video->description)
@@ -144,13 +153,14 @@
             @endif
         </div>
 
-        <!-- While testing we need id -->
-        <p class="card-text">
-            @foreach($video->getUniqueDesignations() as $designation)
-                <a href="/designation/{{$designation}}"
-                   class="badge badge-primary">{{$designation}}</a>
-            @endforeach
 
+        <p class="card-text">
+            @if (!$video->courses()->isEmpty())
+                @foreach($video->getUniqueDesignations() as $designation)
+                    <a href="/designation/{{$designation}}"
+                       class="badge badge-primary">{{$designation}}</a>
+                @endforeach
+            @endif
             @if (!$video->presenters()->isEmpty())
                 @foreach($video->presenters() as $presenter)
                     <a href="/presenter/{{$presenter->username}}" class="badge badge-light">{{$presenter->name}}</a>
@@ -172,7 +182,7 @@
         @if($manageview ?? false)
             <div class="text-right">
                  <span data-toggle="tooltip" data-placement="left" data-title="{{__("Number of Clicks")}}">
-                    <a {{--}}href="{{route('stats', $video->id)}}" {{--}} type="button" class="btn btn-sm px-1">
+                    <a {{--}}href="{{route('stats', $video->id)}}" {{--}} href="#" type="button" class="btn btn-sm px-1">
                         <span style="color: Tomato;"><i class="fa-solid fa-chart-column"></i></span>
                         @if($stats_playback[$video->id] ?? false)
                             {{$stats_playback[$video->id]}}
@@ -182,7 +192,7 @@
                     </a>
                 </span>
                 <span data-toggle="tooltip" data-placement="left" data-title="{{__("Number of Downloads")}}">
-                    <a {{--}} href="{{route('stats', $video->id)}}" {{--}} type="button" class="btn btn-sm px-1">
+                    <a {{--}} href="{{route('stats', $video->id)}}" {{--}} href="#" type="button" class="btn btn-sm px-1">
                         <span style="color: #007bff;"><i class="fa-solid fa-download"></i></span>
                         @if($stats_download[$video->id] ?? false)
                             {{$stats_download[$video->id]}}

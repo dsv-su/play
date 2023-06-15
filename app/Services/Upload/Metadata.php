@@ -4,10 +4,13 @@ namespace App\Services\Upload;
 
 use App\Jobs\JobUploadFailedNotification;
 use App\ManualPresentation;
+use App\Stream;
+use Illuminate\Support\Collection;
 
 class Metadata
 {
     protected $sourse = [];
+    protected $gsubtitles = [];
 
     public function create(ManualPresentation $presentation)
     {
@@ -47,18 +50,26 @@ class Metadata
             //Create thumb for uploaded video
             $thumburl = $Thumb->create($finalPath, $filename, $thumbcreated_after);
 
-            //Add video source
-            $this->source[$key]['video'] = 'video/'. basename($filename);
+            //Sources
 
-            //Add poster source
             $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($filename));
-            $this->source[$key]['poster'] = 'poster/'. $thumb_name . '.png';
+            //Add video source
 
-            //Add playAudio default setting
-            if($key > 0 ) {
-                $this->source[$key]['playAudio'] = false;
-            } else {
-                $this->source[$key]['playAudio'] = true;
+            foreach(\Illuminate\Support\Facades\Storage::disk('play-store')->files($videoPath) as $stream => $f) {
+                $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($f));
+                if($stream == 0) {
+                    $this->source['main'] = [
+                        'video' => 'video/'. basename($f),
+                        'poster' => 'poster/'. $thumb_name . '.png',
+                        'playAudio' => true,
+                    ];
+                } else {
+                    $this->source['camera'.$stream] = [
+                        'video' => 'video/'. basename($f),
+                        'poster' => 'poster/'. $thumb_name . '.png',
+                        'playAudio' => false,
+                    ];
+                }
             }
 
             $presentation->sources = $this->source;
@@ -67,8 +78,63 @@ class Metadata
 
         //Subtitle
         if($subtitles = \Illuminate\Support\Facades\Storage::disk('play-store')->files($subtitlePath)) {
-            $presentation->subtitles = 'subtitle/' . basename($subtitles[0]);
+            switch($presentation->sublanguage) {
+                case('english'):
+                    if($presentation->type == 'manual') {
+                        $presentation->subtitles = [
+                            'English' => 'subtitle/' . basename($subtitles[0])
+                        ];
+                    } else {
+                        $presentation->subtitles = [
+                            'English' => 'subtitle/' . basename($subtitles[0]),
+                            'Generated' => ''
+                        ];
+                    }
+                    break;
+                case('swedish'):
+                    if($presentation->type == 'manual') {
+                        $presentation->subtitles = [
+                            'Svenska' => 'subtitle/' . basename($subtitles[0])
+                        ];
+                    } else {
+                        $presentation->subtitles = [
+                            'Svenska' => 'subtitle/' . basename($subtitles[0]),
+                            'Generated' => ''
+                        ];
+                    }
+                    break;
+                default:
+                    if($presentation->type == 'manual') {
+                        $presentation->subtitles = [
+                            'Svenska' => 'subtitle/' . basename($subtitles[0])
+                        ];
+                    } else {
+                        $presentation->subtitles = [
+                            'Svenska' => 'subtitle/' . basename($subtitles[0]),
+                            'Generated' => ''
+                        ];
+                    }
+            }
+            //Add reference to upload dir
+            $presentation->upload_dir = '/data0/'. $this->storage() . '/' . $presentation->local;
+
         }
+
+        //Subtitle generation
+        if($presentation->pkg_id) {
+            $stream = Stream::where('video_id', $presentation->pkg_id)->where('audio', true)->first();
+            $this->gsubtitles['Generated'] = Collection::make([
+                'type' => 'whisper',
+                'source' => $stream->name
+            ]);
+        } else {
+            $this->gsubtitles['Generated'] = Collection::make([
+                'type' => 'whisper',
+                'source' => 'main'
+            ]);
+        }
+
+        $presentation->generate_subtitles = $this->gsubtitles;
 
         return $presentation->save();
     }

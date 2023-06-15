@@ -49,6 +49,9 @@ class DownloadHandlerClear extends Command
             }
         }
 
+        //Remove downloaded subtitles
+        Storage::disk('public')->deleteDirectory('subtitles');
+
         return 0;
     }
 }

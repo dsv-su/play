@@ -15,6 +15,8 @@ use App\VideoPermission;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Pion\Laravel\ChunkUpload\Exceptions\UploadFailedException;
 use Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException;
 use Pion\Laravel\ChunkUpload\Handler\AbstractHandler;
@@ -34,7 +36,7 @@ class UploadController extends Controller
         $file->user = app()->make('play_username');
         $file->user_email = app()->make('play_email');
         $file->local = Carbon::now()->toDateString('Y-m-d') . '_' . rand(1, 999);
-        $file->base = '-';
+        $file->upload_dir = '';
         $file->title = '';
         $file->title_en = '';
         $file->presenters = [];
@@ -45,6 +47,7 @@ class UploadController extends Controller
         $file->created = now()->format('Y-m-d');
         $file->duration = 0;
         $file->sources = [];
+        $file->generate_subtitles = [];
         $file->save();
         $file->local = $file->local . $file->id;
         $file->save();
@@ -88,6 +91,7 @@ class UploadController extends Controller
 
             //Retrived the upload
             $manualPresentation = ManualPresentation::find($id);
+            $manualPresentation->type = 'manual';
 
             //Presenters
             //Add current user in array
@@ -111,8 +115,11 @@ class UploadController extends Controller
             if ($request->courses) {
                 foreach ($request->courses as $course) {
                     $daisy_courses[] = (int)$course;
-                    $courses[] = Course::find($course)->designation;
-
+                    $course = Course::find($course);
+                    $courses[] = \Illuminate\Support\Collection::make([
+                        'designation' => $course->designation,
+                        'semester' => Str::lower($course->semester) . substr($course->year, 2)
+                    ]);
                 }
             } else {
                 $courses = [];
@@ -158,7 +165,7 @@ class UploadController extends Controller
 
             //Update model
             $manualPresentation->status = 'pending';
-            $manualPresentation->base = '/data0/'. $this->storage() . '/' . $manualPresentation->local;
+            $manualPresentation->upload_dir = '/data0/'. $this->storage() . '/' . $manualPresentation->local;
             $manualPresentation->title = $request->title;
             $manualPresentation->title_en = $request->title_en;
             $manualPresentation->description = $request->description ?? '';
@@ -210,7 +217,7 @@ class UploadController extends Controller
 
         // Send notify
         $notify = new PlayStoreNotify($presentation);
-        $notify->sendSuccess('manual');
+        $notify->sendSuccess('default');
 
         return redirect('/');
     }
@@ -337,10 +344,7 @@ class UploadController extends Controller
         $extension = $file->getClientOriginalExtension();
         $filename = str_replace(".".$extension, "", $file->getClientOriginalName()); // Filename without extension
 
-        //Generate a unique name
-        //$filename = $file->hashName();
-
-        //We use the original name
+        //We use the original hashed name
         return $filename.".".$extension;
     }
 
@@ -359,6 +363,7 @@ class UploadController extends Controller
         $posterPath = $this->storage() . "/{$dir}/poster/";
         $finalFilePath = $filePath;
         $finalPosterPath = $posterPath;
+
 
         if (Storage::disk('play-store')->delete($finalFilePath.$file) ){
 

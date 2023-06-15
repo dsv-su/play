@@ -1,14 +1,5 @@
 @extends('layouts.suplay')
 @section('content')
-    @if (isset($pending) && $pending->count() && !session()->has('message'))
-        <div class="container banner-inner">
-            <div class="row no-gutters w-100">
-                <div class="alert alert-info w-100 mb-5">
-                    {{__('Some of the uploaded presentations are being processed now. You can see them under "All presentations" tab.')}}
-                </div>
-            </div>
-        </div>
-    @endif
     @include('layouts.partials.searchbox')
     <!-- Header message section -->
     <div class="container banner-inner">
@@ -44,7 +35,6 @@
                 @if (isset($my) && !$my->isEmpty())
                     <!-- Paginated tab -->
                     <li class="nav-item pb-0">
-
                         <a class="nav-link" href="#my" data-toggle="tab" role="tab" aria-controls="my"
                            title="
                             @if(in_array(app()->make('play_role'), ['Courseadmin','Uploader', 'Staff']))
@@ -54,35 +44,35 @@
                             @endif
                             <span class="count-label">{{$mypaginated->total()}}</span>
                         </a>
-
                     </li>
                 @endif
                 <!-- VT 2023 -->
                 @if (isset($active_vt) && !$active_vt->isEmpty())
                     <!-- Paginated tab -->
-                        <li class="nav-item pb-0">
-                            <a class="nav-link" href="#active_vt" data-toggle="tab" role="tab" aria-controls="active_vt"
-                               title="@lang('lang.active_courses_vt')">@lang('lang.active_courses_vt') <span
-                                    class="count-label">{{$activepaginated_vt->total()}}</span></a>
-                        </li>
+                    <li class="nav-item pb-0">
+                        <a class="nav-link" href="#active_vt" data-toggle="tab" role="tab" aria-controls="active_vt"
+                           title="@lang('lang.active_courses_vt')">@lang('lang.active_courses_vt') <span
+                                class="count-label">{{$activepaginated_vt->total()}}</span></a>
+                    </li>
                 @endif
                 <!-- HT 2023 -->
                 @if (isset($active_ht) && !$active_ht->isEmpty())
                     <!-- Paginated tab -->
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#active_ht" data-toggle="tab" role="tab" aria-controls="active_ht"
-                           title="@lang('lang.active_courses_ht')">@lang('lang.active_courses_ht') <span
-                                    class="count-label">{{$activepaginated_ht->total()}}</span></a>
+                           title="@lang('lang.active_courses_ht')">@lang('lang.active_courses_ht')
+                            <span class="count-label">{{$activepaginated_ht->total()}}</span>
+                        </a>
                     </li>
                 @endif
                 <!-- HT 2022 -->
                 @if (isset($previous_ht) && !$previous_ht->isEmpty())
                     <!-- Paginated tab -->
-                        <li class="nav-item pb-0">
+                    <li class="nav-item pb-0">
                             <a class="nav-link" href="#previous_ht" data-toggle="tab" role="tab" aria-controls="previous_ht"
                                title="@lang('lang.previous_courses_ht')">@lang('lang.previous_courses_ht') <span
                                     class="count-label">{{$previouspaginated_ht->total()}}</span></a>
-                        </li>
+                    </li>
                 @endif
 
                 <!-- Paginated tab -->
@@ -91,7 +81,9 @@
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#all" data-toggle="tab" role="tab" aria-controls="all"
                            title="@lang('lang.latest')">@lang('lang.latest') <span
-                                    class="count-label">{{$allpaginated->total()}}</span></a>
+                                    class="count-label">{{$allpaginated->total()}}</span>
+                            @livewire('pending-presentations')
+                        </a>
                     </li>
                 @endif
                 {{--}}
@@ -241,7 +233,7 @@
                     </div>
                     <!-- -->
                 </div>
-        @endif
+            @endif
             <!-- Content tab All -->
             <div id="all" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-E">
                 @if ((isset($latest) && $latest->count()) || isset($pending) && $pending->count())
@@ -300,14 +292,9 @@
                         </div>
                     @endif
 
+
                     <div class="card-deck inner">
-                        @if (isset($pending) && $pending->count())
-                            @foreach ($pending as $key => $video)
-                                <div class="col my-3">
-                                    @include('home.pending_video')
-                                </div>
-                            @endforeach
-                        @endif
+                        @livewire('pending-video')
                         @if (isset($tagged) && $tagged)
                             @foreach($tagged as $tagname => $taggedvideos)
                                 <div class="row mx-1 mt-2">
@@ -350,6 +337,7 @@
                                 <div class="card video my-0 mx-auto"></div>
                             </div>
                         @endif
+
                     </div>
                 @else
                     <p class="my-3">

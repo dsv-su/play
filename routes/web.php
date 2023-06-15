@@ -39,7 +39,7 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     Route::post('/tag/{tag}', 'SearchController@viewByTag')->name('tag.filter');
     Route::get('/presenter/{presenter}', 'SearchController@viewByPresenter')->name('presenter.presentations');
     Route::post('/presenter/{presenter}', 'SearchController@viewByPresenter')->name('presenter.filter');
-    Route::get('/queue', 'PlayController@conversionQueue')->name('conversion.queue');
+    //Route::get('/queue', 'PlayController@conversionQueue')->name('conversion.queue'); //Deprecated in new pipeline
 
     // Search and autocomplete
     Route::get('/search/{q}', 'SearchController@search')->name('search');
@@ -72,8 +72,10 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     //Route::get('/manage/courses', 'ManageCourseSettingsController@index')->name('manage_course');
     Route::get('/course/{courseid}/edit', 'ManageCourseSettingsController@edit')->name('course_edit');
     Route::post('/course/{courseid}/store', 'ManageCourseSettingsController@store')->name('course_edit_store');
+    //Bulk edit
     Route::get('/edit/bulk/', 'EditController@bulkEditShow')->name('edit.bulk.show');
     Route::post('/edit/bulk/', 'EditController@bulkEditStore')->name('edit.bulk.store');
+
     Route::get('/edit/{video}', 'EditController@show')->name('presentation_edit');
     Route::post('/edit/{video}', 'EditController@edit')->name('editpresentation');
     Route::post('/delete/{id}', 'ManagePresentationController@delete')->name('presentation.delete');
@@ -107,6 +109,7 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     Route::get('/download/{video}', 'ManualDownloadController@start');
     Route::get('/download_zip/{video}', 'ManualDownloadController@browserDownloadZip');
     Route::get('/download_presentation/{video}', 'ManualDownloadController@download');
+    Route::get('/download/subtitlefile/{video}', [App\Http\Controllers\ManualDownloadController::class, 'subtitle'])->name('download-subtitle-file');
 
     //Video format
     Route::post('/updateVideoFormat', 'PlayController@updateVideoFormat')->name('updateVideoFormat');

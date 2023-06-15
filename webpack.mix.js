@@ -17,6 +17,7 @@ mix.sass('resources/scss/dsv.scss','public/css')
         'resources/css/upload.css',
         'resources/css/faq.css',
         'resources/css/bar.css',
+        'resources/css/spinner.css',
         'node_modules/bootstrap-select/dist/css/bootstrap-select.min.css',
         'node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css',
         'node_modules/@fortawesome/fontawesome-free/css/all.css',

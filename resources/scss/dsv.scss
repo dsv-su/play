@@ -32,3 +32,40 @@
     color: #FFFFFF;
   }
 }
+
+.pending_box {
+    position: relative;
+    z-index: 0;
+    border-radius: 6px;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        z-index: -2;
+        left: -50%;
+        top: -50%;
+        width: 200%;
+        height: 200%;
+        background-color: #185ee0;
+        background-repeat: no-repeat;
+        background-size: 50% 50%, 50% 50%;
+        background-position: 0 0, 100% 0, 100% 100%, 0 100%;
+        background-image: linear-gradient(#185ee0, #185ee0), linear-gradient(#ffffff, #ffffff), linear-gradient(#185ee0, #185ee0), linear-gradient(#ffffff, #ffffff);
+        animation: rotate 4s linear infinite;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        left: 4px;
+        top: 4px;
+        bottom: 3px;
+        right: 3px;
+        width: calc(100% - 8px);
+        height: calc(100% - 8px);
+        background: white;
+        border-radius: 3px;
+    }
+}

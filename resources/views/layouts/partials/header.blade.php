@@ -175,16 +175,6 @@
                     @endif
                 @endif
             </div>
-            <!-- Conversion queue -->
-            @if (in_array(app()->make('play_role'), ['Administrator', 'Staff', 'Uploader', 'Courseadmin']) && !Request::is('queue'))
-                <div class="align-middle ml-auto my-auto">
-                    <span class="badge badge-primary ml-2 mb-2" data-toggle="tooltip" title="{{__("Show upload progress")}}">
-                        <div class="col d-flex align-items-center justify-content-center">
-                            <a href={{route('conversion.queue')}}><i class="fa-solid fa-arrow-up-from-bracket"></i></a>
-                        </div>
-                    </span>
-                </div>
-            @endif
             <!-- Lang localization -->
             <div class="align-middle ml-auto my-auto">
                 <nav class="navbar navbar-expand-lg container">
@@ -219,14 +209,14 @@
             </div>
             <!-- end Lang localization -->
             <!-- Help manual -->
-{{--}}
+
             <div class="align-middle ml-auto my-auto">
                 <span class="badge badge-primary ml-2 mb-2" data-toggle="tooltip" title="{{__("Help")}}">
                     <a @if(app()->make('play_faq') == false) href="{{route('faq')}}" @else href="{{ app()->make('play_faq_url') }}" @endif >
                         <button type="button" class="hamburger animated fadeInLeft is-closed">
                             <span class="hamb-top moving-left">
                                 <i class="fa-solid fa-angle-right fa-2x"></i>
-                                <div class="align-middle" style="position:absolute; bottom:8px; left:32px;">
+                                <div class="align-middle" style="position:absolute; bottom:8px; left:37px;">
                                     {{__("Help")}}
                                 </div>
                             </span>
@@ -236,7 +226,7 @@
                     </a>
                 </span>
             </div>
-{{--}}
+
         </nav>
 
         <nav class="d-lg-none d-flex align-items-center ml-auto" aria-label="Huvudmeny">
@@ -495,6 +485,6 @@
         </nav>
     </div>
 </header>
-
+{{--}}
 @include('layouts.partials.redirect_play2')
-
+{{--}}

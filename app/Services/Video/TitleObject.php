@@ -28,7 +28,7 @@ class TitleObject
     {
         if ($this->json) {
             if (is_null($this->title['sv'])) {
-                return 'Okänd titel';
+                return 'Bearbetar';
             }
             return $this->title['sv'];
         } else {
@@ -40,7 +40,7 @@ class TitleObject
     {
         if ($this->json) {
             if (is_null($this->title['en'])) {
-                return 'Unknown title';
+                return 'Processing';
             }
             return $this->title['en'];
         } else {

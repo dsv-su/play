@@ -10,6 +10,7 @@ use App\Presenter;
 use App\Services\Daisy\DaisyAPI;
 use App\Services\Filters\VisibilityFilter;
 use App\Services\Ldap\SukatUser;
+use App\Services\PacketHandler\EditPackage;
 use App\Stream;
 use App\Tag;
 use App\Video;
@@ -75,12 +76,18 @@ class EditController extends Controller
             // abort(401);
         }
 
-        return view('manage.edit', compact('video', 'permissions', 'presenters', 'individual_permissions', 'user_permission'));
+        //Init new ManualPresentation instance
+        $editHandler = (new UploadController())->init_upload();
+        $editHandler->pkg_id = $video->id;
+        $editHandler->save();
+
+        return view('manage.edit', compact('video', 'permissions', 'presenters', 'individual_permissions', 'user_permission', 'editHandler'));
     }
 
     public function edit(Video $video, Request $request)
     {
         if ($request->isMethod('post')) {
+
             //Video attributes
             $video->title = $request->title;
             $video->title_en = $request->title_en;
@@ -95,9 +102,7 @@ class EditController extends Controller
             if ($request->presenteruids && $request->presenternames) {
                 foreach ($request->presenteruids as $key => $uid) {
                     $name = $request->presenternames[$key];
-                    //   $username = preg_filter("/[^(]*\(([^)]+)\)[^()]*/", "$1", $presenter);
-                    //   $name = trim(preg_replace("/\([^)]+\)/", "", $presenter));
-                    if (!$uid || strpos($uid, 'external') !== false) {
+                    if ($request->presenterorigin[$key] == 'external') {
                         $presenter = Presenter::firstOrCreate([
                             'name' => $name,
                             'description' => 'external'
@@ -120,6 +125,7 @@ class EditController extends Controller
                     }
                 }
             }
+
             //Update group permission for presentation
             if ($videoPermission = VideoPermission::where('video_id', $video->id)->first()) {
                 //Exist
@@ -229,12 +235,14 @@ class EditController extends Controller
 
         Cache::flush();
 
-        //return redirect(session('links')[2])->with('message', __("Presentation successfully updated"));
+        //Create notify package
+        $backend = new EditPackage($video);
+        $backend->sendBackend($request);
 
         if(count(session('links') ?? []) <= 3) {
-            return redirect()->route('home')->with('message', __("Presentation successfully updated"));
+            return redirect()->route('home')->with('message', __("Processing the update"));
         } else {
-            return redirect(session('links')[2])->with('message', __("Presentation successfully updated"));
+            return redirect(session('links')[2])->with('message', __("Processing the update"));
         }
 
     }
@@ -246,6 +254,16 @@ class EditController extends Controller
         $videos = $videos->filter(function ($i) {
             return $i->edit;
         });
+
+        //Initiate for each selected video a editprocess
+        foreach ($videos as $video) {
+            //Init new ManualPresentation instance
+            $editHandler = (new UploadController())->init_upload();
+            $editHandler->pkg_id = $video->id;
+            $editHandler->save();
+        }
+
+
         return view('manage.bulk-edit-presentation', ['videos' => $videos]);
     }
 
@@ -332,6 +350,11 @@ class EditController extends Controller
                 ]);
             }
             $video->save();
+
+            //Create notify package
+
+            $backend = new EditPackage($video);
+            $backend->sendBulkBackend($request);
         }
 
         return redirect(session('links')[2])->with('message', __("Presentations are successfully updated"));
