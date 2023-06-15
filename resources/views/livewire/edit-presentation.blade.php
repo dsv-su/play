@@ -75,7 +75,7 @@
                             @endif
 
                             <input type="hidden" name="p" value="{{$video->id}}">
-                            
+
                         </div>
 
                         <div class="form-group col-md-6 col-lg-8 px-md-3 mb-0">
