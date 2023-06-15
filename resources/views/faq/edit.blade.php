@@ -60,7 +60,22 @@
                     <img class="w-75" src="{{asset('images/manual/edit3_swe.png')}}" alt="Edit presentation" style="border: 1px solid #000; padding: 0;">
                 @endif
                 <br><br>
-                <p>{{__("Save your settings and edits by clicking the 'save' button on the bottom of the page.")}}</p>
+                <h3>{{__("Add or generate subtitles for the presentation")}}</h3>
+                <p>{{__("You can automatically generate subtitles for your presentation by switching the toggle switch on. Subtitles will be generated with Whisper released by OpenAI, an automatic speech recognition system to generate subtitles. If you would rather upload your own subtitle file, you can leave the toggle switch off and upload the subtitle file in the box.")}}</p>
+                <br>
+                <h4>{{__("Download a transcribed subtitle file")}}</h4>
+                <p>{{__("If you want to edit a subtitle file or an auto-generated file, click the desired button after 'Subtitles' here at the top.")}}</p>
+                <br>
+                <img class="w-75" src="{{asset('images/manual/subtitlefile.png')}}" alt="Edit presentation" style="border: 1px solid #000; padding: 0;">
+                <br><br>
+                <p>{{__("The transcribed file will download and you can now edit it.")}}</p>
+                <br><br>
+                <h4>{{__("Upload an edited subtitle file")}}</h4>
+                <p>{{__("Upload an edited subtitle file by dropping it in the upload box along the bottom of the edit view. Also select language.")}}</p>
+                <br>
+                <img class="w-75" src="{{asset('images/manual/editsubtitle.png')}}" alt="Edit presentation" style="border: 1px solid #000; padding: 0;">
+                <br><br><br><br>
+                <p><strong>{{__("Save your settings and edits by clicking the 'save' button on the bottom of the page.")}}</strong></p>
             </article>
 
         </div>
