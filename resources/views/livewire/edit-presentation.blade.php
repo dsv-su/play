@@ -74,19 +74,8 @@
                                 </div>
                             @endif
 
-
-                                {{--}}
-                                <div class="rounded border shadow p-3 my-2">
-                                @if($editt)
-                                <div class="flex justify-center">
-                                    <img src="{{$editt->temporaryUrl}}?{{ rand() }}" width="90%">
-                                </div>
-                                @endif
-                                <small>Upload new thumb</small>
-                                <input type="file" class="form-control form-control-sm" wire:model="editt">
-                                    @error('editt') <span class="error">{{ $message }}</span> @enderror
-                                </div>
-                                {{--}}
+                            <input type="hidden" name="p" value="{{$video->id}}">
+                            
                         </div>
 
                         <div class="form-group col-md-6 col-lg-8 px-md-3 mb-0">

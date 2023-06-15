@@ -29,7 +29,11 @@ class CheckEditPermission
                 return redirect()->guest(route('sulogin'));
             }
         } else {
-            $video = Video::find(basename($request->getUri()));
+            if($video = Video::find($request->p)) {
+
+            } else {
+                $video = Video::find(basename($request->getUri()));
+            }
 
             //If user is Admin
             // This should be changed to 'play_auth' for production
