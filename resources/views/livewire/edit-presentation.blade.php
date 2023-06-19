@@ -29,13 +29,20 @@
                 {{ session('message') }}
             </div>
         @else
+            @if(!$video->state)
+                <div class="alert alert-warning text-center">
+                    {{__("The Presentation has been edited and is under processing")}}
+                </div>
+            @else
             <div class="alert alert-info text-center">
                 {{__("Changes are saved upon clicking Save button at the bottom of the page.")}}
             </div>
+            @endif
+
         @endif
     </div>
 
-    <div class="container px-3 px-sm-0">
+    <div @if(!$video->state) class="container px-3 px-sm-0 bg-blue-secondary text-dark" @else class="container px-3 px-sm-0" @endif>
         <div class="row">
             <div class="col-sm-12">
                 <div class="rounded border shadow p-3 my-2">
@@ -134,20 +141,11 @@
                                 </div>
                             </div>
                             <br>
-                            <!-- Subtitle -->
-                            <div class="row">
-                                <label class="col-4 col-lg-3 mb-0">{{ __("Subtitles:") }}</label>
-                                <div class="col">
-                                    @if(json_decode($video->subtitles))
-                                        @foreach(json_decode($video->subtitles, true) as $key => $sub)
-                                             <a href="{{route('download-subtitle-file', [$video, 'lang' => $key])}}" type="button" class="btn btn-outline-primary">
-                                                 {{$key}} <i class="fa-solid fa-file-arrow-down"></i>
-                                                </a>
-
-                                        @endforeach
-                                    @endif
-                                </div>
-                            </div>
+                            <!-- Transcribed Subtitle file-->
+                            @livewire('handle-subtitles',[
+                            'video' => $video,
+                            'presentation' => $presentation])
+                            <!-- end Subtitle -->
                         </div>
 
                     </div>

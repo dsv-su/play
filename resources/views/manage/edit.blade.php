@@ -6,7 +6,8 @@
         'video' => $video,
         'permissions' => $permissions,
         'individual_permissions' => $individual_permissions,
-        'user_permission' => $user_permission
+        'user_permission' => $user_permission,
+        'presentation' => $editHandler
         ])
 
 

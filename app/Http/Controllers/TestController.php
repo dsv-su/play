@@ -6,7 +6,7 @@ class TestController extends Controller
 {
     public function test()
     {
-
+        phpinfo();
     }
 
     public function server()

@@ -85,10 +85,17 @@ class Metadata
                             'English' => 'subtitle/' . basename($subtitles[0])
                         ];
                     } else {
-                        $presentation->subtitles = [
-                            'English' => 'subtitle/' . basename($subtitles[0]),
-                            'Generated' => ''
-                        ];
+                        //Edit
+                        if(!empty($presentation->subtitles)) {
+                            $presentation->subtitles = array_merge($presentation->subtitles, [
+                                'English' => 'subtitle/' . basename($subtitles[0])
+                            ]);
+                        } else {
+                            $presentation->subtitles = [
+                                'English' => 'subtitle/' . basename($subtitles[0])
+                                //'Generated' => ''
+                            ];
+                        }
                     }
                     break;
                 case('swedish'):
@@ -97,10 +104,17 @@ class Metadata
                             'Svenska' => 'subtitle/' . basename($subtitles[0])
                         ];
                     } else {
-                        $presentation->subtitles = [
-                            'Svenska' => 'subtitle/' . basename($subtitles[0]),
-                            'Generated' => ''
-                        ];
+                        //Edit
+                        if(!empty($presentation->subtitles)) {
+                            $presentation->subtitles = array_merge($presentation->subtitles, [
+                                'Svenska' => 'subtitle/' . basename($subtitles[0])
+                            ]);
+                        } else {
+                            $presentation->subtitles = [
+                                'Svenska' => 'subtitle/' . basename($subtitles[0])
+                                //'Generated' => ''
+                            ];
+                        }
                     }
                     break;
                 default:
@@ -109,10 +123,17 @@ class Metadata
                             'Svenska' => 'subtitle/' . basename($subtitles[0])
                         ];
                     } else {
-                        $presentation->subtitles = [
-                            'Svenska' => 'subtitle/' . basename($subtitles[0]),
-                            'Generated' => ''
-                        ];
+                        //Edit
+                        if(!empty($presentation->subtitles)) {
+                            $presentation->subtitles = array_merge($presentation->subtitles, [
+                                'Svenska' => 'subtitle/' . basename($subtitles[0])
+                            ]);
+                        } else {
+                            $presentation->subtitles = [
+                                'Svenska' => 'subtitle/' . basename($subtitles[0])
+                                //'Generated' => ''
+                            ];
+                        }
                     }
             }
             //Add reference to upload dir

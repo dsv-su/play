@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Course;
 use App\CourseadminPermission;
+use App\ManualPresentation;
 use App\Services\Daisy\DaisyIntegration;
 use App\Services\Ldap\SukatUser;
 use App\Tag;
@@ -13,7 +14,7 @@ use Livewire\Component;
 
 class EditPresentation extends Component
 {
-    public $video;
+    public $video, $presentation;
     public $title, $title_en, $thumb, $created, $date, $origin, $duration, $category, $description;
     public $presenters = [], $presenters_uid = [];
     public $presenterids = [];
@@ -34,7 +35,7 @@ class EditPresentation extends Component
     public $download, $download_switch_warning;
     public $user_permission;
 
-    public function mount($video, $permissions, $individual_permissions, $user_permission)
+    public function mount($video, $permissions, $individual_permissions, $user_permission, ManualPresentation $presentation)
     {
         $this->video = $video;
         $this->title = $video->title;
@@ -49,6 +50,7 @@ class EditPresentation extends Component
         $this->sources = $video->streams;
         $this->ipermissions = $individual_permissions->count();
         $this->download_switch_warning = false;
+        $this->presentation = $presentation;
 
         //Visibility
         if($video->visibility) {

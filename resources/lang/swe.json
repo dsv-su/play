@@ -365,7 +365,7 @@
     "Drop a picture here or click to browse": "Släpp en bild här eller klicka för att bläddra",
     "Drop files here or click to browse": "Släpp filer här eller klicka för att bläddra",
     "Uploaded files": "Uppladdade filer",
-    "Automatic subtitling": "Automatisk undertextning",
+    "Generate subtitling": "Generera undertextning",
     "Drop a WebVTT (.vtt) file here or click to browse": "Släpp en WebVTT (.vtt)-fil här eller klicka för att bläddra",
     "UPLOAD": "LADDA UPP",
     "Note!": "Notera!",
@@ -390,6 +390,10 @@
     "If you want to edit a subtitle file or an auto-generated file, click the desired button after 'Subtitles' here at the top.": "Om du vill redigera en undertextfil eller en automatiskt genererad fil, klicka på önskad knapp efter 'Undertexter' här överst.",
     "The transcribed file will download and you can now edit it.": "Den transkriberade filen kommer att laddas ner och du kan nu redigera den.",
     "Upload an edited subtitle file": "Ladda upp en redigerad undertextfil",
-    "Upload an edited subtitle file by dropping it in the upload box along the bottom of the edit view. Also select language.": "Ladda upp en redigerad undertextfil genom att släppa den i uppladdningsrutan längst ned i redigeringsvyn. Välj även språk."
+    "Upload an edited subtitle file by dropping it in the upload box along the bottom of the edit view. Also select language.": "Ladda upp en redigerad undertextfil genom att släppa den i uppladdningsrutan längst ned i redigeringsvyn. Välj även språk.",
+    "Delete": "Radera",
+    "Download transcription file": "Ladda ner transkriptionsfil",
+    "Delete transcription file": "Ta bort transkriptionsfil",
+    "Add additional subtitles": "Lägg till ytterligare undertext"
 
 }
