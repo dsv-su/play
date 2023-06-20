@@ -15,10 +15,11 @@ class HandleSubtitles extends Component
     {
         $this->video = $video;
         $this->presentation = $presentation;
-        foreach (json_decode($this->video->subtitles, true) as $key => $sub) {
-            $this->purge[$key] = false;
+        if(!empty(json_decode($this->video->subtitles, true))) {
+            foreach (json_decode($this->video->subtitles, true) as $key => $sub) {
+                $this->purge[$key] = false;
+            }
         }
-
     }
 
     public function remove($subtitle)

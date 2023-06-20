@@ -64,17 +64,27 @@
                 <p>{{__("You can automatically generate subtitles for your presentation by switching the toggle switch on. Subtitles will be generated with Whisper released by OpenAI, an automatic speech recognition system to generate subtitles. If you would rather upload your own subtitle file, you can leave the toggle switch off and upload the subtitle file in the box.")}}</p>
                 <br>
                 <h4>{{__("Download a transcribed subtitle file")}}</h4>
-                <p>{{__("If you want to edit a subtitle file or an auto-generated file, click the desired button after 'Subtitles' here at the top.")}}</p>
+                <p>{{__("In the first section besides ‘subtitles’ there will appear a button for downloading the transcribed subtitle file. Click on the button to download the transcribed subtitle file.")}}</p>
                 <br>
                 <img class="w-75" src="{{asset('images/manual/subtitlefile.png')}}" alt="Edit presentation" style="border: 1px solid #000; padding: 0;">
                 <br><br>
                 <p>{{__("The transcribed file will download and you can now edit it.")}}</p>
+                <br>
+                <h4>{{__("Delete a transcribed subtitle file")}}</h4>
+                <p>{{__("To remove a transcribed file from the presentation, click on the delete icon and then save the change")}}</p>
                 <br><br>
                 <h4>{{__("Upload an edited subtitle file")}}</h4>
                 <p>{{__("Upload an edited subtitle file by dropping it in the upload box along the bottom of the edit view. Also select language.")}}</p>
                 <br>
                 <img class="w-75" src="{{asset('images/manual/editsubtitle.png')}}" alt="Edit presentation" style="border: 1px solid #000; padding: 0;">
-                <br><br><br><br>
+                <br><br>
+                <h4>{{__("How to edit an existing subtitle")}}</h4>
+                <p>{{__("If you want to edit existing subtitles from a presentation, hoover over the presentation’s thumbnail. Buttons will appear in the upper right corner of the thumbnail.")}}</p>
+                <p>{{__("Click on the edit-button to edit the presentation.")}}</p>
+                <p>{{__("In the first section besides ‘subtitles’ there will appear a button for downloading the transcribed subtitle file. Click on the button to download the transcribed subtitle file.")}}</p>
+                <p>{{__("You can now edit the text, make sure you only edit the text, do not change the time codes in the file. The file will contain the transcript of the audio track as well as the time codes that sync the captions to the presentation.")}}</p>
+                <p>{{__("Once you have edited the transcribed file (make sure the saved file has the .vtt suffix), you can upload the edited transcribed file in the upload box in the edit-page of the presentation. Don’t forget to click on the ‘Save’ button. The process of replacing the transcribed file begins. Once it is done you will receive and email.")}}</p>
+                <br><br>
                 <p><strong>{{__("Save your settings and edits by clicking the 'save' button on the bottom of the page.")}}</strong></p>
             </article>
 

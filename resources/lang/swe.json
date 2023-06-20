@@ -387,13 +387,20 @@
     "English": "Engelska",
     "Swedish": "Svenska",
     "Download a transcribed subtitle file": "Ladda ner en transkriberad undertextfil",
-    "If you want to edit a subtitle file or an auto-generated file, click the desired button after 'Subtitles' here at the top.": "Om du vill redigera en undertextfil eller en automatiskt genererad fil, klicka på önskad knapp efter 'Undertexter' här överst.",
+    "In the first section besides ‘subtitles’ there will appear a button for downloading the transcribed subtitle file. Click on the button to download the transcribed subtitle file.": "I det första avsnittet, förutom 'undertexter', kommer det att visas en knapp för att ladda ner den transkriberade undertextfilen. Klicka på knappen för att ladda ner den transkriberade undertextfilen. ",
     "The transcribed file will download and you can now edit it.": "Den transkriberade filen kommer att laddas ner och du kan nu redigera den.",
     "Upload an edited subtitle file": "Ladda upp en redigerad undertextfil",
     "Upload an edited subtitle file by dropping it in the upload box along the bottom of the edit view. Also select language.": "Ladda upp en redigerad undertextfil genom att släppa den i uppladdningsrutan längst ned i redigeringsvyn. Välj även språk.",
     "Delete": "Radera",
     "Download transcription file": "Ladda ner transkriptionsfil",
     "Delete transcription file": "Ta bort transkriptionsfil",
-    "Add additional subtitles": "Lägg till ytterligare undertext"
+    "Add additional subtitles": "Lägg till ytterligare undertext",
+    "No subtitles": "Inga undertexter",
+    "To remove a transcribed file from the presentation, click on the delete icon and then save the change": "För att ta bort en transkriberad fil från presentationen, klicka på tabort ikonen och spara sedan ändringen",
+    "How to edit an existing subtitle": "Hur man redigerar en befintlig undertext",
+    "If you want to edit existing subtitles from a presentation, hoover over the presentation’s thumbnail. Buttons will appear in the upper right corner of the thumbnail.": "Om du vill redigera befintliga undertexter från en presentation, håll muspekaren över presentationens miniatyrbild.",
+    "Click on the edit-button to edit the presentation.": "Klicka på redigera-knappen för att redigera presentationen. ",
+    "You can now edit the text, make sure you only edit the text, do not change the time codes in the file. The file will contain the transcript of the audio track as well as the time codes that sync the captions to the presentation.": "Du kan nu redigera texten, se till att du bara redigerar texten, ändra inte tidskoderna i filen. Filen kommer att innehålla transkriptionen av ljudspåret samt tidskoderna som synkroniserar bildtexterna till presentationen.",
+    "Once you have edited the transcribed file (make sure the saved file has the .vtt suffix), you can upload the edited transcribed file in the upload box in the edit-page of the presentation. Don’t forget to click on the ‘Save’ button. The process of replacing the transcribed file begins. Once it is done you will receive and email.": "När du har redigerat den transkriberade filen (se till att den sparade filen har suffixet .vtt), kan du ladda upp den redigerade transkriberade filen i uppladdningsrutan på redigeringssidan för presentationen. Glöm inte att klicka på knappen 'Spara'. Processen att ersätta den transkriberade filen börjar. När det är gjort kommer du att få ett e-postmeddelande."
 
 }

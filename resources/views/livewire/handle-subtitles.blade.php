@@ -31,6 +31,8 @@
                         </span>
                     @endif
                 @endforeach
+            @else
+                {{__("No subtitles")}}
             @endif
         </div>
 
