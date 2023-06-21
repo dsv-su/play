@@ -254,6 +254,7 @@ class DaisyIntegration
     public function init($start_date = null)
     {
         $this->endpoints = array(
+            'courseSegment?semester=20232',
             'courseSegment?semester=20231',
             'courseSegment?semester=20222',
             'courseSegment?semester=20221',

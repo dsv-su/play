@@ -46,6 +46,16 @@
                         </a>
                     </li>
                 @endif
+                <!-- HT 2023 -->
+                @if (isset($active_ht) && !$active_ht->isEmpty())
+                    <!-- Paginated tab -->
+                        <li class="nav-item pb-0">
+                            <a class="nav-link" href="#active_ht" data-toggle="tab" role="tab" aria-controls="active_ht"
+                               title="@lang('lang.active_courses_ht')">@lang('lang.active_courses_ht')
+                                <span class="count-label">{{$activepaginated_ht->total()}}</span>
+                            </a>
+                        </li>
+                @endif
                 <!-- VT 2023 -->
                 @if (isset($active_vt) && !$active_vt->isEmpty())
                     <!-- Paginated tab -->
@@ -53,16 +63,6 @@
                         <a class="nav-link" href="#active_vt" data-toggle="tab" role="tab" aria-controls="active_vt"
                            title="@lang('lang.active_courses_vt')">@lang('lang.active_courses_vt') <span
                                 class="count-label">{{$activepaginated_vt->total()}}</span></a>
-                    </li>
-                @endif
-                <!-- HT 2023 -->
-                @if (isset($active_ht) && !$active_ht->isEmpty())
-                    <!-- Paginated tab -->
-                    <li class="nav-item pb-0">
-                        <a class="nav-link" href="#active_ht" data-toggle="tab" role="tab" aria-controls="active_ht"
-                           title="@lang('lang.active_courses_ht')">@lang('lang.active_courses_ht')
-                            <span class="count-label">{{$activepaginated_ht->total()}}</span>
-                        </a>
                     </li>
                 @endif
                 <!-- HT 2022 -->

@@ -66,7 +66,7 @@ class HomeController extends Controller
             $data['my'] = $visibility->filter($data['mypaginated']);
         }
 
-        // HT2022 Active courses store in cache
+        // HT2023 Active courses store in cache
         $active_courses_ht = Cache::remember(app()->make('play_username') . '_active_ht', $seconds, function () use ($daisy){
             return $daisy->getActiveCoursesHT();
         });
@@ -101,7 +101,7 @@ class HomeController extends Controller
         $data['active_ht'] = $visibility->filter($data['activepaginated_ht']);
         $data['previous_ht'] = $visibility->filter($data['previouspaginated_ht']);
 
-        // VT2022 Active courses store in cache
+        // VT2023 Active courses store in cache
         $active_courses_vt = Cache::remember(app()->make('play_username') . '_active_vt', $seconds, function () use ($daisy){
             return $daisy->getActiveCoursesVT();
         });
