@@ -8,38 +8,36 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.3",
+        "php": "^8.1",
         "ext-json": "*",
         "ext-zip": "*",
-        "arcanedev/log-viewer": "~8",
+        "arcanedev/log-viewer": "9.0.0",
         "directorytree/ldaprecord-laravel": "^2.1",
         "doctrine/dbal": "^3.6",
-        "fideloper/proxy": "^4.2",
-        "fruitcake/laravel-cors": "^1.0",
-        "guzzlehttp/guzzle": "^7.0.1",
-        "hammerstone/fast-paginate": "^0.1.8",
-        "laravel/framework": "^8.0",
+        "guzzlehttp/guzzle": "^7.7.0",
+        "hammerstone/fast-paginate": "^1.0.1",
+        "laravel/framework": "^9.0",
         "laravel/tinker": "^2.0",
-        "league/flysystem-cached-adapter": "^1.1",
         "livewire/livewire": "^2.4",
         "nicolaslopezj/searchable": "1.*",
-        "pbmedia/laravel-ffmpeg": "^7.1",
-        "php-ffmpeg/php-ffmpeg": "^0.16.0",
+        "pbmedia/laravel-ffmpeg": "^8.3.0",
+        "php-ffmpeg/php-ffmpeg": "^1.1.0",
         "pion/laravel-chunk-upload": "^1.5",
-        "spatie/laravel-searchable": "^1.6",
-        "tymon/jwt-auth": "^1.0"
+        "spatie/laravel-searchable": "^1.11.2",
+        "tymon/jwt-auth": "^2.0.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.8",
-        "facade/ignition": "^2.3.6",
+        "spatie/laravel-ignition": "^1.0",
         "mockery/mockery": "^1.3.1",
-        "nunomaduro/collision": "^5.0",
+        "nunomaduro/collision": "^6.1",
         "phpunit/phpunit": "^9.0"
     },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "platform-check": false
     },
     "extra": {
         "laravel": {
