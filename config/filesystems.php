@@ -77,6 +77,7 @@ return [
         'play-store' => [
             'driver' => 'local',
             'root' => $system_config['nfs']['root'],
+            'visibility' => 'public',
             'permissions' => [
                 'file' => [
                     'public' => 0664,
