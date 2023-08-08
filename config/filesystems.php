@@ -52,12 +52,14 @@ return [
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),
+            'throw' => true,
             //'root' => $system_config['nfs']['root'],
         ],
 
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
+            'throw' => true,
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
             'permissions' => [
@@ -75,7 +77,6 @@ return [
         'play-store' => [
             'driver' => 'local',
             'root' => $system_config['nfs']['root'],
-
             'permissions' => [
                 'file' => [
                     'public' => 0664,
