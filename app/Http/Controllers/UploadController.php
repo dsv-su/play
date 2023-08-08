@@ -297,7 +297,10 @@ class UploadController extends Controller
         $finalPath = '/' . $this->storage() . '/' . $folder;
 
         $fileSize = $file->getSize();
-        Storage::disk('play-store')->putFileAs($finalPath, $file, $fileName);
+        Storage::disk('play-store')->putFileAs($finalPath, $file, $fileName, [
+            'visibility' => 'public',
+            'directory_visibility' => 'public'
+        ]);
 
         return response()->json([
             'path' => $finalPath,
