@@ -52,7 +52,7 @@ class AdminController extends Controller
     public function uploads()
     {
         $data['manual_presentations'] = ManualPresentation::all();
-        $data['queued_presentations'] = Video::where('state', 0)->get();
+        $data['queued_presentations'] = Video::where('state', 0)->orderBy('updated_at')->get();
         return view('admin.partials.uploads', $data);
     }
 
