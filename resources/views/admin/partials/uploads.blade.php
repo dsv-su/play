@@ -36,10 +36,11 @@
                         <td>{{$queued_presentation->id}}</td>
                         <td>{{$queued_presentation->origin}}</td>
                         <td>
-                            @foreach(json_decode($queued_presentation->presentation, true)['pending'] as $pending)
-                                {{$pending}}
-                            @endforeach
-
+                            @if(json_decode($queued_presentation->presentation, true)['pending'] ?? false)
+                                @foreach(json_decode($queued_presentation->presentation, true)['pending'] as $pending)
+                                    {{$pending}}
+                                @endforeach
+                            @endif
                         </td>
                         <td>{{$queued_presentation->notification_id}}</td>
                         <td>{{$queued_presentation->creation}}</td>
