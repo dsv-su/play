@@ -9,13 +9,49 @@
             </ol>
         </nav>
 
+        {{--}}
         <div class="card" style="border: 1px solid #3E7DC0 !important;">
             <div class="card-body">
                 {{ __("Uploads are deleted after status completed.") }}
             </div>
         </div>
-        <br>
+        {{--}}
+        <h3>Queue status</h3>
+        <div class="row">
+            <table class="table table-sm table-bordered" style="font-size: small;">
+                <thead>
+                <tr>
+                    <th scope="col">Pkg_id</th>
+                    <th scope="col">Latest Handler</th>
+                    <th scope="col">Pending Handler</th>
+                    <th scope="col">jobid</th>
+                    <th scope="col">Created</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Last updated</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($queued_presentations as $queued_presentation)
+                    <tr>
+                        <td>{{$queued_presentation->id}}</td>
+                        <td>{{$queued_presentation->origin}}</td>
+                        <td>
+                            @foreach(json_decode($queued_presentation->presentation, true)['pending'] as $pending)
+                                {{$pending}}
+                            @endforeach
 
+                        </td>
+                        <td>{{$queued_presentation->notification_id}}</td>
+                        <td>{{$queued_presentation->creation}}</td>
+                        <td>{{Str::limit($queued_presentation->title, 16)}}</td>
+                        <td>{{$queued_presentation->updated_at}}</td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Uploads</h3>
         <div class="row">
             <table class="table table-sm table-bordered" style="font-size: small;">
                 <thead>
