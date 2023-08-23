@@ -36,7 +36,7 @@
                         <td>
                             @if($queued_presentation->origin == 'manual')
                                 <span class="badge badge-primary">{{$queued_presentation->origin}}</span>
-                            @elseif($queued_presentation->origin == 'edit')
+                            @elseif($queued_presentation->origin == 'edited')
                                 <span class="badge badge-secondary">{{$queued_presentation->origin}}</span>
                             @elseif($queued_presentation->origin == 'mediasite')
                                 <span class="badge badge-info">{{$queued_presentation->origin}}</span>
