@@ -71,10 +71,11 @@ class HomeController extends Controller
             return $daisy->getActiveCoursesHT();
         });
 
+        //Disabled 2023-08-23
         // Prevoius year courses store in cache
-        $previous_courses_ht = Cache::remember(app()->make('play_username') . '_previous_ht', $seconds, function () use ($daisy){
+        /*$previous_courses_ht = Cache::remember(app()->make('play_username') . '_previous_ht', $seconds, function () use ($daisy){
             return $daisy->getPreviousYearCoursesHT();
-        });
+        });*/
 
         if($this->administrator()) {
             //Administrator full visibility
@@ -82,9 +83,12 @@ class HomeController extends Controller
                 return $query->whereIn('course_id', $active_courses_ht)->where('state', true);
             })->latest('creation')->fastPaginate(24, ['*'], 'active_ht')->onEachSide(1);
 
-            $data['previouspaginated_ht'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($previous_courses_ht) {
-                return $query->whereIn('course_id', $previous_courses_ht)->where('state', true);
-            })->latest('creation')->fastPaginate(24, ['*'], 'previous_ht')->onEachSide(1);
+            if($previous_courses_ht ?? false) {
+                $data['previouspaginated_ht'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($previous_courses_ht) {
+                    return $query->whereIn('course_id', $previous_courses_ht)->where('state', true);
+                })->latest('creation')->fastPaginate(24, ['*'], 'previous_ht')->onEachSide(1);
+            }
+
 
         } else {
             //Non administrator restricted visibility
@@ -92,14 +96,19 @@ class HomeController extends Controller
                 return $query->whereIn('course_id', $active_courses_ht)->where('visibility', true)->where('state', true);
             })->latest('creation')->fastPaginate(24, ['*'], 'active_ht')->onEachSide(1);
 
-            $data['previouspaginated_ht'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($previous_courses_ht) {
-                return $query->whereIn('course_id', $previous_courses_ht)->where('visibility', true)->where('state', true);
-            })->latest('creation')->fastPaginate(24, ['*'], 'previous_ht')->onEachSide(1);
+            if($previous_courses_ht ?? false) {
+                $data['previouspaginated_ht'] = Video::with('video_course.course')->whereHas('video_course.course', function ($query) use ($previous_courses_ht) {
+                    return $query->whereIn('course_id', $previous_courses_ht)->where('visibility', true)->where('state', true);
+                })->latest('creation')->fastPaginate(24, ['*'], 'previous_ht')->onEachSide(1);
+            }
         }
 
         //Filter
         $data['active_ht'] = $visibility->filter($data['activepaginated_ht']);
-        $data['previous_ht'] = $visibility->filter($data['previouspaginated_ht']);
+        if($data['previouspaginated_ht'] ?? false) {
+            $data['previous_ht'] = $visibility->filter($data['previouspaginated_ht']);
+        }
+
 
         // VT2023 Active courses store in cache
         $active_courses_vt = Cache::remember(app()->make('play_username') . '_active_vt', $seconds, function () use ($daisy){

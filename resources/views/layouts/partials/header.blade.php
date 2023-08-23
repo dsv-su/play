@@ -145,6 +145,10 @@
                                                     class="fas fa-user-cog fa-icon fa-fw mr-2"
                                                     aria-hidden="true"></span>Admin stats and settings</a>
                                         <a class="nav-link level-2 d-flex align-content-center"
+                                           href="{{route('uploads')}}"><span
+                                                class="fas fa-solid fa-box fa-icon fa-fw mr-2"
+                                                aria-hidden="true"></span>Package status</a>
+                                        <a class="nav-link level-2 d-flex align-content-center"
                                            href="{{route('log-viewer::logs.list')}}"><span
                                                     class="fas fa-bug fa-icon fa-fw mr-2" aria-hidden="true"></span>Logs</a>
                                         <a class="nav-link level-2 d-flex align-content-center"

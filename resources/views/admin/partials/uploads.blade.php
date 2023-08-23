@@ -1,11 +1,11 @@
 @extends('layouts.suplay')
 @section('content')
     <div class="container">
-        <h2>Upload</h2>
+        <h2>Package status</h2>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{route('admin_flush')}}">Admin</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Uploads</li>
+                <li class="breadcrumb-item active" aria-current="page">Package status</li>
             </ol>
         </nav>
 
@@ -17,11 +17,13 @@
         <br>
 
         <div class="row">
-            <table class="table table-bordered">
+            <table class="table table-sm table-bordered" style="font-size: small;">
                 <thead>
                 <tr>
                     <th scope="col">Status</th>
-                    <th scope="col">Id</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">jobid</th>
+                    <th scope="col">pkg_id</th>
                     <th scope="col">Created</th>
 
                     <th scope="col">Title</th>
@@ -36,40 +38,64 @@
                         <tr class="table-warning">
                     @elseif($manual_presentation->status == 'failed' or $manual_presentation->status == 'stored')
                         <tr class="table-danger">
+                    @endif
+
+                        <td>
+                            @if($manual_presentation->status == 'stored')
+                                <span class="badge badge-warning">
+                            @elseif($manual_presentation->status == 'sent')
+                                <span class="badge badge-info">
+                            @elseif($manual_presentation->status == 'completed')
+                                <span class="badge badge-success">
+                            @elseif($manual_presentation->status == 'failed')
+                                <span class="badge badge-danger">
                             @endif
-                            <td>{{$manual_presentation->status}}</td>
-                            <td>{{$manual_presentation->id}}</td>
-                            <td>{{$manual_presentation->created_at}}</td>
-                            <td>{{$manual_presentation->Langtitle}}</td>
-                            <td>{{$manual_presentation->local}}</td>
-                            <td>{{$manual_presentation->user}}</td>
-                            @if($manual_presentation->status == 'failed' or $manual_presentation->status == 'stored' or $manual_presentation->status == 'sent')
-                                <td>
-                                    <a role="button" class="btn btn-danger btn-sm"
-                                       href="{{route('manual_admin_notify_fail', $manual_presentation->id)}}">Notify
-                                        fail</a>
-                                    <a role="button" class="btn btn-warning btn-sm"
-                                                   href="{{route('manual_admin_erase', $manual_presentation->id)}}">Erase</a>
-                                </td>
-                            @elseif($manual_presentation->status == 'pending')
-                                <td>
-                                    <a role="button" class="btn btn-warning btn-sm"
-                                       href="{{route('manual_admin_erase', $manual_presentation->id)}}">Erase</a>
-                                    <a role="button" class="btn btn-info btn-sm"
-                                       href="{{route('manual_admin_cancel', $manual_presentation->id)}}">Notify user</a>
-                                    <a role="button" class="btn btn-danger btn-sm"
-                                       href="{{route('upload_store', $manual_presentation->id)}}">Resend</a>
-                                </td>
-                            @elseif($manual_presentation->status == 'notified')
-                                <td>
-                                    <a role="button" class="btn btn-info btn-sm"
-                                       href="{{route('manual_admin_unregister', $manual_presentation->id)}}">Unregister</a>
-                                </td>
-                            @elseif($manual_presentation->status == 'sent' or $manual_presentation->status == 'init')
-                                <td><a role="button" class="btn btn-primary btn-sm"
-                                       href="{{route('manual_admin_unregister', $manual_presentation->id)}}">Unregister</a>
-                                </td>
+                                {{$manual_presentation->status}}</span>
+                        </td>
+                        <td>
+                            @if($manual_presentation->type == 'manual')
+                                <span class="badge badge-primary">
+                            @elseif($manual_presentation->type == 'edit')
+                                <span class="badge badge-secondary">
+                            @else
+                                <span class="badge badge-info">
                             @endif
+                                {{$manual_presentation->type}}</span>
+                        </td>
+                        <td>{{$manual_presentation->jobid}}</td>
+                        <td>{{$manual_presentation->pkg_id}}</td>
+                        <td>{{\Carbon\Carbon::parse($manual_presentation->created_at)->format('Y-m-d H:i')}}</td>
+                        <td>{{Str::limit($manual_presentation->Langtitle, 10)}}</td>
+                        <td>{{$manual_presentation->local}}</td>
+                        <td>{{$manual_presentation->user}}</td>
+
+                        @if($manual_presentation->status == 'failed' or $manual_presentation->status == 'stored' or $manual_presentation->status == 'sent')
+                            <td>
+                                <a role="button" class="btn btn-danger btn-sm" style="font-size: smaller;"
+                                   href="{{route('manual_admin_notify_fail', $manual_presentation->id)}}">Notify
+                                    fail</a>
+                                <a role="button" class="btn btn-warning btn-sm" style="font-size: smaller;"
+                                               href="{{route('manual_admin_erase', $manual_presentation->id)}}">Erase</a>
+                            </td>
+                        @elseif($manual_presentation->status == 'pending')
+                            <td>
+                                <a role="button" class="btn btn-warning btn-sm" style="font-size: smaller;"
+                                   href="{{route('manual_admin_erase', $manual_presentation->id)}}">Erase</a>
+                                <a role="button" class="btn btn-info btn-sm" style="font-size: smaller;"
+                                   href="{{route('manual_admin_cancel', $manual_presentation->id)}}">Notify user</a>
+                                <a role="button" class="btn btn-danger btn-sm" style="font-size: smaller;"
+                                   href="{{route('upload_store', $manual_presentation->id)}}">Resend</a>
+                            </td>
+                        @elseif($manual_presentation->status == 'notified')
+                            <td>
+                                <a role="button" class="btn btn-info btn-sm" style="font-size: smaller;"
+                                   href="{{route('manual_admin_unregister', $manual_presentation->id)}}">Unregister</a>
+                            </td>
+                        @elseif($manual_presentation->status == 'sent' or $manual_presentation->status == 'init')
+                            <td><a role="button" class="btn btn-primary btn-sm" style="font-size: smaller;"
+                                   href="{{route('manual_admin_unregister', $manual_presentation->id)}}">Unregister</a>
+                            </td>
+                        @endif
                         </tr>
                     </tbody>
 
