@@ -16,7 +16,7 @@
             </div>
         </div>
         {{--}}
-        <h3>Queue status</h3>
+        <h3>Incoming - Queue status</h3>
         <div class="row">
             <table class="table table-sm table-bordered" style="font-size: small;">
                 <thead>
@@ -25,7 +25,6 @@
                     <th scope="col">Latest Handler</th>
                     <th scope="col">Pending Handler</th>
                     <th scope="col">jobid</th>
-                    <th scope="col">Created</th>
                     <th scope="col">Title</th>
                     <th scope="col">Last updated</th>
                 </tr>
@@ -34,7 +33,18 @@
                 @foreach($queued_presentations as $queued_presentation)
                     <tr>
                         <td>{{$queued_presentation->id}}</td>
-                        <td>{{$queued_presentation->origin}}</td>
+                        <td>
+                            @if($queued_presentation->origin == 'manual')
+                                <span class="badge badge-primary">{{$queued_presentation->origin}}</span>
+                            @elseif($queued_presentation->origin == 'edit')
+                                <span class="badge badge-secondary">{{$queued_presentation->origin}}</span>
+                            @elseif($queued_presentation->origin == 'mediasite')
+                                <span class="badge badge-info">{{$queued_presentation->origin}}</span>
+                            @else
+                                {{$queued_presentation->origin}}
+                            @endif
+
+                        </td>
                         <td>
                             @if(json_decode($queued_presentation->presentation, true)['pending'] ?? false)
                                 @foreach(json_decode($queued_presentation->presentation, true)['pending'] as $pending)
@@ -43,7 +53,6 @@
                             @endif
                         </td>
                         <td>{{$queued_presentation->notification_id}}</td>
-                        <td>{{$queued_presentation->creation}}</td>
                         <td>{{Str::limit($queued_presentation->title, 16)}}</td>
                         <td>{{$queued_presentation->updated_at}}</td>
                     </tr>
@@ -52,7 +61,7 @@
             </table>
         </div>
 
-        <h3>Uploads</h3>
+        <h3>Uploads/Edit - status</h3>
         <div class="row">
             <table class="table table-sm table-bordered" style="font-size: small;">
                 <thead>
