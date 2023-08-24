@@ -5,7 +5,7 @@
             <div class="col d-flex align-items-center justify-content-center">
                 <div class="webb2021-article p-0 p-lg-2 d-inline-block">
                     <a href="https://play2.dsv.su.se">
-                        {{__("DSVPlay upgrade! The upgrade will take place on Thursday, June 15 between 10 and 12. During the update, there will be a short break in dsvplay.")}}
+                        {{__("Operational disruption: We are currently experiencing issues with dsvplay. Troubleshooting in progress!")}}
                     </a>
                 </div>
                 {{--}}
