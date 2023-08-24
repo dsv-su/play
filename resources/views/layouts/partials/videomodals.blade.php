@@ -129,15 +129,27 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
+                    {{--}}
+                   <div class="modal-body">
                         <div class="form-group">
                             <label for="retype{{$video->id}}" class="form-control-label">
                                 {{_("To confirm deletion, type the presentation title:")}}</label>
                             <input type="text" class="form-control" id="retype{{$video->id}}">
                         </div>
                     </div>
+                    {{--}}
+                    <div class="modal-body">
+                        <div class="form-group">
+                                {{__("Note! The presentation will be deleted and cannot be restored.")}}
+                        </div>
+                    </div>
                     <div class="modal-footer">
+                        {{--}}
+                        <!-- Disabled delete confirmation dialoge 20230824 ->
                         <button id="delete" type="button"
+                                class="btn btn-primary disabled">{{_("Confirm deletion")}}</button>
+                        {{--}}
+                        <button id="delete" type="submit"
                                 class="btn btn-primary disabled">{{_("Confirm deletion")}}</button>
                         <button type="button" class="btn btn-secondary"
                                 data-dismiss="modal">{{__("Close")}}</button>
@@ -148,7 +160,7 @@
     </div>
 @endif
 
-
+{{--}}
 <script>
     $("#retype{{$video->id}}").on('change input', function ($this) {
         var title = "{{$video->LangTitle}}";
@@ -169,6 +181,7 @@
         return false;
     });
 </script>
+{{--}}
 <script>
     function copyToClipboard(text){
         if(navigator.clipboard){
