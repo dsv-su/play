@@ -4,9 +4,9 @@
         <div class="row no-gutters">
             <div class="col d-flex align-items-center justify-content-center">
                 <div class="webb2021-article p-0 p-lg-2 d-inline-block">
-                    <a href="https://play2.dsv.su.se">
+                    <p>
                         {{__("Operational disruption: We are currently experiencing issues with dsvplay. Troubleshooting in progress!")}}
-                    </a>
+                    </p>
                 </div>
                 {{--}}
                 <div class="h-100 d-flex align-items-center">
