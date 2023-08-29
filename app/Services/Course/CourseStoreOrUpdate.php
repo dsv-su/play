@@ -78,7 +78,7 @@ class CourseStoreOrUpdate
                 }
 
                 //Store course administrator permissions
-                if($this->cid) {
+                if($this->cid ?? false) {
                     if($this->daisy) {
                         $this->course_responsible = $this->daisy->getDaisyCourseResponsible($this->cid);
                     } else {
