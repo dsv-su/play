@@ -526,7 +526,7 @@ class SearchController extends Controller
     public
     function find(Request $request)
     {
-        $courses = Course::search($request->get('query'), null, true, true)->groupBy('designation')->orderBy('year', 'desc')->take(2)->get();
+        $courses = Course::search($request->get('query'), null, true, true)->groupBy('designation')->orderBy('year', 'desc')->take(4)->get();
         $videos = Video::search($request->get('query'), null, true, true)->where('visibility', 1)->orderBy('creation', 'desc');
         $tags = Tag::search($request->get('query'), null, true, true)->take(3)->get();
         $presenters = Presenter::search($request->get('query'), null, true, true)->take(3)->get();

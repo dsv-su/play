@@ -28,8 +28,8 @@ class Course extends Model implements Searchable
     protected $fillable = ['id', 'name', 'name_en', 'designation', 'semester', 'year'];
     protected $searchable = [
         'columns' => [
-            'name' => 5,
-            'name_en' => 6,
+            /*'name' => 5,
+            'name_en' => 6,*/
             'designation' => 10,
             'year' => 1
         ]
