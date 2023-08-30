@@ -53,7 +53,7 @@
                             @endif
                         </td>
                         <td>{{$queued_presentation->notification_id}}</td>
-                        <td>{{Str::limit($queued_presentation->title, 16)}}</td>
+                        <td>{{$queued_presentation->title}}</td>
                         <td>{{$queued_presentation->updated_at}}</td>
                     </tr>
                 @endforeach
