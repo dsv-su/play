@@ -493,6 +493,6 @@
         </nav>
     </div>
 </header>
-
+{{--}}
 @include('layouts.partials.message_banner')
-
+{{--}}
