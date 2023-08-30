@@ -5,7 +5,7 @@
             <div class="col d-flex align-items-center justify-content-center">
                 <div class="webb2021-article p-0 p-lg-2 d-inline-block">
                     <p>
-                        {{__("Operational disruption: We are currently having problems publishing recordings from the lecture halls. Troubleshooting in progress!")}}
+                        {{__("Operational disruption: We have temporarily turned off the ability to generate subtitles.")}}
                     </p>
                 </div>
                 {{--}}
