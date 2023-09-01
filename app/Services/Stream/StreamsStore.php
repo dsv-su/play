@@ -19,7 +19,7 @@ class StreamsStore extends Model
 
     public function streams()
     {
-        //Check if presentation has been edited
+        //Check if presentation has been edited override source setting
         if(!$presentation = ManualPresentation::where('pkg_id', $this->video->id)->where('type', 'edit')->where(function($query) {
             $query->where('status', 'sent')->orWhere('status', 'completed');})->latest()->first()) {
             if(count($this->streams)>0) {
