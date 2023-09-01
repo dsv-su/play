@@ -30,7 +30,7 @@ class CourseStoreOrUpdate
             foreach ($this->courses as $this->course) {
                 if($this->course) {
                     //$year = '20' . substr($this->course['semester'], 2);
-                    $year = substr('2023', 2);
+                    $year = substr('ht2023', 2);
                     $semester = Str::upper(mb_substr($this->course['semester'], 0, 2)) ;
                     //Check if course exists
                     if ($this->db_course = Course::where('designation', $this->course['designation'])->where('semester', $semester)->where('year', $year)->first()) {
