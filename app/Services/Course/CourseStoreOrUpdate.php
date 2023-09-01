@@ -25,11 +25,10 @@ class CourseStoreOrUpdate
     public function store()
     {
         if ($this->courses) {
+            //Remove any old VideoCourse associations
+            VideoCourse::where('video_id', $this->video->id)->delete();
             foreach ($this->courses as $this->course) {
                 if($this->course) {
-                    //Remove any old VideoCourse associations
-                    VideoCourse::where('video_id', $this->video->id)->delete();
-
                     //$year = '20' . substr($this->course['semester'], 2);
                     $year = substr('ht2023', 2);
                     $semester = Str::upper(mb_substr($this->course['semester'], 0, 2)) ;
