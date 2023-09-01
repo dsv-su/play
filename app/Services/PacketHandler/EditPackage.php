@@ -49,7 +49,7 @@ class EditPackage
                 $course = Course::find($courseid);
                 $courses[] = \Illuminate\Support\Collection::make([
                     'designation' => $course->designation,
-                    'semester' => Str::lower($course->semester) . substr($course->year, 2)
+                    'semester' => Str::lower($course->semester) . $course->year
                 ]);
             }
             $presentation->courses = $courses;
