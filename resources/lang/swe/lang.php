@@ -33,4 +33,5 @@ return [
     'latest' => 'Alla presentationer',
     'viewed' => 'Mest spelade',
     'downloaded' => 'Mest nerladdade',
+    'studieadmin' => 'Studieadministration',
 ];

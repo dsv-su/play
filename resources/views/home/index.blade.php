@@ -75,6 +75,15 @@
                     </li>
                 @endif
 
+                <!-- Studieadmin tab -->
+                @if (isset($studieadmin) && !isset($course) && $studieadmin->total())
+                    <li class="nav-item pb-0">
+                        <a class="nav-link" href="#all" data-toggle="tab" role="tab" aria-controls="all"
+                           title="Studieadministration">Studieadministration <span
+                                class="count-label">X</span>
+                        </a>
+                    </li>
+                @endif
                 <!-- All Paginated tab -->
 
                 @if (isset($latest) && !isset($course) && $allpaginated->total())
