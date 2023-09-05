@@ -118,7 +118,7 @@ class UploadController extends Controller
                     $course = Course::find($course);
                     $courses[] = \Illuminate\Support\Collection::make([
                         'designation' => $course->designation,
-                        'semester' => Str::lower($course->semester) . substr($course->year, 2)
+                        'semester' => Str::lower($course->semester) . $course->year
                     ]);
                 }
             } else {
