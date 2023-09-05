@@ -17,3 +17,17 @@ div.play_savebar {
     border-radius: 2px;
     outline: 2px solid white;
 }
+
+/* Modifing bootstrap tab border color */
+
+@media only screen and (min-width: 992px) {
+    .nav-tabs a.nav-link.active,
+    .nav-tabs a.nav-link.active:hover,
+    .nav-tabs a.nav-link.active:focus {
+        border-color: #002f5f;
+        border-bottom-color: transparent;
+    }
+    .nav-tabs, .nav-tabs a.nav-link {
+        border-bottom: 1px solid #002f5f;
+    }
+}

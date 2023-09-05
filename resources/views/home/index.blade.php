@@ -75,7 +75,7 @@
                     </li>
                 @endif
 
-                <!-- Paginated tab -->
+                <!-- All Paginated tab -->
 
                 @if (isset($latest) && !isset($course) && $allpaginated->total())
                     <li class="nav-item pb-0">
