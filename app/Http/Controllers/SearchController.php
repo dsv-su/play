@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
 use App\Course;
 use App\CourseadminPermission;
 use App\CoursePermissions;
@@ -152,12 +153,12 @@ class SearchController extends Controller
 
         //Visibility
         $videos = $visibility->filter($videos);
-
         $videos = $videos->groupBy(function ($item) {
             return $item->video_course[0]->course['year'] ?? '9999';
         });
 
-        return view('home.navigator', compact('category', 'videos'));
+        $videoformat = Cookie::get('videoformat') ?? 'grid';
+        return view('home.navigator', compact('category', 'videoformat', 'videos'));
     }
 
     /** Abstract for viewByStudent filtering method

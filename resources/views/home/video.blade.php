@@ -165,6 +165,9 @@
                     <a href="/designation/{{$designation}}"
                        class="badge badge-primary">{{$designation}}</a>
                 @endforeach
+            @elseif ($video->category->id == 2)
+                <a href="/category/Studieadmin"
+                   class="badge badge-success">Studieadmin</a>
             @endif
             @if (!$video->presenters()->isEmpty())
                 @foreach($video->presenters() as $presenter)

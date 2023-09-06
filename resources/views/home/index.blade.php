@@ -78,9 +78,9 @@
                 <!-- Studieadmin tab -->
                 @if (isset($studieadmin) && !isset($course) && $studieadmin->total())
                     <li class="nav-item pb-0">
-                        <a class="nav-link" href="#all" data-toggle="tab" role="tab" aria-controls="all"
-                           title="Studieadministration">Studieadministration <span
-                                class="count-label">X</span>
+                        <a class="nav-link" href="#studieadmin" data-toggle="tab" role="tab" aria-controls="all"
+                           title="@lang('lang.studieadmin')">@lang('lang.studieadmin') <span
+                                class="count-label">{{$studieadmin->total()}}</span>
                         </a>
                     </li>
                 @endif
@@ -243,8 +243,47 @@
                     <!-- -->
                 </div>
             @endif
+            <!-- Studieadmin -->
+            @if (isset($studieadmin))
+                <div id="studieadmin" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-E">
+
+                    <!-- Pagination for Studieadmin -->
+                    {{--}}
+                    <div class="pagination justify-content-center mt-4">
+                        {{ $previouspaginated_ht->fragment('previous_ht')->links() }}
+                    </div>
+                    {{--}}
+
+                    <!-- -->
+                    <div class="card-deck inner">
+                        @foreach ($studieadmin as $key => $video)
+                            <div class="col my-3">
+                                @include('home.video')
+                                @include('layouts.partials.videomodals')
+                            </div>
+                        @endforeach
+                        <div class="col">
+                            <div class="card video my-0 mx-auto"></div>
+                        </div>
+                        <div class="col">
+                            <div class="card video my-0 mx-auto"></div>
+                        </div>
+                        <div class="col">
+                            <div class="card video my-0 mx-auto"></div>
+                        </div>
+                    </div>
+
+                    <!-- Pagination for studieadmin -->
+                    {{--}}
+                    <div class="pagination justify-content-center">
+                        {{ $previouspaginated_ht->fragment('previous_ht')->links() }}
+                    </div>
+                    {{--}}
+                    <!-- -->
+                </div>
+            @endif
             <!-- Content tab All -->
-            <div id="all" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-E">
+            <div id="all" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-F">
                 @if ((isset($latest) && $latest->count()) || isset($pending) && $pending->count())
                     @if (isset($courses) || isset($terms) || isset($presenters) || isset($tags))
                         <form class="form-inline">
