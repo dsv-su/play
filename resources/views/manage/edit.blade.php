@@ -10,8 +10,6 @@
         'presentation' => $editHandler
         ])
 
-    <!-- disabled subtitling 2023-09-04 -->
-    @if(app()->make('play_role') == 'Administrator')
             <div class="container px-3 px-sm-0">
                 <div class="col-sm-12">
                     <div class="rounded border shadow p-3 my-2">
@@ -29,12 +27,8 @@
                                     </select>
                                 </div>
                             </div>
-                            @endif
-                        <!-- disabled subtitling 2023-09-04 -->
     </form>
                                     <!-- end language toggle -->
-                        <!-- disabled subtitling 2023-09-04 -->
-                        @if(app()->make('play_role') == 'Administrator')
                     </div>
                         <div class="form-group col-md-6 flex-column d-flex">
                             <div id="subtitleHolder">
@@ -59,8 +53,7 @@
                 </div>
             </div>
         </div>
-        @endif
-         <!-- disabled subtitling 2023-09-04 -->
+
         <script>
             Dropzone.discover();
             var deleteSubtitle = '{{ route("subtitle-delete") }}';
