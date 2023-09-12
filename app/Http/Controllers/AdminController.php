@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\AdminHandler;
+use App\CourseadminPermission;
+use App\IndividualPermission;
 use App\Jobs\JobUploadFailedNotification;
 use App\ManualPresentation;
 use App\MediasiteFolder;
@@ -15,12 +17,19 @@ use App\Services\DownloadPackageZip;
 use App\Services\Ldap\SukatUser;
 use App\Services\Notify\PlayStoreNotify;
 use App\Services\ReLoadPlayStore;
+use App\Stream;
+use App\StreamResolution;
 use App\Video;
+use App\VideoCourse;
 use App\VideoPermission;
+use App\VideoPresenter;
+use App\VideoStat;
+use App\VideoTag;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Storage;
 use stdClass;
 
@@ -268,6 +277,38 @@ class AdminController extends Controller
         $permission->delete();
 
         return back()->with(['message' => 'The permissiongroup has been deleted']);
+    }
+
+    public function package_queue_erase($id)
+    {
+        $video = Video::find($id);
+
+        //Start transaction
+        DB::beginTransaction();
+
+        try {
+            VideoCourse::where('video_id', $id)->delete();
+            VideoTag::where('video_id', $id)->delete();
+            VideoPresenter::where('video_id', $id)->delete();
+            VideoPermission::where('video_id', $id)->delete();
+            VideoStat::where('video_id', $id)->delete();
+            CourseadminPermission::where('video_id', $id)->delete();
+            IndividualPermission::where('video_id', $id)->delete();
+
+            $streams = Stream::where('video_id', $id)->get();
+            foreach ($streams as $stream) {
+                StreamResolution::where('stream_id', $stream->id)->delete();
+                $stream->delete();
+            }
+            $video->delete();
+        } catch (Exception $e) {
+            report($e);
+            DB::rollback(); // Something went wrong
+            return \Redirect::back()->with('error', true)->with('message', __('Error erasing queue item').': '.$e->getMessage());
+        }
+
+        DB::commit();   // Successfully removed
+        return back()->withInput();
     }
 
     public function admin_erase($id)

@@ -27,6 +27,7 @@
                     <th scope="col">jobid</th>
                     <th scope="col">Title</th>
                     <th scope="col">Last updated</th>
+                    <th scope="col">Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -55,6 +56,8 @@
                         <td>{{$queued_presentation->notification_id}}</td>
                         <td>{{$queued_presentation->title}}</td>
                         <td>{{$queued_presentation->updated_at}}</td>
+                        <td><a role="button" class="btn btn-danger btn-sm" style="font-size: smaller;"
+                               href="{{route('package_queue_erase', $queued_presentation->id)}}">Remove</a></td>
                     </tr>
                 @endforeach
                 </tbody>
