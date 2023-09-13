@@ -20,7 +20,7 @@ div.play_savebar {
 
 /* Modifing bootstrap tab border color */
 
-@media only screen and (min-width: 992px) {
+@media only screen and (min-width: 1200px) {
     .nav-tabs a.nav-link.active,
     .nav-tabs a.nav-link.active:hover,
     .nav-tabs a.nav-link.active:focus {
