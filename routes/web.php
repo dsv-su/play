@@ -163,6 +163,7 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     Route::get('/delete_permission/{permission}', 'AdminController@deletePermission')->name('delete_permission');
     Route::post('/store_new_permission', 'AdminController@adminNewPermission')->name('store_new_permission');
     Route::get('/admin_download_notify_resend/{id}', 'AdminController@admin_download_notify_resend')->name('admin_download_notify_resend');
+    Route::get('/package_queue_erase/{id}', 'AdminController@package_queue_erase')->name('package_queue_erase');
 
     //Mediasite
     Route::get('/mediasite', 'PlayController@mediasite')->name('mediasite');
