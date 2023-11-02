@@ -14,8 +14,8 @@ class Metadata
 
     public function create(ManualPresentation $presentation)
     {
-        $Determine = new PresentationDuration();
-        $Thumb = new StreamThumb();
+        //$Determine = new PresentationDuration();
+        //$Thumb = new StreamThumb();
 
         $finalPath = $this->storage() . '/'. $presentation->local;
         $videoPath = $finalPath . '/video/';
@@ -24,7 +24,7 @@ class Metadata
         $presentation->sources = [];
         //Adds source and created thumbs
         foreach (\Illuminate\Support\Facades\Storage::disk('play-store')->files($videoPath) as $key => $filename) {
-
+        /* Disabled 231102 RD
             //Add duration
             if($key ==  0 ) {
                 if($presentation->duration = $Determine->duration($filename)) {
@@ -54,19 +54,19 @@ class Metadata
 
             $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($filename));
             //Add video source
-
+            */
             foreach(\Illuminate\Support\Facades\Storage::disk('play-store')->files($videoPath) as $stream => $f) {
                 $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($f));
                 if($stream == 0) {
                     $this->source['main'] = [
                         'video' => 'video/'. basename($f),
-                        'poster' => 'poster/'. $thumb_name . '.png',
+                        //'poster' => 'poster/'. $thumb_name . '.png',
                         'playAudio' => true,
                     ];
                 } else {
                     $this->source['camera'.$stream] = [
                         'video' => 'video/'. basename($f),
-                        'poster' => 'poster/'. $thumb_name . '.png',
+                        //'poster' => 'poster/'. $thumb_name . '.png',
                         'playAudio' => false,
                     ];
                 }
@@ -146,7 +146,7 @@ class Metadata
             $stream = Stream::where('video_id', $presentation->pkg_id)->where('audio', true)->first();
             $this->gsubtitles['Generated'] = Collection::make([
                 'type' => 'whisper',
-                'source' => $stream->name
+                'source' => $stream->name ?? 'main'
             ]);
         } else {
             $this->gsubtitles['Generated'] = Collection::make([
