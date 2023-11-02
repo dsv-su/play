@@ -7,7 +7,8 @@ Dropzone.options.datanodeupload =
         chunking: true,      // enable chunking
         forceChunking: true, // forces chunking when file.size < chunkSize
         parallelChunkUploads: true, // allows chunks to be uploaded in parallel (this is independent of the parallelUploads option)
-        chunkSize: 20000000,  // chunk size 20,000,000 bytes (~20MB)
+        //chunkSize: 20000000,  // chunk size 20,000,000 bytes (~20MB)
+        chunkSize: 2000000,  // chunk size 20,000,000 bytes (~2MB)
         retryChunks: true,   // retry chunks on failure
         retryChunksLimit: 5, // retry maximum of 5 times
 
