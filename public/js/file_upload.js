@@ -25,7 +25,12 @@ Dropzone.options.datanodeupload =
             this.on("queuecomplete", function() {
                 //Check number of files before enabling submit button
                 if(this.files.length > 0) {
-                    bt.disabled = false;
+                    async function waitforfiles() {
+                       //Wait for 5 seconds
+                        await new Promise(resolve => setTimeout(resolve, 5000));
+                        bt.disabled = false;
+                    }
+                    waitforfiles();
                 }
                 console.log("The queue has finished:");
             });
