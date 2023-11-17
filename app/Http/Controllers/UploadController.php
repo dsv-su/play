@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Course;
+use App\Jobs\JobUploadFailedNotification;
 use App\Jobs\JobUploadProgressNotification;
 use App\ManualPresentation;
 use App\Permission;
@@ -186,12 +187,6 @@ class UploadController extends Controller
     {
         $presentation = ManualPresentation::find($id);
 
-        //Send email to uploader
-        $job = (new JobUploadProgressNotification($presentation));
-
-        // Dispatch Job and continue
-        dispatch($job);
-
         /***
          * Disabled SFTP upload to server
          */
@@ -209,15 +204,38 @@ class UploadController extends Controller
 
         //Create thumbs and metadata
         $metadata = new Metadata();
-        $metadata->create($presentation);
+        if ($metadata->create($presentation)) {
+            //Metadata is successfully created
 
-        //Change manualupdate status
-        $presentation->status = 'stored';
-        $presentation->save();
+            //Change manualupdate status
+            $presentation->status = 'stored';
+            $presentation->save();
 
-        // Send notify
-        $notify = new PlayStoreNotify($presentation);
-        $notify->sendSuccess('default');
+            // Send notify
+            $notify = new PlayStoreNotify($presentation);
+            $notify->sendSuccess('default');
+
+            //Send email to uploader
+            $job = (new JobUploadProgressNotification($presentation));
+
+            // Dispatch Job and continue
+            dispatch($job);
+
+        } else {
+            //Change manualupdate status
+            $presentation->status = 'failed';
+            $presentation->save();
+
+            //Something went wrong - Send email to uploader
+            $job = (new JobUploadFailedNotification($presentation));
+
+            // Dispatch Job and continue
+            dispatch($job);
+        }
+
+
+
+
 
         return redirect('/');
     }

@@ -326,12 +326,17 @@
 
                             <div class="form-group">
                                 <div id="uploaderHolder">
-                                    <form action="{{ route('file-upload') }}" class="dropzone" id="datanodeupload">
-                                        <input type="file" name="file"  style="display: none;">
+                                    <form action="{{ route('file-upload') }}"
+                                          enctype="multipart/form-data"
+                                          class="dropzone"
+                                          id="datanodeupload">
+                                        <input type="file" name="file"  style="display: none;" multiple>
                                         <input type="hidden" name="localdir"  id="localdir" value="{{ $presentation->local }}">
                                         @csrf
                                         <div class="dz-message" data-dz-message>
+
                                             <span>{{__('Drop files here or click to browse')}}</span>
+
                                         </div>
                                     </form>
                                 </div>
