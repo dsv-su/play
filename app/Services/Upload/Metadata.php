@@ -55,7 +55,8 @@ class Metadata
             $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($filename));
             //Add video source
             */
-            foreach(\Illuminate\Support\Facades\Storage::disk('play-store')->files($videoPath) as $stream => $f) {
+
+            foreach($files = \Illuminate\Support\Facades\Storage::disk('play-store')->files($videoPath) as $stream => $f) {
                 $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($f));
                 if($stream == 0) {
                     $this->source['main'] = [
@@ -156,6 +157,11 @@ class Metadata
         }
 
         $presentation->generate_subtitles = $this->gsubtitles;
+
+        //Failcheck
+        if(!count($files ?? []) > 0) {
+            return false;
+        }
 
         return $presentation->save();
     }
