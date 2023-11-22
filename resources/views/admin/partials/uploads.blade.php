@@ -133,7 +133,9 @@
                                 <a role="button" class="btn btn-info btn-sm" style="font-size: smaller;"
                                    href="{{route('manual_admin_cancel', $manual_presentation->id)}}">Notify user</a>
                                 <a role="button" class="btn btn-danger btn-sm" style="font-size: smaller;"
-                                   href="{{route('upload_store', $manual_presentation->id)}}">Resend</a>
+                                   href="{{route('upload_store', $manual_presentation->id)}}">UploadResend</a>
+                                <a role="button" class="btn btn-danger btn-sm" style="font-size: smaller;"
+                                   href="{{route('pkg_resend', $manual_presentation->id)}}">ResendPkg</a>
                             </td>
                         @elseif($manual_presentation->status == 'notified')
                             <td>
