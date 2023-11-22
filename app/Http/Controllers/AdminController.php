@@ -286,28 +286,32 @@ class AdminController extends Controller
         //Start transaction
         DB::beginTransaction();
 
-        try {
-            VideoCourse::where('video_id', $id)->delete();
-            VideoTag::where('video_id', $id)->delete();
-            VideoPresenter::where('video_id', $id)->delete();
-            VideoPermission::where('video_id', $id)->delete();
-            VideoStat::where('video_id', $id)->delete();
-            CourseadminPermission::where('video_id', $id)->delete();
-            IndividualPermission::where('video_id', $id)->delete();
+        //Only remove non-existent presentations
+        if($video->type != 'edit') {
+            try {
+                VideoCourse::where('video_id', $id)->delete();
+                VideoTag::where('video_id', $id)->delete();
+                VideoPresenter::where('video_id', $id)->delete();
+                VideoPermission::where('video_id', $id)->delete();
+                VideoStat::where('video_id', $id)->delete();
+                CourseadminPermission::where('video_id', $id)->delete();
+                IndividualPermission::where('video_id', $id)->delete();
 
-            $streams = Stream::where('video_id', $id)->get();
-            foreach ($streams as $stream) {
-                StreamResolution::where('stream_id', $stream->id)->delete();
-                $stream->delete();
+                $streams = Stream::where('video_id', $id)->get();
+                foreach ($streams as $stream) {
+                    StreamResolution::where('stream_id', $stream->id)->delete();
+                    $stream->delete();
+                }
+                $video->delete();
+            } catch (Exception $e) {
+                report($e);
+                DB::rollback(); // Something went wrong
+                return \Redirect::back()->with('error', true)->with('message', __('Error erasing queue item').': '.$e->getMessage());
             }
-            $video->delete();
-        } catch (Exception $e) {
-            report($e);
-            DB::rollback(); // Something went wrong
-            return \Redirect::back()->with('error', true)->with('message', __('Error erasing queue item').': '.$e->getMessage());
-        }
 
-        DB::commit();   // Successfully removed
+            DB::commit();   // Successfully removed
+        }
+        
         return back()->withInput();
     }
 
@@ -342,6 +346,19 @@ class AdminController extends Controller
 
         //Remove temp storage
         Storage::disk('play-store')->deleteDirectory($this->storage(). '/'  . $presentation->local);
+
+        return back()->withInput();
+    }
+
+    public function admin_pkg_resend($id)
+    {
+        $presentation = ManualPresentation::find($id);
+        // Send notify
+        $notify = new PlayStoreNotify($presentation);
+        $notify->sendSuccess('edit');
+        //Updated status
+        $presentation->status = 'sent';
+        $presentation->save();
 
         return back()->withInput();
     }
