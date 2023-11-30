@@ -311,7 +311,7 @@ class AdminController extends Controller
 
             DB::commit();   // Successfully removed
         }
-        
+
         return back()->withInput();
     }
 
