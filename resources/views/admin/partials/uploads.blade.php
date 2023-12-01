@@ -27,7 +27,7 @@
                 <tbody>
                 @foreach($queued_presentations as $queued_presentation)
                     <tr>
-                        <td><span class="badge badge-info">Incoming</span></td>
+                        <td><span class="badge badge-info">Inco</span></td>
                         <td>
                             @if($queued_presentation->origin == 'manual')
                                 <span class="badge badge-primary">{{$queued_presentation->origin}}</span>
