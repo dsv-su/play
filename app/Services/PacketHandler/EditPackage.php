@@ -65,9 +65,10 @@ class EditPackage
         }
 
         //Subtitle language
-        $presentation->sublanguage = $request->subtitle_language;
-
-        $presentation->save();
+        if(!$presentation->autogenerate_subtitles) {
+            $presentation->sublanguage = $request->subtitle_language;
+            $presentation->save();
+        }
 
         //Send to backend
         //Create thumbs and metadata
