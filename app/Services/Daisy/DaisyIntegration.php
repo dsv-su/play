@@ -254,6 +254,8 @@ class DaisyIntegration
     public function init($start_date = null)
     {
         $this->endpoints = array(
+            'courseSegment?semester=20242',
+            'courseSegment?semester=20241',
             'courseSegment?semester=20232',
             'courseSegment?semester=20231',
             'courseSegment?semester=20222',
@@ -264,9 +266,9 @@ class DaisyIntegration
             'courseSegment?semester=20202',
             'courseSegment?semester=20191',
             'courseSegment?semester=20192',
-            'courseSegment?semester=20181',
+            /*'courseSegment?semester=20181',
             'courseSegment?semester=20182',
-            /*'courseSegment?semester=20171',
+            'courseSegment?semester=20171',
             'courseSegment?semester=20172',
             'courseSegment?semester=20161',
             'courseSegment?semester=20162',

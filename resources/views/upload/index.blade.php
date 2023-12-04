@@ -326,12 +326,17 @@
 
                             <div class="form-group">
                                 <div id="uploaderHolder">
-                                    <form action="{{ route('file-upload') }}" class="dropzone" id="datanodeupload">
-                                        <input type="file" name="file"  style="display: none;">
+                                    <form action="{{ route('file-upload') }}"
+                                          enctype="multipart/form-data"
+                                          class="dropzone"
+                                          id="datanodeupload">
+                                        <input type="file" name="file"  style="display: none;" multiple>
                                         <input type="hidden" name="localdir"  id="localdir" value="{{ $presentation->local }}">
                                         @csrf
                                         <div class="dz-message" data-dz-message>
+
                                             <span>{{__('Drop files here or click to browse')}}</span>
+
                                         </div>
                                     </form>
                                 </div>
@@ -361,6 +366,8 @@
                             <div class="rounded border su-background__light p-3 my-2">
                                 {{ __('The processing time for a presentation with auto-generated subtitles is longer. You will receive an email when processing is complete. Since the subtitles are auto-generated, you should check the subtitles yourself and edit if necessary.') }}
                             </div>
+                            <label class="form-control-label px-1">{{ __("Force language of subtitles") }}</label>
+                            @livewire('whisper-language', ['presentation' => $presentation ])
                         </div>
 
 

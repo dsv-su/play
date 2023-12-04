@@ -66,16 +66,15 @@ class HomeController extends Controller
             $data['my'] = $visibility->filter($data['mypaginated']);
         }
 
-        // HT2023 Active courses store in cache
+        // HT2024 Active courses store in cache
         $active_courses_ht = Cache::remember(app()->make('play_username') . '_active_ht', $seconds, function () use ($daisy){
             return $daisy->getActiveCoursesHT();
         });
 
-        //Disabled 2023-08-23
-        // Prevoius year courses store in cache
-        /*$previous_courses_ht = Cache::remember(app()->make('play_username') . '_previous_ht', $seconds, function () use ($daisy){
+        // HT2023 Prevoius year courses store in cache
+        $previous_courses_ht = Cache::remember(app()->make('play_username') . '_previous_ht', $seconds, function () use ($daisy){
             return $daisy->getPreviousYearCoursesHT();
-        });*/
+        });
 
         if($this->administrator()) {
             //Administrator full visibility
@@ -110,7 +109,7 @@ class HomeController extends Controller
         }
 
 
-        // VT2023 Active courses store in cache
+        // VT2024 Active courses store in cache
         $active_courses_vt = Cache::remember(app()->make('play_username') . '_active_vt', $seconds, function () use ($daisy){
             return $daisy->getActiveCoursesVT();
         });

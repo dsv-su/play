@@ -157,12 +157,14 @@ Route::middleware(['entitlements', 'playauth', 'web'])->group(function () {
     Route::get('/manual_admin_erase/{id}', 'AdminController@admin_erase')->name('manual_admin_erase');
     Route::get('/manual_admin_cancel/{id}', 'AdminController@admin_cancel')->name('manual_admin_cancel');
     Route::get('/manual_admin_notify/{id}', 'AdminController@admin_upload_notify_fail')->name('manual_admin_notify_fail');
+    Route::get('/resend_pkg/{id}', 'AdminController@admin_pkg_resend')->name('pkg_resend');
     Route::get('/manual_admin_unregister/{id}', 'AdminController@admin_unregister')->name('manual_admin_unregister');
     Route::get('/add_permission', 'AdminController@addPermission')->name('add_permission');
     Route::get('/modify_permission/{permission}', 'AdminController@modifyPermission')->name('modify_permission');
     Route::get('/delete_permission/{permission}', 'AdminController@deletePermission')->name('delete_permission');
     Route::post('/store_new_permission', 'AdminController@adminNewPermission')->name('store_new_permission');
     Route::get('/admin_download_notify_resend/{id}', 'AdminController@admin_download_notify_resend')->name('admin_download_notify_resend');
+    Route::get('/package_queue_erase/{id}', 'AdminController@package_queue_erase')->name('package_queue_erase');
 
     //Mediasite
     Route::get('/mediasite', 'PlayController@mediasite')->name('mediasite');

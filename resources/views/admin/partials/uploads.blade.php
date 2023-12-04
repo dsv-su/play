@@ -9,30 +9,25 @@
             </ol>
         </nav>
 
-        {{--}}
-        <div class="card" style="border: 1px solid #3E7DC0 !important;">
-            <div class="card-body">
-                {{ __("Uploads are deleted after status completed.") }}
-            </div>
-        </div>
-        {{--}}
         <h3>Incoming - Queue status</h3>
         <div class="row">
             <table class="table table-sm table-bordered" style="font-size: small;">
                 <thead>
                 <tr>
-                    <th scope="col">Pkg_id</th>
-                    <th scope="col">Latest Handler</th>
-                    <th scope="col">Pending Handler</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Type</th>
                     <th scope="col">jobid</th>
+                    <th scope="col">Pkg_id</th>
+                    <th scope="col">Pending Handler</th>
                     <th scope="col">Title</th>
                     <th scope="col">Last updated</th>
+                    <th scope="col">Action</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($queued_presentations as $queued_presentation)
                     <tr>
-                        <td>{{$queued_presentation->id}}</td>
+                        <td><span class="badge badge-info">Inco</span></td>
                         <td>
                             @if($queued_presentation->origin == 'manual')
                                 <span class="badge badge-primary">{{$queued_presentation->origin}}</span>
@@ -43,8 +38,9 @@
                             @else
                                 {{$queued_presentation->origin}}
                             @endif
-
                         </td>
+                        <td>{{$queued_presentation->notification_id}}</td>
+                        <td>{{$queued_presentation->id}}</td>
                         <td>
                             @if(json_decode($queued_presentation->presentation, true)['pending'] ?? false)
                                 @foreach(json_decode($queued_presentation->presentation, true)['pending'] as $pending)
@@ -52,9 +48,11 @@
                                 @endforeach
                             @endif
                         </td>
-                        <td>{{$queued_presentation->notification_id}}</td>
+
                         <td>{{$queued_presentation->title}}</td>
                         <td>{{$queued_presentation->updated_at}}</td>
+                        <td><a role="button" class="btn btn-danger btn-sm" style="font-size: smaller;"
+                               href="{{route('package_queue_erase', $queued_presentation->id)}}">Remove</a></td>
                     </tr>
                 @endforeach
                 </tbody>
@@ -130,7 +128,9 @@
                                 <a role="button" class="btn btn-info btn-sm" style="font-size: smaller;"
                                    href="{{route('manual_admin_cancel', $manual_presentation->id)}}">Notify user</a>
                                 <a role="button" class="btn btn-danger btn-sm" style="font-size: smaller;"
-                                   href="{{route('upload_store', $manual_presentation->id)}}">Resend</a>
+                                   href="{{route('upload_store', $manual_presentation->id)}}">UploadResend</a>
+                                <a role="button" class="btn btn-danger btn-sm" style="font-size: smaller;"
+                                   href="{{route('pkg_resend', $manual_presentation->id)}}">ResendPkg</a>
                             </td>
                         @elseif($manual_presentation->status == 'notified')
                             <td>

@@ -6,25 +6,46 @@ Dropzone.options.datanodeupload =
         maxFiles: 4, // max files
         chunking: true,      // enable chunking
         forceChunking: true, // forces chunking when file.size < chunkSize
-        parallelChunkUploads: true, // allows chunks to be uploaded in parallel (this is independent of the parallelUploads option)
-        chunkSize: 20000000,  // chunk size 20,000,000 bytes (~20MB)
+        parallelChunkUploads: false, // allows chunks to be uploaded in parallel (this is independent of the parallelUploads option)
+        //chunkSize: 20000000,  // chunk size 20,000,000 bytes (~20MB)
+        chunkSize: 2000000,  // chunk size 20,000,000 bytes (~2MB)
         retryChunks: true,   // retry chunks on failure
         retryChunksLimit: 5, // retry maximum of 5 times
 
         init: function() {
             var bt = document.getElementById('submit');
-            this.on("complete", function(file) {
-                Livewire.emit('fileAdded')
-                console.log("A file has been added:"+file.name);
-            });
+            var er = false;
+
             this.on("processing", function() {
                 console.log("A upload file process has started");
                 bt.disabled = true;
             });
+
+            this.on("error", function(file) { //Response is 400
+                var msgContainer =  $(file.previewElement).find('.dz-image');
+                msgContainer.css({"border" : "4px solid #d90101"}) //Red border
+                er = true;
+                bt.disabled = true;
+            });
+
+            this.on("success", function(file) {
+                Livewire.emit('fileAdded')
+                console.log("A file has been added:"+file.name);
+                var msgContainer =  $(file.previewElement).find('.dz-image');
+                msgContainer.css({"border" : "2px solid #38873C"}) //Green border
+            });
+
             this.on("queuecomplete", function() {
                 //Check number of files before enabling submit button
                 if(this.files.length > 0) {
-                    bt.disabled = false;
+                    async function waitforfiles() {
+                       //Wait for 2 seconds
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+                        if(er == false) {
+                            bt.disabled = false;
+                        }
+                    }
+                    waitforfiles();
                 }
                 console.log("The queue has finished:");
             });
@@ -39,10 +60,6 @@ Dropzone.options.datanodeupload =
         },
 
         renameFile: function(file) {
-            /*var dt = new Date();
-            var time = dt.getTime();
-            return time+"_"+file.name;*/
-
             var filenameextension = file.name.replace(/^.*[\\\/]/, '');
             var filename = filenameextension.substring(0, filenameextension.lastIndexOf('.'));
             var ext = filenameextension.split('.').pop();
@@ -55,8 +72,6 @@ Dropzone.options.datanodeupload =
                 hash |= 0; // Convert to 32bit integer
             }
             return Math.abs(hash) + '.' + ext;
-
-
         },
         acceptedFiles: "video/*",
         addRemoveLinks: true,
@@ -92,6 +107,6 @@ Dropzone.options.datanodeupload =
             }
             return (fileRef = file.previewElement) != null ?
                 fileRef.parentNode.removeChild(file.previewElement) : void 0;
-        }
+        },
     };
 
