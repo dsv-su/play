@@ -6,7 +6,8 @@ class TestController extends Controller
 {
     public function test()
     {
-        phpinfo();
+        return view('modals.disclamer');
+        //phpinfo();
     }
 
     public function server()

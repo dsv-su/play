@@ -56,7 +56,7 @@
                             </a>
                         </li>
                 @endif
-                <!-- VT 2023 -->
+                <!-- VT 2024 -->
                 @if (isset($active_vt) && !$active_vt->isEmpty())
                     <!-- Paginated tab -->
                     <li class="nav-item pb-0">
