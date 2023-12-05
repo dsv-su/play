@@ -19,7 +19,7 @@
                 <option value="en">{{__("English")}}</option>
                 <option value="fi">{{__("Finnish")}}</option>
                 <option value="de">{{__("German")}}</option>
-                <option value="es">{{__("Spannish")}}</option>
+                <option value="es">{{__("Spanish")}}</option>
                 <option value="sv">{{__("Swedish")}}</option>
             </select>
         </div>
