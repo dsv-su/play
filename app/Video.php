@@ -227,4 +227,22 @@ class Video extends Model implements Searchable
         return $designations;
     }
 
+    /**
+     * @return array
+     */
+    public function getUniqueStudyAdminCat()
+    {
+        $categories = [];
+        if (!$this->video_course->isEmpty()) {
+            if($this->category->category_name == 'Studieadmin') {
+                $category = $this->category->category_name;
+                if (!in_array($category, $categories)) {
+                    $categories[] = $category;
+                }
+            }
+        }
+        return $categories;
+    }
+
+
 }

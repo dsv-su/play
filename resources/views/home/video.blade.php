@@ -165,10 +165,15 @@
                     <a href="/designation/{{$designation}}"
                        class="badge badge-primary">{{$designation}}</a>
                 @endforeach
+                @foreach($video->getUniqueStudyAdminCat() as $cat)
+                    <a href="/category/Studieadmin"
+                       class="badge badge-success">{{__("STUDYADMIN")}}</a>
+                @endforeach
             @elseif ($video->category->id == 2)
                 <a href="/category/Studieadmin"
-                   class="badge badge-success">Studieadmin</a>
+                   class="badge badge-success">{{__("STUDYADMIN")}}</a>
             @endif
+
             @if (!$video->presenters()->isEmpty())
                 @foreach($video->presenters() as $presenter)
                     <a href="/presenter/{{$presenter->username}}" class="badge badge-light">{{$presenter->name}}</a>

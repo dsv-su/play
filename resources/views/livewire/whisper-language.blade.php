@@ -14,9 +14,13 @@
             </p>
             <select wire:model="whisper" class="w-auto form-group form-control" name="whisper_language" style="margin: 5px 0;">
                 <option value="">{{__("Choose a language")}}</option>
+                <option value="da">{{__("Danish")}}</option>
+                <option value="nl">{{__("Dutch")}}</option>
                 <option value="en">{{__("English")}}</option>
-                <option value="sv">{{__("Swedish")}}</option>
                 <option value="fi">{{__("Finnish")}}</option>
+                <option value="de">{{__("German")}}</option>
+                <option value="es">{{__("Spannish")}}</option>
+                <option value="sv">{{__("Swedish")}}</option>
             </select>
         </div>
     @endif

@@ -57,6 +57,8 @@
                     return item.name + ' (' + item.designation + ')';
                 } else if (item.type === 'tag') {
                     return item.name;
+                } else if (item.type === 'category') {
+                    return item.category_name;
                 } else if (item.type === 'presenter') {
                     return item.name;
                 } else {
@@ -75,6 +77,8 @@
                         return '<li><a class="d-block w-100" href="/designation/' + data.designation + '">{{ __('Course') }}: ' + data.name + ' (' + data.designation + ')</a></li>';
                     } else if (data.type === 'tag') {
                         return '<li><a class="d-block w-100" href="/tag/' + data.name + '">{{ __('Tag') }}: ' + data.name + '</a></li>';
+                    } else if (data.type === 'category') {
+                        return '<li><a class="d-block w-100" href="/category/' + data.category_name + '">{{ __('Category') }}: ' + data.category_name + '</a></li>';
                     } else if (data.type === 'presenter') {
                         return '<li><a class="d-block w-100" href="/presenter/' + data.username + '">{{ __('Presenter') }}: ' + data.name + '</a></li>';
                     } else {

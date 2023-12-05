@@ -139,8 +139,7 @@ class SearchController extends Controller
     }
 
 
-    /** Show presentations that belong to the given category (currently not used)
-     * This method shall be rewritten if used.
+    /** Show presentations that belong to the given category
      * @param VisibilityFilter $visibility
      * @param $category
      * @return Application|Factory|View
@@ -151,10 +150,8 @@ class SearchController extends Controller
             return $query->where('category_name', $category);
         })->get());
 
-        //Visibility
-        $videos = $visibility->filter($videos);
         $videos = $videos->groupBy(function ($item) {
-            return $item->video_course[0]->course['year'] ?? '9999';
+            return $item->category->category_name;
         });
 
         $videoformat = Cookie::get('videoformat') ?? 'grid';
@@ -530,10 +527,11 @@ class SearchController extends Controller
         $courses = Course::search($request->get('query'), null, true, true)->groupBy('designation')->orderBy('year', 'desc')->take(4)->get();
         $videos = Video::search($request->get('query'), null, true, true)->where('visibility', 1)->orderBy('creation', 'desc');
         $tags = Tag::search($request->get('query'), null, true, true)->take(3)->get();
+        $categories = Category::search($request->get('query'), null, true, true)->take(3)->get();
         $presenters = Presenter::search($request->get('query'), null, true, true)->take(3)->get();
         $count = $courses->count() + $tags->count() + $presenters->count();
 
-        return $courses->concat($tags)->concat($presenters)->concat($videos->take(15 - $count)->get());
+        return $courses->concat($tags)->concat($categories)->concat($presenters)->concat($videos->take(15 - $count)->get());
     }
 
     /** Method for tag search autocomplete suggestions

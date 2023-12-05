@@ -129,7 +129,7 @@ class HomeController extends Controller
         //Filter
         $data['active_vt'] = $visibility->filter($data['activepaginated_vt']);
 
-        // Studyadministration (tab3) and All courses (tab 4)
+        // Studyadministration and All courses
         if($this->administrator()) {
             //Administrator full visibility
             $data['allpaginated'] = Video::with('category', 'video_course.course')->where('state', true)->latest('creation')->fastPaginate(24, ['*'], 'all')->onEachSide(1);
@@ -142,6 +142,7 @@ class HomeController extends Controller
 
         //Filter
         $data['latest'] = $visibility->filter($data['allpaginated']);
+        $data['studieadmin_filtered'] = $visibility->filter($data['studieadmin']);
 
         return view('home.index', $data);
     }

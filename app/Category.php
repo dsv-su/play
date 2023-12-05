@@ -22,6 +22,14 @@ class Category extends Model implements Searchable
             'category_name' => 10
         ]
     ];
+
+    protected $appends = ['type'];
+
+    public function getTypeAttribute(): string
+    {
+        return 'category';
+    }
+
     public function getSearchResult(): SearchResult
     {
         //$url = route('categories.show', $this->id);
