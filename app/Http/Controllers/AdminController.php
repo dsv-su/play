@@ -89,7 +89,7 @@ class AdminController extends Controller
         if (!$request->server('REMOTE_USER')) {
             //No Shib_Session_ID
             if ($request->role == 'Administrator') {
-                $adminhandler = AdminHandler::updateOrCreate(['Shib_Session_ID' => '9999'], ['override' => false, 'custom' => false, 'user' => '', 'username' => '']);
+                $adminhandler = AdminHandler::updateOrCreate(['Shib_Session_ID' => '9999'], ['override' => false, 'role' => 'Administrator', 'custom' => false, 'user' => '', 'username' => '']);
             }
             elseif ($request->role == 'custom') {
                 //Strip domain suffix
@@ -135,7 +135,7 @@ class AdminController extends Controller
         } else {
             //Has Shib_Session_ID
             if ($request->role == 'Administrator') {
-                AdminHandler::updateOrCreate(['Shib_Session_ID' => $request->server('Shib_Session_ID')], ['override' => false, 'custom' => false, 'user' => '', 'username' => '']);
+                AdminHandler::updateOrCreate(['Shib_Session_ID' => $request->server('Shib_Session_ID')], ['override' => false, 'role' => 'Administrator', 'custom' => false, 'user' => '', 'username' => '']);
             }
             elseif ($request->role == 'custom') {
                 //Strip domain suffix
