@@ -24,9 +24,10 @@ div.play_savebar {
     .nav-tabs a.nav-link.active,
     .nav-tabs a.nav-link.active:hover,
     .nav-tabs a.nav-link.active:focus {
-        border-color: #002f5f;
-        border-bottom-color: transparent;
+        border-color: #002f5f !important;
+        border-bottom-color: transparent !important;
     }
+
     .nav-tabs, .nav-tabs a.nav-link {
         border-bottom: 1px solid #002f5f;
     }

@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Nicolaslopezj\Searchable\SearchableTrait;
 use Spatie\Searchable\Searchable;
 use Spatie\Searchable\SearchResult;
 
@@ -13,7 +14,21 @@ use Spatie\Searchable\SearchResult;
  */
 class Category extends Model implements Searchable
 {
+    use SearchableTrait;
+    protected $primaryKey = 'id';
     protected $fillable = ['category_name'];
+    protected $searchable = [
+        'columns' => [
+            'category_name' => 10
+        ]
+    ];
+
+    protected $appends = ['type'];
+
+    public function getTypeAttribute(): string
+    {
+        return 'category';
+    }
 
     public function getSearchResult(): SearchResult
     {

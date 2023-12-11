@@ -7,9 +7,9 @@
                aria-controls="collapse{{$key}}">
                 <i class="fa mr-2"></i>
                 @if(Lang::locale() == 'swe')
-                    {{\App\Course::find($key) ? \App\Course::find($key)->designation . ' ' . \App\Course::find($key)->semester.\App\Course::find($key)->year . ' — ' . \App\Course::find($key)->name : 'Okategoriserad'}}
+                    {{\App\Course::find($key) ? \App\Course::find($key)->designation . ' ' . \App\Course::find($key)->semester.\App\Course::find($key)->year . ' — ' . \App\Course::find($key)->name : $category ?? 'Okategoriserad'}}
                 @else
-                    {{\App\Course::find($key) ? \App\Course::find($key)->designation . ' ' . \App\Course::find($key)->semester.\App\Course::find($key)->year . ' — ' . \App\Course::find($key)->name_en : 'Uncategorized'}}
+                    {{\App\Course::find($key) ? \App\Course::find($key)->designation . ' ' . \App\Course::find($key)->semester.\App\Course::find($key)->year . ' — ' . \App\Course::find($key)->name_en : $category ?? 'Uncategorized'}}
                 @endif</a>
             <div class="d-inline-block">
                 <span class="badge badge-primary ml-2 mb-2"><span data-toggle="tooltip"

@@ -66,16 +66,15 @@ class HomeController extends Controller
             $data['my'] = $visibility->filter($data['mypaginated']);
         }
 
-        // HT2023 Active courses store in cache
+        // HT2024 Active courses store in cache
         $active_courses_ht = Cache::remember(app()->make('play_username') . '_active_ht', $seconds, function () use ($daisy){
             return $daisy->getActiveCoursesHT();
         });
 
-        //Disabled 2023-08-23
-        // Prevoius year courses store in cache
-        /*$previous_courses_ht = Cache::remember(app()->make('play_username') . '_previous_ht', $seconds, function () use ($daisy){
+        // HT2023 Prevoius year courses store in cache
+        $previous_courses_ht = Cache::remember(app()->make('play_username') . '_previous_ht', $seconds, function () use ($daisy){
             return $daisy->getPreviousYearCoursesHT();
-        });*/
+        });
 
         if($this->administrator()) {
             //Administrator full visibility
@@ -110,7 +109,7 @@ class HomeController extends Controller
         }
 
 
-        // VT2023 Active courses store in cache
+        // VT2024 Active courses store in cache
         $active_courses_vt = Cache::remember(app()->make('play_username') . '_active_vt', $seconds, function () use ($daisy){
             return $daisy->getActiveCoursesVT();
         });
@@ -130,17 +129,20 @@ class HomeController extends Controller
         //Filter
         $data['active_vt'] = $visibility->filter($data['activepaginated_vt']);
 
-        // All courses (tab 3)
+        // Studyadministration and All courses
         if($this->administrator()) {
             //Administrator full visibility
             $data['allpaginated'] = Video::with('category', 'video_course.course')->where('state', true)->latest('creation')->fastPaginate(24, ['*'], 'all')->onEachSide(1);
+            $data['studieadmin'] = Video::with('category', 'video_course.course')->where('category_id', 2)->where('state', true)->latest('creation')->fastPaginate(24, ['*'], 'all')->onEachSide(1);
         } else {
             //Non administrator restricted visibility
             $data['allpaginated'] = Video::with('category', 'video_course.course')->where('visibility', true)->where('state', true)->latest('creation')->fastPaginate(24, ['*'], 'all')->onEachSide(1);
+            $data['studieadmin'] = Video::with('category', 'video_course.course')->where('category_id', 2)->where('visibility', true)->where('state', true)->latest('creation')->fastPaginate(24, ['*'], 'all')->onEachSide(1);
         }
 
         //Filter
         $data['latest'] = $visibility->filter($data['allpaginated']);
+        $data['studieadmin_filtered'] = $visibility->filter($data['studieadmin']);
 
         return view('home.index', $data);
     }

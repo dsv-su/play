@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Services\AuthHandler;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 
 class CheckEntitlement
@@ -18,35 +19,47 @@ class CheckEntitlement
      */
     public function handle(Request $request, Closure $next)
     {
+        $authHandler = new AuthHandler();
+        $system = $authHandler->authorize();
 
-        $system = new AuthHandler();
-        $system = $system->authorize();
-        $auth_param = $system->global->authorization_parameter;
-        $authstring = $system->global->authorization; //For multiple entitlements
-        //$entitlement = $system->global->authorization;
-        $auth = explode(";", $authstring); //For multiple entitlements
-        $match = false;
+        $authParam = $system->global->authorization_parameter;
+        $authString = $system->global->authorization;
+        $auth = explode(";", $authString);
+
         if (!$request->server('REMOTE_USER')) {
             if ($system->global->app_env == 'local') {
                 return $next($request);
             } else {
-                return redirect()->guest(route('sulogin'));
+                return Redirect::guest(route('sulogin'));
             }
         } else {
-            if (isset($_SERVER[$auth_param])) {
-                $server_entitlements = explode(";", $_SERVER[$auth_param]);
-                foreach ($server_entitlements as $server_entitlement) {
-                    if (in_array($server_entitlement, $auth)) {
-                        $match = true;
-                    }
-                }
-            }
-        }
+            $serverEntitlements = $this->getServerEntitlements($authParam);
 
-        if (!$match) {
-            abort(401);
+            if (!$this->checkEntitlementMatch($serverEntitlements, $auth)) {
+                abort(401);
+            }
         }
 
         return $next($request);
+    }
+
+    protected function getServerEntitlements($authParam)
+    {
+        if (isset($_SERVER[$authParam])) {
+            return explode(";", $_SERVER[$authParam]);
+        }
+
+        return [];
+    }
+
+    protected function checkEntitlementMatch($serverEntitlements, $auth)
+    {
+        foreach ($serverEntitlements as $serverEntitlement) {
+            if (in_array($serverEntitlement, $auth)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

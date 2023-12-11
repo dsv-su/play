@@ -33,7 +33,7 @@
         @if (isset($active_vt) || isset($my))
             <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
                 @if (isset($my) && !$my->isEmpty())
-                    <!-- Paginated tab -->
+                    <!-- My courses tab -->
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#my" data-toggle="tab" role="tab" aria-controls="my"
                            title="
@@ -43,6 +43,15 @@
                                 @lang('lang.my_courses')">@lang('lang.my_courses')
                             @endif
                             <span class="count-label">{{$mypaginated->total()}}</span>
+                        </a>
+                    </li>
+                @endif
+                <!-- Studieadmin tab -->
+                @if (isset($studieadmin) && !isset($course) && $studieadmin->total())
+                    <li class="nav-item pb-0">
+                        <a class="nav-link" href="#studieadmin" data-toggle="tab" role="tab" aria-controls="studyadmin"
+                           title="@lang('lang.studieadmin')">@lang('lang.studieadmin') <span
+                                class="count-label">{{$studieadmin->total()}}</span>
                         </a>
                     </li>
                 @endif
@@ -56,7 +65,7 @@
                             </a>
                         </li>
                 @endif
-                <!-- VT 2023 -->
+                <!-- VT 2024 -->
                 @if (isset($active_vt) && !$active_vt->isEmpty())
                     <!-- Paginated tab -->
                     <li class="nav-item pb-0">
@@ -74,7 +83,6 @@
                                     class="count-label">{{$previouspaginated_ht->total()}}</span></a>
                     </li>
                 @endif
-
                 <!-- All Paginated tab -->
 
                 @if (isset($latest) && !isset($course) && $allpaginated->total())
@@ -133,10 +141,49 @@
                     <!-- -->
                 </div>
             @endif
+            <!-- Studieadmin -->
+            @if (isset($studieadmin))
+                <div id="studieadmin" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-B">
+
+                    <!-- Pagination for Studieadmin -->
+
+                <div class="pagination justify-content-center mt-4">
+                    {{ $studieadmin->fragment('studieadmin_filtered')->links() }}
+                </div>
+
+
+                <!-- -->
+                    <div class="card-deck inner">
+                        @foreach ($studieadmin_filtered as $key => $video)
+                            <div class="col my-3">
+                                @include('home.video')
+                                @include('layouts.partials.videomodals')
+                            </div>
+                        @endforeach
+                        <div class="col">
+                            <div class="card video my-0 mx-auto"></div>
+                        </div>
+                        <div class="col">
+                            <div class="card video my-0 mx-auto"></div>
+                        </div>
+                        <div class="col">
+                            <div class="card video my-0 mx-auto"></div>
+                        </div>
+                    </div>
+
+                    <!-- Pagination for studieadmin -->
+                {{--}}
+                <div class="pagination justify-content-center">
+                    {{ $previouspaginated_ht->fragment('previous_ht')->links() }}
+                </div>
+                {{--}}
+                <!-- -->
+                </div>
+            @endif
 
             <!-- Content HT 2023 Active -->
             @if (isset($active_ht) && !$active_ht->isEmpty())
-                <div id="active_ht" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-B">
+                <div id="active_ht" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-C">
 
                     <!-- Pagination for HT2023  Active courses -->
                     <div class="pagination justify-content-center mt-4">
@@ -170,7 +217,7 @@
 
             <!-- Content VT 2023 Active -->
             @if (isset($active_vt) && !$active_vt->isEmpty())
-                <div id="active_vt" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-C">
+                <div id="active_vt" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-D">
                     <!-- Pagination for tab2  Active courses -->
                     <div class="pagination justify-content-center mt-4">
                         {{ $activepaginated_vt->fragment('active_vt')->links() }}
@@ -203,7 +250,7 @@
 
             <!-- Content HT 2022 Previous -->
             @if (isset($previous_ht) && !$previous_ht->isEmpty())
-                <div id="previous_ht" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-D">
+                <div id="previous_ht" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-E">
 
                     <!-- Pagination for HT2022  Previous courses -->
                     <div class="pagination justify-content-center mt-4">
@@ -234,8 +281,9 @@
                     <!-- -->
                 </div>
             @endif
+
             <!-- Content tab All -->
-            <div id="all" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-E">
+            <div id="all" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-F">
                 @if ((isset($latest) && $latest->count()) || isset($pending) && $pending->count())
                     @if (isset($courses) || isset($terms) || isset($presenters) || isset($tags))
                         <form class="form-inline">

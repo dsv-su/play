@@ -366,6 +366,8 @@
                             <div class="rounded border su-background__light p-3 my-2">
                                 {{ __('The processing time for a presentation with auto-generated subtitles is longer. You will receive an email when processing is complete. Since the subtitles are auto-generated, you should check the subtitles yourself and edit if necessary.') }}
                             </div>
+                            <label class="form-control-label px-1">{{ __("Force language of subtitles") }}</label>
+                            @livewire('whisper-language', ['presentation' => $presentation ])
                         </div>
 
 

@@ -145,15 +145,32 @@ class Metadata
         //Subtitle generation
         if($presentation->pkg_id) {
             $stream = Stream::where('video_id', $presentation->pkg_id)->where('audio', true)->first();
-            $this->gsubtitles['Generated'] = Collection::make([
-                'type' => 'whisper',
-                'source' => $stream->name ?? 'main'
-            ]);
+            if($presentation->sublanguage) {
+                $this->gsubtitles['Generated'] = Collection::make([
+                    'type' => 'whisper',
+                    'source' => $stream->name ?? 'main',
+                    'language' => $presentation->sublanguage
+                ]);
+            } else {
+                $this->gsubtitles['Generated'] = Collection::make([
+                    'type' => 'whisper',
+                    'source' => $stream->name ?? 'main'
+                ]);
+            }
+
         } else {
-            $this->gsubtitles['Generated'] = Collection::make([
-                'type' => 'whisper',
-                'source' => 'main'
-            ]);
+            if($presentation->sublanguage) {
+                $this->gsubtitles['Generated'] = Collection::make([
+                    'type' => 'whisper',
+                    'source' => $stream->name ?? 'main',
+                    'language' => $presentation->sublanguage
+                ]);
+            } else {
+                $this->gsubtitles['Generated'] = Collection::make([
+                    'type' => 'whisper',
+                    'source' => $stream->name ?? 'main'
+                ]);
+            }
         }
 
         $presentation->generate_subtitles = $this->gsubtitles;
