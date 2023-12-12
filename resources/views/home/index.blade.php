@@ -10,19 +10,17 @@
                     <h3 class="su-theme-header mb-4">
                         <span class="far fa-clock fa-icon mr-2" aria-hidden="true"></span>
                         {{ __("Last added presentations") }}
-                        @if (in_array(app()->make('play_role'), [ 'Student','Student1', 'Student2', 'Student3']) && isset($my) && $my->count())
+
+                        @if (in_array(app()->make('play_role'), ['Student', 'Student1', 'Student2', 'Student3']) && isset($my) && $my->count())
                             {{ __("from your ongoing courses") }}
                         @endif
+
                         @if (isset($course))
-                            {{ __("from the course") }} <i> @if(Lang::locale() == 'swe')
-                                    {{$course->name}}
-                                @else
-                                    {{$course->name_en}}
-                                @endif {{$course->semester}}{{$course->year}}</i>
+                            {{ __("from the course") }} <i>{{ $course->getName() }}</i>
                         @elseif (isset($tag))
-                            {{ __("after the tag: ") }} <i>{{$tag}}</i>
+                            {{ __("after the tag: ") }} <i>{{ $tag }}</i>
                         @elseif (isset($presenter))
-                            {{ __("by") }} <i>{{$presenter}}</i>
+                            {{ __("by") }} <i>{{ $presenter }}</i>
                         @endif
                     </h3>
                 </div>
@@ -30,93 +28,93 @@
         </div> <!-- row no-gutters -->
     </div>
     <div class="container">
-        @if (isset($active_vt) || isset($my))
+        @php
+            $hasActiveVT = isset($active_vt) && !$active_vt->isEmpty();
+            $hasActiveHT = isset($active_ht) && !$active_ht->isEmpty();
+            $hasPreviousHT = isset($previous_ht) && !$previous_ht->isEmpty();
+            $hasMy = isset($my) && !$my->isEmpty();
+            $hasStudieadmin = isset($studieadmin) && !isset($course) && $studieadmin->total();
+            $hasLatest = isset($latest) && !isset($course) && $allpaginated->total();
+        @endphp
+
+        @if ($hasActiveVT || $hasMy || $hasStudieadmin || $hasActiveHT || $hasPreviousHT || $hasLatest)
             <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
-                @if (isset($my) && !$my->isEmpty())
-                    <!-- My courses tab -->
+            @if ($hasMy)
+                <!-- My courses tab -->
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#my" data-toggle="tab" role="tab" aria-controls="my"
-                           title="
-                            @if(in_array(app()->make('play_role'), ['Courseadmin','Uploader', 'Staff']))
-                                @lang('lang.my_presentations')">@lang('lang.my_presentations')
-                            @else
-                                @lang('lang.my_courses')">@lang('lang.my_courses')
-                            @endif
-                            <span class="count-label">{{$mypaginated->total()}}</span>
+                           title="{{ in_array(app()->make('play_role'), ['Courseadmin', 'Uploader', 'Staff']) ? __('lang.my_presentations') : __('lang.my_courses') }}">
+                            {{ in_array(app()->make('play_role'), ['Courseadmin', 'Uploader', 'Staff']) ? __('lang.my_presentations') : __('lang.my_courses') }}
+                            <span class="count-label">{{ $mypaginated->total() }}</span>
                         </a>
                     </li>
-                @endif
+            @endif
+
+            @if ($hasStudieadmin)
                 <!-- Studieadmin tab -->
-                @if (isset($studieadmin) && !isset($course) && $studieadmin->total())
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#studieadmin" data-toggle="tab" role="tab" aria-controls="studyadmin"
-                           title="@lang('lang.studieadmin')">@lang('lang.studieadmin') <span
-                                class="count-label">{{$studieadmin->total()}}</span>
+                           title="{{ __('lang.studieadmin') }}">
+                            {{ __('lang.studieadmin') }}
+                            <span class="count-label">{{ $studieadmin->total() }}</span>
                         </a>
                     </li>
-                @endif
+            @endif
+
+            @if ($hasActiveHT)
                 <!-- HT 2023 -->
-                @if (isset($active_ht) && !$active_ht->isEmpty())
-                    <!-- Paginated tab -->
-                        <li class="nav-item pb-0">
-                            <a class="nav-link" href="#active_ht" data-toggle="tab" role="tab" aria-controls="active_ht"
-                               title="@lang('lang.active_courses_ht')">@lang('lang.active_courses_ht')
-                                <span class="count-label">{{$activepaginated_ht->total()}}</span>
-                            </a>
-                        </li>
-                @endif
+                    <li class="nav-item pb-0">
+                        <a class="nav-link" href="#active_ht" data-toggle="tab" role="tab" aria-controls="active_ht"
+                           title="{{ __('lang.active_courses_ht') }}">
+                            {{ __('lang.active_courses_ht') }}
+                            <span class="count-label">{{ $activepaginated_ht->total() }}</span>
+                        </a>
+                    </li>
+            @endif
+
+            @if ($hasActiveVT)
                 <!-- VT 2024 -->
-                @if (isset($active_vt) && !$active_vt->isEmpty())
-                    <!-- Paginated tab -->
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#active_vt" data-toggle="tab" role="tab" aria-controls="active_vt"
-                           title="@lang('lang.active_courses_vt')">@lang('lang.active_courses_vt') <span
-                                class="count-label">{{$activepaginated_vt->total()}}</span></a>
+                           title="{{ __('lang.active_courses_vt') }}">
+                            {{ __('lang.active_courses_vt') }}
+                            <span class="count-label">{{ $activepaginated_vt->total() }}</span>
+                        </a>
                     </li>
-                @endif
-                <!-- HT 2022 -->
-                @if (isset($previous_ht) && !$previous_ht->isEmpty())
-                    <!-- Paginated tab -->
-                    <li class="nav-item pb-0">
-                            <a class="nav-link" href="#previous_ht" data-toggle="tab" role="tab" aria-controls="previous_ht"
-                               title="@lang('lang.previous_courses_ht')">@lang('lang.previous_courses_ht') <span
-                                    class="count-label">{{$previouspaginated_ht->total()}}</span></a>
-                    </li>
-                @endif
-                <!-- All Paginated tab -->
+            @endif
 
-                @if (isset($latest) && !isset($course) && $allpaginated->total())
+            @if ($hasPreviousHT)
+                <!-- HT 2022 -->
+                    <li class="nav-item pb-0">
+                        <a class="nav-link" href="#previous_ht" data-toggle="tab" role="tab" aria-controls="previous_ht"
+                           title="{{ __('lang.previous_courses_ht') }}">
+                            {{ __('lang.previous_courses_ht') }}
+                            <span class="count-label">{{ $previouspaginated_ht->total() }}</span>
+                        </a>
+                    </li>
+            @endif
+
+            @if ($hasLatest)
+                <!-- All Paginated tab -->
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#all" data-toggle="tab" role="tab" aria-controls="all"
-                           title="@lang('lang.latest')">@lang('lang.latest') <span
-                                    class="count-label">{{$allpaginated->total()}}</span>
-                            @livewire('pending-presentations')
+                           title="{{ __('lang.latest') }}">
+                            {{ __('lang.latest') }}
+                            <span class="count-label">{{ $allpaginated->total() }}
+                        @livewire('pending-presentations')
+                    </span>
                         </a>
                     </li>
                 @endif
-                {{--}}
-                @if (isset($latest) && $latest->count())
-                    <li class="nav-item pb-0">
-                        <a class="nav-link" href="#all" data-toggle="tab" role="tab" aria-controls="all"
-                           title="@lang('lang.latest')">@lang('lang.latest') <span class="count-label">{{$latest->count()}}+</span></a>
-                    </li>
-                @endif
-                {{--}}
             </ul>
-
-        @endif
-
-        <!-- Tab Contend -->
-
+    @endif
+    <!-- Tab Contend -->
         <div class="tab-content" id="myTabContent">
             <!-- Content tab My -->
             @if (isset($my) && !$my->isEmpty())
                 <div id="my" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-A">
                     <!--  Pagination for tab1 - My courses -->
-                    <div class="pagination justify-content-center mt-4">
-                        {{ $mypaginated->fragment('my')->links() }}
-                    </div>
-
+                    @include('home.partials.paginator', ['paginator' => $mypaginated, 'fragment' => 'my'])
                     <div class="card-deck inner">
                         @foreach ($my as $key => $video)
                             <div class="col my-3 w">
@@ -124,35 +122,18 @@
                                 @include('layouts.partials.videomodals')
                             </div>
                         @endforeach
-                        <div class="col">
-                            <div class="card video my-0 mx-auto"></div>
-                        </div>
-                        <div class="col">
-                            <div class="card video my-0 mx-auto"></div>
-                        </div>
-                        <div class="col">
-                            <div class="card video my-0 mx-auto"></div>
-                        </div>
+                            @include('home.partials.placeholder-videos', ['count' => 3])
                     </div>
                     <!--  Pagination for tab1 - My courses -->
-                    <div class="pagination justify-content-center">
-                        {{ $mypaginated->fragment('my')->links() }}
-                    </div>
+                    @include('home.partials.paginator', ['paginator' => $mypaginated, 'fragment' => 'my'])
                     <!-- -->
                 </div>
             @endif
             <!-- Studieadmin -->
             @if (isset($studieadmin))
                 <div id="studieadmin" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-B">
-
                     <!-- Pagination for Studieadmin -->
-
-                <div class="pagination justify-content-center mt-4">
-                    {{ $studieadmin->fragment('studieadmin_filtered')->links() }}
-                </div>
-
-
-                <!-- -->
+                    @include('home.partials.paginator', ['paginator' => $studieadmin, 'fragment' => 'studieadmin_filtered'])
                     <div class="card-deck inner">
                         @foreach ($studieadmin_filtered as $key => $video)
                             <div class="col my-3">
@@ -160,36 +141,17 @@
                                 @include('layouts.partials.videomodals')
                             </div>
                         @endforeach
-                        <div class="col">
-                            <div class="card video my-0 mx-auto"></div>
-                        </div>
-                        <div class="col">
-                            <div class="card video my-0 mx-auto"></div>
-                        </div>
-                        <div class="col">
-                            <div class="card video my-0 mx-auto"></div>
-                        </div>
+                            @include('home.partials.placeholder-videos', ['count' => 3])
                     </div>
-
-                    <!-- Pagination for studieadmin -->
-                {{--}}
-                <div class="pagination justify-content-center">
-                    {{ $previouspaginated_ht->fragment('previous_ht')->links() }}
-                </div>
-                {{--}}
-                <!-- -->
+                    @include('home.partials.paginator', ['paginator' => $studieadmin, 'fragment' => 'studieadmin_filtered'])
                 </div>
             @endif
 
-            <!-- Content HT 2023 Active -->
+        <!-- Content HT 2023 Active -->
             @if (isset($active_ht) && !$active_ht->isEmpty())
                 <div id="active_ht" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-C">
-
                     <!-- Pagination for HT2023  Active courses -->
-                    <div class="pagination justify-content-center mt-4">
-                        {{ $activepaginated_ht->fragment('active_ht')->links() }}
-                    </div>
-                    <!-- -->
+                    @include('home.partials.paginator', ['paginator' => $activepaginated_ht, 'fragment' => 'active_ht'])
                     <div class="card-deck inner">
                         @foreach ($active_ht as $key => $video)
                             <div class="col my-3">
@@ -197,32 +159,19 @@
                                 @include('layouts.partials.videomodals')
                             </div>
                         @endforeach
-                        <div class="col">
-                            <div class="card video my-0 mx-auto"></div>
-                        </div>
-                        <div class="col">
-                            <div class="card video my-0 mx-auto"></div>
-                        </div>
-                        <div class="col">
-                            <div class="card video my-0 mx-auto"></div>
-                        </div>
+                            @include('home.partials.placeholder-videos', ['count' => 3])
                     </div>
                     <!-- Pagination for tab2  Active courses -->
-                    <div class="pagination justify-content-center">
-                        {{ $activepaginated_ht->fragment('active_ht')->links() }}
-                    </div>
+                    @include('home.partials.paginator', ['paginator' => $activepaginated_ht, 'fragment' => 'active_ht'])
                     <!-- -->
                 </div>
             @endif
 
-            <!-- Content VT 2023 Active -->
+        <!-- Content VT 2023 Active -->
             @if (isset($active_vt) && !$active_vt->isEmpty())
                 <div id="active_vt" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-D">
                     <!-- Pagination for tab2  Active courses -->
-                    <div class="pagination justify-content-center mt-4">
-                        {{ $activepaginated_vt->fragment('active_vt')->links() }}
-                    </div>
-                    <!-- -->
+                    @include('home.partials.paginator', ['paginator' => $activepaginated_vt, 'fragment' => 'active_vt'])
                     <div class="card-deck inner">
                         @foreach ($active_vt as $key => $video)
                             <div class="col my-3">
@@ -230,33 +179,18 @@
                                 @include('layouts.partials.videomodals')
                             </div>
                         @endforeach
-                        <div class="col">
-                            <div class="card video my-0 mx-auto"></div>
-                        </div>
-                        <div class="col">
-                            <div class="card video my-0 mx-auto"></div>
-                        </div>
-                        <div class="col">
-                            <div class="card video my-0 mx-auto"></div>
-                        </div>
+                            @include('home.partials.placeholder-videos', ['count' => 3])
                     </div>
                     <!-- Pagination for tab2  Active courses -->
-                    <div class="pagination justify-content-center">
-                        {{ $activepaginated_vt->fragment('active_vt')->links() }}
-                    </div>
-                    <!-- -->
+                    @include('home.partials.paginator', ['paginator' => $activepaginated_vt, 'fragment' => 'active_vt'])
                 </div>
             @endif
 
-            <!-- Content HT 2022 Previous -->
+        <!-- Content HT 2022 Previous -->
             @if (isset($previous_ht) && !$previous_ht->isEmpty())
                 <div id="previous_ht" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-E">
-
                     <!-- Pagination for HT2022  Previous courses -->
-                    <div class="pagination justify-content-center mt-4">
-                        {{ $previouspaginated_ht->fragment('previous_ht')->links() }}
-                    </div>
-                    <!-- -->
+                    @include('home.partials.paginator', ['paginator' => $previouspaginated_ht, 'fragment' => 'previous_ht'])
                     <div class="card-deck inner">
                         @foreach ($previous_ht as $key => $video)
                             <div class="col my-3">
@@ -264,25 +198,14 @@
                                 @include('layouts.partials.videomodals')
                             </div>
                         @endforeach
-                        <div class="col">
-                            <div class="card video my-0 mx-auto"></div>
-                        </div>
-                        <div class="col">
-                            <div class="card video my-0 mx-auto"></div>
-                        </div>
-                        <div class="col">
-                            <div class="card video my-0 mx-auto"></div>
-                        </div>
+                            @include('home.partials.placeholder-videos', ['count' => 3])
                     </div>
                     <!-- Pagination for tab2  Previous courses -->
-                    <div class="pagination justify-content-center">
-                        {{ $previouspaginated_ht->fragment('previous_ht')->links() }}
-                    </div>
-                    <!-- -->
+                    @include('home.partials.paginator', ['paginator' => $previouspaginated_ht, 'fragment' => 'previous_ht'])
                 </div>
-            @endif
+        @endif
 
-            <!-- Content tab All -->
+        <!-- Content tab All -->
             <div id="all" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-F">
                 @if ((isset($latest) && $latest->count()) || isset($pending) && $pending->count())
                     @if (isset($courses) || isset($terms) || isset($presenters) || isset($tags))
@@ -333,13 +256,10 @@
                         </form>
                     @endif
 
+                    <!--  Pagination for tab3 - All courses -->
                     @if (!isset($course))
-                        <!--  Pagination for tab3 - All courses -->
-                        <div class="pagination justify-content-center mt-4">
-                            {{ $allpaginated->fragment('all')->links() }}
-                        </div>
+                        @include('home.partials.paginator', ['paginator' => $allpaginated, 'fragment' => 'all'])
                     @endif
-
 
                     <div class="card-deck inner">
                         @livewire('pending-video')
@@ -357,15 +277,7 @@
                                             @include('layouts.partials.videomodals')
                                         </div>
                                     @endforeach
-                                    <div class="col">
-                                        <div class="card video my-0 mx-auto"></div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="card video my-0 mx-auto"></div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="card video my-0 mx-auto"></div>
-                                    </div>
+                                        @include('home.partials.placeholder-videos', ['count' => 3])
                                 </div>
                             @endforeach
                         @else
@@ -375,17 +287,8 @@
                                     @include('layouts.partials.videomodals')
                                 </div>
                             @endforeach
-                            <div class="col">
-                                <div class="card video my-0 mx-auto"></div>
-                            </div>
-                            <div class="col">
-                                <div class="card video my-0 mx-auto"></div>
-                            </div>
-                            <div class="col">
-                                <div class="card video my-0 mx-auto"></div>
-                            </div>
+                                @include('home.partials.placeholder-videos', ['count' => 3])
                         @endif
-
                     </div>
                 @else
                     <p class="my-3">
@@ -394,9 +297,7 @@
                 @endif
                 <!-- Pagination for tab3 - All courses -->
                 @if (!isset($course))
-                    <div class="pagination justify-content-center">
-                        {{ $allpaginated->fragment('all')->links() }}
-                    </div>
+                    @include('home.partials.paginator', ['paginator' => $allpaginated, 'fragment' => 'all'])
                 @endif
             </div>
         </div>

@@ -18,6 +18,40 @@ div.play_savebar {
     outline: 2px solid white;
 }
 
+
+/* Responsive tabs breakpoints
+ *  for use with the refactored tab view */
+/*
+.nav-tabs {
+    display:none;
+}
+
+@media(min-width:992px) {
+    .nav-tabs {
+        display: flex;
+    }
+
+    .mobiletab {
+        display:none;
+    }
+
+    .card {
+        border: none;
+    }
+
+    .card .collapse{
+        display:block;
+    }
+}
+
+@media(max-width:991px){
+
+    .tab-content > .tab-pane {
+        display: block !important;
+        opacity: 1;
+    }
+}*/
+
 /* Modifing bootstrap tab border color */
 
 @media only screen and (min-width: 1200px) {
