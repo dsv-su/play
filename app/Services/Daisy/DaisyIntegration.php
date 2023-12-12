@@ -316,13 +316,13 @@ class DaisyIntegration
             foreach ($this->array as $this->item) {
                 if (substr($this->item['semester'], 4) == '1') {
                     Course::updateOrCreate(
-                        ['id' => $this->item['id'], 'designation' => $this->item['designation'], 'semester' => 'VT', 'year' => substr($this->item['semester'], 0, 4)],
-                        ['name' => $this->item['name'], 'name_en' => $this->item['name_en']]
+                        ['id' => $this->item['id']],[ 'designation' => $this->item['designation'], 'semester' => 'VT', 'year' => substr($this->item['semester'], 0, 4),
+                        'name' => $this->item['name'], 'name_en' => $this->item['name_en']]
                     );
                 } else {
                     Course::updateOrCreate(
-                        ['id' => $this->item['id'], 'designation' => $this->item['designation'], 'semester' => 'HT', 'year' => substr($this->item['semester'], 0, 4)],
-                        ['name' => $this->item['name'], 'name_en' => $this->item['name_en']]
+                        ['id' => $this->item['id']], ['designation' => $this->item['designation'], 'semester' => 'HT', 'year' => substr($this->item['semester'], 0, 4),
+                        'name' => $this->item['name'], 'name_en' => $this->item['name_en']]
                     );
                 }
             }
