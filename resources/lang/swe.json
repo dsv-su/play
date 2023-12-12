@@ -406,9 +406,19 @@
     "Note! The presentation will be deleted and cannot be restored.": "OBS! Presentationen kommer att raderas och kan inte återställas.",
     "STUDYADMIN": "STUDIEADMIN",
     "Finnish": "Finska",
+    "French": "Franska",
     "Danish": "Danska",
     "Dutch": "Nederlänska",
+    "Icelandic": "Islänska",
+    "Italian": "Italienska",
     "German": "Tyska",
-    "Spanish": "Spanska"
+    "Norwegian": "Norska",
+    "Russian": "Ryska",
+    "Spanish": "Spanska",
+    "Force language of subtitles": "Generera på specifikt språk",
+    "Subtitling language": "Undertextningsspråk",
+    "Specify the generated language": "Ange det genererade språket",
+    "Choose a language": "Välj ett språk",
+    "Caution: This is not intended for language translation! Please be advised that this feature is not designed for accurate language translation.": "Varning: Det är inte avsett för språköversättning! Observera att den här funktionen inte är utformad för korrekt språköversättning."
 
 }
