@@ -92,14 +92,27 @@
                             </div>
                             <div class="row">
                                 <label class="col-4 col-lg-3 mb-0">{{ __("Origin") }}</label>
-                                <div class="col">@if($origin == 'mediasite')
+
+                                <div class="col">
+                                    @switch($origin)
+                                        @case('mediasite')
                                         {{ __("Migrated from Mediasite") }}
-                                    @elseif($origin == 'cattura')
+                                        @break
+
+                                        @case('cattura')
                                         {{ __("Recorded at DSV") }}
-                                    @elseif($origin == 'manual')
+                                        @break
+
+                                        @case('manual')
                                         {{ __("Uploaded by user") }}
-                                    @endif
+                                        @break
+
+                                        @default
+                                        {{ __("Unknown origin") }}
+                                    @endswitch
                                 </div>
+
+
                             </div>
                             <div class="row"><label class="col-4 col-lg-3 mb-0">{{ __("Recording date") }}</label>
                                 <div class="col">{{$date}}</div>
@@ -123,6 +136,19 @@
                                         <option value="visible">{{__("Visible")}}</option>
                                         <option value="private">{{__("Private")}}</option>
                                         <option value="unlisted">{{__("Unlisted")}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label for="categorySwitch" class="col-4 col-lg-3 mb-0">{{__("Category")}}</label>
+                                <div class="col">
+                                    <select class="w-50form-group form-control" name="video_category" style="margin: 5px 0;">
+                                        @foreach(\App\Category::all() as $category)
+                                            <option value="{{$category->id}}"
+                                                    @if($video->category_id == $category->id) selected @endif >{{$category->category_name}}
+                                            </option>
+                                        @endforeach
+
                                     </select>
                                 </div>
                             </div>

@@ -30,7 +30,7 @@ class VideoUpdate extends Model
         $this->video->subtitles = json_encode($this->request->input('package.subtitles'), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         $this->video->sources = json_encode($this->request->input('package.sources'), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         $this->video->presentation = json_encode($this->request->all(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-        $this->video->category_id = $this->request->category_id ?? 1;
+        //$this->video->category_id = $this->request->category_id ?? 1; //Is set in presentation edit
         //Set video state
         if(count($this->request->pending) > 0) {
             $this->video->state = false;

@@ -230,6 +230,11 @@ class EditController extends Controller
                 $video->download = false;
             }
 
+            //Category
+            if ($request->video_category) {
+                $video->category_id = $request->video_category;
+            }
+
             $video->save();
         }
 
