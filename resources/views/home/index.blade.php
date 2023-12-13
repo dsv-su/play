@@ -29,9 +29,9 @@
     </div>
     <div class="container">
         @php
-            $hasActiveVT = isset($active_vt) && !$active_vt->isEmpty();
-            $hasActiveHT = isset($active_ht) && !$active_ht->isEmpty();
-            $hasPreviousHT = isset($previous_ht) && !$previous_ht->isEmpty();
+            $hasActiveVT = isset($active_vt) && !$active_vt->isEmpty(); //VT2024
+            $hasActiveHT = isset($active_ht) && !$active_ht->isEmpty(); //HT2024
+            $hasPreviousHT = isset($previous_ht) && !$previous_ht->isEmpty(); //HT2023
             $hasMy = isset($my) && !$my->isEmpty();
             $hasStudieadmin = isset($studieadmin) && !isset($course) && $studieadmin->total();
             $hasLatest = isset($latest) && !isset($course) && $allpaginated->total();
@@ -62,7 +62,7 @@
             @endif
 
             @if ($hasActiveHT)
-                <!-- HT 2023 -->
+                <!-- HT 2024 -->
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#active_ht" data-toggle="tab" role="tab" aria-controls="active_ht"
                            title="{{ __('lang.active_courses_ht') }}">
@@ -84,7 +84,7 @@
             @endif
 
             @if ($hasPreviousHT)
-                <!-- HT 2022 -->
+                <!-- HT 2023 -->
                     <li class="nav-item pb-0">
                         <a class="nav-link" href="#previous_ht" data-toggle="tab" role="tab" aria-controls="previous_ht"
                            title="{{ __('lang.previous_courses_ht') }}">
