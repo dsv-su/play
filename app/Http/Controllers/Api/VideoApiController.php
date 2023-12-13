@@ -126,14 +126,6 @@ class VideoApiController extends Controller
                 //If manual upload - Send email to uploader
                 if($manualpresentation = ManualPresentation::where('jobid', $request->jobid)->first()) {
 
-                    //Set edit/delete individual permission for uploader
-                    IndividualPermission::updateOrCreate([
-                        'video_id' => $video->id,
-                        'username' => $manualpresentation->user],
-                        ['name' => 'Uploader', //This can later look up SUKAT for displayname
-                            'permission' => 'delete']
-                    );
-
                     switch ($manualpresentation->type) {
                         case('manual'):
                             $video->origin = 'manual';
@@ -142,6 +134,14 @@ class VideoApiController extends Controller
                             $video->visibility = $manualpresentation->visibility;
                             $video->unlisted = $manualpresentation->unlisted;
                             $video->save();
+
+                            //Set edit/delete individual permission for uploader
+                            IndividualPermission::updateOrCreate([
+                                'video_id' => $video->id,
+                                'username' => $manualpresentation->user],
+                                ['name' => 'Uploader', //This can later look up SUKAT for displayname
+                                    'permission' => 'delete']
+                            );
 
                             //Send email to uploader when processing is done
                             if($video->state) {
