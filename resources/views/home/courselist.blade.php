@@ -7,14 +7,14 @@
                aria-controls="collapse{{$key}}">
                 <i class="fa mr-2"></i>
                 @if(Lang::locale() == 'swe')
-                    {{\App\Course::find($key) ? \App\Course::find($key)->designation . ' ' . \App\Course::find($key)->semester.\App\Course::find($key)->year . ' — ' . \App\Course::find($key)->name : $category ?? 'Okategoriserad'}}
+                    {{\App\Course::find($key) ? \App\Course::find($key)->designation . ' ' . \App\Course::find($key)->semester.\App\Course::find($key)->year . ' — ' . \App\Course::find($key)->name : $category ?? 'Presentationer'}}
                 @else
-                    {{\App\Course::find($key) ? \App\Course::find($key)->designation . ' ' . \App\Course::find($key)->semester.\App\Course::find($key)->year . ' — ' . \App\Course::find($key)->name_en : $category ?? 'Uncategorized'}}
+                    {{\App\Course::find($key) ? \App\Course::find($key)->designation . ' ' . \App\Course::find($key)->semester.\App\Course::find($key)->year . ' — ' . \App\Course::find($key)->name_en : $category ?? 'Presentations'}}
                 @endif</a>
             <div class="d-inline-block">
                 <span class="badge badge-primary ml-2 mb-2"><span data-toggle="tooltip"
                                                                   title="{{__("Number of presentations")}}">{{count($videocourse)}}</span>
-                    @if($key && (int)$key)
+                    @if($key && (int)$key && $key != 999999)
                         <a target="_blank" rel="noopener noreferrer"
                            href="{{route('playCourse', ['course' => $key]) }}" data-toggle="tooltip"
                            title="{{__("Play all")}}" style="color: white;"><i

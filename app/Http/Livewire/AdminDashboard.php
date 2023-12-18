@@ -26,6 +26,7 @@ class AdminDashboard extends Component
     public $stats_permissions, $stats_permissions_dsv, $stats_permissions_staff, $stats_permissions_public, $stats_permissions_private, $total_set;
     public $videos, $cattura, $json_files;
     public $total_courses, $courses_2022, $percent_courses_2022, $courses_2021, $percent_courses_2021, $courses_2020, $percent_courses_2020, $courses_2019, $percent_courses_2019;
+    public $courses_2023, $courses_2024;
     public $api_tab, $stats_tab, $action_tab, $permission_tab, $backup_tab;
     protected $file;
     protected $listeners = ['refreshCattura' => '$refresh'];
@@ -130,21 +131,32 @@ class AdminDashboard extends Component
         $this->json_files = $this->checkJsonFiles();
         //Courses
         $this->total_courses = Course::all()->count();
+        //2024
+        $this->courses_2024 = Course::where('year', 2024)->count();
+        if((int)$this->total_courses) {
+            $this->percent_courses_2024 = (int)$this->courses_2024 / (int)$this->total_courses * 100;
+        }
+        //2023
+        $this->courses_2023 = Course::where('year', 2023)->count();
+        if((int)$this->total_courses) {
+            $this->percent_courses_2023 = (int)$this->courses_2023 / (int)$this->total_courses * 100;
+        }
+        //2022
         $this->courses_2022 = Course::where('year', 2022)->count();
         if((int)$this->total_courses) {
             $this->percent_courses_2022 = (int)$this->courses_2022 / (int)$this->total_courses * 100;
         }
-
+        //2021
         $this->courses_2021 = Course::where('year', 2021)->count();
         if((int)$this->total_courses) {
             $this->percent_courses_2021 = (int)$this->courses_2021 / (int)$this->total_courses * 100;
         }
-
+        //2020
         $this->courses_2020 = Course::where('year', 2020)->count();
         if((int)$this->total_courses) {
             $this->percent_courses_2020 = (int)$this->courses_2020 / (int)$this->total_courses * 100;
         }
-
+        //2019
         $this->courses_2019 = Course::where('year', 2019)->count();
         if((int)$this->total_courses) {
             $this->percent_courses_2019 = (int)$this->courses_2019 / (int)$this->total_courses * 100;
