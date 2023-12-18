@@ -21,16 +21,16 @@ class CategorySeeder extends Seeder
             'updated_at' => Carbon::now(),
         ]);
         DB::table('categories')->insert([
-            'category_name' => 'Databas',
+            'category_name' => 'Studieadmin',
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
         DB::table('categories')->insert([
-            'category_name' => 'Operativsystem',
+            'category_name' => 'Nextilearn',
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
-        DB::table('categories')->insert([
+        /*DB::table('categories')->insert([
             'category_name' => 'Programmering',
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
@@ -49,13 +49,6 @@ class CategorySeeder extends Seeder
             'category_name' => 'IT Säkerhet',
             'created_at' =>  Carbon::now(),
             'updated_at' => Carbon::now(),
-        ]);
-        /*
-        DB::table('categories')->insert([
-            'category_name' => '',
-            'created_at' =>  Carbon::now(),
-            'updated_at' => Carbon::now(),
-        ]);
-        */
+        ]);*/
     }
 }

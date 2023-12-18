@@ -133,16 +133,16 @@ class HomeController extends Controller
         if($this->administrator()) {
             //Administrator full visibility
             $data['allpaginated'] = Video::with('category', 'video_course.course')->where('state', true)->latest('creation')->fastPaginate(24, ['*'], 'all')->onEachSide(1);
-            $data['studieadmin'] = Video::with('category', 'video_course.course')->where('category_id', 2)->where('state', true)->latest('creation')->fastPaginate(24, ['*'], 'all')->onEachSide(1);
+            $data['studyinfo'] = Video::with('category', 'video_course.course')->where('category_id', 2)->where('state', true)->latest('creation')->fastPaginate(24, ['*'], 'all')->onEachSide(1);
         } else {
             //Non administrator restricted visibility
             $data['allpaginated'] = Video::with('category', 'video_course.course')->where('visibility', true)->where('state', true)->latest('creation')->fastPaginate(24, ['*'], 'all')->onEachSide(1);
-            $data['studieadmin'] = Video::with('category', 'video_course.course')->where('category_id', 2)->where('visibility', true)->where('state', true)->latest('creation')->fastPaginate(24, ['*'], 'all')->onEachSide(1);
+            $data['studyinfo'] = Video::with('category', 'video_course.course')->where('category_id', 2)->where('visibility', true)->where('state', true)->latest('creation')->fastPaginate(24, ['*'], 'all')->onEachSide(1);
         }
 
         //Filter
         $data['latest'] = $visibility->filter($data['allpaginated']);
-        $data['studieadmin_filtered'] = $visibility->filter($data['studieadmin']);
+        $data['studyinfo_filtered'] = $visibility->filter($data['studyinfo']);
 
         return view('home.index', $data);
     }

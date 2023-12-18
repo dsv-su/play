@@ -33,5 +33,5 @@ return [
     'latest' => 'All presentations',
     'viewed' => 'Most viewed',
     'downloaded' => 'Most downloaded',
-    'studieadmin' => 'Study administration',
+    'studyinfo' => 'Study information',
 ];

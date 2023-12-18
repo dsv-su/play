@@ -14,7 +14,7 @@
             <div class="d-inline-block">
                 <span class="badge badge-primary ml-2 mb-2"><span data-toggle="tooltip"
                                                                   title="{{__("Number of presentations")}}">{{count($videocourse)}}</span>
-                    @if($key)
+                    @if($key && (int)$key)
                         <a target="_blank" rel="noopener noreferrer"
                            href="{{route('playCourse', ['course' => $key]) }}" data-toggle="tooltip"
                            title="{{__("Play all")}}" style="color: white;"><i

@@ -160,25 +160,39 @@
 
 
         <p class="card-text">
+            <!-- Designations -->
             @if (!$video->courses()->isEmpty())
                 @foreach($video->getUniqueDesignations() as $designation)
-                    <a href="/designation/{{$designation}}"
-                       class="badge badge-primary">{{$designation}}</a>
+                    <a href="/designation/{{$designation}}" class="badge badge-primary">{{$designation}}</a>
                 @endforeach
-                @foreach($video->getUniqueStudyAdminCat() as $cat)
-                    <a href="/category/Studieadmin"
-                       class="badge badge-success">{{__("STUDYADMIN")}}</a>
-                @endforeach
-            @elseif ($video->category->id == 2)
-                <a href="/category/Studieadmin"
-                   class="badge badge-success">{{__("STUDYADMIN")}}</a>
             @endif
 
+            <!-- Study Admin Category -->
+            @if (!$video->courses()->isEmpty() && $video->getUniqueStudyAdminCat())
+                @foreach($video->getUniqueStudyAdminCat() as $cat)
+                    <a href="/category/Studieadmin" class="badge badge-success">{{__("STUDYINFO")}}</a>
+                @endforeach
+            @elseif ($video->category->category_name == 'Studieadmin')
+                <a href="/category/Studieadmin" class="badge badge-success">{{__("STUDYINFO")}}</a>
+            @endif
+
+            <!-- Nextilearn Category -->
+            <!-- Study Admin Category -->
+            @if (!$video->courses()->isEmpty() && $video->getUniqueNextilearnCat())
+                @foreach($video->getUniqueNextilearnCat() as $cat)
+                    <a href="/category/Nextilearn" class="badge badge-success">{{__("NEXTilearn")}}</a>
+                @endforeach
+            @elseif ($video->category->category_name == 'Nextilearn')
+                <a href="/category/Nextilearn" class="badge badge-success">{{__("NEXTilearn")}}</a>
+            @endif
+
+            <!-- Presenters -->
             @if (!$video->presenters()->isEmpty())
                 @foreach($video->presenters() as $presenter)
                     <a href="/presenter/{{$presenter->username}}" class="badge badge-light">{{$presenter->name}}</a>
                 @endforeach
             @endif
+
             {{--}}
             <!-- Hide tags -->
         @if (!$video->tags()->isEmpty())

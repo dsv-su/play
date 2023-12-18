@@ -21,7 +21,7 @@ class MultiplayerController extends Controller
         //Exceptions for 'Multiplayer', 'Presentation' and 'Playlist' for external permission setting
         $this->middleware(['entitlements', 'playauth'])->except(['multiplayer', 'presentation', 'playlist']);
         //Playback middleware checks hidden presentations
-        $this->middleware('playback')->except(['playlist', 'presentation']);
+        $this->middleware('playback')->except(['playlist', 'playCourse','presentation']);
     }
 
     /**
@@ -44,6 +44,7 @@ class MultiplayerController extends Controller
         $video_id = $visibility->filter(Video::whereHas('video_course.course', function ($query) use ($courseid) {
             $query->where('course_id', $courseid);
         })->where('visibility', 1)->orderBy('creation')->get())->first()->id;
+
         return Redirect::to('multiplayer?p=' . $video_id . '&l=' . $courseid);
     }
 
