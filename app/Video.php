@@ -244,5 +244,18 @@ class Video extends Model implements Searchable
         return $categories;
     }
 
+    public function getUniqueNextilearnCat()
+    {
+        $categories = [];
+        if (!$this->video_course->isEmpty()) {
+            if($this->category->category_name == 'Nextilearn') {
+                $category = $this->category->category_name;
+                if (!in_array($category, $categories)) {
+                    $categories[] = $category;
+                }
+            }
+        }
+        return $categories;
+    }
 
 }

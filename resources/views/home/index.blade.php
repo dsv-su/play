@@ -33,7 +33,7 @@
             $hasActiveHT = isset($active_ht) && !$active_ht->isEmpty(); //HT2024
             $hasPreviousHT = isset($previous_ht) && !$previous_ht->isEmpty(); //HT2023
             $hasMy = isset($my) && !$my->isEmpty();
-            $hasStudieadmin = isset($studieadmin) && !isset($course) && $studieadmin->total();
+            $hasStudieadmin = isset($studyinfo) && !isset($course) && $studyinfo->total();
             $hasLatest = isset($latest) && !isset($course) && $allpaginated->total();
         @endphp
 
@@ -53,10 +53,10 @@
             @if ($hasStudieadmin)
                 <!-- Studieadmin tab -->
                     <li class="nav-item pb-0">
-                        <a class="nav-link" href="#studieadmin" data-toggle="tab" role="tab" aria-controls="studyadmin"
-                           title="{{ __('lang.studieadmin') }}">
-                            {{ __('lang.studieadmin') }}
-                            <span class="count-label">{{ $studieadmin->total() }}</span>
+                        <a class="nav-link" href="#studyinfo" data-toggle="tab" role="tab" aria-controls="studyadmin"
+                           title="{{ __('lang.studyinfo') }}">
+                            {{ __('lang.studyinfo') }}
+                            <span class="count-label">{{ $studyinfo->total() }}</span>
                         </a>
                     </li>
             @endif
@@ -130,12 +130,12 @@
                 </div>
             @endif
             <!-- Studieadmin -->
-            @if (isset($studieadmin))
-                <div id="studieadmin" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-B">
+            @if (isset($studyinfo))
+                <div id="studyinfo" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-B">
                     <!-- Pagination for Studieadmin -->
-                    @include('home.partials.paginator', ['paginator' => $studieadmin, 'fragment' => 'studieadmin_filtered'])
+                    @include('home.partials.paginator', ['paginator' => $studyinfo, 'fragment' => 'studyinfo_filtered'])
                     <div class="card-deck inner">
-                        @foreach ($studieadmin_filtered as $key => $video)
+                        @foreach ($studyinfo_filtered as $key => $video)
                             <div class="col my-3">
                                 @include('home.video')
                                 @include('layouts.partials.videomodals')
@@ -143,7 +143,7 @@
                         @endforeach
                             @include('home.partials.placeholder-videos', ['count' => 3])
                     </div>
-                    @include('home.partials.paginator', ['paginator' => $studieadmin, 'fragment' => 'studieadmin_filtered'])
+                    @include('home.partials.paginator', ['paginator' => $studyinfo, 'fragment' => 'studyinfo_filtered'])
                 </div>
             @endif
 
