@@ -288,6 +288,46 @@
                             <div class="card-body">
                                 <div class="media d-flex">
                                     <div class="media-body text-left">
+                                        <h2><span style="color:blue;">{{$courses_2024}}</span></h2>
+                                    </div>
+                                    <div class="media-body text-right">
+                                        <h4><span>2024</span></h4>
+                                    </div>
+                                </div>
+                                <div class="progress mt-1 mb-0" style="height: 7px;">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: {{$percent_courses_2022}}%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <div><small>{{round($percent_courses_2024, 0)}}%</small></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 col-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="media d-flex">
+                                    <div class="media-body text-left">
+                                        <h2><span style="color:blue;">{{$courses_2023}}</span></h2>
+                                    </div>
+                                    <div class="media-body text-right">
+                                        <h4><span>2023</span></h4>
+                                    </div>
+                                </div>
+                                <div class="progress mt-1 mb-0" style="height: 7px;">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: {{$percent_courses_2022}}%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <div><small>{{round($percent_courses_2023, 0)}}%</small></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 col-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="media d-flex">
+                                    <div class="media-body text-left">
                                         <h2><span style="color:blue;">{{$courses_2022}}</span></h2>
                                     </div>
                                     <div class="media-body text-right">
@@ -321,6 +361,9 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="col-12 mt-3 mb-1">
+                    <h4 class="text-uppercase"></h4>
                 </div>
                 <div class="col-xl-3 col-sm-6 col-12">
                     <div class="card">
