@@ -10,8 +10,11 @@
         <div class="card-header position-relative"
              style="background-image: @if ($video->hidden) linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), @endif url({{ asset($video->thumb)}}); width: 100%; height: 0; object-fit: cover; background-repeat: no-repeat; background-position: 50% 50%;">
             <div class="d-flex justify-content-center h-100">
-                <div class="d-inline alert alert-secondary m-auto"
-                     role="alert"><span style="color: blue;">{{ __("Processing") }}</span></div>
+                <div class="d-inline inline-flex alert alert-secondary m-auto" role="alert">
+                    <span style="color: blue; font-weight: bolder">
+                    {{ __("Processing") }}
+                    </span>
+                </div>
             </div>
 
             <p class="m-1 px-1"> @if(isset($video->mediasite_folder_id))
