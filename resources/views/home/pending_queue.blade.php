@@ -1,3 +1,4 @@
+{{--}}
 @extends('layouts.suplay')
 @section('content')
     <!-- Header message section -->
@@ -67,3 +68,4 @@
         </div>
     </div><!-- /.container -->
 @endsection
+{{--}}

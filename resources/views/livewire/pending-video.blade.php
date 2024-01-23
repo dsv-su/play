@@ -4,16 +4,5 @@
             @include('home.pending_video')
         </div>
     @endforeach
-        <div class="col my-3">
-            <div class="card video my-0 mx-auto"></div>
-        </div>
-        <div class="col my-3">
-            <div class="card video my-0 mx-auto"></div>
-        </div>
-        <div class="col my-3">
-            <div class="card video my-0 mx-auto"></div>
-        </div>
-        <div class="col my-3">
-            <div class="card video my-0 mx-auto"></div>
-        </div>
+    @include('home.partials.placeholder-videos', ['count' => 4])
 </div>
