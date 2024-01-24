@@ -493,6 +493,9 @@
         </nav>
     </div>
 </header>
+<!-- Display the message banner exclusively for staff members. -->
+@if(app()->make('play_role') == 'Administrator' or app()->make('play_role') == 'Courseadmin' or app()->make('play_role') == 'Uploader' or app()->make('play_role') == 'Staff')
+    @include('layouts.partials.message_banner')
+@endif
 
-@include('layouts.partials.message_banner')
 
