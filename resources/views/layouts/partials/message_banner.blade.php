@@ -60,7 +60,7 @@
             index++;
             setTimeout(type, Math.random() * 100);
         } else {
-            whisper.innerHTML = text.slice(0, index) + '<a role="button" data-toggle="modal" data-target="#form"> <i class="fa-solid fa-arrow-right"></i>' + '</a>';
+            whisper.innerHTML = text.slice(0, index) + '<a role="button" data-toggle="modal" data-target="#form">&nbsp;<i class="fa-solid fa-arrow-right"></i>' + '</a>';
             //whisper.innerHTML = text.slice(0, index);
         }
     }
