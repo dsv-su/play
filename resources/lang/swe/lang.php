@@ -34,4 +34,5 @@ return [
     'viewed' => 'Mest spelade',
     'downloaded' => 'Mest nerladdade',
     'studyinfo' => 'Studieinformation',
+    'queue' => 'Inkommande kö',
 ];
