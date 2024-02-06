@@ -17,10 +17,12 @@
     <div class="container">
         <div class="row no-gutters">
             <div class="col d-flex align-items-center justify-content-center">
-                <div id="whisper" class="webb2021-article p-0 p-lg-2 d-inline-block">
+                <div {{--}}id="whisper"{{--}} class="webb2021-article p-0 p-lg-2 d-inline-block">
                     {{--}}
                     {{__("Operational disruption: We have temporarily turned off the ability to generate subtitles.")}}
                     {{--}}
+                    {{__("We apologize for any inconvenience, but our system will undergo maintenance for the next 30 minutes starting at 11:00 AM today. Thank you for your patience.")}}
+
                 </div>
                 {{--}}
                 <div class="h-100 d-flex align-items-center">

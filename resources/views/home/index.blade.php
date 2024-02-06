@@ -8,8 +8,11 @@
                 <div>
                     <span class="su-theme-anchor"></span>
                     <h3 class="su-theme-header mb-4">
+                        {{--}}
                         <span class="far fa-clock fa-icon mr-2" aria-hidden="true"></span>
                         {{ __("Last added presentations") }}
+                        {{--}}
+                        {{__("Last added presentations")}}
 
                         @if (in_array(app()->make('play_role'), ['Student', 'Student1', 'Student2', 'Student3']) && isset($my) && $my->count())
                             {{ __("from your ongoing courses") }}
@@ -35,9 +38,22 @@
             $hasMy = isset($my) && !$my->isEmpty();
             $hasStudieadmin = isset($studyinfo) && !isset($course) && $studyinfo->total();
             $hasLatest = isset($latest) && !isset($course) && $allpaginated->total();
+            //$hasQueued = isset($pending) && $pending->count();
         @endphp
 
         @if ($hasActiveVT || $hasMy || $hasStudieadmin || $hasActiveHT || $hasPreviousHT || $hasLatest)
+            {{--}}
+            @livewire('hometab', [
+            'hasMy' => $hasMy,
+            'hasStudieadmin' => $hasStudieadmin,
+            'studyinfo' => $studyinfo,
+            'hasActiveHT' => $hasActiveHT,
+            'hasActiveVT' => $hasActiveVT,
+            'hasPreviousHT' => $hasPreviousHT,
+            'previouspaginated_ht' => $previouspaginated_ht,
+            'hasLatest' => $hasLatest,
+            'allpaginated' => $allpaginated])
+            {{--}}
             <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
             @if ($hasMy)
                 <!-- My courses tab -->
@@ -105,8 +121,23 @@
                     </span>
                         </a>
                     </li>
-                @endif
+            @endif
+            {{--}}
+            @if ($hasQueued)
+                    <!-- Incoming Queue tab -->
+                    <li class="nav-item pb-0">
+                        <a class="nav-link" href="#queue" data-toggle="tab" role="tab" aria-controls="queue"
+                           title="{{ __('lang.queue') }}">
+                            {{ __('lang.queue') }}
+                            <span class="count-label">{{$pending->count()}}
+                        @livewire('pending-presentations')
+                    </span>
+                        </a>
+                    </li>
+            @endif
+            {{--}}
             </ul>
+
     @endif
     <!-- Tab Contend -->
         <div class="tab-content" id="myTabContent">
