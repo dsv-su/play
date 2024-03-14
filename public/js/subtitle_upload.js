@@ -11,7 +11,8 @@ Dropzone.options.subtitleupload =
         chunkSize: 5000000,  // chunk size 10,000,000 bytes (~10MB)
         retryChunks: true,   // retry chunks on failure
         retryChunksLimit: 5, // retry maximum of 5 times
-        acceptedFiles: "text/vtt",
+        //acceptedFiles: "text/vtt",
+        acceptedFiles: "text/vtt, application/vtt",
         addRemoveLinks: true,
         timeout: 0,
         init: function() {
