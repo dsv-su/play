@@ -22,7 +22,7 @@ class StreamsStore extends Model
         //Check if presentation has been edited override source setting
         if(!$presentation = ManualPresentation::where('pkg_id', $this->video->id)->where('type', 'edit')->where(function($query) {
             $query->where('status', 'sent')->orWhere('status', 'completed');})->latest()->first()) {
-            if(count($this->streams)>0) {
+            if(count($this->streams) > 0) {
                 foreach ($this->streams as $key => $source) {
                     if ($source) {
                         $stream = Stream::updateOrCreate([
@@ -55,6 +55,10 @@ class StreamsStore extends Model
                     StreamResolution::where('stream_id', $stream->id)->delete();
                     $stream->delete();
                 }
+                //Update stream resolutions
+
+                //end update
+
             }
         } //end presentation edit
     }
