@@ -637,7 +637,7 @@ class Manage extends Component
             //Individual users
             $this->individual_permissions[$course->course_id] = CoursesettingsUsers::select('id')->where('course_id', $course->course_id)->count();
             //Group permissions
-            $this->playback_permissions[$course->course_id] = CoursePermissions::select('id')->where('course_id', $course->course_id)->first();
+            $this->playback_permissions[$course->course_id] = CoursePermissions::where('course_id', $course->course_id)->first();
         }
     }
 

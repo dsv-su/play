@@ -29,6 +29,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('uploads:clear');
         $schedule->command('download:clear');
         $schedule->command('update:courses');
+        $schedule->command('tokens:clear');
     }
 
     /**
