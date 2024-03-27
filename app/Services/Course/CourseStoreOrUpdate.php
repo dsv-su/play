@@ -4,9 +4,12 @@ namespace App\Services\Course;
 
 use App\Course;
 use App\CourseadminPermission;
+use App\CoursePermissions;
+use App\CoursesettingsPermissions;
 use App\Jobs\JobFailedNotification;
 use App\Services\Daisy\DaisyIntegration;
 use App\VideoCourse;
+use App\VideoPermission;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -15,6 +18,7 @@ class CourseStoreOrUpdate
     protected $courses, $course;
     protected $db_course;
     protected $daisy, $daisy_course;
+    protected $cid;
 
     public function __construct($request, $video)
     {
@@ -117,7 +121,28 @@ class CourseStoreOrUpdate
                         ]);
                     }
                 }
+
+                //Implement course settings
+                $this->courseSettings($this->cid);
             }
+
+        }
+    }
+
+    public function courseSettings($courseid)
+    {
+        //CoursesettingsPermission -if exist
+        if($coursesetting = CoursesettingsPermissions::where('course_id', $courseid)->first()) {
+            $this->video->visibility = $coursesetting->visibility;
+            $this->video->unlisted = $coursesetting->unlisted;
+            $this->video->download = $coursesetting->downloadable;
+            $this->video->save();
+        }
+        //CoursePermissions -if exist
+        if($coursepermission = CoursePermissions::where('course_id', $courseid)->first()) {
+            $videopermission = VideoPermission::where('video_id', $this->video->id)->first();
+            $videopermission->permission_id = $coursepermission->permission_id;
+            $videopermission->save();
         }
     }
 
