@@ -22,7 +22,7 @@ class StreamsStore extends Model
         //Check if presentation has been edited override source setting
         if(!$presentation = ManualPresentation::where('pkg_id', $this->video->id)->where('type', 'edit')->where(function($query) {
             $query->where('status', 'sent')->orWhere('status', 'completed');})->latest()->first()) {
-            if(count($this->streams)>0) {
+            if(count($this->streams) > 0) {
                 foreach ($this->streams as $key => $source) {
                     if ($source) {
                         $stream = Stream::updateOrCreate([
@@ -60,3 +60,60 @@ class StreamsStore extends Model
     }
 
 }
+
+/***
+ * Updated class
+ * Backend handles hidden streams
+ */
+
+/*class StreamsStore extends Model
+{
+    protected $video;
+
+    public function __construct($request, $video)
+    {
+        $this->sources = $request->input('package.sources');
+        $this->video = $video;
+    }
+
+    public function streams()
+    {
+
+        if (empty($this->sources)) {
+            $this->deleteAllStreams();
+            return;
+        }
+
+        foreach ($this->sources as $key => $source) {
+            if (empty($source)) {
+                continue;
+            }
+
+            $stream = $this->updateStream($key, $source);
+            $this->updateStreamResolutions($stream, $source['video'] ?? []);
+        }
+    }
+
+    protected function updateStream($name, $source)
+    {
+        return Stream::updateOrCreate(
+            ['video_id' => $this->video->id, 'name' => $name],
+            ['poster' => $source['poster'] ?? '', 'audio' => $source['playAudio'] ?? false]
+        );
+    }
+
+    protected function updateStreamResolutions($stream, $videoUrls)
+    {
+        foreach ($videoUrls as $resolution => $url) {
+            StreamResolution::updateOrCreate(
+                ['stream_id' => $stream->id, 'resolution' => $resolution],
+                ['filename' => $url]
+            );
+        }
+    }
+
+    protected function deleteAllStreams()
+    {
+        $this->video->streams()->delete();
+    }
+}*/

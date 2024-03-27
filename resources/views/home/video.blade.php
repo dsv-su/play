@@ -85,7 +85,7 @@
                 <!-- end Group Permission -->
 
                 <!-- Visibility icons-->
-                @if($video->hidden)
+                @if($video->hidden && $video->unlisted == false)
                     <div class="visibility mx-1" data-toggle="tooltip" title="{{__("Presentation is private")}}">
                         <i class="fas fa-eye-slash"></i>
                     </div>
