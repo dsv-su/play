@@ -36,7 +36,7 @@
                 </a>
             </div>
         @endif
-        @if ($video->edit)
+        @if ($video->edit and $video->state)
             <div>
                 <a href="{{route('presentation_edit', $video->id)}}" data-toggle="tooltip" data-placement="left"
                    data-title="{{ __('Edit presentation') }}" class="btn btn-dark btn-sm">
@@ -44,7 +44,7 @@
                 </a>
             </div>
         @endif
-        @if ($video->delete)
+        @if ($video->delete and $video->state)
             <div>
                 <span data-toggle="tooltip" data-placement="left" data-title="{{__("Delete presentation")}}">
                     <a type="button" class="btn btn-dark btn-sm" data-toggle="modal"
