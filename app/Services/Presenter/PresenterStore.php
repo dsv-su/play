@@ -71,7 +71,7 @@ class PresenterStore extends Model
                                     'video_id' => $this->video->id,
                                     'username' => $this->item,
                                     'name' => $this->name->getFirstAttribute('cn'),
-                                    'permission' => 'edit',
+                                    'permission' => 'delete',
                                 ]);
                         }
                         if ($key == 0) {
