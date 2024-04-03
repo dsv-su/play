@@ -28,7 +28,7 @@
                 <i class="fas fa-external-link-alt fa-fw"></i>
             </a>
         </div>
-        @if ($video->download)
+        @if ($video->download and $video->state)
             <div class="dropdown" data-placement="left" data-toggle="tooltip" title="{{ __("Download presentation") }}">
                 <a href="#" data-toggle="modal" data-target="#downloadModal{{$video->id}}"
                    data-title="{{ __('Download presentation') }}" class="btn btn-dark btn-sm">
