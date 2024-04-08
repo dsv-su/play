@@ -82,22 +82,24 @@
                         <div class="dropdown">
                             @csrf
                             @foreach(json_decode($video->sources, true) as $source)
-                                @if(is_array($source['video']) && $loop->first)
-                                    @foreach($source['video'] as $key => $source)
+                                @if($source['video'] ?? false)
+                                    @if(is_array($source['video']) && $loop->first)
+                                        @foreach($source['video'] as $key => $source)
+                                            <button class="btn btn-outline-primary btn-sm" name="res"
+                                                    data-dismiss="modal"
+                                                    onclick="downloadPresentation('<?php echo $video->id;?>','<?php echo $key;?>')"
+                                                    value="{{$key}}"><i class="fas fa-download"></i>
+                                                {{$key}}p
+                                            </button>
+                                        @endforeach
+                                    @elseif($loop->first)
                                         <button class="btn btn-outline-primary btn-sm" name="res"
-                                                data-dismiss="modal"
                                                 onclick="downloadPresentation('<?php echo $video->id;?>','<?php echo $key;?>')"
-                                                value="{{$key}}"><i class="fas fa-download"></i>
-                                            {{$key}}p
+                                                data-dismiss="modal"
+                                                value="999">
+                                            <i class="fas fa-download"></i> 720p
                                         </button>
-                                    @endforeach
-                                @elseif($loop->first)
-                                    <button class="btn btn-outline-primary btn-sm" name="res"
-                                            onclick="downloadPresentation('<?php echo $video->id;?>','<?php echo $key;?>')"
-                                            data-dismiss="modal"
-                                            value="999">
-                                        <i class="fas fa-download"></i> 720p
-                                    </button>
+                                    @endif
                                 @endif
                             @endforeach
                         </div>
