@@ -31,7 +31,7 @@ class EditAutosubtitles extends Component
 
     public function checkSubtitles()
     {
-        if($this->video->subtitles) {
+        if($this->video->subtitles && !empty(json_decode($this->video->subtitles, true))) {
             //Checks for generated subtitles
             foreach(json_decode($this->video->subtitles) as $key => $sub) {
                 if($key == 'Generated') {
