@@ -106,9 +106,10 @@ class MultiplayerController extends Controller
             $buildsource[$stream->name] = $build;
 
         }
-        $presentation['sources'] = \Illuminate\Support\Collection::make($buildsource);
-
-
+        //If videostreams exist
+        if($buildsource) {
+            $presentation['sources'] = \Illuminate\Support\Collection::make($buildsource);
+        }
 
         //Add subtitles
         if(json_decode($video->subtitles)) {
