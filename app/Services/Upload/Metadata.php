@@ -5,6 +5,7 @@ namespace App\Services\Upload;
 use App\Jobs\JobUploadFailedNotification;
 use App\ManualPresentation;
 use App\Stream;
+use App\StreamResolution;
 use Illuminate\Support\Collection;
 
 class Metadata
@@ -22,61 +23,86 @@ class Metadata
         $subtitlePath = $finalPath . '/subtitle/';
         //Creates the source attribute
         $presentation->sources = [];
+
         //Adds source and created thumbs
-        foreach (\Illuminate\Support\Facades\Storage::disk('play-store')->files($videoPath) as $key => $filename) {
-        /* Disabled 231102 RD
-            //Add duration
-            if($key ==  0 ) {
-                if($presentation->duration = $Determine->duration($filename)) {
-                    $presentation->save();
-                } else {
-                    //Something went wrong - Send email to uploader
-                    $job = (new JobUploadFailedNotification($presentation));
+        if($presentation->type == 'edit') {
+            //Retrive all streams for presentation
+            $streams = Stream::where('video_id', $presentation->pkg_id)->get();
 
-                    // Dispatch Job and continue
-                    dispatch($job);
+            foreach ($streams as $stream) {
+                $resolutions = StreamResolution::where('stream_id', $stream->id)->get();
+
+                foreach ($resolutions as $resolution) {
+                    $videosource[$resolution->resolution] = 'video/'. $resolution->filename;
                 }
+                $build = \Illuminate\Support\Collection::make([
+                    //'video' => \Illuminate\Support\Collection::make($videosource), /* Disabled for now */
+                    //'poster' => 'poster/' . $stream->poster, /* Disabled for now */
+                    'playAudio' => (bool)$stream->audio
+                ]);
+
+                $buildsource[$stream->name] = $build;
 
             }
-
-            //Set time in sec for thumb generation
-            if($presentation->duration < 30 ) {
-                $thumbcreated_after = $presentation->duration/3;
-            } else {
-                //Fallback
-                $thumbcreated_after = 30;
+            //If videostreams exist
+            if($buildsource) {
+                $this->source = \Illuminate\Support\Collection::make($buildsource);
             }
 
-            //Create thumb for uploaded video
-            $thumburl = $Thumb->create($finalPath, $filename, $thumbcreated_after);
 
-            //Sources
+        } else {
+            foreach (\Illuminate\Support\Facades\Storage::disk('play-store')->files($videoPath) as $key => $filename) {
+                /* Disabled 231102 RD
+                    //Add duration
+                    if($key ==  0 ) {
+                        if($presentation->duration = $Determine->duration($filename)) {
+                            $presentation->save();
+                        } else {
+                            //Something went wrong - Send email to uploader
+                            $job = (new JobUploadFailedNotification($presentation));
 
-            $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($filename));
-            //Add video source
-            */
+                            // Dispatch Job and continue
+                            dispatch($job);
+                        }
 
-            foreach($files = \Illuminate\Support\Facades\Storage::disk('play-store')->files($videoPath) as $stream => $f) {
-                $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($f));
-                if($stream == 0) {
-                    $this->source['main'] = [
-                        'video' => 'video/'. basename($f),
-                        //'poster' => 'poster/'. $thumb_name . '.png',
-                        'playAudio' => true,
-                    ];
-                } else {
-                    $this->source['camera'.$stream] = [
-                        'video' => 'video/'. basename($f),
-                        //'poster' => 'poster/'. $thumb_name . '.png',
-                        'playAudio' => false,
-                    ];
+                    }
+
+                    //Set time in sec for thumb generation
+                    if($presentation->duration < 30 ) {
+                        $thumbcreated_after = $presentation->duration/3;
+                    } else {
+                        //Fallback
+                        $thumbcreated_after = 30;
+                    }
+
+                    //Create thumb for uploaded video
+                    $thumburl = $Thumb->create($finalPath, $filename, $thumbcreated_after);
+
+                    //Sources
+
+                    $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($filename));
+                    //Add video source
+                    */
+                foreach($files = \Illuminate\Support\Facades\Storage::disk('play-store')->files($videoPath) as $stream => $f) {
+                    $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($f));
+                    if($stream == 0) {
+                        $this->source['main'] = [
+                            'video' => 'video/'. basename($f),
+                            //'poster' => 'poster/'. $thumb_name . '.png',
+                            'playAudio' => true,
+                        ];
+                    } else {
+                        $this->source['camera'.$stream] = [
+                            'video' => 'video/'. basename($f),
+                            //'poster' => 'poster/'. $thumb_name . '.png',
+                            'playAudio' => false,
+                        ];
+                    }
                 }
             }
-
-            $presentation->sources = $this->source;
-
         }
 
+        $presentation->sources = $this->source;
         //Subtitle
         if($subtitles = \Illuminate\Support\Facades\Storage::disk('play-store')->files($subtitlePath)) {
             switch($presentation->sublanguage) {
@@ -192,5 +218,16 @@ class Metadata
         $this->system_config = parse_ini_file($this->file, true);
 
         return $this->system_config['nfs']['storage'];
+    }
+
+    private function base_uri()
+    {
+        $this->file = base_path() . '/systemconfig/play.ini';
+        if (!file_exists($this->file)) {
+            abort(503);
+        }
+        $this->system_config = parse_ini_file($this->file, true);
+
+        return $this->system_config['store']['base_uri'];
     }
 }
