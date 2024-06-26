@@ -21,7 +21,7 @@
                     {{--}}
                     {{__("Operational disruption: We have temporarily turned off the ability to generate subtitles.")}}
                     {{--}}
-                    {{__("We apologize for any inconvenience, but our system will undergo maintenance for the next 30 minutes starting at 11:00 AM today. Thank you for your patience.")}}
+                    {{__("Operational disruption: We are currently experiencing technical issues with subtitle generation. Troubleshooting is in progress.")}}
 
                 </div>
                 {{--}}
