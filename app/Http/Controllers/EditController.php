@@ -244,6 +244,9 @@ class EditController extends Controller
         $backend = new EditPackage($video);
         $backend->sendBackend($request);
 
+        //Clear download storage
+        \Artisan::call('download:clear');
+        
         if(count(session('links') ?? []) <= 3) {
             return redirect()->route('home')->with('message', __("Processing the update"));
         } else {
