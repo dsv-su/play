@@ -13,7 +13,7 @@ class DownloadStreamResolution extends Model
 
     public function __construct(Video $video)
     {
-        $this->video_streams = Stream::where('video_id',$video->id)->get();
+        $this->video_streams = Stream::where('video_id', $video->id)->where('hidden', 0)->get();
     }
 
     public function videonames($resolution)
