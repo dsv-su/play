@@ -99,12 +99,6 @@ class PlayStoreNotify extends Model
             $this->presentation->title = ['sv' => $this->presentation['title'], 'en' => $this->presentation['title']];
         }
 
-        if ($type == 'edit') {
-            //For now
-            $this->presentation
-                ->makeHidden('sources');
-        }
-
         if ($type == 'mediasite') {
             $this->presentation->makeHidden('video_id')->makeHidden('mediasite_folder_id');
         }
