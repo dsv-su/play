@@ -246,7 +246,7 @@ class EditController extends Controller
 
         //Clear download storage
         \Artisan::call('download:clear');
-        
+
         if(count(session('links') ?? []) <= 3) {
             return redirect()->route('home')->with('message', __("Processing the update"));
         } else {

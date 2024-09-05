@@ -72,9 +72,9 @@ class HomeController extends Controller
         });
 
         // HT2023 Prevoius year courses store in cache
-        $previous_courses_ht = Cache::remember(app()->make('play_username') . '_previous_ht', $seconds, function () use ($daisy){
+        /*$previous_courses_ht = Cache::remember(app()->make('play_username') . '_previous_ht', $seconds, function () use ($daisy){
             return $daisy->getPreviousYearCoursesHT();
-        });
+        });*/
 
         if($this->administrator()) {
             //Administrator full visibility
