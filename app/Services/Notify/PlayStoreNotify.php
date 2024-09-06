@@ -190,6 +190,10 @@ class PlayStoreNotify extends Model
 
     public function sendFail(string $type)
     {
+        /***
+         * Depricated
+         */
+
         // type: manual
         $this->presentation
             ->makeHidden('id')

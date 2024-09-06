@@ -41,6 +41,11 @@ class Metadata
                     'playAudio' => (bool)$stream->audio
                 ]);
 
+                //Check and update the structure of old format sources
+                if(empty($stream->name)) {
+                    $stream->name = 'main';
+                }
+
                 $buildsource[$stream->name] = $build;
 
             }
