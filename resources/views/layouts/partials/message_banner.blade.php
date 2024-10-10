@@ -18,11 +18,10 @@
         <div class="row no-gutters">
             <div class="col d-flex align-items-center justify-content-center">
                 <div {{--}}id="whisper"{{--}} class="webb2021-article p-0 p-lg-2 d-inline-block">
-                    {{--}}
-                    {{__("Operational disruption: We have temporarily turned off the ability to generate subtitles.")}}
+                    {{__("Operational disruption: Currently, We have a backlog of presentations, so it may take a bit longer for them to be published.")}}
                     {{--}}
                     {{__("Operational disruption: We are currently experiencing technical issues with subtitle generation. Troubleshooting is in progress.")}}
-
+                    {{--}}
                 </div>
                 {{--}}
                 <div class="h-100 d-flex align-items-center">
