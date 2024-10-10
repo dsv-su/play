@@ -501,4 +501,4 @@
 
 @endif
 {{--}}
-
+@include('layouts.partials.message_banner')
