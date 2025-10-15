@@ -1,0 +1,46 @@
+<?php
+
+namespace App\Services\TicketHandler;
+
+use App\Models\CoursePermissions;
+use App\Models\Video;
+
+class oldCourseSettingTicket extends TicketPermissionHandler implements \App\Interfaces\TicketInterface
+{
+    protected $video, $course, $courses, $courseSettings;
+
+    public function __construct(Video $video)
+    {
+        parent::__construct($video);
+        $this->video = $video;
+        $this->courses = $video->courses();
+    }
+
+    public function cast()
+    {
+        //Collect all coursesettings
+        foreach($this->courses as $this->course) {
+            if( $permissionId = $this->getCoursePermissionId($this->course->id)) {
+                $this->courseSettings[] = $permissionId;
+                } else {
+                $this->courseSettings[] = 1;
+                }
+            }
+
+        if($this->courseSettings) {
+            if (count($this->courseSettings) > 1) {
+                //If there exist multiple settings -> set default to dsv students and staff
+                $this->video->setAttribute('ticket_permission_id', 1);
+            } else {
+                $this->video->setAttribute('ticket_permission_id', $this->courseSettings[0]);
+            }
+        }
+
+        return $this->video;
+    }
+
+    private function getCoursePermissionId($course_id)
+    {
+        return CoursePermissions::where('course_id', $course_id)->pluck('permission_id')->first();
+    }
+}

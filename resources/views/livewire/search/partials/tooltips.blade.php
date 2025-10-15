@@ -1,0 +1,18 @@
+<div id="playAll-tooltip" role="tooltip"
+     class="absolute z-30 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+     style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(1443px, 692px);"
+     data-popper-placement="top">{{__("Play All")}}
+    <div class="tooltip-arrow" data-popper-arrow></div>
+</div>
+<div id="edit-tooltip" role="tooltip"
+     class="absolute z-30 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+     style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(1443px, 692px);"
+     data-popper-placement="top">{{__("Edit presentation")}}
+    <div class="tooltip-arrow" data-popper-arrow></div>
+</div>
+<div id="delete-tooltip" role="tooltip"
+     class="absolute z-30 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+     style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(1443px, 692px);"
+     data-popper-placement="top">{{__("Delete presentation")}}
+    <div class="tooltip-arrow" data-popper-arrow></div>
+</div>
