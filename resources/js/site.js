@@ -1,10 +1,7 @@
 import 'flowbite';
 import 'flowbite/dist/datepicker';
-//import '../css/site.css'
 import 'preline'
 import '@preline/carousel'
-
-// site.js
 import _ from 'lodash';
 import Dropzone from 'dropzone';
 window._ = _;
