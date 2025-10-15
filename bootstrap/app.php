@@ -29,6 +29,11 @@ return Application::configure(basePath: dirname(__DIR__))
 
 
     })
+    ->withProviders([
+        App\Providers\AppServiceProvider::class,
+        App\Providers\PlayServiceProvider::class,
+        App\Providers\SystemServiceProvider::class,
+    ])
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

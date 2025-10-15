@@ -1,7 +1,15 @@
 <?php
 
 use App\Http\Controllers\MultiplayerController;
+use App\Services\AuthHandler;
 use Illuminate\Support\Facades\Route;
+
+if (class_exists(AuthHandler::class))
+    $login = app()->make('SystemService')->authorize()->global->login_route;
+
+// SU idp Endpoints
+Route::get('/sulogin', 'SystemController@SUlogin')->name('sulogin');
+Route::get($login, 'SystemController@SUidpReturn')->name('login');
 
 
 // Multiplayer — public endpoints guarded by permissions
