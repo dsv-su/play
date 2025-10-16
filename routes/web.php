@@ -8,8 +8,8 @@ if (class_exists(AuthHandler::class))
     $login = app()->make('SystemService')->authorize()->global->login_route;
 
 // SU idp Endpoints
-Route::get('/sulogin', 'SystemController@SUlogin')->name('sulogin');
-Route::get($login, 'SystemController@SUidpReturn')->name('login');
+Route::get('/sulogin', [\App\Http\Controllers\SystemController::class, 'SUlogin'])->name('sulogin');
+Route::get($login, [\App\Http\Controllers\SystemController::class, 'SUidpReturn'])->name('login');
 
 
 // Multiplayer — public endpoints guarded by permissions
