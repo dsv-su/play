@@ -47,7 +47,7 @@
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>
                 <!-- Displayname from shibboleth -->
-                {{ app()->make('play_user') }} {{--}}| {{app()->make('play_auth')}} {{--}}
+                {{ app()->make('play_user') }} | A:{{app()->make('play_auth')}} | R:{{app()->make('play_role')}}
 
             </div>
 

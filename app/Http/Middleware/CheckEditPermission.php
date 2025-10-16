@@ -54,7 +54,7 @@ class CheckEditPermission
 
         // 3) Courseadmin role, validated via CourseAdmin service
         if ($role === 'Courseadmin') {
-            $courseAdmin = app(CourseAdmin::class); 
+            $courseAdmin = app(CourseAdmin::class);
             if ($courseAdmin->check($username.'@su.se', $video)) {
                 return $next($request);
             }
