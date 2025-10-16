@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append([
 
         ]);
+        $middleware->encryptCookies(['language']); // exclude from encryption
         $middleware->web(append: [
             \App\Http\Middleware\SetLocale::class,
         ]);

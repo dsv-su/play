@@ -13,13 +13,16 @@ class LocaleController extends Controller
         $allowed = config('app.supported_locales', ['en']);
         abort_unless(in_array($locale, $allowed, true), 404);
 
-        // Persist the choice and apply immediately for this request
+        // Persist in session and apply immediately
         $request->session()->put('locale', $locale);
         app()->setLocale($locale);
-
-        // Optional: also persist in a cookie for guests
+        
         cookie()->queue(cookie()->forever('locale', $locale));
+        // Set the language cookie ('se' or 'en')
+        $language = $locale === 'se' ? 'se' : 'en';
+        cookie()->queue(cookie('language', $language, 0, null, null, false, false));
 
-        return back()->with('status', __('messages.welcome')); // example flash msg
+        return back()->with('status', __('messages.welcome'));
     }
+
 }
