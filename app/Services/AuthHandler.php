@@ -26,7 +26,7 @@ class AuthHandler
         $iniPaths       = glob($dir . DIRECTORY_SEPARATOR . '*.ini') ?: [];
         $examplePaths   = glob($dir . DIRECTORY_SEPARATOR . '*.ini.example') ?: [];
 
-        $byBase: array = [];
+        $byBase = [];
 
         //  play.ini.example
         foreach ($examplePaths as $path) {
