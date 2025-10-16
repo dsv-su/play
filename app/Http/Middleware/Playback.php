@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Services\AuthHandler;
 use App\Services\Course\CourseAdminList;
-use App\Services\Course\oldCourseSettingPublic;
+use App\Services\Course\CourseSettingPublic;
 use App\Services\Course\CourseSettingVisibility;
 use App\Services\Staff\AdminCheck;
 use App\Services\Staff\StaffCheck;
@@ -69,7 +69,7 @@ class Playback
             }
 
             //Check if coursesettings is public
-            $course_permission = new oldCourseSettingPublic();
+            $course_permission = new CourseSettingPublic();
             $coursesetting = new CourseSettingVisibility();
             if ($course_permission->check($video) == 4) {
                 //Course is public
