@@ -11,6 +11,7 @@ use App\Observers\VideoObserver;
 use App\Repositories\EloquentVideoRepository;
 use App\Repositories\VideoRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -30,5 +31,8 @@ class AppServiceProvider extends ServiceProvider
         Video::observe(VideoObserver::class);
         Tag::observe(TagObserver::class);
         Course::observe(CourseObserver::class);
+        Livewire::addPersistentMiddleware([
+            \App\Http\Middleware\PlayAuthenticate::class,
+        ]);
     }
 }

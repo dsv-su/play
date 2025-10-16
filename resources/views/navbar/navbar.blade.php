@@ -34,6 +34,9 @@
         <!-- Desktop Navigation -->
         @include('navbar.partials.desktopmenu')
 
+        <!-- Pending presentations -->
+        {{--}}@include('navbar.partials.pending'){{--}}
+
         <!-- Mobile Menu Toggle Button -->
         @include('navbar.partials.mobile_menu_toggle')
     </div>

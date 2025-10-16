@@ -16,7 +16,7 @@ class LocaleController extends Controller
         // Persist in session and apply immediately
         $request->session()->put('locale', $locale);
         app()->setLocale($locale);
-        
+
         cookie()->queue(cookie()->forever('locale', $locale));
         // Set the language cookie ('se' or 'en')
         $language = $locale === 'se' ? 'se' : 'en';
