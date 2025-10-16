@@ -2,6 +2,8 @@
     <img
         class="absolute inset-0 h-full w-full object-cover
                @if($video->hidden) opacity-75 @endif"
+        loading="lazy"
+        decoding="async"
         src="{{ asset($video->thumb . '?' . time()) }}"
         alt="Presentation thumb-{{$loop->index}}">
 </div>

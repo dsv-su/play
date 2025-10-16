@@ -1,5 +1,5 @@
-<div class="relative flex flex-col bg-gray-50 border border-gray-200 w-full
-            max-h-[18rem] overflow-hidden
+<div class="relative flex flex-col bg-gray-50 border border-gray-200 w-full min-w-0
+            max-h-[18rem] overflow-hidden overflow-x-clip
             shadow-2xs rounded-sm hover:shadow-sm transition
             dark:bg-gray-800 {{--}}dark:border-neutral-700{{--}}dark:border-white dark:shadow-neutral-700/70">
 
@@ -15,8 +15,8 @@
     </div>
 
     <!-- Card Body -->
-    <div class="p-2 md:p-3 relative">
-        <div class="flex items-center flex-wrap gap-1">
+    <div class="p-2 md:p-3 relative min-w-0 overflow-x-clip">
+        <div class="flex items-center flex-wrap gap-1 min-w-0">
             @include('home.partials.title')
             @include('home.partials.presenters')
             {{--}}<div class="ml-auto">{{--}}

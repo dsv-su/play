@@ -24,9 +24,7 @@
         @livewire($component)
         {{-- Unique keys: @livewire($component, [], key($component)) --}}
     @endforeach
+
     <!-- Tooltips -->
     @include('home.partials.tooltips')
 </div>
-
-
-

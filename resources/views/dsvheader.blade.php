@@ -9,7 +9,7 @@
             />
         </div>
 
-        <div class="col-span-3 inline-flex items-center px-5 bg-sudepartment">
+        <div class="col-span-3 inline-flex items-center px-5 bg-sudepartment min-w-0">
           <span class="self-center text-base font-normal font-sudepartment whitespace-pre-line text-white truncate">
             {{ __('Department of Computer and Systems Sciences') }}
           </span>
@@ -28,7 +28,7 @@
         </div>
 
         <!-- Center: Department name -->
-        <div class="hidden sm:flex items-center col-span-2 pl-5 bg-sudepartment">
+        <div class="hidden sm:flex items-center col-span-2 pl-5 bg-sudepartment min-w-0">
       <span class="text-2xl font-normal font-sudepartment text-white truncate">
         {{ __('Department of Computer and Systems Sciences') }}
       </span>

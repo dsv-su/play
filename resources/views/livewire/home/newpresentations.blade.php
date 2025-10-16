@@ -22,8 +22,8 @@
             <div class="relative min-h-72 ">
                 <div class="hs-carousel-body absolute top-0 bottom-0 start-0 flex flex-nowrap opacity-0 transition-transform duration-700 hs-carousel-dragging:transition-none hs-carousel-dragging:cursor-grabbing">
                     @foreach($newvideos as $video)
-                        <div class="hs-carousel-slide px-0.5">
-                            <div class="flex justify-center h-full">
+                        <div class="hs-carousel-slide {{--}}px-0.5{{--}}">
+                            <div class="flex justify-center h-full ">
                                 @include('home.partials.presentation')
                             </div>
                         </div>
