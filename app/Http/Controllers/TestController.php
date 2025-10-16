@@ -10,9 +10,7 @@ class TestController extends Controller
 {
     public function index()
     {
-        $links = session('links') ?? [];
 
-        dd($links);
     }
 }
 

@@ -317,7 +317,7 @@ class EditController extends Controller
                         0 => false,
                         1 => true,
                     ];
-                    
+
                     $sources[$stream->name]['playAudio'] = $map[$stream->audio];
                     $presentation->sources = $sources;
 
