@@ -1,6 +1,5 @@
 /.phpunit.cache
 /node_modules
-/public/build
 /public/hot
 /public/storage
 /storage/*.key
@@ -29,3 +28,6 @@ public/css/player/*.css
 public/js/multiplayer.js
 resources/views/player/index.blade.php
 resources/views/player/index-ce.blade.php
+# Ignore specific local resource files
+/resources/css/site.css
+/resources/js/site.js
