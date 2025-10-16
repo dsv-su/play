@@ -4,43 +4,44 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\File;
-
 class AuthHandler
 {
     /**
-     * Load all .ini configs from systemconfig/, preferring play.ini over play.ini.example.
+     * Load and merge INI configs from systemconfig/.
+     * Prefers play.ini over play.ini.example when both exist.
      *
-     * @return array<string, array<string, mixed>>  e.g. ['auth' => ['driver' => '...']]
+     * Returns a stdClass where INI sections are top-level properties:
+     *   $config->global->login_route
      */
-    public function authorize(?string $dir = null): array
+    public function authorize(?string $dir = null): object
     {
         $dir = $dir ?? base_path('systemconfig');
 
         if (!is_dir($dir)) {
-            //
-            return [];
+            // Return empty object if the directory is missing
+            return new \stdClass();
         }
 
-        // Collect base names present as .ini or .ini.example
-        $iniPaths       = glob($dir . DIRECTORY_SEPARATOR . '*.ini') ?: [];
-        $examplePaths   = glob($dir . DIRECTORY_SEPARATOR . '*.ini.example') ?: [];
+        // Find files
+        $sep          = DIRECTORY_SEPARATOR;
+        $iniPaths     = glob($dir . $sep . '*.ini') ?: [];
+        $examplePaths = glob($dir . $sep . '*.ini.example') ?: [];
 
+        // Group by base filename; prefer real .ini over .ini.example
         $byBase = [];
-
-        //  play.ini.example
+        //play.ini.example
         foreach ($examplePaths as $path) {
             $base = basename($path, '.ini.example');
-            $byBase[$base] = ['example' => $path];
+            $byBase[$base]['example'] = $path;
         }
-
-        // play.ini if present
+        //play.ini
         foreach ($iniPaths as $path) {
             $base = basename($path, '.ini');
             $byBase[$base]['real'] = $path;
         }
 
-        $result = [];
+        // Merge all chosen INI files (section-wise)
+        $merged = [];
 
         foreach ($byBase as $base => $paths) {
             $chosen = $paths['real'] ?? $paths['example'] ?? null;
@@ -48,15 +49,49 @@ class AuthHandler
                 continue;
             }
 
+            // INI_SCANNER_TYPED converts "true"/"false"/numbers" to native types
             $parsed = @parse_ini_file($chosen, true, INI_SCANNER_TYPED);
-            if ($parsed === false) {
-                // Skip bad INI
+            if ($parsed === false || !is_array($parsed)) {
+                // Skip invalid INI silently (or log if you prefer)
                 continue;
             }
 
-            $result[$base] = $parsed; // array sections → nested arrays
+            // Later files override earlier ones (last write wins)
+            $merged = array_replace_recursive($merged, $parsed);
         }
 
-        return $result;
+        // Convert nested associative arrays into a stdClass tree
+        return $this->arrayToObject($merged);
+    }
+
+    /**
+     * Recursively convert an associative array to stdClass.
+     *
+     * @param mixed $value
+     */
+    private function arrayToObject($value)
+    {
+        if (!is_array($value)) {
+            return $value;
+        }
+
+        // Distinguish associative vs numeric arrays:
+        $isAssoc = static function (array $arr): bool {
+            if ($arr === []) {
+                return true;
+            }
+            return array_keys($arr) !== range(0, count($arr) - 1);
+        };
+
+        if (!$isAssoc($value)) {
+            // Numeric array: convert each element but keep it as an array
+            return array_map([$this, __FUNCTION__], $value);
+        }
+
+        $obj = new \stdClass();
+        foreach ($value as $k => $v) {
+            $obj->{$k} = $this->arrayToObject($v);
+        }
+        return $obj;
     }
 }
