@@ -313,10 +313,15 @@ class EditController extends Controller
                         $stream->save();
                     }
                     //Prepare source for pkg
-                    $map = [
+                    /*$map = [
                         0 => 'false',
                         1 => true,
+                    ];*/
+                    $map = [
+                        0 => 0,
+                        1 => 1,
                     ];
+
                     $sources[$stream->name]['playAudio'] = $map[$stream->audio];
                     $presentation->sources = $sources;
 
