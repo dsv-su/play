@@ -1,66 +1,62 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
-use Illuminate\Database\Eloquent\Model;
-use phpDocumentor\Reflection\Types\Boolean;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
+use Illuminate\Support\Facades\File;
 
-/**
- * App\Services\AuthHandler
- *
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Services\AuthHandler newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Services\AuthHandler newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Services\AuthHandler query()
- * @mixin \Eloquent
- * @mixin IdeHelperAuthHandler
- */
-class AuthHandler extends Model
+class AuthHandler
 {
-    private $process, $files, $file;
-    protected $plugindir, $list, $filename;
-    public $config;
-
-    private function getFiles($dir)
+    /**
+     * Load all .ini configs from systemconfig/, preferring play.ini over play.ini.example.
+     *
+     * @return array<string, array<string, mixed>>  e.g. ['auth' => ['driver' => '...']]
+     */
+    public function authorize(?string $dir = null): array
     {
-        //Get list of filenames
-        $this->process = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
+        $dir = $dir ?? base_path('systemconfig');
 
-        $this->files = array();
+        if (!is_dir($dir)) {
+            //
+            return [];
+        }
 
-        foreach ($this->process as $this->file) {
+        // Collect base names present as .ini or .ini.example
+        $iniPaths       = glob($dir . DIRECTORY_SEPARATOR . '*.ini') ?: [];
+        $examplePaths   = glob($dir . DIRECTORY_SEPARATOR . '*.ini.example') ?: [];
 
-            if ($this->file->isDir()){
+        $byBase: array = [];
+
+        //  play.ini.example
+        foreach ($examplePaths as $path) {
+            $base = basename($path, '.ini.example');
+            $byBase[$base] = ['example' => $path];
+        }
+
+        // play.ini if present
+        foreach ($iniPaths as $path) {
+            $base = basename($path, '.ini');
+            $byBase[$base]['real'] = $path;
+        }
+
+        $result = [];
+
+        foreach ($byBase as $base => $paths) {
+            $chosen = $paths['real'] ?? $paths['example'] ?? null;
+            if (!$chosen || !is_readable($chosen)) {
                 continue;
             }
 
-            //$files[] = $file->getPathname();
-            $this->files[] = $this->file->getFilename();
-
-        }
-        return $this->files;
-    }
-
-    public function authorize()
-    {
-        $this->plugindir = base_path().'/systemconfig/';
-        $this->list = $this->getFiles($this->plugindir);
-        foreach ($this->list as $this->filename) {
-            // Read the .ini file and store in model
-            if (substr($this->filename, -3) == 'ini') {
-                $this->file = $this->plugindir . $this->filename;
-                if (!file_exists($this->file)) {
-                    $this->file = $this->plugindir . $this->filename . '.example';
-                }
-                $this->config = parse_ini_file($this->file, true);
-
-                $this->config = json_encode($this->config);
-                $this->config = json_decode($this->config);
-
+            $parsed = @parse_ini_file($chosen, true, INI_SCANNER_TYPED);
+            if ($parsed === false) {
+                // Skip bad INI
+                continue;
             }
-        }
-        return $this->config;
 
+            $result[$base] = $parsed; // array sections → nested arrays
+        }
+
+        return $result;
     }
 }

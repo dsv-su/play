@@ -2,7 +2,7 @@
 Development setup for DSVPlay.
 
 ## 2. Requirements
-Requirements are best determined using Server Requirements page of corresponding Laravel 8 version
+Requirements are best determined using Server Requirements page of corresponding Laravel 12 version
 
 - PHP version 8.2.*
 
@@ -143,6 +143,9 @@ Make sure these folder exist or create these folders under storage/framework:
 * Create the database with `php artisan migrate` (this should create database tables needed)
 
 * For developing purposes there are a couple of seeders to run. Reset (rollback) the migration and run `php artisan migrate:fresh --seed`
+
+
+* DSVPlay now uses Typesense for indexing db tabels. Install [Typesense](https://typesense.org/docs/guide/install-typesense.html#option-2-local-machine-self-hosting)
 
 ## 4. Building assets (dev)
 
