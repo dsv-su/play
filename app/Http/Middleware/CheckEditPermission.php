@@ -54,7 +54,7 @@ class CheckEditPermission
 
         // 3) Courseadmin role, validated via CourseAdmin service
         if ($role === 'Courseadmin') {
-            $courseAdmin = app(CourseAdmin::class); // DI-friendly
+            $courseAdmin = app(CourseAdmin::class); 
             if ($courseAdmin->check($username.'@su.se', $video)) {
                 return $next($request);
             }
@@ -102,20 +102,29 @@ class CheckEditPermission
         // Prefer explicit query parameter
         $id = $request->input('p');
 
-        // Fallback: last path segment if numeric (avoid using full URI which may include query string)
+        // Fallback: last path segment if it looks like a UUID
         if (!$id) {
             $lastSegment = (string) str($request->path())->explode('/')->last();
-            if (ctype_digit($lastSegment)) {
+
+            // Validate UUID format
+            if (preg_match(
+                '/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[1-5][0-9a-fA-F]{3}\b-[89abAB][0-9a-fA-F]{3}\b-[0-9a-fA-F]{12}$/',
+                $lastSegment
+            )) {
                 $id = $lastSegment;
             }
         }
 
-        // Final safety: only attempt integer IDs
-        if ($id && ctype_digit((string) $id)) {
-            return Video::find((int) $id);
+        // Final safety: only attempt lookup if it matches UUID format
+        if ($id && preg_match(
+                '/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[1-5][0-9a-fA-F]{3}\b-[89abAB][0-9a-fA-F]{3}\b-[0-9a-fA-F]{12}$/',
+                $id
+            )) {
+            return Video::find($id);
         }
 
         return null;
     }
+
 }
 
