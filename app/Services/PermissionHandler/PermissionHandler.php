@@ -2,7 +2,7 @@
 
 namespace App\Services\PermissionHandler;
 
-use App\VideoPermission;
+use App\Models\VideoPermission;
 use LdapRecord\Models\Model;
 
 class PermissionHandler extends Model

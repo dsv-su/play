@@ -2,7 +2,7 @@
 
 namespace App\Services\TicketHandler;
 
-use App\Permission;                // adjust to App\Models\Permission if needed
+use App\Models\Permission;
 use App\Services\AuthHandler;
 
 class Entitlement
