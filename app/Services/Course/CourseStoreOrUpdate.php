@@ -2,14 +2,14 @@
 
 namespace App\Services\Course;
 
-use App\Course;
-use App\CourseadminPermission;
-use App\CoursePermissions;
-use App\CoursesettingsPermissions;
+use App\Models\Course;
+use App\Models\CourseadminPermission;
+use App\Models\CoursePermissions;
+use App\Models\CoursesettingsPermissions;
 use App\Jobs\JobFailedNotification;
 use App\Services\Daisy\DaisyIntegration;
-use App\VideoCourse;
-use App\VideoPermission;
+use App\Models\VideoCourse;
+use App\Models\VideoPermission;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 

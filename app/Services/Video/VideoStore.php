@@ -2,7 +2,7 @@
 
 namespace App\Services\Video;
 
-use App\Video;
+use App\Models\Video;
 use Carbon\Carbon;
 
 class VideoStore

@@ -2,27 +2,28 @@
 
 namespace App\Services\Api;
 
-use App\ApiLog;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\ApiLog;
+use Illuminate\Http\Request;
 
 class CatchAll
 {
-    protected $request, $api;
+    protected $request;
 
-    public function __construct($request)
+    public function __construct(Request $request)
     {
         $this->request = $request;
     }
 
-    public function catch()
+    public function logRequest()
     {
-        $this->api = new ApiLog;
-        $this->api->catch = json_encode($this->request->all(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-        $this->api->jobid = $this->request->jobid;
-        $this->api->pk_id = $this->request->input('package.pkg_id');
+        $apiLog = new ApiLog();
+        $apiLog->payload = json_encode($this->request->all(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        $apiLog->jobid = $this->request->input('jobid');
+        $apiLog->pk_id = $this->request->input('package.pkg_id');
 
-        $this->api->save();
+        $apiLog->save();
 
-        return response()->json('Logged');
+        return response()->json(['message' => 'Logged successfully']);
     }
 }
+

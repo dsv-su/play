@@ -2,10 +2,10 @@
 
 namespace App\Services\Presenter;
 
-use App\IndividualPermission;
-use App\Presenter;
+use App\Models\IndividualPermission;
+use App\Models\Presenter;
 use App\Services\Ldap\SukatUser;
-use App\VideoPresenter;
+use App\Models\VideoPresenter;
 use Illuminate\Database\Eloquent\Model;
 
 class PresenterStore extends Model

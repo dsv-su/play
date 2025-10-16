@@ -2,8 +2,8 @@
 
 namespace App\Services\Stream;
 
-use App\Stream;
-use App\StreamResolution;
+use App\Models\Stream;
+use App\Models\StreamResolution;
 use Illuminate\Database\Eloquent\Model;
 
 class StreamsStore extends Model

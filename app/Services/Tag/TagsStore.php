@@ -2,8 +2,8 @@
 
 namespace App\Services\Tag;
 
-use App\Tag;
-use App\VideoTag;
+use App\Models\Tag;
+use App\Models\VideoTag;
 use Illuminate\Database\Eloquent\Model;
 
 class TagsStore extends Model
