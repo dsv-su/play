@@ -186,8 +186,6 @@ class EditController extends Controller
                 // 3) Presenters (clear then recreate to honor changed ordering/selection)
                 VideoPresenter::where('video_id', $video->id)->delete();
 
-                $presenter_array[] = null;
-
                 foreach ($data['presenters'] ?? [] as $p) {
                     if (!$p['name']) {
                         continue;
@@ -221,7 +219,7 @@ class EditController extends Controller
                     $presenter_array[] = $presenter->username;
                 }
                 //Presenter array to ManualPresentation instance
-                $presentation->presenters = $presenter_array;
+                $presentation->presenters = $presenter_array ?? null;
 
 
                 // 4) Group permission for the video
