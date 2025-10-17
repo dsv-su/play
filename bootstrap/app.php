@@ -15,9 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append([
 
         ]);
+
         $middleware->encryptCookies(['language']); // exclude from encryption
         $middleware->web(append: [
             \App\Http\Middleware\SetLocale::class,
+
         ]);
         $middleware->alias([
             'playauth' => \App\Http\Middleware\PlayAuthenticate::class,
@@ -27,8 +29,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'presentation-permission' => \App\Http\Middleware\CheckPresentationPermission::class,
             'redirect-links' => \App\Http\Middleware\RedirectLinks::class,
             'edit-permission' => \App\Http\Middleware\CheckEditPermission::class,
+            'jwt' => \App\Http\Middleware\JwtMiddleware::class,
         ]);
-
 
     })
     ->withProviders([
