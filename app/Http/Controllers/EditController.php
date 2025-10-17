@@ -186,8 +186,8 @@ class EditController extends Controller
                 // 3) Presenters (clear then recreate to honor changed ordering/selection)
                 VideoPresenter::where('video_id', $video->id)->delete();
 
-                $presenter_array[] = [];
-                
+                $presenter_array[] = null;
+
                 foreach ($data['presenters'] ?? [] as $p) {
                     if (!$p['name']) {
                         continue;
