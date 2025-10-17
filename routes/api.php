@@ -2,23 +2,28 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Api\VideoApiController;
 
-Route::get('test', 'AuthController@token_test');
+Route::get('test', [AuthController::class, 'token_test']);
 
-//Issue tokens
-Route::post('token_store', 'AuthController@store');
-Route::post('token_read', 'AuthController@read');
-//Invalidate tokens
-Route::post('destroy', 'AuthController@logout');
-//Refresh token
-//Route::post('refresh', 'AuthController@refresh');
+// Issue tokens
+Route::post('token_store', [AuthController::class, 'store']);
+Route::post('token_read', [AuthController::class, 'read']);
 
-//Store
-Route::apiResource('recordings', 'Api\VideoApiController');
+// Invalidate tokens
+Route::post('destroy', [AuthController::class, 'logout']);
 
-//Check permissions
-Route::get('permissions/{id}', 'Api\VideoApiController@permissions');
+// Refresh token (optional)
+// Route::post('refresh', [AuthController::class, 'refresh']);
 
-//Check permissions with ticket
-Route::get('ticket/{id}', 'Api\VideoApiController@perm');
-Route::post('perm', 'Api\VideoApiController@permission');
+// Store
+Route::apiResource('recordings', VideoApiController::class);
+
+// Check permissions
+Route::get('permissions/{id}', [VideoApiController::class, 'permissions']);
+
+// Check permissions with ticket
+Route::get('ticket/{id}', [VideoApiController::class, 'perm']);
+Route::post('perm', [VideoApiController::class, 'permission']);
+
