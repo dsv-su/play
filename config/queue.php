@@ -1,5 +1,25 @@
 <?php
 
+use Illuminate\Support\Str;
+
+// Define the base configuration directory
+$configDir = base_path() . '/systemconfig/';
+
+// Determine the config file to use
+$file = $configDir . 'play.ini';
+if (!file_exists($file)) {
+    $file = $configDir . 'play.ini.example';
+    if (!file_exists($file)) {
+        throw new Exception('Configuration file not found in ' . $configDir);
+    }
+}
+
+// Parse the configuration file and handle potential parsing errors
+$system_config = parse_ini_file($file, true);
+if ($system_config === false) {
+    throw new Exception('Error parsing configuration file: ' . $file);
+}
+
 return [
 
     /*
@@ -36,10 +56,13 @@ return [
 
         'database' => [
             'driver' => 'database',
-            'connection' => env('DB_QUEUE_CONNECTION'),
-            'table' => env('DB_QUEUE_TABLE', 'jobs'),
-            'queue' => env('DB_QUEUE', 'default'),
-            'retry_after' => (int) env('DB_QUEUE_RETRY_AFTER', 90),
+            'connection' => $system_config['database']['db'],
+            //'table' => env('DB_QUEUE_TABLE', 'jobs'),
+            'table' => 'jobs',
+            //'queue' => env('DB_QUEUE', 'default'),
+            'queue' => 'default',
+            //'retry_after' => (int) env('DB_QUEUE_RETRY_AFTER', 90),
+            'retry_after' => 90,
             'after_commit' => false,
         ],
 
