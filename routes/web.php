@@ -63,7 +63,6 @@ Route::middleware(['entitlements', 'playauth','web'])->group(function () {
         Route::post('chunk/delete', 'chunkdelete')->name('file-delete');
     });
 
-
     // Multiplayer
     Route::controller(\App\Http\Controllers\MultiplayerController::class)->group(function () {
         Route::get('/player/{video}', 'player')->name('player.show');

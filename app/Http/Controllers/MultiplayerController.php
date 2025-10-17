@@ -10,10 +10,12 @@ use App\Models\StreamResolution;
 use App\Models\Video;
 use App\Models\VideoCourse;
 use App\Models\VideoStat;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\View\View;
 
 class MultiplayerController extends Controller
 {
@@ -51,149 +53,167 @@ class MultiplayerController extends Controller
 
     public function player(Video $video): RedirectResponse
     {
+        // Fetch the associated course_id (if any)
+        $courseId = VideoCourse::where('video_id', $video->getKey())->value('course_id');
 
-        if (!$playlist = VideoCourse::where('video_id', $video->id)->first()) {
-            //No playlist
-            return Redirect::to('multiplayer?p=' . $video->id);
-            //New Player
-            //return Redirect::to('multiplayer_ce?p=' . $video->id);
-        } else {
-            // Production
-            return Redirect::to('multiplayer?p=' . $video->id . '&l=' . $playlist->course_id);
-            //New Player
-            //return Redirect::to('multiplayer_ce?p=' . $video->id . '&l=' . $playlist->course_id);
+        // Build query parameters for the player
+        $query = ['p' => $video->getKey()];
+        if ($courseId) {
+            $query['l'] = $courseId;
         }
 
+        return redirect()->route('multiplayer.ce', $query);
     }
 
-    public function presentation($id)
+
+    public function presentation(string $id): JsonResponse
     {
-        $video = Video::find($id);
+        // Eager-load
+        $video = Video::with([
+            'streams' => fn ($q) => $q->where('hidden', false),
+            'streams.resolutions',
+        ])->findOrFail($id);
 
-        //Issue ticket for video
-        $ticket = new TicketPermissionHandler($video);
-        $token = $ticket->issue();
+        // Issue ticket for video
+        $token = (new TicketPermissionHandler($video))->issue();
 
-        // Construct Presentation json from DB
-        $presentation = array();
-        $videosource = array();
-        $presentation['id'] = $video->id;
-        $presentation['title'] = $video->title;
-        $presentation['thumb'] = $video->thumb;
+        // Base presentation payload
+        $presentation = [
+            'id'    => $video->id,
+            'title' => $video->title,
+            'thumb' => $video->thumb,
+        ];
 
-        $streams = Stream::where('video_id', $video->id)->where('hidden', 0)->get();
+        // Build sources
+        $sources = [];
+        foreach ($video->streams as $stream) {
+            // Reset per stream
+            $videoSources = [];
 
-        //Deprecated in the updated player
-        /*foreach ($streams as $key => $stream) {
-            $presentation['sources'][] = [
-                'poster' => $this->base_uri() .'/' . $video->id . '/' .$stream->poster,
+            foreach ($stream->resolutions as $resolution) {
+                $videoSources[$resolution->resolution] = $this->base_uri().'/'.$video->id.'/'.$resolution->filename;
+            }
+
+            $sources[$stream->name] = [
+                'video'     => $videoSources,
+                'poster'    => $this->base_uri().'/'.$video->id.'/'.$stream->poster,
                 'playAudio' => (bool) $stream->audio,
-                'name' => $stream->name
-             ];
-            $resolutions = StreamResolution::where('stream_id', $stream->id)->get();
-            foreach ($resolutions as $resolution) {
-                $presentation['sources'][$key]['video'][$resolution->resolution] = $this->base_uri() .'/'. $video->id . '/' . $resolution->filename;
-            }
-        }*/
-
-        //New presentation structure
-        foreach ($streams as $key => $stream) {
-            $resolutions = StreamResolution::where('stream_id', $stream->id)->get();
-
-            foreach ($resolutions as $resolution) {
-                $videosource[$resolution->resolution] = $this->base_uri() .'/'. $video->id . '/' . $resolution->filename;
-            }
-            $build = \Illuminate\Support\Collection::make([
-                'video' => \Illuminate\Support\Collection::make($videosource),
-                'poster' => $this->base_uri() . '/' . $video->id . '/' . $stream->poster,
-                'playAudio' => (bool)$stream->audio
-            ]);
-
-            $buildsource[$stream->name] = $build;
-
-        }
-        //If videostreams exist
-        if($buildsource) {
-            $presentation['sources'] = \Illuminate\Support\Collection::make($buildsource);
+            ];
         }
 
-        //Add subtitles
-        if(json_decode($video->subtitles)) {
-            $subs = [];
-            $subtitles = json_decode($video->subtitles, true);
-            foreach($subtitles as $key => $subtitle) {
-                $subs[$key] = $this->base_uri() . '/' . $video->id . '/' . $subtitle;
-            }
-            if(!empty($subs)) {
-                $presentation['subtitles'] = $subs;
+        if (!empty($sources)) {
+            $presentation['sources'] = $sources;
+        }
+
+        // Subtitles
+        if (!empty($video->subtitles)) {
+            $subtitleArray = is_array($video->subtitles)
+                ? $video->subtitles
+                : (json_decode($video->subtitles, true) ?: []);
+
+            if (!empty($subtitleArray)) {
+                // Map keys to absolute URLs
+                $presentation['subtitles'] = collect($subtitleArray)
+                    ->mapWithKeys(fn ($path, $key) => [$key => $this->base_uri().'/'.$video->id.'/'.$path])
+                    ->all();
             }
         }
 
-        //Add valid token
+        // Add valid token
         $presentation['token'] = $token;
 
-        //Update stats
-        $stats = VideoStat::firstOrNew(['video_id' => $id]);
-        $stats->playback = $stats->playback + 1;
-        $stats->save();
+        // Update stats (atomic)
+        $stat = VideoStat::firstOrCreate(
+            ['video_id' => $video->id],
+            ['playback' => 0]
+        );
+        $stat->increment('playback');
 
-        return json_encode($presentation);
+        return response()->json($presentation);
     }
 
-    public function playlist($id): string
+    public function playlist(int $id): JsonResponse
     {
-        //Generate a playlist of videos associated with the course
-        $videos = VideoCourse::where('course_id', $id)->latest()->pluck('video_id')->toArray();
-
-        $visibility = app(VisibilityFilter::class);
-
-        $playlist = $visibility->filter(Video::whereIn('id', $videos)->where('visibility', 1)->orderBy('creation')->get());
+        // 1) Load the course
         $course = Course::findOrFail($id);
 
-        //Build json playlist
-        $json = Collection::make([
-            'title' => $course->designation . ' ' . $course->semester . $course->year . ' presentations'
-        ]);
-        $playlist
-            ->makeHidden('presentation')
-            ->makeHidden('notification_id')
-            ->makeHidden('creation')
-            ->makeHidden('subtitles')
-            ->makeHidden('sources')
-            ->makeHidden('origin')
-            ->makeHidden('type')
-            ->makeHidden('duration')
-            ->makeHidden('tags')
-            ->makeHidden('category_id')
-            ->makeHidden('visibility')
-            ->makeHidden('download')
-            ->makeHidden('created_at')
-            ->makeHidden('updated_at');
+        // 2) Pull video IDs in desired order (latest first).
+        $videoIds = VideoCourse::where('course_id', $id)
+            ->latest() // relies on created_at in pivot; adjust if you have a different column
+            ->pluck('video_id')
+            ->all();
 
-        $json['items'] = $playlist->toArray();
+        // if no videos
+        if (empty($videoIds)) {
+            return response()->json([
+                'title' => sprintf(
+                    '%s %s%s presentations',
+                    $course->designation,
+                    $course->semester,
+                    $course->year
+                ),
+                'items' => [],
+            ]);
+        }
 
+        // 3) Base query
+        $query = Video::query()
+            ->whereIn('id', $videoIds)
+            ->where('visibility', 1)
+            ->select(['id', 'title', 'title_en', 'thumb', 'visibility', 'description']); // trim payload
 
-        return $json->toJson(JSON_PRETTY_PRINT);
+        // 4) Apply visibilityfilter
+        $visibility = app(VisibilityFilter::class);
+        $visibleVideos = $visibility->filter($query->get());
+
+        // 5) Preserve the original order from $videoIds
+        $orderIndex = array_flip($videoIds);
+        $ordered = $visibleVideos->sortBy(fn ($v) => $orderIndex[$v->id])->values();
+
+        // 6) Build response payload
+        $payload = [
+            'title' => sprintf(
+                '%s %s%s presentations',
+                $course->designation,
+                $course->semester,
+                $course->year
+            ),
+            'items' => $ordered->map(fn ($v) => [
+                'id'    => $v->id,
+                'title' => $v->title,
+                'title_en' => $v->title_en,
+                'thumb' => $v->thumb,
+                'description' => $v->description,
+            ])->all(),
+        ];
+
+        // 7) Return  JSON (pretty-print)
+        return response()->json($payload, 200, [], JSON_PRETTY_PRINT );
     }
+
 
     public function multiplayer()
     {
         return view('player.index');
     }
 
-    public function multiplayer_ce(Request $request)
+    public function multiplayer_ce(Request $request): View|RedirectResponse
     {
-        if(!empty($request->has('p'))) {
+        // Validate query params (?p=...&l=...)
+        $data = $request->validate([
+            'p' => ['required', 'string'],   // presentation id
+            'l' => ['nullable', 'int'],   // playlist id
+        ]);
 
-            if(!empty($request->has('l'))) {
-                //Presentation with Playlist
-                return view('player.index-ce', ['presentation' => $request->p, 'playlist' => $request->l]);
-            } else {
-                //Single presentation
-                return view('player.index-ce', ['presentation' => $request->p]);
-            }
+        // Build view data
+        $viewData = [
+            'presentation' => $data['p'],
+        ];
+
+        if (!empty($data['l'])) {
+            $viewData['playlist'] = $data['l'];
         }
 
-        dd('Stop');
+        return view('player.index-ce', $viewData);
     }
 }
