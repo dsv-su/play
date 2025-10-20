@@ -320,7 +320,7 @@
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.woff2"
   },
   "resources/css/site.css": {
-    "file": "assets/site-qiFtJXtk.css",
+    "file": "assets/site-oJvGfv_q.css",
     "src": "resources/css/site.css",
     "isEntry": true
   },
@@ -333,7 +333,7 @@
     "src": "resources/fonts/Rock_Salt/RockSalt-Regular.ttf"
   },
   "resources/js/site.js": {
-    "file": "assets/site-BUkubbms.js",
+    "file": "assets/site-E0320-vE.js",
     "name": "site",
     "src": "resources/js/site.js",
     "isEntry": true
