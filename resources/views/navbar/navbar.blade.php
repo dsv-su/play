@@ -35,7 +35,7 @@
         @include('navbar.partials.desktopmenu')
 
         <!-- Pending presentations -->
-        {{--}}@include('navbar.partials.pending'){{--}}
+        <livewire:home.pending-indicator />
 
         <!-- Mobile Menu Toggle Button -->
         @include('navbar.partials.mobile_menu_toggle')

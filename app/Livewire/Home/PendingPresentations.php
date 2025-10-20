@@ -12,7 +12,7 @@ class PendingPresentations extends Component
     public function mount()
     {
         $this->pendingvideos = Video::query()
-            ->select(['id', 'title', 'creation', 'duration', 'visibility', 'state', 'thumb', 'category_id', 'description']) // keep it lean
+            ->select()
             ->where('state', false)
             ->latest('creation')
             ->with([

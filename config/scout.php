@@ -1,8 +1,21 @@
 <?php
 
-use App\Models\Course;
-use App\Models\Tag;
-use App\Models\Video;
+// Absolute path to the primary config file
+$primaryConfig = base_path('systemconfig/play.ini');
+$exampleConfig = base_path('systemconfig/play.ini.example');
+
+// Choose the real config if present, otherwise fallback to the example
+$configFile = file_exists($primaryConfig) ? $primaryConfig : $exampleConfig;
+
+// Parse the INI file with section support
+$system_config = parse_ini_file($configFile, true);
+
+// Validate parsing result
+if ($system_config === false) {
+    throw new \RuntimeException(
+        sprintf('Failed to parse configuration file: %s', $configFile)
+    );
+}
 
 return [
 
@@ -163,18 +176,18 @@ return [
 
     'typesense' => [
         'client-settings' => [
-            'api_key' => env('TYPESENSE_API_KEY', 'xyz'),
+            'api_key' => $system_config['typesense']['api'],
             'nodes' => [
                 [
-                    'host' => env('TYPESENSE_HOST', 'localhost'),
-                    'port' => env('TYPESENSE_PORT', '8108'),
+                    'host' => $system_config['typesense']['host'],
+                    'port' => $system_config['typesense']['port'],
                     'path' => env('TYPESENSE_PATH', ''),
                     'protocol' => env('TYPESENSE_PROTOCOL', 'http'),
                 ],
             ],
             'nearest_node' => [
-                'host' => env('TYPESENSE_HOST', 'localhost'),
-                'port' => env('TYPESENSE_PORT', '8108'),
+                'host' => $system_config['typesense']['host'],
+                'port' => $system_config['typesense']['port'],
                 'path' => env('TYPESENSE_PATH', ''),
                 'protocol' => env('TYPESENSE_PROTOCOL', 'http'),
             ],

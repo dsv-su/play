@@ -1,7 +1,7 @@
 <div class="relative aspect-video w-full overflow-hidden rounded-t-sm">
     <img
         class="absolute inset-0 h-full w-full object-cover
-               @if($video->hidden) opacity-75 @endif"
+               @if($video->hidden) opacity-50 @endif"
         loading="lazy"
         decoding="async"
         src="{{ asset($video->thumb . '?' . time()) }}"

@@ -1,13 +1,33 @@
 <div class="relative">
 
     <!-- Fade overlay for unlisted-->
-    @if($video->unlisted)
-        <div class="absolute inset-0 bg-black bg-opacity-50 z-20"></div>
+    @if($video->hidden && $video->unlisted)
+        <div class="absolute inset-0 bg-black bg-opacity-50 z-30"></div>
 
         <!-- Centered Unlisted Alert -->
-        <div class="absolute inset-0 flex items-center justify-center z-20">
+        <div class="absolute inset-0 flex items-center justify-center z-30 -translate-y-16">
             <div class="bg-gray-50 border border-gray-200 text-sm text-gray-600 rounded py-2 px-8 dark:bg-white/10 dark:border-white/10 dark:text-white">
-                <span class="font-normal">{{ __("Unlisted") }}</span>
+                <span class="font-medium">{{ __("Unlisted") }}</span>
+            </div>
+        </div>
+    @endif
+    <!-- Fade overlay for Private-->
+    @if($video->hidden && !$video->unlisted)
+        <div class="absolute inset-0 bg-black bg-opacity-50 z-30"></div>
+        <!-- Centered Private Alert -->
+        <div class="absolute inset-0 flex items-center justify-center z-30 -translate-y-16">
+            <div class="bg-gray-50 border border-gray-200 text-sm text-gray-900 rounded py-2 px-8 dark:bg-white/20 dark:border-white/20 dark:text-white">
+                <span class="font-medium">{{ __("Private") }}</span>
+            </div>
+        </div>
+    @endif
+    <!-- Fade overlay for Pending-->
+    @if(!$video->state)
+        <div class="absolute inset-0 bg-black bg-opacity-50 z-30"></div>
+        <!-- Centered Pending Alert -->
+        <div class="absolute inset-0 flex items-center justify-center z-30 -translate-y-16">
+            <div class="bg-gray-50 border border-gray-200 text-sm text-gray-900 rounded py-2 px-8 dark:bg-white/20 dark:border-white/20 dark:text-white">
+                <span class="font-medium">{{ __("Processing") }}</span>
             </div>
         </div>
     @endif
