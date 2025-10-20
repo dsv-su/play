@@ -11,7 +11,7 @@
                   "lg": 4
                 },
           "isDraggable": true
-        }' class="relative">
+        }' class="relative js-carousel">
             <div class="px-4 py-2">
                 <a href="{{route('my.presentations')}}"
                    class="group inline-flex items-center text-blue-700 text-xl font-light tracking-wide uppercase whitespace-nowrap drop-shadow-md dark:text-white hover:text-blue-900 dark:hover:text-gray-300 transition-colors duration-200">

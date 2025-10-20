@@ -28,7 +28,12 @@ Route::controller(MultiplayerController::class)->group(function () {
 
 //Protected routes
 Route::middleware(['entitlements', 'playauth','web'])->group(function () {
-    Route::middleware(['redirect-links'])->get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::middleware(['redirect-links'])
+        ->get('/', [\App\Http\Controllers\HomeController::class, 'index'])
+        ->name('home');
+    Route::middleware(['redirect-links'])
+        ->get('/pending', [\App\Http\Controllers\HomeController::class, 'pending'])
+        ->name('pending.presentations');
     // Locale
     Route::get('/locale/{locale}', [\App\Http\Controllers\LocaleController::class, 'switch'])->name('locale.switch');
     // Test

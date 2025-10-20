@@ -13,7 +13,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Throwable;
 
-class PerformVideoDownload implements ShouldQueue, ShouldBeUnique
+class PerformVideoDownload implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -41,7 +41,6 @@ class PerformVideoDownload implements ShouldQueue, ShouldBeUnique
     public function handle(DownloadService $downloader): void
     {
         $video = Video::findOrFail($this->videoId);
-
         $p = Presentation::findOrFail($this->videoId);
         if (!$p) {
             //Nothing to do
