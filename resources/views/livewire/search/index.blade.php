@@ -323,7 +323,7 @@
 
                                             // Primary destination
                                             $primaryUrl = route('player.show', $video);
-                                            if (! $has('title','description')) {
+                                            /*if (! $has('title','description')) {
                                                 if ($has('tag_names') && ! $has('course_names','course_designation')) {
                                                     $primaryUrl = $tagForBadge
                                                         ? route('tags.show', $tagForBadge->slug ?? $tagForBadge->id)
@@ -337,7 +337,7 @@
                                                         ? route('presenters.show', $presenterForBadge->slug ?? $presenterForBadge->id)
                                                         : $primaryUrl;
                                                 }
-                                            }
+                                            }*/
 
                                             $matchedFields = $fields->values();
                                         @endphp
