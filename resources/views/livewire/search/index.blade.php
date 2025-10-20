@@ -342,7 +342,9 @@
                                             $matchedFields = $fields->values();
                                         @endphp
 
-                                        <a href="{{ $primaryUrl }}" data-result-link class="block focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:focus-visible:ring-blue-400 rounded-lg">
+                                        <a target="_blank" rel="noopener noreferrer" href="{{ $primaryUrl }}"
+                                           data-result-link
+                                           class="block focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:focus-visible:ring-blue-400 rounded-lg">
                                             <article class="border rounded-lg p-3 sm:p-4 space-y-2 transition
                                                             border-slate-200 hover:bg-blue-50 active:bg-blue-100
                                                             dark:border-slate-800 dark:hover:bg-slate-800 dark:active:bg-slate-700">
