@@ -19,7 +19,7 @@ class Entitlement
             return true;
         }
 
-        // Get the configured server var / header name (e.g. "HTTP_ENTITLEMENTS")
+        // Get the configured server authorization parameter
         $system = app(AuthHandler::class)->authorize();
         $param  = data_get($system, 'global.authorization_parameter');
         if (!$param) {
