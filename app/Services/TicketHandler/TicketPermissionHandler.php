@@ -37,7 +37,7 @@ class TicketPermissionHandler
         // 3) Entitlement validation for the (possibly overridden) permission_id
         $permissionId   = (int) ($this->video->ticket_permission_id ?? 1);
         $userEntitlement = new Entitlement();
-
+        \Log::notice('Prepare ', ['video_permissionID' => $permissionId  ?? 99]);
         if ($userEntitlement->validate($permissionId)) {
             \Log::notice('ticket sent to issuer(1) ', ['video_permission' => $this->video->ticket_permission_id ?? 0]);
             // Issue token

@@ -8,5 +8,10 @@ class TestController extends Controller
     {
 
     }
+
+    public function server()
+    {
+        dd($_SERVER);
+    }
 }
 

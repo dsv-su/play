@@ -18,14 +18,14 @@ class Entitlement
         if (app()->environment('local') || $id === 4) {
             return true;
         }
-
+        \Log::notice('Entitlement remote (1) ');
         // Get the configured server authorization parameter
         $system = app(AuthHandler::class)->authorize();
         $param  = data_get($system, 'global.authorization_parameter');
         if (!$param) {
             return false;
         }
-
+        \Log::notice('Entitlement remote (2) ');
         // Required entitlements for this permission id
         $requiredStr = (string) (Permission::whereKey($id)->value('entitlement') ?? '');
         if ($requiredStr === '') {
@@ -33,18 +33,19 @@ class Entitlement
             return false;
         }
         $required = $this->splitEntitlements($requiredStr);
-
+        \Log::notice('Entitlement remote (3) ');
         // Entitlements from request
         $rawHeader = (string) ($_SERVER[$param] ?? '');
         if ($rawHeader === '') {
             return false;
         }
         $provided = $this->splitEntitlements($rawHeader);
-
+        \Log::notice('Entitlement remote (4) ');
         // Case-insensitive intersection
         $requiredLower = array_map('mb_strtolower', $required);
         $providedLower = array_map('mb_strtolower', $provided);
-
+        \Log::notice('Entitlement remote (5) ');
+        \Log::notice('Entitlement: ', ['value' => !empty(array_intersect($requiredLower, $providedLower))]);
         return !empty(array_intersect($requiredLower, $providedLower));
     }
 

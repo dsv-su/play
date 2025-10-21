@@ -39,6 +39,8 @@ Route::middleware(['entitlements', 'playauth','web'])->group(function () {
     // Test
     Route::get('/test', [\App\Http\Controllers\TestController::class, 'index'])
         ->name('test');
+    Route::get('/server', [\App\Http\Controllers\TestController::class, 'server'])
+        ->name('server');
     //My
     Route::middleware(['redirect-links'])->get('/user/all', \App\Livewire\My\UserPresentations::class)->name('my.presentations');
     //Route::get('/user/all', \App\Livewire\My\MyPresentations::class)->name('my.presentations');
