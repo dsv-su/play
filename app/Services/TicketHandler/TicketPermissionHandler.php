@@ -28,17 +28,18 @@ class TicketPermissionHandler
     {
         // 1) Presentation setting → sets ticket_permission_id on $this->video
         (new PresentationTicket($this->video))->cast();
-
+        \Log::notice('ticket(1) ', ['video_ticket_id' => $this->video->ticket_permission_id]);
         // 2) If default (1), let course setting potentially override permission_id
         if ((int) ($this->video->ticket_permission_id ?? 1) === 1) {
             (new CourseSettingTicket($this->video))->cast();
         }
-
+        \Log::notice('ticket(2) ', ['video_ticket_id' => $this->video->ticket_permission_id]);
         // 3) Entitlement validation for the (possibly overridden) permission_id
         $permissionId   = (int) ($this->video->ticket_permission_id ?? 1);
         $userEntitlement = new Entitlement();
-
+        \Log::notice('ticket(3) ', ['video_ticket_id' => $this->video->ticket_permission_id]);
         if ($userEntitlement->validate($permissionId)) {
+            \Log::notice('ticketissue(1) ');
             // Issue token
             $token = new TokenIssuer($this->video);
             return $token->issue();
@@ -49,9 +50,10 @@ class TicketPermissionHandler
         (new CourseIndividualTicket($this->video))->cast();
         (new CourseAdminTicket($this->video))->cast();
         (new AdminTicket($this->video))->cast();
-
+        \Log::notice('ticket(4) ', ['video_has_ticket' => $this->video->ticket ?? 0]);
         // 5) Final decision
         if ($this->video->getAttribute('ticket') === true) {
+            \Log::notice('ticketissue(2) ');
             $token = new TokenIssuer($this->video);
             return $token->issue();
         }
