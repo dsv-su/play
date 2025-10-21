@@ -63,9 +63,10 @@ class DownloadService
         $posterNames = $resolver->posternames();
 
         // Create directories
+        \Log::notice('starting directory creation');
         Storage::disk(self::PUBLIC_DISK)->makeDirectory($dirVideo);
         Storage::disk(self::PUBLIC_DISK)->makeDirectory($dirPoster);
-
+        \Log::notice('end directory creation');
         // Download video files
         foreach ($videoNames as $name) {
             \Log::notice('starting file download');
