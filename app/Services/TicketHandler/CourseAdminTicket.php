@@ -24,7 +24,7 @@ class CourseAdminTicket extends TicketPermissionHandler implements \App\Interfac
         // DB stores usernames without domain
         $username = explode('@', $remote, 2)[0];
 
-        $hasTicket = $this->video->coursepermissions()
+        $hasTicket = $this->video->coursepermissions
             ->where('username', $username)
             ->where('permission', 'delete') // keep your original rule
             ->exists();

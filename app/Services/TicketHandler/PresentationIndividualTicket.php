@@ -28,7 +28,7 @@ class PresentationIndividualTicket extends TicketPermissionHandler implements \A
 
         // Check if this user has an individual permission for this video
         // and that permission is one of read/edit/delete.
-        $hasTicket = $this->video->ipermissions()
+        $hasTicket = $this->video->individualPermissions
             ->where('username', $local)
             ->whereIn('permission', ['read', 'edit', 'delete'])
             ->exists();
