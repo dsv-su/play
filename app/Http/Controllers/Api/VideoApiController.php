@@ -32,6 +32,7 @@ class VideoApiController extends Controller
     public function __construct()
     {
         $this->middleware('jwt:api', ['except' => ['permission']]);
+        $this->middleware('jwt:api');
     }
 
     /**

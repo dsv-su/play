@@ -22,9 +22,9 @@ class DownloadResource
     public function getFile($storage, $url)
     {
         $client = new Client();
-
+        \Log::notice('loaded guzzle client');
         $resource = storage_path('app/public/'.$storage);
-
+        \Log::notice('preparing get request', ['token' => $this->token]);
        $response = $client->request('GET', $url, [
            'cache' => 'no-cache',
            'query' =>['token' => $this->token],

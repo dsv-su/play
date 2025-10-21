@@ -39,7 +39,7 @@ class TicketPermissionHandler
         $userEntitlement = new Entitlement();
 
         if ($userEntitlement->validate($permissionId)) {
-            // Issue token; do NOT call fresh() or you will lose computed attributes
+            // Issue token
             $token = new TokenIssuer($this->video);
             return $token->issue();
         }

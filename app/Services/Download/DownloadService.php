@@ -68,6 +68,7 @@ class DownloadService
 
         // Download video files
         foreach ($videoNames as $name) {
+            \Log::notice('starting file download');
             $downloader->getFile(
                 $dirVideo . '/' . basename($name),
                 $this->storeBaseUri() . '/' . $video->id . '/' . ltrim($name, '/')

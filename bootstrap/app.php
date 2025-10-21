@@ -19,7 +19,6 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->encryptCookies(['language']); // exclude from encryption
         $middleware->web(append: [
             \App\Http\Middleware\SetLocale::class,
-
         ]);
         $middleware->alias([
             'playauth' => \App\Http\Middleware\PlayAuthenticate::class,
