@@ -5,14 +5,15 @@
         class="relative inline-flex items-center justify-center w-11 h-11 rounded-lg p-0.5
          text-gray-600 hover:text-gray-900 hover:bg-gray-100
          dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700
-         focus:outline-none focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-    >
+         focus:outline-none focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600">
         <!-- Bell icon -->
-        <svg class="w-6 h-6 text-current" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 21">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                  d="M8 3.464V1.1m0 2.365a5.338 5.338 0 0 1 5.133 5.368v1.8c0 2.386 1.867 2.982 1.867 4.175C15 15.4 15 16 14.462 16H1.538C1 16 1 15.4 1 14.807c0-1.193 1.867-1.789 1.867-4.175v-1.8A5.338 5.338 0 0 1 8 3.464ZM4.54 16a3.48 3.48 0 0 0 6.92 0H4.54Z"/>
+        <svg class="w-6 h-6 text-gray-800 dark:text-white"
+             data-tooltip-target="incoming-tooltip"
+             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12H4m12 0-4 4m4-4-4-4m3-4h2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-2"/>
         </svg>
-        @if($pending > 0)
+
+    @if($pending > 0)
         <!-- Notification badge (top-left) -->
         <span class="pointer-events-none absolute top-0 left-0
            -translate-x-[3%] -translate-y-[3%]
@@ -32,4 +33,9 @@
         </span>
         @endif
     </a>
+    <div id="incoming-tooltip" role="tooltip"
+         class="absolute z-30 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+         style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(1443px, 692px);" data-popper-placement="top">{{ __('Pending Presentations') }}
+        <div class="tooltip-arrow" data-popper-arrow></div>
+    </div>
 </div>
