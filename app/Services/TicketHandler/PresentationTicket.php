@@ -5,13 +5,12 @@ namespace App\Services\TicketHandler;
 use App\Models\Video;
 use App\Models\VideoPermission;
 
-class PresentationTicket extends TicketPermissionHandler implements \App\Interfaces\TicketInterface
+class PresentationTicket implements \App\Interfaces\TicketInterface
 {
     protected Video $video;
 
     public function __construct(Video $video)
     {
-        parent::__construct($video);
         $this->video = $video;
     }
 

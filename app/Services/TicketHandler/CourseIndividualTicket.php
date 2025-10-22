@@ -5,13 +5,12 @@ namespace App\Services\TicketHandler;
 use App\Models\CoursesettingsUsers;
 use App\Models\Video;
 
-class CourseIndividualTicket extends TicketPermissionHandler implements \App\Interfaces\TicketInterface
+class CourseIndividualTicket implements \App\Interfaces\TicketInterface
 {
     protected Video $video;
 
     public function __construct(Video $video)
     {
-        parent::__construct($video);
         // Work with the loaded collection, not the relation object
         $this->video = $video->loadMissing('courses');
     }

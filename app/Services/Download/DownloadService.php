@@ -57,7 +57,7 @@ class DownloadService
         $dirVideo  = trim($presentation->local, '/') . '/videos';
         $dirPoster = trim($presentation->local, '/') . '/posters';
 
-        $downloader = new DownloadResource($video, new TicketPermissionHandler($video, $entitlement));
+        $downloader = new DownloadResource($video, new TicketPermissionHandler($entitlement));
         $resolver   = new DownloadStreamResolution($video);
 
         $videoNames  = $resolver->videonames($presentation->resolution);

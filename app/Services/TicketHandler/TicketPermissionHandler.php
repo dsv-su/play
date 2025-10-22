@@ -3,6 +3,7 @@
 namespace App\Services\TicketHandler;
 
 use App\Models\Video;
+use App\Services\TicketHandler\Entitlement;
 
 class TicketPermissionHandler
 {
