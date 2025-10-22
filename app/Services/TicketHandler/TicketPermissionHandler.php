@@ -6,10 +6,7 @@ use App\Models\Video;
 
 class TicketPermissionHandler
 {
-    public function __construct(
-        protected Video $video,
-        protected Entitlement $entitlement
-    ) {}
+    public function __construct(protected Entitlement $entitlement) {}
 
     /**
      * Decides whether to issue a ticket.
@@ -22,38 +19,32 @@ class TicketPermissionHandler
      *
      * @return mixed TokenIssuer::issue() result, or '' when not allowed.
      */
-    public function issue(array $providedEntitlements)
+    public function issue(Video $video, array $providedEntitlements = [])
     {
         // 1) Presentation setting → sets ticket_permission_id on $this->video
-        (new PresentationTicket($this->video))->cast();
+        (new PresentationTicket($video))->cast();
 
         // 2) If default (1), let course setting potentially override permission_id
-        if ((int) ($this->video->ticket_permission_id ?? 1) === 1) {
-            (new CourseSettingTicket($this->video))->cast();
+        if ((int) ($video->ticket_permission_id ?? 1) === 1) {
+            (new CourseSettingTicket($video))->cast();
         }
 
         // 3) Entitlement validation for the (possibly overridden) permission_id
-        $permissionId   = (int) ($this->video->ticket_permission_id ?? 1);
+        $permissionId   = (int) ($video->ticket_permission_id ?? 1);
         if ($this->entitlement->validate($permissionId, $providedEntitlements)) {
-            $token = new TokenIssuer($this->video);
-            return $token->issue();
+            return (new TokenIssuer($video))->issue();
         }
 
         // 4) Exceptions/grants (set $video->ticket = true if matched)
-        (new PresentationIndividualTicket($this->video))->cast();
-        (new CourseIndividualTicket($this->video))->cast();
-        (new CourseAdminTicket($this->video))->cast();
-        (new AdminTicket($this->video))->cast();
+        (new PresentationIndividualTicket($video))->cast();
+        (new CourseIndividualTicket($video))->cast();
+        (new CourseAdminTicket($video))->cast();
+        (new AdminTicket($video))->cast();
 
         // 5) Final decision
-        if ($this->video->getAttribute('ticket') === true) {
-
-            $token = new TokenIssuer($this->video);
-            return $token->issue();
-        }
-
-        // No ticket
-        return '';
+        return $video->getAttribute('ticket') === true
+            ? (new TokenIssuer($video))->issue()
+            : '';
     }
 }
 
