@@ -7,7 +7,9 @@ namespace App\Http\Controllers;
 use App\Jobs\PerformVideoDownload;
 use App\Models\Video;
 use App\Models\Presentation;
+use App\Services\AuthHandler;
 use App\Services\Store\DownloadResource;
+use App\Services\TicketHandler\Entitlement;
 use App\Services\TicketHandler\TicketPermissionHandler;
 use App\Models\VideoStat;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
@@ -36,8 +38,30 @@ class DownloadController extends Controller
     /** Cache for parsed ini */
     private ?string $storeListUri = null;
 
-    public function download(Request $request, Video $video)
+    private function splitEntitlements(string $value): array
     {
+        return array_values(array_filter(
+            array_map('trim', explode(';', $value)),
+            static fn ($v) => $v !== ''
+        ));
+    }
+    private function normalizeHeaderName(string $param): string
+    {
+        // If it's given as 'HTTP_X_USER_ENTITLEMENTS', convert to 'X-User-Entitlements'
+        if (str_starts_with($param, 'HTTP_')) {
+            $param = substr($param, 5);
+            $param = str_replace('_', '-', $param);
+        }
+        // HeaderBag is case-insensitive, so case doesn’t matter, but this is fine.
+        return $param;
+    }
+
+    public function download(Request $request, Entitlement $entitlement, Video $video)
+    {
+        $param = data_get(app(AuthHandler::class)->authorize(), 'global.authorization_parameter');
+        $headerName = $this->normalizeHeaderName($param);
+        $provided = $this->splitEntitlements((string) $request->headers->get($headerName, ''));
+
         $resolution = (string) ($request->input('r', '720'));
 
         try {
@@ -57,9 +81,9 @@ class DownloadController extends Controller
             $sync = $request->boolean('sync', false); // default to no sync
 
             if ($sync) {
-                PerformVideoDownload::dispatchSync($video->id);
+                PerformVideoDownload::dispatchSync($video->id, $provided);
             } else {
-                PerformVideoDownload::dispatch($video->id);
+                PerformVideoDownload::dispatch($video->id, $provided);
             }
 
             // After the job finishes, the ZIP should be on disk; stream it.

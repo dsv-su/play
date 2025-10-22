@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Cattura;
+use App\Models\Cattura;
 use App\Services\AuthHandler;
 use App\Services\Cattura\CatturaRecoders;
 use App\Services\ConfigurationHandler;
