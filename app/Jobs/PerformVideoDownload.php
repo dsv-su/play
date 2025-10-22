@@ -53,7 +53,7 @@ class PerformVideoDownload implements ShouldQueue
 
         try {
             //Does the heavy lifting and reports progress
-            $downloader->run($video, function (int $percent) use ($p) {
+            $downloader->run($video, $entitlement, function (int $percent) use ($p) {
                 // Throttle writes as needed
                 $p->update(['progress' => $percent]);
             });

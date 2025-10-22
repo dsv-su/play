@@ -9,6 +9,7 @@ use App\Models\Presentation;
 use App\Services\DownloadZip;
 use App\Services\Store\DownloadResource;
 use App\Services\Store\DownloadStreamResolution;
+use App\Services\TicketHandler\Entitlement;
 use App\Services\TicketHandler\TicketPermissionHandler;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -31,14 +32,14 @@ class DownloadService
     /**
      * @param  callable(int $percent): void  $progress
      */
-    public function run(Video $video, callable $progress = null): void
+    public function run(Video $video, Entitlement $entitlement, callable $progress = null): void
     {
         $progress ??= fn (int $p) => null;
 
         $presentation = Presentation::findOrFail($video->id);
 
         // === Phase 1: fetch assets ===
-        $this->downloadAssets($video, $presentation);
+        $this->downloadAssets($video, $entitlement, $presentation);
         $progress(40);
 
         // === Phase 2: build package ===
@@ -50,13 +51,13 @@ class DownloadService
         $progress(100);
     }
 
-    private function downloadAssets(Video $video, Presentation $presentation): void
+    private function downloadAssets(Video $video, Entitlement $entitlement, Presentation $presentation): void
     {
         //file/folder creation + DownloadResource loops here
         $dirVideo  = trim($presentation->local, '/') . '/videos';
         $dirPoster = trim($presentation->local, '/') . '/posters';
 
-        $downloader = new DownloadResource($video, new TicketPermissionHandler($video));
+        $downloader = new DownloadResource($video, new TicketPermissionHandler($video, $entitlement));
         $resolver   = new DownloadStreamResolution($video);
 
         $videoNames  = $resolver->videonames($presentation->resolution);
