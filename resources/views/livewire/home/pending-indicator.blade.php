@@ -19,15 +19,17 @@
            -translate-x-[3%] -translate-y-[3%]
            inline-flex items-center justify-center">
             <!-- Ping ring -->
-            <span class="motion-safe:animate-ping absolute inline-flex rounded-full
+            <span
+                class="motion-safe:animate-ping absolute inline-flex rounded-full
                      bg-blue-500 dark:bg-blue-600 opacity-75
-                     h-3 w-3 sm:h-3.5 sm:w-3.5"></span>
-                <!-- Count dot -->
+                     h-3.5 w-3.5 sm:h-3 sm:w-3 lg:h-4 lg:w-4">
+            </span>
+            <!-- Count dot -->
             <span
                 class="relative inline-flex items-center justify-center rounded-full
                      bg-blue-600 text-white dark:bg-blue-500
-                     h-3 w-3 sm:h-4 sm:w-4
-                     text-[10px] sm:text-xs font-medium leading-none">
+                     h-4 w-4 sm:h-3.5 sm:w-3.5 lg:h-5 lg:w-5
+                     text-[11px] sm:text-[10px] lg:text-xs font-medium leading-none">
               {{$pending}}
             </span>
         </span>

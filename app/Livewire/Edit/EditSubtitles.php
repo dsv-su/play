@@ -154,7 +154,7 @@ class EditSubtitles extends Component
     {
         $param      = data_get(app(AuthHandler::class)->authorize(), 'global.authorization_parameter');
         $headerName = $this->normalizeHeaderName($param);
-        
+
         $raw = (string) ($_SERVER[$headerName] ?? request()->server($headerName) ?? '');
 
         return $this->splitEntitlements($raw);
