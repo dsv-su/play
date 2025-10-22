@@ -3,7 +3,9 @@
 namespace App\Livewire\Edit;
 
 use App\Models\ManualPresentation;
+use App\Services\AuthHandler;
 use App\Services\Store\DownloadResource;
+use App\Services\TicketHandler\Entitlement;
 use App\Services\TicketHandler\TicketPermissionHandler;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
@@ -100,12 +102,62 @@ class EditSubtitles extends Component
     {
         //Create local storage directory
         \Storage::disk('public')->makeDirectory('subtitles/download/' . $this->video->id);
-        //Create token
-        $file = new DownloadResource($this->video, new TicketPermissionHandler($this->video));
-        $path = 'subtitles/download/'.$this->video->id.'/'. $this->subtitles[$value];
-        $file->getFile($path, $this->baseUri() . '/' . $this->video->id . '/' . $this->subtitles[$value]);
 
+        // Get token (throws/aborts if not allowed)
+        $token = $this->getToken($this->video);
+
+        // Use the token to download the file
+        $downloader = new DownloadResource($token);
+
+        /*$file = new DownloadResource($this->getToken($this->video));
+
+        $path = 'subtitles/download/'.$this->video->id.'/'. $this->subtitles[$value];
+        $file->getFile($path, $this->baseUri() . '/' . $this->video->id . '/' . $this->subtitles[$value]);*/
+
+        $filename = $this->subtitles[$value];
+        $path     = 'subtitles/download/' . $this->video->id . '/' . $filename;
+
+        $downloader->getFile(
+            $path,
+            $this->baseUri() . '/' . $this->video->id . '/' . ltrim($filename, '/')
+        );
         return \Illuminate\Support\Facades\Storage::disk('public')->download($path);
+    }
+
+    /**
+     * Get a download token for this video, using current request entitlements.
+     */
+    public function getToken(Video $video): string
+    {
+        // Resolve the dependencies here so callers can stay simple
+        /** @var Entitlement $entitlement */
+        $entitlement = app(Entitlement::class);
+
+        /** @var TicketPermissionHandler $handler */
+        $handler = new TicketPermissionHandler($entitlement);
+        // or: $handler = app(TicketPermissionHandler::class);
+
+        $token = $handler->issue($video, $this->getEntitlements());
+
+        // If not allowed, guard early
+        if ($token === '' || $token === null) {
+            abort(403, 'Download not permitted.');
+        }
+
+        return (string) $token;
+    }
+
+    /**
+     * Extract the provided entitlements from headers/request context.
+     */
+    public function getEntitlements(): array
+    {
+        $param      = data_get(app(AuthHandler::class)->authorize(), 'global.authorization_parameter');
+        $headerName = $this->normalizeHeaderName($param);
+        
+        $raw = (string) ($_SERVER[$headerName] ?? request()->server($headerName) ?? '');
+
+        return $this->splitEntitlements($raw);
     }
 
     public function removefile($id)
@@ -156,6 +208,25 @@ class EditSubtitles extends Component
         }
 
         return $config['store']['list_uri'];
+    }
+
+    private function splitEntitlements(string $value): array
+    {
+        return array_values(array_filter(
+            array_map('trim', explode(';', $value)),
+            static fn ($v) => $v !== ''
+        ));
+    }
+
+    private function normalizeHeaderName(string $param): string
+    {
+        // If it's given as 'HTTP_X_USER_ENTITLEMENTS', convert to 'X-User-Entitlements'
+        if (str_starts_with($param, 'HTTP_')) {
+            $param = substr($param, 5);
+            $param = str_replace('_', '-', $param);
+        }
+        // HeaderBag is case-insensitive, so case doesn’t matter, but this is fine.
+        return $param;
     }
 
     public function render()
