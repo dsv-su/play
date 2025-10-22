@@ -32,14 +32,15 @@ class DownloadService
     /**
      * @param  callable(int $percent): void  $progress
      */
-    public function run(Video $video, Entitlement $entitlement, callable $progress = null): void
+    public function run(Video $video, Entitlement $entitlement, array $providedEntitlements = [], callable $progress = null): void
     {
         $progress ??= fn (int $p) => null;
 
         $presentation = Presentation::findOrFail($video->id);
 
         // === Phase 1: fetch assets ===
-        $this->downloadAssets($video, $entitlement, $presentation);
+        //$this->downloadAssets($video, $entitlement, $presentation);
+        $this->downloadAssets($video, $entitlement, $presentation, $providedEntitlements);
         $progress(40);
 
         // === Phase 2: build package ===
@@ -51,13 +52,23 @@ class DownloadService
         $progress(100);
     }
 
-    private function downloadAssets(Video $video, Entitlement $entitlement, Presentation $presentation): void
+    private function downloadAssets(
+        Video $video,
+        Entitlement $entitlement,
+        Presentation $presentation,
+        array $providedEntitlements
+    ): void
     {
         //file/folder creation + DownloadResource loops here
         $dirVideo  = trim($presentation->local, '/') . '/videos';
         $dirPoster = trim($presentation->local, '/') . '/posters';
 
-        $downloader = new DownloadResource($video, new TicketPermissionHandler($entitlement));
+        //Handler expects Entitlement; token requires Video + entitlements
+        $handler = new TicketPermissionHandler($entitlement);
+        $token   = $handler->issue($video, $providedEntitlements);
+
+        //$downloader = new DownloadResource($video, new TicketPermissionHandler($entitlement));
+        $downloader = new DownloadResource($token);
         $resolver   = new DownloadStreamResolution($video);
 
         $videoNames  = $resolver->videonames($presentation->resolution);

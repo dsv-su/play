@@ -6,7 +6,7 @@ use App\Services\TicketHandler\TicketPermissionHandler;
 use App\Models\Video;
 use GuzzleHttp\Client;
 
-class DownloadResource
+/*class DownloadResource
 {
     protected $video, $ticket, $token;
 
@@ -33,5 +33,23 @@ class DownloadResource
             'sink' => $resource,
         ]);
 
+    }
+}*/
+class DownloadResource
+{
+    public function __construct(private string $token) {}
+
+    public function getFile(string $storage, string $url): void
+    {
+        $client   = new Client();
+        $resource = storage_path('app/public/'.$storage);
+
+        \Log::notice('preparing get request', ['token' => $this->token]);
+
+        $client->request('GET', $url, [
+            'cache' => 'no-cache',
+            'query' => ['token' => $this->token],
+            'sink'  => $resource,
+        ]);
     }
 }

@@ -43,17 +43,13 @@ class PerformVideoDownload implements ShouldQueue
 
         $video = Video::findOrFail($this->videoId);
         $p = Presentation::findOrFail($this->videoId);
-        if (!$p) {
-            //Nothing to do
-            return;
-        }
 
         //Mark as processing
         $p->update(['status' => 'processing', 'progress' => 10]); // add progress column (tinyint) if you want
 
         try {
             //Does the heavy lifting and reports progress
-            $downloader->run($video, $entitlement, function (int $percent) use ($p) {
+            $downloader->run($video, $entitlement, $this->providedEntitlements, function (int $percent) use ($p) {
                 // Throttle writes as needed
                 $p->update(['progress' => $percent]);
             });
