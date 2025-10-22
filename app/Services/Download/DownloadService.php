@@ -39,7 +39,6 @@ class DownloadService
         $presentation = Presentation::findOrFail($video->id);
 
         // === Phase 1: fetch assets ===
-        //$this->downloadAssets($video, $entitlement, $presentation);
         $this->downloadAssets($video, $entitlement, $presentation, $providedEntitlements);
         $progress(40);
 
@@ -67,7 +66,6 @@ class DownloadService
         $handler = new TicketPermissionHandler($entitlement);
         $token   = $handler->issue($video, $providedEntitlements);
 
-        //$downloader = new DownloadResource($video, new TicketPermissionHandler($entitlement));
         $downloader = new DownloadResource($token);
         $resolver   = new DownloadStreamResolution($video);
 

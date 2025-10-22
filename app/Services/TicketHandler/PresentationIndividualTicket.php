@@ -27,7 +27,7 @@ class PresentationIndividualTicket implements \App\Interfaces\TicketInterface
 
         // Check if this user has an individual permission for this video
         // and that permission is one of read/edit/delete.
-        $hasTicket = $this->video->individualPermissions
+        $hasTicket = $this->video->individualPermissions()
             ->where('username', $local)
             ->whereIn('permission', ['read', 'edit', 'delete'])
             ->exists();

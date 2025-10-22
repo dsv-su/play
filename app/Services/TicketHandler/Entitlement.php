@@ -36,14 +36,6 @@ class Entitlement
         }
         $required = $this->splitEntitlements($requiredStr);
 
-        // Entitlements from request
-        /*$rawHeader = (string) ($_SERVER[$param] ?? '');
-
-        if ($rawHeader === '') {
-            return false;
-        }*/
-
-        //$provided = $this->splitEntitlements($rawHeader);
         // Case-insensitive intersection
         $requiredLower = array_map('mb_strtolower', $required);
         $providedLower = array_map('mb_strtolower', $provided);

@@ -45,7 +45,7 @@ class PerformVideoDownload implements ShouldQueue
         $p = Presentation::findOrFail($this->videoId);
 
         //Mark as processing
-        $p->update(['status' => 'processing', 'progress' => 10]); // add progress column (tinyint) if you want
+        $p->update(['status' => 'processing', 'progress' => 10]);
 
         try {
             //Does the heavy lifting and reports progress
