@@ -75,7 +75,9 @@ class MultiplayerController extends Controller
         ])->findOrFail($id);
 
         // Issue ticket for video
-        $token = (new TicketPermissionHandler($video))->issue();
+        //$token = (new TicketPermissionHandler($video))->issue();
+        $handler = app(TicketPermissionHandler::class);      // constructor gets Entitlement via container
+        $token   = $handler->issue($video, $entitlements ?? []);
 
         // Base presentation payload
         $presentation = [

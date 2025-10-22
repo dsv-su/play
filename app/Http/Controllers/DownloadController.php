@@ -60,7 +60,7 @@ class DownloadController extends Controller
     {
         $param = data_get(app(AuthHandler::class)->authorize(), 'global.authorization_parameter');
         $headerName = $this->normalizeHeaderName($param);
-        $provided = $this->splitEntitlements((string) $request->headers->get($headerName, ''));
+        $provided = $this->splitEntitlements((string) ($_SERVER[$headerName] ?? ''));
 
         $resolution = (string) ($request->input('r', '720'));
 
