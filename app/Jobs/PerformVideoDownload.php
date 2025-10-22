@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\Video;
 use App\Models\Presentation;
 use App\Services\Download\DownloadService;
+use App\Services\TicketHandler\Entitlement;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -17,14 +18,13 @@ class PerformVideoDownload implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public string $videoId;
     public int $timeout = 900;               // 15 min
     public int $tries   = 3;                 // retry strategy
 
-    public function __construct(string $videoId)
-    {
-        $this->videoId = $videoId;
-    }
+    public function __construct(
+        public string $videoId,
+        public array $providedEntitlements,
+    ) {}
 
     //Prevent duplicate jobs per video while one is pending/running
     public function uniqueId(): string
@@ -38,8 +38,9 @@ class PerformVideoDownload implements ShouldQueue
         return [10, 30, 120];
     }
 
-    public function handle(DownloadService $downloader): void
+    public function handle(DownloadService $downloader, Entitlement $entitlement): void
     {
+
         $video = Video::findOrFail($this->videoId);
         $p = Presentation::findOrFail($this->videoId);
         if (!$p) {
