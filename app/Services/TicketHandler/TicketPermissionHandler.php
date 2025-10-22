@@ -6,12 +6,10 @@ use App\Models\Video;
 
 class TicketPermissionHandler
 {
-    protected Video $video;
-
-    public function __construct(Video $video)
-    {
-        $this->video = $video;
-    }
+    public function __construct(
+        protected Video $video,
+        protected Entitlement $entitlement
+    ) {}
 
     /**
      * Decides whether to issue a ticket.
@@ -24,7 +22,7 @@ class TicketPermissionHandler
      *
      * @return mixed TokenIssuer::issue() result, or '' when not allowed.
      */
-    public function issue()
+    public function issue(array $providedEntitlements)
     {
         // 1) Presentation setting → sets ticket_permission_id on $this->video
         (new PresentationTicket($this->video))->cast();
@@ -36,24 +34,20 @@ class TicketPermissionHandler
 
         // 3) Entitlement validation for the (possibly overridden) permission_id
         $permissionId   = (int) ($this->video->ticket_permission_id ?? 1);
-        $userEntitlement = new Entitlement();
-        \Log::notice('Prepare ', ['video_permissionID' => $permissionId  ?? 99]);
-        if ($userEntitlement->validate($permissionId)) {
-            \Log::notice('ticket sent to issuer(1) ', ['video_permission' => $this->video->ticket_permission_id ?? 0]);
-            // Issue token
+        if ($this->entitlement->validate($permissionId, $providedEntitlements)) {
             $token = new TokenIssuer($this->video);
             return $token->issue();
         }
-        \Log::notice('ticket NOT sent to issuer(2) ', ['video_permission' => $this->video->ticket_permission_id ?? 0]);
+
         // 4) Exceptions/grants (set $video->ticket = true if matched)
         (new PresentationIndividualTicket($this->video))->cast();
         (new CourseIndividualTicket($this->video))->cast();
         (new CourseAdminTicket($this->video))->cast();
         (new AdminTicket($this->video))->cast();
-        \Log::notice('ticket(1) ', ['video_has_ticket' => $this->video->ticket ?? 0]);
+
         // 5) Final decision
         if ($this->video->getAttribute('ticket') === true) {
-            \Log::notice('ticketissue(2) ');
+
             $token = new TokenIssuer($this->video);
             return $token->issue();
         }
