@@ -34,11 +34,15 @@ class Entitlement
         }
         $required = $this->splitEntitlements($requiredStr);
         \Log::notice('Entitlement remote (3) ');
+
         // Entitlements from request
-        $rawHeader = (string) ($_SERVER[$param] ?? '');
-        if ($rawHeader === '') {
+        $rawHeader = (string) ($_SERVER[$param]);
+
+        if (isset($rawHeader)) {
+            \Log::notice('Entitlement missing in SERVER (3.1) ');
             return false;
         }
+
         $provided = $this->splitEntitlements($rawHeader);
         \Log::notice('Entitlement remote (4) ');
         // Case-insensitive intersection
