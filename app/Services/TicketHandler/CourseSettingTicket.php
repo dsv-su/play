@@ -11,7 +11,7 @@ class CourseSettingTicket implements \App\Interfaces\TicketInterface
 
     public function __construct(Video $video)
     {
-        // Work with the collection (not the relation object)
+        // Work with the collection
         $this->video = $video->loadMissing('courses');
     }
 

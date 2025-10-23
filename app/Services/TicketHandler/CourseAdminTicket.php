@@ -25,7 +25,7 @@ class CourseAdminTicket implements \App\Interfaces\TicketInterface
 
         $hasTicket = $this->video->coursepermissions()
             ->where('username', $username)
-            ->where('permission', 'delete') // keep your original rule
+            ->where('permission', 'delete') // keep original rule
             ->exists();
 
         if ($hasTicket) {

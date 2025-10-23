@@ -6,7 +6,7 @@
     <!-- Image wrapper with relative positioning -->
     <div class="relative">
         @include('home.partials.img')
-        @include('home.partials.duration')
+        {{--}}@include('home.partials.duration'){{--}}
         @include('home.partials.icons')
     </div>
 
@@ -20,5 +20,5 @@
         @include('home.partials.courses')
         @include('home.partials.description')
     </div>
-    @include('home.partials.edit')
+    @include('pending.partials.progress')
 </div>

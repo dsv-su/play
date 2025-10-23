@@ -1,62 +1,65 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Video;
 
 use App\Models\Video;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
-class VideoStore
+final class VideoStore
 {
-    protected $video, $request;
-
-    public function __construct($request)
-    {
-        $this->request = $request;
-    }
+    public function __construct(private readonly Request $request) {}
 
     public function presentation(): Video
     {
-        $this->video = new Video;
-        $title = new TitleObject($this->request->input('package.title'));
-        $this->video->id = $this->request->input('package.pkg_id');
-        $this->video->origin = $this->request->origin;
-        $this->video->notification_id = $this->request->jobid;
-        $this->video->creation = $this->request->input('package.created');
-        $this->video->title = $title->swedish();
-        $this->video->title_en = $title->english();
-        $this->video->description = $this->request->input('package.description');
-        $this->video->thumb = $this->request->input('package.thumb');
-        $this->video->duration = Carbon::parse($this->request->input('package.duration'));
-        //$this->video->visibility = !isset($this->request->visibility) || (bool)$this->request->visibility;
-        $this->video->subtitles = json_encode($this->request->input('package.subtitles'), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-        $this->video->sources = json_encode($this->request->input('package.sources'), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-        $this->video->presentation = json_encode($this->request->all(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-        $this->video->category_id = $this->request->category_id ?? 1;
-        //Set video state
-        if(count($this->request->pending) > 0) {
-            $this->video->state = false;
-        } else {
-            $this->video->state = true;
+        // Pull the "package"
+        $pkg = (array) $this->request->input('package', []);
+
+        // Title handling
+        $titleObj = new TitleObject((array) data_get($pkg, 'title', ''));
+
+        // Try to find existing video, otherwise create a new one
+        $videoId = data_get($pkg, 'pkg_id');
+        $video = Video::firstOrNew(['id' => $videoId]);
+
+        // Build attributes cleanly
+        $video->fill([
+            'origin'          => $this->request->get('origin'),
+            'notification_id' => $this->request->get('jobid'),
+            'creation'        => data_get($pkg, 'created'),
+            'title'           => $titleObj->swedish(),
+            'title_en'        => $titleObj->english(),
+            'description'     => data_get($pkg, 'description'),
+            'thumb'           => data_get($pkg, 'thumb'),
+            'duration'        => $this->normalizeDuration(data_get($pkg, 'duration')),
+            'subtitles'       => json_encode(data_get($pkg, 'subtitles', []), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
+            'sources'         => json_encode(data_get($pkg, 'sources', []), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
+            'presentation'    => json_encode($this->request->all(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), // store full payload (cast to array in model)
+            'category_id'     => (int) ($this->request->get('category_id', 1)),
+            'state'           => $this->deriveState($this->request->input('pending')),
+        ]);
+
+        $video->save();
+
+        return $video;
+    }
+
+    private function deriveState(mixed $pending): bool
+    {
+        // Treat anything as "has pending items" => state=false
+        $pendingItems = Arr::wrap($pending);
+        return count(array_filter($pendingItems, static fn($v) => !empty($v))) === 0;
+    }
+
+    private function normalizeDuration(mixed $value): ?Carbon
+    {
+        if ($value === null || $value === '') {
+            return null;
         }
-        $this->video->save();
 
-        //Update mediasite video link
-        //TODO
-        /*if ($this->request->origin == 'mediasite') {
-            // If the Mediasite presentation doesnt exist - prevent error /RD
-            if($mp = MediasitePresentation::find($this->request->notification_id)) {
-                $mp->video_id = $this->video->id;
-                $mp->save();
-            }
-        }*/
-
-        //Make manual uploaded presentation that are not associated to a course default hidden
-        //Depricated
-        /*if($this->request->origin == 'manual') {
-            $this->video->visibility = false;
-            $this->video->save();
-        }*/
-
-        return $this->video;
+        return Carbon::parse($value);
     }
 }

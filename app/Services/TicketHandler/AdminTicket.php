@@ -18,7 +18,7 @@ class AdminTicket implements \App\Interfaces\TicketInterface
     {
         $system = app(AuthHandler::class)->authorize();
 
-        // Read the server var name configured by your AuthHandler (e.g., "HTTP_ENTITLEMENTS")
+        // Read the server var name configured by AuthHandler
         $paramName = data_get($system, 'global.authorization_parameter');
         if (!$paramName) {
             return $this->video; // nothing to check

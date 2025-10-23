@@ -1,96 +1,107 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Presenter;
 
 use App\Models\IndividualPermission;
 use App\Models\Presenter;
+use App\Models\Video;
 use App\Services\Ldap\SukatUser;
-use App\Models\VideoPresenter;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
-class PresenterStore extends Model
+class PresenterStore
 {
-    protected $presenter, $item, $video;
-    protected $name, $username;
-
-    public function __construct($request, $video)
+    /**
+     * Sync presenters for a video from request input:
+     * expects an array in `package.presenters` containing either SUKAT usernames or external presenter names.
+     */
+    public function presenter($request, Video $video): void
     {
-        $this->presenters = $request->input('package.presenters');
-        $this->video = $video;
-    }
+        $raw = $request->input('package.presenters', []);
+        $userInputs = $this->normalizeList($raw);
 
-    public function presenter()
-    {
-        if ($this->presenters) {
-            foreach ($this->presenters as $key => $this->item) {
-                if ($this->item) {
-                    if (!$this->db_presenter = Presenter::where('username', $this->item)->first()) {
-                        //Stores new presenters
-                        if ($this->name = SukatUser::findBy('uid', $this->item)) {
-                            //Presenter found in SUKAT
-                            $this->presenter = Presenter::create([
-                                'username' => $this->item,
-                                'name' => $this->name->getFirstAttribute('cn'),
-                                'description' => 'sukat',
-                            ]);
-                            //Add edit-permission for presenter
-                            IndividualPermission::create([
-                                'video_id' => $this->video->id,
-                                'username' => $this->item,
-                                'name' => $this->name->getFirstAttribute('cn'),
-                                'permission' => 'edit',
-                            ]);
-                        } else {
-                            //External presenter
-                            $this->presenter = Presenter::create([
-                                'name' => $this->item,
-                                //'username' => $this->item,
-                                'description' => 'external',
-                            ]);
-                        }
-
-                        VideoPresenter::create([
-                            'video_id' => $this->video->id,
-                            'presenter_id' => $this->presenter->id,
-                        ]);
-                    } else {
-                        //Updates presenters
-                        if ($this->name = SukatUser::findBy('uid', $this->item)) {
-                            //Update presenter
-                            $this->db_presenter::updateOrCreate([
-                                'username' => $this->item],
-                                [
-                                    'username' => $this->item,
-                                    'name' => $this->name->getFirstAttribute('cn'),
-                                ]);
-                            //Update edit-permission
-                            IndividualPermission::updateOrCreate([
-                                'video_id' => $this->video->id,
-                                'username' => $this->item],
-                                [
-                                    'video_id' => $this->video->id,
-                                    'username' => $this->item,
-                                    'name' => $this->name->getFirstAttribute('cn'),
-                                    'permission' => 'delete',
-                                ]);
-                        }
-                        if ($key == 0) {
-                            //Remove any old associations
-                            VideoPresenter::where('video_id', $this->video->id)->delete();
-                        }
-                        //Create new associations
-                        VideoPresenter::Create([
-                            'video_id' => $this->video->id,
-                            'presenter_id' => $this->db_presenter->id,
-                        ]);
-                    }
-                } else {
-                    //Remove any old associations
-                    VideoPresenter::where('video_id', $this->video->id)->delete();
-                } // end check
-            } // end foreach
+        if (empty($userInputs)) {
+            // no presenters => clear associations
+            $video->presenters()->sync([]);
+            return;
         }
 
+        DB::transaction(function () use ($userInputs, $video) {
+            $presenterIds = [];
 
+            foreach ($userInputs as $value) {
+                // Try SUKAT first (treat value as username)
+                $ldapUser = SukatUser::findBy('uid', $value);
+
+                if ($ldapUser) {
+                    // LDAP-backed presenter (unique on username)
+                    $presenter = Presenter::updateOrCreate(
+                        ['username' => $value],
+                        [
+                            'username'    => $value,
+                            'name'        => $ldapUser->getFirstAttribute('cn'),
+                            'description' => 'sukat',
+                        ]
+                    );
+
+                    // Ensure edit permission for this SUKAT user on this video
+                    IndividualPermission::updateOrCreate(
+                        [
+                            'video_id' => $video->id,
+                            'username' => $value,
+                        ],
+                        [
+                            'video_id'    => $video->id,
+                            'username'    => $value,
+                            'name'        => $ldapUser->getFirstAttribute('cn'),
+                            'permission'  => 'edit', // <- fixed from 'delete'
+                        ]
+                    );
+                } else {
+                    // External presenter: we can’t rely on username, so upsert by (name, description)
+                    $presenter = Presenter::updateOrCreate(
+                        [
+                            'name'        => $value,
+                            'description' => 'external',
+                        ],
+                        [
+                            // keep username null for externals
+                            'username'    => null,
+                            'name'        => $value,
+                            'description' => 'external',
+                        ]
+                    );
+                    // Note: original code did NOT create IndividualPermission for externals; keeping that behavior.
+                }
+
+                $presenterIds[] = $presenter->id;
+            }
+
+            // Finalize associations in one go (requires Video::presenters() belongsToMany)
+            $video->presenters()->sync($presenterIds);
+        });
+    }
+
+    /**
+     * Normalize input to a unique, trimmed list (drop null/empty).
+     *
+     * @param mixed $raw
+     * @return array<int, string>
+     */
+    private function normalizeList($raw): array
+    {
+        $items = Arr::wrap($raw);
+
+        $items = array_map(
+            static fn($v) => is_string($v) ? trim($v) : '',
+            $items
+        );
+
+        $items = array_filter($items, static fn($v) => $v !== '');
+
+        // de-duplicate while preserving order
+        return array_values(array_unique($items));
     }
 }

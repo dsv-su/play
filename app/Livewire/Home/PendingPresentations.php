@@ -22,6 +22,7 @@ class PendingPresentations extends Component
             ->get();
     }
 
+
     public function render()
     {
         return view('livewire.home.pending-presentations');

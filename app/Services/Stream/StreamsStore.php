@@ -4,56 +4,99 @@ namespace App\Services\Stream;
 
 use App\Models\Stream;
 use App\Models\StreamResolution;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-class StreamsStore extends Model
+class StreamsStore
 {
+    protected array $sources = [];
     protected $video;
 
-    public function __construct($request, $video)
+    public function __construct(Request $request, $video)
     {
-        $this->sources = $request->input('package.sources');
+        $this->sources = (array) $request->input('package.sources', []);
         $this->video = $video;
     }
 
-    public function streams()
+    public function streams(): void
     {
-
-        if (empty($this->sources)) {
-            $this->deleteAllStreams();
-            return;
-        }
-
-        foreach ($this->sources as $key => $source) {
-            if (empty($source)) {
-                continue;
+        DB::transaction(function () {
+            // If there are no valid sources, delete all
+            if ($this->isEmptySources()) {
+                $this->deleteAllStreams();
+                return;
             }
 
-            $stream = $this->updateStream($key, $source);
-            $this->updateStreamResolutions($stream, $source['video'] ?? []);
-        }
+            $keptStreamIds = [];
+
+            foreach ($this->sources as $key => $source) {
+                if (empty($source)) {
+                    continue;
+                }
+
+                $stream = $this->updateStream($key, $source);
+                $keptStreamIds[] = $stream->id;
+
+                $this->updateStreamResolutions($stream, $source['video'] ?? []);
+            }
+
+            // Remove streams that were not present in the request
+            $this->video->streams()
+                ->whereNotIn('id', $keptStreamIds)
+                ->delete();
+        });
     }
 
-    protected function updateStream($name, $source)
+    protected function updateStream(string|int $name, array $source): Stream
     {
         return Stream::updateOrCreate(
             ['video_id' => $this->video->id, 'name' => $name],
-            ['poster' => $source['poster'] ?? '', 'audio' => $source['playAudio'] ?? false]
+            [
+                'poster' => $source['poster'] ?? '',
+                'audio' => $source['playAudio'] ?? false,
+            ]
         );
     }
 
-    protected function updateStreamResolutions($stream, $videoUrls)
+    protected function updateStreamResolutions(Stream $stream, array $videoUrls): void
     {
+        $keptIds = [];
+
         foreach ($videoUrls as $resolution => $url) {
-            StreamResolution::updateOrCreate(
-                ['stream_id' => $stream->id, 'resolution' => $resolution],
+            $resolutionModel = StreamResolution::updateOrCreate(
+                [
+                    'stream_id' => $stream->id,
+                    'resolution' => $resolution,
+                ],
                 ['filename' => $url]
             );
+
+            $keptIds[] = $resolutionModel->id;
         }
+
+        // Clean up removed resolutions
+        $stream->resolutions()
+            ->whereNotIn('id', $keptIds)
+            ->delete();
     }
 
-    protected function deleteAllStreams()
+    protected function deleteAllStreams(): void
     {
         $this->video->streams()->delete();
+    }
+
+    protected function isEmptySources(): bool
+    {
+        if (empty($this->sources)) {
+            return true;
+        }
+
+        foreach ($this->sources as $source) {
+            if (!empty($source)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

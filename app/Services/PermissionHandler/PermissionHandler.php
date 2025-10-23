@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
 namespace App\Services\PermissionHandler;
 
 use App\Models\VideoPermission;
-use LdapRecord\Models\Model;
 
-class PermissionHandler extends Model
+final class PermissionHandler
 {
     protected $request, $video, $video_permission;
     protected $perm, $permission;
@@ -33,5 +33,4 @@ class PermissionHandler extends Model
             }
 
         }
-
 }

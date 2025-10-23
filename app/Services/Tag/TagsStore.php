@@ -3,51 +3,51 @@
 namespace App\Services\Tag;
 
 use App\Models\Tag;
-use App\Models\VideoTag;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Video;
+use Illuminate\Support\Facades\DB;
 
-class TagsStore extends Model
+class TagsStore
 {
-    protected $tags, $video;
-
-    public function __construct($request, $video)
+    public function handle($request, Video $video): void
     {
-        $this->tags = $request->input('package.tags');
-        $this->video = $video;
+        // Normalize only spacing and empties — NOT case
+        $names = collect((array)($request->input('package.tags') ?? []))
+            ->map(fn ($t) => is_string($t) ? trim($t) : '')
+            ->filter()  // remove empty/null
+            ->unique()  // keep first unique by exact string match
+            ->values();
+
+        DB::transaction(function () use ($video, $names) {
+            if ($names->isEmpty()) {
+                // Remove all old tag associations
+                $video->tags()->sync([]);
+                return;
+            }
+
+            // Get existing tags (incase-sensitive)
+            //$existing = Tag::whereIn('name', $names)->pluck('id', 'name');
+            // Get existing tags (case-sensitive)
+            $existing = \App\Models\Tag::whereIn(DB::raw('BINARY name'), $names)->pluck('id', 'name');
+
+            // Determine which tags need to be created
+            $toCreate = $names->diff($existing->keys());
+
+            if ($toCreate->isNotEmpty()) {
+                Tag::insert(
+                    $toCreate->map(fn ($name) => [
+                        'name'       => $name,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ])->all()
+                );
+            }
+
+            // Fetch all tag IDs (existing + newly created)
+            //$allIds = Tag::whereIn('name', $names)->pluck('id')->all();
+            $allIds = \App\Models\Tag::whereIn(DB::raw('BINARY name'), $names)->pluck('id')->all();
+
+            // Sync in one go — replaces old associations automatically
+            $video->tags()->sync($allIds);
+        });
     }
-
-    public function tags()
-    {
-        if($this->tags) {
-
-            foreach ($this->tags as $key => $this->item) {
-                if ($this->item) {
-                    if (! $this->db_tag = Tag::where('name', $this->item)->first()) {
-                        $this->tag = Tag::create([
-                            'name' => $this->item
-                        ]);
-                        VideoTag::create([
-                            'video_id' => $this->video->id,
-                            'tag_id' => $this->tag->id,
-                        ]);
-                    } else {
-                        if($key == 0) {
-                            //Remove any old associations
-                            VideoTag::where('video_id', $this->video->id)->delete();
-                        }
-                        //Create new associations
-                        VideoTag::Create([
-                            'video_id' => $this->video->id,
-                            'tag_id' => $this->db_tag->id,
-                        ]);
-                    }
-                } //end check
-            } // end foreach
-
-        } else {
-            //Remove any old associations
-            VideoTag::where('video_id', $this->video->id)->delete();
-        }
-    }
-
 }

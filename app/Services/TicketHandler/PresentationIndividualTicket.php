@@ -21,8 +21,6 @@ class PresentationIndividualTicket implements \App\Interfaces\TicketInterface
             return $this->video;
         }
 
-        // Compare using the REMOTE_USER "local part" (before the @)
-        // since the DB stores usernames without the domain.
         $local = explode('@', $remote, 2)[0];
 
         // Check if this user has an individual permission for this video

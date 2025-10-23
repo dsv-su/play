@@ -11,7 +11,7 @@ class CourseIndividualTicket implements \App\Interfaces\TicketInterface
 
     public function __construct(Video $video)
     {
-        // Work with the loaded collection, not the relation object
+        // Work with the loaded collection
         $this->video = $video->loadMissing('courses');
     }
 
@@ -22,7 +22,7 @@ class CourseIndividualTicket implements \App\Interfaces\TicketInterface
             return $this->video; // no authenticated remote user
         }
 
-        // DB stores usernames without domain (based on your original code)
+        // DB stores usernames without domain
         $username = explode('@', $remote, 2)[0];
 
         $courses = $this->video->courses; // Collection<Course>
