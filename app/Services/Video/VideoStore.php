@@ -39,7 +39,7 @@ final class VideoStore
             'sources'         => json_encode(data_get($pkg, 'sources', []), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
             'presentation'    => json_encode($this->request->all(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), // store full payload (cast to array in model)
             'category_id'     => (int) ($this->request->get('category_id', 1)),
-            'state'           => $this->deriveState(json_decode($this->request->input('pending'), true)),
+            'state'           => $this->deriveState($this->request->input('pending')),
         ]);
 
         $video->save();

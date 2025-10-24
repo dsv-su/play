@@ -24,7 +24,7 @@ class Video extends Model
     public $incrementing = false;
     //TODO Remove presentation attribute
     protected $fillable = [
-        'id', 'title', 'title_en', 'thumb', 'creation', 'origin', 'notification_id', 'subtitles',
+        'id', 'title', 'title_en', 'thumb', 'creation', 'origin', 'notification_id', 'subtitles', 'state',
         'presenter', 'duration', 'thumb', 'category_id', 'description', 'visibility', 'unlisted', 'sources', 'presentation'
     ];
     protected $table = 'videos';
