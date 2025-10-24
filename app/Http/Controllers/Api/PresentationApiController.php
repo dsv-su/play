@@ -56,7 +56,7 @@ class PresentationApiController extends Controller
     }
 
     /**
-     * Store or update a presentation (webhook-like entrypoint).
+     * Store or update a presentation
      */
     public function store(PresentationRequest $request): JsonResponse
     {

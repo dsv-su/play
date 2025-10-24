@@ -17,7 +17,8 @@ class CatchAll
     public function logRequest()
     {
         $apiLog = new ApiLog();
-        $apiLog->payload = json_encode($this->request->all(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        //TODO update ->payload
+        $apiLog->catch = json_encode($this->request->all(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         $apiLog->jobid = $this->request->input('jobid');
         $apiLog->pk_id = $this->request->input('package.pkg_id');
 

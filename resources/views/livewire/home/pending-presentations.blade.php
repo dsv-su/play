@@ -1,4 +1,4 @@
-<div>
+<div wire:poll.15s.visible>
     <div class="max-w-screen-xl mx-auto px-4 py-6 sm:px-6 lg:px-8 md:pt-8 md:pb-8 space-y-8">
         <div class="px-4 py-2">
             <!-- Left-aligned heading -->
