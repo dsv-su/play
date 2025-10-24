@@ -36,11 +36,14 @@ Route::middleware(['entitlements', 'playauth','web'])->group(function () {
         ->name('pending.presentations');
     // Locale
     Route::get('/locale/{locale}', [\App\Http\Controllers\LocaleController::class, 'switch'])->name('locale.switch');
+
     // Test
-    Route::get('/test', [\App\Http\Controllers\TestController::class, 'index'])
-        ->name('test');
-    Route::get('/server', [\App\Http\Controllers\TestController::class, 'server'])
-        ->name('server');
+    Route::controller(\App\Http\Controllers\TestController::class)->group(function () {
+        Route::get('/test', 'index')->name('test');
+        Route::get('/server', 'server')->name('server');
+        Route::get('/daisy', 'health')->name('daisy.health');
+    });
+
     //My
     Route::middleware(['redirect-links'])->get('/user/all', \App\Livewire\My\UserPresentations::class)->name('my.presentations');
     //Route::get('/user/all', \App\Livewire\My\MyPresentations::class)->name('my.presentations');

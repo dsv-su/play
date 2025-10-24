@@ -2,21 +2,6 @@
 
 namespace App\Services\Daisy;
 
-/*use App\System;
-use Illuminate\Database\Eloquent\Model;
-
-class CheckDaisyApi extends Model
-{
-    public function call($healt='health')
-    {
-        $system = System::find(1);
-        $daisy = new DaisyIntegration($system);
-        return json_decode($daisy->getResource($healt)->getBody()->getContents() , true);
-    }
-
-
-}*/
-use App\System;
 use RuntimeException;
 
 class DaisyHealthChecker
@@ -47,9 +32,3 @@ class DaisyHealthChecker
         return $data;
     }
 }
-/* Controller
-public function health(DaisyHealthChecker $checker)
-{
-    $data = $checker->call(); // defaults to 'health'
-    return response()->json($data);
-}*/

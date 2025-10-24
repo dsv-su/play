@@ -115,7 +115,7 @@ class PresentationApiController extends Controller
     /**
      * Show a single presentation or 404.
      */
-    public function show(int $id): JsonResponse
+    public function show(string $id): JsonResponse
     {
         $video = Video::find($id);
         if (!$video) {
@@ -128,7 +128,7 @@ class PresentationApiController extends Controller
     /**
      * Update placeholder (explicit 501 until implemented).
      */
-    public function update(Request $request, int $id): JsonResponse
+    public function update(Request $request, string $id): JsonResponse
     {
         return response()->json(['error' => 'Not implemented'], Response::HTTP_NOT_IMPLEMENTED);
     }
@@ -136,7 +136,7 @@ class PresentationApiController extends Controller
     /**
      * Destroy placeholder (explicit 501 until implemented).
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy($id): JsonResponse
     {
         return response()->json(['error' => 'Not implemented'], Response::HTTP_NOT_IMPLEMENTED);
     }
@@ -145,7 +145,7 @@ class PresentationApiController extends Controller
      *  perm endpoint – invalidates auth and returns granted=true.
      *
      */
-    public function perm(int $id): JsonResponse
+    public function perm($id): JsonResponse
     {
         try {
             auth()->invalidate();
@@ -170,7 +170,7 @@ class PresentationApiController extends Controller
         ]);
 
         $payload = auth()->payload();
-        $videoId = (int) $payload->get('id');
+        $videoId = (string) $payload->get('id');
 
         $video = Video::find($videoId);
         if (!$video) {
@@ -241,7 +241,7 @@ class PresentationApiController extends Controller
     /**
      * Public permission/entitlement view.
      */
-    public function permissions(int $id): JsonResponse
+    public function permissions($id): JsonResponse
     {
         $video = Video::where('presentation_id', $id)->first();
         if (!$video) {
@@ -251,7 +251,7 @@ class PresentationApiController extends Controller
         $entitlements = $video->entitlement ? explode(';', (string) $video->entitlement) : [];
 
         return response()->json([
-            'public'       => (bool) $video->permission,
+            'public'       => $video->permission,
             'entitlements' => array_values(array_filter($entitlements, static fn ($e) => $e !== '')),
         ], Response::HTTP_OK);
     }
