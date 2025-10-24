@@ -1,10 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\PresentationApiController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Api\VideoApiController;
+
 
 Route::get('test', [AuthController::class, 'token_test']);
 
@@ -19,15 +18,11 @@ Route::post('destroy', [AuthController::class, 'logout']);
 // Route::post('refresh', [AuthController::class, 'refresh']);
 
 // Store
-//Route::apiResource('recordings', VideoApiController::class);
 Route::apiResource('recordings', PresentationApiController::class);
 
 // Check permissions
-//Route::get('permissions/{id}', [VideoApiController::class, 'permissions']);
 Route::get('permissions/{id}', [PresentationApiController::class, 'permissions']);
 
 // Check permissions with ticket
-//Route::get('ticket/{id}', [VideoApiController::class, 'perm']);
-//Route::post('perm', [VideoApiController::class, 'permission']);
 Route::get('ticket/{id}', [PresentationApiController::class, 'perm']);
 Route::post('perm', [PresentationApiController::class, 'permission']);
