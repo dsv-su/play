@@ -10,6 +10,7 @@ use App\Observers\TagObserver;
 use App\Observers\VideoObserver;
 use App\Repositories\EloquentVideoRepository;
 use App\Repositories\VideoRepositoryInterface;
+use Illuminate\Contracts\Debug\ExceptionHandler as ExceptionHandlerContract;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
 
@@ -21,6 +22,10 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(VideoRepositoryInterface::class, EloquentVideoRepository::class);
+        $this->app->singleton(
+            ExceptionHandlerContract::class,
+            \App\Exceptions\Handler::class
+        );
     }
 
     /**
