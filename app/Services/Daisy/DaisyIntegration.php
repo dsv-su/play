@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Daisy;
 
-use App\Course;
+use App\Models\Course;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
@@ -341,7 +341,6 @@ class DaisyIntegration
 
     public function init(?string $start_date = null): void
     {
-        // Keep your explicit semester list (you can generate programmatically if you prefer)
         $endpoints = [
             'courseSegment?semester=20252',
             'courseSegment?semester=20251',
@@ -353,10 +352,10 @@ class DaisyIntegration
             'courseSegment?semester=20221',
             'courseSegment?semester=20212',
             'courseSegment?semester=20211',
-            'courseSegment?semester=20201',
-            'courseSegment?semester=20202',
-            'courseSegment?semester=20191',
-            'courseSegment?semester=20192',
+            //'courseSegment?semester=20201',
+            //'courseSegment?semester=20202',
+            //'courseSegment?semester=20191',
+            //'courseSegment?semester=20192',
         ];
 
         foreach ($endpoints as $ep) {

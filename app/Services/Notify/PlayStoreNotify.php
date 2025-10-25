@@ -87,12 +87,12 @@ class PlayStoreNotify extends Model
                 ->makeHidden('subtitles');
         }
         //Check if description has been uploaded
-        if(!$this->presentation->description) {
+        /*if(!$this->presentation->description) {
             $this->presentation
                 ->makeHidden('description');
-        }
+        }*/
 
-        //Exceptions
+
         if ($type == 'default' or $type == 'edit') {
             $this->presentation->title = ['sv' => $this->presentation['title'], 'en' => $this->presentation['title_en']];
         } elseif ($type == 'mediasite') {
