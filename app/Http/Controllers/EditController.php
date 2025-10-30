@@ -444,7 +444,7 @@ class EditController extends Controller
 
             // Send notify
             $notify = new PlayStoreNotify($presentation);
-return            $notify->sendSuccess('edit');
+            $notify->sendSuccess('edit');
 
             // Clear download storage
             Artisan::call('download:clear');
