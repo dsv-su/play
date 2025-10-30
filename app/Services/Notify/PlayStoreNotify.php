@@ -1,313 +1,195 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Notify;
 
 use App\Models\ManualPresentation;
-use App\MediasitePresentation;
 use App\Models\VideoPermission;
 use GuzzleHttp\Client;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
-class PlayStoreNotify extends Model
+final class PlayStoreNotify
 {
 
-    protected $json, $client, $headers, $response, $title;
-    protected $log;
-    private $file, $system_config;
+    public const TYPE_DEFAULT   = 'default';
+    public const TYPE_EDIT      = 'edit';
 
-    public function __construct(Model $model)
+    private ManualPresentation $presentation;
+    private ClientInterface $http;
+
+    public function __construct(ManualPresentation $presentation, ?ClientInterface $http = null)
     {
-        $this->presentation = $model;
+        $this->presentation = $presentation;
+        $this->http         = $http ?? new Client();
     }
 
-    public function sendSuccess(string $type)
+    /**
+     * Build and optionally send the notification.
+     *
+     * @return array|string|RedirectResponse|bool  Array (payload) on dryRun, redirect/bool on send
+     */
+    public function sendSuccess(string $type, bool $dryRun = false): array|string|RedirectResponse|bool
     {
-        // type: default | type: edit | type: mediasite
+        $this->assertValidType($type);
 
-        $this->presentation
-            ->makeHidden('id')
-            ->makeHidden('title_en')
-            ->makeHidden('status')
-            ->makeHidden('type')
-            ->makeHidden('jobid')
-            ->makeHidden('duration')
-            ->makeHidden('sublanguage')
-            ->makeHidden('autogenerate_subtitles')
-            ->makeHidden('user')
-            ->makeHidden('user_email')
-            ->makeHidden('local')
-            ->makeHidden('visibility')
-            ->makeHidden('unlisted')
-            ->makeHidden('files')
-            ->makeHidden('permission')
-            ->makeHidden('entitlement')
-            ->makeHidden('daisy_courses')
-            ->makeHidden('created_at')
-            ->makeHidden('updated_at');
+        // 1) Build payload without mutating the Eloquent model
+        $payload = $this->buildPayload($type);
 
-        //Conditions
-        //Pkg_id
-        if(empty($this->presentation->pkg_id)) {
-            $this->presentation->makeHidden('pkg_id');
-        }
-        //upload_dir
-        if(empty($this->presentation->upload_dir)) {
-            $this->presentation->makeHidden('upload_dir');
-        }
-        //Presenters
-        if(empty($this->presentation->presenters)) {
-            //$this->presentation->makeHidden('presenters');
-            $this->presentation->presenters = [];
-        }
-        //Courses
-        if(empty($this->presentation->courses)) {
-            //$this->presentation->makeHidden('courses');
-            $this->presentation->courses = [];
-        }
-        //Tags
-        if(empty($this->presentation->tags)) {
-            //$this->presentation->makeHidden('tags');
-            $this->presentation->tags = [];
-        }
-        //Subs
-        if(empty($this->presentation->subtitles)) {
-            $this->presentation->makeHidden('subtitles');
-        }
-        //Autogenerate subs
-        if(!$this->presentation->autogenerate_subtitles) {
-            $this->presentation->makeHidden('generate_subtitles');
+        if ($dryRun) {
+            // JSON for debugging
+            return json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         }
 
-        //Check if subtitles has been uploaded
-        if(!$this->presentation->subtitles) {
-            $this->presentation
-                ->makeHidden('subtitles');
-        }
-        //Check if description has been uploaded
-        /*if(!$this->presentation->description) {
-            $this->presentation
-                ->makeHidden('description');
-        }*/
+        // 2) Send
+        $uri = $this->uri();
 
-
-        if ($type == 'default' or $type == 'edit') {
-            $this->presentation->title = ['sv' => $this->presentation['title'], 'en' => $this->presentation['title_en']];
-        } elseif ($type == 'mediasite') {
-            $this->presentation->title = ['sv' => $this->presentation['title'], 'en' => $this->presentation['title']];
-        }
-
-        if ($type == 'mediasite') {
-            $this->presentation->makeHidden('video_id')->makeHidden('mediasite_folder_id');
-        }
-
-        $this->json = $this->presentation;
-        $this->json = $this->json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-
-        // Success
-        //return $this->json;
-        //
-
-        $this->client = new Client(['base_uri' => $this->uri()]);
-
-        $this->headers = [
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
-        ];
         try {
-            $uri = ($type == 'mediasite') ? $this->mediasite_uri() : $this->uri();
-            $this->response = $this->client->request('POST', $uri, [
-                'headers' => $this->headers,
-                'body' => $this->json
+            $response = $this->http->request('POST', $uri, [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Accept'       => 'application/json',
+                ],
+                'body'    => json_encode($payload, JSON_UNESCAPED_UNICODE),
+                'timeout' => 20,
             ]);
-        } catch (\Exception $e) {
-            /**
-             * If there is an exception; Client error;
-             */
-            if ($e->hasResponse()) {
 
-                //Change model status
-                $this->presentation = ($type == 'mediasite') ? MediasitePresentation::find($this->presentation->id) : ManualPresentation::find($this->presentation->id);
-                $this->presentation->status = 'failed';
-                $this->presentation->save();
+            $status  = $response->getStatusCode();
+            $bodyStr = (string) $response->getBody();
 
-                //Write info to log
-                Log::error($e->getResponse()->getBody());
-
-                return $this->response = $e->getResponse()->getBody();
-            }
-        }
-
-        if ($type == 'mediasite') {
-            //Drop slides property since it's no longer needed to save
-            unset($this->presentation->slides);
-        }
-
-        if (!empty( $this->presentation->jobid = (string) $this->response->getBody() ) ) {
-
-            //Change manualupdate status
-            $this->presentation = ($type == 'mediasite') ? MediasitePresentation::find($this->presentation->id) : ManualPresentation::find($this->presentation->id);
-            $this->presentation->jobid = (string) $this->response->getBody();
-            $this->presentation->status = 'sent';
-            $this->presentation->save();
-
-            if (App::isLocale('swe')) {
-                $message = 'Bearbetar presentationen';
-            } else {
-                $message = 'Processing the presentation';
+            if ($status < 200 || $status >= 300 || $bodyStr === '') {
+                return $this->handleSendFailure($type, 'Empty or non-2xx response.');
             }
 
-            //Update VideoPermissions
-            if($type == 'edit') {
-                $videopermissions = VideoPermission::where('video_id', $this->presentation->pkg_id)->first();
-            } else {
-                $videopermissions = VideoPermission::where('notification_id', $this->presentation->id)->first();
-            }
-            $videopermissions->jobid = (string) $this->response->getBody();
-            $videopermissions->save();
+            // Persist job id and statuses
+            $jobId = trim($bodyStr);
 
-            if($type == 'edit') {
+            //Re-load ManualPresentation
+            $model = ManualPresentation::find($this->presentation->id);
+
+            if ($model) {
+                // For "edit" we only set jobid + status=sent (matches original intent)
+                $model->jobid  = $jobId;
+                $model->status = 'sent';
+                $model->save();
+            }
+
+            // Update VideoPermission
+            $videoPermission = $type === self::TYPE_EDIT
+                ? VideoPermission::where('video_id', $this->presentation->pkg_id)->first()
+                : VideoPermission::where('notification_id', $this->presentation->id)->first();
+
+            if ($videoPermission) {
+                $videoPermission->jobid = $jobId;
+                $videoPermission->save();
+            }
+
+            if ($type === self::TYPE_EDIT) {
+                // Original code returns true for edit
                 return true;
             }
 
+            $message = App::isLocale('swe') ? 'Bearbetar presentationen' : 'Processing the presentation';
             return redirect('/')->with(['message' => $message]);
-        } else {
-            //Change manualupdate status
-            $this->presentation = ($type == 'mediasite') ? MediasitePresentation::find($this->presentation->id) : ManualPresentation::find($this->presentation->id);
-            if (App::isLocale('swe')) {
-                $message = 'Något gick fel med uppladdningen';
-            } else {
-                $message = 'Something went wrong with the upload';
-            }
-            $this->presentation->status = 'failed';
-            $this->presentation->save();
 
-            return redirect('/')->with(['message' => $message]);
+        } catch (GuzzleException $e) {
+            // Mark failed + log body if available
+            Log::error('PlayStoreNotify send failed', [
+                'message' => $e->getMessage(),
+            ]);
+
+            return $this->handleSendFailure($type, $e->getMessage());
         }
     }
 
-    public function sendFail(string $type)
+    /**
+     * Outgoing payload array without mutating the model.
+     */
+    private function buildPayload(string $type): array
     {
-        /***
-         * Depricated
-         */
+        $p = $this->presentation->toArray();
 
-        // type: manual
-        $this->presentation
-            ->makeHidden('id')
-            ->makeHidden('status')
-            ->makeHidden('user')
-            ->makeHidden('upload_dir')
-            ->makeHidden('local')
-            ->makeHidden('title')
-            ->makeHidden('presenters')
-            ->makeHidden('created')
-            ->makeHidden('duration')
-            ->makeHidden('courses')
-            ->makeHidden('tags')
-            ->makeHidden('thumb')
-            ->makeHidden('files')
-            ->makeHidden('sources')
-            ->makeHidden('permission')
-            ->makeHidden('entitlement')
-            ->makeHidden('created_at')
-            ->makeHidden('updated_at');
+        // Remove fields that are noise
+        unset(
+            $p['id'], $p['title_en'], $p['status'], $p['type'], $p['jobid'], $p['duration'],
+            $p['sublanguage'], $p['user'], $p['user_email'], $p['local'],
+            $p['visibility'], $p['unlisted'], $p['files'], $p['permission'],
+            $p['entitlement'], $p['daisy_courses'], $p['created_at'], $p['updated_at']
+        );
 
-        //Make json wrapper
-        $this->json = Collection::make([
-            'status' => 'failure',
-            'type' => $type
-        ]);
-        $this->json['package'] = Collection::make([
-            'message' => $this->presentation->status,
-            'upload_dir' => $this->presentation->upload_dir
-        ]);
+        // Conditional removals
+        if (empty($this->presentation->pkg_id))    unset($p['pkg_id']);
+        if (empty($this->presentation->upload_dir)) unset($p['upload_dir']);
 
-        $this->json = $this->json->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        // Normalize arrays
+        $p['presenters'] = $this->normalizeArray($p['presenters'] ?? null);
+        $p['courses']    = $this->normalizeArray($p['courses'] ?? null);
+        $p['tags']       = $this->normalizeArray($p['tags'] ?? null);
 
-        // Fail
-        //return $this->json;
-        //
-
-        $this->client = new Client(['base_uri' => $this->uri()]);
-        $this->headers = [
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
-        ];
-        try {
-            $this->response = $this->client->request('POST', $this->uri(), [
-                'headers' => $this->headers,
-                'body' => $this->json
-            ]);
-        } catch (\Exception $e) {
-            /**
-             * If there is an exception; Client error;
-             */
-            if ($e->hasResponse()) {
-                //Change model status
-                $this->presentation = ($type == 'mediasite') ? MediasitePresentation::find($this->presentation->id) : ManualPresentation::find($this->presentation->id);
-                $this->presentation->status = 'failed';
-                $this->presentation->save();
-
-                //Write info to log
-                Log::error($e->getResponse()->getBody());
-
-                return $this->response = $e->getResponse()->getBody();
-            }
+        // Subtitles
+        $hasSubs = !empty($this->presentation->subtitles);
+        if (!$hasSubs) {
+            unset($p['subtitles']);
         }
-
-        if ($this->response->getBody()) {
-            //Change manualupdate status
-            $this->presentation = ($type == 'mediasite') ? MediasitePresentation::find($this->presentation->id) : ManualPresentation::find($this->presentation->id);
-            $this->presentation->status = 'notified fail';
-            $this->presentation->save();
-
-            return back()->withInput();
-
+        if (empty($this->presentation->autogenerate_subtitles)) {
+            //Hide flag and json
+            unset($p['autogenerate_subtitles'], $p['generate_subtitles']);
         } else {
-            //Change manualupdate status
-            $this->presentation = ($type == 'mediasite') ? MediasitePresentation::find($this->presentation->id) : ManualPresentation::find($this->presentation->id);
-            $this->presentation->status = 'notification error';
-            $this->presentation->save();
-            //TODO Store error
-            return $this->response->getBody();
+            //Hide flag
+            unset($p['autogenerate_subtitles']);
         }
+
+        // Title mapping
+        $titleSv = $this->presentation->title ?? '';
+        $titleEn = $this->presentation->title_en ?? $titleSv;
+
+        $p['title'] = ['sv' => $titleSv, 'en' => $titleEn];
+
+        // Remove nulls to keep payload clean
+        return $this->removeNulls($p);
     }
 
-    public function sendDelete()
+    private function normalizeArray(mixed $value): array
     {
-        $this->client = new Client(['base_uri' => $this->base_uri()]);
-        $this->headers = [
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json'
-        ];
+        return is_array($value) ? array_values($value) : [];
+    }
 
-       $this->auth = Collection::make([
-            'auth' => $this->storeauth()
-        ]);
-        $this->auth = $this->auth->toJson(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-
-        try {
-            $this->response = $this->client->request('DELETE', $this->base_uri() . '/' . $this->presentation->id, [
-                'headers' => $this->headers,
-                'body' => $this->auth
-            ]);
-        } catch (\Exception $e) {
-            /**
-             * If there is an exception; Client error;
-             */
-            if ($e->hasResponse()) {
-                return $this->response = $e->getResponse()->getBody();
+    private function removeNulls(array $arr): array
+    {
+        return array_filter($arr, static function ($v) {
+            if (is_array($v)) {
+                return count($v) > 0;
             }
+            return $v !== null;
+        });
+    }
+
+    private function handleSendFailure(string $type, string $reason): RedirectResponse
+    {
+        // Fail ManualPresentation
+        $model = ManualPresentation::find($this->presentation->id);
+        if ($model) {
+            $model->status = 'failed';
+            $model->save();
         }
 
-        if ($this->response->getBody()) {
-            return true;
-        } else {
-            //TODO Error handling
-            return json_decode($this->response->getBody(), true);
+        Log::error('PlayStoreNotify: send failed', ['reason' => $reason]);
+
+        $message = App::isLocale('swe')
+            ? 'Något gick fel med uppladdningen'
+            : 'Something went wrong with the upload';
+
+        return redirect('/')->with(['message' => $message]);
+    }
+
+    private function assertValidType(string $type): void
+    {
+        if (!in_array($type, [self::TYPE_DEFAULT, self::TYPE_EDIT], true)) {
+            throw new \InvalidArgumentException("Invalid type '{$type}'.");
         }
     }
 
@@ -333,16 +215,6 @@ class PlayStoreNotify extends Model
         return $this->system_config['store']['notify_uri'];
     }
 
-    private function mediasite_uri()
-    {
-        $this->file = base_path() . '/systemconfig/play.ini';
-        if (!file_exists($this->file)) {
-            $this->file = base_path() . '/systemconfig/play.ini.example';
-        }
-        $this->system_config = parse_ini_file($this->file, true);
-
-        return $this->system_config['store']['notify_mediasite_uri'];
-    }
 
     private function storeauth()
     {

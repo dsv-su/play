@@ -25,6 +25,7 @@ use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -323,12 +324,34 @@ class EditController extends Controller
 
                 }
                 // 9) Subtitles
-                 if (!empty($data['autosub'])) {
-                     $presentation->autogenerate_subtitles = true;
+                if (!empty($data['autosub'])) {
+                    $presentation->autogenerate_subtitles = true;
                     $presentation->sublanguage = $data['autosub_language'] ?? null;
+
+                    // Find the stream where PlayAudio is true
+                    $audioStream = collect($streams ?? [])
+                        ->firstWhere('audio', true);
+
+                    // Fallback: use 'main' if no such stream found
+                    $sourceName = $audioStream->name ?? 'main';
+
+                    // Build subtitle generation data
+                    $generated = [
+                        'type' => 'whisper',
+                        'source' => $sourceName,
+                    ];
+
+                    if ($presentation->sublanguage) {
+                        $generated['language'] = $presentation->sublanguage;
+                    }
+
+                    $generatedsubtitles['Generated'] = Collection::make($generated);
+                    $presentation->generate_subtitles = $generatedsubtitles;
                 }
 
-                 //Manually uploaded subtitles
+
+
+                //Manually uploaded subtitles
                 if (!empty($data['add_sub'])) {
                     foreach ($data['add_sub'] as $filename => $path) {
                         // Normalize the incoming relative path
@@ -421,7 +444,7 @@ class EditController extends Controller
 
             // Send notify
             $notify = new PlayStoreNotify($presentation);
-            $notify->sendSuccess('edit');
+return            $notify->sendSuccess('edit');
 
             // Clear download storage
             Artisan::call('download:clear');
