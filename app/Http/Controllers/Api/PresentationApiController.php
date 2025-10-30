@@ -15,6 +15,9 @@ use App\Models\Video;
 use App\Models\tokenHandler;
 use App\Services\Api\CatchAll;
 use App\Services\Course\CourseStoreOrUpdate;
+use App\Services\PacketHandler\Package;
+use App\Services\Pending\Pending;
+use App\Services\Pending\PendingHandler;
 use App\Services\PermissionHandler\PermissionHandler;
 use App\Services\Presenter\PresenterStore;
 use App\Services\Stream\StreamsStore;
@@ -261,6 +264,8 @@ class PresentationApiController extends Controller
      */
     private function applySharedWrites(PresentationRequest $request, Video $video): void
     {
+        (new Package($request))->presentation();
+        (new PendingHandler($request))->handle();
         (new PermissionHandler($request, $video))->setPermission();
         (new PresenterStore())->presenter($request, $video);
         (new CourseStoreOrUpdate($request, $video))->store();

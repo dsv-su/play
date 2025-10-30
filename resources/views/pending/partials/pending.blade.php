@@ -19,6 +19,9 @@
         @include('home.partials.studyadmin')
         @include('home.partials.courses')
         @include('home.partials.description')
+        <div class="pt-1 pb-1">
+            @include('pending.partials.progress')
+        </div>
     </div>
-    @include('pending.partials.progress')
+
 </div>

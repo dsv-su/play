@@ -25,7 +25,7 @@ final class VideoStore
         $videoId = data_get($pkg, 'pkg_id');
         $video = Video::firstOrNew(['id' => $videoId]);
 
-        // Build attributes cleanly
+        // Build attributes
         $video->fill([
             'origin'          => $this->request->get('origin'),
             'notification_id' => $this->request->get('jobid'),
@@ -51,6 +51,7 @@ final class VideoStore
     {
         // Treat anything as "has pending items" => state=false
         $pendingItems = Arr::wrap($pending);
+
         return count(array_filter($pendingItems, static fn($v) => !empty($v))) === 0;
     }
 

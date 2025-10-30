@@ -9,22 +9,26 @@ class PendingPresentations extends Component
 {
     public $pendingvideos;
 
-    public function mount()
+    public function pending()
     {
-        $this->pendingvideos = Video::query()
-            ->select()
+        return Video::query()
             ->where('state', false)
-            ->latest('creation')
+            ->latest('created_at')
             ->with([
                 'video_course:id,video_id,course_id',
-                'video_course.course:id,name,designation'
+                'video_course.course:id,name,designation',
+                'pending:id,video_id,progress',
             ])
             ->get();
     }
 
-
     public function render()
     {
-        return view('livewire.home.pending-presentations');
+        $pendingvideos = $this->pending();
+
+        $this->pendingvideos = $pendingvideos;
+
+        return view('livewire.home.pending-presentations', compact('pendingvideos'));
     }
+
 }

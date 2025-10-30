@@ -25,12 +25,13 @@ class Video extends Model
     //TODO Remove presentation attribute
     protected $fillable = [
         'id', 'title', 'title_en', 'thumb', 'creation', 'origin', 'notification_id', 'subtitles', 'state',
-        'presenter', 'duration', 'thumb', 'category_id', 'description', 'visibility', 'unlisted', 'sources', 'presentation'
+        'presenter', 'duration', 'thumb', 'category_id', 'description', 'visibility', 'unlisted', 'sources', 'presentation',
+        'progress'
     ];
     protected $table = 'videos';
 
     //Playlist
-    protected $appends = ['link', 'type'];
+    protected $appends = ['link', 'type', 'progress'];
 
     protected $casts = [
         'permission_type' => 'string',
@@ -40,6 +41,16 @@ class Video extends Model
         'unlisted'   => 'boolean',
         'published_at' => 'datetime',
     ];
+
+    public function getProgressAttribute()
+    {
+        return optional($this->pending)->progress;
+    }
+
+    public function pending()
+    {
+        return $this->hasOne(Pending::class, 'video_id');
+    }
 
     public function tagsRelation(): BelongsToMany
     {
