@@ -82,6 +82,4 @@ class ManualPresentation extends Model
         $this->attributes['sources'] = json_encode($value);
     }
 
-
-
 }
