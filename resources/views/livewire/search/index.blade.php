@@ -99,7 +99,7 @@
                                     {{ __("Courses") }}
                                 </h4>
 
-                                <div class="space-y-2">
+                                <div class="space-y-2 mb-2">
                                     @foreach($courses as $c)
                                         @php
                                             $docId = (string) ($c->id ?? $c->getKey());
@@ -120,13 +120,14 @@
                                                             dark:border-slate-800 dark:hover:bg-slate-800 dark:active:bg-slate-700">
 
                                                 <div class="flex items-start gap-2">
+                                                    {{--}}
                                                     <svg class="w-4 h-4 sm:w-6 sm:h-6 text-gray-800 dark:text-white shrink-0"
                                                          aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                          viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                               d="M20 14H4m6.5 3L8 20m5.5-3 2.5 3M4.88889 17H19.1111c.4909 0 .8889-.4157.8889-.9286V4.92857C20 4.41574 19.602 4 19.1111 4H4.88889C4.39797 4 4 4.41574 4 4.92857V16.0714c0 .5129.39797.9286.88889.9286ZM13 14v-3h4v3h-4Z"/>
                                                     </svg>
-
+                                                    {{--}}
                                                     <div class="font-semibold text-xs sm:text-base leading-tight min-w-0 truncate text-slate-900 dark:text-slate-100">
                                                         @if($des){!! $des !!}@else{{ e($des) }}@endif
                                                         @if($sem)&nbsp;<span class="text-gray-700 dark:text-slate-300">{!! $sem !!}</span>@endif
@@ -178,12 +179,14 @@
                                                             dark:border-slate-800 dark:hover:bg-slate-800 dark:active:bg-slate-700">
 
                                                 <div class="flex items-start gap-2">
+                                                    {{--}}
                                                     <svg class="w-5 h-5 sm:w-6 sm:h-6 text-gray-800 dark:text-white shrink-0"
                                                          aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                                          fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-width="2"
                                                               d="M7 17v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3Zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
                                                     </svg>
+                                                    {{--}}
                                                     <div class="font-medium text-sm sm:text-base min-w-0 truncate text-slate-900 dark:text-slate-100">
                                                         {!! $name !!}
                                                     </div>
@@ -206,7 +209,7 @@
                                     {{ __("Tags") }}
                                 </h4>
 
-                                <div class="space-y-2">
+                                <div class="space-y-2 mb-2">
                                     @foreach($tags as $t)
                                         @php
                                             $docId = (string) ($t->id ?? $t->getKey());
@@ -222,13 +225,14 @@
                                                             border-slate-200 hover:bg-blue-50 active:bg-blue-100
                                                             dark:border-slate-800 dark:hover:bg-slate-800 dark:active:bg-slate-700">
                                                 <div class="flex items-start gap-2">
+                                                    {{--}}
                                                     <svg class="w-5 h-5 sm:w-6 sm:h-6 text-gray-800 dark:text-white shrink-0"
                                                          aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                          viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                               d="M15.2 6H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11.2a1 1 0 0 0 .747-.334l4.46-5a1 1 0 0 0 0-1.332l-4.46-5A1 1 0 0 0 15.2 6Z"/>
                                                     </svg>
-
+                                                    {{--}}
                                                     <div class="text-sm sm:text-base font-medium min-w-0 truncate text-slate-900 dark:text-slate-100">
                                                         {!! $name !!}
                                                     </div>
@@ -352,7 +356,7 @@
                                                 <!-- Title row -->
                                                 <h3 class="text-sm sm:text-base font-semibold leading-tight text-slate-900 dark:text-slate-100">
                                                     <span class="flex items-start gap-2">
-                                                      <svg class="w-5 h-5 sm:w-6 sm:h-6 text-gray-800 dark:text-white shrink-0"
+                                                      <svg class="w-5 h-5 sm:w-6 sm:h-6 text-blue-800 dark:text-white shrink-0"
                                                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                            viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
