@@ -23,8 +23,8 @@
 
     <!-- preview template can keep its <div> wrapper -->
     <template data-hs-file-upload-preview="">
-        <div class="w-full h-full flex justify-center items-center">
-            <img class="object-contain max-w-full max-h-full mx-auto" data-dz-thumbnail="">
+        <div class="relative aspect-video w-full overflow-hidden rounded-t-sm">
+            <img class="absolute inset-0 h-full w-full object-cover" data-dz-thumbnail="">
         </div>
     </template>
 

@@ -10,9 +10,9 @@
 
                 <!-- LEFT COLUMN: Image + Status -->
                 <div class="flex flex-col items-center gap-0">
-                    <img class="p-4 rounded-sm w-full h-auto object-contain
-                @if($visibility == 'private' or $visibility == 'unlisted') opacity-20
-                @endif"
+                    <img class="p-4 rounded-sm w-full max-h-64 object-contain
+                        @if($visibility == 'private' or $visibility == 'unlisted') opacity-20
+                        @endif"
                          src="{{$video->thumb}}"
                          alt="Presentation Thumb">
                     <div class="flex mb-3">
