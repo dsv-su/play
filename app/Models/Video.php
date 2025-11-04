@@ -245,16 +245,6 @@ class Video extends Model
         return $this->hasMany(VideoCourse::class);
     }
 
-    /*public function hasCourseDesignation($designation)
-    {
-        foreach ($this->courses() as $course) {
-            if ($course->designation == $designation) {
-                return true;
-            }
-        }
-        return false;
-    }*/
-
     public function hasCourseDesignation($designation)
     {
         foreach ($this->courses as $course) {

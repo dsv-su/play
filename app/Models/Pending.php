@@ -13,6 +13,10 @@ class Pending extends Model
 
     protected $fillable = ['id', 'video_id', 'handlers', 'progress'];
 
+    protected $casts = [
+        'handlers' => 'array',
+    ];
+
     public function video()
     {
         return $this->belongsTo(Video::class);

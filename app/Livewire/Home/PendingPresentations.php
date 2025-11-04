@@ -17,7 +17,7 @@ class PendingPresentations extends Component
             ->with([
                 'video_course:id,video_id,course_id',
                 'video_course.course:id,name,designation',
-                'pending:id,video_id,progress',
+                'pending:id,video_id,progress,handlers,updated_at',
             ])
             ->get();
     }
