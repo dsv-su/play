@@ -10,12 +10,15 @@
 
                 <!-- LEFT COLUMN: Image + Status -->
                 <div class="flex flex-col items-center gap-0">
-                    <img class="p-4 rounded-sm w-full max-h-64 object-contain
-                        @if($visibility == 'private' or $visibility == 'unlisted') opacity-20
-                        @endif"
-                         src="{{$video->thumb}}"
-                         alt="Presentation Thumb">
-                    <div class="flex mb-3">
+                    {{--}}<div class="relative w-full h-64">{{--}}
+                    <div class="relative aspect-video w-full overflow-hidden rounded-t-sm">
+                        <img
+                            class="absolute inset-0 h-full w-full object-cover
+                            @if($visibility == 'private' or $visibility == 'unlisted') opacity-20 @endif"
+                            src="{{$video->thumb}}"
+                            alt="Presentation Thumb">
+                    </div>
+                    <div class="flex mt-2 mb-3">
                         {{__("Status:")}} &nbsp;
                         <span class="border
                     @if($visibility == 'visible') border-blue-400 bg-blue-100 text-blue-800
