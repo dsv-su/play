@@ -37,7 +37,7 @@
         </div>
     @endif
 
-    <div class="absolute bottom-0 left-0 z-20 flex items-center bg-gray-800 border border-gray-800 rounded gap-0.5">
+    <div class="absolute bottom-0 left-0 z-20 flex items-center bg-gray-800 border border-gray-800 rounded gap-0.5 pointer-events-auto">
         @include('home.partials.permission-buttons')
     </div>
 </div>

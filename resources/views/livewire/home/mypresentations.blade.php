@@ -73,3 +73,11 @@
         <!-- End Slider -->
     @endif
 </div>
+<script>
+    document.addEventListener('livewire:load', () => {
+        window.HSStaticMethods?.autoInit();
+        Livewire.hook('message.processed', () => {
+            window.HSStaticMethods?.autoInit();
+        });
+    });
+</script>

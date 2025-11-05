@@ -15,7 +15,7 @@
     </div>
 
     <!-- Card Body -->
-    <div class="p-2 md:p-3 relative min-w-0 overflow-x-clip">
+    <div class="p-2 md:p-3 relative min-w-0 overflow-x-clip pointer-events-none">
         <div class="flex items-center flex-wrap gap-1 min-w-0">
             @include('home.partials.title')
             @include('home.partials.presenters')
