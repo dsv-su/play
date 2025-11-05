@@ -10,7 +10,7 @@
         </div>
 
         <div class="col-span-3 inline-flex items-center px-5 bg-sudepartment min-w-0">
-          <span class="self-center text-base font-normal font-sudepartment whitespace-pre-line text-white truncate">
+          <span class="-mt-4 self-center text-base font-normal font-sudepartment whitespace-pre-line text-white truncate">
             {{ __('Department of Computer and Systems Sciences') }}
           </span>
         </div>
@@ -47,7 +47,7 @@
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>
                 <!-- Displayname from shibboleth -->
-                {{ app()->make('play_user') }} | A:{{app()->make('play_auth')}} | R:{{app()->make('play_role')}}
+                {{ app()->make('play_user') }}
 
             </div>
 

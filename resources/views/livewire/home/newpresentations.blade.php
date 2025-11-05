@@ -22,10 +22,11 @@
         <!-- Transparent background -->
         <div class="hs-carousel w-full overflow-hidden bg-transparent rounded-lg">
             <div class="relative min-h-72 ">
-                <div class="hs-carousel-body absolute top-0 bottom-0 start-0 flex flex-nowrap opacity-0 transition-transform duration-700 hs-carousel-dragging:transition-none hs-carousel-dragging:cursor-grabbing">
+                <div class="hs-carousel-body absolute top-0 bottom-0 start-0 flex flex-nowrap opacity-0 transition-transform duration-700
+                            hs-carousel-dragging:transition-none hs-carousel-dragging:cursor-grabbing" style="touch-action: pan-y;">
                     @foreach($newvideos as $video)
                         <div class="hs-carousel-slide px-0.5">
-                            <div class="flex justify-center h-full ">
+                            <div class="flex justify-center h-full pointer-events-none">
                                 @include('home.partials.presentation')
                             </div>
                         </div>
@@ -66,46 +67,4 @@
         </div>
     </div>
     <!-- End Slider -->
-
 </div>
-{{--}}
-<script>
-    (function () {
-        // tiny debounce to avoid spamming on drag
-        const debounce = (fn, ms=80) => {
-            let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
-        };
-
-        function attachObserver() {
-            const root = document.getElementById('new-on-play-carousel');
-            if (!root) return;
-
-            const infoEl = root.querySelector('.hs-carousel-info-current');
-            if (!infoEl) return;
-
-            const pushIndex = debounce(() => {
-                const btn = document.getElementById('prev');
-                const display = parseInt(infoEl.textContent, 10);
-                const index = isNaN(display) ? 0 : Math.max(0, display - 1);
-                if(index > 0) btn.style.display = "block";
-                if(index <= 0) btn.style.display = "none";
-
-            });
-
-            // Observe the number Preline updates
-            const obs = new MutationObserver(pushIndex);
-            obs.observe(infoEl, { characterData: true, childList: true, subtree: true });
-
-            // Fallback on button/dot clicks to schedule a push right after UI updates
-            root.addEventListener('click', (e) => {
-                if (e.target.closest('.hs-carousel-next, .hs-carousel-prev, .hs-carousel-pagination, .hs-carousel-pagination-item')) {
-                    requestAnimationFrame(pushIndex);
-                }
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', attachObserver);
-        document.addEventListener('livewire:navigated', attachObserver); // for morphs
-    })();
-</script>
-{{--}}
