@@ -20,7 +20,7 @@
             @include('home.partials.title')
             @include('home.partials.presenters')
             {{--}}<div class="ml-auto">{{--}}
-            <div class="absolute top-2 right-2">
+            <div class="absolute top-2 right-2 pointer-events-auto">
                 <!-- Share modal -->
                 @include('livewire.search.partials.share-modal')
             </div>

@@ -8,7 +8,7 @@ class TestController extends Controller
 {
     public function index()
     {
-
+        
     }
 
     public function server()

@@ -56,7 +56,7 @@ class Playback
                     //Presentation visibility is set to default
 
                     //Check course association
-                    if (!count($video->courses()) > 0) {
+                    if (!count($video->courses) > 0) {
                         return $next($request);
                     }
 
