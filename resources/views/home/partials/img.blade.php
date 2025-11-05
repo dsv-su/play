@@ -1,5 +1,5 @@
 <div class="relative aspect-video w-full overflow-hidden rounded-t-sm select-none pointer-events-none">
-    <img
+    <img draggable="false"
         class="absolute inset-0 h-full w-full object-cover
                @if($video->hidden) opacity-50 @endif"
         loading="lazy"
