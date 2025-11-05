@@ -26,7 +26,7 @@
                             hs-carousel-dragging:transition-none hs-carousel-dragging:cursor-grabbing" style="touch-action: pan-y;">
                     @foreach($newvideos as $video)
                         <div class="hs-carousel-slide px-0.5">
-                            <div class="flex justify-center h-full pointer-events-none">
+                            <div class="flex justify-center h-full">
                                 @include('home.partials.presentation')
                             </div>
                         </div>
