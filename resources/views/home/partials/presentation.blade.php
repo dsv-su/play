@@ -7,7 +7,7 @@
     <div class="relative">
 
         <a target="_blank" rel="noopener noreferrer" href="{{ route('player.show', ['video' => $video]) }}"
-           class="absolute inset-0 z-10" aria-label="Open video-{{$loop->index}}"></a>
+           class="absolute inset-0 z-10 hs-carousel-dragging:pointer-events-none" aria-label="Open video-{{$loop->index}}"></a>
 
         @include('home.partials.img')
         @include('home.partials.duration')
