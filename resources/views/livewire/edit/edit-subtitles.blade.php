@@ -4,12 +4,12 @@
     <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
         <!-- Subtitles list -->
         <div class="min-w-0 bg-blue-50 border border-blue-500 text-sm text-gray-700 rounded-lg p-4 sm:p-5 lg:p-6 dark:bg-blue-600/[.15]">
-            <h3 class="mb-3 text-base sm:text-lg font-semibold text-blue-700 dark:text-white">Subtitles list</h3>
+            <h3 class="mb-3 text-base sm:text-lg font-semibold text-blue-700 dark:text-white">{{__("Subtitles list")}}</h3>
             @include('livewire.edit.partials.form.subtitle-files')
         </div>
         <!-- Upload -->
         <div class="min-w-0 border border-gray-300 text-sm text-gray-700 rounded-lg p-4 sm:p-5 lg:p-6 dark:bg-yellow-600/[.15]">
-            <h3 class="mb-4 text-base sm:text-lg font-semibold text-blue-600 dark:text-white">Subtitles</h3>
+            <h3 class="mb-4 text-base sm:text-lg font-semibold text-blue-600 dark:text-white">{{__("Subtitles")}}</h3>
 
             <div x-data="fileUpload()">
             @include('livewire.edit.partials.form.subtitles-upload-progress')
@@ -27,13 +27,12 @@
                         class="absolute inset-0 z-30 flex items-center justify-center bg-blue-500/90"
                         x-show="isDropping"
                     >
-                        <span class="text-2xl sm:text-3xl text-white">Release file to upload!</span>
+                        <span class="text-2xl sm:text-3xl text-white">{{__("Release file to upload!")}}</span>
                     </div>
 
-                    <label
-                        class="py-3 sm:py-4 flex flex-col items-center justify-center w-full bg-white dark:bg-neutral-800 border border-susecondary shadow cursor-pointer rounded-2xl hover:bg-slate-50 dark:hover:bg-neutral-700"
-                        for="file-upload"
-                    >
+                    <label class="py-3 sm:py-4 flex flex-col items-center justify-center w-full bg-white dark:bg-neutral-800 border border-susecondary
+                                    shadow cursor-pointer rounded-2xl hover:bg-slate-50 dark:hover:bg-neutral-700"
+                            for="file-upload">
                         <span class="inline-flex justify-center items-center size-12 sm:size-16 bg-gray-100 text-gray-800 rounded-full dark:bg-neutral-700 dark:text-neutral-200">
                               <svg class="shrink-0 h-5 w-5 sm:h-6 sm:w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -43,21 +42,21 @@
                               </svg>
                         </span>
 
-                        <div class="mt-3 sm:mt-4 flex flex-wrap justify-center text-sm sm:text-base leading-6 text-gray-600 dark:text-neutral-300">
-                            <span class="pe-1 font-medium text-gray-800 dark:text-neutral-200">
-                                Drop your
-                                <span class="bg-white dark:bg-neutral-800 font-semibold text-blue-600 dark:text-blue-500 hover:text-blue-700 dark:hover:text-blue-600 rounded-lg decoration-2 hover:underline focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2">
-                                    subtitle-files (WebVTT)
+                        <div class="mt-3 sm:mt-4 flex flex-col items-center text-center text-sm sm:text-base leading-6 text-gray-600 dark:text-neutral-300">
+                                <span class="pe-1 font-medium text-gray-800 dark:text-neutral-200">
+                                    {{ __("Drop your") }}
+                                    <span class="bg-white dark:bg-neutral-800 font-semibold text-blue-600 dark:text-blue-500 hover:text-blue-700 dark:hover:text-blue-600 rounded-lg decoration-2 hover:underline focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2">
+                                        {{ __("subtitle-files (WebVTT)") }}
+                                    </span>
+                                    {{ __("here or") }}
                                 </span>
-                                here or
-                            </span>
-                            <span class="bg-white dark:bg-neutral-800 font-semibold text-blue-600 dark:text-blue-500 hover:text-blue-700 dark:hover:text-blue-600 rounded-lg decoration-2 hover:underline focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2">
-                                browse
-                            </span>
+                                <span class="bg-white dark:bg-neutral-800 font-semibold text-blue-600 dark:text-blue-500 hover:text-blue-700 dark:hover:text-blue-600 rounded-lg decoration-2 hover:underline focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2">
+                                    {{ __("browse") }}
+                                </span>
                         </div>
 
                         <p class="mt-1 text-xs sm:text-sm text-gray-400 dark:text-neutral-400">
-                            Allowed file types: .vtt
+                            {{__("Allowed file types: .vtt")}}
                         </p>
                     </label>
 

@@ -5,8 +5,10 @@
     </legend>
 
     <div class="p-4 sm:p-6 md:p-8">
-        <div class="flex flex-row gap-x-4"> <!-- Parent container for 2 columns -->
-            <!-- Left Column -->
+        {{--}}<div class="flex flex-row gap-x-4"> {{--}}
+        <div class="flex flex-col md:flex-row gap-4">
+
+        <!-- Left Column -->
             @include('livewire.edit.partials.form.visibility')
             <!-- Right Column -->
             @include('livewire.edit.partials.form.category')

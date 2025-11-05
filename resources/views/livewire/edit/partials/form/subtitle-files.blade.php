@@ -1,5 +1,5 @@
 <!-- Existing subtitles -->
-<h3 class="mb-4 text-blue-600 font-semibold dark:font-medium dark:text-white">Existing subtitles files: {{count($subtitles)}}</h3>
+<h3 class="mb-4 text-blue-600 font-semibold dark:font-medium dark:text-white">{{__("Existing subtitles files")}}: {{count($subtitles)}}</h3>
 <div class="mb-2 flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
     @foreach($subtitles as $key => $subtitle)
         <!-- Body -->
@@ -41,7 +41,7 @@
                                     <line x1="10" x2="10" y1="11" y2="17"></line>
                                     <line x1="14" x2="14" y1="11" y2="17"></line>
                                 </svg>
-                                <span class="sr-only">Delete</span>
+                                <span class="sr-only">{{__("Delete")}}</span>
                             </button>
 
                             <button wire:click.prevent="downloadExistingFile('{{$key}}')"
@@ -52,7 +52,7 @@
                                     <path d="M8 14l4 4 4-4"></path>
                                     <path d="M5 20h14"></path>
                                 </svg>
-                                <span class="sr-only">Download All</span>
+                                <span class="sr-only">{{__("Download All")}}</span>
                             </button>
                         </div>
                     </div>
@@ -61,14 +61,14 @@
                 </div>
             </div>
         @else
-            No File
+            {{__("No File")}}
         @endif
             <!-- End Body -->
     @endforeach
 
 </div>
 <!-- Uploaded subtitles -->
-<h3 class="mb-4 text-blue-600 font-semibold dark:font-medium dark:text-white">Uploaded subtitles files: {{count($savedfiles)}}</h3>
+<h3 class="mb-4 text-blue-600 font-semibold dark:font-medium dark:text-white">{{__("Uploaded subtitles files")}}: {{count($savedfiles)}}</h3>
 <!-- File card -->
 <div class="mb-2 flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
     @foreach($savedfiles as $key => $pp_file)
@@ -112,9 +112,9 @@
                                     wire:change="setLanguagetoSubtitle($event.target.value)"
                                     class="w-40 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm
                                             focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                                <option value="">-- Select a language --</option>
-                                <option value="english">English</option>
-                                <option value="swedish">Swedish</option>
+                                <option value="">-- {{__("Select a language")}} --</option>
+                                <option value="english">{{__("English")}}</option>
+                                <option value="swedish">{{__("Swedish")}}</option>
                             </select>
                             @endif
 

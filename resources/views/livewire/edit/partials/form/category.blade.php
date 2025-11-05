@@ -1,6 +1,6 @@
-<div class="flex flex-col gap-y-1 w-1/2">
+<div class="flex flex-col gap-y-1 w-full md:w-1/2">
     <label for="duration" class="font-sans block mb-1 text-sm font-medium text-gray-900 dark:text-white">
-        {{__("Category:")}}
+        {{__("Category")}}
     </label>
 
     @php

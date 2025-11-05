@@ -28,22 +28,25 @@
 
     <!-- Header with Logo, Desktop Nav, and Mobile Toggle -->
     <div class="flex items-center justify-between bg-dsv border-b border-susecondary px-4 py-2 dark:bg-gray-800">
-        <!-- Logo -->
-        @include('navbar.partials.logo')
+        <!-- Logo (always left) -->
+    @include('navbar.partials.logo')
 
-        <!-- Desktop Navigation -->
-        @include('navbar.partials.desktopmenu')
+    <!-- Desktop Navigation (center on md+; usually hidden on mobile) -->
+    @include('navbar.partials.desktopmenu')
 
-        <!-- Pending presentations -->
-        <livewire:home.pending-indicator />
-
-        <!-- Mobile Menu Toggle Button -->
-        @include('navbar.partials.mobile_menu_toggle')
+    <!-- Right controls: pending + mobile menu toggle (sit together on the right) -->
+        <div class="ml-auto flex items-center gap-2">
+            <!-- Theme toggle -->
+            @include('navbar.partials.dark_toggle')
+            <!-- Pending presentations -->
+            <livewire:home.pending-indicator />
+            <!-- Mobile Menu Toggle Button -->
+            @include('navbar.partials.mobile_menu_toggle')
+        </div>
     </div>
 
     <!-- Mobile Navigation Menu -->
     @include('navbar.partials.mobilemenu')
-
 
     <!-- Desktop Dropdown Menu (only visible on md and up) -->
     @include('navbar.partials.desktop_dropdown')

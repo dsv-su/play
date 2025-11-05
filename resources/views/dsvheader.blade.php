@@ -29,9 +29,9 @@
 
         <!-- Center: Department name -->
         <div class="hidden sm:flex items-center col-span-2 pl-5 bg-sudepartment min-w-0">
-      <span class="text-2xl font-normal font-sudepartment text-white truncate">
-        {{ __('Department of Computer and Systems Sciences') }}
-      </span>
+          <span class="text-2xl font-normal font-sudepartment text-white truncate">
+            {{ __('Department of Computer and Systems Sciences') }}
+          </span>
         </div>
 
         <!-- Right: user / actions -->
@@ -53,9 +53,9 @@
 
             <!-- Theme toggle -->
             <button
-                id="theme-toggle"
+                {{--}}id="theme-toggle"{{--}}
                 type="button"
-                class="flex items-center justify-center w-7 h-7 rounded-md
+                class="theme-toggle flex items-center justify-center w-7 h-7 rounded-md
                    text-white bg-transparent border-none
                    hover:text-gray-700 dark:hover:text-blue-300
                    focus:ring-2 focus:ring-gray-400 dark:focus:ring-blue-600"

@@ -2,7 +2,7 @@
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
         <div class="flex flex-col gap-y-1">
             <label for="course" class="font-sans block mb-1 text-sm font-medium text-gray-900 dark:text-white">
-                {{__("Tags:")}}
+                {{__("Tags")}}
             </label>
 
             <div>
@@ -13,7 +13,7 @@
         <!-- Column right -->
         <div class="flex flex-col gap-y-2">
             <label for="course" class="font-sans block mb-1 text-sm font-medium text-gray-900 dark:text-white">
-                {{__("Tags:")}}
+                {{__("Tags")}}
             </label>
 
             <div class="flex flex-wrap gap-x-2 gap-y-1">
