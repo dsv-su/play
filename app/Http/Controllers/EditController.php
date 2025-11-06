@@ -246,7 +246,7 @@ class EditController extends Controller
 
                 if (!empty($data['individualpermission'])) {
                     foreach ($data['individualpermission'] as $perm) {
-                        $username   = $perm['uid']        ?? null;      // maps to your 'username' column
+                        $username   = $perm['uid'] ?? null;
                         $name       = trim($perm['name']  ?? '');
                         $permission = $perm['permission'] ?? 'read';    // default if missing
 
@@ -254,10 +254,16 @@ class EditController extends Controller
                             continue; // skip incomplete entries
                         }
 
-                        IndividualPermission::updateOrCreate(
+                        /*IndividualPermission::updateOrCreate(
                             ['video_id' => $video->id, 'username' => $username],
                             ['name' => $name, 'permission' => $permission]
-                        );
+                        );*/
+                        IndividualPermission::create([
+                            'video_id'   => $video->id,
+                            'username'   => $username,
+                            'name'       => $name,
+                            'permission' => $permission,
+                        ]);
                     }
                 }
 
@@ -351,8 +357,6 @@ class EditController extends Controller
                     $generatedsubtitles['Generated'] = Collection::make($generated);
                     $presentation->generate_subtitles = $generatedsubtitles;
                 }
-
-
 
                 //Manually uploaded subtitles
                 if (!empty($data['add_sub'])) {

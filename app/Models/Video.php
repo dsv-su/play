@@ -206,21 +206,6 @@ class Video extends Model
         return Carbon::createFromTimestamp($this->creation)->format('M d, Y');
     }
 
-    /*public function tags(): Collection
-    {
-        return $this->belongsToMany(Tag::class, 'video_tags', 'video_id', 'tag_id')->get();
-    }*/
-
-    /*public function courses(): Collection
-    {
-        return $this->belongsToMany(Course::class, VideoCourse::class, 'video_id', 'course_id')->get();
-    }*/
-
-    /*public function presenters(): Collection
-    {
-        return $this->belongsToMany(Presenter::class, 'video_presenters', 'video_id', 'presenter_id')->get();
-    }*/
-
     //New
     public function tags(): BelongsToMany
     {

@@ -36,6 +36,8 @@
 
     <!-- Right controls: pending + mobile menu toggle (sit together on the right) -->
         <div class="ml-auto flex items-center gap-2">
+            <!-- Carousel order -->
+            {{--}}@include('navbar.partials.carousel_order'){{--}}
             <!-- Theme toggle -->
             @include('navbar.partials.dark_toggle')
             <!-- Pending presentations -->
