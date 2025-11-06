@@ -14,7 +14,7 @@ class ManualPresentation extends Model
     use HasFactory;
     protected $fillable = ['jobid', 'pkg_id', 'status', 'type', 'user','upload_dir', 'jobid', 'video_id',
         'subtitles', 'sublanguage', 'title', 'title_en', 'created', 'presenters',
-        'courses','daisy_courses', 'tags', 'thumb','permission', 'entitlement',
+        'courses','daisy_courses', 'tags', 'thumb', 'permission', 'entitlement',
         'sources', 'autogenerate_subtitles', 'generate_subtitles', 'description'];
 
     protected $casts = [

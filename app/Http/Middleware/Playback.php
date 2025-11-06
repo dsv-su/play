@@ -93,7 +93,7 @@ class Playback
             }
 
             //Check if video belongs to course
-            if (count($video->courses()) >= 1) {
+            if (count($video->courses) >= 1) {
 
                 //Associated to one or more course
                 $staff = new StaffCheck();

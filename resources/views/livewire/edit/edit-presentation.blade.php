@@ -30,6 +30,31 @@
                                 text-xs font-medium px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-blue-400">
                             {{ __($visibility) }}
                         </span>
+                        <div class="flex items-center gap-x-3">
+                            <label for="hs-xs-switch" class="relative inline-block w-9 h-5 cursor-pointer">
+                                <input type="checkbox"
+                                       wire:model.live="render_thumb"
+                                       name="render_thumb"
+                                       id="hs-xs-switch"
+                                       class="peer sr-only">
+                                <span class="absolute inset-0 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-blue-600 dark:bg-neutral-700 dark:peer-checked:bg-blue-500 peer-disabled:opacity-50 peer-disabled:pointer-events-none"></span>
+                                <span class="absolute top-1/2 start-0.5 -translate-y-1/2 size-4 bg-white rounded-full shadow-xs transition-transform duration-200 ease-in-out peer-checked:translate-x-full dark:bg-neutral-400 dark:peer-checked:bg-white"></span>
+                            </label>
+                            <label for="hs-xs-switch" class="text-sm text-gray-500 dark:text-neutral-400">
+                                @if($render_thumb)
+                                    {{__("Regenerate thumbnail")}}
+                                @else
+                                    {{__("Keep original thumbnail")}}
+                                @endif
+                                    <button id="render-thumb-button" data-modal-toggle="render-thumb-modal" type="button"
+                                            class="inline-flex items-center justify-center align-middle ml-1 size-5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus-visible:ring focus-visible:ring-primary-500">
+                                        <svg class="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M8 9h2v5m-2 0h4M9.408 5.5h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                        </svg>
+                                    </button>
+                            </label>
+                        </div>
+
                     </div>
 
                     <!-- Img status message -->
@@ -81,6 +106,7 @@
                                 <input id="title_sv"
                                        type="text"
                                        name="title"
+                                       wire:model.live="title"
                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600
                                               block w-full p-3 @if($type == 'complete') dark:bg-blue-900 @else dark:bg-gray-700 @endif
                                                 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-200 dark:focus:ring-primary-500 dark:focus:border-primary-500"
@@ -112,6 +138,7 @@
                                 <input id="title_en"
                                        type="text"
                                        name="title_en"
+                                       wire:model.live="title_en"
                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600
                                               block w-full p-3 @if($type == 'complete') dark:bg-blue-900 @else dark:bg-gray-700 @endif
                                            dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-200 dark:focus:ring-primary-500 dark:focus:border-primary-500"
@@ -142,7 +169,8 @@
 
                             <div class="flex">
                                 <textarea id="description"
-                                        name="description"
+                                          name="description"
+                                          wire:model.live="description"
                                         class="h-32 sm:h-24 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600
                                                block w-full p-3 @if($type == 'complete') dark:bg-blue-900 @else dark:bg-gray-700 @endif
                                                 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-200 dark:focus:ring-primary-500 dark:focus:border-primary-500"

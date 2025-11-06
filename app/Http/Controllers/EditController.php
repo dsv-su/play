@@ -108,6 +108,9 @@ class EditController extends Controller
         if ($request->isMethod('post')) {
 
             // 1) Validate upfront
+            $request->merge([
+                'render_thumb' => $request->has('render_thumb'),
+            ]);
             $data = $request->validate([
                 'title'                   => ['required','string','max:255'],
                 'title_en'                => ['nullable','string','max:255'],
@@ -127,10 +130,12 @@ class EditController extends Controller
                 'autosub'                 => ['nullable', 'bool'],
                 'autosub_language'        => ['nullable', 'string'],
                 'add_sub'                 => ['array'],
-                'uploadedSubLanguage'     => ['required_with:add_sub','array']
+                'uploadedSubLanguage'     => ['required_with:add_sub','array'],
+                'render_thumb'            => ['nullable', 'bool']
             ]);
 
             $presentation = ManualPresentation::create();
+
             DB::transaction(function () use ($request, $video, $presentation, $data) {
 
                 $presentation->pkg_id = $video->id;
@@ -222,7 +227,6 @@ class EditController extends Controller
                 //Presenter array to ManualPresentation instance
                 $presentation->presenters = $presenter_array ?? null;
 
-
                 // 4) Group permission for the video
                 //    Normalize type from permission id
                 $permId = (int) $data['playback'];
@@ -256,7 +260,6 @@ class EditController extends Controller
                         );
                     }
                 }
-
 
                 // 6) Courses
                 VideoCourse::where('video_id', $video->id)->delete();
@@ -436,8 +439,12 @@ class EditController extends Controller
                 //Change status video
                 $video->state = 0;
                 $video->save();
-
             });
+
+            if(!$data['render_thumb']) {
+                $presentation->thumb = Str::afterLast($video->thumb, '/');
+                $presentation->save();
+            }
 
             // 9) Cache & background work
             Cache::flush();
@@ -795,8 +802,6 @@ class EditController extends Controller
                 ->with('message', __('The presentation has not been deleted').': '.$e->getMessage());
         }
     }
-
-
 
     private function storage()
     {

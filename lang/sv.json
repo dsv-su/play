@@ -456,5 +456,11 @@
     "Choose a language": "Välj ett språk",
     "Caution: This is not intended for language translation! Please be advised that this feature is not designed for accurate language translation.": "Varning: Det är inte avsett för språköversättning! Observera att den här funktionen inte är utformad för korrekt språköversättning.",
     "Operational disruption: We are currently experiencing technical issues with subtitle generation. Troubleshooting is in progress.": "Driftsstörning: Vi har för närvarande tekniska problem med undertextgenerering. Felsökning pågår.",
-    "Error: File not found!": "Error: Filen saknas!"
+    "Error: File not found!": "Error: Filen saknas!",
+    "More help?": "Behöver du mer hjälp?",
+    "If you need moore help contact helpdesk@dsv.su.se": "Om du behöver mer hjälp kontakta helpdesk@dsv.su.se",
+    "Enabling this option will regenerate the presentation thumbnail using the Swedish title, presenters, and description.\nIf you’ve uploaded a custom thumbnail, do not enable this setting, as it will overwrite your custom image.": "När du aktiverar det här alternativet återskapas presentationens miniatyrbild baserat på den svenska titeln, presentatörerna och beskrivningen.\nOm du har laddat upp en egen miniatyrbild bör du inte aktivera det här alternativet, eftersom din anpassade bild då skrivs över.",
+    "Thumbnail rerender": "Skapa ny miniatyr",
+    "Regenerate thumbnail": "Återskapa miniatyrbild",
+    "Keep original thumbnail": "Behåll originalminiatyrbilden"
 }

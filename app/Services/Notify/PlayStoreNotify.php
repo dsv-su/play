@@ -113,7 +113,7 @@ final class PlayStoreNotify
     {
         $p = $this->presentation->toArray();
 
-        // Remove fields that are noise
+        //Remove fields that are noise
         unset(
             $p['id'], $p['title_en'], $p['status'], $p['type'], $p['jobid'], $p['duration'],
             $p['sublanguage'], $p['user'], $p['user_email'], $p['local'],
@@ -121,16 +121,18 @@ final class PlayStoreNotify
             $p['entitlement'], $p['daisy_courses'], $p['created_at'], $p['updated_at']
         );
 
-        // Conditional removals
+        //Conditional removals
         if (empty($this->presentation->pkg_id))    unset($p['pkg_id']);
         if (empty($this->presentation->upload_dir)) unset($p['upload_dir']);
+        //Thumb should rerender
+        if (!empty($this->presentation->thumb) && $type == 'edit')    unset($p['thumb']);
 
         // Normalize arrays
         $p['presenters'] = $this->normalizeArray($p['presenters'] ?? null);
         $p['courses']    = $this->normalizeArray($p['courses'] ?? null);
         $p['tags']       = $this->normalizeArray($p['tags'] ?? null);
 
-        // Subtitles
+        //Subtitles
         $hasSubs = !empty($this->presentation->subtitles);
         if (!$hasSubs) {
             unset($p['subtitles']);

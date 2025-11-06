@@ -12,8 +12,12 @@ class EditPresentation extends Component
     /** Core state */
     public Video $video;
     public string $type = '';
+    public string $title;
+    public string $title_en;
+    public ?string $description = null;
 
     /** UI fields */
+    public bool $render_thumb = false;
     public string $date = '';                 // yyyy-mm-dd for inputs
 
     public array $categories = [];            // collection->toArray()
@@ -32,6 +36,11 @@ class EditPresentation extends Component
     {
         $this->video = $video->loadMissing(['courses', 'category']);
         $this->type = $type;
+
+        //Populate fields
+        $this->title = $this->video->title;
+        $this->title_en = $this->video->title_en;
+        $this->description = $this->video->description;
 
         // Dates: incoming `$video->creation` assumed unix timestamp
         $this->date = $this->formatTimestampForInput($this->video->creation);
@@ -54,6 +63,14 @@ class EditPresentation extends Component
             : ($this->video->visibility ? 'visible' : 'private');
 
         $this->download = (bool)$this->video->download;
+    }
+
+    public function updated($name, $value)
+    {
+        // Turn on thumb rendering when either title field changes
+        if (in_array($name, ['title', 'title_en', 'description'])) {
+            $this->render_thumb = true;
+        }
     }
 
     /** Keep the three states in sync with any UI toggles */
