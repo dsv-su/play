@@ -254,10 +254,6 @@ class EditController extends Controller
                             continue; // skip incomplete entries
                         }
 
-                        /*IndividualPermission::updateOrCreate(
-                            ['video_id' => $video->id, 'username' => $username],
-                            ['name' => $name, 'permission' => $permission]
-                        );*/
                         IndividualPermission::create([
                             'video_id'   => $video->id,
                             'username'   => $username,
