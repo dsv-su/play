@@ -48,12 +48,19 @@
                 </svg>
                 <!-- Displayname from shibboleth -->
                 {{ app()->make('play_user') }}
+                <span class="ml-1 inline-flex items-center gap-x-1 py-0.3 px-1 rounded-[9px] text-[8px]
+                            font-medium text-gray-300 border border-gray-300">
+                    @if(in_array(app()->make('play_role'), ['Courseadmin', 'Uploader', 'Staff']))
+                        {{__("DSV Staff")}}
+                    @else
+                        {{app()->make('play_role')}}
+                    @endif
+                </span>
 
             </div>
 
             <!-- Theme toggle -->
             <button
-                {{--}}id="theme-toggle"{{--}}
                 type="button"
                 class="theme-toggle flex items-center justify-center w-7 h-7 rounded-md
                    text-white bg-transparent border-none
@@ -147,4 +154,3 @@
      style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(1443px, 692px);" data-popper-placement="top">{{ __('Change language') }}
     <div class="tooltip-arrow" data-popper-arrow></div>
 </div>
-

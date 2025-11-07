@@ -8,7 +8,7 @@
                     <path d="M12 8h.01"></path>
                 </svg>
                 <div class="ms-3">
-                    <h3 class="text-blue-600 font-semibold dark:font-medium dark:text-white">Please note!</h3>
+                    <h3 class="text-blue-600 font-semibold dark:font-medium dark:text-white">{{__("Please note!")}}</h3>
                     <p class="mt-2 text-gray-800 dark:text-slate-400">
                         {{__("Enabling this option will allow all selected presentations to be downloaded.")}}
                     </p>

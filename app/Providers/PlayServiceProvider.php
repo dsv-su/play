@@ -10,6 +10,7 @@ use App\Services\CountPresentations;
 use App\Services\Daisy\DaisyIntegration;
 use App\Services\Filters\VisibilityFilter;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class PlayServiceProvider extends ServiceProvider
 {
@@ -43,6 +44,7 @@ class PlayServiceProvider extends ServiceProvider
         app()->bind('visibility', function(){
             return new VisibilityFilter();
         });
+
     }
 
     /**
@@ -52,6 +54,30 @@ class PlayServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        //Staff
+        Gate::before(function ($user = null, string $ability, array $arguments) {
+            if ($ability !== 'manage-content') return null;
+
+            $role = app()->make('play_role');
+            return in_array($role, ['Uploader', 'Courseadmin', 'Administrator'], true);
+        });
+
+        // Fallback
+        Gate::define('manage-content', fn ($user = null) =>
+        in_array(app('play_role'), ['Uploader', 'Courseadmin', 'Administrator'], true)
+        );
+
+        //Admin
+        Gate::before(function ($user = null, string $ability, array $arguments) {
+            if ($ability !== 'admin-content') return null;
+
+            $role = app()->make('play_role');
+            return in_array($role, ['Administrator'], true);
+        });
+
+        // Fallback
+        Gate::define('admin-content', fn ($user = null) =>
+        in_array(app('play_role'), ['Administrator'], true)
+        );
     }
 }

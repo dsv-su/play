@@ -90,5 +90,4 @@ Route::middleware(['entitlements', 'playauth','web'])->group(function () {
         session()->forget('links');
         return redirect('/')->with('status', 'Session links cleared!');
     });
-
 }); //end protected routes
