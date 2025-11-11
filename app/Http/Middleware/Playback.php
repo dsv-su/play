@@ -141,7 +141,7 @@ class Playback
             }
 
             // Individual presentation permissions
-            if ($username && $video->ipermissions?->contains(
+            if ($username && $video->individualPermissions?->contains(
                     fn ($p) => $p->username === $username
                         && in_array($p->permission, ['read', 'edit', 'delete'], true)
                 )) {
@@ -161,7 +161,7 @@ class Playback
             return true;
         }
 
-        if ($username && $video->ipermissions?->contains(
+        if ($username && $video->individualPermissions?->contains(
                 fn ($p) => $p->username === $username
                     && in_array($p->permission, ['read', 'edit', 'delete'], true)
             )) {

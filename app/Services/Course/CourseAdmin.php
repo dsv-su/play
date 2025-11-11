@@ -10,7 +10,11 @@ class CourseAdmin
 
     public function check($user, $video)
     {
-        return array_intersect($this->courses($user),$video->courses()->pluck('id')->toArray());
+        return array_intersect(
+            $this->courses($user),
+            $video->courses()->pluck('courses.id')->toArray()
+        );
+
     }
 
     public function courses($id)
