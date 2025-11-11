@@ -86,6 +86,11 @@ Route::middleware(['entitlements', 'playauth','web'])->group(function () {
         Route::get('/designation/{designation}', 'courses')->name('courses.show');
         Route::get('/presenter/{username}', 'presenters')->name('presenters.show');
     });
+
+    //Admin
+    Route::prefix('search')->controller(\App\Http\Controllers\AdminController::class)->group(function () {
+        Route::post('/emulate', 'emulateUser')->name('admin.emulate');
+    });
     Route::get('/clear-links', function () {
         session()->forget('links');
         return redirect('/')->with('status', 'Session links cleared!');

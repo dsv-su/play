@@ -16,7 +16,7 @@
     @if($pending > 0)
         <!-- Notification badge (top-left) -->
         <span class="pointer-events-none absolute top-0 left-0
-           -translate-x-[3%] -translate-y-[3%]
+           -translate-x-[1%] -translate-y-[2%]
            inline-flex items-center justify-center">
             <!-- Ping ring -->
             <span

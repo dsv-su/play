@@ -40,8 +40,11 @@
             <div
                 class="flex items-center h-7 px-3 justify-center text-xs text-white rounded-lg"
                 title="{{ __('Profile settings') }}"
+                @if(!app()->make('play_role') == 'Administrator')
                 data-tooltip-target="displayName-tooltip"
-                aria-label="{{ __('Profile settings') }}">
+                aria-label="{{ __('Profile settings') }}"
+                @endif
+            >
                 <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
@@ -50,10 +53,14 @@
                 {{ app()->make('play_user') }}
                 <span class="ml-1 inline-flex items-center gap-x-1 py-0.3 px-1 rounded-[9px] text-[8px]
                             font-medium text-gray-300 border border-gray-300">
-                    @if(in_array(app()->make('play_role'), ['Courseadmin', 'Uploader', 'Staff']))
+                    @if(in_array(app()->make('play_role'), ['Courseadmin', 'Uploader', 'Staff']) && app()->make('play_auth') != 'Administrator')
                         {{__("DSV Staff")}}
                     @else
+                        @if(app()->make('play_auth') == 'Administrator')
+                            @include('navbar.partials.role')
+                        @else
                         {{app()->make('play_role')}}
+                        @endif
                     @endif
                 </span>
 
@@ -138,12 +145,14 @@
 </header>
 
 <!-- Tooltips -->
+@if(!app()->make('play_role') == 'Administrator')
 <div id="displayName-tooltip" role="tooltip"
      class="absolute z-30 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
      style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(1443px, 692px);"
      data-popper-placement="top">{{__('Profile settings')}}
     <div class="tooltip-arrow" data-popper-arrow></div>
 </div>
+@endif
 <div id="navbar-dropdown-toggle-dark-mode-tooltip" role="tooltip"
      class="absolute z-30 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
      style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(1443px, 692px);" data-popper-placement="top">{{__('Toggle dark mode')}}
