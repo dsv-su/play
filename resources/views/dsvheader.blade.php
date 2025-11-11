@@ -38,7 +38,7 @@
         <div class="flex items-center justify-end col-span-1 bg-sudepartment gap-3 pr-3">
             <!-- User name -->
             <div
-                class="flex items-center h-7 px-3 justify-center text-xs text-white rounded-lg"
+                class="flex items-center h-7 justify-center text-xs text-white rounded-lg min-w-[250px]"
                 title="{{ __('Profile settings') }}"
                 @if(!app()->make('play_role') == 'Administrator')
                 data-tooltip-target="displayName-tooltip"
