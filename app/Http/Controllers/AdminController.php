@@ -73,15 +73,15 @@ class AdminController extends Controller
             }
 
             // Fallbacks if DAISY didn’t return expected data
-            $fullName = ($person['firstName'] ?? null) && ($person['lastName'] ?? null)
-                ? $person['firstName'].' '.$person['lastName']
+            $fullName = ($person['person']['firstName'] ?? null) && ($person['person']['lastName'] ?? null)
+                ? $person['person']['firstName'].' '.$person['person']['lastName']
                 : $userID;
 
             //Decide role based on DAISY employee check; fallback to Student
             $role = 'Student';
-            if (!empty($person['id'])) {
+            if (!empty($person['person']['id'])) {
                 try {
-                    $role = $daisy->checkifEmployee($person['id']) ? 'Courseadmin' : 'Student';
+                    $role = $daisy->checkifEmployee($person['person']['id']) ? 'Courseadmin' : 'Student';
                 } catch (\Throwable $e) {
                     \Log::warning('DAISY employee check failed', ['personId' => $person['id'], 'error' => $e->getMessage()]);
                 }
