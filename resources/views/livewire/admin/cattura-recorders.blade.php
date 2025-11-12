@@ -13,7 +13,7 @@
                 @endphp
 
                 <a @can('admin-content') href="{{ $cattura['url'] }}" @endcan
-                   class="flex flex-col bg-white border border-gray-200 shadow-sm rounded-xl hover:shadow-md transition-shadow
+                   class="flex flex-col bg-white border border-susecondary shadow-sm rounded-xl hover:shadow-md transition-shadow
                   dark:bg-neutral-900 dark:border-neutral-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                     <div class="p-3 md:p-3 flex gap-4">
                         <!-- Status icon -->

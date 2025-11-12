@@ -12,9 +12,9 @@
       "isDraggable": true
     }' class="relative js-carousel">
         <div class="px-4 py-2">
-            <a href="#"
+            <a href="{{route('study.presentations')}}"
                class="group inline-flex items-center text-blue-700 text-xl font-light tracking-wide uppercase whitespace-nowrap drop-shadow-md dark:text-white hover:text-blue-900 dark:hover:text-gray-300 transition-colors duration-200">
-                {{__("Study information")}}
+                {{__("Study information")}} ({{$totalCount}})
                 <svg class="ml-2 w-6 h-6 text-current transform transition-transform duration-200 group-hover:translate-x-1"
                      aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                      fill="none" viewBox="0 0 24 24">

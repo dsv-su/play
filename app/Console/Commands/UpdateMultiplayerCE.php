@@ -28,16 +28,16 @@ class UpdateMultiplayerCE extends Command
      */
     public function handle()
     {
-        // Define the paths for the multiplayer repository
+        //Define the paths for the multiplayer repository
         $multiplayerPath = storage_path(). '/app/multiplayer-ce';
         $multiplayerJsSource = 'multiplayer-ce/multiplayer.js';
         $multiplayerJsDestination = 'public/js/multiplayer.js';
         $updateMultiplayerCmd = "cd $multiplayerPath && git pull";
 
-        // Execute the update command for the multiplayer repository
+        //Execute the update command for the multiplayer repository
         exec($updateMultiplayerCmd, $output, $statusCode);
 
-        // Check if the repository update was successful
+        //Check if the repository update was successful
         if ($statusCode === 0) {
             if (isset($output[0]) && $output[0] === 'Already up to date.') {
                 $this->comment('MultiplayerCE is already up to date.');
@@ -46,18 +46,18 @@ class UpdateMultiplayerCE extends Command
                 $this->comment('MultiplayerCE update output: ' . implode(PHP_EOL, $output));
             }
         } else {
-            // Handle failure: output the error details
+            //Handle failure: output the error details
             $this->comment('Failed to update MultiplayerCE repository. Error: ' . implode(PHP_EOL, $output));
             return 1; // Return failure status
         }
 
-        // Copy the updated multiplayer.js file to the public directory
+        //Copy the updated multiplayer.js file to the public directory
         if (!Storage::disk('local')->copy($multiplayerJsSource, $multiplayerJsDestination)) {
             $this->comment('Failed to copy multiplayer.js to public/js directory.');
             return 1; // Return failure status
         }
 
-    // Indicate that the update and copy were successful
+    //Indicate that the update and copy were successful
         $this->comment('MultiplayerCE has been successfully updated and multiplayer.js has been copied.');
         return 0; // Return success status
 

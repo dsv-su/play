@@ -9,10 +9,10 @@ use Livewire\Component;
 class Studypresentations extends Component
 {
     public $studyvideos;
+    public int $totalCount = 0;
 
     public function mount(VisibilityFilter $visibility)
     {
-        //$raw = Video::with('video_course.course')->where('state', true)->where('category_id', 2)->latest('creation')->limit(10)->get();
         $raw = Video::query()
             ->select(['id', 'title', 'creation', 'duration', 'visibility', 'state', 'thumb', 'category_id', 'description']) // keep it lean
             ->where('visibility', true)
@@ -27,6 +27,9 @@ class Studypresentations extends Component
             ->get();
         //Filter
         $this->studyvideos = $visibility->filter($raw);
+
+        //Count
+        $this->totalCount = $this->studyvideos->count();
     }
 
     public function render()

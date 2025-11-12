@@ -48,6 +48,9 @@ Route::middleware(['entitlements', 'playauth','web'])->group(function () {
     Route::middleware(['redirect-links'])->get('/user/all', \App\Livewire\My\UserPresentations::class)->name('my.presentations');
     //Route::get('/user/all', \App\Livewire\My\MyPresentations::class)->name('my.presentations');
 
+    //Study
+    Route::middleware(['redirect-links'])->get('/study/all', \App\Livewire\Study\StudyPresentations::class)->name('study.presentations');
+
     //Edit
     Route::controller(\App\Http\Controllers\EditController::class)->group(function () {
         Route::get('/edit/{video}', 'show')->name('presentation.edit');
