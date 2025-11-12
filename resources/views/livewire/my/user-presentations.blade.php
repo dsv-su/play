@@ -46,12 +46,12 @@
                             <polyline points="6 9 12 15 18 9"></polyline>
                           </svg>
                           <span class="leading-snug break-words hyphens-auto min-w-0">
-                            {{ $this->courseTitles[$courseId] ?? __('Presentations') }}
+                            {!!  $this->courseTitles[$courseId] ?? "<span class='text-blue-800'>". __('Presentations')." </span>" !!}
                           </span>
                           <a @click.stop href="#"
                              data-tooltip-target="playAll-tooltip"
                              class="shrink-0 inline-flex items-center gap-1
-                                   ml-0 sm:ml-2 mt-2 sm:mt-0
+                                   ml-0 sm:ml-2 sm:mt-0
                                    bg-blue-800 hover:bg-blue-900 text-white
                                    text-sm sm:text-base font-semibold
                                    px-2 sm:px-2.5 py-0.5 rounded border border-blue-900

@@ -39,6 +39,18 @@
                        dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
                         <option value="en">{{__("English")}}</option>
                         <option value="sv">{{__("Swedish")}}</option>
+                        @can('admin-content')
+                            <option value="da">{{__("Danish")}}</option>
+                            <option value="nl">{{__("Dutch")}}</option>
+                            <option value="is">{{__("Icelandic")}}</option>
+                            <option value="it">{{__("Italian")}}</option>
+                            <option value="fi">{{__("Finnish")}}</option>
+                            <option value="fr">{{__("French")}}</option>
+                            <option value="de">{{__("German")}}</option>
+                            <option value="no">{{__("Norwegian")}}</option>
+                            <option value="ru">{{__("Russian")}}</option>
+                            <option value="es">{{__("Spanish")}}</option>
+                        @endcan
                     </select>
                 @endif
 

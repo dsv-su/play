@@ -90,7 +90,10 @@ Route::middleware(['entitlements', 'playauth','web'])->group(function () {
     //Admin
     Route::prefix('search')->controller(\App\Http\Controllers\AdminController::class)->group(function () {
         Route::post('/emulate', 'emulateUser')->name('admin.emulate');
+        Route::get('/cattura', 'recorders')->name('admin.recorder');
     });
+    //Route::middleware(['play-admin'])->get('/cattura', \App\Livewire\Admin\CatturaRecorders::class)->name('admin.recorders');
+    Route::get('/cattura', \App\Livewire\Admin\CatturaRecorders::class)->name('admin.recorders');
     Route::get('/clear-links', function () {
         session()->forget('links');
         return redirect('/')->with('status', 'Session links cleared!');

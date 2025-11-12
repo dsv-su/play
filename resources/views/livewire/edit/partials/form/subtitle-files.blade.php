@@ -115,6 +115,18 @@
                                 <option value="">-- {{__("Select a language")}} --</option>
                                 <option value="english">{{__("English")}}</option>
                                 <option value="swedish">{{__("Swedish")}}</option>
+                                @can('admin-content')
+                                    <option value="danish">{{__("Danish")}}</option>
+                                    <option value="dutch">{{__("Dutch")}}</option>
+                                    <option value="icelandic">{{__("Icelandic")}}</option>
+                                    <option value="italian">{{__("Italian")}}</option>
+                                    <option value="finnish">{{__("Finnish")}}</option>
+                                    <option value="french">{{__("French")}}</option>
+                                    <option value="german">{{__("German")}}</option>
+                                    <option value="norwegian">{{__("Norwegian")}}</option>
+                                    <option value="russian">{{__("Russian")}}</option>
+                                    <option value="spanish">{{__("Spanish")}}</option>
+                                @endcan
                             </select>
                             @endif
 

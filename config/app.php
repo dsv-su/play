@@ -29,7 +29,8 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'DSVPlay'),
+    //'name' => env('APP_NAME', 'DSVPlay'),
+    'name' => $system_config['global']['app_name'],
 
     /*
     |--------------------------------------------------------------------------
