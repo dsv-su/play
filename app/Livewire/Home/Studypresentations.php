@@ -13,11 +13,18 @@ class Studypresentations extends Component
 
     public function mount(VisibilityFilter $visibility)
     {
-        $raw = Video::query()
-            ->select(['id', 'title', 'creation', 'duration', 'visibility', 'state', 'thumb', 'category_id', 'description']) // keep it lean
+        // Base query for visible and active study videos
+        $baseQuery = Video::query()
             ->where('visibility', true)
             ->where('state', true)
-            ->where('category_id', 2)
+            ->where('category_id', 2);
+
+        // Count *all* videos that match the filters (without limit)
+        $this->totalCount = $baseQuery->count();
+
+        // Fetch the first 10 videos (with relationships)
+        $raw = $baseQuery
+            ->select(['id', 'title', 'creation', 'duration', 'visibility', 'state', 'thumb', 'category_id', 'description'])
             ->latest('creation')
             ->limit(10)
             ->with([
@@ -25,11 +32,9 @@ class Studypresentations extends Component
                 'video_course.course:id,name,designation'
             ])
             ->get();
-        //Filter
-        $this->studyvideos = $visibility->filter($raw);
 
-        //Count
-        $this->totalCount = $this->studyvideos->count();
+        // Apply visibility filter
+        $this->studyvideos = $visibility->filter($raw);
     }
 
     public function render()
