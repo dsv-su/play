@@ -18,7 +18,7 @@
              dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400
              dark:border-slate-700 dark:focus:ring-blue-400"
             wire:model.live.debounce.300ms="searchPresenter"
-            placeholder="Start typing to add a presenter"
+            placeholder="{{__('Start typing to add a presenter')}}"
             autocomplete="off"
             role="combobox"
             aria-expanded="{{ filled($searchPresenter) ? 'true' : 'false' }}"

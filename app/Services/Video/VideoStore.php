@@ -37,7 +37,7 @@ final class VideoStore
             'duration'        => $this->normalizeDuration(data_get($pkg, 'duration')),
             'subtitles'       => json_encode(data_get($pkg, 'subtitles', []), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
             'sources'         => json_encode(data_get($pkg, 'sources', []), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
-            'presentation'    => json_encode($this->request->all(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), // store full payload (cast to array in model)
+            //'presentation'    => json_encode($this->request->all(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), // store full payload (cast to array in model)
             'category_id'     => (int) ($this->request->get('category_id', 1)),
             'state'           => $this->deriveState($this->request->input('pending')),
         ]);

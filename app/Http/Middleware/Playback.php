@@ -2,191 +2,176 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Video;
+use App\Models\VideoPermission;
 use App\Services\AuthHandler;
 use App\Services\Course\CourseAdminList;
 use App\Services\Course\CourseSettingPublic;
 use App\Services\Course\CourseSettingVisibility;
 use App\Services\Staff\AdminCheck;
 use App\Services\Staff\StaffCheck;
-use App\Models\Video;
-use App\Models\VideoPermission;
 use Closure;
 use Illuminate\Http\Request;
 
 class Playback
 {
+    public function __construct(
+        private AuthHandler $authHandler,
+        private AdminCheck $adminCheck,
+        private StaffCheck $staffCheck,
+        private \App\Services\Course\CourseAdmin $courseAdmin,
+        private CourseAdminList $courseAdminList,
+        private CourseSettingPublic $courseSettingPublic,
+        private CourseSettingVisibility $courseSettingVisibility,
+    ) {}
+
     /**
      * Handle an incoming request.
-     *
-     * @param Request $request
-     * @param Closure $next
-     * @return mixed
      */
     public function handle(Request $request, Closure $next)
     {
-        /***
-         * Middleware for restricting hidden presentations from playback
-         */
-        $system = new AuthHandler();
-        $system = $system->authorize();
-        if ($video = Video::find(basename($request->getUri()))) {
-        } else {
-            $video = Video::find($request->p);
-        }
+        // Initialize/authorize session context
+        $this->authHandler->authorize();
 
+        $video = $this->resolveVideo($request);
         if (!$video) {
             return redirect()->route('home');
         }
 
-        //Check if user is through SU SSO
-        if (!$request->server('REMOTE_USER')) {
+        // Ensure relationships for checks are available
+        $video->loadMissing(['courses:id', 'individualPermissions']);
 
-            //Local dev enviroment
-            if ($system->global->app_env == 'local') {
+        $remoteUser = $request->server('REMOTE_USER');
+        $username   = $remoteUser ? strtok($remoteUser, '@') : null;
+
+        // Anonymous flow (no Shibboleth/SSO)
+        if (!$remoteUser) {
+            // Allow everything locally to not hinder dev
+            if (config('app.env') === 'local') {
                 return $next($request);
             }
 
-            //If Shibboleth session is missing
-
-            //Check if video is public
-            $permission = VideoPermission::where('video_id', $video->id)->firstOrFail();
-            if ($permission->permission_id == 4) {
-                //Presentation is public
-                if ($video->visibility) {
-                    //Presentation visibility is set to default
-
-                    //Check course association
-                    if (!count($video->courses()) > 0) {
-                        return $next($request);
-                    }
-
-                    $coursesetting = new CourseSettingVisibility();
-                    if ($coursesetting->check($video)) {
-                        //Coursesetting is set to default visibility
-                        return $next($request);
-                    }
-                }
-            }
-
-            //Check if coursesettings is public
-            $course_permission = new CourseSettingPublic();
-            $coursesetting = new CourseSettingVisibility();
-            if ($course_permission->check($video) == 4) {
-                //Course is public
-                if ($coursesetting->check($video)) {
-                    return $next($request);
-                }
-            }
-
-            if ($video->unlisted) {
+            // Otherwise only allow if anonymous access rules pass
+            if ($this->anonymousCanView($video)) {
                 return $next($request);
             }
 
             return redirect()->route('home');
-        } else {
-            //Shibboleth
-
-            //If user is Admin
-            $admin = new AdminCheck();
-            if ($admin->check()) {
-                return $next($request);
-            }
-
-            //Check if video belongs to course
-            if (count($video->courses()) >= 1) {
-
-                //Associated to one or more course
-                $staff = new StaffCheck();
-                $courseadmin_list = new CourseAdminList();
-                $coursesetting = new CourseSettingVisibility();
-
-                // Check if user is courseAdmin
-                // (1) First check if user is staff
-                if ($staff->check()) {
-                    // (2) If user is staff check if user is courseadmin
-                    $courseadmin = new \App\Services\Course\CourseAdmin();
-                    if ($courseadmin->check($_SERVER['REMOTE_USER'], $video)) {
-                        return $next($request);
-                    }
-                }
-
-                // (2) Check if user exist in coursesettings list
-                if ($courseadmin_list->check($_SERVER['REMOTE_USER'], $video)) {
-                    //User exist in CourseAdmin List
-                    return $next($request);
-                }
-
-                // (3) Check if Individual presentation settings allows playback
-                //Check if individual permissions has been set for presentation
-                if ($individuals = $video->ipermissions ?? false) {
-                    foreach ($individuals as $iper) {
-                        //Check if user is listed
-                        $username = substr($_SERVER['REMOTE_USER'], 0, strpos($_SERVER['REMOTE_USER'], "@"));
-                        if ($iper->username == $username) {
-                            //Check if user has set permissions
-                            if (in_array($iper->permission, ['read', 'edit', 'delete'])) {
-                                return $next($request);
-                            }
-                        }
-
-                    }
-                }
-
-                /***
-                 * Disabled
-                 *
-                // (4) Check if Course visibility allows playback
-                if ($coursesetting->check($video)) {
-
-                }
-                */
-                // (5) Check if Presentation visibility allows playback
-                if ($video->visibility) {
-                    return $next($request);
-                }
-
-                // (6) Check if Presentation is unlisted and allows playback
-                if ($video->unlisted) {
-                    return $next($request);
-                }
-
-                return redirect()->route('home');
-
-            } else {
-
-                //Not associated to a course
-                if ($video->visibility) {
-                    return $next($request);
-                }
-
-                //Check individual settings
-                //Check if individual permissions has been set for presentation
-                if ($individuals = $video->ipermissions ?? false) {
-                    foreach ($individuals as $iper) {
-                        //Check if user is listed
-                        $username = substr($_SERVER['REMOTE_USER'], 0, strpos($_SERVER['REMOTE_USER'], "@"));
-                        if ($iper->username == $username) {
-                            //Check if user has set permissions
-                            if (in_array($iper->permission, ['read', 'edit', 'delete'])) {
-                                return $next($request);
-                            }
-                        }
-                    }
-                }
-
-                // Check if Presentation is unlisted and allows playback
-                if ($video->unlisted) {
-                    return $next($request);
-                }
-
-                return redirect()->route('home');
-
-            }
-            //End Shibboleth
         }
 
-        //If none of the above handles the request
-        return redirect()->route('home');
+        // Authenticated flow (Shibboleth)
+        if ($this->adminCheck->check()) {
+            return $next($request);
+        }
 
+        if ($this->userCanView($video, $remoteUser, $username)) {
+            return $next($request);
+        }
+
+        return redirect()->route('home');
+    }
+
+    /**
+     * Try to find the Video model from common places.
+     */
+    private function resolveVideo(Request $request): ?Video
+    {
+        $id = $request->input('p')
+            //Fallback: last path segment as we are encoding IDs in the URL
+            ?? basename($request->path());
+
+        if (!$id) {
+            return null;
+        }
+
+        return Video::query()->find($id);
+    }
+
+    /**
+     * Rules for anonymous viewers.
+     */
+    private function anonymousCanView(Video $video): bool
+    {
+        // Unlisted always allowed
+        if ($video->unlisted) {
+            return true;
+        }
+
+        // “Public video” via VideoPermission + default visibility (+ optional course visibility)
+        $perm = VideoPermission::where('video_id', $video->id)->first(); // no 404s in middleware
+        if ($perm && (int) $perm->permission_id === 4) {
+            if ($video->visibility) {
+                // If no courses -> allow
+                if (!$video->courses()->exists()) {
+                    return true;
+                }
+                // If courses exist, fall back to course visibility rules
+                if ($this->courseSettingVisibility->check($video)) {
+                    return true;
+                }
+            }
+        }
+
+        // Course-level “public” overrides when presentation visibility is “default”
+        if ($this->courseSettingPublic->check($video) == 4) {
+            if ($this->courseSettingVisibility->check($video)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Rules for authenticated users (via Shibboleth).
+     */
+    private function userCanView(Video $video, string $remoteUser, ?string $username): bool
+    {
+        $hasCourse = $video->courses()->exists();
+
+        if ($hasCourse) {
+            // Staff + CourseAdmin
+            if ($this->staffCheck->check() && $this->courseAdmin->check($remoteUser, $video)) {
+                return true;
+            }
+
+            // Explicit course admin list
+            if ($this->courseAdminList->check($remoteUser, $video)) {
+                return true;
+            }
+
+            // Individual presentation permissions
+            if ($username && $video->individualPermissions?->contains(
+                    fn ($p) => $p->username === $username
+                        && in_array($p->permission, ['read', 'edit', 'delete'], true)
+                )) {
+                return true;
+            }
+
+            // Presentation-level visibility/unlisted
+            if ($video->visibility || $video->unlisted) {
+                return true;
+            }
+
+            return false;
+        }
+
+        // Not associated to a course
+        if ($video->visibility) {
+            return true;
+        }
+
+        if ($username && $video->individualPermissions?->contains(
+                fn ($p) => $p->username === $username
+                    && in_array($p->permission, ['read', 'edit', 'delete'], true)
+            )) {
+            return true;
+        }
+
+        if ($video->unlisted) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -12,7 +12,6 @@ class Newpresentations extends Component
 
     public function mount(VisibilityFilter $visibility)
     {
-        //$raw = Video::with('video_course.course')->where('visibility', true)->where('state', true)->latest('creation')->limit(10)->get();
         $raw = Video::query()
             ->select(['id', 'title', 'creation', 'duration', 'visibility', 'state', 'thumb', 'category_id', 'subtitles', 'description'])
             ->where('visibility', true)

@@ -25,7 +25,7 @@
                             <!-- Left side: Icons -->
                             <div class="flex items-center gap-2 shrink-0">
                                 @include('livewire.search.partials.checkbox')
-                                <div class="flex items-center bg-gray-600 border border-gray-600 rounded px-1 py-0.5">
+                                <div class="flex items-center bg-gray-900 border border-gray-900 rounded">
                                     @include('home.partials.permission-buttons')
                                 </div>
                             </div>

@@ -25,7 +25,7 @@
              dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400
              dark:border-slate-700 dark:focus:ring-blue-400"
                 wire:model.live.debounce.300ms="searchP"
-                placeholder="Start typing name or username"
+                placeholder="{{__('Start typing name or username')}}"
                 autocomplete="off"
                 role="combobox"
                 aria-expanded="{{ filled($searchP) ? 'true' : 'false' }}"

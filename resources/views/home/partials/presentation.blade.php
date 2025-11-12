@@ -7,7 +7,7 @@
     <div class="relative">
 
         <a target="_blank" rel="noopener noreferrer" href="{{ route('player.show', ['video' => $video]) }}"
-           class="absolute inset-0 z-10" aria-label="Open video-{{$loop->index}}"></a>
+           class="absolute inset-0 z-10 hs-carousel-dragging:pointer-events-none" aria-label="Open video-{{$loop->index}}"></a>
 
         @include('home.partials.img')
         @include('home.partials.duration')
@@ -15,12 +15,12 @@
     </div>
 
     <!-- Card Body -->
-    <div class="p-2 md:p-3 relative min-w-0 overflow-x-clip">
+    <div class="p-2 md:p-3 relative min-w-0 overflow-x-clip pointer-events-none">
         <div class="flex items-center flex-wrap gap-1 min-w-0">
             @include('home.partials.title')
             @include('home.partials.presenters')
             {{--}}<div class="ml-auto">{{--}}
-            <div class="absolute top-2 right-2">
+            <div class="absolute top-2 right-2 pointer-events-auto">
                 <!-- Share modal -->
                 @include('livewire.search.partials.share-modal')
             </div>

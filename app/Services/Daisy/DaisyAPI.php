@@ -37,21 +37,29 @@ class DaisyAPI extends DaisyIntegration
         return $all;
     }
 
-    /**
-     * Cheap O(1) check: does an employee record exist for this person id?
-     * Avoids downloading the whole /employee list.
-     */
     public function checkifEmployee(int|string $id): bool
     {
         try {
-            // If this endpoint exists, it’s ideal. If the API only allows username lookups,
-            // you can fall back to contributions or person->employment settings.
-            $this->getJson("employee/{$id}");
-            return true;
+            // Fetch all employees as JSON
+            $employees = $this->getJson('employee');
+
+            // If $employees is not already an array, decode it
+            if (is_string($employees)) {
+                $employees = json_decode($employees, true);
+            }
+
+            // Extract all employee person IDs
+            $employeeIds = collect($employees)->map(function ($item) {
+                return $item['person']['id'] ?? null;
+            })->filter(); // remove nulls
+
+            // Check if the given ID exists in the list
+            return $employeeIds->contains($id);
         } catch (\Throwable $e) {
             return false;
         }
     }
+
 
     /**
      * Prefer returning the employee resource; fall back to person if needed.

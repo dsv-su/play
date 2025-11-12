@@ -48,6 +48,9 @@ Route::middleware(['entitlements', 'playauth','web'])->group(function () {
     Route::middleware(['redirect-links'])->get('/user/all', \App\Livewire\My\UserPresentations::class)->name('my.presentations');
     //Route::get('/user/all', \App\Livewire\My\MyPresentations::class)->name('my.presentations');
 
+    //Study
+    Route::middleware(['redirect-links'])->get('/study/all', \App\Livewire\Study\StudyPresentations::class)->name('study.presentations');
+
     //Edit
     Route::controller(\App\Http\Controllers\EditController::class)->group(function () {
         Route::get('/edit/{video}', 'show')->name('presentation.edit');
@@ -86,9 +89,16 @@ Route::middleware(['entitlements', 'playauth','web'])->group(function () {
         Route::get('/designation/{designation}', 'courses')->name('courses.show');
         Route::get('/presenter/{username}', 'presenters')->name('presenters.show');
     });
+
+    //Admin
+    Route::prefix('search')->controller(\App\Http\Controllers\AdminController::class)->group(function () {
+        Route::post('/emulate', 'emulateUser')->name('admin.emulate');
+        Route::get('/cattura', 'recorders')->name('admin.recorder');
+    });
+    //Route::middleware(['play-admin'])->get('/cattura', \App\Livewire\Admin\CatturaRecorders::class)->name('admin.recorders');
+    Route::get('/cattura', \App\Livewire\Admin\CatturaRecorders::class)->name('admin.recorders');
     Route::get('/clear-links', function () {
         session()->forget('links');
         return redirect('/')->with('status', 'Session links cleared!');
     });
-
 }); //end protected routes

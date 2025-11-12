@@ -30,7 +30,7 @@
                 <!-- Thumb -->
                 <span class="absolute top-1/2 start-0.5 -translate-y-1/2 size-3 bg-white rounded-full shadow-xs transition-transform peer-checked:translate-x-full dark:bg-neutral-400 dark:peer-checked:bg-white"></span>
             </label>
-            <label for="hs-xs-switch-{{ $key }}" class="text-xs text-gray-500 dark:text-neutral-400">Audio</label>
+            <label for="hs-xs-switch-{{ $key }}" class="text-xs text-gray-500 dark:text-neutral-400">{{__("Audio")}}</label>
         </div>
 
         <!-- Visibility -->
@@ -48,7 +48,7 @@
                 <!-- Thumb -->
                 <span class="absolute top-1/2 start-0.5 -translate-y-1/2 size-3 bg-white rounded-full shadow-xs transition-transform peer-checked:translate-x-full dark:bg-neutral-400 dark:peer-checked:bg-white"></span>
             </label>
-            <label for="hs-xs-switch-visibility-{{ $key }}" class="text-xs text-gray-500 dark:text-neutral-400">Hidden</label>
+            <label for="hs-xs-switch-visibility-{{ $key }}" class="text-xs text-gray-500 dark:text-neutral-400">{{__("Hidden")}}</label>
         </div>
     </div>
 </div>

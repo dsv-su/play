@@ -23,13 +23,22 @@
             </div>
             {{--}}
             <div class="w-72">
-                <a href="{{route('my.presentations')}}" @click="navigationMenuClose()" class="block px-3.5 py-3 text-sm rounded hover:bg-neutral-100">
-                    <span class="block mb-1 font-medium text-black">{{__("My Presentations")}}</span>
+                <a href="{{route('my.presentations')}}" @click="navigationMenuClose()"
+                   class="block px-3.5 py-3 text-sm rounded
+                          hover:bg-neutral-100 dark:hover:bg-white/10
+                          transition-colors duration-150">
+                    <span class="block mb-1 font-medium text-gray-900 dark:text-gray-600">
+                        {{ __("My Presentations") }}
+                    </span>
 
                     @if(in_array(app()->make('play_auth'), ['Administrator', 'Staff']))
-                        <span class="block font-light leading-5 opacity-50">{{__('Here you can navigate among presentations from your teaching activities sorted after course.')}}</span>
+                        <span class="block font-light leading-5 text-gray-600 dark:text-gray-600">
+                            {{__('Here you can navigate among presentations from your teaching activities sorted after course.')}}
+                        </span>
                     @elseif(app()->make('play_auth') == 'Student')
-                        <span class="block font-light leading-5 opacity-50">{{__('Here you can navigate among presentations from your registed course sorted after course.')}}</span>
+                        <span class="block font-light leading-5 text-gray-600 dark:text-gray-600">
+                            {{__('Here you can navigate among presentations from your registed course sorted after course.')}}
+                        </span>
                     @endif
 
                 </a>

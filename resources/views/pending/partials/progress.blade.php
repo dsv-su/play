@@ -56,7 +56,7 @@
         <!-- Progress for edited-->
         <div class="flex w-full h-3 bg-gray-200 rounded overflow-hidden dark:bg-neutral-700"
              role="progressbar"
-             aria-valuenow="{{ $video->progress ?? 0 }}"
+             aria-valuenow="{{ $progress ?? 0 }}"
              aria-valuemin="0"
              aria-valuemax="100">
             <div class="flex flex-col justify-center rounded-full overflow-hidden

@@ -32,11 +32,11 @@ class PresenterStore
             $presenterIds = [];
 
             foreach ($userInputs as $value) {
-                // Try SUKAT first (treat value as username)
+                //Try SUKAT first
                 $ldapUser = SukatUser::findBy('uid', $value);
 
                 if ($ldapUser) {
-                    // LDAP-backed presenter (unique on username)
+                    //LDAP-backed presenter (unique on username)
                     $presenter = Presenter::updateOrCreate(
                         ['username' => $value],
                         [
@@ -46,21 +46,19 @@ class PresenterStore
                         ]
                     );
 
-                    // Ensure edit permission for this SUKAT user on this video
-                    IndividualPermission::updateOrCreate(
+                    //Ensure edit permission for this SUKAT user on this video
+                    IndividualPermission::firstOrCreate(
                         [
                             'video_id' => $video->id,
                             'username' => $value,
                         ],
                         [
-                            'video_id'    => $video->id,
-                            'username'    => $value,
-                            'name'        => $ldapUser->getFirstAttribute('cn'),
-                            'permission'  => 'edit', // <- fixed from 'delete'
+                            'name'       => $ldapUser->getFirstAttribute('cn'),
+                            'permission' => 'edit',
                         ]
                     );
                 } else {
-                    // External presenter: we can’t rely on username, so upsert by (name, description)
+                    //External presenter: we can’t rely on username, so upsert by (name, description)
                     $presenter = Presenter::updateOrCreate(
                         [
                             'name'        => $value,
@@ -73,13 +71,12 @@ class PresenterStore
                             'description' => 'external',
                         ]
                     );
-                    // Note: original code did NOT create IndividualPermission for externals; keeping that behavior.
                 }
 
                 $presenterIds[] = $presenter->id;
             }
 
-            // Finalize associations in one go (requires Video::presenters() belongsToMany)
+            // Finalize associations
             $video->presenters()->sync($presenterIds);
         });
     }

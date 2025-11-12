@@ -1,5 +1,9 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
-
+<style>
+    [data-hs-file-upload-previews]:has(img[data-dz-thumbnail]) span {
+        display: none;
+    }
+</style>
 <div data-module="thumb-uploader"
      data-hs-file-upload='{
   "headers": { "X-CSRF-TOKEN": "{{ csrf_token() }}" },
@@ -19,8 +23,8 @@
 
     <!-- preview template can keep its <div> wrapper -->
     <template data-hs-file-upload-preview="">
-        <div class="w-full h-full flex justify-center items-center">
-            <img class="object-contain max-h-full" data-dz-thumbnail="">
+        <div class="relative aspect-video w-full overflow-hidden rounded-t-sm">
+            <img class="absolute inset-0 h-full w-full object-cover" data-dz-thumbnail="">
         </div>
     </template>
 
@@ -28,10 +32,8 @@
     <div class="flex flex-col items-center gap-2">
         <div data-hs-file-upload-previews=""
              data-hs-file-upload-pseudo-trigger=""
-             class="has-[img[data-dz-thumbnail]]:text-transparent flex flex-wrap justify-center items-center size-48
-                    border-2 border-dotted border-gray-300 text-gray-600 cursor-pointer hover:bg-gray-50
-              dark:border-neutral-700 dark:text-neutral-600 dark:hover:bg-neutral-700/50">
-            <span class="text-center justify-center">{{__('Thumb will be generated or Upload a custom thumbnail')}}</span>
+             class="flex justify-center items-center size-48 border-2 border-dotted border-gray-300 text-gray-600 cursor-pointer hover:bg-gray-50 dark:border-neutral-700 dark:text-neutral-600 dark:hover:bg-neutral-700/50 relative overflow-hidden">
+            <span class="absolute inset-0 flex items-center justify-center text-center">{{__('Thumb will be generated or Upload a custom thumbnail')}}</span>
         </div>
 
         <div class="flex items-center gap-x-2">

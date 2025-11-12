@@ -6,6 +6,6 @@
 
     <div class="p-4 sm:p-6 md:p-8">
         <livewire:edit.bulk.enable-tag />
-        <livewire:edit.edit-tags />
+        <livewire:edit.edit-tags :video="$video ?? null" />
     </div>
 </fieldset>

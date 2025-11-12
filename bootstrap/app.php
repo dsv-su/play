@@ -22,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->alias([
             'playauth' => \App\Http\Middleware\PlayAuthenticate::class,
+            'play-admin' => \App\Http\Middleware\PlayAdmin::class,
             'entitlements' => \App\Http\Middleware\CheckEntitlement::class,
             'playback' => \App\Http\Middleware\Playback::class,
             'video-permission' => \App\Http\Middleware\CheckVideoPermission::class,

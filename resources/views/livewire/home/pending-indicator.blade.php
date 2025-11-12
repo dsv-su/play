@@ -6,7 +6,7 @@
          text-gray-600 hover:text-gray-900 hover:bg-gray-100
          dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700
          focus:outline-none focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600">
-        <!-- Bell icon -->
+        <!-- icon -->
         <svg class="w-6 h-6 text-gray-800 dark:text-white"
              data-tooltip-target="incoming-tooltip"
              aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -16,7 +16,7 @@
     @if($pending > 0)
         <!-- Notification badge (top-left) -->
         <span class="pointer-events-none absolute top-0 left-0
-           -translate-x-[3%] -translate-y-[3%]
+           -translate-x-[1%] -translate-y-[2%]
            inline-flex items-center justify-center">
             <!-- Ping ring -->
             <span

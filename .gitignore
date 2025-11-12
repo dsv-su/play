@@ -11,6 +11,8 @@
 .env.production
 .phpactor.json
 .phpunit.result.cache
+.editorconfig
+.gitattributes
 Homestead.json
 Homestead.yaml
 npm-debug.log
@@ -31,3 +33,4 @@ resources/views/player/index-ce.blade.php
 # Ignore specific local resource files
 /resources/css/site.css
 /resources/js/site.js
+composer.lock
