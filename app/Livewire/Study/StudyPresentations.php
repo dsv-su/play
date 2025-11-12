@@ -40,7 +40,6 @@ class StudyPresentations extends Component
             ->where('state', true)
             ->where('category_id', 2)
             ->latest('creation')
-            ->limit(10)
             ->with([
                 'video_course:id,video_id,course_id',
                 'video_course.course:id,name,designation'
