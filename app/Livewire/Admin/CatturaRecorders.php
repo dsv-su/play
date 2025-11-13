@@ -5,6 +5,7 @@ namespace App\Livewire\Admin;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class CatturaRecorders extends Component
@@ -53,9 +54,18 @@ class CatturaRecorders extends Component
                 ->get(rtrim($baseUrl, '/') . '/api/1/status', ['since' => '']);
 
             if ($response->failed()) {
+                Log::warning('Recorder unreachable', [
+                    'url' => $baseUrl,
+                    'status' => $response->status(),
+                    'body' => $response->body(),
+                ]);
                 return [
                     'state'   => 'UNREACHABLE',
-                    'details' => [],
+                    'details' => [
+                        'internet' => false,
+                        'free_pct' => null,
+                        'unit'     => '',
+                    ],
                     'summary' => 'UNREACHABLE',
                 ];
             }
@@ -79,16 +89,24 @@ class CatturaRecorders extends Component
             return [
                 'state'   => $state,
                 'details' => [
-                    'internet' => $internetUp,
-                    'free_pct' => $freePct,
-                    'unit'     => $unit,
+                    'internet' => $internetUp ?? false,
+                    'free_pct' => $freePct ?? null,
+                    'unit'     => $unit ?? '',
                 ],
                 'summary' => $summary,
             ];
         } catch (\Throwable $e) {
+            Log::error('Recorder fetch exception', [
+                'url'       => $baseUrl,
+                'exception' => $e->getMessage(),
+            ]);
             return [
                 'state'   => 'ERROR',
-                'details' => [],
+                'details' => [
+                    'internet' => false,
+                    'free_pct' => null,
+                    'unit'     => '',
+                ],
                 'summary' => 'ERROR',
             ];
         }
