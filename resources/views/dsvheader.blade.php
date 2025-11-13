@@ -40,7 +40,7 @@
             <div
                 class="flex items-center h-7 justify-center text-xs text-white rounded-lg min-w-[250px]"
                 title="{{ __('Profile settings') }}"
-                @if(!app()->make('play_role') == 'Administrator')
+                @if(app()->make('play_role') != 'Administrator')
                 data-tooltip-target="displayName-tooltip"
                 aria-label="{{ __('Profile settings') }}"
                 @endif
@@ -53,7 +53,8 @@
                 {{ app()->make('play_user') }}
                 <span class="ml-1 inline-flex items-center gap-x-1 py-0.3 px-1 rounded-[9px] text-[8px]
                             font-medium text-gray-300 border border-gray-300">
-                    @if(in_array(app()->make('play_role'), ['Courseadmin', 'Uploader', 'Staff']) && app()->make('play_auth') != 'Administrator')
+
+                    {{--}}@if(in_array(app()->make('play_role'), ['Courseadmin', 'Uploader', 'Staff']) && app()->make('play_auth') != 'Administrator')
                         {{__("DSV Staff")}}
                     @else
                         @if(app()->make('play_auth') == 'Administrator')
@@ -61,9 +62,16 @@
                         @else
                         {{app()->make('play_role')}}
                         @endif
+                    @endif{{--}}
+                    @if(app()->make('play_auth') === 'Administrator')
+                        @include('navbar.partials.role')
+                    @elseif(in_array(app()->make('play_role'), ['Courseadmin', 'Uploader', 'Staff']))
+                        {{ __("DSV Staff") }}
+                    @else
+                        {{ app()->make('play_role') }}
                     @endif
-                </span>
 
+                </span>
             </div>
 
             <!-- Theme toggle -->
@@ -145,7 +153,7 @@
 </header>
 
 <!-- Tooltips -->
-@if(!app()->make('play_role') == 'Administrator')
+@if(app()->make('play_role') != 'Administrator')
 <div id="displayName-tooltip" role="tooltip"
      class="absolute z-30 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
      style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(1443px, 692px);"
