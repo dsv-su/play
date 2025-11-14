@@ -4,6 +4,7 @@
     </button>
 
     <form
+        style="display: none;"
         x-ref="form"
         x-show="open"
         x-transition
