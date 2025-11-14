@@ -7,7 +7,7 @@
                       ->map(fn($id) => (string) $id)
                       ->values();
     @endphp
-    
+
     <form id="bulk-edit-form"
           method="post"
           action="{{ route('bulk.edit') }}"
@@ -38,10 +38,19 @@
                         <!-- Middle: Title + meta -->
                         <div class="flex-1 min-w-0 flex flex-col gap-1">
                             <!-- Title -->
+                            @php
+                                $titleColor =
+                                    $video->hidden && $video->unlisted
+                                        ? 'text-yellow-600 dark:text-yellow-300'     // Unlisted
+                                        : ($video->hidden && !$video->unlisted
+                                            ? 'text-red-600 dark:text-red-400'       // Private
+                                            : 'text-gray-900 dark:text-neutral-100'  // Normal
+                                          );
+                            @endphp
                             <a target="_blank"
                                rel="noopener noreferrer"
                                href="{{ route('player.show', ['video' => $video]) }}"
-                               class="w-full font-medium text-sm sm:text-base hover:text-blue-600 text-gray-800 dark:text-neutral-100 truncate"
+                               class="w-full font-medium text-sm sm:text-base hover:text-blue-600 {{ $titleColor }} dark:text-neutral-100 truncate"
                                title="{{ $video->title }}">
                                 {{ $video->title }}
                             </a>

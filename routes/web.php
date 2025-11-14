@@ -84,11 +84,12 @@ Route::middleware(['entitlements', 'playauth','web'])->group(function () {
     });
 
     // Search Results
-    Route::prefix('search')->controller(\App\Http\Controllers\SearchResultController::class)->group(function () {
-        Route::get('/tags/{tag}', 'tags')->name('tags.show');
+    Route::controller(App\Http\Controllers\SearchResultController::class)->group(function () {
+        Route::get('/tag/{tag}', 'tags')->name('tags.show');
         Route::get('/designation/{designation}', 'courses')->name('courses.show');
         Route::get('/presenter/{username}', 'presenters')->name('presenters.show');
     });
+
 
     //Admin
     Route::prefix('search')->controller(\App\Http\Controllers\AdminController::class)->group(function () {

@@ -2,7 +2,7 @@
     <!-- Course text -->
     <h3 class="ml-6 pt-2 flex items-center text-normal font-bold text-gray-800 dark:text-white">
         {{__("Tag: ")}}
-        <span class="ml-1 flex items-center py-1.5 px-3 rounded-lg text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500">
+        <span class="ml-1 shrink-0 flex items-center gap-x-1.5 py-1.5 px-3 rounded-lg text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500">
             {{$tag}}
         </span>
         @include('livewire.search.partials.grid-switch')
@@ -47,7 +47,7 @@
                             <polyline points="6 9 12 15 18 9"></polyline>
                           </svg>
                           <span class="leading-snug break-words hyphens-auto min-w-0">
-                            {{ $this->courseTitles[$courseId] ?? __('Presentations') }}
+                            {!!  $this->courseTitles[$courseId] ?? "<span class='text-blue-800'>". __('Presentations')." </span>" !!}
                           </span>
 
                           <a @click.stop href="#"
