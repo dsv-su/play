@@ -33,6 +33,7 @@
 
     <!-- Desktop Navigation (center on md+; usually hidden on mobile) -->
     @include('navbar.partials.desktopmenu')
+    {{--}}@include('navbar.partials.banner'){{--}}
 
     <!-- Right controls: pending + mobile menu toggle (sit together on the right) -->
         <div class="ml-auto flex items-center gap-2">
@@ -45,6 +46,7 @@
             <!-- Mobile Menu Toggle Button -->
             @include('navbar.partials.mobile_menu_toggle')
         </div>
+
     </div>
 
     <!-- Mobile Navigation Menu -->

@@ -14,7 +14,7 @@
                         <img
                             class="absolute inset-0 h-full w-full object-cover
                             @if($visibility == 'private' or $visibility == 'unlisted') opacity-20 @endif"
-                            src="{{$video->thumb}}"
+                            src="{{ $video->thumb . '?' . time() }}"
                             alt="Presentation Thumb">
                     </div>
 

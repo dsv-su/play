@@ -1,4 +1,22 @@
 <!-- Save bar -->
+<style>
+    .save-btn:disabled {
+        position: relative;
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+
+    .save-btn:disabled::after {
+        content: "";
+        position: absolute;
+        left: 10%;
+        right: 10%;
+        top: 50%;
+        height: 2px;
+        background-color: white; /* or any color */
+    }
+
+</style>
 <div class="fixed bottom-0 left-0 w-full px-2 z-50 bg-suprimary shadow-md">
     <div class="p-3">
         <div class="flex flex-wrap justify-end">
@@ -29,7 +47,7 @@
                                 form="presentation-upload-Form"
                                 disabled
                             @endif
-                            class="m-auto px-6 py-3 text-white border border-white rounded-lg text-lg hover:bg-white hover:text-gray-800 transition">
+                            class="save-btn m-auto px-6 py-3 text-white border border-white rounded-lg text-lg hover:bg-white hover:text-gray-800 transition">
                         {{ __("Save") }}
                     </button>
                 </div>

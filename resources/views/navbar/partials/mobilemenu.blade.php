@@ -24,7 +24,7 @@
         @can('manage-content')
         <li>
             <button @click="activeMobileMenu = activeMobileMenu === 'learn-more' ? '' : 'learn-more'" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-neutral-700 hover:bg-neutral-100 dark:text-white">
-                Manage
+                {{__("Manage")}}
                 <svg :class="{ 'rotate-180': activeMobileMenu === 'learn-more' }" class="inline-block h-4 w-4 ml-2 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
@@ -37,7 +37,7 @@
                     Course
                 </a>{{--}}
                 <a href="{{route('presentation.upload')}}" @click="mobileMenuOpen = false; activeMobileMenu = ''" class="block px-3 py-2 rounded-md text-base font-medium text-neutral-700 hover:bg-neutral-100 dark:text-white">
-                    Manual Upload
+                    {{__("Manual Upload")}}
                 </a>
                 {{--}}<a href="#_" @click="mobileMenuOpen = false; activeMobileMenu = ''" class="block px-3 py-2 rounded-md text-base font-medium text-neutral-700 hover:bg-neutral-100 dark:text-white">
                     Settings
