@@ -58,10 +58,10 @@
                             <!-- Meta row: duration, course, presenters, tags -->
                             <div class="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
                                 <!-- Duration -->
-                                <span class="inline-flex items-center px-2 py-0.5 text-[11px] sm:text-xs
+                                <span class="mt-1 inline-flex items-center px-2 py-0.5 text-[11px] sm:text-xs
                                          font-medium text-white bg-gray-500 border border-gray-500 rounded shadow whitespace-nowrap">
-                                {{ $video->duration }}
-                            </span>
+                                    {{ $video->duration }}
+                                </span>
 
                                 <!-- Course -->
                                 <div class="flex items-center">
