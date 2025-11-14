@@ -40,7 +40,7 @@ class TicketPermissionHandler
         (new PresentationIndividualTicket($video))->cast();
         (new CourseIndividualTicket($video))->cast();
         (new CourseAdminTicket($video))->cast();
-        //(new AdminTicket($video))->cast();
+        (new AdminTicket($video))->cast();
 
         // 5) Final decision
         return $video->getAttribute('ticket') === true

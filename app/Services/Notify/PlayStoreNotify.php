@@ -132,6 +132,9 @@ final class PlayStoreNotify
         $p['courses']    = $this->normalizeArray($p['courses'] ?? null);
         $p['tags']       = $this->normalizeArray($p['tags'] ?? null);
 
+        //Normalize string
+        $p['description'] = $this->normalizeString($p['description'] ?? '');
+
         //Subtitles
         $hasSubs = !empty($this->presentation->subtitles);
         if (!$hasSubs) {
@@ -151,14 +154,21 @@ final class PlayStoreNotify
 
         $p['title'] = ['sv' => $titleSv, 'en' => $titleEn];
 
+        return $p;
         // Remove nulls to keep payload clean
-        return $this->removeNulls($p);
+        //return $this->removeNulls($p);
     }
 
     private function normalizeArray(mixed $value): array
     {
         return is_array($value) ? array_values($value) : [];
     }
+
+    private function normalizeString(mixed $value): string
+    {
+        return is_string($value) ? $value : '';
+    }
+
 
     private function removeNulls(array $arr): array
     {
