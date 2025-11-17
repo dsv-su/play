@@ -38,12 +38,14 @@
 
                             <!-- Badges: always under the status, wrap on small screens -->
                             <div class="mt-2 flex flex-wrap items-center gap-2">
-                                <span class="inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium
-                                               border-blue-300 {{ $this->spaceClass($cattura['details']['free_pct'] ?? 0) }} dark:text-blue-300 dark:border-blue-500">
-                                  {{ __('Available space:') }} {{ $cattura['details']['free_pct'] }}%
+                                <span class="inline-flex items-center rounded-full border px-2.5 py-1
+                                             text-xs font-medium
+                                             border-blue-300 text-blue-700 bg-blue-50
+                                             dark:border-blue-500 dark:text-blue-200 dark:bg-blue-900/40
+                                             {{ $this->spaceClass($cattura['details']['free_pct'] ?? 0) }}">
+                                    {{ __('Available space:') }} {{ $cattura['details']['free_pct'] }}%
                                 </span>
-
-                                @if($cattura['details']['internet'])
+                            @if($cattura['details']['internet'])
                                     <span class="inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium
                                                 border-emerald-300 text-emerald-800 dark:text-emerald-300 dark:border-emerald-500">
                                         {{ __('Connected') }}
