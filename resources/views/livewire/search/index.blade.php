@@ -115,7 +115,7 @@
                                         <a href="{{ route('courses.show', $c->designation) }}"
                                            data-result-link
                                            class="block focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:focus-visible:ring-blue-400 rounded-lg">
-                                            <article class="border rounded-lg p-3 sm:p-4 space-y-1.5 transition
+                                            <article class="border rounded-lg p-3 sm:p-4 space-y-1 transition
                                                             border-slate-200 hover:bg-blue-50 active:bg-blue-100
                                                             dark:border-slate-800 dark:hover:bg-slate-800 dark:active:bg-slate-700">
 
@@ -174,7 +174,7 @@
                                         <a href="{{ route('presenters.show', $p->username) }}"
                                            data-result-link
                                            class="block focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:focus-visible:ring-blue-400 rounded-lg">
-                                            <article class="border rounded-lg p-3 sm:p-4 space-y-1.5 transition
+                                            <article class="border rounded-lg p-3 sm:p-4 space-y-1 transition
                                                             border-slate-200 hover:bg-blue-50 active:bg-blue-100
                                                             dark:border-slate-800 dark:hover:bg-slate-800 dark:active:bg-slate-700">
 
@@ -349,7 +349,7 @@
                                         <a target="_blank" rel="noopener noreferrer" href="{{ $primaryUrl }}"
                                            data-result-link
                                            class="block focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:focus-visible:ring-blue-400 rounded-lg">
-                                            <article class="border rounded-lg p-3 sm:p-4 space-y-2 transition
+                                            <article class="border rounded-lg p-3 sm:p-4 space-y-1.5 transition
                                                             border-slate-200 hover:bg-blue-50 active:bg-blue-100
                                                             dark:border-slate-800 dark:hover:bg-slate-800 dark:active:bg-slate-700">
 
