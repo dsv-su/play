@@ -34,7 +34,7 @@
 
             </div>
         </div>
-        <hr class="my-6 border-default sm:mx-auto lg:my-8" />
+        <hr class="my-6 border-susecondary sm:mx-auto lg:my-8" />
         <div class="sm:flex sm:items-center sm:justify-between">
             <span class="text-sm text-body sm:text-center"></span>
 
