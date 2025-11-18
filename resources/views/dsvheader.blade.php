@@ -40,24 +40,17 @@
             <div
                 class="flex items-center h-7 justify-center text-xs text-white rounded-lg min-w-[250px]"
                 title="{{ __('Profile settings') }}">
-                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                </svg>
+                <a href="{{route('presentation-order.show')}}">
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </a>
+
                 <!-- Displayname from shibboleth -->
                 {{ app()->make('play_user') }}
                 <span class="ml-1 inline-flex items-center gap-x-1 py-0.3 px-1 rounded-[9px] text-[8px]
                             font-medium text-gray-300 border border-gray-300">
-
-                    {{--}}@if(in_array(app()->make('play_role'), ['Courseadmin', 'Uploader', 'Staff']) && app()->make('play_auth') != 'Administrator')
-                        {{__("DSV Staff")}}
-                    @else
-                        @if(app()->make('play_auth') == 'Administrator')
-                            @include('navbar.partials.role')
-                        @else
-                        {{app()->make('play_role')}}
-                        @endif
-                    @endif{{--}}
                     @if(app()->make('play_auth') === 'Administrator')
                         @include('navbar.partials.role')
                     @elseif(in_array(app()->make('play_role'), ['Courseadmin', 'Uploader', 'Staff']))

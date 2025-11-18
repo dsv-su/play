@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MultiplayerController;
+use App\Http\Controllers\PresentationOrderController;
 use App\Services\AuthHandler;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +37,12 @@ Route::middleware(['entitlements', 'playauth','web'])->group(function () {
         ->name('pending.presentations');
     // Locale
     Route::get('/locale/{locale}', [\App\Http\Controllers\LocaleController::class, 'switch'])->name('locale.switch');
+
+    //Profile
+    Route::get('/presentation-order', [PresentationOrderController::class, 'show'])
+        ->name('presentation-order.show');
+    Route::post('/presentation-order', [PresentationOrderController::class, 'store'])
+        ->name('presentation-order.store');
 
     // Test
     Route::controller(\App\Http\Controllers\TestController::class)->group(function () {
