@@ -9,11 +9,16 @@ use Livewire\Component;
 class Newpresentations extends Component
 {
     public $newvideos;
+    public bool $new = true;
 
     public function mount(VisibilityFilter $visibility)
     {
         $raw = Video::query()
-            ->select(['id', 'title', 'creation', 'duration', 'visibility', 'state', 'thumb', 'category_id', 'subtitles', 'description'])
+            ->select([
+                'id', 'title', 'creation', 'duration', 'visibility',
+                'state', 'thumb', 'category_id', 'subtitles', 'description',
+                'created_at'
+            ])
             ->where('visibility', true)
             ->where('state', true)
             ->latest('creation')

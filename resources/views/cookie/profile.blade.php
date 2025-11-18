@@ -91,7 +91,7 @@
                             <h2 class="font-medium text-sm text-gray-800 dark:text-neutral-200">
                                 {{ __("Order of presentations sections") }}
                             </h2>
-                            
+
                         </div>
                         <div class="grid grid-cols-2 gap-2">
                             <div class="flex flex-col">

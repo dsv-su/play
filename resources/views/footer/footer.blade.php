@@ -18,6 +18,12 @@
                         <li>
                             <p class="mb-4 dark:text-gray-300 dark:hover:text-gray-200">{{__("Phone: +46 8 16 20 20")}}</p>
                         </li>
+                        <li class="mb-4">
+                            <a href="mailto:playsupport@dsv.su.se"
+                               class="text-blue-600 hover:underline dark:text-gray-300 dark:hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 rounded">
+                                {{ __("DSVPlay support") }}
+                            </a>
+                        </li>
                     </ul>
                 </div>
                 <div class="md:col-start-3">

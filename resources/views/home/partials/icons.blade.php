@@ -1,5 +1,4 @@
 <div class="relative">
-
     <!-- Fade overlay for unlisted-->
     @if($video->hidden && $video->unlisted)
         <div class="absolute inset-0 bg-black bg-opacity-50 z-30"></div>

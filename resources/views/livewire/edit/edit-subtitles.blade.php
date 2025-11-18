@@ -4,7 +4,7 @@
     <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
         <!-- Subtitles list -->
         <div class="min-w-0 bg-blue-50 border border-blue-500 text-sm text-gray-700 rounded-lg p-4 sm:p-5 lg:p-6 dark:bg-blue-600/[.15]">
-            <h3 class="mb-3 text-base sm:text-lg font-semibold text-blue-700 dark:text-white">{{__("Subtitles list")}}</h3>
+            <h3 class="mb-3 text-base sm:text-lg font-semibold text-blue-700 dark:text-white">{{__("Subtitles")}}</h3>
             @include('livewire.edit.partials.form.subtitle-files')
         </div>
         <!-- Upload -->
