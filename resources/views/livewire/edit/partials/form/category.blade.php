@@ -6,8 +6,8 @@
     @php
         $categories = [
             1 => 'DSV presentation (default)',
-            2 => 'Studieadmin information video',
-            8 => 'NextiLearn tutorial video',
+            2 => 'Studieadmin information presentation',
+            8 => 'NextiLearn tutorial presentation',
         ];
     @endphp
 
