@@ -38,7 +38,7 @@
         </main>
 
         @livewireScripts
-        {{-- @include('footer.footer') --}}
+        @include('footer.footer')
         @stack('scripts')
     </body>
 </html>
