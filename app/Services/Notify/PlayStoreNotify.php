@@ -135,6 +135,9 @@ final class PlayStoreNotify
         //Normalize string
         $p['description'] = $this->normalizeString($p['description'] ?? '');
 
+        //Normalize int
+        $p['created']    = $this->normalizeInt($p['created'] ?? null);
+
         //Subtitles
         $hasSubs = !empty($this->presentation->subtitles);
         if (!$hasSubs) {
@@ -167,6 +170,11 @@ final class PlayStoreNotify
     private function normalizeString(mixed $value): string
     {
         return is_string($value) ? $value : '';
+    }
+
+    private function normalizeInt(mixed $value): int
+    {
+        return is_numeric($value) ? (int) $value : 0;
     }
 
 
