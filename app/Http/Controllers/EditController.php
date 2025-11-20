@@ -41,7 +41,7 @@ class EditController extends Controller
     public function __construct()
     {
         $this->middleware('redirect-links');
-        $this->middleware('edit-permission')->except(['bulkEditShow','bulkEditStore']);
+        $this->middleware('edit-permission')->except(['bulkEditShow','bulkEditSave']);
     }
 
     public function show(CourseResolver $resolver, Video $video, VisibilityFilter $visibility)
