@@ -733,6 +733,7 @@ class EditController extends Controller
                         'unlisted'   => $v->unlisted,
                         'courses'    => $courses_pkg,
                         'tags'       => $tags_pkg,
+                        'created'    => $v->creation,
                         'created_at' => $now,
                         'updated_at' => $now,
                     ]);
