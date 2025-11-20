@@ -23,8 +23,8 @@ class Index extends Component
     public $tags = [];
 
     protected array $videoTsOptions = [
-        'query_by'                   => 'title,title_en,description,tag_names,course_names,course_designation,presenter_names,presenter_usernames',
-        'highlight_full_fields'      => 'title,title_en,description,tag_names,course_names,course_designation,presenter_names,presenter_usernames',
+        'query_by'                   => 'uuid,title,title_en,description,tag_names,course_names,course_designation,presenter_names,presenter_usernames',
+        'highlight_full_fields'      => 'uuid,title,title_en,description,tag_names,course_names,course_designation,presenter_names,presenter_usernames',
         'highlight_start_tag'        => '<span class="font-bold text-blue-600">',
         'highlight_end_tag'          => '</span>',
         'snippet_threshold'          => 80,

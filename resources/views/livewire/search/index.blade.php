@@ -345,13 +345,13 @@
 
                                             $matchedFields = $fields->values();
                                         @endphp
-
-                                        <a target="_blank" rel="noopener noreferrer" href="{{ $primaryUrl }}"
-                                           data-result-link
-                                           class="block focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:focus-visible:ring-blue-400 rounded-lg">
-                                            <article class="border rounded-lg p-3 sm:p-4 space-y-1.5 transition
+                                        <article class="border rounded-lg p-3 sm:p-4 space-y-1.5 transition
                                                             border-slate-200 hover:bg-blue-50 active:bg-blue-100
                                                             dark:border-slate-800 dark:hover:bg-slate-800 dark:active:bg-slate-700">
+                                            <a target="_blank" rel="noopener noreferrer" href="{{ $primaryUrl }}"
+                                               data-result-link
+                                               class="block focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:focus-visible:ring-blue-400 rounded-lg">
+
 
                                                 <!-- Title row -->
                                                 <h3 class="text-sm sm:text-base font-semibold leading-tight text-slate-900 dark:text-slate-100">
@@ -431,9 +431,11 @@
                                                         @endforeach
                                                     </div>
                                                 @endif
-
-                                            </article>
-                                        </a>
+                                            </a>
+                                            @can('admin-content')
+                                                @include('livewire.search.result-partials.admin_edit')
+                                            @endcan
+                                        </article>
                                     @endforeach <!-- endforeach videos -->
                                 </div>
                             @endif

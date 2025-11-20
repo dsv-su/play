@@ -120,6 +120,7 @@ class Video extends Model
 
         return [
             'id'                    => (string) $this->getKey(),
+            'uuid'                  => (string) $this->getKey(),
             'title'                 => (string) $this->title,
             'title_en'              => (string) $this->title_en,
             'description'           => (string) ($this->description ?? ''),
