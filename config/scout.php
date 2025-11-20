@@ -202,6 +202,7 @@ return [
                 'collection-schema' => [
                     'name'   => 'videos',
                     'fields' => [
+                        ['name' => 'uuid',                  'type' => 'string'],
                         ['name' => 'title',                 'type' => 'string'],
                         ['name' => 'title_en',              'type' => 'string'],
                         ['name' => 'description',           'type' => 'string'],
@@ -221,7 +222,7 @@ return [
                     'default_sorting_field' => 'published_at_ts',
                 ],
                 'search-parameters' => [
-                    'query_by' => 'title,title_en,description,tag_names,course_names,course_designation,presenter_names,presenter_usernames',
+                    'query_by' => 'uuid,title,title_en,description,tag_names,course_names,course_designation,presenter_names,presenter_usernames',
                     'highlight_full_fields' => 'title,title_en,description,tag_names,course_names,course_designation,presenter_names,presenter_usernames',
                 ],
             ],
