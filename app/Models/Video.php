@@ -204,8 +204,13 @@ class Video extends Model
 
     public function getCreationDate(): string
     {
-        return Carbon::createFromTimestamp($this->creation)->format('M d, Y');
+        if (!$this->creation) {
+            return '';
+        }
+
+        return Carbon::createFromTimestamp((int) $this->creation)->format('M d, Y');
     }
+
 
     //New
     public function tags(): BelongsToMany

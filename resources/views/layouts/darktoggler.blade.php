@@ -45,10 +45,22 @@
         }));
 
         // Follow system changes only if user hasn't chosen
-        const mql = window.matchMedia('(prefers-color-scheme: dark)');
+        /*const mql = window.matchMedia('(prefers-color-scheme: dark)');
         (mql.addEventListener ? mql.addEventListener : mql.addListener).call(mql, 'change', (e) => {
             if (getStored()) return;
             applyTheme(e.matches);
-        });
+        });*/
+        const mql = window.matchMedia('(prefers-color-scheme: dark)');
+        const handleChange = (e) => {
+            if (getStored()) return;      // respect stored user choice
+            applyTheme(e.matches);        // follow system
+        };
+
+        if (typeof mql.addEventListener === 'function') {
+            mql.addEventListener('change', handleChange);
+        } else if (typeof mql.addListener === 'function') {
+            mql.addListener(handleChange);
+        }
+
     })();
 </script>
