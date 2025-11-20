@@ -12,7 +12,7 @@ class CourseSettingVisibility
 
     public function check($video)
     {
-        foreach($video->courses() as $this->course) {
+        foreach($video->courses as $this->course) {
             $this->courselist[] = $this->course->id;
         }
         foreach($this->courselist as $this->courseId) {
