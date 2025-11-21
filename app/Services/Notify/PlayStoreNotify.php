@@ -18,6 +18,7 @@ final class PlayStoreNotify
 
     public const TYPE_DEFAULT   = 'default';
     public const TYPE_EDIT      = 'edit';
+    public const TYPE_BULK      = 'bulk';
 
     private ManualPresentation $presentation;
     private ClientInterface $http;
@@ -121,10 +122,18 @@ final class PlayStoreNotify
             $p['entitlement'], $p['daisy_courses'], $p['created_at'], $p['updated_at']
         );
 
+        // Title mapping
+        $titleSv = $this->presentation->title ?? '';
+        $titleEn = $this->presentation->title_en ?? $titleSv;
+
+        $p['title'] = ['sv' => $titleSv, 'en' => $titleEn];
+
         //Conditional removals
         if (empty($this->presentation->pkg_id))    unset($p['pkg_id']);
         if (empty($this->presentation->upload_dir)) unset($p['upload_dir']);
-        //Thumb should rerender
+
+        //Edit
+        if (empty($this->presentation->sources ) && $type == 'edit')    unset($p['sources']);
         if (!empty($this->presentation->thumb) && $type == 'edit')    unset($p['thumb']);
 
         // Normalize arrays
@@ -138,6 +147,22 @@ final class PlayStoreNotify
         //Normalize int
         $p['created']    = $this->normalizeInt($p['created'] ?? null);
 
+        //Bulk
+        if ($type == 'bulk')    unset($p['title']);
+        if ($type == 'bulk')    unset($p['title_en']);
+        if ($type == 'bulk')    unset($p['sources']);
+        if ($type == 'bulk')    unset($p['description']);
+        if (empty($this->presentation->thumb) && $type == 'bulk')    unset($p['thumb']);
+        if (in_array('origin', $this->presentation->courses, true) && $type === 'bulk') {
+            unset($p['courses']);
+        }
+        if (in_array('origin', $this->presentation->presenters, true) && $type === 'bulk') {
+            unset($p['presenters']);
+        }
+        if (in_array('origin', $this->presentation->tags, true) && $type === 'bulk') {
+            unset($p['tags']);
+        }
+
         //Subtitles
         $hasSubs = !empty($this->presentation->subtitles);
         if (!$hasSubs) {
@@ -150,12 +175,6 @@ final class PlayStoreNotify
             //Hide flag
             unset($p['autogenerate_subtitles']);
         }
-
-        // Title mapping
-        $titleSv = $this->presentation->title ?? '';
-        $titleEn = $this->presentation->title_en ?? $titleSv;
-
-        $p['title'] = ['sv' => $titleSv, 'en' => $titleEn];
 
         return $p;
         // Remove nulls to keep payload clean
@@ -208,7 +227,7 @@ final class PlayStoreNotify
 
     private function assertValidType(string $type): void
     {
-        if (!in_array($type, [self::TYPE_DEFAULT, self::TYPE_EDIT], true)) {
+        if (!in_array($type, [self::TYPE_DEFAULT, self::TYPE_EDIT, self::TYPE_BULK], true)) {
             throw new \InvalidArgumentException("Invalid type '{$type}'.");
         }
     }
