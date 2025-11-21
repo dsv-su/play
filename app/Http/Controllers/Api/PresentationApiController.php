@@ -285,7 +285,7 @@ class PresentationApiController extends Controller
             return;
         }
 
-        if (!in_array($manual->type, ['manual', 'edit'], true)) {
+        if (!in_array($manual->type, ['manual', 'edit', 'bulk'], true)) {
             return;
         }
         //Set visibility settings from upload

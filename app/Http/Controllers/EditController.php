@@ -512,6 +512,7 @@ class EditController extends Controller
         $data = $request->validate([
             'videos'                 => ['required'],
             'visibility'             => ['string', 'in:visible,private,unlisted'],
+            'category'               => ['nullable','integer'],
             'download'               => ['nullable'],
             'selected-courses'       => ['nullable', 'array'],
             'selected-courses.*'     => ['nullable','integer'],
@@ -531,6 +532,7 @@ class EditController extends Controller
         }
 
         $visibility   = $data['visibility'];
+        $category = $data['category'];
         $download     = filter_var($request->input('download'), FILTER_VALIDATE_BOOLEAN);
 
         //Overwrite switches
@@ -588,14 +590,15 @@ class EditController extends Controller
         };
 
         DB::transaction(function () use (
-            $videos, $isVisible, $isUnlisted, $download, $bulkdownload, $bulkvisibility,
+            $videos, $isVisible, $isUnlisted, $download, $category, $bulkdownload, $bulkvisibility,
             $bulkcourse, $bulkpresenter, $bulktag, $courseIds, $tagIds, $presenterPayloads
         ) {
 
             // Upsert/resolve presenters once (prefer username uniqueness, fallback to name)
             $presenterIds = collect();
-            $presenters_pkg = $courses_pkg = $tags_pkg = [];
+            $presenters_pkg = $courses_pkg = $tags_pkg = ['origin'];
             if($bulkpresenter) {
+                $presenters_pkg = [];
                 if ($presenterPayloads->isNotEmpty()) {
                     $presenterModel = \App\Models\Presenter::class;
 
@@ -623,6 +626,7 @@ class EditController extends Controller
                         }
                         //Package
                         $presenters_pkg[] = $p['pkg'];
+
                     }
                     if (!empty($toCreate)) {
                         // Use upsert on username (unique) to avoid races
@@ -647,6 +651,8 @@ class EditController extends Controller
                 if($bulkvisibility) {
                     $video->visibility = $isVisible;
                     $video->unlisted   = $isUnlisted;
+                    //Category
+                    $video->category_id = $category;
                 }
                 //Check if overwrite is active
                 if($bulkdownload) {
@@ -705,16 +711,23 @@ class EditController extends Controller
             } //end foreach
 
             //Build Package
-            foreach ($courseIds as $cid) {
-                $c = \App\Models\Course::find($cid);
-                $courses_pkg[] = \Illuminate\Support\Collection::make([
-                    'designation' => $c->designation,
-                    'semester' => Str::lower($c->semester) . $c->year
-                ]);
+            if($bulkcourse) {
+                $courses_pkg = [];
+                foreach ($courseIds as $cid) {
+                    $c = \App\Models\Course::find($cid);
+                    $courses_pkg[] = \Illuminate\Support\Collection::make([
+                        'designation' => $c->designation,
+                        'semester' => Str::lower($c->semester) . $c->year
+                    ]);
+                }
             }
-            foreach ($tagIds as $tid) {
-                $t = \App\Models\Tag::find($tid);
-                $tags_pkg[] = $t['name'];
+
+            if($bulktag) {
+                $tags_pkg = [];
+                foreach ($tagIds as $tid) {
+                    $t = \App\Models\Tag::find($tid);
+                    $tags_pkg[] = $t['name'];
+                }
             }
 
             //Store ManualPresentation
@@ -725,7 +738,7 @@ class EditController extends Controller
                     $presentation = ManualPresentation::create([
                         'pkg_id'     => $v->id,
                         'status'     => 'stored',
-                        'type'       => 'edit',
+                        'type'       => 'bulk',
                         'title'      => $v->title,
                         'title_en'   => $v->title_en,
                         'presenters' => $presenters_pkg,
@@ -740,7 +753,7 @@ class EditController extends Controller
 
                     // Send notify
                     $notify = new PlayStoreNotify($presentation);
-                    $notify->sendSuccess('edit');
+                    $notify->sendSuccess('bulk');
                 }
             }); //end MP store
         }); // end transaction
