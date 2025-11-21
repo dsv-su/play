@@ -653,7 +653,11 @@ class EditController extends Controller
                     $video->unlisted   = $isUnlisted;
                     //Category
                     $video->category_id = $category;
+                } else {
+                    $isVisible = $video->visibility;
+                    $isUnlisted = $video->unlisted;
                 }
+
                 //Check if overwrite is active
                 if($bulkdownload) {
                     $video->download   = $download;
@@ -733,7 +737,7 @@ class EditController extends Controller
             //Store ManualPresentation
             $now = now();
 
-            $videos->chunk(500)->each(function ($chunk) use ($now, $presenters_pkg, $courses_pkg, $tags_pkg) {
+            $videos->chunk(500)->each(function ($chunk) use ($now, $presenters_pkg, $courses_pkg, $tags_pkg, $isVisible, $isUnlisted) {
                 foreach ($chunk as $v) {
                     $presentation = ManualPresentation::create([
                         'pkg_id'     => $v->id,
@@ -742,8 +746,8 @@ class EditController extends Controller
                         'title'      => $v->title,
                         'title_en'   => $v->title_en,
                         'presenters' => $presenters_pkg,
-                        'visibility' => $v->visibility,
-                        'unlisted'   => $v->unlisted,
+                        'visibility' => $isVisible,
+                        'unlisted'   => $isUnlisted,
                         'courses'    => $courses_pkg,
                         'tags'       => $tags_pkg,
                         'created'    => $v->creation,
