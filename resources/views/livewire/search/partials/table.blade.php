@@ -77,7 +77,7 @@
                                 <div class="flex items-center">
                                     @include('livewire.search.partials.tag-table')
                                 </div>
-                                
+
                                 <!-- Studyadmin -->
                                 <div class="flex items-center">
                                     @include('home.partials.studyadmin')
