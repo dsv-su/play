@@ -126,11 +126,11 @@ class CatturaRecorders extends Component
     public function spaceClass(float|int $freeSpace): string
     {
         if ($freeSpace > 80) {
-            return 'bg-red-100 text-red-800'; // critical
+            return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'; // critical
         } elseif ($freeSpace > 50) {
-            return 'bg-yellow-100 text-yellow-800'; // warning
+            return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'; // warning
         } else {
-            return 'bg-green-100 text-green-800'; // healthy
+            return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'; // healthy
         }
     }
 

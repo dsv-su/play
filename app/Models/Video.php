@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\URL;
 use Laravel\Scout\Searchable;
@@ -177,9 +178,9 @@ class Video extends Model
         return 'video';
     }
 
-    public function video_stat(): HasMany
+    public function videoStats(): HasOne
     {
-        return $this->hasMany(VideoStat::class);
+        return $this->hasOne(VideoStat::class);
     }
 
     public function video_presenter(): HasMany
