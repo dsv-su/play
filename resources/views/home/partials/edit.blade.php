@@ -1,4 +1,4 @@
-<div class="absolute bottom-2 right-1 z-[100]">
+<div class="absolute bottom-1 right-1 z-[100]">
     <div class="inline-flex rounded-md shadow-sm space-x-0.5" role="group">
         <!-- Download button -->
         @include('livewire.edit.partials.buttons.download')

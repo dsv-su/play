@@ -29,6 +29,7 @@
         @include('home.partials.courses')
         @include('home.partials.description')
     </div>
+    @include('home.partials.stats')
     @include('home.partials.edit')
     @include('partials.download-poller-script')
 </div>
