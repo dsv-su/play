@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Notify;
 
 use App\Models\ManualPresentation;
+use App\Models\Video;
 use App\Models\VideoPermission;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
@@ -23,7 +24,9 @@ final class PlayStoreNotify
     private ManualPresentation $presentation;
     private ClientInterface $http;
 
-    public function __construct(ManualPresentation $presentation, ?ClientInterface $http = null)
+    //public function __construct(ManualPresentation $presentation, ?ClientInterface $http = null)
+    public function __construct(ManualPresentation|Video $presentation, ?ClientInterface $http = null)
+
     {
         $this->presentation = $presentation;
         $this->http         = $http ?? new Client();
@@ -105,6 +108,12 @@ final class PlayStoreNotify
 
             return $this->handleSendFailure($type, $e->getMessage());
         }
+    }
+
+    public function sendDelete()
+    {
+        //TODO
+        return 1;
     }
 
     /**
