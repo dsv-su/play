@@ -768,9 +768,6 @@ class EditController extends Controller
 
     public function destroy(Video $video, Request $request)
     {
-        // Optional: policy check
-        // $this->authorize('delete', $video);
-
         // Keep a snapshot for the post-commit notification payload
         $videoSnapshot = $video->replicate();
 
