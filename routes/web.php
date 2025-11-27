@@ -57,7 +57,7 @@ Route::middleware(['entitlements', 'playauth','web'])->group(function () {
 
     //Study
     Route::middleware(['redirect-links'])->get('/study/all', \App\Livewire\Study\StudyPresentations::class)->name('study.presentations');
-
+    Route::middleware(['redirect-links'])->get('/nextilearn/all', \App\Livewire\Nextilearn\NextIlearnPresentations::class)->name('nextilearn.presentations');
     //Edit
     Route::controller(\App\Http\Controllers\EditController::class)->group(function () {
         Route::get('/edit/{video}', 'show')->name('presentation.edit');

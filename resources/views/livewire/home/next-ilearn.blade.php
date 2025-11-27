@@ -1,7 +1,8 @@
 <div>
-    @if(count($studyvideos)>0)
+    @if(count($nextilearnvideos)>0)
     <!-- Slider -->
-    <div data-hs-carousel='{
+    <div wire:ignore
+         data-hs-carousel='{
       "loadingClasses": "opacity-0",
       "dotsItemClasses": "hs-carousel-active:bg-blue-700 hs-carousel-active:border-blue-700 size-3 border border-gray-400 rounded-full cursor-pointer dark:border-neutral-600 dark:hs-carousel-active:bg-blue-500 dark:hs-carousel-active:border-blue-500",
       "slidesQty": {
@@ -13,9 +14,9 @@
       "isDraggable": true
     }' class="relative js-carousel">
         <div class="px-4 py-2">
-            <a href="{{route('study.presentations')}}"
+            <a href="{{route('nextilearn.presentations')}}"
                class="group inline-flex items-center text-blue-700 text-xl font-light tracking-wide uppercase whitespace-nowrap drop-shadow-md dark:text-white hover:text-blue-900 dark:hover:text-gray-300 transition-colors duration-200">
-                {{__("Study information")}} ({{$totalCount}})
+                {{__("NextILearn tutorials")}} ({{$totalCount}})
                 <svg class="ml-2 w-6 h-6 text-current transform transition-transform duration-200 group-hover:translate-x-1"
                      aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                      fill="none" viewBox="0 0 24 24">
@@ -27,8 +28,9 @@
         <!-- Transparent background -->
         <div class="hs-carousel w-full overflow-hidden bg-transparent rounded-lg">
             <div class="relative min-h-72 ">
-                <div class="hs-carousel-body absolute top-0 bottom-0 start-0 flex flex-nowrap opacity-0 transition-transform duration-700 hs-carousel-dragging:transition-none hs-carousel-dragging:cursor-grabbing">
-                    @foreach($studyvideos as $video)
+                <div class="hs-carousel-body absolute top-0 bottom-0 start-0 flex flex-nowrap opacity-0 transition-transform duration-700
+                            hs-carousel-dragging:transition-none hs-carousel-dragging:cursor-grabbing" style="touch-action: pan-y;">
+                    @foreach($nextilearnvideos as $video)
                         <div class="hs-carousel-slide px-0.5">
                             <div class="flex justify-center h-full">
                                 @include('home.partials.presentation')
@@ -56,6 +58,7 @@
               </svg>
             </span>
         </button>
+
         <div class="hs-carousel-info absolute bottom-2 left-1/2 -translate-x-1/2 translate-y-8 inline-flex justify-center px-4 bg-white rounded-lg">
             <span class="hs-carousel-info-current me-1">0</span>
             /
