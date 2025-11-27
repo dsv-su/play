@@ -3,7 +3,12 @@
    $raw = request()->cookie('presentation_order', '[]');
    $orderFromCookie = json_decode($raw, true);
    // Allowed components default order
-   $defaultOrder = ['home.newpresentations', 'home.mypresentations', 'home.studypresentations'];
+   $defaultOrder = [
+        'home.newpresentations',
+        'home.mypresentations',
+        'home.studypresentations',
+        'home.nextilearn'
+        ];
 
    // Sanitize: keep only allowed values
    $order = collect(is_array($orderFromCookie) ? $orderFromCookie : [])
