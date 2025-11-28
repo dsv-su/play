@@ -12,6 +12,7 @@ class PresentationOrderController extends Controller
             'home.newpresentations' => 'New on Play Presentations',
             'home.mypresentations' => 'My Presentations',
             'home.studypresentations' => 'Study Presentations',
+            'home.nextilearn' => 'NextIlearn Presentations'
         ];
 
         return view('cookie.profile',['componentLabels' => $componentLabels]);
@@ -20,7 +21,7 @@ class PresentationOrderController extends Controller
     public function store(Request $request)
     {
         // Allowed components (same as in your Blade)
-        $defaultOrder = ['home.newpresentations', 'home.mypresentations', 'home.studypresentations'];
+        $defaultOrder = ['home.newpresentations', 'home.mypresentations', 'home.studypresentations', 'home.nextilearn'];
 
         // Validate and sanitize input
         $data = $request->validate([
