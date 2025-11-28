@@ -6,6 +6,7 @@ use App\Models\Pivots\VideoCoursePivot;
 use App\Models\Pivots\VideoPresenterPivot;
 use App\Models\Pivots\VideoTagPivot;
 use Carbon\Carbon;
+use DirectoryTree\Metrics\HasMetrics;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -17,7 +18,7 @@ use Laravel\Scout\Searchable;
 
 class Video extends Model
 {
-    use Searchable;
+    use Searchable, HasMetrics;
 
     //UUID
     protected $primaryKey = 'id';

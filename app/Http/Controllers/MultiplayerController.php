@@ -131,6 +131,17 @@ class MultiplayerController extends Controller
         );
         $stat->increment('playback');
 
+        //Record metrics for presentation
+        metric('presentation')
+            ->measurable($video)
+            ->with(['vid' => $video->id])
+            ->category('clicks')
+            ->record();
+        //Record metrics overall
+        metric('playback')
+            ->category('clicks')
+            ->record();
+
         return response()->json($presentation);
     }
 
