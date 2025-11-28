@@ -1,7 +1,10 @@
 @if ($video->edit && $video->state)
     <div class="flex space-x-1">
-        {{-- Playback Metric --}}
-        <div class="flex items-center justify-center w-8 h-8 hover:bg-neutral-100 active:bg-white focus:bg-white
+        <!-- Playback Metric -->
+        <button
+            type="button"
+            onclick="Livewire.dispatch('open-chart-modal', { videoId: @js($video->id) })"
+            class="flex items-center justify-center w-8 h-8 hover:bg-neutral-100 active:bg-white focus:bg-white
                     focus:outline-none focus:ring-2 focus:ring-neutral-200/60 focus:ring-offset-2
                     disabled:opacity-50 disabled:pointer-events-none">
 
@@ -24,9 +27,9 @@
                     {{ $video->videoStats->playback ?? 0 }}
                 </p>
             </div>
-        </div>
+        </button>
 
-        {{-- Download Metric --}}
+        <!-- Download Metric -->
         <div class="flex items-center justify-center w-8 h-8 hover:bg-neutral-100 active:bg-white focus:bg-white
                     focus:outline-none focus:ring-2 focus:ring-neutral-200/60 focus:ring-offset-2
                     disabled:opacity-50 disabled:pointer-events-none">
@@ -48,8 +51,8 @@
                 </p>
             </div>
         </div>
-
     </div>
-
-
+    <!-- Metrics chart -->
+    <livewire:stats.video-stats :video="$video" :key="'video-stats-'.$video->id" />
+    <!-- end chart -->
 @endif

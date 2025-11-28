@@ -64,14 +64,14 @@
 
                 <div class="bg-gray-100 border border-gray-200 p-2 md:p-3 flex items-center justify-between">
                     <div class="p-1 flex-1">
-            <textarea
-                x-ref="embedLink"
-                :id="$id('embed-link')"
-                class="w-full text-sm outline-none border-none bg-transparent p-0 resize-none"
-                rows="8"
-                aria-label="embed ilearn"
-                readonly><div style="position: relative;"><a target="_blank" href="{{ route('player.show', ['video' => $video]) }}"><div style="position: absolute; top: 130px; left: 255px; display: inline-block;color: white;"><i class="fa fa-play fa-5x" aria-hidden="true"></i></div><img src="{{ asset($video->thumb)}}" width="560" height="315"></a></div>
-            </textarea>
+                        <textarea
+                            x-ref="embedLink"
+                            :id="$id('embed-link')"
+                            class="w-full text-sm outline-none border-none bg-transparent p-0 resize-none"
+                            rows="8"
+                            aria-label="embed ilearn"
+                            readonly><div style="position: relative;"><a target="_blank" href="{{ route('player.show', ['video' => $video]) }}"><div style="position: absolute; top: 130px; left: 255px; display: inline-block;color: white;"><i class="fa fa-play fa-5x" aria-hidden="true"></i></div><img src="{{ asset($video->thumb)}}" width="560" height="315"></a></div>
+                        </textarea>
                     </div>
                     <button
                         x-data="{ copied: false }"

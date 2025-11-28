@@ -162,6 +162,17 @@ class DownloadController extends Controller
         if (Storage::disk(self::PUBLIC_DISK)->exists($filePath)) {
             // Increment stats atomically
             VideoStat::firstOrCreate(['video_id' => $video->id])->increment('download');
+            //Record metrics for presentation
+            metric('presentation_download')
+                ->measurable($video)
+                ->with(['vid' => $video->id])
+                ->category('download')
+                ->record();
+            //Record metrics overall
+            metric('download')
+                ->category('download')
+                ->record();
+
             return Storage::disk(self::PUBLIC_DISK)->download($filePath);
         }
 
