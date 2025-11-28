@@ -21,7 +21,7 @@ class PresentationOrderController extends Controller
     public function store(Request $request)
     {
         // Allowed components (same as in your Blade)
-        $defaultOrder = ['home.newpresentations', 'home.mypresentations', 'home.studypresentations', 'home.nextilearn'];
+        $defaultOrder = ['home.newpresentations', 'home.mypresentations', 'home.studypresentations', 'home.next-learn'];
 
         // Validate and sanitize input
         $data = $request->validate([
