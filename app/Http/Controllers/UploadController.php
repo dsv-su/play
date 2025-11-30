@@ -42,6 +42,8 @@ class UploadController extends Controller
         //Allowed courses
         $result = $resolver->getCoursesForUser($username, $role);
         $courses = $result['courses'];
+        //Sort after year
+        $courses = $courses->sortByDesc('year')->values();
         $allowedCourseIds = $result['allowedCourseIds'];
 
         // Prepopulate from the latest draft by this user

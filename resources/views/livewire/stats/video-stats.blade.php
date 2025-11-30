@@ -64,6 +64,10 @@
                     <span class="px-1.5 py-0 text-[10px] font-medium text-blue-700 bg-gray-100 border-none rounded-sm shadow-sm dark:bg-neutral-300">
                          {{$sum_year ?? 0}}
                     </span>
+                    {{__("Total")}}:
+                    <span class="px-1.5 py-0 text-[10px] font-medium text-blue-700 bg-gray-100 border-none rounded-sm shadow-sm dark:bg-neutral-300">
+                         {{$video->videoStats->playback ?? 0}}
+                    </span>
                 </div>
                 <!-- Chart -->
                 <div class="chart-container">
