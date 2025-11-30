@@ -67,6 +67,8 @@ class EditController extends Controller
         $result = $resolver->getCoursesForUser($username, $role);
 
         $courses = $result['courses'];
+        //Sort after year
+        $courses = $courses->sortByDesc('year')->values();
         $allowedCourseIds = $result['allowedCourseIds'];
 
         // Permission level for this specific video

@@ -8,7 +8,7 @@
         'home.newpresentations',
         'home.mypresentations',
         'home.studypresentations',
-        'home.nextilearn'
+        'home.next-ilearn'
         ];
 
     // Sanitize: keep only allowed values
