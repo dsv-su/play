@@ -6,6 +6,7 @@ use App\Jobs\JobDevNotification;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
+use Livewire\Mechanisms\HandleComponents\CorruptComponentPayloadException;
 use Throwable;
 use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
@@ -21,6 +22,7 @@ class Handler extends ExceptionHandler
     protected $dontReport = [
         TokenExpiredException::class,
         TokenBlacklistedException::class,
+        CorruptComponentPayloadException::class,
     ];
 
     /**
@@ -95,6 +97,13 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        if ($exception instanceof CorruptComponentPayloadException) {
+            //Simple “please refresh” page
+            return response(
+                'The page has been updated. Please refresh and try again.',
+                409
+            );
+        }
         return parent::render($request, $exception);
     }
 }
