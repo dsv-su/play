@@ -11,6 +11,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
@@ -162,13 +163,13 @@ final class PlayStoreNotify
         if ($type == 'bulk')    unset($p['sources']);
         if ($type == 'bulk')    unset($p['description']);
         if (empty($this->presentation->thumb) && $type == 'bulk')    unset($p['thumb']);
-        if (in_array('origin', $this->presentation->courses, true) && $type === 'bulk') {
+        if (in_array('origin', Arr::wrap($this->presentation->courses), true) && $type === 'bulk') {
             unset($p['courses']);
         }
-        if (in_array('origin', $this->presentation->presenters, true) && $type === 'bulk') {
+        if (in_array('origin', Arr::wrap($this->presentation->presenters), true) && $type === 'bulk') {
             unset($p['presenters']);
         }
-        if (in_array('origin', $this->presentation->tags, true) && $type === 'bulk') {
+        if (in_array('origin', Arr::wrap($this->presentation->tags), true) && $type === 'bulk') {
             unset($p['tags']);
         }
 
