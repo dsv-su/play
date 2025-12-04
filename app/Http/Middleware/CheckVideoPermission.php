@@ -57,6 +57,11 @@ class CheckVideoPermission
             return $next($request);
         }
 
+        //Check for ifram from nextIlearn
+        if( isset($_SERVER['HTTP_SEC_FETCH_DEST']) && $_SERVER['HTTP_SEC_FETCH_DEST'] == 'iframe' ) {
+            abort(450);
+        }
+
         //Default + not public at course level
         return $this->localOrLogin($request, $next);
     }
