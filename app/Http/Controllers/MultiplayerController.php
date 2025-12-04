@@ -196,6 +196,7 @@ class MultiplayerController extends Controller
                 'title' => $v->title,
                 'title_en' => $v->title_en,
                 'thumb' => $v->thumb,
+                'link' => $v->link,
                 'description' => $v->description,
             ])->all(),
         ];
