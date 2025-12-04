@@ -13,7 +13,7 @@ class TestController extends Controller
 
     public function server()
     {
-        dd($_SERVER);
+        //dd($_SERVER);
     }
 
     public function health(DaisyHealthChecker $checker)
