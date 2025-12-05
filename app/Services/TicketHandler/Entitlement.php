@@ -29,9 +29,10 @@ class Entitlement
             return false; // nothing configured → deny
         }
 
-        // 3. If no entitlements were passed explicitly and permission = 1,
+        // 3. If no entitlements were passed explicitly,
         //    try to read them from the server variable
-        if (empty($provided) && $id === 1) {
+        //if (empty($provided) && $id === 1) {
+        if (empty($provided)) {
             $raw = $_SERVER[$paramName] ?? null;
             if (!$raw) {
                 return false; // header/var not present → deny
