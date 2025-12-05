@@ -5,15 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Services\Filters\VisibilityFilter;
 use App\Services\TicketHandler\TicketPermissionHandler;
-use App\Models\Stream;
-use App\Models\StreamResolution;
 use App\Models\Video;
 use App\Models\VideoCourse;
 use App\Models\VideoStat;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -62,7 +59,7 @@ class MultiplayerController extends Controller
             $query['l'] = $courseId;
         }
 
-        return redirect()->route('multiplayer.ce', $query);
+        return redirect()->route('multiplayer.index', $query);
     }
 
 
@@ -75,7 +72,6 @@ class MultiplayerController extends Controller
         ])->findOrFail($id);
 
         // Issue ticket for video
-        //$token = (new TicketPermissionHandler($video))->issue();
         $handler = app(TicketPermissionHandler::class);      // constructor gets Entitlement via container
         $token   = $handler->issue($video, $entitlements ?? []);
 
@@ -205,9 +201,9 @@ class MultiplayerController extends Controller
         return response()->json($payload, 200, [], JSON_PRETTY_PRINT );
     }
 
-
     public function multiplayer()
     {
+        //deprecated
         return view('player.index');
     }
 
