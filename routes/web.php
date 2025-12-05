@@ -17,8 +17,7 @@ Route::get($login, [\App\Http\Controllers\SystemController::class, 'SUidpReturn'
 Route::controller(MultiplayerController::class)->group(function () {
     // video-permission applies to both multiplayer pages
     Route::middleware('video-permission')->group(function () {
-        Route::get('/multiplayer',     'multiplayer')->name('multiplayer.index');
-        Route::get('/multiplayer_ce',  'multiplayer_ce')->name('multiplayer.ce');
+        Route::get('/multiplayer',     'multiplayer_ce')->name('multiplayer.index');
     });
 
     // presentation-permission only for presentations

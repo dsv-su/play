@@ -413,6 +413,16 @@ class EditController extends Controller
                     $map = [
                         'english' => 'English',
                         'swedish' => 'Svenska',
+                        'danish' => 'Danish',
+                        'dutch' => 'Dutch',
+                        'icelandic' => 'Icelandic',
+                        'italian' => 'Italian',
+                        'finnish' => 'Finnish',
+                        'french' => 'French',
+                        'german' => 'German',
+                        'norwegian' => 'Norwegian',
+                        'russian' => 'Russian',
+                        'spanish' => 'Spanish'
                     ];
 
                     $subtitles = []; // Collect all subtitles here
