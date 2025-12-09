@@ -10,8 +10,10 @@ use App\Models\VideoPermission;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
@@ -25,7 +27,6 @@ final class PlayStoreNotify
     private ManualPresentation $presentation;
     private ClientInterface $http;
 
-    //public function __construct(ManualPresentation $presentation, ?ClientInterface $http = null)
     public function __construct(ManualPresentation|Video $presentation, ?ClientInterface $http = null)
 
     {
@@ -111,10 +112,68 @@ final class PlayStoreNotify
         }
     }
 
-    public function sendDelete()
+    /**
+     * Send a DELETE request to remove the presentation in the external service.
+     *
+     * @param  bool  $dryRun  If true, just return the JSON payload instead of sending.
+     * @return bool|string    true on successful delete, false on failure, JSON string on dryRun
+     */
+    public function sendDelete(bool $dryRun = false): bool|string
     {
-        //TODO
-        return 1;
+        // Build URI for this presentation
+        $uri = rtrim($this->uri(), '/') . '/' . $this->presentation->id;
+
+        // Auth payload
+        $payload = [
+            'auth' => $this->storeauth(),
+        ];
+
+        if ($dryRun) {
+            // For debugging the outgoing request
+            return json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        }
+
+        try {
+            $response = $this->http->request('DELETE', $uri, [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Accept'       => 'application/json',
+                ],
+                'body'    => json_encode($payload, JSON_UNESCAPED_UNICODE),
+                'timeout' => 20,
+            ]);
+        } catch (RequestException $e) {
+            // If the server responded with an error, log body if present
+            $body = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+
+            Log::error('PlayStoreNotify delete failed (request exception)', [
+                'message' => $e->getMessage(),
+                'body'    => $body,
+            ]);
+
+            return false;
+        } catch (GuzzleException $e) {
+            Log::error('PlayStoreNotify delete failed (guzzle exception)', [
+                'message' => $e->getMessage(),
+            ]);
+
+            return false;
+        }
+
+        $status  = $response->getStatusCode();
+        $bodyStr = (string) $response->getBody();
+
+        if ($status < 200 || $status >= 300) {
+            Log::warning('PlayStoreNotify delete non-2xx response', [
+                'status' => $status,
+                'body'   => $bodyStr,
+            ]);
+            return false;
+        }
+
+        // $data = $bodyStr !== '' ? json_decode($bodyStr, true) : null;
+
+        return true;
     }
 
     /**
