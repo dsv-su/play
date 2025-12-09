@@ -24,7 +24,7 @@ final class PlayStoreNotify
     public const TYPE_EDIT      = 'edit';
     public const TYPE_BULK      = 'bulk';
 
-    private ManualPresentation $presentation;
+    private ManualPresentation|Video $presentation;
     private ClientInterface $http;
 
     public function __construct(ManualPresentation|Video $presentation, ?ClientInterface $http = null)
