@@ -143,7 +143,13 @@ class Video extends Model
     //Keep index fresh when the Video itself is saved
     protected static function booted(): void
     {
+        // When a video is saved, make it searchable
         static::saved(fn (self $video) => $video->searchable());
+
+        // When a video is deleted, delete its metrics
+        static::deleting(function (self $video) {
+            $video->metrics()->delete();
+        });
     }
     //end typesense
 

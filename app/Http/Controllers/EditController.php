@@ -796,7 +796,6 @@ class EditController extends Controller
                 \App\Models\IndividualPermission::where('video_id', $videoId)->delete();
                 \App\Models\VideoStat::where('video_id', $videoId)->delete();
 
-
                 // Streams + resolutions
                 $streamIds = \App\Models\Stream::where('video_id', $videoId)->pluck('id');
                 if ($streamIds->isNotEmpty()) {
@@ -814,13 +813,6 @@ class EditController extends Controller
             DB::afterCommit(fn() => (new PlayStoreNotify($videoSnapshot))->sendDelete());
             return back()->with('success', true)
                 ->with('message', __('The presentation has been deleted'));
-            /*if ($notify->sendDelete()) {
-                return back()->with('success', true)
-                    ->with('message', __('The presentation has been deleted'));
-            }
-
-            return back()->with('error', true)
-                ->with('message', __('The presentation has not been deleted'));*/
 
         } catch (Throwable $e) {
             report($e);
