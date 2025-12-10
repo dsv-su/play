@@ -406,7 +406,7 @@ class EditController extends Controller
                 }
 
                 //If uploaded subtitles
-                if($data['uploadedSubLanguage'] ?? false || $data['remove_existing_sub'] ?? false) {
+                if (!empty($data['uploadedSubLanguage']) || !empty($data['remove_existing_sub'])) {
 
                     //Set upload true
                     if($data['uploadedSubLanguage'] ?? false) {
