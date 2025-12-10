@@ -133,6 +133,7 @@ class EditController extends Controller
                 'autosub_language'        => ['nullable', 'string'],
                 'add_sub'                 => ['array'],
                 'uploadedSubLanguage'     => ['required_with:add_sub','array'],
+                'remove_existing_sub'     => ['nullable','array'],
                 'render_thumb'            => ['nullable', 'bool']
             ]);
 
@@ -405,12 +406,16 @@ class EditController extends Controller
                 }
 
                 //If uploaded subtitles
-                if($data['uploadedSubLanguage'] ?? false) {
+                if($data['uploadedSubLanguage'] ?? false || $data['remove_existing_sub'] ?? false) {
+
                     //Set upload true
-                    $this->upload = true;
+                    if($data['uploadedSubLanguage'] ?? false) {
+                        $this->upload = true;
+                    }
 
                     // A mapping from the uploaded language key to the display name
                     $map = [
+                        'Generated' => 'Generated',
                         'english' => 'English',
                         'swedish' => 'Svenska',
                         'danish' => 'Danish',
@@ -427,11 +432,23 @@ class EditController extends Controller
 
                     $subtitles = []; // Collect all subtitles here
                     $index = 0;
-                    foreach ($data['uploadedSubLanguage'] as $subs) {
-                        if (isset($map[$subs])) {
-                            $subtitles[$map[$subs]] = 'subtitle/' . $subtitles_filename[$index];
-                            $index++;
+                    if($data['uploadedSubLanguage'] ?? false) {
+                        foreach ($data['uploadedSubLanguage'] as $subs) {
+                            if (isset($map[$subs])) {
+                                $subtitles[$map[$subs]] = 'subtitle/' . $subtitles_filename[$index];
+                                $index++;
+                            }
                         }
+                    }
+
+                    //If remove subs
+                    if($data['remove_existing_sub'] ?? false) {
+                        foreach ($data['remove_existing_sub'] as $key => $removesubs) {
+                            if (isset($map[$key])) {
+                                $subtitles[$map[$key]] = null;
+                            }
+                        }
+
                     }
 
                     // Store in the database
