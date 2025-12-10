@@ -36,6 +36,8 @@
                     </button>
                 </div>
 
+                {{--}}@include('livewire.search.partials.share.select_sub_language'){{--}}
+
                 <!-- Direct link -->
                 <h4 class="text-lg font-normal">{{ __("Direct link") }}</h4>
                 <small class="opacity-50">{{ __("Click on the icon to copy to clipboard") }}</small>
