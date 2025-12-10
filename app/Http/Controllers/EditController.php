@@ -446,6 +446,8 @@ class EditController extends Controller
                         foreach ($data['remove_existing_sub'] as $key => $removesubs) {
                             if (isset($map[$key])) {
                                 $subtitles[$map[$key]] = '';
+                            } else {
+                                $subtitles[$key] = '';
                             }
                         }
 
