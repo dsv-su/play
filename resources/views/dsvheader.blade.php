@@ -35,10 +35,10 @@
         </div>
 
         <!-- Right: user / actions -->
-        <div class="flex items-center justify-end col-span-1 bg-sudepartment gap-3 pr-3">
+        <div class="flex items-center justify-end col-span-1 bg-sudepartment gap-3 pr-1">
             <!-- User name -->
             <div
-                class="flex items-center h-7 justify-center text-xs text-white rounded-lg min-w-[250px]"
+                class="flex items-center h-7 justify-end text-xs text-white rounded-lg min-w-[250px]"
                 title="{{ __('Profile settings') }}">
                 <a href="{{route('presentation-order.show')}}">
                     <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
