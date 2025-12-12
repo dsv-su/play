@@ -212,7 +212,7 @@ class MultiplayerController extends Controller
         // Validate query params
         $data = $request->validate([
             'p' => ['required', 'string'],   // presentation id
-            'l' => ['nullable', 'int'],   // playlist id
+            'l' => ['nullable', 'integer'],   // playlist id
             's' => ['nullable', 'string'],   // default subtitle
         ]);
 
@@ -224,6 +224,11 @@ class MultiplayerController extends Controller
         if (!empty($data['l'])) {
             $viewData['playlist'] = $data['l'];
         }
+
+        if (!empty($data['s'])) {
+            $viewData['s'] = $data['s'];
+        }
+
 
         return view('player.index-ce', $viewData);
     }
