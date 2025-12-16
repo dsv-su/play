@@ -90,6 +90,27 @@
                 </div>
                 <!-- end Buttons -->
 
+                <!-- Apply buttons -->
+                <div class="flex justify-start gap-2 mt-3">
+                    <button type="button" @click="applySubtitle()"
+                        class="py-1.5 px-3 inline-flex items-center gap-x-1.5 text-xs font-medium rounded-md
+                               border border-blue-600 text-blue-600
+                               hover:border-blue-500 hover:text-blue-500
+                               disabled:opacity-50 disabled:pointer-events-none">
+                        {{ __("Apply subtitle") }}
+                    </button>
+
+                    <button type="button" @click="clearSubtitle()"
+                        class="py-1.5 px-3 inline-flex items-center gap-x-1.5 text-xs font-medium rounded-md
+                               border border-red-500 text-red-500
+                               hover:border-red-400 hover:text-red-400
+                               disabled:opacity-50 disabled:pointer-events-none">
+                        {{ __("Remove subtitle") }}
+                    </button>
+                </div>
+
+                <!-- end apply buttons -->
+
                 <!-- Direct link -->
                 <h4 class="text-lg font-normal mt-6">{{ __("Direct link") }}</h4>
                 <small class="opacity-50">{{ __("Click on the icon to copy to clipboard") }}</small>
@@ -154,27 +175,49 @@
 </div>
 
 <script>
-    function shareModal({ baseUrl, videoId, defaultSubtitle }) {
+    function shareModal({ baseUrl, videoId, defaultSubtitle, thumbUrl }) {
         return {
             modalOpen: false,
-            baseUrl: baseUrl,
-            videoId: videoId,
+            baseUrl,
+            videoId,
+            thumbUrl,
+
+            // UI selection (changes when radio clicked)
             selectedSubtitle: defaultSubtitle,
+
+            // Actually applied to URL (starts null)
+            appliedSubtitle: null,
+
+            applySubtitle() {
+                this.appliedSubtitle = this.selectedSubtitle;
+            },
+
+            clearSubtitle() {
+                this.appliedSubtitle = null;
+            },
+
             get shareUrl() {
                 const params = new URLSearchParams();
                 params.set('p', this.videoId);
 
-                if (this.selectedSubtitle) {
-                    params.set('s', this.selectedSubtitle);
+                if (this.appliedSubtitle) {
+                    params.set('s', this.appliedSubtitle);
                 }
 
-                return this.baseUrl + '?' + params.toString();
+                return `${this.baseUrl}?${params.toString()}`;
             },
 
             get embedCode() {
-                return `<span style="position: relative; display: inline-block;"><a target="_blank" href="${this.shareUrl}"><span style="position: absolute;inset: 0;display: flex;align-items: center;justify-content: center;color: white;" > <i class="fa fa-play fa-5x" aria-hidden="true"></i> </span> <img src="${this.thumbUrl}" width="560" height="315" alt=""> </a> </span>`;
+                return `<span style="position:relative;display:inline-block;">
+  <a target="_blank" href="${this.shareUrl}">
+    <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:white;">
+      <i class="fa fa-play fa-5x" aria-hidden="true"></i>
+    </span>
+    <img src="${this.thumbUrl}" width="560" height="315" alt="">
+  </a>
+</span>`;
             },
-
         };
     }
+
 </script>
