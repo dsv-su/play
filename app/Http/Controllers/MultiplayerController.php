@@ -209,10 +209,11 @@ class MultiplayerController extends Controller
 
     public function multiplayer_ce(Request $request): View|RedirectResponse
     {
-        // Validate query params (?p=...&l=...)
+        // Validate query params
         $data = $request->validate([
             'p' => ['required', 'string'],   // presentation id
-            'l' => ['nullable', 'int'],   // playlist id
+            'l' => ['nullable', 'integer'],   // playlist id
+            's' => ['nullable', 'string'],   // default subtitle
         ]);
 
         // Build view data
@@ -223,6 +224,11 @@ class MultiplayerController extends Controller
         if (!empty($data['l'])) {
             $viewData['playlist'] = $data['l'];
         }
+
+        if (!empty($data['s'])) {
+            $viewData['s'] = $data['s'];
+        }
+
 
         return view('player.index-ce', $viewData);
     }

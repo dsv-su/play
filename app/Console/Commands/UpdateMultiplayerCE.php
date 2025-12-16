@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 class UpdateMultiplayerCE extends Command
@@ -30,8 +31,8 @@ class UpdateMultiplayerCE extends Command
     {
         //Define the paths for the multiplayer repository
         $multiplayerPath = storage_path(). '/app/multiplayer-ce';
-        $multiplayerJsSource = 'multiplayer-ce/multiplayer.js';
-        $multiplayerJsDestination = 'public/js/multiplayer.js';
+        $multiplayerJsSource = storage_path('app/multiplayer-ce/multiplayer.js');
+        $multiplayerJsDestination = public_path('js/multiplayer.js');
         $updateMultiplayerCmd = "cd $multiplayerPath && git pull";
 
         //Execute the update command for the multiplayer repository
@@ -51,10 +52,19 @@ class UpdateMultiplayerCE extends Command
             return 1; // Return failure status
         }
 
+        // Ensure destination directory exists
+        File::ensureDirectoryExists(dirname($multiplayerJsDestination));
+
+        // Validate source
+        if (!File::exists($multiplayerJsSource)) {
+            $this->error("Source file not found: {$multiplayerJsSource}");
+            return self::FAILURE;
+        }
+
         //Copy the updated multiplayer.js file to the public directory
-        if (!Storage::disk('local')->copy($multiplayerJsSource, $multiplayerJsDestination)) {
-            $this->comment('Failed to copy multiplayer.js to public/js directory.');
-            return 1; // Return failure status
+        if (!File::copy($multiplayerJsSource, $multiplayerJsDestination)) {
+            $this->error('Failed to copy multiplayer.js to public/js.');
+            return self::FAILURE;
         }
 
     //Indicate that the update and copy were successful
