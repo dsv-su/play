@@ -15,7 +15,7 @@ class Newpresentations extends Component
     {
         $raw = Video::query()
             ->select([
-                'id', 'title', 'creation', 'duration', 'visibility',
+                'id', 'title', 'title_en', 'creation', 'duration', 'visibility',
                 'state', 'thumb', 'category_id', 'subtitles', 'description',
                 'created_at'
             ])
