@@ -52,7 +52,7 @@
                                href="{{ route('player.show', ['video' => $video]) }}"
                                class="w-full font-medium text-sm sm:text-base hover:text-blue-600 {{ $titleColor }} dark:text-neutral-100 truncate"
                                title="{{ $video->title }}">
-                                {{ $video->title }}
+                                {{ $video->LangTitle }}
                             </a>
 
                             <!-- Meta row: duration, course, presenters, tags -->

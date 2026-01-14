@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\URL;
 use Laravel\Scout\Searchable;
@@ -168,10 +169,10 @@ class Video extends Model
 
     public function getLangTitleAttribute(): string
     {
-        if (Lang::locale() == 'swe') {
-            return $this->title;
-        } else {
+        if (App::isLocale('en')) {
             return $this->title_en ?: $this->title;
+        } else {
+            return $this->title;
         }
     }
 
