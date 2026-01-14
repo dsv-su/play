@@ -37,10 +37,12 @@
         </a>
     </li>
     @can('admin-content')
+    {{--}}
     <li>
         <a href="#_" class="inline-flex items-center justify-center h-10 px-4 py-2 font-medium transition-colors rounded-md hover:text-neutral-900 dark:hover:text-gray-200">
             Admin
         </a>
     </li>
+    {{--}}
     @endcan
 </ul>

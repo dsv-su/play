@@ -1,3 +1,4 @@
+{{--}} // deactivated 2026-01-14
 <div class="mr-4 flex justify-end w-full">
     <div
         x-data="{ switchOn: @entangle('switchOn').live }"
@@ -25,3 +26,4 @@
         </label>
     </div>
 </div>
+{{--}}
