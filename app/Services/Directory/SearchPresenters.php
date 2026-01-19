@@ -115,6 +115,20 @@ class SearchPresenters
             }
         }
 
+        // Prioritize: DSV staff first, then External/local, then Student, then Other
+        $priority = [
+            'DSV'      => 0,  // staff entitlement
+            'External' => 1,  // local external presenters
+            'Student'  => 2,
+            'Other'    => 3,
+        ];
+
+        $users = $users
+            ->sortBy(function ($u) use ($priority) {
+                return $priority[$u->role] ?? 99;
+            })
+            ->values();
+
 
         return $users->take($limit)->values()->all();
     }
