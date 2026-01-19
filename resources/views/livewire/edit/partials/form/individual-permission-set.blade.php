@@ -21,27 +21,29 @@
                     <option value="edit"   {{ $name['permission'] === 'edit' ? 'selected' : '' }}>{{__("Edit")}}</option>
                     <option value="delete" {{ $name['permission'] === 'delete' ? 'selected' : '' }}>{{__("Delete")}}</option>
                 </select>{{--}}
-            <!-- Permission Select -->
+                <!-- Permission Select -->
                 <select wire:change="setPermission({{ $key }}, $event.target.value)"
                         class="flex-1 sm:flex-none w-full sm:w-32 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm
-                                focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:opacity-70 dark:text-gray-300 dark:bg-slate-700 dark:sm:border-slate-600">
+               focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:opacity-70 dark:text-gray-300 dark:bg-slate-700 dark:sm:border-slate-600">
+
                     <option value="read" {{ $name['permission'] === 'read' ? 'selected' : '' }}>
                         {{ __("Read") }}
                     </option>
 
                     <option value="edit"
                         {{ $name['permission'] === 'edit' ? 'selected' : '' }}
-                        {{ $name['permission'] === 'read' ? 'disabled' : '' }}>
+                        {{ ($user_permission !== 'delete' && $name['permission'] === 'read') ? 'disabled' : '' }}>
                         {{ __("Edit") }}
                     </option>
 
                     <option value="delete"
                         {{ $name['permission'] === 'delete' ? 'selected' : '' }}
-                        {{ in_array($name['permission'], ['read','edit']) ? 'disabled' : '' }}>
+                        {{ ($user_permission !== 'delete' && in_array($name['permission'], ['read','edit'], true)) ? 'disabled' : '' }}>
                         {{ __("Delete") }}
                     </option>
 
                 </select>
+
 
                 <!-- Remove Button -->
                 <button type="button"

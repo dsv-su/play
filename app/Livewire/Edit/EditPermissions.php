@@ -97,17 +97,21 @@ class EditPermissions extends Component
         //$this->individualPermissions[$key]['permission'] = $value;
         $current = $this->individualPermissions[$key]['permission'] ?? null;
 
-        // allow only known values
         if (!in_array($value, ['read', 'edit', 'delete'], true)) {
             return;
         }
 
-        // Rule: if current is edit, block selecting delete
+        // Only "delete" users can do any transition
+        if ($this->user_permission === 'delete') {
+            $this->individualPermissions[$key]['permission'] = $value;
+            return;
+        }
+
+        // Otherwise enforce rules:
         if ($current === 'edit' && $value === 'delete') {
             return;
         }
 
-        // Rule: if current is read, block selecting edit
         if ($current === 'read' && $value === 'edit') {
             return;
         }
