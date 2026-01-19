@@ -94,7 +94,6 @@ class EditPermissions extends Component
 
     public function setPermission($key, $value): void
     {
-        //$this->individualPermissions[$key]['permission'] = $value;
         $current = $this->individualPermissions[$key]['permission'] ?? null;
 
         if (!in_array($value, ['read', 'edit', 'delete'], true)) {

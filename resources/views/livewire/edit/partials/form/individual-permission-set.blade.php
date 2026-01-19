@@ -34,7 +34,6 @@
                     </option>
                 </select>
 
-
                 <!-- Remove Button -->
                 <button type="button"
                         class="w-10 h-10 flex items-center justify-center rounded-md border border-gray-300 text-gray-500 hover:text-gray-700
