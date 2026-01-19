@@ -32,13 +32,13 @@
 
                     <option value="edit"
                         {{ $name['permission'] === 'edit' ? 'selected' : '' }}
-                        {{ ($this->user_permission !== 'delete' && $name['permission'] === 'read') ? 'disabled' : '' }}>
+                        {{ ($user_permission !== 'delete' && $name['permission'] === 'read') ? 'disabled' : '' }}>
                         {{ __("Edit") }}
                     </option>
 
                     <option value="delete"
                         {{ $name['permission'] === 'delete' ? 'selected' : '' }}
-                        {{ ($this->user_permission !== 'delete' && in_array($name['permission'], ['read','edit'], true)) ? 'disabled' : '' }}>
+                        {{ ($user_permission !== 'delete' && in_array($name['permission'], ['read','edit'], true)) ? 'disabled' : '' }}>
                         {{ __("Delete") }}
                     </option>
 
