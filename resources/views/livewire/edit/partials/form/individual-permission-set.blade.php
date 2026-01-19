@@ -44,13 +44,13 @@
 
                     <option value="edit"
                         {{ $name['permission'] === 'edit' ? 'selected' : '' }}
-                        {{ ($user_permission !== 'delete') ? 'disabled' : '' }}>
+                        {{ ($user_permission !== 'delete' && in_array($name['permission'], ['read','edit'], true)) ? 'disabled' : '' }}>
                         {{ __("Edit") }}
                     </option>
 
                     <option value="delete"
                         {{ $name['permission'] === 'delete' ? 'selected' : '' }}
-                        {{ ($user_permission !== 'delete') ? 'disabled' : '' }}>
+                        {{ ($user_permission !== 'delete' && in_array($name['permission'], ['read','edit','delete'], true)) ? 'disabled' : '' }}>
                         {{ __("Delete") }}
                     </option>
                 </select>
