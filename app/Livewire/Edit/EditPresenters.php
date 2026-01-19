@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Edit;
 
+use App\Models\Presenter;
 use App\Models\Video;
 use App\Services\Ldap\SukatUser;
 use App\Services\Directory\SearchPresenters;
@@ -59,9 +60,16 @@ class EditPresenters extends Component
     public function getPresenters(): void
     {
         // If no video, there are no presenters to load from DB
+        $username = app()->bound('play_username') ? app('play_username') : null;
+
+        $blocked = ['dsv-dev', 'stud1111', 'stud2222', 'stud3333'];
+
         $presenters = $this->video?->exists
             ? $this->video->presenters
-            : [];
+            : (in_array($username, $blocked, true)
+                ? [] // empty presenters
+                : ($username ? Presenter::where('username', $username)->get() : [])
+            );
 
         $uids = collect($presenters)->pluck('username')->filter()->unique()->values();
 

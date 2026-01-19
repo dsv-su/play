@@ -10,6 +10,8 @@ use Prism\Prism\ValueObjects\Media\Document;
 
 class TestController extends Controller
 {
+    protected $video;
+
     public function index()
     {
         //$this->cleanVttFile();
