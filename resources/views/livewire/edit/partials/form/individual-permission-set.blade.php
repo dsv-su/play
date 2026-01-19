@@ -32,7 +32,7 @@
 
                     <option value="edit"
                         {{ $name['permission'] === 'edit' ? 'selected' : '' }}
-                        {{ ($user_permission !== 'delete' && $name['permission'] === 'read') ? 'disabled' : '' }}>
+                        {{ ($user_permission != 'delete' && $name['permission'] === 'read') ? 'disabled' : '' }}>
                         {{ __("Edit") }}
                     </option>
 
