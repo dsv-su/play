@@ -101,24 +101,17 @@ class EditPermissions extends Component
             return;
         }
 
-        // Only "delete" users can do any transition
+        // "delete" users can change anything
         if ($this->user_permission === 'delete') {
             $this->individualPermissions[$key]['permission'] = $value;
             return;
         }
 
-        // Otherwise enforce rules:
-        if ($current === 'edit' && $value === 'delete') {
-            return;
-        }
-
-        if ($current === 'read' && $value === 'edit') {
-            return;
-        }
-
-        if ($current === 'read' && $value === 'delete') {
-            return;
-        }
+        // restrictions for everyone else
+        if ($current === 'edit' && $value === 'delete') return;
+        if ($current === 'read' && $value === 'edit') return;
+        // optional stricter:
+        // if ($current === 'read' && $value === 'delete') return;
 
         $this->individualPermissions[$key]['permission'] = $value;
     }
