@@ -88,33 +88,29 @@ class EditPermissions extends Component
 
     public function addPermission($Uid, $name)
     {
-        $this->individualPermissions[] =  ['username' => $Uid, 'name' => $name, 'permission' => 'read'];
+        $this->individualPermissions[] =  ['username' => $Uid, 'name' => $name, 'permission' => 'edit'];
         $this->searchP = '';
     }
 
     public function setPermission($key, $value): void
     {
-        //$this->individualPermissions[$key]['permission'] = $value;
         $current = $this->individualPermissions[$key]['permission'] ?? null;
 
-        // allow only known values
         if (!in_array($value, ['read', 'edit', 'delete'], true)) {
             return;
         }
 
-        // Rule: if current is edit, block selecting delete
-        if ($current === 'edit' && $value === 'delete') {
+        // "delete" users can change anything
+        if ($this->user_permission === 'delete') {
+            $this->individualPermissions[$key]['permission'] = $value;
             return;
         }
 
-        // Rule: if current is read, block selecting edit
-        if ($current === 'read' && $value === 'edit') {
-            return;
-        }
-
-        if ($current === 'read' && $value === 'delete') {
-            return;
-        }
+        // restrictions for everyone else
+        if ($current === 'edit' && $value === 'delete') return;
+        if ($current === 'read' && $value === 'edit') return;
+        // optional stricter:
+        // if ($current === 'read' && $value === 'delete') return;
 
         $this->individualPermissions[$key]['permission'] = $value;
     }
