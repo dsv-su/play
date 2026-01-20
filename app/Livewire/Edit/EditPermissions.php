@@ -88,7 +88,7 @@ class EditPermissions extends Component
 
     public function addPermission($Uid, $name)
     {
-        $this->individualPermissions[] =  ['username' => $Uid, 'name' => $name, 'permission' => 'read'];
+        $this->individualPermissions[] =  ['username' => $Uid, 'name' => $name, 'permission' => 'edit'];
         $this->searchP = '';
     }
 
