@@ -13,7 +13,7 @@ class DownloadResource
         $client   = new Client();
         $resource = storage_path('app/public/'.$storage);
 
-        \Log::notice('preparing get request', ['token' => $this->token]);
+        //\Log::notice('preparing get request', ['token' => $this->token]);
 
         $client->request('GET', $url, [
             'cache' => 'no-cache',
