@@ -491,13 +491,16 @@ class EditController extends Controller
             Artisan::call('download:clear');
 
             // 10) Redirect
-            $links = session('links') ?? [];
-            /*if (count($links) <= 3) {
-                return redirect()->route('home')
-                    ->with('message', __("Processing the update"));
-            }*/
-            return redirect($links[1])
-                ->with('message', __("Processing the update"));
+            $links = session('links', []);
+
+            //Fallback
+            $fallback = route('home');
+
+            if (!isset($links[1]) || empty($links[1])) {
+                return redirect($fallback)->with('message', __("Processing the update"));
+            }
+
+            return redirect($links[1])->with('message', __("Processing the update"));
         }
 
         return view('videos.edit', compact('video'));
