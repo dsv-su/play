@@ -580,10 +580,10 @@ class UploadController extends Controller
         $presentation = ManualPresentation::where('local', $request->localdir)->first();
 
         // Decode existing sources, or initialize empty array
-        $sources = $presentation->sources ? json_decode($presentation->sources, true) : [];
+        $sources = $presentation->sources ?? [];
 
         // Add new entry depending on number of files
-        if ($presentation->files == 1) {
+        if ((int) $presentation->files === 1) {
             $sources['main'] = [
                 'video' => 'video/' . $filename,
                 'playAudio' => true,
