@@ -8,7 +8,7 @@ class TestController extends Controller
 {
     public function index()
     {
-
+        //return view('faq.faq_student');
     }
 
     public function server()
