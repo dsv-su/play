@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Edit;
 
+use App\Models\StreamResolution;
 use App\Models\Video;
 use Illuminate\Support\Collection;
 use Livewire\Component;
@@ -11,6 +12,7 @@ class EditStreams extends Component
     public Video $video;
     public array $audio = [];
     public array $streamVisibility = [];
+    public array $streamUrl = [];
 
     /** @var array<int, array{audio:bool, hidden:bool, poster:?string}> */
     public array $streams = [];
@@ -59,6 +61,7 @@ class EditStreams extends Component
         $this->streams = $this->video->streams
             ->map(function ($stream) use ($base) {
                 return [
+                    'id' => $stream->id,
                     'title' => $stream->name,
                     'audio'  => (bool) $stream->audio,
                     'hidden' => (bool) $stream->hidden,
@@ -71,6 +74,10 @@ class EditStreams extends Component
             ->all();
         foreach ($this->streams as $i => $stream) {
             $this->streamVisibility[] = $stream['hidden'];
+        }
+        //Testing
+        foreach ($this->streams as $i => $stream) {
+            $this->streamUrl[$stream['id']] = StreamResolution::where('stream_id', $stream['id'])->where('resolution', '720')->pluck('filename')->first();
         }
     }
 

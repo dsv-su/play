@@ -125,6 +125,10 @@ class PlayAuthenticate
             } elseif (in_array($role_staff, $server)) {
                 $playAuth = 'Staff';
                 $playRole = $this->handleStaffRole($daisy, $daisyPersonID, $role_uploader, $server);
+            } elseif (in_array($role_uploader, $server)) {
+                //Access for external staff users
+                $playAuth = 'Staff';
+                $playRole = $this->handleStaffRole($daisy, $daisyPersonID, $role_uploader, $server);
             } else {
                 $playAuth = 'Student';
                 $playRole = in_array($role_uploader, $server) ? 'Uploader' : 'Student';
