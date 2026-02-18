@@ -107,6 +107,9 @@
     </div>
 
     <div class="grid grid-cols-4 gap-x-2 empty:gap-0" data-hs-file-upload-previews></div>
-</div>
 
+</div>
+@error('files')
+<p id="file-errors" class="mt-3 text-sm leading-6 text-red-600">{{ $message }}</p>
+@enderror
 
