@@ -100,6 +100,12 @@ class UploadController extends Controller
         //Retrive MP
         $manualPresentation = ManualPresentation::find($id);
 
+        if (($manualPresentation->files ?? 0) <= 0) {
+            return redirect()->to(url()->previous().'#file-errors')
+                ->withInput()
+                ->withErrors(['files' => 'Please upload at least one file.']);
+        }
+
         $presenters = [];
 
         // Always include the current play_username
@@ -196,9 +202,17 @@ class UploadController extends Controller
         //Subtitles
         $gsubtitles = [];
         if (!empty($data['autosub'])) {
+            // Find the firststream where PlayAudio is true
+            $streams = $manualPresentation->sources;
+            $firstKey = array_key_first($streams);
+
+            // Fallback: use 'main' if no such stream found
+            $sourceName = $firstKey ?? 'main';
+
+            // Build subtitle generation data
             $generated = [
                 'type' => 'whisper',
-                'source' => 'main',
+                'source' => $sourceName,
             ];
 
             if (!empty($data['autosub_language'])) {
@@ -480,6 +494,9 @@ class UploadController extends Controller
             Storage::disk('play-store')->delete($finalPosterPath . $thumb_name.'.png');
 
             $this->deleteFilesCount($request);
+            //Remove source
+            $this->removeSource($request, $file);
+
             return response()->json([
                 'status' => 'ok'
             ], 200);
@@ -600,6 +617,65 @@ class UploadController extends Controller
         $presentation->sources = $sources;
         $presentation->save();
     }
+
+    protected function removeSource(Request $request, string $filename)
+    {
+        $presentation = ManualPresentation::where('local', $request->localdir)->first();
+        $sources = $presentation->sources ?? [];
+
+        if (!isset($sources) || !is_array($sources)) {
+            return response()->json([
+                'ok' => false,
+                'message' => 'No sources found in JSON',
+            ], 404);
+        }
+
+        // Normalize filename in case they pass a full path
+        $needle = basename($filename);
+
+        // Find which key to remove by matching the filename at the end of the stored video path
+        $keyToRemove = null;
+
+        foreach ($sources as $key => $source) {
+            $video = $source['video'] ?? '';
+
+            // Match on filename (end of path)
+            if ($video && basename($video) === $needle) {
+                $keyToRemove = $key;
+                break;
+            }
+        }
+
+        if ($keyToRemove === null) {
+            return response()->json([
+                'ok' => false,
+                'message' => 'Source not found for filename',
+                'filename' => $needle,
+            ], 404);
+        }
+
+        unset($sources[$keyToRemove]);
+
+        //Set the first source playAudio -> true
+        if (!isset($sources) || !is_array($sources) || count($sources) === 0) {
+            return response()->json(['ok' => false, 'message' => 'No sources found'], 404);
+        }
+        $firstKey = array_key_first($sources);
+
+        foreach ($sources as $key => &$source) {
+            $source['playAudio'] = ($key === $firstKey);
+        }
+
+        $presentation->sources = $sources;
+        $presentation->save();
+
+        return response()->json([
+            'ok' => true,
+            'removedKey' => $keyToRemove,
+            'sources' => $sources,
+        ]);
+    }
+
 
     protected function addFilesCount(Request $request): void
     {
