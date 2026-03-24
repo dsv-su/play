@@ -479,5 +479,12 @@
     "Enabling this option will regenerate the presentation thumbnail using the Swedish title, presenters, and description.\nIf you’ve uploaded a custom thumbnail, do not enable this setting, as it will overwrite your custom image.": "När du aktiverar det här alternativet återskapas presentationens miniatyrbild baserat på den svenska titeln, presentatörerna och beskrivningen.\nOm du har laddat upp en egen miniatyrbild bör du inte aktivera det här alternativet, eftersom din anpassade bild då skrivs över.",
     "Thumbnail rerender": "Skapa ny miniatyr",
     "Regenerate thumbnail": "Återskapa miniatyrbild",
-    "Keep original thumbnail": "Behåll originalminiatyrbilden"
+    "Keep original thumbnail": "Behåll originalminiatyrbilden",
+    "Presentation Title": "Presentationstitel",
+    "Instructions": "Instruktioner",
+    "Add a title for your Presentation.": "Lägg till en titel för din presentation.",
+    "Presentation Date": "Presentationsdatum",
+    "Recording date for the Presentation.": "Inspelningsdatum för presentationen.",
+    "Description for the Presentation.": "Beskrivning för presentationen.",
+    "Make the presentation downloadable.": "Gör presentationen nedladdningsbar."
 }

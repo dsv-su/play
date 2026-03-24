@@ -3,12 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Services\Daisy\DaisyHealthChecker;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Prism\Prism\Enums\Provider;
+use Prism\Prism\Facades\Prism;
+use Prism\Prism\ValueObjects\Media\Document;
 
 class TestController extends Controller
 {
     public function index()
     {
-        //return view('faq.faq_student');
+
     }
 
     public function server()
@@ -22,4 +27,3 @@ class TestController extends Controller
         return response()->json($data);
     }
 }
-
