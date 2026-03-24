@@ -139,6 +139,7 @@ class MultiplayerController extends Controller
             ->record();
 
         return response()->json($presentation);
+
     }
 
     public function playlist(int $id): JsonResponse

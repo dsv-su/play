@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\MultiplayerController;
 use App\Http\Controllers\PresentationOrderController;
+use App\Http\Controllers\TestController;
 use App\Services\AuthHandler;
 use Illuminate\Support\Facades\Route;
 
@@ -44,8 +45,9 @@ Route::middleware(['entitlements', 'playauth','web'])->group(function () {
         ->name('presentation-order.store');
 
     // Test
-    Route::controller(\App\Http\Controllers\TestController::class)->group(function () {
-        Route::get('/test', 'index')->name('test');
+    Route::controller(TestController::class)->group(function () {
+        Route::get('/test/ai-prompt', [TestController::class, 'aiPrompt'])->name('test.ai.prompt');
+Route::post('/test/ai-prompt', [TestController::class, 'aiPromptSubmit'])->name('test.ai.prompt.submit');
         Route::get('/server', 'server')->name('server');
         Route::get('/daisy', 'health')->name('daisy.health');
     });

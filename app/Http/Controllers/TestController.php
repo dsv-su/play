@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\Daisy\DaisyHealthChecker;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Prism\Prism\Enums\Provider;
 use Prism\Prism\Facades\Prism;
@@ -27,6 +28,33 @@ class TestController extends Controller
         echo $response->text;*/
     }
 
+    /**
+     * Renders a small "AI chat prompt" textbox + button.
+     *
+     */
+    public function aiPrompt()
+    {
+        return response()->view('ai.prompt');
+    }
+
+    public function aiPromptSubmit(Request $request)
+    {
+        $data = $request->validate([
+            'prompt' => ['required', 'string', 'max:2000'],
+        ]);
+
+        $response = Prism::text()
+            ->using(Provider::OpenAI, 'gpt-5.2')
+            ->withSystemPrompt('You are a helpful assistant. Answer concisely and clearly.')
+            ->withPrompt($data['prompt'])
+            ->asText();
+
+        return response()->json([
+            'ok' => true,
+            'prompt' => $data['prompt'],
+            'answer' => (string) $response->text,
+        ]);
+    }
 
     public function cleanVttFile()
     {
@@ -76,7 +104,6 @@ class TestController extends Controller
         return 'File cleaned and stored successfully.';
     }
 
-
     public function server()
     {
         //dd($_SERVER);
@@ -88,4 +115,3 @@ class TestController extends Controller
         return response()->json($data);
     }
 }
-
