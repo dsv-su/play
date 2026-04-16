@@ -26,7 +26,6 @@
         "vite": "^6.0.11"
     },
     "dependencies": {
-        "-": "^0.0.1",
         "@alpinejs/collapse": "^3.12.0",
         "@fontsource/roboto": "^5.2.6",
         "@preline/carousel": "^3.2.3",
