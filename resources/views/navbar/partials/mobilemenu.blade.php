@@ -2,7 +2,7 @@
     <ul class="px-2 pt-2 pb-3 space-y-1">
         <!-- Mobile Dropdown for "Navigation" -->
         <li>
-            <button @click="activeMobileMenu = activeMobileMenu === 'getting-started' ? '' : 'getting-started'" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-neutral-700 hover:bg-neutral-100 dark:text-white">
+            <button @click="activeMobileMenu = activeMobileMenu === 'getting-started' ? '' : 'getting-started'" aria-label="{{ __('Navigation menu') }}" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-neutral-700 hover:bg-neutral-100 dark:text-white">
                 {{__("Navigation")}}
                 <svg :class="{ 'rotate-180': activeMobileMenu === 'getting-started' }" class="inline-block h-4 w-4 ml-2 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -23,7 +23,7 @@
         <!-- Mobile Dropdown for "Manage" -->
         @can('manage-content')
         <li>
-            <button @click="activeMobileMenu = activeMobileMenu === 'learn-more' ? '' : 'learn-more'" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-neutral-700 hover:bg-neutral-100 dark:text-white">
+            <button @click="activeMobileMenu = activeMobileMenu === 'learn-more' ? '' : 'learn-more'" aria-label="{{ __('Manage menu') }}" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-neutral-700 hover:bg-neutral-100 dark:text-white">
                 {{__("Manage")}}
                 <svg :class="{ 'rotate-180': activeMobileMenu === 'learn-more' }" class="inline-block h-4 w-4 ml-2 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
