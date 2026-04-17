@@ -51,6 +51,7 @@
                     </button>
 
                 </div>
+                <h1 class="sr-only">{{__("Video statistics")}}</h1>
                 <div class="flex gap-2 mb-4 items-center justify-center">
                     {{__("This week")}}:
                     <span class="px-1.5 py-0 text-[10px] font-medium text-blue-700 bg-gray-100 border-none rounded-sm shadow-sm dark:bg-neutral-300">

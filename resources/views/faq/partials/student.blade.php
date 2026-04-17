@@ -6,7 +6,7 @@
                 <!-- LEFT: text -->
                 <div class="md:col-span-1">
                     <div class="prose max-w-none">
-                        <h2 class="text-xl font-semibold">Help / FAQ</h2>
+                        <h2 class="text-xl font-semibold text-blue-950 dark:text-white">Help / FAQ</h2>
                         <p>
                             Frequently asked questions from students.
                         </p>
