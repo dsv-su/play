@@ -1,4 +1,4 @@
-<header class="w-full border-b-4 border-susecondary" role="banner" aria-label="Site header">
+<header class="w-full border-b-4 border-susecondary" aria-label="Site header">
     <!-- Mobile header -->
     <div class="grid grid-cols-4 md:hidden">
         <div class="flex items-center justify-center col-span-1 bg-suprimary">
@@ -40,7 +40,7 @@
             <div
                 class="flex items-center h-7 justify-end text-xs text-white rounded-lg min-w-[250px]"
                 title="{{ __('Profile settings') }}">
-                <a href="{{route('presentation-order.show')}}">
+                <a href="{{route('presentation-order.show')}}" aria-label="Set carousel order">
                     <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
                         <circle cx="12" cy="7" r="4"></circle>
@@ -100,7 +100,7 @@
                     @php($isSv = Illuminate\Support\Facades\App::currentLocale() === 'sv')
                     <img
                         src="{{ asset($isSv ? 'images/globallinks-lang-sv.gif' : 'images/globallinks-lang-en.gif') }}"
-                        alt="{{ $isSv ? 'Svenska' : 'English' }}"
+                        alt="{{ $isSv ? 'Språk på Svenska' : 'English language' }}"
                         class="w-4 h-4 mr-2 opacity-80"
                     />
                     {{ $isSv ? 'Svenska' : 'English' }}
