@@ -8,7 +8,13 @@
              dark:bg-neutral-900 dark:text-white dark:border-neutral-700 dark:hover:bg-neutral-800"
             @click="selectedVideos.length === allIds.length ? selectedVideos = [] : selectedVideos = allIds.slice()"
         >
-            <span class="whitespace-nowrap" x-text="selectedVideos.length === allIds.length ? 'Deselect All' : 'Select All'"></span>
+            {{--}}<span class="whitespace-nowrap" x-text="selectedVideos.length === allIds.length ? 'Deselect All' : 'Select All'"></span>{{--}}
+            <span
+                class="whitespace-nowrap"
+                x-text="selectedVideos.length === allIds.length
+                ? @js(__('ui.deselect_all'))
+                : @js(__('ui.select_all'))"
+            ></span>
         </button>
 
         <!-- Bulk Edit -->
