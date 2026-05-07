@@ -486,5 +486,8 @@
     "Presentation Date": "Presentationsdatum",
     "Recording date for the Presentation.": "Inspelningsdatum för presentationen.",
     "Description for the Presentation.": "Beskrivning för presentationen.",
-    "Make the presentation downloadable.": "Gör presentationen nedladdningsbar."
+    "Make the presentation downloadable.": "Gör presentationen nedladdningsbar.",
+    "With selected": "Med valda",
+    "Number of Clicks": "Antal klick",
+    "Number of Downloads": "Antal nerladdningar"
 }
