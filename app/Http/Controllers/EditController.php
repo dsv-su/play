@@ -29,6 +29,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -552,54 +553,71 @@ class EditController extends Controller
 
     public function streamUpload(Video $video, Request $request)
     {
-        $request->validate([
-            'edit_presentation_id' => ['required', 'integer'],
-            'stream_id' => ['required', 'integer'],
-        ]);
+        try {
+            $request->validate([
+                'edit_presentation_id' => ['required', 'integer'],
+                'stream_id' => ['required', 'integer'],
+            ]);
 
-        $presentation = ManualPresentation::query()
-            ->whereKey($request->integer('edit_presentation_id'))
-            ->where('pkg_id', $video->id)
-            ->where('type', 'edit')
-            ->firstOrFail();
+            $presentation = ManualPresentation::query()
+                ->whereKey($request->integer('edit_presentation_id'))
+                ->where('pkg_id', $video->id)
+                ->where('type', 'edit')
+                ->firstOrFail();
 
-        $stream = Stream::query()
-            ->whereKey($request->integer('stream_id'))
-            ->where('video_id', $video->id)
-            ->firstOrFail();
+            $stream = Stream::query()
+                ->whereKey($request->integer('stream_id'))
+                ->where('video_id', $video->id)
+                ->firstOrFail();
 
-        $receiver = new FileReceiver('file', $request, HandlerFactory::classFromRequest($request));
+            $receiver = new FileReceiver('file', $request, HandlerFactory::classFromRequest($request));
 
-        if ($receiver->isUploaded() === false) {
-            throw new UploadMissingFileException();
-        }
-
-        $save = $receiver->receive();
-
-        if ($save->isFinished()) {
-            $file = $save->getFile();
-            $videoPath = $this->storeReplacementStream($file, $presentation, $stream->name);
-
-            if (is_file($file->getPathname())) {
-                @unlink($file->getPathname());
+            if ($receiver->isUploaded() === false) {
+                throw new UploadMissingFileException();
             }
+
+            $save = $receiver->receive();
+
+            if ($save->isFinished()) {
+                $file = $save->getFile();
+                $videoPath = $this->storeReplacementStream($file, $presentation, $stream->name);
+
+                if (is_file($file->getPathname())) {
+                    @unlink($file->getPathname());
+                }
+
+                return response()->json([
+                    'status' => true,
+                    'done' => 100,
+                    'stream_id' => $stream->id,
+                    'video' => $videoPath,
+                    'name' => basename($videoPath),
+                ]);
+            }
+
+            /** @var AbstractHandler $handler */
+            $handler = $save->handler();
 
             return response()->json([
                 'status' => true,
-                'done' => 100,
-                'stream_id' => $stream->id,
-                'video' => $videoPath,
-                'name' => basename($videoPath),
+                'done' => $handler->getPercentageDone(),
             ]);
+        } catch (Throwable $e) {
+            Log::error('Replacement stream upload failed', [
+                'video_id' => $video->id,
+                'edit_presentation_id' => $request->input('edit_presentation_id'),
+                'stream_id' => $request->input('stream_id'),
+                'play_store_root' => config('filesystems.disks.play-store.root'),
+                'chunk_path' => config('chunk-upload.storage.chunks'),
+                'storage_path' => $this->storage(),
+                'exception' => $e,
+            ]);
+
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage(),
+            ], 500);
         }
-
-        /** @var AbstractHandler $handler */
-        $handler = $save->handler();
-
-        return response()->json([
-            'status' => true,
-            'done' => $handler->getPercentageDone(),
-        ]);
     }
 
 
