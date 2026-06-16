@@ -39,7 +39,7 @@ final class PlayStoreNotify
      *
      * @return array|string|RedirectResponse|bool  Array (payload) on dryRun, redirect/bool on send
      */
-    public function sendSuccess(string $type, bool $dryRun = true): array|string|RedirectResponse|bool
+    public function sendSuccess(string $type, bool $dryRun = false): array|string|RedirectResponse|bool
     {
         $this->assertValidType($type);
 
