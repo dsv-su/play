@@ -60,6 +60,7 @@ Route::middleware(['entitlements', 'playauth','web'])->group(function () {
     //Edit
     Route::controller(\App\Http\Controllers\EditController::class)->group(function () {
         Route::get('/edit/{video}', 'show')->name('presentation.edit');
+        Route::post('/edit/{video}/stream/upload', 'streamUpload')->name('presentation.stream-upload');
         Route::post('/edit/{video}', 'edit')->name('presentation.save');
         Route::delete('/delete/{video}', 'destroy')->name('presentation.destroy');
         Route::post('/bulkedit', 'bulkEditShow')->name('bulk.edit');

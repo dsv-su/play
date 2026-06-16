@@ -529,5 +529,10 @@
     "Uploaded subtitle files": "Uppladdade undertextfiler",
     "No uploaded subtitles": "Inga uppladdade undertexter",
     "Presentation information": "Presentationsinformation",
-    "Keep titles concise and add the metadata needed for search and playback.": "Håll titlar korta och lägg till den metadata som behövs för sökning och uppspelning."
+    "Keep titles concise and add the metadata needed for search and playback.": "Håll titlar korta och lägg till den metadata som behövs för sökning och uppspelning.",
+    "Drop a replacement stream here or browse": "Släpp en videofil här eller bläddra",
+    "MP4, MOV, M4V, or WebM.": "MP4, MOV, M4V eller WebM.",
+    "Ready to finish?": "Klar att avsluta?",
+    "Save applies all edits on this page. Cancel returns without saving.": "Spara tillämpar alla ändringar på denna sida. Avbryt återgår utan att spara.",
+    "Save presentation": "Spara presentation"
 }

@@ -1,6 +1,6 @@
 <!-- Subtitle Uploading Progress Form -->
 @if(count($files ?? []))
-    <div class="mb-4 flex flex-col rounded-lg border border-slate-200 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+    <div class="mb-4 flex flex-col rounded-lg border border-susecondary bg-white shadow-sm dark:border-susecondary dark:bg-neutral-900">
         <div class="space-y-4 p-4">
 
             @foreach($files as $file)

@@ -3,7 +3,7 @@
     @include('dsvheader')
     @include('navbar.navbar')
     <div class="mx-auto max-w-screen-2xl px-4 py-6 pb-32 sm:px-6 lg:px-8">
-        <section class="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+        <section class="overflow-hidden rounded-lg border border-susecondary bg-white shadow-sm dark:border-susecondary dark:bg-neutral-900">
             <div class="border-b border-slate-200 bg-slate-50 px-4 py-5 sm:px-6 lg:px-8 dark:border-neutral-700 dark:bg-neutral-950">
                 @include('livewire.edit.partials.form.edit-banner')
                 @include('livewire.edit.partials.form.form_title')
@@ -14,6 +14,7 @@
                     @csrf
 
                     <input type="hidden" name="type" value="{{$type}}">
+                    <input type="hidden" name="edit_presentation_id" value="{{ $editPresentation->id }}">
                     @if(in_array($type, ['edit']))
                         <input type="hidden" name="id" value="{{$video->id}}">
                     @endif

@@ -32,6 +32,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException;
+use Pion\Laravel\ChunkUpload\Handler\AbstractHandler;
+use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
+use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
 use Throwable;
 
 class EditController extends Controller
@@ -85,6 +89,11 @@ class EditController extends Controller
             $user_permission = 'read';
         }
         $type = 'edit';
+        $editPresentation = ManualPresentation::create([
+            'pkg_id' => $video->id,
+            'type' => 'edit',
+        ]);
+
         // Already-associated courses
         $associatedCourseIds = $video->courses->pluck('id')->all();
 
@@ -101,7 +110,8 @@ class EditController extends Controller
             'courses',
             'allowedCourseIds',
             'type',
-            'associatedCourseIds'
+            'associatedCourseIds',
+            'editPresentation'
         ));
     }
 
@@ -136,9 +146,19 @@ class EditController extends Controller
                 'remove_existing_sub'     => ['nullable','array'],
                 'render_thumb'            => ['nullable', 'bool'],
                 'custom_thumb'            => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+                'edit_presentation_id'    => ['nullable', 'integer'],
+                'uploaded_stream'         => ['nullable', 'array'],
+                'uploaded_stream.*.video' => ['nullable', 'string', 'regex:/^video\/[^\/]+$/'],
             ]);
 
-            $presentation = ManualPresentation::create();
+            $presentation = ManualPresentation::query()
+                ->whereKey($data['edit_presentation_id'] ?? null)
+                ->where('pkg_id', $video->id)
+                ->where('type', 'edit')
+                ->first() ?? ManualPresentation::create([
+                    'pkg_id' => $video->id,
+                    'type' => 'edit',
+                ]);
 
             DB::transaction(function () use ($request, $video, $presentation, $data) {
 
@@ -303,6 +323,7 @@ class EditController extends Controller
 
                 $audio   = $data['audio'] ?? null;
                 $hidden  = $data['streamVisibility'] ?? null;
+                $uploadedStreams = $data['uploaded_stream'] ?? [];
 
                 // Determine the single stream that should have audio
                 $selectedAudioName = is_array($audio) ? array_key_first($audio) : $audio;
@@ -329,6 +350,20 @@ class EditController extends Controller
                     ];
 
                     $sources[$stream->name]['playAudio'] = $map[$stream->audio];
+
+                    if (
+                        !empty($uploadedStreams[$stream->id]['video'])
+                        && $this->storedReplacementStreamExists($presentation, $uploadedStreams[$stream->id]['video'])
+                    ) {
+                        $this->removeOldStreamPoster($stream, $video);
+
+                        $sources[$stream->name] = [
+                            'video' => $uploadedStreams[$stream->id]['video'],
+                            'poster' => '',
+                            'playAudio' => $newAudio,
+                        ];
+                    }
+
                     $presentation->sources = $sources;
 
                 }
@@ -488,7 +523,7 @@ class EditController extends Controller
 
             // Send notify
             $notify = new PlayStoreNotify($presentation);
-            $notify->sendSuccess('edit');
+return            $notify->sendSuccess('edit');
 
             // Clear download storage
             Artisan::call('download:clear');
@@ -507,6 +542,58 @@ class EditController extends Controller
         }
 
         return view('videos.edit', compact('video'));
+    }
+
+    public function streamUpload(Video $video, Request $request)
+    {
+        $request->validate([
+            'edit_presentation_id' => ['required', 'integer'],
+            'stream_id' => ['required', 'integer'],
+        ]);
+
+        $presentation = ManualPresentation::query()
+            ->whereKey($request->integer('edit_presentation_id'))
+            ->where('pkg_id', $video->id)
+            ->where('type', 'edit')
+            ->firstOrFail();
+
+        $stream = Stream::query()
+            ->whereKey($request->integer('stream_id'))
+            ->where('video_id', $video->id)
+            ->firstOrFail();
+
+        $receiver = new FileReceiver('file', $request, HandlerFactory::classFromRequest($request));
+
+        if ($receiver->isUploaded() === false) {
+            throw new UploadMissingFileException();
+        }
+
+        $save = $receiver->receive();
+
+        if ($save->isFinished()) {
+            $file = $save->getFile();
+            $videoPath = $this->storeReplacementStream($file, $presentation, $stream->name);
+
+            if (is_file($file->getPathname())) {
+                @unlink($file->getPathname());
+            }
+
+            return response()->json([
+                'status' => true,
+                'done' => 100,
+                'stream_id' => $stream->id,
+                'video' => $videoPath,
+                'name' => basename($videoPath),
+            ]);
+        }
+
+        /** @var AbstractHandler $handler */
+        $handler = $save->handler();
+
+        return response()->json([
+            'status' => true,
+            'done' => $handler->getPercentageDone(),
+        ]);
     }
 
 
@@ -873,5 +960,46 @@ class EditController extends Controller
         Storage::disk('play-store')->putFileAs($folder, $file, $fileName);
 
         return 'poster/' . $fileName;
+    }
+
+    private function storeReplacementStream(
+        \Illuminate\Http\UploadedFile $file,
+        ManualPresentation $presentation,
+        string $streamName
+    ): string {
+        $extension = $file->getClientOriginalExtension() ?: $file->extension();
+        $baseName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $safeBaseName = Str::slug($baseName) ?: Str::slug($streamName) ?: 'stream';
+        $fileName = $safeBaseName . '-' . Str::random(8) . '.' . $extension;
+
+        $folder = '/' . trim($this->storage(), '/') . '/' . trim($presentation->local, '/') . '/video';
+
+        Storage::disk('play-store')->putFileAs($folder, $file, $fileName);
+
+        return 'video/' . $fileName;
+    }
+
+    private function removeOldStreamPoster(Stream $stream, Video $video): void
+    {
+        if (empty($stream->poster)) {
+            return;
+        }
+
+        $posterPath = trim($this->storage(), '/') . '/' . $video->id . '/' . ltrim($stream->poster, '/');
+        Storage::disk('play-store')->delete($posterPath);
+
+        $stream->poster = '';
+        $stream->save();
+    }
+
+    private function storedReplacementStreamExists(ManualPresentation $presentation, string $videoPath): bool
+    {
+        if (!str_starts_with($videoPath, 'video/') || str_contains($videoPath, '..')) {
+            return false;
+        }
+
+        $path = trim($this->storage(), '/') . '/' . trim($presentation->local, '/') . '/' . ltrim($videoPath, '/');
+
+        return Storage::disk('play-store')->exists($path);
     }
 }

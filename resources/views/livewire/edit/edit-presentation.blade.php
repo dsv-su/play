@@ -21,7 +21,7 @@
         $visibilityStyle = $visibilityStyles[$visibility] ?? $visibilityStyles['private'];
     @endphp
 
-    <section class="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+    <section class="overflow-hidden rounded-lg border border-susecondary bg-white shadow-sm dark:border-susecondary dark:bg-neutral-900">
         <div class="border-b border-slate-200 bg-slate-50 px-4 py-4 sm:px-6 dark:border-neutral-700 dark:bg-neutral-950/60">
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div class="min-w-0">
@@ -38,7 +38,7 @@
         <div class="p-4 sm:p-6">
             <div class="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(19rem,25rem)_1fr]">
                 <div class="min-w-0">
-                    <div class="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-950">
+                    <div class="overflow-hidden rounded-lg border border-susecondary bg-white shadow-sm dark:border-susecondary dark:bg-neutral-950">
                         <div class="relative aspect-video w-full overflow-hidden bg-slate-200 dark:bg-neutral-800">
                             <img
                                 class="absolute inset-0 h-full w-full object-cover @if($visibility == 'private' or $visibility == 'unlisted') opacity-30 @endif"
