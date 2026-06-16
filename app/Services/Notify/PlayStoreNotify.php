@@ -203,7 +203,7 @@ final class PlayStoreNotify
 
         //Edit
         if (empty($this->presentation->sources ) && $type == 'edit')    unset($p['sources']);
-        if (!empty($this->presentation->thumb) && $type == 'edit')    unset($p['thumb']);
+        if (empty($this->presentation->thumb) && $type == 'edit')    unset($p['thumb']);
 
         // Normalize arrays
         $p['presenters'] = $this->normalizeArray($p['presenters'] ?? null);

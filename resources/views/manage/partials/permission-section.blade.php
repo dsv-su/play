@@ -1,7 +1,7 @@
 <section class="rounded-lg border border-slate-200 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
     <div class="border-b border-slate-200 px-4 py-4 sm:px-6 dark:border-neutral-700">
         <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{__("Permissions")}}</h2>
-        <p class="mt-1 text-sm text-slate-600 dark:text-neutral-400">{{__("Control playback access and grant individual permissions when a presentation needs a narrower audience.")}}</p>
+        <p class="mt-1 text-sm text-slate-600 dark:text-neutral-400">{{__("Control playback access and grant individual permissions.")}}</p>
     </div>
 
     <div class="p-4 sm:p-6">

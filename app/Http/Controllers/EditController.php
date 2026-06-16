@@ -134,7 +134,8 @@ class EditController extends Controller
                 'add_sub'                 => ['array'],
                 'uploadedSubLanguage'     => ['required_with:add_sub','array'],
                 'remove_existing_sub'     => ['nullable','array'],
-                'render_thumb'            => ['nullable', 'bool']
+                'render_thumb'            => ['nullable', 'bool'],
+                'custom_thumb'            => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             ]);
 
             $presentation = ManualPresentation::create();
@@ -464,6 +465,13 @@ class EditController extends Controller
                     $presentation->upload_dir = '/data0/incoming/'. $presentation->local;
                 }
 
+                if ($request->hasFile('custom_thumb')) {
+                    $presentation->thumb = $this->storeCustomThumbnail(
+                        $request->file('custom_thumb'),
+                        $presentation
+                    );
+                }
+
                 //Change status presentation
                 $presentation->status = 'stored';
 
@@ -474,11 +482,6 @@ class EditController extends Controller
                 $video->state = 0;
                 $video->save();
             });
-
-            if(!$data['render_thumb']) {
-                $presentation->thumb = Str::afterLast($video->thumb, '/');
-                $presentation->save();
-            }
 
             // 9) Cache & background work
             Cache::flush();
@@ -856,5 +859,19 @@ class EditController extends Controller
         $this->system_config = parse_ini_file($this->file, true);
 
         return $this->system_config['nfs']['storage'];
+    }
+
+    private function storeCustomThumbnail(\Illuminate\Http\UploadedFile $file, ManualPresentation $presentation): string
+    {
+        $extension = $file->getClientOriginalExtension() ?: $file->extension();
+        $baseName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $safeName = Str::slug($baseName) ?: 'custom-thumbnail';
+        $fileName = $safeName . '-' . Str::random(8) . '.' . $extension;
+
+        $folder = '/' . trim($this->storage(), '/') . '/' . trim($presentation->local, '/') . '/poster';
+
+        Storage::disk('play-store')->putFileAs($folder, $file, $fileName);
+
+        return 'poster/' . $fileName;
     }
 }

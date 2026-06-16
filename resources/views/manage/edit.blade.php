@@ -10,7 +10,7 @@
             </div>
 
             <div class="px-4 py-6 sm:px-6 lg:px-8">
-                <form id="presentation-edit-Form" method="post" action="{{route('presentation.save', $video)}}">
+                <form id="presentation-edit-Form" method="post" action="{{route('presentation.save', $video)}}" enctype="multipart/form-data">
                     @csrf
 
                     <input type="hidden" name="type" value="{{$type}}">
