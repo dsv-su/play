@@ -39,7 +39,7 @@ final class PlayStoreNotify
      *
      * @return array|string|RedirectResponse|bool  Array (payload) on dryRun, redirect/bool on send
      */
-    public function sendSuccess(string $type, bool $dryRun = false): array|string|RedirectResponse|bool
+    public function sendSuccess(string $type, bool $dryRun = true): array|string|RedirectResponse|bool
     {
         $this->assertValidType($type);
 
@@ -203,7 +203,7 @@ final class PlayStoreNotify
 
         //Edit
         if (empty($this->presentation->sources ) && $type == 'edit')    unset($p['sources']);
-        if (!empty($this->presentation->thumb) && $type == 'edit')    unset($p['thumb']);
+        if (empty($this->presentation->thumb) && $type == 'edit')    unset($p['thumb']);
 
         // Normalize arrays
         $p['presenters'] = $this->normalizeArray($p['presenters'] ?? null);

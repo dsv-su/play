@@ -10,6 +10,7 @@ use Livewire\Component;
 class EditStreams extends Component
 {
     public Video $video;
+    public int $editPresentationId = 0;
     public array $audio = [];
     public array $streamVisibility = [];
     public array $streamUrl = [];
@@ -17,11 +18,12 @@ class EditStreams extends Component
     /** @var array<int, array{audio:bool, hidden:bool, poster:?string}> */
     public array $streams = [];
 
-    public function mount(Video $video): void
+    public function mount(Video $video, int $editPresentationId = 0): void
     {
         $this->video = $video->loadMissing([
             'streams:id,video_id,name,audio,hidden,poster',
         ]);
+        $this->editPresentationId = $editPresentationId;
         $this->getStreams();
         $this->getAudio();
     }
@@ -108,4 +110,3 @@ class EditStreams extends Component
         return view('livewire.edit.edit-streams');
     }
 }
-

@@ -1,0 +1,3 @@
+[submodule "storage/multiplayer-ce"]
+	path = storage/multiplayer-ce
+	url = http://gitea.dsv.su.se/DMC/multiplayer-ce.git

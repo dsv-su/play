@@ -1,16 +1,14 @@
 <div class="flex flex-col gap-1">
-    <label for="playback" class="text-sm text-gray-600 dark:text-neutral-400">
+    <label for="playback" class="text-sm font-medium text-slate-900 dark:text-white">
         {{__("Playback Permission")}}
     </label>
+    <p class="mb-2 text-sm text-slate-500 dark:text-neutral-400">{{__("Select the general audience allowed to play this presentation.")}}</p>
 
     <select
         wire:model.live="playback"
         name="playback"
         id="playback"
-        class="py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm bg-gray-50
-               focus:border-blue-500 focus:ring-blue-500
-               disabled:opacity-50 disabled:pointer-events-none
-               dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
+        class="block w-full rounded-lg border-slate-300 bg-white px-4 py-3 pe-9 text-sm text-slate-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder:text-neutral-500">
         @foreach($permissions as $permission)
             <option value="{{ $permission->id }}">
                 {{ $permission->scope }}
@@ -18,4 +16,3 @@
         @endforeach
     </select>
 </div>
-

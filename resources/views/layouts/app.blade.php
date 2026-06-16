@@ -32,8 +32,8 @@
         @vite(['resources/css/site.css', 'resources/js/site.js'])
     </head>
 
-    <body class="bg-dsvbg dark:bg-gray-800 overflow-x-hidden">
-        <main class="min-h-screen">
+    <body class="flex min-h-dvh flex-col bg-dsvbg dark:bg-gray-800 overflow-x-hidden">
+        <main class="flex-1">
             @yield('content')
         </main>
 

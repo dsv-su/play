@@ -1,10 +1,10 @@
-<fieldset class="w-full mb-2 bg-white border border-susecondary rounded-lg shadow-sm
-          dark:bg-gray-800 dark:border-gray-700">
-    <legend class="mx-auto px-2 text-xs uppercase text-blue-500 dark:text-blue-400 bg-white dark:bg-gray-800">
-        {{__("Presenters")}}
-    </legend>
+<section class="rounded-lg border border-susecondary bg-white shadow-sm dark:border-susecondary dark:bg-neutral-900">
+    <div class="border-b border-slate-200 px-4 py-4 sm:px-6 dark:border-neutral-700">
+        <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{__("Presenters")}}</h2>
+        <p class="mt-1 text-sm text-slate-600 dark:text-neutral-400">{{__("Add everyone who should be shown as a presenter and remove names that no longer apply.")}}</p>
+    </div>
 
-    <div class="p-4 sm:p-6 md:p-8">
+    <div class="p-4 sm:p-6">
         <livewire:edit.edit-presenters :video="$video ?? null" />
     </div>
-</fieldset>
+</section>
