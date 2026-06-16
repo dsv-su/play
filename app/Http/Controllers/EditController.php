@@ -324,6 +324,7 @@ class EditController extends Controller
                 $audio   = $data['audio'] ?? null;
                 $hidden  = $data['streamVisibility'] ?? null;
                 $uploadedStreams = $data['uploaded_stream'] ?? [];
+                $hasUploadedStream = false;
 
                 // Determine the single stream that should have audio
                 $selectedAudioName = is_array($audio) ? array_key_first($audio) : $audio;
@@ -362,6 +363,7 @@ class EditController extends Controller
                             'poster' => '',
                             'playAudio' => $newAudio,
                         ];
+                        $hasUploadedStream = true;
                     }
 
                     $presentation->sources = $sources;
@@ -498,6 +500,10 @@ class EditController extends Controller
 
                 if($this->upload) {
                     $presentation->upload_dir = '/data0/incoming/'. $presentation->local;
+                }
+
+                if ($hasUploadedStream || $request->hasFile('custom_thumb')) {
+                    $presentation->upload_dir = $this->uploadDirectory($presentation);
                 }
 
                 if ($request->hasFile('custom_thumb')) {
@@ -960,6 +966,11 @@ class EditController extends Controller
         Storage::disk('play-store')->putFileAs($folder, $file, $fileName);
 
         return 'poster/' . $fileName;
+    }
+
+    private function uploadDirectory(ManualPresentation $presentation): string
+    {
+        return '/data0/' . $this->storage() . '/' . $presentation->local;
     }
 
     private function storeReplacementStream(
