@@ -1,0 +1,16 @@
+{
+    "id": "",
+    "title": "",
+    "thumb": "", //an image file
+    "token": "",
+    "subtitles": "", //a .vtt file
+    "sources": [ //any number of sources, tested up to 4
+        {
+            "video": { //all sources should have the same set of resolutions
+                "720":  "" //map a resolution to a video file
+            },
+            "poster": "", //an image file
+            "playAudio": true //only one source should play audio
+        }
+    ]
+}

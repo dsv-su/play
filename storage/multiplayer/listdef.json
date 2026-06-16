@@ -1,0 +1,12 @@
+{
+    "title": "", //name of this playlist
+    "items": [
+        {
+            "id": "",
+            "title": "",
+            "description": "",
+            "link": "",
+            "thumb": "" //an image file
+        }
+    ]
+}
