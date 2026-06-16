@@ -1,21 +1,10 @@
-<fieldset class="w-full mb-2 bg-white border border-susecondary rounded-lg shadow-sm
-          dark:bg-gray-800 dark:border-gray-700">
-    <div class="flex justify-center px-4 sm:px-6">
-        <div class="w-full max-w-screen-sm sm:max-w-screen-md lg:max-w-screen-lg {{--}}-mt-4 mb-4{{--}}">
-            <p class="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-2 py-1 px-3
-                    rounded-lg text-blue-700 dark:text-blue-500 text-base sm:text-lg lg:text-xl font-medium
-                    text-center break-words"
-               role="note">
-                {{ __("Changes are saved upon clicking") }}
-                <span class="inline-block bg-blue-100 text-blue-800 dark:bg-gray-700 dark:text-blue-400
-                        border border-blue-400 rounded px-2.5 py-0.5 text-sm sm:text-base lg:text-xl">
-                {{ __("Save") }}
-            </span>
-                {{ __("button at the bottom of the page.") }}
-            </p>
-        </div>
+<div class="mb-4 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-950 dark:border-blue-900/70 dark:bg-blue-950/40 dark:text-blue-100">
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <p class="font-medium">
+            {{ __("Edit the presentation details, access, media, and subtitles below.") }}
+        </p>
+        <p class="text-blue-800 dark:text-blue-200">
+            {{ __("Use the fixed action bar to save or cancel your changes.") }}
+        </p>
     </div>
-</fieldset>
-
-
-
+</div>

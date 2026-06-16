@@ -1,42 +1,35 @@
 @if(count($savedfiles) < 1)
-    <div class="flex items-center gap-x-2">
-    {{__("Generate subtitling")}}
-        <!-- Smaller Switch -->
-        <label for="hs-xs-switch-autosub" class="relative inline-block w-8 h-4 cursor-pointer">
+    <div class="rounded-lg border border-slate-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-900">
+        <div class="flex flex-wrap items-center gap-3">
+            <span class="text-sm font-medium text-slate-900 dark:text-white">{{__("Generate subtitling")}}</span>
+        <label for="hs-xs-switch-autosub" class="relative inline-block h-5 w-9 cursor-pointer">
             <input type="checkbox" id="hs-xs-switch-autosub" class="peer sr-only" wire:model.live="auto">
-            <span class="absolute inset-0 bg-gray-200 rounded-full transition-colors peer-checked:bg-blue-600 dark:bg-neutral-700 dark:peer-checked:bg-blue-500"></span>
-            <span class="absolute top-1/2 start-0.5 -translate-y-1/2 size-3 bg-white rounded-full shadow transition-transform peer-checked:translate-x-full dark:bg-neutral-400 dark:peer-checked:bg-white"></span>
+            <span class="absolute inset-0 rounded-full bg-slate-200 transition-colors peer-checked:bg-blue-600 dark:bg-neutral-700 dark:peer-checked:bg-blue-500"></span>
+            <span class="absolute start-0.5 top-1/2 size-4 -translate-y-1/2 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-full dark:bg-neutral-300 dark:peer-checked:bg-white"></span>
         </label>
 
 
-        <!-- Right-side label -->
         @if($auto)
-            <span class="px-1.5 py-0 text-[0.8125rem]/5 font-medium text-white bg-suprimary border border-suprimary rounded shadow-md
-                                        inline-flex items-center gap-1 truncate dark:bg-blue-500">
+            <span class="inline-flex items-center rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 dark:border-blue-900/70 dark:bg-blue-950 dark:text-blue-300">
                 {{__("On")}}
             </span>
         @else
-            <span class="px-1.5 py-0 text-[0.8125rem]/5 font-medium text-white bg-red-600
-                                        border border-red-600 rounded shadow-md inline-flex items-center gap-1 truncate">
+            <span class="inline-flex items-center rounded-full border border-red-200 bg-red-50 px-3 py-1 text-xs font-semibold text-red-700 dark:border-red-900/70 dark:bg-red-950 dark:text-red-300">
                 {{__("Off")}}
             </span>
         @endif
         @if($auto)
-            {{__("Force language of subtitles")}}
-            <!-- Force switch -->
-            <label for="hs-xs-switch-force" class="relative inline-block w-8 h-4 cursor-pointer">
+            <span class="text-sm text-slate-700 dark:text-neutral-300">{{__("Force language of subtitles")}}</span>
+            <label for="hs-xs-switch-force" class="relative inline-block h-5 w-9 cursor-pointer">
                 <input type="checkbox" id="hs-xs-switch-force" class="peer sr-only" wire:model.live="force">
-                <span class="absolute inset-0 bg-gray-200 rounded-full transition-colors peer-checked:bg-blue-600 dark:bg-neutral-700 dark:peer-checked:bg-blue-500"></span>
-                <span class="absolute top-1/2 start-0.5 -translate-y-1/2 size-3 bg-white rounded-full shadow transition-transform peer-checked:translate-x-full dark:bg-neutral-400 dark:peer-checked:bg-white"></span>
+                <span class="absolute inset-0 rounded-full bg-slate-200 transition-colors peer-checked:bg-blue-600 dark:bg-neutral-700 dark:peer-checked:bg-blue-500"></span>
+                <span class="absolute start-0.5 top-1/2 size-4 -translate-y-1/2 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-full dark:bg-neutral-300 dark:peer-checked:bg-white"></span>
             </label>
 
-            <!-- select autosub language -->
                 @if($force)
                     <select
                         name="autosub_language"
-                        class="py-1 px-2 pe-6 border-gray-200 rounded-md text-xs bg-gray-50
-                       focus:border-blue-500 focus:ring-blue-500
-                       dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
+                        class="rounded-lg border-slate-300 bg-white px-3 py-2 pe-8 text-sm text-slate-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white">
                         <option value="en">{{__("English")}}</option>
                         <option value="sv">{{__("Swedish")}}</option>
                         @can('admin-content')
@@ -55,11 +48,10 @@
                 @endif
 
         @endif
-
-
+        </div>
     </div>
     @if($auto)
-        <div class="mt-2 min-w-0 border border-gray-300 text-sm text-gray-700 rounded-lg p-4 sm:p-5 lg:p-6 dark:bg-yellow-600/[.15]">
+        <div class="mt-3 min-w-0 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900/70 dark:bg-amber-950/50 dark:text-amber-100">
             {{__("Subtitles will be autogenerated. You will receive an email when processing is complete. Since the subtitles are auto-generated, you should check the subtitles yourself and edit if necessary.")}}
         </div>
     @endif

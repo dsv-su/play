@@ -1,10 +1,10 @@
-<fieldset class="w-full mb-2 bg-white border border-susecondary rounded-lg shadow-sm
-          dark:bg-gray-800 dark:border-gray-700">
-    <legend class="mx-auto px-2 text-xs uppercase text-blue-500 dark:text-blue-400 bg-white dark:bg-gray-800">
-        {{__("Streams")}}
-    </legend>
+<section class="rounded-lg border border-slate-200 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+    <div class="border-b border-slate-200 px-4 py-4 sm:px-6 dark:border-neutral-700">
+        <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{__("Streams")}}</h2>
+        <p class="mt-1 text-sm text-slate-600 dark:text-neutral-400">{{__("Review the video streams that belong to this presentation.")}}</p>
+    </div>
 
-    <div class="p-4 sm:p-6 md:p-4">
+    <div class="p-4 sm:p-6">
         <livewire:edit.edit-streams :video="$video" />
     </div>
-</fieldset>
+</section>

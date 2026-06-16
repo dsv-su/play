@@ -1,10 +1,9 @@
-<div class="flex flex-col gap-y-2 w-full max-w-sm">
-    <!-- Top Label + Info Button -->
+<div class="min-w-0">
     <label for="hs-xs-switch-download"
-           class="font-sans text-sm font-medium text-gray-900 dark:text-white flex items-center gap-x-1">
+           class="mb-2 flex items-center gap-x-1 text-sm font-medium text-slate-900 dark:text-white">
         {{ __("Downloadable") }}
-        <button id="download-button" data-modal-toggle="download-modal" class="inline-flex" type="button">
-            <svg class="w-[16px] h-[16px] text-gray-800 dark:text-white"
+        <button id="download-button" data-modal-toggle="download-modal" class="inline-flex size-5 items-center justify-center text-slate-500 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-neutral-400 dark:hover:text-white" type="button" aria-label="{{ __('More info about downloads') }}">
+            <svg class="size-4"
                  aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                  fill="none" viewBox="0 0 20 20">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
@@ -13,11 +12,9 @@
         </button>
     </label>
 
-    <!-- Switch + Right Label -->
-    <div class="flex items-center gap-x-2">
-        <!-- Smaller Switch -->
+    <div class="flex min-h-[3rem] items-center gap-x-3 rounded-lg border border-slate-200 bg-slate-50 px-3 dark:border-neutral-700 dark:bg-neutral-950">
         <label for="hs-xs-switch-download"
-               class="relative inline-block w-10 h-5 sm:w-11 sm:h-5 md:w-12 md:h-6 cursor-pointer">
+               class="relative inline-block h-6 w-11 shrink-0 cursor-pointer">
             <input
                 type="checkbox"
                 id="hs-xs-switch-download"
@@ -25,32 +22,22 @@
                 name="download"
                 wire:model.live="download"
             >
-            <!-- Track -->
-            <span class="absolute inset-0 bg-gray-200 rounded-full transition-colors
+            <span class="absolute inset-0 rounded-full bg-slate-200 transition-colors
                          peer-checked:bg-blue-600 dark:bg-neutral-700 dark:peer-checked:bg-blue-500"></span>
 
-            <!-- Thumb -->
-            <span class="absolute top-1/2 start-0.5 -translate-y-1/2
-                         size-4 sm:size-4.5 md:size-5
-                         bg-white rounded-full shadow transition-transform
-                         peer-checked:translate-x-full dark:bg-neutral-400 dark:peer-checked:bg-white"></span>
+            <span class="absolute start-0.5 top-1/2 size-5 -translate-y-1/2 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-full dark:bg-neutral-300 dark:peer-checked:bg-white"></span>
         </label>
 
-        <!-- Right-side label -->
         @if($download)
-            <span class="px-1.5 py-0 text-[0.8125rem]/5 font-medium text-white bg-suprimary border border-suprimary rounded shadow-md
-                                    inline-flex items-center gap-1 truncate dark:bg-blue-500">
+            <span class="inline-flex items-center rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 dark:border-blue-900/70 dark:bg-blue-950 dark:text-blue-300">
             {{__("Downloadable")}}
         </span>
         @else
-            <span class="px-1.5 py-0 text-[0.8125rem]/5 font-medium text-white bg-red-600
-                                    border border-red-600 rounded shadow-md inline-flex items-center gap-1 truncate">
+            <span class="inline-flex items-center rounded-full border border-red-200 bg-red-50 px-3 py-1 text-xs font-semibold text-red-700 dark:border-red-900/70 dark:bg-red-950 dark:text-red-300">
             {{__("Not Downloadable")}}
         </span>
         @endif
-
     </div>
 </div>
 <input type="hidden" name="download"  value="{{ $download }}" >
-
 

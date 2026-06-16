@@ -30,8 +30,8 @@ class UpdateMultiplayerCE extends Command
     public function handle()
     {
         //Define the paths for the multiplayer repository
-        $multiplayerPath = storage_path(). '/app/multiplayer-ce';
-        $multiplayerJsSource = storage_path('app/multiplayer-ce/multiplayer.js');
+        $multiplayerPath = storage_path(). '/multiplayer-ce';
+        $multiplayerJsSource = storage_path('multiplayer-ce/multiplayer.js');
         $multiplayerJsDestination = public_path('js/multiplayer.js');
         $updateMultiplayerCmd = "cd $multiplayerPath && git pull";
 
