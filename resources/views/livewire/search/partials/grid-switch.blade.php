@@ -1,29 +1,23 @@
-{{--}} // deactivated 2026-01-14
-<div class="mr-4 flex justify-end w-full">
-    <div
+<div class="flex justify-end">
+    <button
         x-data="{ switchOn: @entangle('switchOn').live }"
-        class="inline-flex items-center space-x-2">
-
-        <input type="checkbox" class="hidden" x-model="switchOn">
-
-        <button
-            x-ref="switchButton"
-            type="button"
-            @click="switchOn = !switchOn"
-            :class="switchOn ? 'bg-neutral-900' : 'bg-neutral-200'"
-            class="relative inline-flex h-4 py-0.5 rounded-full focus:outline-none w-6">
+        type="button"
+        role="switch"
+        :aria-checked="switchOn.toString()"
+        @click="switchOn = !switchOn"
+        class="inline-flex min-h-11 items-center gap-3 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-300 dark:hover:bg-neutral-900 dark:focus-visible:ring-blue-500 dark:focus-visible:ring-offset-neutral-950">
+        <span
+            aria-hidden="true"
+            :class="switchOn ? 'bg-blue-700 dark:bg-blue-600' : 'bg-gray-200 dark:bg-neutral-700'"
+            class="relative inline-flex h-6 w-11 shrink-0 rounded-full p-0.5 transition">
             <span
-                :class="switchOn ? 'translate-x-[10px]' : 'translate-x-0.5'"
-                class="w-3 h-3 duration-200 ease-in-out bg-white rounded-full shadow-md"
+                :class="switchOn ? 'translate-x-5' : 'translate-x-0'"
+                class="size-5 rounded-full bg-white shadow-sm duration-200 ease-in-out"
             ></span>
-        </button>
+        </span>
 
-        <label
-            @click="$refs.switchButton.click(); $refs.switchButton.focus()"
-            :class="{ 'text-neutral-900': switchOn, 'text-gray-400': !switchOn }"
-            class="text-xs font-medium select-none truncate">
-            {{__("Grid")}}
-        </label>
-    </div>
+        <span class="select-none whitespace-nowrap">
+            {{ __("Grid view") }}
+        </span>
+    </button>
 </div>
-{{--}}

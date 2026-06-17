@@ -104,6 +104,7 @@
                     const progress = Number.isFinite(+data.progress) ? Math.max(0, Math.min(100, +data.progress)) : 0;
 
                     bar.style.width = progress + '%';
+                    bar.setAttribute('aria-valuenow', String(progress));
                     text.textContent = exists ? `${status} (${progress}%)` : 'Queued…';
                     detail.textContent = exists
                         ? ((progress >= 100 || status === 'stored') ? 'Finalizing…' : 'Working…')

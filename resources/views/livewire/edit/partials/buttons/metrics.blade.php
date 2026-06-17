@@ -4,15 +4,16 @@
         <button
             type="button"
             onclick="Livewire.dispatch('open-chart-modal', { videoId: @js($video->id) })"
+            aria-label="{{ __('Show playback metrics for :title', ['title' => $video->LangTitle]) }}"
             class="flex items-center justify-center w-8 h-8 hover:bg-neutral-100 active:bg-white focus:bg-white
-                    focus:outline-none focus:ring-2 focus:ring-neutral-200/60 focus:ring-offset-2
+                    focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2
                     disabled:opacity-50 disabled:pointer-events-none">
 
             <div data-tooltip-target="metrics-tooltip"
                  class="inline-flex text-blue-500 rounded-md shadow-sm space-x-0.5"
                  role="group">
 
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                      fill="currentColor" class="size-3.5">
                     <path d="M15.5 2A1.5 1.5 0 0 0 14 3.5v13a1.5 1.5 0 0 0
                              1.5 1.5h1a1.5 1.5 0 0 0 1.5-1.5v-13A1.5 1.5 0 0 0
@@ -32,13 +33,16 @@
         <!-- Download Metric -->
         <div class="flex items-center justify-center w-8 h-8 hover:bg-neutral-100 active:bg-white focus:bg-white
                     focus:outline-none focus:ring-2 focus:ring-neutral-200/60 focus:ring-offset-2
-                    disabled:opacity-50 disabled:pointer-events-none">
+                    disabled:opacity-50 disabled:pointer-events-none"
+             role="img"
+             aria-label="{{ __('Downloads: :count', ['count' => $video->videoStats->download ?? 0]) }}">
 
             <div data-tooltip-target="download-metrics-tooltip"
                  class="inline-flex text-red-500 rounded-md shadow-sm space-x-0.5"
                  role="group">
 
                 <svg class="w-4 h-4 text-red-500 dark:text-white"
+                     aria-hidden="true"
                      xmlns="http://www.w3.org/2000/svg" fill="none"
                      viewBox="0 0 24 24">
                     <path stroke="currentColor" stroke-linecap="round"
