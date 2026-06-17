@@ -10,7 +10,6 @@
         "directorytree/ldaprecord-laravel": "^3.4",
         "directorytree/metrics": "^1.5",
         "icehouse-ventures/laravel-chartjs": "^4.2",
-        "laravel/ai": "^0.3.2",
         "laravel/framework": "^12.0",
         "laravel/scout": "^10.17",
         "laravel/tinker": "^2.9",
@@ -27,8 +26,7 @@
         "laravel/sail": "^1.26",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.1",
-        "phpunit/phpunit": "^11.0.1",
-        "webcrafts-studio/lens-for-laravel": "^1.1"
+        "phpunit/phpunit": "^11.0.1"
     },
     "autoload": {
         "psr-4": {
