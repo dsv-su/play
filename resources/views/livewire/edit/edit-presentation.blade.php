@@ -38,10 +38,22 @@
         <div class="p-4 sm:p-6">
             <div class="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(19rem,25rem)_1fr]">
                 <div class="min-w-0">
-                    <div class="overflow-hidden rounded-lg border border-susecondary bg-white shadow-sm dark:border-susecondary dark:bg-neutral-950">
+                    <div class="overflow-hidden rounded-lg border border-susecondary bg-white shadow-sm dark:border-susecondary dark:bg-neutral-950"
+                         x-data="{
+                             fileName: '',
+                             preview: '',
+                             isDropping: false,
+                             setFile(file) {
+                                 if (!file) return;
+                                 this.fileName = file.name;
+                                 if (this.preview) URL.revokeObjectURL(this.preview);
+                                 this.preview = URL.createObjectURL(file);
+                             }
+                         }">
                         <div class="relative aspect-video w-full overflow-hidden bg-slate-200 dark:bg-neutral-800">
                             <img
-                                class="absolute inset-0 h-full w-full object-cover @if($visibility == 'private' or $visibility == 'unlisted') opacity-30 @endif"
+                                class="absolute inset-0 h-full w-full object-cover transition duration-300 @if($visibility == 'private' or $visibility == 'unlisted') opacity-30 @endif"
+                                x-bind:class="{ 'scale-105 blur-sm': preview }"
                                 src="{{ $video->thumb . '?' . time() }}"
                                 alt="{{ __('Presentation thumbnail') }}">
 
@@ -52,18 +64,7 @@
                             </div>
                         </div>
 
-                        <div class="flex flex-col gap-4 p-4"
-                             x-data="{
-                                 fileName: '',
-                                 preview: '',
-                                 isDropping: false,
-                                 setFile(file) {
-                                     if (!file) return;
-                                     this.fileName = file.name;
-                                     if (this.preview) URL.revokeObjectURL(this.preview);
-                                     this.preview = URL.createObjectURL(file);
-                                 }
-                             }">
+                        <div class="flex flex-col gap-4 p-4">
                             <div class="rounded-lg border p-3 {{ $visibilityStyle['panel'] }}">
                                 <div class="flex items-start gap-3">
                                     <span class="mt-0.5 inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-white/70 dark:bg-neutral-950/40">
@@ -170,6 +171,34 @@
                 </div>
 
                 <div class="min-w-0">
+                    @if(in_array($type, ['edit']))
+                        <div class="mb-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
+                            <div class="rounded-lg border border-slate-200 bg-slate-50 p-4 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+                                <p class="text-xs font-medium uppercase text-slate-500 dark:text-neutral-400">{{ __("Duration") }}</p>
+                                <p class="mt-1 text-lg font-semibold text-slate-950 dark:text-white">{{$video->duration}}</p>
+                            </div>
+
+                            <div class="rounded-lg border border-slate-200 bg-slate-50 p-4 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+                                <p class="flex items-center gap-1 text-xs font-medium uppercase text-slate-500 dark:text-neutral-400">
+                                    {{ __("Origin") }}
+                                    <button id="origin-button" data-modal-toggle="origin-modal" type="button" class="inline-flex size-5 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-white" aria-label="{{ __('More info about origin') }}">
+                                        <svg class="size-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M8 9h2v5m-2 0h4M9.408 5.5h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                        </svg>
+                                    </button>
+                                </p>
+                                <p class="mt-1 text-lg font-semibold text-slate-950 dark:text-white">
+                                    @switch($video->origin)
+                                        @case('mediasite') {{ __("Mediasite") }} @break
+                                        @case('cattura') {{ __("DSV") }} @break
+                                        @case('manual') {{ __("Uploaded") }} @break
+                                        @default {{ __("Unknown") }}
+                                    @endswitch
+                                </p>
+                            </div>
+                        </div>
+                    @endif
+
                     <div class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-neutral-700 dark:bg-neutral-950 sm:p-5">
                         <div class="mb-5 border-b border-slate-200 pb-4 dark:border-neutral-800">
                             <h3 class="text-sm font-semibold text-slate-950 dark:text-white">{{ __('Presentation information') }}</h3>
