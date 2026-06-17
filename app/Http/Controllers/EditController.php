@@ -29,6 +29,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -324,6 +325,7 @@ class EditController extends Controller
                 $audio   = $data['audio'] ?? null;
                 $hidden  = $data['streamVisibility'] ?? null;
                 $uploadedStreams = $data['uploaded_stream'] ?? [];
+                $hasUploadedStream = false;
 
                 // Determine the single stream that should have audio
                 $selectedAudioName = is_array($audio) ? array_key_first($audio) : $audio;
@@ -362,6 +364,7 @@ class EditController extends Controller
                             'poster' => '',
                             'playAudio' => $newAudio,
                         ];
+                        $hasUploadedStream = true;
                     }
 
                     $presentation->sources = $sources;
@@ -500,6 +503,10 @@ class EditController extends Controller
                     $presentation->upload_dir = '/data0/incoming/'. $presentation->local;
                 }
 
+                if ($hasUploadedStream || $request->hasFile('custom_thumb')) {
+                    $presentation->upload_dir = $this->uploadDirectory($presentation);
+                }
+
                 if ($request->hasFile('custom_thumb')) {
                     $presentation->thumb = $this->storeCustomThumbnail(
                         $request->file('custom_thumb'),
@@ -523,7 +530,7 @@ class EditController extends Controller
 
             // Send notify
             $notify = new PlayStoreNotify($presentation);
-return            $notify->sendSuccess('edit');
+            $notify->sendSuccess('edit');
 
             // Clear download storage
             Artisan::call('download:clear');
@@ -546,54 +553,71 @@ return            $notify->sendSuccess('edit');
 
     public function streamUpload(Video $video, Request $request)
     {
-        $request->validate([
-            'edit_presentation_id' => ['required', 'integer'],
-            'stream_id' => ['required', 'integer'],
-        ]);
+        try {
+            $request->validate([
+                'edit_presentation_id' => ['required', 'integer'],
+                'stream_id' => ['required', 'integer'],
+            ]);
 
-        $presentation = ManualPresentation::query()
-            ->whereKey($request->integer('edit_presentation_id'))
-            ->where('pkg_id', $video->id)
-            ->where('type', 'edit')
-            ->firstOrFail();
+            $presentation = ManualPresentation::query()
+                ->whereKey($request->integer('edit_presentation_id'))
+                ->where('pkg_id', $video->id)
+                ->where('type', 'edit')
+                ->firstOrFail();
 
-        $stream = Stream::query()
-            ->whereKey($request->integer('stream_id'))
-            ->where('video_id', $video->id)
-            ->firstOrFail();
+            $stream = Stream::query()
+                ->whereKey($request->integer('stream_id'))
+                ->where('video_id', $video->id)
+                ->firstOrFail();
 
-        $receiver = new FileReceiver('file', $request, HandlerFactory::classFromRequest($request));
+            $receiver = new FileReceiver('file', $request, HandlerFactory::classFromRequest($request));
 
-        if ($receiver->isUploaded() === false) {
-            throw new UploadMissingFileException();
-        }
-
-        $save = $receiver->receive();
-
-        if ($save->isFinished()) {
-            $file = $save->getFile();
-            $videoPath = $this->storeReplacementStream($file, $presentation, $stream->name);
-
-            if (is_file($file->getPathname())) {
-                @unlink($file->getPathname());
+            if ($receiver->isUploaded() === false) {
+                throw new UploadMissingFileException();
             }
+
+            $save = $receiver->receive();
+
+            if ($save->isFinished()) {
+                $file = $save->getFile();
+                $videoPath = $this->storeReplacementStream($file, $presentation, $stream->name);
+
+                if (is_file($file->getPathname())) {
+                    @unlink($file->getPathname());
+                }
+
+                return response()->json([
+                    'status' => true,
+                    'done' => 100,
+                    'stream_id' => $stream->id,
+                    'video' => $videoPath,
+                    'name' => basename($videoPath),
+                ]);
+            }
+
+            /** @var AbstractHandler $handler */
+            $handler = $save->handler();
 
             return response()->json([
                 'status' => true,
-                'done' => 100,
-                'stream_id' => $stream->id,
-                'video' => $videoPath,
-                'name' => basename($videoPath),
+                'done' => $handler->getPercentageDone(),
             ]);
+        } catch (Throwable $e) {
+            Log::error('Replacement stream upload failed', [
+                'video_id' => $video->id,
+                'edit_presentation_id' => $request->input('edit_presentation_id'),
+                'stream_id' => $request->input('stream_id'),
+                'play_store_root' => config('filesystems.disks.play-store.root'),
+                'chunk_path' => config('chunk-upload.storage.chunks'),
+                'storage_path' => $this->storage(),
+                'exception' => $e,
+            ]);
+
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage(),
+            ], 500);
         }
-
-        /** @var AbstractHandler $handler */
-        $handler = $save->handler();
-
-        return response()->json([
-            'status' => true,
-            'done' => $handler->getPercentageDone(),
-        ]);
     }
 
 
@@ -962,21 +986,31 @@ return            $notify->sendSuccess('edit');
         return 'poster/' . $fileName;
     }
 
+    private function uploadDirectory(ManualPresentation $presentation): string
+    {
+        return '/data0/' . $this->storage() . '/' . $presentation->local;
+    }
+
     private function storeReplacementStream(
         \Illuminate\Http\UploadedFile $file,
         ManualPresentation $presentation,
         string $streamName
     ): string {
-        $extension = $file->getClientOriginalExtension() ?: $file->extension();
-        $baseName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        $safeBaseName = Str::slug($baseName) ?: Str::slug($streamName) ?: 'stream';
-        $fileName = $safeBaseName . '-' . Str::random(8) . '.' . $extension;
+        $fileName = $this->createUploadFilename($file);
 
         $folder = '/' . trim($this->storage(), '/') . '/' . trim($presentation->local, '/') . '/video';
 
         Storage::disk('play-store')->putFileAs($folder, $file, $fileName);
 
         return 'video/' . $fileName;
+    }
+
+    private function createUploadFilename(\Illuminate\Http\UploadedFile $file): string
+    {
+        $extension = $file->getClientOriginalExtension() ?: $file->extension();
+        $filename = str_replace('.' . $extension, '', $file->getClientOriginalName());
+
+        return $filename . '.' . $extension;
     }
 
     private function removeOldStreamPoster(Stream $stream, Video $video): void

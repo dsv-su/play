@@ -37,4 +37,156 @@
     @include('manage.partials.savebar')
     @include('livewire.edit.partials.form.modal')
     @include('layouts.darktoggler')
+    @push('scripts')
+        <script>
+            (() => {
+                const ready = (callback) => {
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', callback, { once: true });
+                    } else {
+                        callback();
+                    }
+                };
+
+                ready(() => {
+                    const form = document.getElementById('presentation-upload-Form');
+                    const saveButton = document.getElementById('presentation-save-button');
+                    const uploader = document.getElementById('hs-file-upload');
+
+                    if (
+                        !(form instanceof HTMLFormElement) ||
+                        !(saveButton instanceof HTMLButtonElement) ||
+                        !(uploader instanceof HTMLElement)
+                    ) {
+                        return;
+                    }
+
+                    let uploadedFiles = Number.parseInt(uploader.dataset.uploadedFiles || '0', 10) || 0;
+                    const completedFiles = new WeakSet();
+
+                    const hasRequiredValues = () => {
+                        const requiredControls = Array.from(form.querySelectorAll('[required]'))
+                            .filter((control) => !control.disabled);
+
+                        return requiredControls.every((control) => {
+                            if (control.type === 'checkbox' || control.type === 'radio') {
+                                return form.querySelector(`[name="${CSS.escape(control.name)}"]:checked`) !== null;
+                            }
+
+                            return control.checkValidity();
+                        });
+                    };
+
+                    const updateSaveState = () => {
+                        saveButton.disabled = !(uploadedFiles > 0 && hasRequiredValues());
+                    };
+
+                    const normalizeResponse = (response) => {
+                        if (typeof response !== 'string') return response || {};
+
+                        try {
+                            return JSON.parse(response);
+                        } catch {
+                            return {};
+                        }
+                    };
+
+                    const payloadFromFile = (file, response, xhr) => {
+                        const candidates = [
+                            response,
+                            xhr?.responseText,
+                            file?.xhr?.responseText,
+                            ...(file?.upload?.chunks || []).map((chunk) => chunk?.response),
+                        ];
+
+                        for (const candidate of candidates) {
+                            const payload = normalizeResponse(candidate);
+
+                            if (Number(payload?.done) >= 100 || payload?.name) {
+                                return payload;
+                            }
+                        }
+
+                        return {};
+                    };
+
+                    const markFileComplete = (file, payload = {}) => {
+                        if (completedFiles.has(file)) return;
+
+                        if (Number(payload?.done) >= 100 || payload?.name || file.status === 'success') {
+                            completedFiles.add(file);
+                            uploadedFiles += 1;
+                            uploader.dataset.uploadedFiles = String(uploadedFiles);
+                            updateSaveState();
+                        }
+                    };
+
+                    const attachDropzoneListeners = () => {
+                        const instance = window.HSFileUpload?.getInstance(uploader, true);
+                        const dropzone = instance?.element?.dropzone;
+
+                        if (!dropzone || dropzone.__uploadFormSaveStateBound) {
+                            updateSaveState();
+                            return Boolean(dropzone);
+                        }
+
+                        dropzone.__uploadFormSaveStateBound = true;
+
+                        dropzone.on('success', (file, response, xhr) => {
+                            markFileComplete(file, payloadFromFile(file, response, xhr));
+                        });
+
+                        dropzone.on('complete', (file) => {
+                            if (completedFiles.has(file)) {
+                                return;
+                            }
+
+                            markFileComplete(file, payloadFromFile(file));
+                        });
+
+                        dropzone.on('removedfile', (file) => {
+                            if (completedFiles.has(file)) {
+                                completedFiles.delete(file);
+                                uploadedFiles = Math.max(0, uploadedFiles - 1);
+                                uploader.dataset.uploadedFiles = String(uploadedFiles);
+                            }
+
+                            updateSaveState();
+                        });
+
+                        dropzone.on('error', updateSaveState);
+                        dropzone.on('canceled', updateSaveState);
+                        updateSaveState();
+
+                        return true;
+                    };
+
+                    form.addEventListener('input', updateSaveState);
+                    form.addEventListener('change', updateSaveState);
+                    document.addEventListener('livewire:navigated', updateSaveState);
+
+                    form.addEventListener('submit', (event) => {
+                        updateSaveState();
+
+                        if (saveButton.disabled) {
+                            event.preventDefault();
+                            form.reportValidity();
+                        }
+                    });
+
+                    let attempts = 0;
+                    const waitForUploader = () => {
+                        attempts += 1;
+
+                        if (attachDropzoneListeners() || attempts >= 40) return;
+
+                        window.setTimeout(waitForUploader, 100);
+                    };
+
+                    waitForUploader();
+                    updateSaveState();
+                });
+            })();
+        </script>
+    @endpush
 @endsection

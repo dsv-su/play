@@ -1,6 +1,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <div id="hs-file-upload"
      data-localdir="{{ $presentation->local }}"
+     data-uploaded-files="{{ (int) ($presentation->files ?? 0) }}"
     data-hs-file-upload='{
   "url": "chunk/upload?localdir={{$presentation->local}}",
   "headers": { "X-CSRF-TOKEN": "{{ csrf_token() }}" },
@@ -95,13 +96,12 @@
 
                 <div class="mt-4 flex flex-wrap justify-center text-sm/6 text-gray-600">
                     <span class="pe-1 font-medium text-gray-800 dark:text-neutral-200">
-                      Drop your file(s) here or
+                      {{__("Drop your file(s) here or browse")}}
                     </span>
-                    <span class="bg-white font-semibold text-blue-600 hover:text-blue-700 rounded-lg decoration-2 hover:underline focus-within:outline-hidden focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2 dark:bg-neutral-800 dark:text-blue-500 dark:hover:text-blue-600">browse</span>
                 </div>
 
                 <p class="mt-1 text-xs text-gray-400 dark:text-neutral-400">
-                    Up to 4 media files per presentation can be uploaded. Each uploaded file should be the same length.
+                    {{__("Up to 4 media files per presentation can be uploaded. Each uploaded file should be the same length.")}}
                 </p>
         </div>
     </div>
@@ -112,4 +112,3 @@
 @error('files')
 <p id="file-errors" class="mt-3 text-sm leading-6 text-red-600">{{ $message }}</p>
 @enderror
-

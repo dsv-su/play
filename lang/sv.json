@@ -534,5 +534,12 @@
     "MP4, MOV, M4V, or WebM.": "MP4, MOV, M4V eller WebM.",
     "Ready to finish?": "Klar att avsluta?",
     "Save applies all edits on this page. Cancel returns without saving.": "Spara tillämpar alla ändringar på denna sida. Avbryt återgår utan att spara.",
-    "Save presentation": "Spara presentation"
+    "Save presentation": "Spara presentation",
+    "Up to 4 media files per presentation can be uploaded. Each uploaded file should be the same length.": "Upp till 4 mediefiler per presentation kan laddas upp. Varje uppladdad fil ska ha samma längd.",
+    "Drop your file(s) here or browse": "Släpp dina filer här eller bläddra",
+    "Uploading": "Laddar upp",
+    "Upload complete": "Uppladdningen klar",
+    "Upload failed": "Uppladdning misslyckades",
+    "The upload could not be completed.": "Uppladdningen kunde inte genomföras",
+    "The upload finished but no video path was returned.": "Uppladdningen är klar men ingen path returnerades."
 }
