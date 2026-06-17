@@ -156,6 +156,7 @@
                             const end = Math.min(file.size, start + chunkSize);
                             const formData = new FormData();
 
+                            formData.append('_token', csrfToken);
                             formData.append('edit_presentation_id', draftId);
                             formData.append('stream_id', streamId);
                             formData.append('dzuuid', uploadId);
