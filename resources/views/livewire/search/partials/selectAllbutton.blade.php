@@ -19,7 +19,7 @@
 
         <!-- Bulk Edit -->
         <button
-            type="submit" id="bulkedit" form="bulk-edit-form"
+            type="submit"
             class="w-full sm:w-40 py-2 px-3 inline-flex items-center justify-center gap-x-1 text-sm rounded-lg border border-blue-700 bg-white text-blue-800
              hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none
              dark:bg-neutral-900 dark:text-white dark:border-neutral-700 dark:hover:bg-neutral-800"
@@ -32,5 +32,4 @@
         </button>
     </div>
 @endif
-
 

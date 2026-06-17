@@ -24,11 +24,6 @@
                     else url.searchParams.delete('open');
                     history.pushState({}, '', url);
 
-                    this.$nextTick(() => {
-                        if (this.activeAccordion) {
-                            document.getElementById(`panel-${this.activeAccordion}`)?.focus({ preventScroll: true });
-                        }
-                    });
                 }
             }
         };

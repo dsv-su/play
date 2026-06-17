@@ -8,7 +8,7 @@
                       ->values();
     @endphp
 
-    <form id="bulk-edit-form"
+    <form id="bulk-edit-form-{{ $courseId }}"
           method="post"
           action="{{ route('bulk.edit') }}"
           x-data="{
@@ -51,7 +51,8 @@
                                rel="noopener noreferrer"
                                href="{{ route('player.show', ['video' => $video]) }}"
                                class="w-full font-medium text-sm sm:text-base hover:text-blue-600 {{ $titleColor }} dark:text-neutral-100 truncate"
-                               title="{{ $video->title }}">
+                               title="{{ $video->title }}"
+                               aria-label="{{ __('Open :title in a new tab', ['title' => $video->LangTitle]) }}">
                                 {{ $video->LangTitle }}
                             </a>
 
@@ -106,5 +107,3 @@
     </form>
 
 </div>
-
-
