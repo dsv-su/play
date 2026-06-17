@@ -140,6 +140,25 @@
                     return response;
                 };
 
+                const payloadFromFile = (file, response, xhr) => {
+                    const candidates = [
+                        response,
+                        xhr?.responseText,
+                        file?.xhr?.responseText,
+                        ...(file?.upload?.chunks || []).map((chunk) => chunk?.response),
+                    ];
+
+                    for (const candidate of candidates) {
+                        const payload = parseResponse(candidate);
+
+                        if (payload.video || payload.message || payload.error) {
+                            return payload;
+                        }
+                    }
+
+                    return {};
+                };
+
                 const bindUploader = (uploader) => {
                     const dropzone = getDropzone(uploader);
 
@@ -165,11 +184,28 @@
                         setProgress(uploader, progress);
                     });
 
-                    dropzone.on('success', (_file, response) => {
-                        const payload = parseResponse(response);
+                    dropzone.on('success', (file, response, xhr) => {
+                        const payload = payloadFromFile(file, response, xhr);
 
                         if (payload.video) {
                             setUploadComplete(uploader, payload);
+                        }
+                    });
+
+                    dropzone.on('complete', (file) => {
+                        if (uploader.querySelector('[data-uploaded-stream-path]')?.value) {
+                            return;
+                        }
+
+                        const payload = payloadFromFile(file);
+
+                        if (payload.video) {
+                            setUploadComplete(uploader, payload);
+                            return;
+                        }
+
+                        if (file.status === 'success') {
+                            setUploadError(uploader, @js(__('The upload finished but no video path was returned.')));
                         }
                     });
 
