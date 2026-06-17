@@ -49,7 +49,7 @@
     <div wire:ignore
          data-edit-stream-uploader
          data-stream-id="{{ $stream['id'] }}"
-         data-upload-url="{{ route('presentation.stream-upload', $video) }}"
+         data-upload-url="{{ route('presentation.stream-upload', $video, false) }}"
          data-draft-id="{{ $editPresentationId }}">
         <label for="new-stream-upload-{{ $stream['id'] }}"
                data-stream-dropzone

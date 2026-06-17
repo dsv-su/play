@@ -168,8 +168,10 @@
 
                             const response = await fetch(uploadUrl, {
                                 method: 'POST',
+                                credentials: 'same-origin',
                                 headers: {
                                     'X-CSRF-TOKEN': csrfToken,
+                                    'X-Requested-With': 'XMLHttpRequest',
                                     'Accept': 'application/json',
                                 },
                                 body: formData,
