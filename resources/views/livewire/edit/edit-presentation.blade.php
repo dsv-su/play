@@ -29,7 +29,9 @@
                     <p class="mt-1 text-sm text-slate-600 dark:text-neutral-400">{{__("Start with the information users see in search results, course pages, and the player.")}}</p>
                 </div>
 
-                <span class="inline-flex w-fit items-center rounded-md border px-3 py-1 text-xs font-semibold {{ $visibilityStyle['badge'] }}">
+                <span class="inline-flex w-fit items-center rounded-md border px-3 py-1 text-xs font-semibold {{ $visibilityStyle['badge'] }}"
+                      role="status"
+                      aria-live="polite">
                     {{ __($visibility) }}
                 </span>
             </div>
@@ -74,7 +76,7 @@
                                     </span>
                                     <div class="min-w-0">
                                         <p class="text-sm font-semibold">{{ __('Visibility status') }}</p>
-                                        <p class="mt-1 text-sm leading-6">{{ $visibilityStyle['message'] }}</p>
+                                        <p class="mt-1 text-sm leading-6" role="status" aria-live="polite">{{ $visibilityStyle['message'] }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -89,20 +91,23 @@
                                                wire:model.live="render_thumb"
                                                name="render_thumb"
                                                id="hs-xs-switch"
-                                               class="peer sr-only">
-                                        <span class="absolute inset-0 rounded-full bg-slate-200 transition-colors duration-200 ease-in-out peer-checked:bg-blue-600 dark:bg-neutral-700 dark:peer-checked:bg-blue-500"></span>
+                                               class="peer sr-only"
+                                               aria-describedby="render-thumb-description render-thumb-status">
+                                        <span class="absolute inset-0 rounded-full bg-slate-200 transition-colors duration-200 ease-in-out peer-checked:bg-blue-600 peer-focus-visible:ring-2 peer-focus-visible:ring-blue-500 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-white dark:bg-neutral-700 dark:peer-checked:bg-blue-500 dark:peer-focus-visible:ring-offset-neutral-900"></span>
                                         <span class="absolute start-0.5 top-1/2 size-5 -translate-y-1/2 rounded-full bg-white shadow-sm transition-transform duration-200 ease-in-out peer-checked:translate-x-full dark:bg-neutral-300 dark:peer-checked:bg-white"></span>
                                     </label>
 
                                     <div class="min-w-0">
                                         <label for="hs-xs-switch" class="text-sm font-medium text-slate-900 dark:text-white">
-                                            @if($render_thumb)
-                                                {{__("Regenerate thumbnail")}}
-                                            @else
-                                                {{__("Keep original thumbnail")}}
-                                            @endif
+                                            <span id="render-thumb-status" role="status" aria-live="polite">
+                                                @if($render_thumb)
+                                                    {{__("Regenerate thumbnail")}}
+                                                @else
+                                                    {{__("Keep original thumbnail")}}
+                                                @endif
+                                            </span>
                                         </label>
-                                        <p class="mt-1 text-sm text-slate-500 dark:text-neutral-400">
+                                        <p id="render-thumb-description" class="mt-1 text-sm text-slate-500 dark:text-neutral-400">
                                             {{ __("Choose whether the thumbnail should be recreated when saving.") }}
                                             <button id="render-thumb-button" data-modal-toggle="render-thumb-modal" type="button"
                                                     class="inline-flex size-5 items-center justify-center align-middle text-slate-500 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-neutral-400 dark:hover:text-white"
@@ -121,7 +126,7 @@
                                 <div class="mb-3 flex items-start justify-between gap-3">
                                     <div class="min-w-0">
                                         <h3 class="text-sm font-semibold text-slate-950 dark:text-white">{{ __('Custom thumbnail') }}</h3>
-                                        <p class="mt-1 text-sm text-slate-500 dark:text-neutral-400">{{ __('Upload an image to replace the generated thumbnail for this edit.') }}</p>
+                                        <p id="custom-thumb-description" class="mt-1 text-sm text-slate-500 dark:text-neutral-400">{{ __('Upload an image to replace the generated thumbnail for this edit.') }}</p>
                                     </div>
                                 </div>
 
@@ -150,8 +155,11 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5V19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2.5M7 10l5-5m0 0 5 5m-5-5v12" />
                                         </svg>
                                     </span>
-                                    <span class="relative z-10 mt-3 text-sm font-medium text-slate-800 dark:text-neutral-100" x-text="fileName || @js(__('Drop an image here or browse'))"></span>
-                                    <span class="relative z-10 mt-1 text-xs text-slate-500 dark:text-neutral-400">{{ __('JPG, PNG, or WebP. Recommended 16:9.') }}</span>
+                                    <span class="relative z-10 mt-3 text-sm font-medium text-slate-800 dark:text-neutral-100"
+                                          role="status"
+                                          aria-live="polite"
+                                          x-text="fileName || @js(__('Drop an image here or browse'))"></span>
+                                    <span id="custom-thumb-requirements" class="relative z-10 mt-1 text-xs text-slate-500 dark:text-neutral-400">{{ __('JPG, PNG, or WebP. Recommended 16:9.') }}</span>
                                 </label>
 
                                 <input id="custom-thumb-upload"
@@ -160,10 +168,12 @@
                                        name="custom_thumb"
                                        accept="image/jpeg,image/png,image/webp"
                                        class="sr-only"
+                                       aria-describedby="custom-thumb-description custom-thumb-requirements @error('custom_thumb') custom-thumb-error @enderror"
+                                       aria-invalid="@error('custom_thumb') true @else false @enderror"
                                        x-on:change="setFile($event.target.files[0])">
 
                                 @error('custom_thumb')
-                                <p class="mt-2 text-sm leading-6 text-red-600">{{ $message }}</p>
+                                <p id="custom-thumb-error" class="mt-2 text-sm leading-6 text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
@@ -207,8 +217,10 @@
 
                         <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
                             <div class="min-w-0">
-                                <label for="title_sv" class="mb-2 block text-sm font-medium text-slate-900 dark:text-white">
-                                    {{ __('Title in Swedish') }}<span class="text-red-600"> *</span>
+                                <div class="mb-2 flex items-center gap-1">
+                                    <label for="title_sv" class="block text-sm font-medium text-slate-900 dark:text-white">
+                                        {{ __('Title in Swedish') }}<span class="text-red-600"> *</span>
+                                    </label>
                                     <button id="title-sv-button" data-modal-toggle="title-modal" type="button"
                                             class="inline-flex size-5 items-center justify-center align-middle text-slate-500 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-neutral-400 dark:hover:text-white"
                                             aria-label="{{ __('More info about titles') }}">
@@ -216,7 +228,7 @@
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M8 9h2v5m-2 0h4M9.408 5.5h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                                         </svg>
                                     </button>
-                                </label>
+                                </div>
 
                                 <input id="title_sv"
                                        type="text"
@@ -225,17 +237,21 @@
                                        class="block w-full rounded-lg border-slate-300 bg-white p-3 text-sm text-slate-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:placeholder:text-neutral-500"
                                        value="{{ old('title') ? old('title') : $video->title ?? '' }}"
                                        placeholder="{{ __('Title in Swedish') }}"
+                                       aria-invalid="@error('title') true @else false @enderror"
+                                       @error('title') aria-describedby="title-sv-error" @enderror
                                        @if($type == 'edit') required @else readonly @endif>
                                 @error('title')
-                                <p class="mt-2 text-sm leading-6 text-red-600" x-init="$el.closest('form').scrollIntoView()">
+                                <p id="title-sv-error" class="mt-2 text-sm leading-6 text-red-600" x-init="$el.closest('form').scrollIntoView()">
                                     {{ __('This is a required input') }}
                                 </p>
                                 @enderror
                             </div>
 
                             <div class="min-w-0">
-                                <label for="title_en" class="mb-2 block text-sm font-medium text-slate-900 dark:text-white">
-                                    {{ __('Title in English') }}<span class="text-red-600"> *</span>
+                                <div class="mb-2 flex items-center gap-1">
+                                    <label for="title_en" class="block text-sm font-medium text-slate-900 dark:text-white">
+                                        {{ __('Title in English') }}<span class="text-red-600"> *</span>
+                                    </label>
                                     <button id="title-en-button" data-modal-toggle="title-modal" type="button"
                                             class="inline-flex size-5 items-center justify-center align-middle text-slate-500 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-neutral-400 dark:hover:text-white"
                                             aria-label="{{ __('More info about titles') }}">
@@ -243,7 +259,7 @@
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M8 9h2v5m-2 0h4M9.408 5.5h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                                         </svg>
                                     </button>
-                                </label>
+                                </div>
 
                                 <input id="title_en"
                                        type="text"
@@ -252,9 +268,11 @@
                                        class="block w-full rounded-lg border-slate-300 bg-white p-3 text-sm text-slate-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:placeholder:text-neutral-500"
                                        value="{{ old('title_en') ? old('title_en') : $video->title_en ?? '' }}"
                                        placeholder="{{ __('Title in English') }}"
+                                       aria-invalid="@error('title_en') true @else false @enderror"
+                                       @error('title_en') aria-describedby="title-en-error" @enderror
                                        @if($type == 'edit') required @else readonly @endif>
                                 @error('title_en')
-                                <p class="mt-2 text-sm leading-6 text-red-600" x-init="$el.closest('form').scrollIntoView()">
+                                <p id="title-en-error" class="mt-2 text-sm leading-6 text-red-600" x-init="$el.closest('form').scrollIntoView()">
                                     {{ __('This is a required input') }}
                                 </p>
                                 @enderror
@@ -278,8 +296,10 @@
                                      }
                                  }"
                                  x-init="updateDescriptionLength()">
-                                <label for="description" class="mb-2 block text-sm font-medium text-slate-900 dark:text-white">
-                                    {{ __('Description') }}
+                                <div class="mb-2 flex items-center gap-1">
+                                    <label for="description" class="block text-sm font-medium text-slate-900 dark:text-white">
+                                        {{ __('Description') }}
+                                    </label>
                                     <button id="description-button" data-modal-toggle="description-modal" type="button"
                                             class="inline-flex size-5 items-center justify-center align-middle text-slate-500 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-neutral-400 dark:hover:text-white"
                                             aria-label="{{ __('More info about descriptions') }}">
@@ -288,7 +308,7 @@
                                                   d="M8 9h2v5m-2 0h4M9.408 5.5h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                                         </svg>
                                     </button>
-                                </label>
+                                </div>
 
                                 <textarea id="description"
                                           name="description"
@@ -296,8 +316,9 @@
                                           x-on:input="updateDescriptionLength()"
                                           wire:model.live="description"
                                           class="block h-32 w-full rounded-lg border-slate-300 bg-white p-3 text-sm text-slate-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:placeholder:text-neutral-500"
+                                          aria-describedby="description-count"
                                           placeholder="{{ __('Description') }}">{{ old('description') ? old('description') : ($video->description ?? '') }}</textarea>
-                                <p class="mt-1 text-xs">
+                                <p id="description-count" class="mt-1 text-xs" role="status" aria-live="polite">
                                     <span x-text="descriptionLength"
                                           x-bind:class="descriptionLength > maxDescriptionLength
                                               ? 'text-red-600 dark:text-red-400'
