@@ -15,14 +15,12 @@
 @once
     @push('scripts')
         <script>
-            document.addEventListener('DOMContentLoaded', () => {
+            window.addEventListener('load', () => {
                 const uploaders = document.querySelectorAll('[data-edit-stream-uploader]');
                 const form = document.getElementById('presentation-edit-Form');
                 const saveButton = document.getElementById('presentation-save-button');
                 const saveStatus = document.getElementById('edit-stream-upload-status');
-                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
                 const activeUploads = new Set();
-                const chunkSize = 2000000;
                 const defaultDropText = @js(__('Drop a replacement stream here or browse'));
 
                 const setSaveState = () => {
@@ -38,21 +36,13 @@
                     }
                 };
 
-                form?.addEventListener('submit', (event) => {
-                    if (activeUploads.size === 0) {
-                        return;
-                    }
+                const posterParts = (uploader) => {
+                    const poster = document.querySelector(`[data-stream-poster="${uploader.dataset.streamId}"]`);
 
-                    event.preventDefault();
-                    setSaveState();
-                });
-
-                const uuid = () => {
-                    if (window.crypto?.randomUUID) {
-                        return window.crypto.randomUUID();
-                    }
-
-                    return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+                    return {
+                        image: poster?.querySelector('[data-stream-poster-image]'),
+                        overlay: poster?.querySelector('[data-stream-replaced-overlay]'),
+                    };
                 };
 
                 const setProgress = (uploader, value) => {
@@ -67,22 +57,27 @@
                     const label = uploader.querySelector('[data-stream-upload-label]');
                     const pathInput = uploader.querySelector('[data-uploaded-stream-path]');
                     const cancelButton = uploader.querySelector('[data-stream-replacement-cancel]');
-                    const poster = document.querySelector(`[data-stream-poster="${uploader.dataset.streamId}"]`);
-                    const posterImage = poster?.querySelector('[data-stream-poster-image]');
-                    const replacedOverlay = poster?.querySelector('[data-stream-replaced-overlay]');
+                    const poster = posterParts(uploader);
 
                     spinner?.classList.add('hidden');
                     if (label) label.textContent = @js(__('Upload complete'));
                     if (pathInput) pathInput.value = response.video || '';
                     cancelButton?.classList.remove('hidden');
-                    posterImage?.classList.add('blur-sm');
-                    replacedOverlay?.classList.remove('hidden');
-                    replacedOverlay?.classList.add('flex');
+                    poster.image?.classList.add('blur-sm');
+                    poster.overlay?.classList.remove('hidden');
+                    poster.overlay?.classList.add('flex');
                     setProgress(uploader, 100);
+                    activeUploads.delete(uploader.dataset.streamId);
+                    setSaveState();
                 };
 
-                const resetReplacement = (uploader) => {
-                    const fileInput = uploader.querySelector('[data-stream-file-input]');
+                const getDropzone = (uploader) => {
+                    const instance = window.HSFileUpload?.getInstance(uploader, true);
+
+                    return instance?.element?.dropzone || instance?.dropzone || null;
+                };
+
+                const resetReplacement = (uploader, removeFiles = true) => {
                     const fileName = uploader.querySelector('[data-stream-file-name]');
                     const pathInput = uploader.querySelector('[data-uploaded-stream-path]');
                     const status = uploader.querySelector('[data-stream-upload-status]');
@@ -92,11 +87,12 @@
                     const bar = uploader.querySelector('[data-stream-upload-bar]');
                     const error = uploader.querySelector('[data-stream-upload-error]');
                     const cancelButton = uploader.querySelector('[data-stream-replacement-cancel]');
-                    const poster = document.querySelector(`[data-stream-poster="${uploader.dataset.streamId}"]`);
-                    const posterImage = poster?.querySelector('[data-stream-poster-image]');
-                    const replacedOverlay = poster?.querySelector('[data-stream-replaced-overlay]');
+                    const poster = posterParts(uploader);
 
-                    if (fileInput) fileInput.value = '';
+                    if (removeFiles) {
+                        getDropzone(uploader)?.removeAllFiles(true);
+                    }
+
                     if (fileName) fileName.textContent = defaultDropText;
                     if (pathInput) pathInput.value = '';
                     status?.classList.add('hidden');
@@ -106,9 +102,11 @@
                     if (bar) bar.style.width = '0%';
                     error?.classList.add('hidden');
                     cancelButton?.classList.add('hidden');
-                    posterImage?.classList.remove('blur-sm');
-                    replacedOverlay?.classList.add('hidden');
-                    replacedOverlay?.classList.remove('flex');
+                    poster.image?.classList.remove('blur-sm');
+                    poster.overlay?.classList.add('hidden');
+                    poster.overlay?.classList.remove('flex');
+                    activeUploads.delete(uploader.dataset.streamId);
+                    setSaveState();
                 };
 
                 const setUploadError = (uploader, message) => {
@@ -119,131 +117,100 @@
                     spinner?.classList.add('hidden');
                     if (label) label.textContent = @js(__('Upload failed'));
                     if (error) {
-                        error.textContent = message;
+                        error.textContent = String(message || @js(__('The upload could not be completed.'))).slice(0, 180);
                         error.classList.remove('hidden');
                     }
-                };
-
-                const uploadFile = async (uploader, file) => {
-                    if (!file) return;
-
-                    const uploadId = uuid();
-                    const streamId = uploader.dataset.streamId;
-                    const uploadUrl = uploader.dataset.uploadUrl;
-                    const draftId = uploader.dataset.draftId;
-                    const totalChunks = Math.max(1, Math.ceil(file.size / chunkSize));
-                    const fileName = uploader.querySelector('[data-stream-file-name]');
-                    const error = uploader.querySelector('[data-stream-upload-error]');
-                    const spinner = uploader.querySelector('[data-stream-upload-spinner]');
-                    const label = uploader.querySelector('[data-stream-upload-label]');
-                    const pathInput = uploader.querySelector('[data-uploaded-stream-path]');
-
-                    if (fileName) fileName.textContent = file.name;
-                    if (pathInput) pathInput.value = '';
-                    error?.classList.add('hidden');
-                    spinner?.classList.remove('hidden');
-                    if (label) label.textContent = @js(__('Uploading'));
-
-                    activeUploads.add(uploadId);
+                    activeUploads.delete(uploader.dataset.streamId);
                     setSaveState();
-                    setProgress(uploader, 0);
-
-                    try {
-                        let finalResponse = null;
-
-                        for (let index = 0; index < totalChunks; index++) {
-                            const start = index * chunkSize;
-                            const end = Math.min(file.size, start + chunkSize);
-                            const formData = new FormData();
-
-                            formData.append('_token', csrfToken);
-                            formData.append('edit_presentation_id', draftId);
-                            formData.append('stream_id', streamId);
-                            formData.append('dzuuid', uploadId);
-                            formData.append('dzchunkindex', index);
-                            formData.append('dztotalchunkcount', totalChunks);
-                            formData.append('dzchunksize', chunkSize);
-                            formData.append('dzchunkbyteoffset', start);
-                            formData.append('dztotalfilesize', file.size);
-                            formData.append('file', file.slice(start, end), file.name);
-
-                            const response = await fetch(uploadUrl, {
-                                method: 'POST',
-                                credentials: 'same-origin',
-                                headers: {
-                                    'X-CSRF-TOKEN': csrfToken,
-                                    'X-Requested-With': 'XMLHttpRequest',
-                                    'Accept': 'application/json',
-                                },
-                                body: formData,
-                            });
-
-                            const contentType = response.headers.get('content-type') || '';
-
-                            if (!response.ok) {
-                                if (contentType.includes('application/json')) {
-                                    const errorResponse = await response.json();
-                                    throw new Error(errorResponse.message || @js(__('The upload could not be completed.')));
-                                }
-
-                                const errorText = await response.text();
-                                throw new Error(errorText.slice(0, 160) || @js(__('The upload could not be completed.')));
-                            }
-
-                            if (!contentType.includes('application/json')) {
-                                const responseText = await response.text();
-                                throw new Error(responseText.slice(0, 160) || @js(__('The upload did not return JSON.')));
-                            }
-
-                            finalResponse = await response.json();
-                            setProgress(uploader, finalResponse.done || ((index + 1) / totalChunks) * 100);
-                        }
-
-                        setUploadComplete(uploader, finalResponse || {});
-                    } catch (error) {
-                        setUploadError(uploader, error.message || @js(__('The upload could not be completed.')));
-                    } finally {
-                        activeUploads.delete(uploadId);
-                        setSaveState();
-                    }
                 };
 
-                uploaders.forEach((uploader) => {
-                    const input = uploader.querySelector('[data-stream-file-input]');
-                    const dropzone = uploader.querySelector('[data-stream-dropzone]');
-                    const overlay = uploader.querySelector('[data-stream-drop-overlay]');
-                    const cancelReplacement = uploader.querySelector('[data-stream-replacement-cancel]');
+                const parseResponse = (response) => {
+                    if (!response) {
+                        return {};
+                    }
 
-                    input?.addEventListener('change', (event) => {
-                        uploadFile(uploader, event.target.files?.[0]);
+                    if (typeof response === 'string') {
+                        try {
+                            return JSON.parse(response);
+                        } catch (_) {
+                            return { message: response };
+                        }
+                    }
+
+                    return response;
+                };
+
+                const bindUploader = (uploader) => {
+                    const dropzone = getDropzone(uploader);
+
+                    if (!dropzone || uploader.dataset.streamUploaderBound === 'true') {
+                        return Boolean(dropzone);
+                    }
+
+                    uploader.dataset.streamUploaderBound = 'true';
+
+                    dropzone.on('addedfile', (file) => {
+                        uploader.querySelector('[data-stream-file-name]').textContent = file.name;
+                        uploader.querySelector('[data-uploaded-stream-path]').value = '';
+                        uploader.querySelector('[data-stream-upload-error]')?.classList.add('hidden');
                     });
 
-                    cancelReplacement?.addEventListener('click', () => {
+                    dropzone.on('processing', () => {
+                        activeUploads.add(uploader.dataset.streamId);
+                        setProgress(uploader, 0);
+                        setSaveState();
+                    });
+
+                    dropzone.on('uploadprogress', (_file, progress) => {
+                        setProgress(uploader, progress);
+                    });
+
+                    dropzone.on('success', (_file, response) => {
+                        const payload = parseResponse(response);
+
+                        if (payload.video) {
+                            setUploadComplete(uploader, payload);
+                        }
+                    });
+
+                    dropzone.on('error', (_file, message, xhr) => {
+                        const payload = parseResponse(xhr?.responseText || message);
+                        setUploadError(uploader, payload.message || payload.error || message);
+                    });
+
+                    dropzone.on('canceled', () => resetReplacement(uploader, false));
+                    dropzone.on('removedfile', () => {
+                        if (!uploader.querySelector('[data-uploaded-stream-path]')?.value) {
+                            resetReplacement(uploader, false);
+                        }
+                    });
+
+                    uploader.querySelector('[data-stream-replacement-cancel]')?.addEventListener('click', () => {
                         resetReplacement(uploader);
                     });
 
-                    dropzone?.addEventListener('dragover', (event) => {
-                        event.preventDefault();
-                        overlay?.classList.remove('hidden');
-                        overlay?.classList.add('flex');
-                    });
+                    return true;
+                };
 
-                    dropzone?.addEventListener('dragleave', (event) => {
-                        event.preventDefault();
-                        overlay?.classList.add('hidden');
-                        overlay?.classList.remove('flex');
-                    });
+                form?.addEventListener('submit', (event) => {
+                    if (activeUploads.size === 0) {
+                        return;
+                    }
 
-                    dropzone?.addEventListener('drop', (event) => {
-                        event.preventDefault();
-                        overlay?.classList.add('hidden');
-                        overlay?.classList.remove('flex');
-                        uploadFile(uploader, event.dataTransfer.files?.[0]);
-                    });
+                    event.preventDefault();
+                    setSaveState();
                 });
 
+                const interval = window.setInterval(() => {
+                    const allBound = Array.from(uploaders).every(bindUploader);
+
+                    if (allBound) {
+                        window.clearInterval(interval);
+                    }
+                }, 100);
+
                 document.addEventListener('edit-stream-replacements:reset', () => {
-                    uploaders.forEach(resetReplacement);
+                    uploaders.forEach((uploader) => resetReplacement(uploader));
                 });
             });
         </script>

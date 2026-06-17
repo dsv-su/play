@@ -49,11 +49,56 @@
     <div wire:ignore
          data-edit-stream-uploader
          data-stream-id="{{ $stream['id'] }}"
-         data-upload-url="{{ route('presentation.stream-upload', $video, false) }}"
-         data-draft-id="{{ $editPresentationId }}">
-        <label for="new-stream-upload-{{ $stream['id'] }}"
-               data-stream-dropzone
-               class="relative flex min-h-28 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border border-dashed border-slate-300 bg-slate-50 p-4 text-center transition hover:border-blue-400 hover:bg-blue-50/60 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-blue-500 dark:hover:bg-blue-950/30">
+         data-hs-file-upload='{
+  "url": "{{ route('presentation.stream-upload', $video, false) }}?edit_presentation_id={{ $editPresentationId }}&stream_id={{ $stream['id'] }}",
+  "headers": { "X-CSRF-TOKEN": "{{ csrf_token() }}" },
+  "acceptedFiles": "video/*",
+  "parallelUploads": 1,
+  "maxFiles": 1,
+  "chunking": true,
+  "forceChunking": true,
+  "maxFilesize": 5000,
+  "parallelChunkUploads": false,
+  "chunkSize": 2000000,
+  "retryChunks": true,
+  "retryChunksLimit": 5,
+  "createImageThumbnails": false,
+  "paramName": "file",
+  "autoHideTrigger": false,
+  "extensions": {
+    "default": { "class": "shrink-0 size-5" },
+    "mp4": { "class": "shrink-0 size-5" },
+    "mov": { "class": "shrink-0 size-5" },
+    "m4v": { "class": "shrink-0 size-5" },
+    "webm": { "class": "shrink-0 size-5" }
+  }
+}'>
+        <template data-hs-file-upload-preview>
+            <div class="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3 dark:border-neutral-700 dark:bg-neutral-900">
+                <div class="mb-1 flex items-center justify-between gap-3 text-xs text-slate-600 dark:text-neutral-400">
+                    <div class="min-w-0">
+                        <div class="truncate text-sm font-medium text-slate-800 dark:text-neutral-100" data-dz-name></div>
+                        <div class="text-xs text-slate-500 dark:text-neutral-400" data-dz-size></div>
+                    </div>
+                    <span class="shrink-0 text-sm text-slate-800 dark:text-white">
+                        <span data-hs-file-upload-progress-bar-value>0</span>%
+                    </span>
+                </div>
+                <div class="h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-neutral-800"
+                     role="progressbar"
+                     aria-valuenow="0"
+                     aria-valuemin="0"
+                     aria-valuemax="100"
+                     data-hs-file-upload-progress-bar>
+                    <div class="h-full w-0 rounded-full bg-blue-600 transition-all duration-300 hs-file-upload-complete:bg-green-500"
+                         data-hs-file-upload-progress-bar-pane></div>
+                </div>
+            </div>
+        </template>
+
+        <div data-stream-dropzone
+             data-hs-file-upload-trigger
+             class="relative flex min-h-28 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border border-dashed border-slate-300 bg-slate-50 p-4 text-center transition hover:border-blue-400 hover:bg-blue-50/60 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-blue-500 dark:hover:bg-blue-950/30">
             <span class="absolute inset-0 hidden items-center justify-center bg-blue-600/90 text-sm font-semibold text-white"
                   data-stream-drop-overlay>
                 {{ __('Drop video to upload') }}
@@ -67,13 +112,9 @@
             <span class="relative z-10 mt-3 max-w-full truncate text-sm font-medium text-slate-800 dark:text-neutral-100"
                   data-stream-file-name>{{ __('Drop a replacement stream here or browse') }}</span>
             <span class="relative z-10 mt-1 text-xs text-slate-500 dark:text-neutral-400">{{ __('MP4, MOV, M4V, or WebM.') }}</span>
-        </label>
+        </div>
 
-        <input id="new-stream-upload-{{ $stream['id'] }}"
-               type="file"
-               data-stream-file-input
-               accept="video/mp4,video/quicktime,video/x-m4v,video/webm,.mp4,.mov,.m4v,.webm"
-               class="sr-only">
+        <div data-hs-file-upload-previews></div>
 
         <input type="hidden"
                data-uploaded-stream-path
