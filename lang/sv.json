@@ -541,5 +541,9 @@
     "Upload complete": "Uppladdningen klar",
     "Upload failed": "Uppladdning misslyckades",
     "The upload could not be completed.": "Uppladdningen kunde inte genomföras",
-    "The upload finished but no video path was returned.": "Uppladdningen är klar men ingen path returnerades."
+    "The upload finished but no video path was returned.": "Uppladdningen är klar men ingen path returnerades.",
+    "Upload a custom thumbnail or let one be generated.": "Ladda upp en anpassad miniatyrbild eller låt en genereras.",
+    "A thumbnail can also be generated automatically.": "En miniatyrbild kan också genereras automatiskt.",
+    "Upload thumbnail": "Ladda upp miniatyrbild",
+    "Remove thumbnail": "Ta bort miniatyrbild"
 }

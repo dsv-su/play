@@ -32,9 +32,10 @@
                         @endif
                         <button type="button"
                                 wire:click="remove_presenter({{$key}})"
-                                class="inline-flex size-5 shrink-0 items-center justify-center rounded-full text-blue-700 hover:bg-blue-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-blue-200 dark:hover:bg-blue-900">
-                        <span class="sr-only">Remove</span>
-                        <svg class="shrink-0 size-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                class="inline-flex size-6 shrink-0 items-center justify-center rounded-full text-blue-700 hover:bg-blue-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-blue-200 dark:hover:bg-blue-900"
+                                aria-label="{{ __('Remove presenter') }} {{$presenter['name']}}">
+                        <span class="sr-only">{{ __('Remove presenter') }} {{$presenter['name']}}</span>
+                        <svg class="shrink-0 size-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M18 6 6 18"></path>
                             <path d="m6 6 12 12"></path>
                         </svg>

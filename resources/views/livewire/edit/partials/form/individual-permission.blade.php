@@ -24,12 +24,13 @@
                 placeholder="{{__('Start typing name or username')}}"
                 autocomplete="off"
                 role="combobox"
+                aria-autocomplete="list"
                 aria-expanded="{{ filled($searchP) ? 'true' : 'false' }}"
-                aria-controls="search-results"
+                aria-controls="permission-search-results"
             />
 
             @if(filled($searchP))
-                <div id="search-results" role="listbox"
+                <div id="permission-search-results" role="listbox"
                      class="absolute left-0 right-0 top-full z-50 mt-2 rounded-lg border border-slate-200 bg-white p-2 shadow-lg
                   max-h-[calc(100vh-8rem)] overflow-y-auto
                   dark:border-neutral-700 dark:bg-neutral-900">
@@ -40,6 +41,8 @@
                                 <button
                                     type="button"
                                     role="option"
+                                    id="permission-result-{{ $i }}"
+                                    aria-selected="{{ $highlighted === $i ? 'true' : 'false' }}"
                                     class="w-full rounded-lg border border-slate-200 p-3 text-left transition hover:bg-blue-50 active:bg-blue-100 dark:border-neutral-700 dark:hover:bg-neutral-800 dark:active:bg-neutral-700 sm:p-4 {{ $highlighted === $i ? 'bg-blue-100 dark:bg-neutral-800' : '' }}"
                                     wire:click="addPermission('{{ $sukatUser->uid }}', '{{ addslashes($sukatUser->name) }}')"
                                     x-on:click="$wire.set('searchP','')"

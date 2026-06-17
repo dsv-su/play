@@ -28,8 +28,8 @@ class EditSubtitles extends Component
     public array $remove_existing_sub = [];
     public string $sub_language = '';
     public array $uploadedSubLanguage = [];
-    public bool $auto;
-    public bool $force;
+    public bool $auto = false;
+    public bool $force = false;
 
     protected $listeners = [
         'upload_refresh' => '$refresh'
@@ -37,13 +37,16 @@ class EditSubtitles extends Component
 
     public function mount($video = null, $presentation = null): void
     {
+        $this->presentation = $presentation;
+
         if($video) {
             $this->video = $video;
             $this->directory = 'subtitles/' . $this->video->id;  // relative path inside the disk
+            $this->auto = (bool) ($this->presentation?->autogenerate_subtitles ?? false);
         } else {
             //Upload
-            $this->presentation = $presentation;
             $this->directory = 'subtitles/' . $this->presentation->local;  // relative path inside the disk
+            $this->auto = (bool) ($this->presentation->autogenerate_subtitles ?? true);
         }
 
 
