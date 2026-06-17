@@ -996,16 +996,21 @@ class EditController extends Controller
         ManualPresentation $presentation,
         string $streamName
     ): string {
-        $extension = $file->getClientOriginalExtension() ?: $file->extension();
-        $baseName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        $safeBaseName = Str::slug($baseName) ?: Str::slug($streamName) ?: 'stream';
-        $fileName = $safeBaseName . '-' . Str::random(8) . '.' . $extension;
+        $fileName = $this->createUploadFilename($file);
 
         $folder = '/' . trim($this->storage(), '/') . '/' . trim($presentation->local, '/') . '/video';
 
         Storage::disk('play-store')->putFileAs($folder, $file, $fileName);
 
         return 'video/' . $fileName;
+    }
+
+    private function createUploadFilename(\Illuminate\Http\UploadedFile $file): string
+    {
+        $extension = $file->getClientOriginalExtension() ?: $file->extension();
+        $filename = str_replace('.' . $extension, '', $file->getClientOriginalName());
+
+        return $filename . '.' . $extension;
     }
 
     private function removeOldStreamPoster(Stream $stream, Video $video): void

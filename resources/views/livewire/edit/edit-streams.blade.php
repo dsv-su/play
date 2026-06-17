@@ -140,6 +140,14 @@
                     return response;
                 };
 
+                const videoPathFromFile = (file) => {
+                    if (!file?.name || file.name.includes('/')) {
+                        return '';
+                    }
+
+                    return `video/${file.name}`;
+                };
+
                 const payloadFromFile = (file, response, xhr) => {
                     const candidates = [
                         response,
@@ -205,6 +213,13 @@
                         }
 
                         if (file.status === 'success') {
+                            const fallbackVideo = videoPathFromFile(file);
+
+                            if (fallbackVideo) {
+                                setUploadComplete(uploader, { video: fallbackVideo });
+                                return;
+                            }
+
                             setUploadError(uploader, @js(__('The upload finished but no video path was returned.')));
                         }
                     });
