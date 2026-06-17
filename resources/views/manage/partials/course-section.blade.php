@@ -9,15 +9,15 @@
                 <label for="course" class="block text-sm font-medium text-slate-900 dark:text-white">
                     {{__("Associated course(s)")}}
                 </label>
-                <p class="mt-1 mb-3 text-sm text-slate-500 dark:text-neutral-400">{{__("Add or remove the course used for search.")}}</p>
+                <p id="course-select-description" class="mt-1 mb-3 text-sm text-slate-500 dark:text-neutral-400">{{__("Add or remove the course used for search.")}}</p>
 
                 @include('manage.partials.edit-course')
             </div>
 
             <div class="min-w-0 rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-neutral-700 dark:bg-neutral-950">
-                <label for="course" class="block text-sm font-medium text-slate-900 dark:text-white">
+                <h3 class="block text-sm font-medium text-slate-900 dark:text-white">
                     {{__("Course manager(s)")}}
-                </label>
+                </h3>
                 <p class="mt-1 mb-3 text-sm text-slate-500 dark:text-neutral-400">{{__("Review who is responsible for the selected course.")}}</p>
 
                 <livewire:edit.course-responsible />

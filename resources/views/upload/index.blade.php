@@ -63,6 +63,13 @@
 
                     let uploadedFiles = Number.parseInt(uploader.dataset.uploadedFiles || '0', 10) || 0;
                     const completedFiles = new WeakSet();
+                    const uploadStatus = document.getElementById('media-upload-status');
+
+                    const announceUploadStatus = (message) => {
+                        if (uploadStatus) {
+                            uploadStatus.textContent = message;
+                        }
+                    };
 
                     const hasRequiredValues = () => {
                         const requiredControls = Array.from(form.querySelectorAll('[required]'))
@@ -117,6 +124,7 @@
                             completedFiles.add(file);
                             uploadedFiles += 1;
                             uploader.dataset.uploadedFiles = String(uploadedFiles);
+                            announceUploadStatus(@js(__('Media file upload complete.')));
                             updateSaveState();
                         }
                     };
@@ -149,13 +157,20 @@
                                 completedFiles.delete(file);
                                 uploadedFiles = Math.max(0, uploadedFiles - 1);
                                 uploader.dataset.uploadedFiles = String(uploadedFiles);
+                                announceUploadStatus(@js(__('Media file removed.')));
                             }
 
                             updateSaveState();
                         });
 
-                        dropzone.on('error', updateSaveState);
-                        dropzone.on('canceled', updateSaveState);
+                        dropzone.on('error', () => {
+                            announceUploadStatus(@js(__('Media file upload failed.')));
+                            updateSaveState();
+                        });
+                        dropzone.on('canceled', () => {
+                            announceUploadStatus(@js(__('Media file upload canceled.')));
+                            updateSaveState();
+                        });
                         updateSaveState();
 
                         return true;

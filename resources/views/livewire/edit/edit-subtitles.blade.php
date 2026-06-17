@@ -14,6 +14,9 @@
 
                 <div
                     class="relative flex cursor-pointer items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50 p-4 dark:border-neutral-700 dark:bg-neutral-900 sm:p-6"
+                    role="group"
+                    aria-labelledby="subtitle-upload-heading"
+                    aria-describedby="subtitle-upload-instructions subtitle-upload-status"
                     x-on:drop="isDroppingFile = false"
                     x-on:drop.prevent="handleFileDrop($event)"
                     x-on:dragover.prevent="isDroppingFile = true"
@@ -24,13 +27,19 @@
                         class="absolute inset-0 z-30 flex items-center justify-center rounded-lg bg-blue-600/90"
                         x-show="isDropping"
                     >
-                        <span class="text-lg font-semibold text-white sm:text-xl">{{__("Release file to upload")}}</span>
+                        <span class="text-lg font-semibold text-white sm:text-xl" role="status" aria-live="assertive">{{__("Release file to upload")}}</span>
                     </div>
 
                     <label class="flex w-full cursor-pointer flex-col items-center justify-center rounded-lg border border-slate-200 bg-white py-5 text-center shadow-sm hover:bg-slate-50 dark:border-neutral-700 dark:bg-neutral-950 dark:hover:bg-neutral-900"
-                            for="file-upload">
+                            for="subtitle-file-upload"
+                            role="button"
+                            tabindex="0"
+                            aria-labelledby="subtitle-upload-heading"
+                            aria-describedby="subtitle-upload-instructions"
+                            x-on:keydown.enter.prevent="$refs.subtitleFileUpload.click()"
+                            x-on:keydown.space.prevent="$refs.subtitleFileUpload.click()">
                         <span class="inline-flex size-12 items-center justify-center rounded-full bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
-                              <svg class="size-5 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                              <svg class="size-5 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                     <polyline points="17 8 12 3 7 8"></polyline>
@@ -39,7 +48,7 @@
                         </span>
 
                         <div class="mt-3 flex flex-col items-center text-center text-sm leading-6 text-slate-600 dark:text-neutral-300">
-                                <span class="pe-1 font-medium text-slate-800 dark:text-neutral-200">
+                                <span id="subtitle-upload-heading" class="pe-1 font-medium text-slate-800 dark:text-neutral-200">
                                     {{ __("Drop your") }}
                                     <span class="font-semibold text-blue-700 dark:text-blue-300">
                                         {{ __("subtitle-files (WebVTT)") }}
@@ -51,13 +60,14 @@
                                 </span>
                         </div>
 
-                        <p class="mt-1 text-xs text-slate-400 dark:text-neutral-500">
+                        <p id="subtitle-upload-instructions" class="mt-1 text-xs text-slate-400 dark:text-neutral-500">
                             {{__("Allowed file types: .vtt")}}
                         </p>
                     </label>
 
-                    <input type="file" id="file-upload" multiple @change="handleFileSelect" class="hidden" />
+                    <input type="file" id="subtitle-file-upload" x-ref="subtitleFileUpload" multiple @change="handleFileSelect" class="hidden" aria-describedby="subtitle-upload-instructions" accept=".vtt,text/vtt" />
                 </div>
+                <p id="subtitle-upload-status" class="sr-only" role="status" aria-live="polite"></p>
 
                 <script>
                     function fileUpload() {
@@ -74,14 +84,22 @@
                             uploadFiles(files) {
                                 const $this = this;
                                 this.isUploading = true
+                                document.getElementById('subtitle-upload-status').textContent = files.length + ' ' + @js(__('subtitle file(s) selected for upload.'));
                             @this.uploadMultiple('files', files,
                                 function () {
                                     $this.isUploading = false
                                     $this.progress = 0
                                     $this.files = []
+                                    document.getElementById('subtitle-upload-status').textContent = @js(__('Subtitle upload complete.'));
                                 },
-                                function (error) { console.log('error', error) },
-                                function (event) { $this.progress = event.detail.progress }
+                                function (error) {
+                                    console.log('error', error)
+                                    document.getElementById('subtitle-upload-status').textContent = @js(__('Subtitle upload failed.'));
+                                },
+                                function (event) {
+                                    $this.progress = event.detail.progress
+                                    document.getElementById('subtitle-upload-status').textContent = @js(__('Subtitle upload progress:')) + ' ' + event.detail.progress + '%';
+                                }
                             )
                             @this.checkToggle();
                             },
