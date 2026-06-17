@@ -91,6 +91,36 @@
                         }
                     };
 
+                    const payloadFromFile = (file, response, xhr) => {
+                        const candidates = [
+                            response,
+                            xhr?.responseText,
+                            file?.xhr?.responseText,
+                            ...(file?.upload?.chunks || []).map((chunk) => chunk?.response),
+                        ];
+
+                        for (const candidate of candidates) {
+                            const payload = normalizeResponse(candidate);
+
+                            if (Number(payload?.done) >= 100 || payload?.name) {
+                                return payload;
+                            }
+                        }
+
+                        return {};
+                    };
+
+                    const markFileComplete = (file, payload = {}) => {
+                        if (completedFiles.has(file)) return;
+
+                        if (Number(payload?.done) >= 100 || payload?.name || file.status === 'success') {
+                            completedFiles.add(file);
+                            uploadedFiles += 1;
+                            uploader.dataset.uploadedFiles = String(uploadedFiles);
+                            updateSaveState();
+                        }
+                    };
+
                     const attachDropzoneListeners = () => {
                         const instance = window.HSFileUpload?.getInstance(uploader, true);
                         const dropzone = instance?.element?.dropzone;
@@ -102,17 +132,16 @@
 
                         dropzone.__uploadFormSaveStateBound = true;
 
-                        dropzone.on('success', (file, response) => {
-                            if (completedFiles.has(file)) return;
+                        dropzone.on('success', (file, response, xhr) => {
+                            markFileComplete(file, payloadFromFile(file, response, xhr));
+                        });
 
-                            const payload = normalizeResponse(response);
-
-                            if (Number(payload?.done) >= 100 && payload?.name) {
-                                completedFiles.add(file);
-                                uploadedFiles += 1;
-                                uploader.dataset.uploadedFiles = String(uploadedFiles);
-                                updateSaveState();
+                        dropzone.on('complete', (file) => {
+                            if (completedFiles.has(file)) {
+                                return;
                             }
+
+                            markFileComplete(file, payloadFromFile(file));
                         });
 
                         dropzone.on('removedfile', (file) => {
