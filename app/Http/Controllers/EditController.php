@@ -363,7 +363,7 @@ class EditController extends Controller
                             'video' => 'video/'. ($stream->resolutions->first()?->filename ?? ''),
                             'poster' => $stream->poster,
                             'playAudio' => $newAudio,
-                            //'enabled' => true,
+                            'enabled' => true,
                         ];
                     }
 
@@ -377,7 +377,7 @@ class EditController extends Controller
                             'video' => $uploadedStreams[$stream->id]['video'],
                             'poster' => '',
                             'playAudio' => $newAudio,
-                            //'enabled' => true,
+                            'enabled' => true,
                         ];
                         $hasUploadedStream = true;
                     }
