@@ -361,7 +361,7 @@ class EditController extends Controller
                     if (!empty($data['autosub'])) {
                         $sources[$stream->name] = [
                             'video' => 'video/'. ($stream->resolutions->first()?->filename ?? ''),
-                            'poster' => $stream->poster,
+                            //'poster' => $stream->poster,
                             'playAudio' => $newAudio,
                             'enabled' => true,
                         ];
