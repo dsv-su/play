@@ -210,6 +210,11 @@ final class PlayStoreNotify
         $p['courses']    = $this->normalizeArray($p['courses'] ?? null);
         $p['tags']       = $this->normalizeArray($p['tags'] ?? null);
 
+        // Sources should always be a dict (object)
+        if (isset($p['sources'])) {
+            $p['sources'] = (object) $p['sources'];
+        }
+
         //Normalize string
         $p['description'] = $this->normalizeString($p['description'] ?? '');
 

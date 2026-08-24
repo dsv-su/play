@@ -329,6 +329,7 @@ class EditController extends Controller
                 $hidden  = $data['streamVisibility'] ?? null;
                 $uploadedStreams = $data['uploaded_stream'] ?? [];
                 $hasUploadedStream = false;
+                $sources = [];
 
                 // Determine the single stream that should have audio
                 $selectedAudioName = is_array($audio) ? array_key_first($audio) : $audio;
@@ -352,11 +353,14 @@ class EditController extends Controller
                         $stream->hidden = $newHidden;
                         $stream->save();
                     }
-                    $sources[$stream->name]['playAudio'] = $newAudio;
+
+                    $sources[$stream->name] = [
+                        'playAudio' => $newAudio,
+                    ];
 
                     if (!empty($data['autosub'])) {
                         $sources[$stream->name] = [
-                            'video' => 'video/'. $stream->resolutions->first()?->filename ?? '',
+                            'video' => 'video/'. ($stream->resolutions->first()?->filename ?? ''),
                             'poster' => $stream->poster,
                             'playAudio' => $newAudio,
                             //'enabled' => true,
@@ -373,14 +377,13 @@ class EditController extends Controller
                             'video' => $uploadedStreams[$stream->id]['video'],
                             'poster' => '',
                             'playAudio' => $newAudio,
-                            'enabled' => true,
+                            //'enabled' => true,
                         ];
                         $hasUploadedStream = true;
                     }
 
-                    $presentation->sources = $sources;
-
                 }
+                $presentation->sources = (object) $sources;
                 // 9) Subtitles
                 if (!empty($data['autosub'])) {
                     $presentation->autogenerate_subtitles = true;
@@ -759,6 +762,7 @@ class EditController extends Controller
             // Upsert/resolve presenters once (prefer username uniqueness, fallback to name)
             $presenterIds = collect();
             $presenters_pkg = $courses_pkg = $tags_pkg = ['origin'];
+            $sources_pkg = (object) [];
             if($bulkpresenter) {
                 $presenters_pkg = [];
                 if ($presenterPayloads->isNotEmpty()) {
@@ -899,7 +903,7 @@ class EditController extends Controller
             //Store ManualPresentation
             $now = now();
 
-            $videos->chunk(500)->each(function ($chunk) use ($now, $presenters_pkg, $courses_pkg, $tags_pkg, $isVisible, $isUnlisted) {
+            $videos->chunk(500)->each(function ($chunk) use ($now, $presenters_pkg, $courses_pkg, $tags_pkg, $sources_pkg, $isVisible, $isUnlisted) {
                 foreach ($chunk as $v) {
                     $presentation = ManualPresentation::create([
                         'pkg_id'     => $v->id,
