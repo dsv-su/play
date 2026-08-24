@@ -323,7 +323,7 @@ class EditController extends Controller
                 }
 
                 // 8) Streams (audio/hidden flags)
-                $streams = Stream::where('video_id', $video->id)->get();
+                $streams = Stream::where('video_id', $video->id)->with('resolutions')->get();
 
                 $audio   = $data['audio'] ?? null;
                 $hidden  = $data['streamVisibility'] ?? null;
@@ -340,7 +340,11 @@ class EditController extends Controller
                     // Hidden:
                     //  - If $hidden is null, force all to false
                     //  - Else look up by name, defaulting to false
+                    //  - If autosub is true, force all to false
                     $newHidden = is_null($hidden) ? false : ((bool)($hidden[$stream->name] ?? false));
+                    if (!empty($data['autosub'])) {
+                        $newHidden = false;
+                    }
 
                     // Only persist if something actually changed
                     if ((bool)$stream->audio !== $newAudio || (bool)$stream->hidden !== $newHidden) {
@@ -348,13 +352,16 @@ class EditController extends Controller
                         $stream->hidden = $newHidden;
                         $stream->save();
                     }
-                    //Prepare source for pkg
-                    $map = [
-                        0 => false,
-                        1 => true,
-                    ];
+                    $sources[$stream->name]['playAudio'] = $newAudio;
 
-                    $sources[$stream->name]['playAudio'] = $map[$stream->audio];
+                    if (!empty($data['autosub'])) {
+                        $sources[$stream->name] = [
+                            'video' => 'video/'. $stream->resolutions->first()?->filename ?? '',
+                            'poster' => $stream->poster,
+                            'playAudio' => $newAudio,
+                            //'enabled' => true,
+                        ];
+                    }
 
                     if (
                         !empty($uploadedStreams[$stream->id]['video'])
@@ -366,6 +373,7 @@ class EditController extends Controller
                             'video' => $uploadedStreams[$stream->id]['video'],
                             'poster' => '',
                             'playAudio' => $newAudio,
+                            'enabled' => true,
                         ];
                         $hasUploadedStream = true;
                     }
