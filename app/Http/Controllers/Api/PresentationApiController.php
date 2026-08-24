@@ -292,6 +292,7 @@ class PresentationApiController extends Controller
         $video->origin     = $manual->type === 'manual' ? 'manual' : 'edited';
         $video->visibility = $manual->visibility;
         $video->unlisted   = $manual->unlisted;
+        $video->category_id = $manual->category_id;
         $video->save();
 
         if ($manual->type === 'manual') {

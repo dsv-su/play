@@ -186,7 +186,7 @@ final class PlayStoreNotify
         //Remove fields that are noise
         unset(
             $p['id'], $p['title_en'], $p['status'], $p['type'], $p['jobid'], $p['duration'],
-            $p['sublanguage'], $p['user'], $p['user_email'], $p['local'],
+            $p['sublanguage'], $p['user'], $p['user_email'], $p['local'], $p['category_id'],
             $p['visibility'], $p['unlisted'], $p['files'], $p['permission'],
             $p['entitlement'], $p['daisy_courses'], $p['created_at'], $p['updated_at']
         );
