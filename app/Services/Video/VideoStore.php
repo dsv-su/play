@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Video;
 
+use App\Models\ManualPresentation;
 use App\Models\Video;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -25,10 +26,13 @@ final class VideoStore
         $videoId = data_get($pkg, 'pkg_id');
         $video = Video::firstOrNew(['id' => $videoId]);
 
+        $jobId = $this->request->get('jobid');
+        $manual = $jobId ? ManualPresentation::where('jobid', $jobId)->first() : null;
+
         // Build attributes
         $video->fill([
             'origin'          => $this->request->get('origin'),
-            'notification_id' => $this->request->get('jobid'),
+            'notification_id' => $jobId,
             'creation'        => data_get($pkg, 'created'),
             'title'           => $titleObj->swedish(),
             'title_en'        => $titleObj->english(),
@@ -38,7 +42,7 @@ final class VideoStore
             'subtitles'       => json_encode(data_get($pkg, 'subtitles', []), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
             'sources'         => json_encode(data_get($pkg, 'sources', []), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
             //'presentation'    => json_encode($this->request->all(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), // store full payload (cast to array in model)
-            'category_id'     => (int) ($this->request->get('category_id', 1)),
+            'category_id'     => (int) ($this->request->get('category_id', !in_array($manual?->type ?? '', ['manual', 'edit', 'bulk'], true) ? 1 : ($video->category_id ?? 1))),
             'state'           => $this->deriveState($this->request->input('pending')),
         ]);
 

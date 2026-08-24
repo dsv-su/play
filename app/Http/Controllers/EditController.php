@@ -93,6 +93,7 @@ class EditController extends Controller
         $editPresentation = ManualPresentation::create([
             'pkg_id' => $video->id,
             'type' => 'edit',
+            'category_id' => $video->category_id,
         ]);
 
         // Already-associated courses
@@ -159,6 +160,7 @@ class EditController extends Controller
                 ->first() ?? ManualPresentation::create([
                     'pkg_id' => $video->id,
                     'type' => 'edit',
+                    'category_id' => $video->category_id,
                 ]);
 
             DB::transaction(function () use ($request, $video, $presentation, $data) {
@@ -179,6 +181,7 @@ class EditController extends Controller
                     'title_en'    => $data['title_en'] ?? null,
                     'description' => $data['description'] ?? null,
                     'created'    => Carbon::createFromFormat('Y-m-d', $data['recording_date'])->timestamp,
+                    'category_id' => $data['category'] ?? 1,
                 ]);
 
 
@@ -901,6 +904,7 @@ class EditController extends Controller
                         'unlisted'   => $isUnlisted,
                         'courses'    => $courses_pkg,
                         'tags'       => $tags_pkg,
+                        'category_id' => $v->category_id,
                         'created'    => $v->creation,
                         'created_at' => $now,
                         'updated_at' => $now,

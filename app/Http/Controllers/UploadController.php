@@ -310,7 +310,8 @@ class UploadController extends Controller
                 'unlisted'               => $unlisted,
                 'autogenerate_subtitles' => $data['autosub'] ?? 0,
                 'generate_subtitles'     => $gsubtitles,
-                'subtitles'              => $subtitles ?? null
+                'subtitles'              => $subtitles ?? null,
+                'category_id'            => $data['category'] ?? 1,
             ])->save();
 
             // Upsert video permissions for this presentation

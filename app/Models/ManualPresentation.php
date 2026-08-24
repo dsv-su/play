@@ -15,7 +15,7 @@ class ManualPresentation extends Model
     protected $fillable = ['jobid', 'pkg_id', 'status', 'type', 'user','upload_dir', 'jobid', 'video_id',
         'subtitles', 'sublanguage', 'title', 'title_en', 'created', 'presenters', 'visibility', 'unlisted',
         'courses','daisy_courses', 'tags', 'thumb', 'permission', 'entitlement', 'description',
-        'sources', 'autogenerate_subtitles', 'generate_subtitles', 'description'];
+        'sources', 'autogenerate_subtitles', 'generate_subtitles', 'description', 'category_id'];
 
     protected $casts = [
         'presenters' => 'array',
@@ -54,6 +54,7 @@ class ManualPresentation extends Model
             $file->duration = $file->duration ?? 0;
             $file->sources = $file->sources ?? [];
             $file->generate_subtitles = $file->generate_subtitles ?? [];
+            $file->category_id = $file->category_id ?? 1;
         });
 
         // After insert: append the DB id to `local`
