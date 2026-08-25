@@ -24,7 +24,7 @@ class Studypresentations extends Component
 
         // Fetch the first 10 videos (with relationships)
         $raw = $baseQuery
-            ->select(['id', 'title', 'title_en', 'creation', 'duration', 'visibility', 'state', 'thumb', 'category_id', 'description'])
+            ->select(['id', 'title', 'title_en', 'creation', 'duration', 'visibility', 'state', 'subtitles', 'thumb', 'category_id', 'description'])
             ->latest('creation')
             ->limit(10)
             ->with([
