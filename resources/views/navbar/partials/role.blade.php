@@ -18,7 +18,7 @@
             id="role"
             name="role"
             x-model="role"
-            @change="if (role !== 'custom') $refs.form.submit()"
+            @change="if ($event.target.value !== 'custom') $refs.form.submit()"
             class="rounded-md border-gray-600 bg-gray-800 text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         >
             @foreach (['Administrator', 'Courseadmin', 'Uploader', 'Staff', 'Student1', 'Student2', 'Student3', 'custom'] as $role)
@@ -39,4 +39,3 @@
         </div>
     </form>
 </div>
-
