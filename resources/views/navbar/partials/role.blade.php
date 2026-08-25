@@ -1,6 +1,6 @@
 <div x-data="{ open: false, role: '{{ app()->make('play_role') }}' }" class="relative inline-block">
     <button type="button" @click="open = !open">
-        {{ app()->make('play_auth') ?? 'Not logged in' }}
+        {{ app()->make('play_role') ?? 'Not logged in' }}
     </button>
 
     <form
