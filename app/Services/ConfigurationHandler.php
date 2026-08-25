@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\System;
+use App\Models\System;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use RecursiveDirectoryIterator;

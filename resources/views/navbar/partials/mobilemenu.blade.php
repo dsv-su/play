@@ -59,8 +59,8 @@
         <!-- Admin -->
         @can('admin-content')
         <li>
-            <a href="#_" class="block px-3 py-2 rounded-md text-base font-medium text-neutral-700 hover:bg-neutral-100 dark:text-white">
-                Admin
+            <a href="{{route('admin.settings')}}" class="block px-3 py-2 rounded-md text-base font-medium text-neutral-700 hover:bg-neutral-100 dark:text-white">
+                {{__("Admin")}}
             </a>
         </li>
         @endcan

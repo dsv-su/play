@@ -99,9 +99,10 @@ Route::middleware(['entitlements', 'playauth','web'])->group(function () {
 
 
     //Admin
-    Route::prefix('search')->controller(\App\Http\Controllers\AdminController::class)->group(function () {
-        Route::post('/emulate', 'emulateUser')->name('admin.emulate');
-        Route::get('/cattura', 'recorders')->name('admin.recorder');
+    Route::prefix('admin')->middleware(['play-admin'])->group(function () {
+        Route::get('/settings', \App\Livewire\Admin\AdminSettings::class)->name('admin.settings');
+        Route::post('/emulate', [\App\Http\Controllers\AdminController::class, 'emulateUser'])->name('admin.emulate');
+        Route::get('/cattura', [\App\Http\Controllers\AdminController::class, 'recorders'])->name('admin.recorder');
     });
     //Route::middleware(['play-admin'])->get('/cattura', \App\Livewire\Admin\CatturaRecorders::class)->name('admin.recorders');
     Route::get('/cattura', \App\Livewire\Admin\CatturaRecorders::class)->name('admin.recorders');
