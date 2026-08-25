@@ -18,6 +18,10 @@ class AdminController extends Controller
 
     public function emulateUser(Request $request)
     {
+        // play_role is intentionally allowed to change while emulating.
+        // Only real administrators can switch.
+        abort_unless(app()->make('play_auth') === 'Administrator', 403);
+
         //Validate inputs
         $validated = $request->validate([
             'role' => [
