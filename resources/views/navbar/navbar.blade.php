@@ -5,6 +5,7 @@
         navigationMenu: '',
         navigationMenuCloseDelay: 200,
         navigationMenuCloseTimeout: null,
+        navigationMenuTrigger: null,
         navigationMenuLeave() {
             let that = this;
             this.navigationMenuCloseTimeout = setTimeout(() => {
@@ -13,17 +14,44 @@
         },
         navigationMenuReposition(navElement) {
             this.navigationMenuClearCloseTimeout();
+            this.navigationMenuTrigger = navElement;
             this.$refs.navigationDropdown.style.left = navElement.offsetLeft + 'px';
             this.$refs.navigationDropdown.style.marginLeft = (navElement.offsetWidth/2) + 'px';
+        },
+        navigationMenuOpenFor(navElement, menu, focusFirstItem = false) {
+            this.navigationMenuReposition(navElement);
+            this.navigationMenu = menu;
+            this.navigationMenuOpen = true;
+
+            if (focusFirstItem) {
+                this.$nextTick(() => {
+                    this.$refs.navigationDropdown
+                        .querySelector(`[data-navigation-panel='${menu}'] a`)
+                        ?.focus();
+                });
+            }
+        },
+        navigationMenuToggle(navElement, menu) {
+            if (this.navigationMenuOpen && this.navigationMenu === menu) {
+                this.navigationMenuClose();
+                return;
+            }
+
+            this.navigationMenuOpenFor(navElement, menu);
         },
         navigationMenuClearCloseTimeout(){
             clearTimeout(this.navigationMenuCloseTimeout);
         },
-        navigationMenuClose(){
+        navigationMenuClose(returnFocus = false){
             this.navigationMenuOpen = false;
             this.navigationMenu = '';
+
+            if (returnFocus) {
+                this.navigationMenuTrigger?.focus();
+            }
         }
     }"
+     @keydown.escape.window="navigationMenuOpen && navigationMenuClose(true)"
      class="relative z-20 w-full bg-white dark:bg-gray-800">
 
     <!-- Header with Logo, Desktop Nav, and Mobile Toggle -->
