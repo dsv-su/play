@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\AuthHandler;
 use App\Services\ConfigurationHandler;
 use App\Services\Daisy\DaisyIntegration;
-use App\System;
+use App\Models\System;
 use Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;

@@ -1,3 +1,25 @@
+@php
+    $role = app()->make('play_role');
+    $banner = \App\Models\Banner::where('visible', true)
+        ->where(function($query) use ($role) {
+            // General banners (not role-specific)
+            $query->where(function($q) {
+                $q->where('visible_for_staff', false)
+                  ->where('visible_for_student', false);
+            });
+            // Staff banners
+            if ($role === 'Staff' || $role === 'Administrator') {
+                $query->orWhere('visible_for_staff', true);
+            }
+            // Student banners
+            if (in_array($role, ['Student', 'Student1', 'Student2', 'Student3']) || $role === 'Administrator') {
+                $query->orWhere('visible_for_student', true);
+            }
+        })
+        ->first();
+@endphp
+
+@if($banner)
 <!-- Banner -->
 <div id="play-banner" class="relative isolate flex items-center gap-x-6 overflow-hidden bg-susecondary px-6 py-2.5 sm:px-3.5 sm:before:flex-1">
     <div aria-hidden="true" class="absolute top-1/2 left-[max(-7rem,calc(50%-52rem))] -z-10 -translate-y-1/2 transform-gpu blur-2xl">
@@ -9,17 +31,15 @@
     <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
 
         <p class="text-sm/6 text-gray-900">
-            {{--}}<strong class="font-semibold">Message</strong>
-            <svg viewBox="0 0 2 2" aria-hidden="true" class="mx-2 inline size-0.5 fill-current"><circle r="1" cx="1" cy="1" /></svg>{{--}}
-            {{__("Play will be down for migration from Friday night to Saturday morning. All recordings will be unavailable during the migration.")}}
+            {{ $banner->content }}
         </p>
 
-        {{--}}
-        <a href="#" class="flex-none rounded-full bg-gray-900 px-3.5 py-1 text-sm font-semibold text-white shadow-xs hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900">
-            Link
+        @if($banner->link_url)
+        <a href="{{ $banner->link_url }}" class="flex-none rounded-full bg-gray-900 px-3.5 py-1 text-sm font-semibold text-white shadow-xs hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900">
+            {{ $banner->link_text ?? 'Learn more' }}
             <span aria-hidden="true">&rarr;</span>
         </a>
-        {{--}}
+        @endif
     </div>
     <div class="flex flex-1 justify-end">
         <button id="play-banner-dismiss" type="button" class="-m-3 p-3 focus-visible:-outline-offset-4">
@@ -41,4 +61,5 @@
         }
     });
 </script>
+@endif
 

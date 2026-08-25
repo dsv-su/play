@@ -55,4 +55,4 @@
     <!-- Desktop Dropdown Menu (only visible on md and up) -->
     @include('navbar.partials.desktop_dropdown')
 </nav>
-{{--}}@include('navbar.partials.banner'){{--}}
+@include('navbar.partials.banner')
