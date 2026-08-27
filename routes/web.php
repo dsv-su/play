@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FaqController;
 use App\Http\Controllers\MultiplayerController;
 use App\Http\Controllers\PresentationOrderController;
 use App\Http\Controllers\TestController;
@@ -35,6 +36,8 @@ Route::middleware(['entitlements', 'playauth','web'])->group(function () {
     Route::middleware(['redirect-links'])
         ->get('/pending', [\App\Http\Controllers\HomeController::class, 'pending'])
         ->name('pending.presentations');
+
+    Route::get('/faq', FaqController::class)->name('faq');
     // Locale
     Route::get('/locale/{locale}', [\App\Http\Controllers\LocaleController::class, 'switch'])->name('locale.switch');
 
@@ -57,6 +60,8 @@ Route::middleware(['entitlements', 'playauth','web'])->group(function () {
     //Study
     Route::middleware(['redirect-links'])->get('/study/all', \App\Livewire\Study\StudyPresentations::class)->name('study.presentations');
     Route::middleware(['redirect-links'])->get('/nextilearn/all', \App\Livewire\Nextilearn\NextIlearnPresentations::class)->name('nextilearn.presentations');
+    Route::get('/channels/manage', \App\Livewire\Channel\ManageChannels::class)->middleware('can:manage-content')->name('channels.manage');
+    Route::middleware(['redirect-links'])->get('/channels/{channel}', \App\Livewire\Channel\ChannelPresentations::class)->name('channels.show');
     //Edit
     Route::controller(\App\Http\Controllers\EditController::class)->group(function () {
         Route::get('/edit/{video}', 'show')->name('presentation.edit');

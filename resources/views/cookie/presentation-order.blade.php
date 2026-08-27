@@ -2,21 +2,7 @@
     // Read cookie
     $raw = request()->cookie('presentation_order', '[]');
     $orderFromCookie = json_decode($raw, true);
-    $defaultOrder = [
-        'home.newpresentations',
-        'home.mypresentations',
-        'home.studypresentations',
-        'home.next-ilearn',
-    ];
-
-   // Keep only allowed values
-    $order = collect(is_array($orderFromCookie) ? $orderFromCookie : [])
-        ->filter(fn ($c) => in_array($c, $defaultOrder, true))
-        ->values()
-        ->all();
-
-   // Ensure all defaults appear (append any missing ones, preserving cookie order first)
-    $order = array_values(array_unique(array_merge($order, $defaultOrder)));
+    $order = \App\Support\HomePresentationOrder::sanitize($orderFromCookie);
 @endphp
 
 <div id="presentation-order" class="mt-5"

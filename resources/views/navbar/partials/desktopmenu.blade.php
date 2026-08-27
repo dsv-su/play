@@ -46,6 +46,13 @@
             {{__("Recorders")}}
         </a>
     </li>
+    <li>
+        <a href="{{ route('faq') }}"
+           @if (request()->routeIs('faq')) aria-current="page" @endif
+           class="inline-flex items-center justify-center h-10 px-4 py-2 font-medium transition-colors rounded-md hover:text-neutral-900 dark:hover:text-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 dark:focus-visible:ring-blue-400 dark:focus-visible:ring-offset-gray-800 {{ request()->routeIs('faq') ? 'bg-neutral-100 text-neutral-900 dark:bg-white/10 dark:text-white' : '' }}">
+            {{ __('FAQ') }}
+        </a>
+    </li>
     @can('admin-content')
     <li>
         <a href="{{route('admin.settings')}}" class="inline-flex items-center justify-center h-10 px-4 py-2 font-medium transition-colors rounded-md hover:text-neutral-900 dark:hover:text-gray-200">

@@ -39,9 +39,10 @@
                 <a href="{{route('presentation.upload')}}" @click="mobileMenuOpen = false; activeMobileMenu = ''" class="block px-3 py-2 rounded-md text-base font-medium text-neutral-700 hover:bg-neutral-100 dark:text-white">
                     {{__("Manual Upload")}}
                 </a>
-                {{--}}<a href="#_" @click="mobileMenuOpen = false; activeMobileMenu = ''" class="block px-3 py-2 rounded-md text-base font-medium text-neutral-700 hover:bg-neutral-100 dark:text-white">
-                    Settings
+                <a href="{{ route('channels.manage') }}" @click="mobileMenuOpen = false; activeMobileMenu = ''" class="block px-3 py-2 rounded-md text-base font-medium text-neutral-700 hover:bg-neutral-100 dark:text-white">
+                    {{__("Manage channel")}}
                 </a>
+                {{--}}
                 <a href="#_" @click="mobileMenuOpen = false; activeMobileMenu = ''" class="block px-3 py-2 rounded-md text-base font-medium text-neutral-700 hover:bg-neutral-100 dark:text-white">
                     Help
                 </a>
@@ -54,6 +55,14 @@
         <li>
             <a href="{{route('admin.recorders')}}" class="inline-flex items-center justify-center px-3 h-10 py-2 font-medium transition-colors rounded-md hover:text-neutral-900 dark:hover:text-gray-200">
                 {{__("Recorders")}}
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('faq') }}"
+               @click="mobileMenuOpen = false; activeMobileMenu = ''"
+               @if (request()->routeIs('faq')) aria-current="page" @endif
+               class="block px-3 py-2 rounded-md text-base font-medium text-neutral-700 hover:bg-neutral-100 dark:text-white {{ request()->routeIs('faq') ? 'bg-neutral-100 text-neutral-900 dark:bg-white/10' : '' }}">
+                {{ __('FAQ') }}
             </a>
         </li>
         <!-- Admin -->

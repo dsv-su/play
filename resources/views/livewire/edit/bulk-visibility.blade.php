@@ -21,13 +21,7 @@
             {{__("Category")}}
         </label>
 
-        @php
-            $categories = [
-                1 => 'DSV presentation (default)',
-                2 => 'Studieadmin information video',
-                8 => 'NextiLearn tutorial video',
-            ];
-        @endphp
+        @php($categories = \App\Models\Category::query()->orderBy('category_name')->get(['id', 'category_name']))
 
         <select
             name="category"
@@ -37,8 +31,8 @@
                    disabled:opacity-50 disabled:pointer-events-none
                    dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
 
-            @foreach($categories as $value => $label)
-                <option value="{{ $value }}">{{ $label }}</option>
+            @foreach($categories as $item)
+                <option value="{{ $item->id }}">{{ $item->category_name }}</option>
             @endforeach
         </select>
     </div>
