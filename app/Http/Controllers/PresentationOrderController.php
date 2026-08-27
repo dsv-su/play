@@ -90,7 +90,7 @@ class PresentationOrderController extends Controller
             'home.newpresentations' => 'New on Play Presentations',
             'home.mypresentations' => 'My Presentations',
             'home.studypresentations' => 'Study Presentations',
-            'home.nextilearn' => 'NextIlearn Presentations'
+            'home.next-ilearn' => 'NextIlearn Presentations'
         ];
 
         return view('cookie.profile', compact(
@@ -105,7 +105,7 @@ class PresentationOrderController extends Controller
     public function store(Request $request)
     {
         // Allowed components (same as in your Blade)
-        $defaultOrder = ['home.newpresentations', 'home.mypresentations', 'home.studypresentations', 'home.next-learn'];
+        $defaultOrder = ['home.newpresentations', 'home.mypresentations', 'home.studypresentations', 'home.next-ilearn'];
 
         // Validate and sanitize input
         $data = $request->validate([
@@ -123,7 +123,7 @@ class PresentationOrderController extends Controller
         $order = array_values(array_unique(array_merge($order, $defaultOrder)));
 
         // Encode as JSON for the cookie
-        $json = json_encode($order);
+        $json = json_encode($order, JSON_THROW_ON_ERROR);
 
         // Cookie lifetime (e.g. 30 days)
         $minutes = 60 * 24 * 30;

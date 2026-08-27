@@ -7,6 +7,7 @@ export default defineConfig({
             input: [
                 'resources/css/site.css',
                 'resources/js/site.js',
+                'resources/js/presentation-order.js',
             ],
             refresh: true,
         }),
