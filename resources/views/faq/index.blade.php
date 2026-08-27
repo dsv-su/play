@@ -87,7 +87,7 @@
                     'steps' => [
                         [
                             'title' => __('Add presentation details'),
-                            'body' => __('Enter the Swedish and English titles, an optional short description, and the recording date. You can also upload a custom thumbnail or allow Playback to generate one from the video.'),
+                            'body' => __('Enter the Swedish and English titles, an optional short description, and the recording date. You can also upload a custom thumbnail or allow DSVPlay to generate one from the video.'),
                         ],
                         [
                             'title' => __('Choose visibility and downloads'),
@@ -115,7 +115,7 @@
                         ],
                         [
                             'title' => __('Review and save'),
-                            'body' => __('Check the complete form and choose Save presentation. The button becomes available after all required fields are valid and at least one media file has finished uploading. Playback validates the information, places the presentation in the processing queue, and returns you to the home page with a confirmation message.'),
+                            'body' => __('Check the complete form and choose Save presentation. The button becomes available after all required fields are valid and at least one media file has finished uploading. DSVPlay validates the information, places the presentation in the processing queue, and returns you to the home page with a confirmation message.'),
                         ],
                     ],
                     'note' => __('After saving, use Pending Presentations to follow processing. The media must be processed before the finished presentation is available, and you will receive an upload progress notification. If the upload or processing appears stuck, contact Helpdesk.'),
@@ -207,7 +207,7 @@
                     'steps' => [
                         [
                             'title' => __('Find the presentation UUID'),
-                            'body' => __('Locate the presentation in Playback and copy its UUID from the presentation, player, or edit-page URL. Use the internal presentation UUID, not a notification ID, course code, title, or channel address.'),
+                            'body' => __('Locate the presentation in DSVPlay and copy its UUID from the presentation, player, or edit-page URL. Use the internal presentation UUID, not a notification ID, course code, title, or channel address.'),
                         ],
                         [
                             'title' => __('Search for the presentation'),
@@ -308,13 +308,13 @@
                     <h1 class="text-3xl font-semibold tracking-tight text-gray-950 dark:text-white sm:text-4xl">{{ __('Frequently asked questions') }}</h1>
                     <span class="rounded-full px-3 py-1 text-xs font-semibold {{ $roleStyles['badge'] }}">{{ __($role) }}</span>
                 </div>
-                <p class="mt-4 text-base leading-7 text-gray-600 dark:text-neutral-300">{{ __('Quick answers about Playback, with guidance selected for your role.') }}</p>
+                <p class="mt-4 text-base leading-7 text-gray-600 dark:text-neutral-300">{{ __('Quick answers about DSVPlay, with guidance selected for your role.') }}</p>
             </div>
         </section>
 
         @foreach ([
             ['id' => strtolower($role), 'title' => __('For :role', ['role' => __($role)]), 'description' => __('Guidance based on your current access.'), 'questions' => $roleQuestions[$role]],
-            ['id' => 'general', 'title' => __('General questions'), 'description' => __('Useful information for everyone using Playback.'), 'questions' => $commonQuestions],
+            ['id' => 'general', 'title' => __('General questions'), 'description' => __('Useful information for everyone using DSVPlay.'), 'questions' => $commonQuestions],
         ] as $section)
             <section class="mt-10" aria-labelledby="faq-section-{{ $loop->index }}">
                 <h2 id="faq-section-{{ $loop->index }}" class="text-xl font-semibold text-gray-950 dark:text-white">{{ $section['title'] }}</h2>
