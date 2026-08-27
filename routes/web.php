@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FaqController;
 use App\Http\Controllers\MultiplayerController;
 use App\Http\Controllers\PresentationOrderController;
 use App\Http\Controllers\TestController;
@@ -35,6 +36,8 @@ Route::middleware(['entitlements', 'playauth','web'])->group(function () {
     Route::middleware(['redirect-links'])
         ->get('/pending', [\App\Http\Controllers\HomeController::class, 'pending'])
         ->name('pending.presentations');
+
+    Route::get('/faq', FaqController::class)->name('faq');
     // Locale
     Route::get('/locale/{locale}', [\App\Http\Controllers\LocaleController::class, 'switch'])->name('locale.switch');
 

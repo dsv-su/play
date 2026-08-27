@@ -57,6 +57,14 @@
                 {{__("Recorders")}}
             </a>
         </li>
+        <li>
+            <a href="{{ route('faq') }}"
+               @click="mobileMenuOpen = false; activeMobileMenu = ''"
+               @if (request()->routeIs('faq')) aria-current="page" @endif
+               class="block px-3 py-2 rounded-md text-base font-medium text-neutral-700 hover:bg-neutral-100 dark:text-white {{ request()->routeIs('faq') ? 'bg-neutral-100 text-neutral-900 dark:bg-white/10' : '' }}">
+                {{ __('FAQ') }}
+            </a>
+        </li>
         <!-- Admin -->
         @can('admin-content')
         <li>
