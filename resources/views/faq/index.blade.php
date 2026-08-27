@@ -24,6 +24,31 @@
                 'question' => __('Can I change the language?'),
                 'answer' => __('Yes. Use the language selector in the page header to switch between English and Swedish.'),
             ],
+            [
+                'question' => __('How do I change the presentation carousel order?'),
+                'answer' => __('Open your Profile settings to choose the order in which presentation sections and channel carousels appear on your home page. Follow these steps:'),
+                'steps_label' => __('Carousel ordering steps'),
+                'steps' => [
+                    [
+                        'title' => __('Open Profile settings'),
+                        'body' => __('In the desktop page header, find your name in the upper-right corner and select the person icon immediately beside it. This opens your profile page, where you can also review presentation activity, course information, and permissions.'),
+                    ],
+                    [
+                        'title' => __('Find Presentation carousel order'),
+                        'body' => __('Scroll to the Presentation carousel order section. It lists the home-page presentation sections and any channels configured to appear as carousels, with their current positions shown as numbers.'),
+                    ],
+                    [
+                        'title' => __('Arrange the sections'),
+                        'body' => __('Drag each item by its six-dot handle and drop it in the preferred position. For keyboard control, focus a drag handle and use the Up or Down arrow key to move that section.'),
+                    ],
+                    [
+                        'title' => __('Save and verify the order'),
+                        'body' => __('Choose Save order and wait for the Order saved confirmation. Return to the home page to confirm that the presentation sections and channel carousels now follow your selected order.'),
+                    ],
+                ],
+                'note_label' => __('About your preference'),
+                'note' => __('The carousel order is saved in a browser cookie for 30 days. You may need to set it again when using another browser or device, after clearing browser cookies, or after the cookie expires.'),
+            ],
         ];
 
         $roleQuestions = [
