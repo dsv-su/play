@@ -727,7 +727,20 @@
     "Publishing rule": "Publiceringsregel",
     "Only one banner can be enabled at a time. Enabling a banner automatically disables every other banner, so review Existing Banners before publishing a replacement.": "Endast en banner kan vara aktiverad åt gången. När en banner aktiveras inaktiveras alla andra automatiskt, så granska Existing Banners innan du publicerar en ersättare.",
     "Copy link to this answer": "Kopiera länk till det här svaret",
-    "Link copied!": "Länken har kopierats!"
+    "Link copied!": "Länken har kopierats!",
+    "How do I change the presentation carousel order?": "Hur ändrar jag ordningen på presentationskarusellerna?",
+    "Open your Profile settings to choose the order in which presentation sections and channel carousels appear on your home page. Follow these steps:": "Öppna dina profilinställningar för att välja i vilken ordning presentationsavsnitt och kanalkaruseller visas på startsidan. Följ dessa steg:",
+    "Carousel ordering steps": "Steg för att ordna karuseller",
+    "Open Profile settings": "Öppna profilinställningarna",
+    "In the desktop page header, find your name in the upper-right corner and select the person icon immediately beside it. This opens your profile page, where you can also review presentation activity, course information, and permissions.": "Leta upp ditt namn i det övre högra hörnet av sidhuvudet på datorn och välj personikonen direkt bredvid namnet. Då öppnas din profilsida, där du även kan granska presentationsaktivitet, kursinformation och behörigheter.",
+    "Find Presentation carousel order": "Hitta presentationskarusellernas ordning",
+    "Scroll to the Presentation carousel order section. It lists the home-page presentation sections and any channels configured to appear as carousels, with their current positions shown as numbers.": "Rulla till avsnittet Presentation carousel order. Där listas startsidans presentationsavsnitt och de kanaler som är inställda att visas som karuseller. Deras aktuella positioner visas med siffror.",
+    "Arrange the sections": "Ordna avsnitten",
+    "Drag each item by its six-dot handle and drop it in the preferred position. For keyboard control, focus a drag handle and use the Up or Down arrow key to move that section.": "Dra varje objekt med handtaget med sex punkter och släpp det på önskad plats. För tangentbordsstyrning fokuserar du på ett draghandtag och använder uppåt- eller nedåtpilen för att flytta avsnittet.",
+    "Save and verify the order": "Spara och kontrollera ordningen",
+    "Choose Save order and wait for the Order saved confirmation. Return to the home page to confirm that the presentation sections and channel carousels now follow your selected order.": "Välj Save order och vänta på bekräftelsen Order saved. Gå tillbaka till startsidan och kontrollera att presentationsavsnitten och kanalkarusellerna nu följer den ordning du har valt.",
+    "About your preference": "Om din inställning",
+    "The carousel order is saved in a browser cookie for 30 days. You may need to set it again when using another browser or device, after clearing browser cookies, or after the cookie expires.": "Karusellordningen sparas i en webbläsarkaka i 30 dagar. Du kan behöva ställa in den igen om du använder en annan webbläsare eller enhet, efter att du har rensat webbläsarkakor eller när kakan har löpt ut."
 
 
 }
