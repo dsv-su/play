@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Search;
 
+use App\Models\Channel;
 use App\Models\Course;
 use App\Models\Presenter;
 use App\Models\Tag;
@@ -16,11 +17,13 @@ class Index extends Component
     public array $presenterHighlightsById = [];
     public array $courseHighlightsById = [];
     public array $tagHighlightsById = [];
+    public array $channelHighlightsById = [];
 
     public $videos = [];
     public $presenters = [];
     public $courses = [];
     public $tags = [];
+    public $channels = [];
 
     protected array $videoTsOptions = [
         'query_by'                   => 'uuid,title,title_en,description,tag_names,course_names,course_designation,presenter_names,presenter_usernames',
@@ -59,14 +62,23 @@ class Index extends Component
         'highlight_affix_num_tokens' => 4,
     ];
 
+    protected array $channelTsOptions = [
+        'query_by'                   => 'name,slug',
+        'highlight_full_fields'      => 'name,slug',
+        'highlight_start_tag'        => '<span class="font-bold text-blue-600">',
+        'highlight_end_tag'          => '</span>',
+        'snippet_threshold'          => 80,
+        'highlight_affix_num_tokens' => 4,
+    ];
+
     public function updatedSearchTerm() { $this->search(); }
     public function mount() { if ($this->searchTerm !== '') $this->search(); }
 
     protected function search(): void
     {
         if (trim($this->searchTerm) === '') {
-            $this->videos = $this->presenters = $this->courses = $this->tags = collect();
-            $this->videoHighlightsById = $this->presenterHighlightsById = $this->courseHighlightsById = $this->tagHighlightsById = [];
+            $this->videos = $this->presenters = $this->courses = $this->tags = $this->channels = collect();
+            $this->videoHighlightsById = $this->presenterHighlightsById = $this->courseHighlightsById = $this->tagHighlightsById = $this->channelHighlightsById = [];
             return;
         }
 
@@ -126,6 +138,18 @@ class Index extends Component
                     'score'      => $hit['text_match'] ?? null,
                 ],
             ])->all();
+
+        // CHANNELS
+        $channelBuilder = Channel::search($this->searchTerm)->options($this->channelTsOptions);
+        $this->channels = $channelBuilder->take(3)->get()->values()->all();
+        $channelRaw = $channelBuilder->raw();
+        $this->channelHighlightsById = collect($channelRaw['hits'] ?? [])
+            ->mapWithKeys(fn ($hit) => [
+                (string)($hit['document']['id'] ?? '') => [
+                    'highlights' => $hit['highlights'] ?? [],
+                    'score'      => $hit['text_match'] ?? null,
+                ],
+            ])->all();
     }
 
     public function render()
@@ -136,10 +160,12 @@ class Index extends Component
             'presenters'             => $this->presenters,
             'courses'                => $this->courses,
             'tags'                   => $this->tags,
+            'channels'               => $this->channels,
             'videoHighlightsById'    => $this->videoHighlightsById,
             'presenterHighlightsById'=> $this->presenterHighlightsById,
             'courseHighlightsById'   => $this->courseHighlightsById,
             'tagHighlightsById'      => $this->tagHighlightsById,
+            'channelHighlightsById'  => $this->channelHighlightsById,
         ]);
     }
 }

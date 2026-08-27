@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Scout\Searchable;
 
 class Channel extends Model
 {
+    use Searchable;
+
     protected $fillable = ['category_id', 'name', 'slug', 'created_by', 'show_on_homepage'];
 
     protected $casts = ['show_on_homepage' => 'boolean'];
@@ -31,6 +34,15 @@ class Channel extends Model
     public function getComponentKeyAttribute(): string
     {
         return 'channel.'.$this->id;
+    }
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'id'   => (string) $this->getKey(),
+            'name' => (string) $this->name,
+            'slug' => (string) $this->slug,
+        ];
     }
 
     public function presentations(): BelongsToMany

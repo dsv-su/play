@@ -243,6 +243,37 @@
                                 </div>
                             @endif
 
+                            <!-- CHANNELS -->
+                            @if(count($channels))
+                                <h4 class="text-sm sm:text-base font-semibold text-purple-600 dark:text-purple-400 mb-2">
+                                    {{ __('Channels') }}
+                                </h4>
+
+                                <div class="space-y-2 mb-2">
+                                    @foreach($channels as $channel)
+                                        @php
+                                            $docId = (string) ($channel->id ?? $channel->getKey());
+                                            $hit = $channelHighlightsById[$docId] ?? ['highlights' => []];
+                                            $hlsBy = collect($hit['highlights'])->groupBy('field');
+                                            $name = data_get($hlsBy->get('name'), '0.snippet') ?: e($channel->name ?? '');
+                                        @endphp
+
+                                        <a href="{{ route('channels.show', $channel) }}"
+                                           data-result-link
+                                           class="block focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:focus-visible:ring-blue-400 rounded-lg">
+                                            <article class="border rounded-lg p-3 sm:p-4 transition border-slate-200 hover:bg-blue-50 active:bg-blue-100 dark:border-slate-800 dark:hover:bg-slate-800 dark:active:bg-slate-700">
+                                                <div class="flex items-start gap-2">
+                                                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-gray-800 dark:text-white shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14M5 12h14M5 17h14"/>
+                                                    </svg>
+                                                    <div class="text-sm sm:text-base font-medium min-w-0 truncate text-slate-900 dark:text-slate-100">{!! $name !!}</div>
+                                                </div>
+                                            </article>
+                                        </a>
+                                    @endforeach
+                                </div>
+                            @endif
+
                             <!-- VIDEOS -->
                             @if(count($videos))
                                 <h4 class="text-sm sm:text-base font-semibold text-blue-600 dark:text-blue-400 mb-2">{{ __("Presentations") }}</h4>
@@ -441,7 +472,7 @@
                             @endif
 
                             <!-- Empty-state if all buckets empty -->
-                            @if(!count($videos) && !count($presenters) && !count($courses) && !count($tags))
+                            @if(!count($videos) && !count($presenters) && !count($courses) && !count($tags) && !count($channels))
                                 <div class="text-sm text-gray-500 dark:text-slate-400">No results.</div>
                             @endif
 
@@ -623,7 +654,6 @@
         updateAria(!!resultsContainer && items.length > 0);
     });
 </script>
-
 
 
 

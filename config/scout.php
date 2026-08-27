@@ -269,6 +269,20 @@ return [
                 ],
             ], //end Tags
 
+            App\Models\Channel::class => [
+                'collection-schema' => [
+                    'name'   => 'channels',
+                    'fields' => [
+                        ['name' => 'name', 'type' => 'string'],
+                        ['name' => 'slug', 'type' => 'string'],
+                    ],
+                ],
+                'search-parameters' => [
+                    'query_by' => 'name,slug',
+                    'highlight_full_fields' => 'name,slug',
+                ],
+            ],
+
         ],
 
     ], //end typesense
