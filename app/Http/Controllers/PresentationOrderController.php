@@ -87,10 +87,10 @@ class PresentationOrderController extends Controller
         ];
 
         $componentLabels = [
-            'home.newpresentations' => 'New on Play Presentations',
-            'home.mypresentations' => 'My Presentations',
-            'home.studypresentations' => 'Study Presentations',
-            'home.next-ilearn' => 'NextIlearn Presentations'
+            'home.newpresentations' => __('New on Play'),
+            'home.mypresentations' => __('My Courses'),
+            'home.studypresentations' => __('Study Information'),
+            'home.next-ilearn' => __('NextIlearn Tutorials'),
         ];
 
         return view('cookie.profile', compact(
