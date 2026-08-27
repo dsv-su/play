@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Upload;
 
+use App\Models\Category;
 use App\Models\ManualPresentation;
 use Carbon\Carbon;
 use Livewire\Component;
@@ -9,22 +10,28 @@ use Livewire\Component;
 class UploadMeta extends Component
 {
     public ?ManualPresentation $presentation = null;
+
     /** UI fields */
     public string $date = '';                 // yyyy-mm-dd for inputs
 
     public array $categories = [];            // collection->toArray()
+
     public ?int $category = null;             // selected category id
+
     /** Visibility */
     public string $visibility = 'visible';    // 'visible' | 'private' | 'unlisted'
+
     public bool $download = false;
+
     public bool $download_switch_warning = false;
 
     public function mount($presentation = null)
     {
-        if($presentation) {
+        if ($presentation) {
             $this->presentation = $presentation;
         }
         $this->date = $this->formatTimestampForInput();
+        $this->categories = Category::query()->orderBy('category_name')->get(['id', 'category_name'])->toArray();
     }
 
     public function render()

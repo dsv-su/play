@@ -13,27 +13,30 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\URL;
 use Laravel\Scout\Searchable;
 
 class Video extends Model
 {
-    use Searchable, HasMetrics;
+    use HasMetrics, Searchable;
 
-    //UUID
+    // UUID
     protected $primaryKey = 'id';
+
     protected $keyType = 'string';
+
     public $incrementing = false;
-    //TODO Remove presentation attribute
+
+    // TODO Remove presentation attribute
     protected $fillable = [
         'id', 'title', 'title_en', 'thumb', 'creation', 'origin', 'notification_id', 'subtitles', 'state',
         'presenter', 'duration', 'thumb', 'category_id', 'description', 'visibility', 'unlisted', 'sources', 'presentation',
-        'progress'
+        'progress',
     ];
+
     protected $table = 'videos';
 
-    //Playlist
+    // Playlist
     protected $appends = ['link', 'type', 'progress'];
 
     protected $casts = [
@@ -41,7 +44,7 @@ class Video extends Model
         'edit' => 'boolean',
         'delete' => 'boolean',
         'visibility' => 'boolean',
-        'unlisted'   => 'boolean',
+        'unlisted' => 'boolean',
         'published_at' => 'datetime',
     ];
 
@@ -118,30 +121,30 @@ class Video extends Model
     {
         // Ensure relations are loaded for single-record indexing paths
         $this->loadMissing(['tagsRelation:id,name',
-                            'coursesRelation:id,name,designation',
-                            'presenterRelation:id,name,username']);
+            'coursesRelation:id,name,designation',
+            'presenterRelation:id,name,username']);
 
         return [
-            'id'                    => (string) $this->getKey(),
-            'uuid'                  => (string) $this->getKey(),
-            'title'                 => (string) $this->title,
-            'title_en'              => (string) $this->title_en,
-            'description'           => (string) ($this->description ?? ''),
-            'tag_names'             => $this->tagsRelation->pluck('name')->filter()->values()->all(),
-            'course_names'          => $this->coursesRelation->pluck('name')->filter()->values()->all(),
-            'course_designation'    => $this->coursesRelation->pluck('designation')->filter()->values()->all(),
-            'presenter_names'       => $this->presenterRelation->pluck('name')->filter()->values()->all(),
-            'presenter_usernames'   => $this->presenterRelation->pluck('username')->filter()->values()->all(),
-            'tag_ids'               => $this->tagsRelation->pluck('id')->values()->all(),
-            'course_ids'            => $this->coursesRelation->pluck('id')->values()->all(),
-            'presenter_ids'         => $this->presenterRelation->pluck('id')->values()->all(),
-            'published_at_ts'       => $this->published_at?->timestamp ?? 0,
-            'visibility'            => $this->visibility ? 1 : 0,
-            'unlisted'              => $this->unlisted ? 1 : 0,
+            'id' => (string) $this->getKey(),
+            'uuid' => (string) $this->getKey(),
+            'title' => (string) $this->title,
+            'title_en' => (string) $this->title_en,
+            'description' => (string) ($this->description ?? ''),
+            'tag_names' => $this->tagsRelation->pluck('name')->filter()->values()->all(),
+            'course_names' => $this->coursesRelation->pluck('name')->filter()->values()->all(),
+            'course_designation' => $this->coursesRelation->pluck('designation')->filter()->values()->all(),
+            'presenter_names' => $this->presenterRelation->pluck('name')->filter()->values()->all(),
+            'presenter_usernames' => $this->presenterRelation->pluck('username')->filter()->values()->all(),
+            'tag_ids' => $this->tagsRelation->pluck('id')->values()->all(),
+            'course_ids' => $this->coursesRelation->pluck('id')->values()->all(),
+            'presenter_ids' => $this->presenterRelation->pluck('id')->values()->all(),
+            'published_at_ts' => $this->published_at?->timestamp ?? 0,
+            'visibility' => $this->visibility ? 1 : 0,
+            'unlisted' => $this->unlisted ? 1 : 0,
         ];
     }
 
-    //Keep index fresh when the Video itself is saved
+    // Keep index fresh when the Video itself is saved
     protected static function booted(): void
     {
         // When a video is saved, make it searchable
@@ -152,15 +155,15 @@ class Video extends Model
             $video->metrics()->delete();
         });
     }
-    //end typesense
+    // end typesense
 
     public function getLinkAttribute(): string
     {
-        if (!$playlist = VideoCourse::where('video_id', $this->id)->first()) {
-            //No playlist
-            return $this->attributes['link'] = URL::to('/') . '/multiplayer?p=' . $this->id;
+        if (! $playlist = VideoCourse::where('video_id', $this->id)->first()) {
+            // No playlist
+            return $this->attributes['link'] = URL::to('/').'/multiplayer?p='.$this->id;
         } else {
-            return $this->attributes['link'] = URL::to('/') . '/multiplayer?p=' . $this->id . '&l=' . $playlist->course_id;
+            return $this->attributes['link'] = URL::to('/').'/multiplayer?p='.$this->id.'&l='.$playlist->course_id;
         }
     }
 
@@ -175,7 +178,7 @@ class Video extends Model
 
     public function getThumbAttribute(): string
     {
-        return $this->base_uri() . '/' . $this->id . '/' . $this->attributes['thumb'];
+        return $this->base_uri().'/'.$this->id.'/'.$this->attributes['thumb'];
     }
 
     public function getTypeAttribute(): string
@@ -210,15 +213,14 @@ class Video extends Model
 
     public function getCreationDate(): string
     {
-        if (!$this->creation) {
+        if (! $this->creation) {
             return '';
         }
 
         return Carbon::createFromTimestamp((int) $this->creation)->format('M d, Y');
     }
 
-
-    //New
+    // New
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class, 'video_tags', 'video_id', 'tag_id')
@@ -231,6 +233,7 @@ class Video extends Model
             ->withTimestamps();
 
     }
+
     public function presenters(): BelongsToMany
     {
         return $this->belongsToMany(Presenter::class, 'video_presenters', 'video_id', 'presenter_id')
@@ -249,6 +252,7 @@ class Video extends Model
                 return true;
             }
         }
+
         return false;
     }
 
@@ -267,12 +271,20 @@ class Video extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function channels(): BelongsToMany
+    {
+        return $this->belongsToMany(Channel::class, 'channel_video_assignments')
+            ->withPivot('assigned_by')
+            ->withTimestamps();
+    }
+
     public function getPresentationDate()
     {
         $presentation = json_decode($this->presentation);
         if ($presentation) {
             return $presentation->creation ?? strtotime($presentation->recorded);
         }
+
         return null;
     }
 
@@ -282,7 +294,7 @@ class Video extends Model
             ->withTimestamps();
     }
 
-    //Overall group permissions
+    // Overall group permissions
     public function status(): HasMany
     {
         return $this->hasMany(VideoPermission::class);
@@ -305,9 +317,9 @@ class Video extends Model
 
     private function base_uri()
     {
-        $this->file = base_path() . '/systemconfig/play.ini';
-        if (!file_exists($this->file)) {
-            $this->file = base_path() . '/systemconfig/play.ini.example';
+        $this->file = base_path().'/systemconfig/play.ini';
+        if (! file_exists($this->file)) {
+            $this->file = base_path().'/systemconfig/play.ini.example';
         }
         $this->system_config = parse_ini_file($this->file, true);
 
@@ -320,14 +332,15 @@ class Video extends Model
     public function getUniqueDesignations()
     {
         $designations = [];
-        if (!$this->video_course->isEmpty()) {
+        if (! $this->video_course->isEmpty()) {
             foreach ($this->video_course as $vc) {
                 $designation = Course::find($vc->course_id)->designation;
-                if (!in_array($designation, $designations)) {
+                if (! in_array($designation, $designations)) {
                     $designations[] = $designation;
                 }
             }
         }
+
         return $designations;
     }
 
@@ -337,29 +350,30 @@ class Video extends Model
     public function getUniqueStudyAdminCat()
     {
         $categories = [];
-        if (!$this->video_course->isEmpty()) {
-            if($this->category->category_name == 'Studieadmin') {
+        if (! $this->video_course->isEmpty()) {
+            if ($this->category->category_name == 'Studieadmin') {
                 $category = $this->category->category_name;
-                if (!in_array($category, $categories)) {
+                if (! in_array($category, $categories)) {
                     $categories[] = $category;
                 }
             }
         }
+
         return $categories;
     }
 
     public function getUniqueNextilearnCat()
     {
         $categories = [];
-        if (!$this->video_course->isEmpty()) {
-            if($this->category->category_name == 'Nextilearn') {
+        if (! $this->video_course->isEmpty()) {
+            if ($this->category->category_name == 'Nextilearn') {
                 $category = $this->category->category_name;
-                if (!in_array($category, $categories)) {
+                if (! in_array($category, $categories)) {
                     $categories[] = $category;
                 }
             }
         }
+
         return $categories;
     }
-
 }

@@ -70,11 +70,13 @@
                     <span class="block leading-5 text-gray-700 dark:text-gray-200">{{__('Upload a presentation and associate it with a course.')}}</span>
                 </a>
             </div>
-            {{--}}<div class="w-72">
-                <a href="#_" @click="navigationMenuClose()" class="block px-3.5 py-3 text-sm rounded hover:bg-neutral-100">
-                    <span class="block mb-1 font-medium text-black">Manage a channel</span>
-                    <span class="block font-light leading-5 opacity-50">Here you can manage a channel</span>
+            <div class="w-72">
+                <a href="{{ route('channels.manage') }}" @click="navigationMenuClose()"
+                   class="block px-3.5 py-3 text-sm rounded hover:bg-neutral-100 dark:hover:bg-white/10 transition-colors duration-150 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400">
+                    <span class="block mb-1 font-medium text-gray-900 dark:text-gray-200">{{__("Manage channel")}}</span>
+                    <span class="block leading-5 text-gray-700 dark:text-gray-200">{{__("Here you can add or manage a custom channel")}}</span>
                 </a>
+                {{--}}
                 <a href="#_" @click="navigationMenuClose()" class="block px-3.5 py-3 text-sm rounded hover:bg-neutral-100">
                     <span class="block mb-1 font-medium text-black">Help</span>
                     <span class="block leading-5 opacity-50">Get Help for the most used cases.</span>
@@ -83,7 +85,8 @@
                     <span class="block mb-1 font-medium text-black">Delete</span>
                     <span class="block leading-5 opacity-50">Settings.</span>
                 </a>
-            </div>{{--}}
+                {{--}}
+            </div>
         </div>
     </div>
 </div>

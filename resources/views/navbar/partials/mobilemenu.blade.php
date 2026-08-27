@@ -39,9 +39,10 @@
                 <a href="{{route('presentation.upload')}}" @click="mobileMenuOpen = false; activeMobileMenu = ''" class="block px-3 py-2 rounded-md text-base font-medium text-neutral-700 hover:bg-neutral-100 dark:text-white">
                     {{__("Manual Upload")}}
                 </a>
-                {{--}}<a href="#_" @click="mobileMenuOpen = false; activeMobileMenu = ''" class="block px-3 py-2 rounded-md text-base font-medium text-neutral-700 hover:bg-neutral-100 dark:text-white">
-                    Settings
+                <a href="{{ route('channels.manage') }}" @click="mobileMenuOpen = false; activeMobileMenu = ''" class="block px-3 py-2 rounded-md text-base font-medium text-neutral-700 hover:bg-neutral-100 dark:text-white">
+                    {{__("Manage channel")}}
                 </a>
+                {{--}}
                 <a href="#_" @click="mobileMenuOpen = false; activeMobileMenu = ''" class="block px-3 py-2 rounded-md text-base font-medium text-neutral-700 hover:bg-neutral-100 dark:text-white">
                     Help
                 </a>

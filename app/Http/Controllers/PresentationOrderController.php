@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CourseadminPermission;
+use App\Models\Channel;
 use App\Models\Course;
+use App\Models\CourseadminPermission;
 use App\Models\IndividualPermission;
 use App\Models\Presenter;
 use App\Services\MyPresentation\MyPresentationsService;
+use App\Support\HomePresentationOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -73,7 +75,7 @@ class PresentationOrderController extends Controller
             ->get(['id', 'designation', 'semester', 'year']);
 
         $daisySemesters = $daisyCourses
-            ->map(fn (Course $course) => trim((string) $course->semester . ' ' . (string) $course->year))
+            ->map(fn (Course $course) => trim((string) $course->semester.' '.(string) $course->year))
             ->filter()
             ->unique()
             ->sortDesc()
@@ -92,6 +94,9 @@ class PresentationOrderController extends Controller
             'home.studypresentations' => __('Study Information'),
             'home.next-ilearn' => __('NextIlearn Tutorials'),
         ];
+        Channel::query()->where('show_on_homepage', true)->get()->each(function (Channel $channel) use (&$componentLabels) {
+            $componentLabels[$channel->component_key] = $channel->name;
+        });
 
         return view('cookie.profile', compact(
             'componentLabels',
@@ -105,22 +110,14 @@ class PresentationOrderController extends Controller
     public function store(Request $request)
     {
         // Allowed components (same as in your Blade)
-        $defaultOrder = ['home.newpresentations', 'home.mypresentations', 'home.studypresentations', 'home.next-ilearn'];
-
         // Validate and sanitize input
         $data = $request->validate([
-            'order'   => 'required|array',
+            'order' => 'required|array',
             'order.*' => 'string',
         ]);
 
         // Keep only allowed components and preserve order
-        $order = collect($data['order'])
-            ->filter(fn ($c) => in_array($c, $defaultOrder, true))
-            ->values()
-            ->all();
-
-        // Ensure all defaults appear, same logic as in your Blade
-        $order = array_values(array_unique(array_merge($order, $defaultOrder)));
+        $order = HomePresentationOrder::sanitize($data['order']);
 
         // Encode as JSON for the cookie
         $json = json_encode($order, JSON_THROW_ON_ERROR);
@@ -131,7 +128,7 @@ class PresentationOrderController extends Controller
         // JSON
         return response()->json([
             'status' => 'ok',
-            'order'  => $order,
+            'order' => $order,
         ])->cookie('presentation_order', $json, $minutes);
     }
 }
