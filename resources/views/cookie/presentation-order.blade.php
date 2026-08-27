@@ -1,82 +1,58 @@
 @php
     // Read cookie
-   $raw = request()->cookie('presentation_order', '[]');
-   $orderFromCookie = json_decode($raw, true);
-   // Allowed components default order
-   $defaultOrder = [
+    $raw = request()->cookie('presentation_order', '[]');
+    $orderFromCookie = json_decode($raw, true);
+    $defaultOrder = [
         'home.newpresentations',
         'home.mypresentations',
         'home.studypresentations',
-        'home.nextilearn'
-        ];
+        'home.next-ilearn',
+    ];
 
-   // Sanitize: keep only allowed values
-   $order = collect(is_array($orderFromCookie) ? $orderFromCookie : [])
-       ->filter(fn ($c) => in_array($c, $defaultOrder, true))
-       ->values()
-       ->all();
+   // Keep only allowed values
+    $order = collect(is_array($orderFromCookie) ? $orderFromCookie : [])
+        ->filter(fn ($c) => in_array($c, $defaultOrder, true))
+        ->values()
+        ->all();
 
    // Ensure all defaults appear (append any missing ones, preserving cookie order first)
-   $order = array_values(array_unique(array_merge($order, $defaultOrder)));
+    $order = array_values(array_unique(array_merge($order, $defaultOrder)));
 @endphp
 
-<div class="mt-2 p-4">
-    <ul id="component-list" class="max-w-xs flex flex-col">
+<div id="presentation-order" class="mt-5"
+     data-store-url="{{ route('presentation-order.store') }}"
+     data-saving-label="{{ __('Saving…') }}"
+     data-save-label="{{ __('Save order') }}"
+     data-success-message="{{ __('Order saved.') }}"
+     data-error-message="{{ __('The order could not be saved. Please try again.') }}">
+    <div class="rounded-xl border border-gray-200 bg-gray-50/70 p-3 dark:border-neutral-800 dark:bg-neutral-900/60 sm:p-4">
+        <ul id="component-list" class="space-y-2" aria-label="{{ __('Home page sections in display order') }}">
         @foreach ($order as $component)
-            <li class="inline-flex items-center gap-x-3 py-3 px-4 text-sm font-medium bg-white border border-gray-200 text-gray-800 -mt-px first:rounded-t-lg first:mt-0 last:rounded-b-lg dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-200"
+            <li class="group flex items-center gap-3 rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm font-medium text-gray-800 shadow-sm transition dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-200"
                 data-component="{{ $component }}">
-                <svg class="hs-handle cursor-grab shrink-0 size-4 text-gray-500 dark:text-neutral-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="5 9 2 12 5 15"></polyline>
-                    <polyline points="9 5 12 2 15 5"></polyline>
-                    <polyline points="15 19 12 22 9 19"></polyline>
-                    <polyline points="19 9 22 12 19 15"></polyline>
-                    <line x1="2" x2="22" y1="12" y2="12"></line>
-                    <line x1="12" x2="12" y1="2" y2="22"></line>
-                </svg>
-                {{ $componentLabels[$component] ?? $component }}
-
+                <button type="button" class="drag-handle cursor-grab touch-none rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 active:cursor-grabbing dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+                        aria-label="{{ __('Drag to reorder :section', ['section' => $componentLabels[$component] ?? $component]) }}">
+                    <svg class="size-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <circle cx="9" cy="6" r="1" fill="currentColor"/><circle cx="15" cy="6" r="1" fill="currentColor"/>
+                        <circle cx="9" cy="12" r="1" fill="currentColor"/><circle cx="15" cy="12" r="1" fill="currentColor"/>
+                        <circle cx="9" cy="18" r="1" fill="currentColor"/><circle cx="15" cy="18" r="1" fill="currentColor"/>
+                    </svg>
+                </button>
+                <span class="min-w-0 flex-1">{{ $componentLabels[$component] ?? $component }}</span>
+                <span class="order-number flex size-7 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-500 dark:bg-neutral-800 dark:text-neutral-400">{{ $loop->iteration }}</span>
             </li>
         @endforeach
-    </ul>
+        </ul>
+    </div>
 
-    <button id="save-order"
-            class="mt-2 py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-blue-600 text-blue-600
-            hover:border-blue-500 hover:text-blue-500 focus:outline-hidden focus:border-blue-500 focus:text-blue-500 disabled:opacity-50
-            disabled:pointer-events-none dark:border-blue-500 dark:text-blue-500 dark:hover:text-blue-400 dark:hover:border-blue-400">
-        Save order
-    </button>
-
-    <p id="order-message" class="text-sm text-green-700 mt-2 hidden">
-        Order saved!
-    </p>
+    <div class="mt-4 flex flex-wrap items-center gap-3">
+        <button id="save-order" type="button" disabled
+                class="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus:ring-offset-neutral-950">
+            <svg id="save-spinner" class="hidden size-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4Z"/></svg>
+            <span id="save-label">{{ __('Save order') }}</span>
+        </button>
+        <p id="order-message" class="hidden text-sm font-medium" role="status" aria-live="polite"></p>
+    </div>
 </div>
 
-<script>
-    document.getElementById('save-order').addEventListener('click', function () {
-        const items = document.querySelectorAll('#component-list [data-component]');
-        const order = [];
-        items.forEach(el => order.push(el.dataset.component));
-
-        fetch("{{ route('presentation-order.store') }}", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ order })
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'ok') {
-                    const msg = document.getElementById('order-message');
-                    msg.classList.remove('hidden');
-                    msg.textContent = 'Order saved!';
-                }
-            })
-            .catch(err => {
-                console.error(err);
-            });
-    });
-</script>
-
+@vite('resources/js/presentation-order.js')

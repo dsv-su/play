@@ -51,7 +51,7 @@
                 </dl>
             </div>
         </section>
-        
+
         @if ($daisyStats['courses'] > 0)
             <section class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm ring-1 ring-black/[0.02] dark:border-neutral-800 dark:bg-neutral-950 dark:ring-white/[0.04] sm:p-8">
                 <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -88,7 +88,7 @@
 
         <section class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm ring-1 ring-black/[0.02] dark:border-neutral-800 dark:bg-neutral-950 dark:ring-white/[0.04] sm:p-8">
             <div class="max-w-2xl">
-                <h2 class="text-base font-semibold text-gray-950 dark:text-white">{{ __('Home page order') }}</h2>
+                <h2 class="text-base font-semibold text-gray-950 dark:text-white">{{ __('Presentation carousel order') }}</h2>
                 <p class="mt-1 text-sm text-gray-500 dark:text-neutral-400">{{ __('Drag the sections into your preferred order, then save your changes.') }}</p>
                 @include('cookie.presentation-order')
             </div>

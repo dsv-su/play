@@ -545,5 +545,15 @@
     "Upload a custom thumbnail or let one be generated.": "Ladda upp en anpassad miniatyrbild eller låt en genereras.",
     "A thumbnail can also be generated automatically.": "En miniatyrbild kan också genereras automatiskt.",
     "Upload thumbnail": "Ladda upp miniatyrbild",
-    "Remove thumbnail": "Ta bort miniatyrbild"
+    "Remove thumbnail": "Ta bort miniatyrbild",
+    "Your profile": "Din profil",
+    "Presentation activity": "Presentationsaktivitet",
+    "An overview of presentations where you are listed as a presenter.": "En översikt över presentationer där du är listad som presentatör.",
+    "Daisy study profile": "Studieprofil",
+    "Your current course information from Daisy.": "Din aktuella kursinformation från Daisy.",
+    "Save order": "Spara ordning",
+    "Order saved.": "Ordningen har sparats.",
+    "The order could not be saved. Please try again.": "Ordningen kunde inte sparas. Vänligen försök igen.",
+    "Presentation carousel order": "Presentations ordning",
+    "Drag the sections into your preferred order, then save your changes.": "Dra sektionerna till din önskade ordning"
 }
