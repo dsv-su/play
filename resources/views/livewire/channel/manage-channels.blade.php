@@ -57,6 +57,15 @@
                         <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                         <span x-text="copied ? @js(__('Copied!')) : @js(__('Share link'))">{{ __('Share link') }}</span>
                     </button>
+                    <button type="button"
+                            wire:click="deleteChannel({{ $editingChannel->id }})"
+                            wire:confirm="{{ __('Delete this channel and remove all presentation assignments? This cannot be undone.') }}"
+                            wire:loading.attr="disabled"
+                            wire:target="deleteChannel({{ $editingChannel->id }})"
+                            class="inline-flex min-w-36 items-center justify-center gap-1.5 rounded-lg border border-red-300 bg-white px-3 py-1.5 text-xs font-semibold text-red-700 hover:bg-red-50 disabled:opacity-50 dark:border-red-900 dark:bg-neutral-950 dark:text-red-300 dark:hover:bg-red-950">
+                        <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v5M14 11v5"/></svg>
+                        {{ __('Delete channel') }}
+                    </button>
                 </div>
             </div>
 

@@ -99,6 +99,27 @@ class ManageChannels extends Component
         session()->flash('status', __('Presentation removed from channel.'));
     }
 
+    public function deleteChannel(int $id): void
+    {
+        $channel = $this->findManageableChannel($id);
+
+        DB::transaction(function () use ($channel) {
+            $category = $channel->category;
+
+            // Deleting the channel cascades to all of its video assignments.
+            $channel->delete();
+
+            // Channels receive a dedicated category when created. Do not remove
+            // it if it has since been assigned to a presentation.
+            if ($category && $category->video()->doesntExist()) {
+                $category->delete();
+            }
+        });
+
+        $this->resetForm();
+        session()->flash('status', __('Channel deleted.'));
+    }
+
     public function cancel(): void
     {
         $this->resetForm();
