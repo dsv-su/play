@@ -308,7 +308,7 @@
                     <h1 class="text-3xl font-semibold tracking-tight text-gray-950 dark:text-white sm:text-4xl">{{ __('Frequently asked questions') }}</h1>
                     <span class="rounded-full px-3 py-1 text-xs font-semibold {{ $roleStyles['badge'] }}">{{ __($role) }}</span>
                 </div>
-                <p class="mt-4 text-base leading-7 text-gray-600 dark:text-neutral-300">{{ __('Quick answers about DSVPlay, with guidance selected for your role.') }}</p>
+                <p class="mt-4 text-base leading-7 text-gray-600 dark:text-neutral-300">{{ __('Quick answers about DSVPlay.') }}</p>
             </div>
         </section>
 

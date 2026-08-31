@@ -383,6 +383,9 @@
                             <div class="flex items-center justify-between p-4 border rounded-lg {{ $banner->visible ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : 'border-gray-200 dark:border-gray-600' }}">
                                 <div class="flex-1">
                                     <p class="text-sm font-semibold dark:text-white">{{ $banner->content }}</p>
+                                    @if($banner->content_sv)
+                                        <p class="text-sm text-gray-600 dark:text-gray-300"><span class="font-medium">Swedish:</span> {{ $banner->content_sv }}</p>
+                                    @endif
                                     @if($banner->link_url)
                                         <p class="text-xs text-gray-500 dark:text-gray-400">{{ $banner->link_text ?? 'Link' }}: {{ $banner->link_url }}</p>
                                     @endif
@@ -412,9 +415,16 @@
                         <form wire:submit.prevent="{{ $editingBannerId ? 'updateBanner' : 'createBanner' }}">
                             <div class="grid grid-cols-6 gap-6">
                                 <div class="col-span-6">
-                                    <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Banner Message Content</label>
+                                    <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Banner Message Content (English)</label>
                                     <textarea id="content" wire:model.defer="{{ $editingBannerId ? 'editBannerContent' : 'newBannerContent' }}" rows="3" class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
                                     @error($editingBannerId ? 'editBannerContent' : 'newBannerContent') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="col-span-6">
+                                    <label for="content_sv" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Banner Message Content (Swedish)</label>
+                                    <textarea id="content_sv" wire:model.defer="{{ $editingBannerId ? 'editBannerContentSv' : 'newBannerContentSv' }}" rows="3" class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+                                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">The English message is used if this translation is left empty.</p>
+                                    @error($editingBannerId ? 'editBannerContentSv' : 'newBannerContentSv') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                 </div>
 
                                 <div class="col-span-3">
