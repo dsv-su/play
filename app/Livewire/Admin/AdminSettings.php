@@ -23,6 +23,7 @@ class AdminSettings extends Component
     public $videoData;
 
     public $newBannerContent;
+    public $newBannerContentSv;
     public $newBannerVisible = false;
     public $newBannerVisibleForStaff = false;
     public $newBannerVisibleForStudent = false;
@@ -31,6 +32,7 @@ class AdminSettings extends Component
     
     public $editingBannerId = null;
     public $editBannerContent;
+    public $editBannerContentSv;
     public $editBannerVisible;
     public $editBannerVisibleForStaff;
     public $editBannerVisibleForStudent;
@@ -43,12 +45,14 @@ class AdminSettings extends Component
 
     protected $rules = [
         'newBannerContent' => 'nullable|string',
+        'newBannerContentSv' => 'nullable|string',
         'newBannerVisible' => 'boolean',
         'newBannerVisibleForStaff' => 'boolean',
         'newBannerVisibleForStudent' => 'boolean',
         'newBannerLinkUrl' => 'nullable|url',
         'newBannerLinkText' => 'nullable|string',
         'editBannerContent' => 'nullable|string',
+        'editBannerContentSv' => 'nullable|string',
         'editBannerVisible' => 'boolean',
         'editBannerVisibleForStaff' => 'boolean',
         'editBannerVisibleForStudent' => 'boolean',
@@ -100,6 +104,7 @@ class AdminSettings extends Component
 
         Banner::create([
             'content' => $this->newBannerContent,
+            'content_sv' => $this->newBannerContentSv,
             'link_url' => $this->newBannerLinkUrl,
             'link_text' => $this->newBannerLinkText,
             'visible' => $this->newBannerVisible,
@@ -107,7 +112,7 @@ class AdminSettings extends Component
             'visible_for_student' => $this->newBannerVisibleForStudent,
         ]);
 
-        $this->reset(['newBannerContent', 'newBannerLinkUrl', 'newBannerLinkText', 'newBannerVisible', 'newBannerVisibleForStaff', 'newBannerVisibleForStudent']);
+        $this->reset(['newBannerContent', 'newBannerContentSv', 'newBannerLinkUrl', 'newBannerLinkText', 'newBannerVisible', 'newBannerVisibleForStaff', 'newBannerVisibleForStudent']);
         $this->loadBanners();
         session()->flash('message', 'Banner created.');
     }
@@ -117,6 +122,7 @@ class AdminSettings extends Component
         $banner = Banner::find($id);
         $this->editingBannerId = $id;
         $this->editBannerContent = $banner->content;
+        $this->editBannerContentSv = $banner->content_sv;
         $this->editBannerVisible = $banner->visible;
         $this->editBannerVisibleForStaff = $banner->visible_for_staff;
         $this->editBannerVisibleForStudent = $banner->visible_for_student;
@@ -138,6 +144,7 @@ class AdminSettings extends Component
 
         $banner->update([
             'content' => $this->editBannerContent,
+            'content_sv' => $this->editBannerContentSv,
             'visible' => $this->editBannerVisible,
             'visible_for_staff' => $this->editBannerVisibleForStaff,
             'visible_for_student' => $this->editBannerVisibleForStudent,

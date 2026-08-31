@@ -31,7 +31,7 @@
     <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
 
         <p class="text-sm/6 text-gray-900">
-            {{ $banner->content }}
+            {{ app()->getLocale() === 'sv' && filled($banner->content_sv) ? $banner->content_sv : $banner->content }}
         </p>
 
         @if($banner->link_url)
@@ -62,4 +62,3 @@
     });
 </script>
 @endif
-
