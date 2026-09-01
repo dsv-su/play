@@ -45,6 +45,17 @@ class Channel extends Model
         ];
     }
 
+    public function typesenseCollectionSchema(): array
+    {
+        return [
+            'name' => $this->searchableAs(),
+            'fields' => [
+                ['name' => 'name', 'type' => 'string'],
+                ['name' => 'slug', 'type' => 'string'],
+            ],
+        ];
+    }
+
     public function presentations(): BelongsToMany
     {
         return $this->belongsToMany(Video::class, 'channel_video_assignments')
