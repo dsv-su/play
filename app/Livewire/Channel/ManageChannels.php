@@ -72,7 +72,7 @@ class ManageChannels extends Component
     public function addVideo(string $videoId): void
     {
         $channel = $this->findManageableChannel((int) $this->editingId);
-        $video = $this->findManageableVideo($videoId);
+        $video = $this->addableVideosQuery()->findOrFail($videoId);
 
         DB::transaction(function () use ($channel, $video) {
             ChannelVideoAssignment::firstOrCreate([
@@ -172,6 +172,13 @@ class ManageChannels extends Component
         });
     }
 
+    private function addableVideosQuery(): Builder
+    {
+        return $this->manageableVideosQuery()
+            ->where('visibility', true)
+            ->where('unlisted', false);
+    }
+
     private function currentUsername(): string
     {
         return app()->bound('play_username') ? (string) app('play_username') : '';
@@ -192,7 +199,7 @@ class ManageChannels extends Component
             ? $this->manageableVideosQuery()->whereKey($assignedVideos->pluck('id'))->pluck('videos.id')
             : collect();
         $availableVideos = $editingChannel
-            ? $this->manageableVideosQuery()
+            ? $this->addableVideosQuery()
                 ->whereDoesntHave('channels', fn ($query) => $query->whereKey($editingChannel->id))
                 ->when($this->videoSearch !== '', function ($query) {
                     $search = '%'.$this->videoSearch.'%';
