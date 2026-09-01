@@ -32,6 +32,7 @@ class UploadMeta extends Component
         }
         $this->date = $this->formatTimestampForInput();
         $this->categories = Category::query()->orderBy('category_name')->get(['id', 'category_name'])->toArray();
+        $this->category = $this->presentation?->category_id ?? 1;
     }
 
     public function render()
