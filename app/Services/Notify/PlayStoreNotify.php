@@ -26,12 +26,18 @@ final class PlayStoreNotify
 
     private ManualPresentation|Video $presentation;
     private ClientInterface $http;
+    private bool $renderThumb;
 
-    public function __construct(ManualPresentation|Video $presentation, ?ClientInterface $http = null)
+    public function __construct(
+        ManualPresentation|Video $presentation,
+        ?ClientInterface $http = null,
+        bool $renderThumb = false
+    )
 
     {
         $this->presentation = $presentation;
         $this->http         = $http ?? new Client();
+        $this->renderThumb  = $renderThumb;
     }
 
     /**
@@ -203,7 +209,11 @@ final class PlayStoreNotify
 
         //Edit
         if (empty($this->presentation->sources ) && $type == 'edit')    unset($p['sources']);
-        if (empty($this->presentation->thumb) && $type == 'edit')    unset($p['thumb']);
+        if ($type === self::TYPE_EDIT && $this->renderThumb) {
+            $p['thumb'] = '';
+        } elseif (empty($this->presentation->thumb) && $type === self::TYPE_EDIT) {
+            unset($p['thumb']);
+        }
 
         // Normalize arrays
         $p['presenters'] = $this->normalizeArray($p['presenters'] ?? null);

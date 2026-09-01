@@ -534,7 +534,10 @@ class EditController extends Controller
             Cache::flush();
 
             // Send notify
-            $notify = new PlayStoreNotify($presentation);
+            $notify = new PlayStoreNotify(
+                $presentation,
+                renderThumb: $data['render_thumb']
+            );
             $notify->sendSuccess('edit');
 
             // Clear download storage
