@@ -54,8 +54,8 @@ class EditPresentation extends Component
             ->get(['id', 'category_name'])
             ->toArray();
 
-        // Preselect category (guard for null relation)
-        $this->category = optional($this->video->category)->id;
+        // Keep the existing category, or default uncategorized presentations.
+        $this->category = $this->video->category_id ?? 1;
 
         // Visibility: normalize from model fields (visibility + unlisted booleans)
         $this->visibility = $this->video->unlisted

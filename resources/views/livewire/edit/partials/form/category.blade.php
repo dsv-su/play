@@ -10,9 +10,11 @@
         name="category"
         aria-describedby="category-description"
         class="block w-full rounded-lg border-slate-300 bg-white px-4 py-3 pe-9 text-sm text-slate-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder:text-neutral-500">
-        <option value="" disabled selected>{{__("Choose a category")}}</option>
+        <option value="" disabled>{{__("Choose a category")}}</option>
         @foreach($categories as $item)
-            <option value="{{ $item['id'] }}">{{ $item['category_name'] }}</option>
+            <option value="{{ $item['id'] }}" @selected((int) ($category ?? 1) === (int) $item['id'])>
+                {{ $item['category_name'] }}
+            </option>
         @endforeach
     </select>
 </div>
