@@ -214,6 +214,7 @@ class MultiplayerController extends Controller
             'p' => ['required', 'string'],   // presentation id
             'l' => ['nullable', 'integer'],   // playlist id
             's' => ['nullable', 'string'],   // default subtitle
+            't' => ['nullable', 'numeric', 'min:0'],   // playback timestamp in seconds
         ]);
 
         // Build view data
@@ -227,6 +228,10 @@ class MultiplayerController extends Controller
 
         if (!empty($data['s'])) {
             $viewData['s'] = $data['s'];
+        }
+
+        if (isset($data['t'])) {
+            $viewData['t'] = $data['t'];
         }
 
 

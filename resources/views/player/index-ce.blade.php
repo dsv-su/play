@@ -28,12 +28,12 @@
                     style="width: 100vw; height: 100vh;"
                     play="/presentation/{{ $presentation }}"
                     @if(isset($playlist)) list="/playlist/{{ $playlist }}" @endif
-                    @if(isset($s)) s="{{ $s }}" @endif>
+                    @if(isset($s)) s="{{ $s }}" @endif
+                    @if(isset($t)) t="{{ $t }}" @endif>
                 </multi-player>
             </div>
         </div>
     </body>
 </html>
-
 
 
