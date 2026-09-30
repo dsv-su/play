@@ -29,7 +29,7 @@
 
         @livewireStyles
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        @vite(['resources/css/site.css', 'resources/js/site.js'])
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
 
     <body class="flex min-h-dvh flex-col bg-dsvbg dark:bg-gray-800 overflow-x-hidden">
