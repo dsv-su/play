@@ -201,12 +201,6 @@ class MultiplayerController extends Controller
         return response()->json($payload, 200, [], JSON_PRETTY_PRINT );
     }
 
-    public function multiplayer()
-    {
-        //deprecated
-        return view('player.index');
-    }
-
     public function multiplayer_ce(Request $request): View|RedirectResponse
     {
         // Validate query params
