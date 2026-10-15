@@ -16,9 +16,7 @@ return new class extends Migration
         Schema::create('channel_video_assignments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('channel_id')->constrained()->cascadeOnDelete();
-            // videos.id was created as CHAR(36). Laravel's MariaDB grammar
-            // otherwise emits a native UUID column, which cannot reference it.
-            $table->char('video_id', 36);
+            $table->uuid('video_id');
             $table->foreign('video_id')->references('id')->on('videos')->cascadeOnDelete();
             $table->string('assigned_by');
             $table->timestamps();

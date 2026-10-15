@@ -1,35 +1,35 @@
 {
   "node_modules/@preline/file-upload/index.js": {
-    "file": "assets/file-upload-CxSY9A0A.js",
+    "file": "assets/file-upload-C0FLAH05.js",
     "name": "file-upload",
     "src": "node_modules/@preline/file-upload/index.js",
     "isDynamicEntry": true,
     "imports": [
-      "resources/js/site.js"
+      "resources/js/app.js"
     ]
   },
-  "resources/css/site.css": {
-    "file": "assets/site-CNxG0MqP.css",
-    "name": "site",
+  "resources/css/app.css": {
+    "file": "assets/app-CNxG0MqP.css",
+    "name": "app",
     "names": [
-      "site.css"
+      "app.css"
     ],
-    "src": "resources/css/site.css",
+    "src": "resources/css/app.css",
     "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-D_yWGo7A.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "dynamicImports": [
+      "node_modules/@preline/file-upload/index.js"
+    ]
   },
   "resources/js/presentation-order.js": {
     "file": "assets/presentation-order-DsavOIH8.js",
     "name": "presentation-order",
     "src": "resources/js/presentation-order.js",
     "isEntry": true
-  },
-  "resources/js/site.js": {
-    "file": "assets/site-BVyPHE7a.js",
-    "name": "site",
-    "src": "resources/js/site.js",
-    "isEntry": true,
-    "dynamicImports": [
-      "node_modules/@preline/file-upload/index.js"
-    ]
   }
 }

@@ -37,7 +37,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}" />
 
         <!-- Vite -->
-        @vite(['resources/css/site.css', 'resources/js/site.js'])
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     </head>
 

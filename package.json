@@ -1,6 +1,7 @@
 {
     "private": true,
     "type": "module",
+    "name": "play",
     "scripts": {
         "build": "vite build",
         "dev": "vite"
