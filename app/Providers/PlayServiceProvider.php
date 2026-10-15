@@ -55,7 +55,7 @@ class PlayServiceProvider extends ServiceProvider
     public function boot()
     {
         //Staff
-        Gate::before(function ($user = null, string $ability, array $arguments) {
+        Gate::before(function ($user, string $ability, array $arguments) {
             if ($ability !== 'manage-content') return null;
 
             $role = app()->make('play_role');
@@ -68,7 +68,7 @@ class PlayServiceProvider extends ServiceProvider
         );
 
         //Admin
-        Gate::before(function ($user = null, string $ability, array $arguments) {
+        Gate::before(function ($user, string $ability, array $arguments) {
             if ($ability !== 'admin-content') return null;
 
             $role = app()->make('play_role');
