@@ -99,8 +99,13 @@ class CheckEditPermission
      */
     protected function resolveVideo(Request $request): ?Video
     {
-        // Prefer explicit query parameter
-        $id = $request->input('p');
+        // Nested routes such as /edit/{video}/stream/upload do not end in the video ID.
+        $routeVideo = $request->route('video');
+        if ($routeVideo instanceof Video) {
+            return $routeVideo;
+        }
+
+        $id = $routeVideo ?: $request->input('p');
 
         // Fallback: last path segment if it looks like a UUID
         if (!$id) {

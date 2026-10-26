@@ -51,7 +51,7 @@
          data-stream-id="{{ $stream['id'] }}"
          data-hs-file-upload='{
   "url": "{{ route('presentation.stream-upload', $video, false) }}?edit_presentation_id={{ $editPresentationId }}&stream_id={{ $stream['id'] }}",
-  "headers": { "X-CSRF-TOKEN": "{{ csrf_token() }}" },
+  "headers": { "X-CSRF-TOKEN": "{{ csrf_token() }}", "Accept": "application/json" },
   "acceptedFiles": "video/*",
   "parallelUploads": 1,
   "maxFiles": 1,
