@@ -126,6 +126,46 @@ class EditStreamsWorkflowTest extends TestCase
         self::assertCount(2, $this->video->streams()->get());
     }
 
+    public function test_replacing_audio_stream_in_three_stream_presentation_preserves_all_other_media(): void
+    {
+        $camera = Stream::create([
+            'video_id' => $this->video->id, 'name' => 'camera',
+            'poster' => 'poster/camera.jpg', 'audio' => false,
+        ]);
+        $camera->hidden = true;
+        $camera->save();
+        foreach ([$this->main, $this->slides, $camera] as $stream) {
+            StreamResolution::create([
+                'stream_id' => $stream->id, 'resolution' => 1080,
+                'filename' => $stream->name.'-1080-old.mp4',
+            ]);
+        }
+        $before = [$this->slides->fresh()->toArray(), $camera->fresh()->toArray()];
+        $resolutionsBefore = [$this->slides->resolutions()->get()->toArray(), $camera->resolutions()->get()->toArray()];
+
+        $this->save([
+            'uploaded_stream' => [$this->main->id => ['video' => $this->storeReplacement('main')]],
+            'streamVisibility' => ['camera' => 'on'],
+        ]);
+        $payload = json_decode((string) $this->history[0]['request']->getBody(), true);
+        self::assertCount(3, $payload['sources']);
+        self::assertSame('video/main.mp4', $payload['sources']['main']['video']);
+        self::assertTrue($payload['sources']['main']['playAudio']);
+        self::assertSame(['playAudio' => false], $payload['sources']['slides']);
+        self::assertSame(['playAudio' => false], $payload['sources']['camera']);
+
+        (new StreamsStore(new Request(['jobid' => 'job-123', 'package' => ['sources' => [
+            'main' => ['video' => [720 => 'main-new.mp4'], 'poster' => 'poster/new-main.jpg', 'playAudio' => true],
+        ]]]), $this->video))->streams();
+
+        self::assertCount(3, $this->video->streams()->get());
+        self::assertSame('main-new.mp4', $this->main->resolutions()->sole()->filename);
+        self::assertSame('poster/new-main.jpg', $this->main->fresh()->poster);
+        self::assertTrue((bool) $this->main->fresh()->audio);
+        self::assertSame($before, [$this->slides->fresh()->toArray(), $camera->fresh()->toArray()]);
+        self::assertSame($resolutionsBefore, [$this->slides->resolutions()->get()->toArray(), $camera->resolutions()->get()->toArray()]);
+    }
+
     public function test_interleaved_chunk_uploads_with_the_same_filename_keep_streams_separate(): void
     {
         config(['chunk-upload.storage.chunks' => 'test-chunks', 'chunk-upload.chunk.name.use.session' => false]);
