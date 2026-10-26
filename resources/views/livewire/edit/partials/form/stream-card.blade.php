@@ -119,7 +119,7 @@
         <input type="hidden"
                data-uploaded-stream-path
                name="uploaded_stream[{{ $stream['id'] }}][video]"
-               value="">
+               value="{{ old('uploaded_stream.' . $stream['id'] . '.video', '') }}">
 
         <div class="mt-3 hidden" data-stream-upload-status>
             <div class="mb-1 flex items-center justify-between gap-3 text-xs text-slate-600 dark:text-neutral-400">

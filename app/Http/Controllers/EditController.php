@@ -91,7 +91,11 @@ class EditController extends Controller
             $user_permission = 'read';
         }
         $type = 'edit';
-        $editPresentation = ManualPresentation::create([
+        $editPresentation = ManualPresentation::query()
+            ->whereKey(old('edit_presentation_id'))
+            ->where('pkg_id', $video->id)
+            ->where('type', 'edit')
+            ->first() ?? ManualPresentation::create([
             'pkg_id' => $video->id,
             'type' => 'edit',
             'category_id' => $video->category_id,
@@ -151,6 +155,7 @@ class EditController extends Controller
                 'custom_thumb'            => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
                 'edit_presentation_id'    => ['nullable', 'integer'],
                 'uploaded_stream'         => ['nullable', 'array'],
+                'uploaded_stream.*'       => ['array'],
                 'uploaded_stream.*.video' => ['nullable', 'string', 'regex:/^video\/[^\/]+$/'],
             ]);
 
@@ -378,8 +383,6 @@ class EditController extends Controller
                         !empty($uploadedStreams[$stream->id]['video'])
                         && $this->storedReplacementStreamExists($presentation, $uploadedStreams[$stream->id]['video'])
                     ) {
-                        $this->removeOldStreamPoster($stream, $video);
-
                         $sources[$stream->name] = [
                             'video' => $uploadedStreams[$stream->id]['video'],
                             'poster' => '',
@@ -550,11 +553,14 @@ class EditController extends Controller
             Cache::flush();
 
             // Send notify
-            $notify = new PlayStoreNotify(
-                $presentation,
-                renderThumb: $data['render_thumb']
-            );
-            $notify->sendSuccess('edit');
+            $notify = app()->makeWith(PlayStoreNotify::class, [
+                'presentation' => $presentation,
+                'renderThumb' => $data['render_thumb'],
+            ]);
+            $result = $notify->sendSuccess('edit');
+            if ($result instanceof RedirectResponse) {
+                return $result;
+            }
 
             // Clear download storage
             Artisan::call('download:clear');
@@ -626,6 +632,8 @@ class EditController extends Controller
                 'status' => true,
                 'done' => $handler->getPercentageDone(),
             ]);
+        } catch (ValidationException | \Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            throw $e;
         } catch (Throwable $e) {
             Log::error('Replacement stream upload failed', [
                 'video_id' => $video->id,
@@ -1040,19 +1048,6 @@ class EditController extends Controller
         $filename = str_replace('.' . $extension, '', $file->getClientOriginalName());
 
         return $filename . '.' . $extension;
-    }
-
-    private function removeOldStreamPoster(Stream $stream, Video $video): void
-    {
-        if (empty($stream->poster)) {
-            return;
-        }
-
-        $posterPath = trim($this->storage(), '/') . '/' . $video->id . '/' . ltrim($stream->poster, '/');
-        Storage::disk('play-store')->delete($posterPath);
-
-        $stream->poster = '';
-        $stream->save();
     }
 
     private function storedReplacementStreamExists(ManualPresentation $presentation, string $videoPath): bool

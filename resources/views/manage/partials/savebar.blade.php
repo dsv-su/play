@@ -33,7 +33,7 @@
             <p class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ __("Ready to finish?") }}</p>
             <p class="hidden text-sm text-slate-500 dark:text-neutral-400 sm:block">{{ __("Save applies all edits on this page. Cancel returns without saving.") }}</p>
             <p id="edit-stream-upload-status" class="mt-1 hidden text-sm font-medium text-blue-700 dark:text-blue-300">
-                {{ __("Uploading replacement stream...") }}
+                {{ __("Complete or cancel replacement uploads before saving.") }}
             </p>
         </div>
 

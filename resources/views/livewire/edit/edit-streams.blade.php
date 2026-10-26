@@ -1,7 +1,7 @@
 <div>
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
     @foreach ($streams as $key => $stream)
-            <div class="w-full">
+            <div class="w-full" wire:key="edit-stream-{{ $stream['id'] }}">
                 <div class="flex h-full flex-col overflow-hidden rounded-lg border border-susecondary bg-white shadow-sm dark:border-susecondary dark:bg-neutral-950">
                     @include('livewire.edit.partials.form.stream-img')
 
@@ -123,7 +123,7 @@
                         error.textContent = String(message || @js(__('The upload could not be completed.'))).slice(0, 180);
                         error.classList.remove('hidden');
                     }
-                    activeUploads.delete(uploader.dataset.streamId);
+                    activeUploads.add(uploader.dataset.streamId);
                     setSaveState();
                 };
 
@@ -177,6 +177,8 @@
                             dropzone.removeFile(existing);
                         });
                         resetReplacement(uploader, false);
+                        activeUploads.add(uploader.dataset.streamId);
+                        setSaveState();
                         uploader.querySelector('[data-stream-file-name]').textContent = file.name;
                         uploader.querySelector('[data-uploaded-stream-path]').value = '';
                         uploader.querySelector('[data-stream-upload-error]')?.classList.add('hidden');
@@ -184,6 +186,7 @@
 
                     dropzone.on('processing', () => {
                         activeUploads.add(uploader.dataset.streamId);
+                        uploader.querySelector('[data-stream-replacement-cancel]')?.classList.remove('hidden');
                         setProgress(uploader, 0);
                         setSaveState();
                     });
@@ -243,6 +246,11 @@
 
                     event.preventDefault();
                     setSaveState();
+                });
+
+                uploaders.forEach((uploader) => {
+                    const video = uploader.querySelector('[data-uploaded-stream-path]')?.value;
+                    if (video) setUploadComplete(uploader, { video });
                 });
 
                 const interval = window.setInterval(() => {

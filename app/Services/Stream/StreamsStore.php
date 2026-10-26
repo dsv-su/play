@@ -2,6 +2,7 @@
 
 namespace App\Services\Stream;
 
+use App\Models\ManualPresentation;
 use App\Models\Stream;
 use App\Models\StreamResolution;
 use Illuminate\Http\Request;
@@ -11,19 +12,34 @@ class StreamsStore
 {
     protected array $sources = [];
     protected $video;
+    protected bool $hasSources;
+    protected bool $isEdit;
 
     public function __construct(Request $request, $video)
     {
+        // Editing can replace individual streams; an edit callback may omit unchanged sources.
+        $this->isEdit = $request->filled('jobid') && ManualPresentation::query()
+            ->where('jobid', $request->input('jobid'))
+            ->where('pkg_id', $video->id)
+            ->where('type', 'edit')
+            ->exists();
+        $this->hasSources = $request->exists('package.sources');
         $this->sources = (array) $request->input('package.sources', []);
         $this->video = $video;
     }
 
     public function streams(): void
     {
+        if (!$this->hasSources) {
+            return;
+        }
+
         DB::transaction(function () {
-            // If there are no valid sources, delete all
+            // An empty edit result must not remove the existing streams.
             if ($this->isEmptySources()) {
-                $this->deleteAllStreams();
+                if (!$this->isEdit) {
+                    $this->deleteAllStreams();
+                }
                 return;
             }
 
@@ -37,13 +53,17 @@ class StreamsStore
                 $stream = $this->updateStream($key, $source);
                 $keptStreamIds[] = $stream->id;
 
-                $this->updateStreamResolutions($stream, $source['video'] ?? []);
+                if (array_key_exists('video', $source)) {
+                    $this->updateStreamResolutions($stream, $source['video']);
+                }
             }
 
-            // Remove streams that were not present in the request
-            $this->video->streams()
-                ->whereNotIn('id', $keptStreamIds)
-                ->delete();
+            // Non-edit callbacks contain an authoritative stream list.
+            if (!$this->isEdit) {
+                $this->video->streams()
+                    ->whereNotIn('id', $keptStreamIds)
+                    ->delete();
+            }
         });
     }
 
@@ -51,10 +71,10 @@ class StreamsStore
     {
         return Stream::updateOrCreate(
             ['video_id' => $this->video->id, 'name' => $name],
-            [
-                'poster' => $source['poster'] ?? '',
-                'audio' => $source['playAudio'] ?? false,
-            ]
+            array_filter([
+                'poster' => $source['poster'] ?? null,
+                'audio' => $source['playAudio'] ?? null,
+            ], fn ($value) => $value !== null)
         );
     }
 
