@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Illuminate\Validation\ValidationException;
 use Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException;
 use Pion\Laravel\ChunkUpload\Handler\AbstractHandler;
 use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
@@ -162,6 +163,21 @@ class EditController extends Controller
                     'type' => 'edit',
                     'category_id' => $video->category_id,
                 ]);
+
+            // Reject missing uploads before changing any presentation data.
+            $streamIds = $video->streams()->pluck('id')->all();
+            foreach ($data['uploaded_stream'] ?? [] as $streamId => $replacement) {
+                if (empty($replacement['video'])) {
+                    continue;
+                }
+
+                if (!in_array((int) $streamId, $streamIds)
+                    || !$this->storedReplacementStreamExists($presentation, $replacement['video'])) {
+                    throw ValidationException::withMessages([
+                        "uploaded_stream.$streamId.video" => __('The replacement stream is missing. Please upload it again.'),
+                    ]);
+                }
+            }
 
             DB::transaction(function () use ($request, $video, $presentation, $data) {
 
@@ -1006,11 +1022,14 @@ class EditController extends Controller
         ManualPresentation $presentation,
         string $streamName
     ): string {
-        $fileName = $this->createUploadFilename($file);
+        $extension = $file->getClientOriginalExtension() ?: $file->extension();
+        $fileName = (Str::slug($streamName) ?: 'stream') . '-' . Str::uuid() . '.' . $extension;
 
         $folder = '/' . trim($this->storage(), '/') . '/' . trim($presentation->local, '/') . '/video';
 
-        Storage::disk('play-store')->putFileAs($folder, $file, $fileName);
+        if (Storage::disk('play-store')->putFileAs($folder, $file, $fileName) === false) {
+            throw new \RuntimeException('The replacement stream could not be stored. Please try again.');
+        }
 
         return 'video/' . $fileName;
     }

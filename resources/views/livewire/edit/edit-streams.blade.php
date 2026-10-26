@@ -114,6 +114,9 @@
                     const spinner = uploader.querySelector('[data-stream-upload-spinner]');
                     const label = uploader.querySelector('[data-stream-upload-label]');
 
+                    uploader.querySelector('[data-uploaded-stream-path]').value = '';
+                    uploader.querySelector('[data-stream-upload-status]')?.classList.remove('hidden');
+                    uploader.querySelector('[data-stream-replacement-cancel]')?.classList.remove('hidden');
                     spinner?.classList.add('hidden');
                     if (label) label.textContent = @js(__('Upload failed'));
                     if (error) {
@@ -138,14 +141,6 @@
                     }
 
                     return response;
-                };
-
-                const videoPathFromFile = (file) => {
-                    if (!file?.name || file.name.includes('/')) {
-                        return '';
-                    }
-
-                    return `video/${file.name}`;
                 };
 
                 const payloadFromFile = (file, response, xhr) => {
@@ -177,6 +172,11 @@
                     uploader.dataset.streamUploaderBound = 'true';
 
                     dropzone.on('addedfile', (file) => {
+                        // Remove an earlier selection so failed or completed uploads can be retried.
+                        dropzone.files.filter((existing) => existing !== file).forEach((existing) => {
+                            dropzone.removeFile(existing);
+                        });
+                        resetReplacement(uploader, false);
                         uploader.querySelector('[data-stream-file-name]').textContent = file.name;
                         uploader.querySelector('[data-uploaded-stream-path]').value = '';
                         uploader.querySelector('[data-stream-upload-error]')?.classList.add('hidden');
@@ -213,13 +213,6 @@
                         }
 
                         if (file.status === 'success') {
-                            const fallbackVideo = videoPathFromFile(file);
-
-                            if (fallbackVideo) {
-                                setUploadComplete(uploader, { video: fallbackVideo });
-                                return;
-                            }
-
                             setUploadError(uploader, @js(__('The upload finished but no video path was returned.')));
                         }
                     });
