@@ -37,8 +37,12 @@
                 </div>
             @else
                 <div
-                    x-data="accordionGroup()"
-                    x-init="init()"
+                    x-data="{
+                        activeAccordion: @entangle('activeAccordion').live,
+                        setActiveAccordion(id) {
+                            this.activeAccordion = this.activeAccordion === id ? null : id;
+                        }
+                    }"
                     aria-label="{{ __('Presentations by course') }}"
                     class="relative w-full overflow-hidden rounded-xl border border-gray-200 bg-white text-base font-normal shadow-sm dark:border-neutral-800 dark:bg-neutral-950 dark:text-white">
 
@@ -49,10 +53,10 @@
                             class="group border-b border-gray-200 last:border-b-0 dark:border-neutral-800">
                             <button
                                 type="button"
-                                :id="'trigger-${id}'"
+                                :id="'trigger-' + id"
                                 @click="setActiveAccordion(id)"
                                 :aria-expanded="(activeAccordion === id).toString()"
-                                :aria-controls="'panel-${id}'"
+                                :aria-controls="'panel-' + id"
                                 class="flex w-full items-center justify-between gap-3 px-4 py-4 text-left transition hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-inset dark:hover:bg-neutral-900 dark:focus-visible:ring-blue-500 sm:px-5">
 
                                 <span class="flex min-w-0 flex-1 items-start gap-3 sm:items-center">
@@ -85,22 +89,24 @@
                                 </span>
                             </button>
 
-                            <template x-if="activeAccordion === id">
+                            @if($activeAccordion === 'course-'.$courseId)
                                 <div
-                                    :id="'panel-${id}'"
-                                    :aria-labelledby="'trigger-${id}'"
+                                    id="panel-course-{{ $courseId }}"
+                                    aria-labelledby="trigger-course-{{ $courseId }}"
                                     tabindex="-1"
+                                    wire:key="tag-course-{{ $courseId }}-{{ $courseVideos->currentPage() }}-{{ (int) $switchOn }}"
                                     class="border-t border-gray-100 bg-gray-50/60 px-2 py-3 focus:outline-none dark:border-neutral-800 dark:bg-neutral-900/40 sm:px-3">
-                                    <div x-data="{ switchOn: @entangle('switchOn').live }">
-                                        <template x-if="!switchOn">
-                                            @include('livewire.search.partials.table')
-                                        </template>
-                                        <template x-if="switchOn">
-                                            @include('livewire.search.partials.grid')
-                                        </template>
+                                    @if($switchOn)
+                                        @include('livewire.search.partials.grid', ['group' => $courseVideos->getCollection()])
+                                    @else
+                                        @include('livewire.search.partials.table', ['group' => $courseVideos->getCollection()])
+                                    @endif
+
+                                    <div class="px-4 py-3">
+                                        {{ $courseVideos->links(data: ['scrollTo' => false]) }}
                                     </div>
                                 </div>
-                            </template>
+                            @endif
 
                         </div>
                     @endforeach
