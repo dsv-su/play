@@ -13,7 +13,7 @@
   "maxFiles": 4,
   "chunking": true,
   "forceChunking": true,
-  "maxFilesize": 5000,
+  "maxFilesize": 10240,
   "parallelChunkUploads": false,
   "chunkSize": 2000000,
   "retryChunks": true,
