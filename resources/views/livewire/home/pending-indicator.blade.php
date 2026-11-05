@@ -9,7 +9,7 @@
      @keydown.escape.window="tooltipOpen = false">
     <a
         href="{{route('pending.presentations')}}"
-        aria-label="View pending presentations"
+        aria-label="{{ __('View pending presentations') }}"
         :aria-describedby="$id('pending-presentations-tooltip')"
         class="relative inline-flex items-center justify-center w-11 h-11 rounded-lg p-0.5
          text-gray-600 hover:text-gray-900 hover:bg-gray-100

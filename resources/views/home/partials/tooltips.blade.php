@@ -68,4 +68,16 @@
     </div>
 
 
+    <div id="course-tooltip" role="tooltip"
+         class="z-30 inline-block rounded-lg bg-gray-900 px-3 py-2 text-xs font-medium text-white shadow-sm
+                dark:bg-gray-700 opacity-0 invisible transition-opacity duration-200 tooltip">
+        {{ __('Show presentations for this course') }}
+        <div class="tooltip-arrow" data-popper-arrow></div>
+    </div>
+    <div id="presenter-tooltip" role="tooltip"
+         class="z-30 inline-block rounded-lg bg-gray-900 px-3 py-2 text-xs font-medium text-white shadow-sm
+                dark:bg-gray-700 opacity-0 invisible transition-opacity duration-200 tooltip">
+        {{ __('Show presentations by this presenter') }}
+        <div class="tooltip-arrow" data-popper-arrow></div>
+    </div>
 </div>

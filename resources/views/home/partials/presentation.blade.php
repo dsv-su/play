@@ -1,4 +1,4 @@
-<div class="relative flex flex-col bg-gray-50 border border-gray-200 w-full min-w-0
+<div data-presentation-card class="relative flex flex-col bg-gray-50 border border-gray-200 w-full min-w-0
             max-h-[18rem] overflow-hidden overflow-x-clip
             shadow-2xs rounded-sm hover:shadow-sm transition
             dark:bg-gray-800 {{--}}dark:border-neutral-700{{--}}dark:border-white dark:shadow-neutral-700/70">

@@ -1,3 +1,4 @@
+import './presentation-tooltips';
 import './bootstrap';
 import _ from 'lodash';
 import { Dropzone } from 'dropzone';

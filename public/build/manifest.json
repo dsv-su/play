@@ -1,6 +1,6 @@
 {
   "node_modules/@preline/file-upload/index.js": {
-    "file": "assets/file-upload-CFQ2wQYN.js",
+    "file": "assets/file-upload-CCKvR1Gu.js",
     "name": "file-upload",
     "src": "node_modules/@preline/file-upload/index.js",
     "isDynamicEntry": true,
@@ -18,7 +18,7 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-CHsLFEew.js",
+    "file": "assets/app-DzPSa8Ni.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,

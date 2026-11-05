@@ -6,6 +6,8 @@
     "Contact": "Kontakt",
     "DSV Shortcuts": "DSV genvägar",
     "My Presentations": "Mina presentationer",
+    "Pending Presentations": "Väntande presentationer",
+    "View pending presentations": "Visa väntande presentationer",
     "Navigation": "Navigering",
     "Here you can navigate among presentations from your teaching activities sorted after course.": "Här kan du navigera bland presentationer från dina undervisningsaktiviteter, sorterade efter kurs.",
     "Here you can navigate among presentations from your registed course sorted after course.": "Här kan du navigera bland presentationer från dina registrerade kurser, sorterade efter kurs.",
@@ -740,7 +742,16 @@
     "Save and verify the order": "Spara och kontrollera ordningen",
     "Choose Save order and wait for the Order saved confirmation. Return to the home page to confirm that the presentation sections and channel carousels now follow your selected order.": "Välj Save order och vänta på bekräftelsen Order saved. Gå tillbaka till startsidan och kontrollera att presentationsavsnitten och kanalkarusellerna nu följer den ordning du har valt.",
     "About your preference": "Om din inställning",
-    "The carousel order is saved in a browser cookie for 30 days. You may need to set it again when using another browser or device, after clearing browser cookies, or after the cookie expires.": "Karusellordningen sparas i en webbläsarkaka i 30 dagar. Du kan behöva ställa in den igen om du använder en annan webbläsare eller enhet, efter att du har rensat webbläsarkakor eller när kakan har löpt ut."
-
-
+    "The carousel order is saved in a browser cookie for 30 days. You may need to set it again when using another browser or device, after clearing browser cookies, or after the cookie expires.": "Karusellordningen sparas i en webbläsarkaka i 30 dagar. Du kan behöva ställa in den igen om du använder en annan webbläsare eller enhet, efter att du har rensat webbläsarkakor eller när kakan har löpt ut.",
+    "Copy direct link": "Kopiera direktlänk",
+    "Copy embed code": "Kopiera inbäddningskod",
+    "Embed nextIlearn": "Bädda in i nextIlearn",
+    "Use this embed code to insert the video in nextILearn": "Använd denna inbäddningskod för att infoga videon i nextILearn",
+    "Select a default subtitle language for your direct link.": "Välj ett förvalt undertextspråk för din direktlänk.",
+    "Embed code": "Inbäddningskod",
+    "Close share dialog": "Stäng delningsdialogen",
+    "Remove subtitle": "Ta bort undertext",
+    "Apply subtitle": "Använd undertext",
+    "Show presentations for this course": "Visa presentationer för denna kurs",
+    "Show presentations by this presenter": "Visa presentationer av denna presentatör"
 }
