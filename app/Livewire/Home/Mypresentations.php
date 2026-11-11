@@ -2,18 +2,18 @@
 
 namespace App\Livewire\Home;
 
+use App\Models\Video;
 use App\Services\Filters\VisibilityFilter;
-use App\Services\MyPresentation\MyPresentationsService;;
+use App\Services\MyPresentation\MyPresentationsService;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 class Mypresentations extends Component
 {
-    /** @var array<int, \App\Models\Video> */
+    /** @var array<int, Video> */
     public array $myvideos = [];
 
     public int $totalCount = 0;
-
 
     public function mount(MyPresentationsService $service, VisibilityFilter $visibility): void
     {
@@ -23,12 +23,10 @@ class Mypresentations extends Component
 
         $result = $service->getTopForUser($username, $authRole, $playRole, limit: 10);
 
-        $this->myvideos   = $visibility->filter($result['videos'])->all();
+        $this->myvideos = $visibility->filter($result['videos'])->all();
         $this->totalCount = $result['total'];
 
     }
-
-
 
     /**
      * True if user is staff (any staff-like auth + role).
@@ -52,4 +50,3 @@ class Mypresentations extends Component
         return view('livewire.home.mypresentations');
     }
 }
-

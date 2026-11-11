@@ -2,10 +2,11 @@
 
 namespace App\Services\Filters;
 
+use App\Interfaces\VisibilityInterface;
 use App\Models\CoursesettingsPermissions;
 use App\Models\Video;
 
-class CourseSettingsFilter extends VisibilityFilter implements \App\Interfaces\VisibilityInterface
+class CourseSettingsFilter extends VisibilityFilter implements VisibilityInterface
 {
     protected Video $video;
 
@@ -22,6 +23,7 @@ class CourseSettingsFilter extends VisibilityFilter implements \App\Interfaces\V
         // If there are no courses, choose a sensible default (kept as true to match your fallback)
         if ($courses->isEmpty()) {
             $this->video->setAttribute('visibility', true);
+
             return;
         }
 
@@ -43,6 +45,7 @@ class CourseSettingsFilter extends VisibilityFilter implements \App\Interfaces\V
         $unique = array_unique($visList);
         if (count($visList) > 1 && count($unique) !== 1) {
             $this->video->setAttribute('visibility', false);
+
             return;
         }
 
@@ -50,4 +53,3 @@ class CourseSettingsFilter extends VisibilityFilter implements \App\Interfaces\V
         $this->video->setAttribute('visibility', (bool) $visList[0]);
     }
 }
-

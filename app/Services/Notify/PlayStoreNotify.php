@@ -13,37 +13,37 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
 final class PlayStoreNotify
 {
+    public const TYPE_DEFAULT = 'default';
 
-    public const TYPE_DEFAULT   = 'default';
-    public const TYPE_EDIT      = 'edit';
-    public const TYPE_BULK      = 'bulk';
+    public const TYPE_EDIT = 'edit';
+
+    public const TYPE_BULK = 'bulk';
 
     private ManualPresentation|Video $presentation;
+
     private ClientInterface $http;
+
     private bool $renderThumb;
 
     public function __construct(
         ManualPresentation|Video $presentation,
         ?ClientInterface $http = null,
         bool $renderThumb = false
-    )
-
-    {
+    ) {
         $this->presentation = $presentation;
-        $this->http         = $http ?? new Client();
-        $this->renderThumb  = $renderThumb;
+        $this->http = $http ?? new Client;
+        $this->renderThumb = $renderThumb;
     }
 
     /**
      * Build and optionally send the notification.
      *
-     * @return array|string|RedirectResponse|bool  Array (payload) on dryRun, redirect/bool on send
+     * @return array|string|RedirectResponse|bool Array (payload) on dryRun, redirect/bool on send
      */
     public function sendSuccess(string $type, bool $dryRun = false): array|string|RedirectResponse|bool
     {
@@ -64,13 +64,13 @@ final class PlayStoreNotify
             $response = $this->http->request('POST', $uri, [
                 'headers' => [
                     'Content-Type' => 'application/json',
-                    'Accept'       => 'application/json',
+                    'Accept' => 'application/json',
                 ],
-                'body'    => json_encode($payload, JSON_UNESCAPED_UNICODE),
+                'body' => json_encode($payload, JSON_UNESCAPED_UNICODE),
                 'timeout' => 20,
             ]);
 
-            $status  = $response->getStatusCode();
+            $status = $response->getStatusCode();
             $bodyStr = (string) $response->getBody();
 
             if ($status < 200 || $status >= 300 || $bodyStr === '') {
@@ -80,12 +80,12 @@ final class PlayStoreNotify
             // Persist job id and statuses
             $jobId = trim($bodyStr);
 
-            //Re-load ManualPresentation
+            // Re-load ManualPresentation
             $model = ManualPresentation::find($this->presentation->id);
 
             if ($model) {
                 // For "edit" we only set jobid + status=sent (matches original intent)
-                $model->jobid  = $jobId;
+                $model->jobid = $jobId;
                 $model->status = 'sent';
                 $model->save();
             }
@@ -106,6 +106,7 @@ final class PlayStoreNotify
             }
 
             $message = App::isLocale('swe') ? 'Bearbetar presentationen' : 'Processing the presentation';
+
             return redirect('/')->with(['message' => $message]);
 
         } catch (GuzzleException $e) {
@@ -122,12 +123,12 @@ final class PlayStoreNotify
      * Send a DELETE request to remove the presentation in the external service.
      *
      * @param  bool  $dryRun  If true, just return the JSON payload instead of sending.
-     * @return bool|string    true on successful delete, false on failure, JSON string on dryRun
+     * @return bool|string true on successful delete, false on failure, JSON string on dryRun
      */
     public function sendDelete(bool $dryRun = false): bool|string
     {
         // Build URI for this presentation
-        $uri = rtrim($this->uri(), '/') . '/' . $this->presentation->id;
+        $uri = rtrim($this->uri(), '/').'/'.$this->presentation->id;
 
         // Auth payload
         $payload = [
@@ -143,9 +144,9 @@ final class PlayStoreNotify
             $response = $this->http->request('DELETE', $uri, [
                 'headers' => [
                     'Content-Type' => 'application/json',
-                    'Accept'       => 'application/json',
+                    'Accept' => 'application/json',
                 ],
-                'body'    => json_encode($payload, JSON_UNESCAPED_UNICODE),
+                'body' => json_encode($payload, JSON_UNESCAPED_UNICODE),
                 'timeout' => 20,
             ]);
         } catch (RequestException $e) {
@@ -154,7 +155,7 @@ final class PlayStoreNotify
 
             Log::error('PlayStoreNotify delete failed (request exception)', [
                 'message' => $e->getMessage(),
-                'body'    => $body,
+                'body' => $body,
             ]);
 
             return false;
@@ -166,14 +167,15 @@ final class PlayStoreNotify
             return false;
         }
 
-        $status  = $response->getStatusCode();
+        $status = $response->getStatusCode();
         $bodyStr = (string) $response->getBody();
 
         if ($status < 200 || $status >= 300) {
             Log::warning('PlayStoreNotify delete non-2xx response', [
                 'status' => $status,
-                'body'   => $bodyStr,
+                'body' => $bodyStr,
             ]);
+
             return false;
         }
 
@@ -189,7 +191,7 @@ final class PlayStoreNotify
     {
         $p = $this->presentation->toArray();
 
-        //Remove fields that are noise
+        // Remove fields that are noise
         unset(
             $p['id'], $p['title_en'], $p['status'], $p['type'], $p['jobid'], $p['duration'],
             $p['sublanguage'], $p['user'], $p['user_email'], $p['local'], $p['category_id'],
@@ -203,12 +205,18 @@ final class PlayStoreNotify
 
         $p['title'] = ['sv' => $titleSv, 'en' => $titleEn];
 
-        //Conditional removals
-        if (empty($this->presentation->pkg_id))    unset($p['pkg_id']);
-        if (empty($this->presentation->upload_dir)) unset($p['upload_dir']);
+        // Conditional removals
+        if (empty($this->presentation->pkg_id)) {
+            unset($p['pkg_id']);
+        }
+        if (empty($this->presentation->upload_dir)) {
+            unset($p['upload_dir']);
+        }
 
-        //Edit
-        if (empty($this->presentation->sources ) && $type == 'edit')    unset($p['sources']);
+        // Edit
+        if (empty($this->presentation->sources) && $type == 'edit') {
+            unset($p['sources']);
+        }
         if ($type === self::TYPE_EDIT && $this->renderThumb) {
             $p['thumb'] = '';
         } elseif (empty($this->presentation->thumb) && $type === self::TYPE_EDIT) {
@@ -217,26 +225,36 @@ final class PlayStoreNotify
 
         // Normalize arrays
         $p['presenters'] = $this->normalizeArray($p['presenters'] ?? null);
-        $p['courses']    = $this->normalizeArray($p['courses'] ?? null);
-        $p['tags']       = $this->normalizeArray($p['tags'] ?? null);
+        $p['courses'] = $this->normalizeArray($p['courses'] ?? null);
+        $p['tags'] = $this->normalizeArray($p['tags'] ?? null);
 
         // Sources should always be a dict (object)
         if (isset($p['sources'])) {
             $p['sources'] = (object) $p['sources'];
         }
 
-        //Normalize string
+        // Normalize string
         $p['description'] = $this->normalizeString($p['description'] ?? '');
 
-        //Normalize int
-        $p['created']    = $this->normalizeInt($p['created'] ?? null);
+        // Normalize int
+        $p['created'] = $this->normalizeInt($p['created'] ?? null);
 
-        //Bulk
-        if ($type == 'bulk')    unset($p['title']);
-        if ($type == 'bulk')    unset($p['title_en']);
-        if ($type == 'bulk')    unset($p['sources']);
-        if ($type == 'bulk')    unset($p['description']);
-        if (empty($this->presentation->thumb) && $type == 'bulk')    unset($p['thumb']);
+        // Bulk
+        if ($type == 'bulk') {
+            unset($p['title']);
+        }
+        if ($type == 'bulk') {
+            unset($p['title_en']);
+        }
+        if ($type == 'bulk') {
+            unset($p['sources']);
+        }
+        if ($type == 'bulk') {
+            unset($p['description']);
+        }
+        if (empty($this->presentation->thumb) && $type == 'bulk') {
+            unset($p['thumb']);
+        }
         if (in_array('origin', Arr::wrap($this->presentation->courses), true) && $type === 'bulk') {
             unset($p['courses']);
         }
@@ -247,22 +265,22 @@ final class PlayStoreNotify
             unset($p['tags']);
         }
 
-        //Subtitles
-        $hasSubs = !empty($this->presentation->subtitles);
-        if (!$hasSubs) {
+        // Subtitles
+        $hasSubs = ! empty($this->presentation->subtitles);
+        if (! $hasSubs) {
             unset($p['subtitles']);
         }
         if (empty($this->presentation->autogenerate_subtitles)) {
-            //Hide flag and json
+            // Hide flag and json
             unset($p['autogenerate_subtitles'], $p['generate_subtitles']);
         } else {
-            //Hide flag
+            // Hide flag
             unset($p['autogenerate_subtitles']);
         }
 
         return $p;
         // Remove nulls to keep payload clean
-        //return $this->removeNulls($p);
+        // return $this->removeNulls($p);
     }
 
     private function normalizeArray(mixed $value): array
@@ -280,13 +298,13 @@ final class PlayStoreNotify
         return is_numeric($value) ? (int) $value : 0;
     }
 
-
     private function removeNulls(array $arr): array
     {
         return array_filter($arr, static function ($v) {
             if (is_array($v)) {
                 return count($v) > 0;
             }
+
             return $v !== null;
         });
     }
@@ -311,16 +329,16 @@ final class PlayStoreNotify
 
     private function assertValidType(string $type): void
     {
-        if (!in_array($type, [self::TYPE_DEFAULT, self::TYPE_EDIT, self::TYPE_BULK], true)) {
+        if (! in_array($type, [self::TYPE_DEFAULT, self::TYPE_EDIT, self::TYPE_BULK], true)) {
             throw new \InvalidArgumentException("Invalid type '{$type}'.");
         }
     }
 
     private function base_uri()
     {
-        $this->file = base_path() . '/systemconfig/play.ini';
-        if (!file_exists($this->file)) {
-            $this->file = base_path() . '/systemconfig/play.ini.example';
+        $this->file = base_path().'/systemconfig/play.ini';
+        if (! file_exists($this->file)) {
+            $this->file = base_path().'/systemconfig/play.ini.example';
         }
         $this->system_config = parse_ini_file($this->file, true);
 
@@ -329,21 +347,20 @@ final class PlayStoreNotify
 
     private function uri()
     {
-        $this->file = base_path() . '/systemconfig/play.ini';
-        if (!file_exists($this->file)) {
-            $this->file = base_path() . '/systemconfig/play.ini.example';
+        $this->file = base_path().'/systemconfig/play.ini';
+        if (! file_exists($this->file)) {
+            $this->file = base_path().'/systemconfig/play.ini.example';
         }
         $this->system_config = parse_ini_file($this->file, true);
 
         return $this->system_config['store']['notify_uri'];
     }
 
-
     private function storeauth()
     {
-        $this->file = base_path() . '/systemconfig/play.ini';
-        if (!file_exists($this->file)) {
-            $this->file = base_path() . '/systemconfig/play.ini.example';
+        $this->file = base_path().'/systemconfig/play.ini';
+        if (! file_exists($this->file)) {
+            $this->file = base_path().'/systemconfig/play.ini.example';
         }
         $this->system_config = parse_ini_file($this->file, true);
 

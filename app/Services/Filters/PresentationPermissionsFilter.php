@@ -2,12 +2,14 @@
 
 namespace App\Services\Filters;
 
+use App\Interfaces\VisibilityInterface;
 use App\Models\Video;
 use Illuminate\Database\Eloquent\Collection;
 
-class PresentationPermissionsFilter extends VisibilityFilter implements \App\Interfaces\VisibilityInterface
+class PresentationPermissionsFilter extends VisibilityFilter implements VisibilityInterface
 {
     protected Video $video;
+
     protected Collection $permissions;
 
     public function __construct(Video $video)

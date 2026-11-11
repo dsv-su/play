@@ -15,9 +15,9 @@ class ReplacementStreamTest extends TestCase
     public function test_streams_with_the_same_original_filename_keep_separate_contents(): void
     {
         Storage::fake('play-store');
-        $presentation = new ManualPresentation();
+        $presentation = new ManualPresentation;
         $presentation->local = 'replacement-test';
-        $controller = new EditController();
+        $controller = new EditController;
         $store = new ReflectionMethod($controller, 'storeReplacementStream');
         $exists = new ReflectionMethod($controller, 'storedReplacementStreamExists');
 
@@ -37,9 +37,9 @@ class ReplacementStreamTest extends TestCase
     {
         Storage::shouldReceive('disk')->with('play-store')->once()->andReturnSelf();
         Storage::shouldReceive('putFileAs')->once()->andReturn(false);
-        $presentation = new ManualPresentation();
+        $presentation = new ManualPresentation;
         $presentation->local = 'replacement-test';
-        $controller = new EditController();
+        $controller = new EditController;
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('could not be stored');

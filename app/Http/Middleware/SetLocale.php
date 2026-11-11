@@ -2,8 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App;
-
 class SetLocale
 {
     public function handle($request, \Closure $next)
@@ -13,6 +11,7 @@ class SetLocale
             ?? config('app.locale');
 
         app()->setLocale($locale);
+
         return $next($request);
     }
 }

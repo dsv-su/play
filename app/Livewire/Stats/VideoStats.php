@@ -13,11 +13,20 @@ use Livewire\Component;
 class VideoStats extends Component
 {
     public ?Video $video = null;
+
     public array $datasets = [];
+
     public array $labels = [];
+
     public array $data = [];
+
     public bool $showModal = false;
-    public $sum_year, $sum_month, $sum_week;
+
+    public $sum_year;
+
+    public $sum_month;
+
+    public $sum_week;
 
     // 'week' by default
     public string $period = 'week';
@@ -53,7 +62,7 @@ class VideoStats extends Component
     public function setPeriod(string $period): void
     {
         // guard against invalid values if you want
-        if (!in_array($period, ['week', 'month'], true)) {
+        if (! in_array($period, ['week', 'month'], true)) {
             return;
         }
 
@@ -70,6 +79,7 @@ class VideoStats extends Component
     {
         return Metric::thisMonth()->where('vid', $this->video->id)->get();
     }
+
     protected function buildLabelsAndData($metrics): void
     {
         $this->labels = [];
@@ -78,10 +88,9 @@ class VideoStats extends Component
         foreach ($metrics as $metric) {
             $date = Carbon::create($metric->year, $metric->month, $metric->day);
             $this->labels[] = $date->format('d M');
-            $this->data[]   = $metric->value ?? 0;
+            $this->data[] = $metric->value ?? 0;
         }
     }
-
 
     protected function totalCount()
     {
@@ -104,26 +113,26 @@ class VideoStats extends Component
             : $this->labelWeek($metrics);*/
 
         $labels = $this->labels;
-        $data   = $this->data;
+        $data = $this->data;
 
-            // Livewire-bound data (matches ->model('datasets'))
+        // Livewire-bound data (matches ->model('datasets'))
         $this->datasets = [
             'datasets' => [
                 [
-                    'label'           => 'Number of Presentation clicks',
+                    'label' => 'Number of Presentation clicks',
                     'backgroundColor' => 'rgba(38, 185, 154, 0.31)',
-                    'borderColor'     => 'rgba(38, 185, 154, 0.7)',
-                    "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointBackgroundColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointHoverBackgroundColor" => "#fff",
-                    "pointHoverBorderColor" => "rgba(220,220,220,1)",
-                    'data'            => $data,
+                    'borderColor' => 'rgba(38, 185, 154, 0.7)',
+                    'pointBorderColor' => 'rgba(38, 185, 154, 0.7)',
+                    'pointBackgroundColor' => 'rgba(38, 185, 154, 0.7)',
+                    'pointHoverBackgroundColor' => '#fff',
+                    'pointHoverBorderColor' => 'rgba(220,220,220,1)',
+                    'data' => $data,
                 ],
             ],
             'labels' => $labels,
         ];
 
-        //Calc total metrics
+        // Calc total metrics
         $this->totalCount();
     }
 
@@ -132,4 +141,3 @@ class VideoStats extends Component
         return view('livewire.stats.video-stats');
     }
 }
-

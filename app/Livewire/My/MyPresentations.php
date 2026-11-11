@@ -2,19 +2,21 @@
 
 namespace App\Livewire\My;
 
-use Livewire\Component;
 use App\Livewire\Concerns\DSVCourseNames;
+use App\Livewire\Concerns\HasSelectableFilters;
 use App\Services\Filters\VisibilityFilter;
 use App\Services\MyPresentation\MyPresentationsService;
-use App\Livewire\Concerns\HasSelectableFilters;
 use Livewire\Attributes\On;
+use Livewire\Component;
 
 class MyPresentations extends Component
 {
-    use HasSelectableFilters, DSVCourseNames;
+    use DSVCourseNames, HasSelectableFilters;
 
     public int $totalCount = 0;
+
     public bool $switchOn = false;
+
     public array $activeFilters = ['courses' => true, 'presenters' => true, 'semesters' => true, 'tags' => true];
 
     public function mount(MyPresentationsService $my, VisibilityFilter $visibility): void
@@ -30,7 +32,6 @@ class MyPresentations extends Component
 
         $this->recompute();
     }
-
 
     /*#[On('recompute')]
     public function handleRecompute(string $prop): void

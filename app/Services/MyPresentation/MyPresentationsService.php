@@ -3,10 +3,11 @@
 namespace App\Services\MyPresentation;
 
 use App\Models\IndividualPermission;
+use App\Repositories\VideoRepositoryInterface;
 use App\Services\Daisy\DaisyIntegration;
 use App\Services\Student\StudentProfile;
-use App\Repositories\VideoRepositoryInterface;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
 class MyPresentationsService
@@ -14,8 +15,7 @@ class MyPresentationsService
     public function __construct(
         private DaisyIntegration $daisy,
         private VideoRepositoryInterface $videos
-    ) {
-    }
+    ) {}
 
     /**
      * Resolve courses for a user with role awareness and caching.
@@ -33,6 +33,7 @@ class MyPresentationsService
                     return $this->daisy->getActiveEmployeeCourses($username) ?: [];
                 } catch (\Throwable $e) {
                     report($e);
+
                     return [];
                 }
             });
@@ -40,9 +41,11 @@ class MyPresentationsService
 
         try {
             $student = new StudentProfile($this->daisy, $ttl);
+
             return $student->getStudentCourseIds() ?: [];
         } catch (\Throwable $e) {
             report($e);
+
             return [];
         }
     }
@@ -67,13 +70,14 @@ class MyPresentationsService
     public function isStaff(string $authRole, string $playRole): bool
     {
         $staff = ['Administrator', 'Courseadmin', 'Staff'];
+
         return in_array($authRole, $staff, true) && in_array($playRole, $staff, true);
     }
 
     /**
      * Fetch both list and count (top N version).
      *
-     * @return array{videos: \Illuminate\Support\Collection, total: int}
+     * @return array{videos: Collection, total: int}
      */
     public function getTopForUser(
         string $username,
@@ -95,9 +99,8 @@ class MyPresentationsService
         $isAdmin = $this->isAdmin($authRole, $playRole);
 
         $total = $this->videos->countFor($courses, $individual, $isAdmin);
-        $list  = $this->videos->topFor($courses, $individual, $isAdmin, $limit);
+        $list = $this->videos->topFor($courses, $individual, $isAdmin, $limit);
 
         return ['videos' => $list, 'total' => $total];
     }
 }
-

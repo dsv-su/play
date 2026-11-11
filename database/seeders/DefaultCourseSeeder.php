@@ -21,7 +21,7 @@ class DefaultCourseSeeder extends Seeder
             'designation' => 'Ingen kurstillhörighet',
             'semester' => 'VT',
             'year' => 2021,
-            'created_at' =>  Carbon::now(),
+            'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
     }

@@ -2,10 +2,11 @@
 
 namespace App\Services\Filters;
 
+use App\Interfaces\VisibilityInterface;
 use App\Models\CoursePermissions;
 use App\Models\Video;
 
-class CoursePermissionFilter extends VisibilityFilter implements \App\Interfaces\VisibilityInterface
+class CoursePermissionFilter extends VisibilityFilter implements VisibilityInterface
 {
     protected Video $video;
 
@@ -23,6 +24,7 @@ class CoursePermissionFilter extends VisibilityFilter implements \App\Interfaces
         if ($courses->isEmpty()) {
             $this->video->setAttribute('course_permission', true);
             $this->video->setAttribute('permission_type', 'dsv');
+
             return;
         }
 
@@ -57,6 +59,4 @@ class CoursePermissionFilter extends VisibilityFilter implements \App\Interfaces
         $this->video->setAttribute('course_permission', true);
         $this->video->setAttribute('permission_type', $finalType);
     }
-
 }
-

@@ -12,23 +12,28 @@ class CourseAdminList
      * the user must at least exist in one of the associated coursesettings
     /*************************************************************************/
     protected $courselist = [];
+
     protected $user_permission_list = [];
-    protected $course, $courseId;
+
+    protected $course;
+
+    protected $courseId;
 
     public function check($username, $video)
     {
-        $username = substr($username, 0, strpos($username, "@"));
-        foreach($video->courses as $this->course) {
+        $username = substr($username, 0, strpos($username, '@'));
+        foreach ($video->courses as $this->course) {
             $this->courselist[] = $this->course->id;
-            }
-        foreach($this->courselist as $this->courseId) {
+        }
+        foreach ($this->courselist as $this->courseId) {
             $this->user_permission_list = $this->getUsersCourseAdminPermissions($this->courseId, $username);
         }
 
-        if($this->user_permission_list) {
-            if(array_intersect($this->user_permission_list, ['read', 'edit', 'delete'])) {
+        if ($this->user_permission_list) {
+            if (array_intersect($this->user_permission_list, ['read', 'edit', 'delete'])) {
                 return true;
             }
+
             return false;
         }
     }

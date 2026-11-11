@@ -12,7 +12,7 @@ class StreamThumb
         $base = basename($video);
         $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', $base);
 
-        //Create thumb and store in folder
+        // Create thumb and store in folder
         try {
             FFMpeg::fromDisk('play-store')
                 ->open($video)
@@ -24,7 +24,7 @@ class StreamThumb
             report($e);
         }
 
-        if($path = Storage::disk('public')->url($directory.'/poster/'.$thumb_name.'.png')) {
+        if ($path = Storage::disk('public')->url($directory.'/poster/'.$thumb_name.'.png')) {
             return $path;
         }
 

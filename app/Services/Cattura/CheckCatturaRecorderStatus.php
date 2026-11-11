@@ -16,13 +16,14 @@ class CheckCatturaRecorderStatus extends Model
         ];
         try {
             $response = $client->request('GET', $uri, [
-                'headers' => $headers,'verify' => false, 'connect_timeout' => 2
+                'headers' => $headers, 'verify' => false, 'connect_timeout' => 2,
             ]);
         } catch (\Exception $e) {
             /**
              * If there is an exception; Mark recorder;
              */
-            $cattura['capture']['state']= 'ERROR';
+            $cattura['capture']['state'] = 'ERROR';
+
             return $cattura;
 
         }

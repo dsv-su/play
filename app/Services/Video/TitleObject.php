@@ -20,10 +20,11 @@ final class TitleObject
     private array $titles;
 
     private const DEFAULT_SV = 'Bearbetar';
+
     private const DEFAULT_EN = 'Processing';
 
     /**
-     * @param string|array<string, mixed>|null $title
+     * @param  string|array<string, mixed>|null  $title
      */
     public function __construct($title)
     {
@@ -98,13 +99,14 @@ final class TitleObject
     private function get(string $locale): string
     {
         $value = $this->titles[$locale] ?? null;
+
         return is_string($value) ? trim($value) : '';
     }
 
     /**
      * Normalize various inputs to ['sv' => ?, 'en' => ?].
      *
-     * @param mixed $input
+     * @param  mixed  $input
      * @return array<string, string|null>
      */
     private function normalizeToLocaleArray($input): array
@@ -132,6 +134,7 @@ final class TitleObject
             // If neither en nor sv exists, and array looks like a single value, treat as sv.
             if ($map['sv'] === null && $map['en'] === null) {
                 $asString = $this->firstStringValue($input);
+
                 return [
                     'sv' => $asString,
                     'en' => null,
@@ -151,14 +154,14 @@ final class TitleObject
     /**
      * Extract 'sv' and 'en' considering variants (sv_SE, swe, en_GB, etc.)
      *
-     * @param array<string, mixed> $arr
+     * @param  array<string, mixed>  $arr
      * @return array{sv: string|null, en: string|null}
      */
     private function extractLocales(array $arr): array
     {
         $normalized = [];
         foreach ($arr as $key => $value) {
-            if (!is_string($key)) {
+            if (! is_string($key)) {
                 continue;
             }
             $norm = $this->normalizeLocale($key);
@@ -192,7 +195,7 @@ final class TitleObject
     /**
      * Find the first string-ish value in an array for graceful fallback.
      *
-     * @param array<string, mixed> $arr
+     * @param  array<string, mixed>  $arr
      */
     private function firstStringValue(array $arr): ?string
     {
@@ -204,6 +207,7 @@ final class TitleObject
                 return (string) $value;
             }
         }
+
         return null;
     }
 }

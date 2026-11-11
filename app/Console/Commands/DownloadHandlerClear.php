@@ -40,15 +40,15 @@ class DownloadHandlerClear extends Command
     public function handle()
     {
         $downloads = Presentation::all();
-        foreach($downloads as $download) {
-            if($download->status == 'stored') {
-                //Remove files and zip
+        foreach ($downloads as $download) {
+            if ($download->status == 'stored') {
+                // Remove files and zip
                 Storage::disk('public')->deleteDirectory($download->local);
                 Presentation::destroy($download->id);
             }
         }
 
-        //Remove downloaded subtitles
+        // Remove downloaded subtitles
         Storage::disk('local')->deleteDirectory('subtitles');
 
         return 0;

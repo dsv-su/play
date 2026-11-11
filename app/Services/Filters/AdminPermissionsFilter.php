@@ -8,6 +8,7 @@ use App\Models\Video;
 class AdminPermissionsFilter extends VisibilityFilter implements VisibilityInterface
 {
     protected Video $video;
+
     protected string $role;
 
     public function __construct(Video $video)
@@ -26,11 +27,11 @@ class AdminPermissionsFilter extends VisibilityFilter implements VisibilityInter
      */
     public function cast()
     {
-        if (!$this->isAdmin()) {
+        if (! $this->isAdmin()) {
             return;
         }
 
-        if (!$this->video->getAttribute('visibility')) {
+        if (! $this->video->getAttribute('visibility')) {
             // Keep your original behavior: do NOT force visibility true;
             // just mark as 'hidden' if it's not visible.
             $this->video->setAttribute('hidden', true);
@@ -48,4 +49,3 @@ class AdminPermissionsFilter extends VisibilityFilter implements VisibilityInter
         return $this->role === 'Administrator';
     }
 }
-

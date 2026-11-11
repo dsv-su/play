@@ -17,17 +17,17 @@ class CategorySeeder extends Seeder
     {
         DB::table('categories')->insert([
             'category_name' => 'Okategoriserad',
-            'created_at' =>  Carbon::now(),
+            'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
         DB::table('categories')->insert([
             'category_name' => 'Studieadmin',
-            'created_at' =>  Carbon::now(),
+            'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
         DB::table('categories')->insert([
             'category_name' => 'Nextilearn',
-            'created_at' =>  Carbon::now(),
+            'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
         /*DB::table('categories')->insert([

@@ -25,15 +25,15 @@ class CatturaRecorders extends Component
 
         $ini = parse_ini_file($path, true, INI_SCANNER_TYPED);
 
-        if ($ini === false || !isset($ini['recorders']) || !is_array($ini['recorders'])) {
+        if ($ini === false || ! isset($ini['recorders']) || ! is_array($ini['recorders'])) {
             abort(503, 'Invalid or missing [recorders] section in play.ini.');
         }
 
         foreach ($ini['recorders'] as $recorder => $baseUrl) {
             $this->cattura_recorders[] = [
                 'recorder' => (string) $recorder,
-                'status'   => 'CHECKING',
-                'url'      => (string) $baseUrl,
+                'status' => 'CHECKING',
+                'url' => (string) $baseUrl,
             ];
         }
 
@@ -51,7 +51,7 @@ class CatturaRecorders extends Component
     {
         try {
             $response = Http::timeout(5)->acceptJson()
-                ->get(rtrim($baseUrl, '/') . '/api/1/status', ['since' => '']);
+                ->get(rtrim($baseUrl, '/').'/api/1/status', ['since' => '']);
 
             if ($response->failed()) {
                 Log::warning('Recorder unreachable', [
@@ -59,12 +59,13 @@ class CatturaRecorders extends Component
                     'status' => $response->status(),
                     'body' => $response->body(),
                 ]);
+
                 return [
-                    'state'   => 'UNREACHABLE',
+                    'state' => 'UNREACHABLE',
                     'details' => [
                         'internet' => false,
                         'free_pct' => null,
-                        'unit'     => '',
+                        'unit' => '',
                     ],
                     'summary' => 'UNREACHABLE',
                 ];
@@ -75,7 +76,7 @@ class CatturaRecorders extends Component
             $state = strtoupper(data_get($data, 'capture.state', 'UNKNOWN'));
             $internetUp = (bool) data_get($data, 'network.internet.connected', false);
             $total = (int) data_get($data, 'storage.total', 0);
-            $free  = (int) data_get($data, 'storage.free', 0);
+            $free = (int) data_get($data, 'storage.free', 0);
             $freePct = $total > 0 ? round(($free / $total) * 100) : null;
             $unit = (string) data_get($data, 'info.unitName', '');
 
@@ -87,25 +88,26 @@ class CatturaRecorders extends Component
             ]));
 
             return [
-                'state'   => $state,
+                'state' => $state,
                 'details' => [
                     'internet' => $internetUp ?? false,
                     'free_pct' => $freePct ?? null,
-                    'unit'     => $unit ?? '',
+                    'unit' => $unit ?? '',
                 ],
                 'summary' => $summary,
             ];
         } catch (\Throwable $e) {
             Log::error('Recorder fetch exception', [
-                'url'       => $baseUrl,
+                'url' => $baseUrl,
                 'exception' => $e->getMessage(),
             ]);
+
             return [
-                'state'   => 'ERROR',
+                'state' => 'ERROR',
                 'details' => [
                     'internet' => false,
                     'free_pct' => null,
-                    'unit'     => '',
+                    'unit' => '',
                 ],
                 'summary' => 'ERROR',
             ];
@@ -117,7 +119,7 @@ class CatturaRecorders extends Component
         foreach ($this->cattura_recorders as $i => $rec) {
             $result = $this->fetchRecorderStatus($rec['url']);
             // store both raw state and a human summary
-            $this->cattura_recorders[$i]['status']  = $result['state'];   // e.g. IDLE / RECORDING
+            $this->cattura_recorders[$i]['status'] = $result['state'];   // e.g. IDLE / RECORDING
             $this->cattura_recorders[$i]['summary'] = $result['summary']; // pretty line
             $this->cattura_recorders[$i]['details'] = $result['details']; // optional extras
         }
@@ -134,19 +136,17 @@ class CatturaRecorders extends Component
         }
     }
 
-
     public function badgeClass(string $state): string
     {
         return match (strtoupper($state)) {
             'RECORDING',
-            'CAPTURING'    => 'bg-blue-600 text-white',
-            'IDLE', 'READY'=> 'bg-green-100 text-green-800',
+            'CAPTURING' => 'bg-blue-600 text-white',
+            'IDLE', 'READY' => 'bg-green-100 text-green-800',
             'UNREACHABLE',
-            'ERROR'        => 'bg-red-100 text-red-800',
-            default        => 'bg-gray-100 text-gray-800',
+            'ERROR' => 'bg-red-100 text-red-800',
+            default => 'bg-gray-100 text-gray-800',
         };
     }
-
 
     public function render(): View
     {
@@ -155,5 +155,3 @@ class CatturaRecorders extends Component
         ]);
     }
 }
-
-

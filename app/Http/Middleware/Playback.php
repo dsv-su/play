@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\Video;
 use App\Models\VideoPermission;
 use App\Services\AuthHandler;
+use App\Services\Course\CourseAdmin;
 use App\Services\Course\CourseAdminList;
 use App\Services\Course\CourseSettingPublic;
 use App\Services\Course\CourseSettingVisibility;
@@ -19,7 +20,7 @@ class Playback
         private AuthHandler $authHandler,
         private AdminCheck $adminCheck,
         private StaffCheck $staffCheck,
-        private \App\Services\Course\CourseAdmin $courseAdmin,
+        private CourseAdmin $courseAdmin,
         private CourseAdminList $courseAdminList,
         private CourseSettingPublic $courseSettingPublic,
         private CourseSettingVisibility $courseSettingVisibility,
@@ -34,7 +35,7 @@ class Playback
         $this->authHandler->authorize();
 
         $video = $this->resolveVideo($request);
-        if (!$video) {
+        if (! $video) {
             return redirect()->route('home');
         }
 
@@ -42,10 +43,10 @@ class Playback
         $video->loadMissing(['courses:id', 'individualPermissions']);
 
         $remoteUser = $request->server('REMOTE_USER');
-        $username   = $remoteUser ? strtok($remoteUser, '@') : null;
+        $username = $remoteUser ? strtok($remoteUser, '@') : null;
 
         // Anonymous flow (no Shibboleth/SSO)
-        if (!$remoteUser) {
+        if (! $remoteUser) {
             // Allow everything locally to not hinder dev
             if (config('app.env') === 'local') {
                 return $next($request);
@@ -77,10 +78,10 @@ class Playback
     private function resolveVideo(Request $request): ?Video
     {
         $id = $request->input('p')
-            //Fallback: last path segment as we are encoding IDs in the URL
+            // Fallback: last path segment as we are encoding IDs in the URL
             ?? basename($request->path());
 
-        if (!$id) {
+        if (! $id) {
             return null;
         }
 
@@ -102,7 +103,7 @@ class Playback
         if ($perm && (int) $perm->permission_id === 4) {
             if ($video->visibility) {
                 // If no courses -> allow
-                if (!$video->courses()->exists()) {
+                if (! $video->courses()->exists()) {
                     return true;
                 }
                 // If courses exist, fall back to course visibility rules
@@ -142,9 +143,9 @@ class Playback
 
             // Individual presentation permissions
             if ($username && $video->individualPermissions?->contains(
-                    fn ($p) => $p->username === $username
-                        && in_array($p->permission, ['read', 'edit', 'delete'], true)
-                )) {
+                fn ($p) => $p->username === $username
+                    && in_array($p->permission, ['read', 'edit', 'delete'], true)
+            )) {
                 return true;
             }
 
@@ -162,9 +163,9 @@ class Playback
         }
 
         if ($username && $video->individualPermissions?->contains(
-                fn ($p) => $p->username === $username
-                    && in_array($p->permission, ['read', 'edit', 'delete'], true)
-            )) {
+            fn ($p) => $p->username === $username
+                && in_array($p->permission, ['read', 'edit', 'delete'], true)
+        )) {
             return true;
         }
 

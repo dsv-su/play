@@ -11,33 +11,40 @@ class EditPresentation extends Component
 {
     /** Core state */
     public Video $video;
+
     public string $type = '';
+
     public string $title;
+
     public string $title_en;
+
     public ?string $description = null;
 
     /** UI fields */
     public bool $render_thumb = false;
+
     public string $date = '';                 // yyyy-mm-dd for inputs
 
     public array $categories = [];            // collection->toArray()
+
     public ?int $category = null;             // selected category id
 
     /** Visibility */
     public string $visibility = 'private';    // 'visible' | 'private' | 'unlisted'
+
     public bool $download = false;
+
     public bool $download_switch_warning = false;
 
     /** Authorization / relations */
     public $allowedCourseIds = [];
-
 
     public function mount(Video $video, string $type, $allowedCourseIds): void
     {
         $this->video = $video->loadMissing(['courses', 'category']);
         $this->type = $type;
 
-        //Populate fields
+        // Populate fields
         $this->title = $this->video->title;
         $this->title_en = $this->video->title_en;
         $this->description = $this->video->description;
@@ -46,7 +53,7 @@ class EditPresentation extends Component
         $this->date = $this->formatTimestampForInput($this->video->creation);
 
         // Courses & allowed ids provided from parent
-        $this->allowedCourseIds  = $allowedCourseIds;
+        $this->allowedCourseIds = $allowedCourseIds;
 
         // Categories for select
         $this->categories = Category::query()
@@ -62,7 +69,7 @@ class EditPresentation extends Component
             ? 'unlisted'
             : ($this->video->visibility ? 'visible' : 'private');
 
-        $this->download = (bool)$this->video->download;
+        $this->download = (bool) $this->video->download;
     }
 
     public function updated($name, $value)
@@ -93,7 +100,6 @@ class EditPresentation extends Component
         $this->video->category_id = $this->category;
 
     }
-
 
     public function render()
     {

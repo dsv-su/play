@@ -16,20 +16,21 @@ class PlayAuthenticate
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next)
     {
-        $system = (new AuthHandler())->authorize();
+        $system = (new AuthHandler)->authorize();
         // If system is running locally
         if ($system->global->app_env == 'local') {
             $this->setLocalBindings();
             $adminhandler = AdminHandler::where('Shib_Session_ID', '9999')->first();
             $this->setShibbolethBindings(null, $system, $adminhandler);
+
             return $next($request);
         }
 
-        if (!$this->validateAuthorizationParameter($system)) {
+        if (! $this->validateAuthorizationParameter($system)) {
             return Redirect::guest(route('sulogin'));
         }
 
@@ -66,26 +67,27 @@ class PlayAuthenticate
             return $_SERVER['displayName'];
         });
 
-        app()->bind('play_username', function() {
-            return substr($_SERVER['REMOTE_USER'], 0, strpos($_SERVER['REMOTE_USER'], "@"));
+        app()->bind('play_username', function () {
+            return substr($_SERVER['REMOTE_USER'], 0, strpos($_SERVER['REMOTE_USER'], '@'));
         });
 
-        app()->bind('play_email', function() {
+        app()->bind('play_email', function () {
             return $_SERVER['mail'];
         });
     }
 
     protected function initializeSystem()
     {
-        if (!System::find(1)) {
+        if (! System::find(1)) {
             app()->make('init')->check_system();
         }
     }
 
     protected function validateAuthorizationParameter($system)
     {
-        if (!isset($_SERVER[$system->global->authorization_parameter])) {
+        if (! isset($_SERVER[$system->global->authorization_parameter])) {
             abort(511);
+
             return false;
         }
 
@@ -94,7 +96,7 @@ class PlayAuthenticate
 
     protected function getServerEntitlements($authParam)
     {
-        return explode(";", $_SERVER[$authParam]);
+        return explode(';', $_SERVER[$authParam]);
     }
 
     protected function setShibbolethBindings($serverEntitlements, $system, $adminhandler)
@@ -105,16 +107,16 @@ class PlayAuthenticate
         $role_staff = $system->global->staff;
         $server = $serverEntitlements;
 
-        if($server) {
+        if ($server) {
 
             // Get Shibboleth entitlements
-            if (!isset($_SERVER[$system->global->authorization_parameter])) {
+            if (! isset($_SERVER[$system->global->authorization_parameter])) {
                 return redirect()->guest(route('sulogin'))->abort(511);
             }
 
             // Get user DaisyID
-            $daisy = new DaisyAPI();
-            $daisyPersonID = $daisy->getDaisyPersonId(substr($_SERVER['REMOTE_USER'], 0, strpos($_SERVER['REMOTE_USER'], "@")));
+            $daisy = new DaisyAPI;
+            $daisyPersonID = $daisy->getDaisyPersonId(substr($_SERVER['REMOTE_USER'], 0, strpos($_SERVER['REMOTE_USER'], '@')));
 
             // Determine user role
             $playAuth = $playRole = '';
@@ -126,7 +128,7 @@ class PlayAuthenticate
                 $playAuth = 'Staff';
                 $playRole = $this->handleStaffRole($daisy, $daisyPersonID, $role_uploader, $server);
             } elseif (in_array($role_uploader, $server)) {
-                //Access for external staff users
+                // Access for external staff users
                 $playAuth = 'Staff';
                 $playRole = $this->handleStaffRole($daisy, $daisyPersonID, $role_uploader, $server);
             } else {
@@ -135,8 +137,8 @@ class PlayAuthenticate
             }
 
             // Bind values to the container
-            app()->bind('play_auth', fn() => $playAuth);
-            app()->bind('play_role', fn() => $playRole);
+            app()->bind('play_auth', fn () => $playAuth);
+            app()->bind('play_role', fn () => $playRole);
 
         } else {
 
@@ -172,7 +174,7 @@ class PlayAuthenticate
                 if (isset($roleBindings[$role])) {
                     $binding = $roleBindings[$role];
 
-                    app()->bind('play_role', function () use ($adminhandler, $role) {
+                    app()->bind('play_role', function () use ($role) {
                         return $role;
                     });
 
@@ -231,31 +233,32 @@ class PlayAuthenticate
 
     protected function handleAdminOverride($adminHandler)
     {
-        if($adminHandler->custom) {
-            //Impersonate user
-            app()->bind('play_user', fn() => $adminHandler->user);
-            app()->bind('play_username', fn() => $adminHandler->username);
+        if ($adminHandler->custom) {
+            // Impersonate user
+            app()->bind('play_user', fn () => $adminHandler->user);
+            app()->bind('play_username', fn () => $adminHandler->username);
         } else {
-            //Static TestUsers
-            switch($adminHandler->role) {
-                case('Courseadmin'):
-                    app()->bind('play_user', fn() => 'CourseAdmin');
-                    app()->bind('play_username', fn() => 'gwett');
+            // Static TestUsers
+            switch ($adminHandler->role) {
+                case 'Courseadmin':
+                    app()->bind('play_user', fn () => 'CourseAdmin');
+                    app()->bind('play_username', fn () => 'gwett');
                     break;
-                case('Student1'):
-                    app()->bind('play_user', fn() => 'Student 1');
-                    app()->bind('play_username', fn() => 'stud1111');
+                case 'Student1':
+                    app()->bind('play_user', fn () => 'Student 1');
+                    app()->bind('play_username', fn () => 'stud1111');
                     break;
-                case('Student2'):
-                    app()->bind('play_user', fn() => 'Student 2');
-                    app()->bind('play_username', fn() => 'stud2222');
+                case 'Student2':
+                    app()->bind('play_user', fn () => 'Student 2');
+                    app()->bind('play_username', fn () => 'stud2222');
                     break;
-                case('Student3'):
-                    app()->bind('play_user', fn() => 'Student 3');
-                    app()->bind('play_username', fn() => 'stud3333');
+                case 'Student3':
+                    app()->bind('play_user', fn () => 'Student 3');
+                    app()->bind('play_username', fn () => 'stud3333');
                     break;
             }
         }
+
         return $adminHandler->role;
     }
 
@@ -266,6 +269,7 @@ class PlayAuthenticate
         } elseif (in_array($roleUploader, $server)) {
             return 'Uploader';
         }
+
         return 'Staff';
     }
 }

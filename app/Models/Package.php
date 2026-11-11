@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Package extends Model
 {
-    //UUID
+    // UUID
     protected $primaryKey = 'id';
+
     protected $keyType = 'string';
+
     public $incrementing = false;
 
     protected $fillable = ['id', 'presentation'];

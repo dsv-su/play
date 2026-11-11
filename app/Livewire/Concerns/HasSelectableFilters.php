@@ -1,38 +1,47 @@
 <?php
+
 declare(strict_types=1);
+
 namespace App\Livewire\Concerns;
 
+use App\Services\VideoSearch\VideoSearchService;
 use App\Support\VideoFilters;
+use App\Support\VideoFiltersFromRequest;
 use Illuminate\Support\Collection;
+use Livewire\Attributes\Locked;
 
 trait HasSelectableFilters
 {
     public VideoFilters $filters;
 
     public $videos;
+
     /** Persisted across requests (Livewire-safe) */
-    #[\Livewire\Attributes\Locked] // optional: prevents client tampering
+    #[Locked] // optional: prevents client tampering
     public $allVideos;
 
     public int $totalCount = 0;
 
     /** Buckets for UI */
     public array $courses = [];
+
     public array $terms = [];
+
     public array $presenters = [];
+
     public array $tags = [];
 
     /** “Select all” */
     public array $selectedVideos = [];
 
-    //protected Collection $allVideos;
+    // protected Collection $allVideos;
 
     /** Map “selectedFoo” props to filter keys */
     protected array $selectedMap = [
-        'selectedCourses'    => 'courses',
+        'selectedCourses' => 'courses',
         'selectedPresenters' => 'presenters',
-        'selectedSemesters'  => 'semesters',
-        'selectedTags'       => 'tags',
+        'selectedSemesters' => 'semesters',
+        'selectedTags' => 'tags',
     ];
 
     /** Children can override if they need a different source */
@@ -55,7 +64,6 @@ trait HasSelectableFilters
         ]);*/
     }
 
-
     protected function buildFiltersFromState(): VideoFilters
     {
         // Legacy `$this->course`, `$this->semester`, etc. merge here.
@@ -64,10 +72,10 @@ trait HasSelectableFilters
 
     protected function applyFilters(): void
     {
-        /** @var \App\Services\VideoSearch\VideoSearchService $service */
-        $service = app(\App\Services\VideoSearch\VideoSearchService::class);
+        /** @var VideoSearchService $service */
+        $service = app(VideoSearchService::class);
 
-        $filtersArray = \App\Support\VideoFiltersFromRequest::make(
+        $filtersArray = VideoFiltersFromRequest::make(
             $this->buildFiltersFromState()->toSearchArray()
         );
 
@@ -75,39 +83,40 @@ trait HasSelectableFilters
             $service->performFiltering($this->sourceVideos(), $filtersArray);
 
         // Buckets are arrays already:
-        $this->courses    = $courses;
-        $this->terms      = $terms;
+        $this->courses = $courses;
+        $this->terms = $terms;
         $this->presenters = $presenters;
-        $this->tags       = $tags;
+        $this->tags = $tags;
 
         // Convert grouped: Collection<int|string, Collection<Model>> -> array<int|string, array<array>>
-        //$this->videos = $this->normalizeGrouped($grouped);
+        // $this->videos = $this->normalizeGrouped($grouped);
         $this->videos = $grouped;
 
     }
 
-    /** @return array */
     protected function normalizeGrouped(Collection $grouped): array
     {
         // Todo: map each model into a lightweight DTO for Livewire hydration safety
         return $grouped->map(function (Collection $g) {
             return $g->values()->map(function ($v) {
                 return [
-                    'id'        => $v->id,
-                    'title'     => $v->title ?? null,
-                    'creation'  => $v->creation ?? null,
-                    'duration'  => $v->duration ?? null,
+                    'id' => $v->id,
+                    'title' => $v->title ?? null,
+                    'creation' => $v->creation ?? null,
+                    'duration' => $v->duration ?? null,
                     'thumbnail' => $v->thumbnail_url ?? null,
                     // add only the fields used in Blade
                 ];
             })->all();
         })->toArray();
     }
+
     /** Single updated handler for all selected* arrays */
     public function updated($name, $value): void
     {
         if (str_starts_with($name, 'filters.selected.')) {
             $this->recompute();
+
             return;
         }
 

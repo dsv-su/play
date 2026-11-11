@@ -4,9 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
-
 
 class AuthController extends Controller
 {
@@ -22,8 +19,6 @@ class AuthController extends Controller
 
     /**
      * Get a JWT via given credentials.
-     *
-     * @return JsonResponse
      */
     public function store(): JsonResponse
     {
@@ -49,8 +44,6 @@ class AuthController extends Controller
 
     /**
      * Test the token.
-     *
-     * @return JsonResponse
      */
     public function token_test(): JsonResponse
     {
@@ -59,8 +52,6 @@ class AuthController extends Controller
 
     /**
      * Log the user out (Invalidate the token).
-     *
-     * @return JsonResponse
      */
     public function logout(): JsonResponse
     {
@@ -71,8 +62,6 @@ class AuthController extends Controller
 
     /**
      * Refresh a token.
-     *
-     * @return JsonResponse
      */
     public function refresh(): JsonResponse
     {
@@ -82,16 +71,14 @@ class AuthController extends Controller
     /**
      * Get the token array structure.
      *
-     * @param  string $token
-     *
-     * @return JsonResponse
+     * @param  string  $token
      */
     protected function respondWithToken($token): JsonResponse
     {
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
+            'expires_in' => auth()->factory()->getTTL() * 60,
         ]);
     }
 }

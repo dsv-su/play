@@ -14,6 +14,7 @@ use RecursiveIteratorIterator;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Services\ConfigurationHandler newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Services\ConfigurationHandler newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Services\ConfigurationHandler query()
+ *
  * @mixin \Eloquent
  * @mixin IdeHelperConfigurationHandler
  */
@@ -21,21 +22,22 @@ class ConfigurationHandler extends Model
 {
     private function getFiles($dir)
     {
-        //Get list of filenames
+        // Get list of filenames
         $process = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
 
-        $files = array();
+        $files = [];
 
         foreach ($process as $file) {
 
-            if ($file->isDir()){
+            if ($file->isDir()) {
                 continue;
             }
 
-            //$files[] = $file->getPathname();
+            // $files[] = $file->getPathname();
             $files[] = $file->getFilename();
 
         }
+
         return $files;
     }
 
@@ -54,35 +56,36 @@ class ConfigurationHandler extends Model
         foreach ($list as $filename) {
             // Read the .ini file and store in table
             if (substr($filename, -3) == 'ini') {
-                $file = $plugindir . $filename;
-                if (!file_exists($file)) {
-                    $file = $plugindir . $filename . '.example';
-                    }
-                $config = parse_ini_file($file, true);
-                $system = new System();
-                foreach ($config as $configkey => $configvalue) {
-                        $config = json_encode($configvalue);
-                        $config = json_decode($config);
-                        //dd($config);
-                        //Store in Plugin
-                        $systemtable = $system->getFillable();
-                        foreach ($config as $key => $item) {
-                            //dd($item);
-                            //$plugin->name = $key;
-                            foreach ($systemtable as $systemitem) {
-                                    if ($systemitem == $key) {
-                                        if($item == "") $item = 'null';
-                                        $system->$systemitem = $item;
-                                        }
-                                    }
-                            }
-
-                        }
-                $system->save();
+                $file = $plugindir.$filename;
+                if (! file_exists($file)) {
+                    $file = $plugindir.$filename.'.example';
                 }
+                $config = parse_ini_file($file, true);
+                $system = new System;
+                foreach ($config as $configkey => $configvalue) {
+                    $config = json_encode($configvalue);
+                    $config = json_decode($config);
+                    // dd($config);
+                    // Store in Plugin
+                    $systemtable = $system->getFillable();
+                    foreach ($config as $key => $item) {
+                        // dd($item);
+                        // $plugin->name = $key;
+                        foreach ($systemtable as $systemitem) {
+                            if ($systemitem == $key) {
+                                if ($item == '') {
+                                    $item = 'null';
+                                }
+                                $system->$systemitem = $item;
+                            }
+                        }
+                    }
 
+                }
+                $system->save();
             }
 
-    }
+        }
 
+    }
 }

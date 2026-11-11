@@ -15,21 +15,44 @@ class UserPresentations extends Component
     use FiltersPresentations;
 
     public array $courses = [];
+
     public array $terms = [];
+
     public array $presenters = [];
+
     public array $tags = [];
-    public $course, $presenter, $semester, $tag;
+
+    public $course;
+
+    public $presenter;
+
+    public $semester;
+
+    public $tag;
+
     public array $selectedCourses = [];
+
     public array $selectedPresenters = [];
+
     public array $selectedSemesters = [];
+
     public array $selectedTags = [];
+
     public bool $switchOn = false;
-    public $videos, $allVideos;
+
+    public $videos;
+
+    public $allVideos;
+
     public int $totalCount = 0;
+
     public array $activeFilters = ['courses' => true, 'presenters' => true, 'semesters' => true, 'tags' => true];
+
     public array $selectedVideos = [];
+
     public $allowBulkEdit = true;
-    //Test
+
+    // Test
     public string $group = 'group1';
 
     public function mount(MyPresentationsService $my, VisibilityFilter $visibility, VideoSearchService $service)

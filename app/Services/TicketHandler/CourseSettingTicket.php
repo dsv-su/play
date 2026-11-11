@@ -2,10 +2,11 @@
 
 namespace App\Services\TicketHandler;
 
+use App\Interfaces\TicketInterface;
 use App\Models\CoursePermissions;
 use App\Models\Video;
 
-class CourseSettingTicket implements \App\Interfaces\TicketInterface
+class CourseSettingTicket implements TicketInterface
 {
     protected Video $video;
 

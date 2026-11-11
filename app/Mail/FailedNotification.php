@@ -3,14 +3,16 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
 class FailedNotification extends Mailable
 {
     use Queueable, SerializesModels;
-    public $video, $failed;
+
+    public $video;
+
+    public $failed;
 
     /**
      * Create a new message instance.
@@ -31,6 +33,7 @@ class FailedNotification extends Mailable
     public function build()
     {
         $server = config('app.name');
+
         return $this->from('play@dsv.su.se', 'DSVPlay')->subject("[$server] Failed notification")
             ->view('emails.failed_notification');
     }

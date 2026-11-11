@@ -23,18 +23,18 @@ class Entitlement
         }
 
         // 2. Get the configured server authorization parameter from AuthHandler
-        $system    = $this->auth->authorize();
+        $system = $this->auth->authorize();
         $paramName = data_get($system, 'global.authorization_parameter');
-        if (!$paramName) {
+        if (! $paramName) {
             return false; // nothing configured → deny
         }
 
         // 3. If no entitlements were passed explicitly,
         //    try to read them from the server variable
-        //if (empty($provided) && $id === 1) {
+        // if (empty($provided) && $id === 1) {
         if (empty($provided)) {
             $raw = $_SERVER[$paramName] ?? null;
-            if (!$raw) {
+            if (! $raw) {
                 return false; // header/var not present → deny
             }
 
@@ -53,9 +53,8 @@ class Entitlement
         $requiredLower = array_map('mb_strtolower', $required);
         $providedLower = array_map('mb_strtolower', $provided);
 
-        return !empty(array_intersect($requiredLower, $providedLower));
+        return ! empty(array_intersect($requiredLower, $providedLower));
     }
-
 
     private function splitEntitlements(string $value): array
     {
@@ -68,4 +67,3 @@ class Entitlement
         );
     }
 }
-

@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\ManualPresentation;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -40,6 +39,7 @@ class UploadHandlerClear extends Command
     public function handle()
     {
         DB::table('manual_presentations')->where('status', 'init')->orWhere('status', 'completed')->delete();
+
         return 0;
     }
 }

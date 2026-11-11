@@ -1,5 +1,18 @@
 <?php
 
+use App\Http\Middleware\CheckEditPermission;
+use App\Http\Middleware\CheckEntitlement;
+use App\Http\Middleware\CheckPresentationPermission;
+use App\Http\Middleware\CheckVideoPermission;
+use App\Http\Middleware\JwtMiddleware;
+use App\Http\Middleware\PlayAdmin;
+use App\Http\Middleware\PlayAuthenticate;
+use App\Http\Middleware\Playback;
+use App\Http\Middleware\RedirectLinks;
+use App\Http\Middleware\SetLocale;
+use App\Providers\AppServiceProvider;
+use App\Providers\PlayServiceProvider;
+use App\Providers\SystemServiceProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -18,25 +31,25 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->encryptCookies(['language']); // exclude from encryption
         $middleware->web(append: [
-            \App\Http\Middleware\SetLocale::class,
+            SetLocale::class,
         ]);
         $middleware->alias([
-            'playauth' => \App\Http\Middleware\PlayAuthenticate::class,
-            'play-admin' => \App\Http\Middleware\PlayAdmin::class,
-            'entitlements' => \App\Http\Middleware\CheckEntitlement::class,
-            'playback' => \App\Http\Middleware\Playback::class,
-            'video-permission' => \App\Http\Middleware\CheckVideoPermission::class,
-            'presentation-permission' => \App\Http\Middleware\CheckPresentationPermission::class,
-            'redirect-links' => \App\Http\Middleware\RedirectLinks::class,
-            'edit-permission' => \App\Http\Middleware\CheckEditPermission::class,
-            'jwt' => \App\Http\Middleware\JwtMiddleware::class,
+            'playauth' => PlayAuthenticate::class,
+            'play-admin' => PlayAdmin::class,
+            'entitlements' => CheckEntitlement::class,
+            'playback' => Playback::class,
+            'video-permission' => CheckVideoPermission::class,
+            'presentation-permission' => CheckPresentationPermission::class,
+            'redirect-links' => RedirectLinks::class,
+            'edit-permission' => CheckEditPermission::class,
+            'jwt' => JwtMiddleware::class,
         ]);
 
     })
     ->withProviders([
-        App\Providers\AppServiceProvider::class,
-        App\Providers\PlayServiceProvider::class,
-        App\Providers\SystemServiceProvider::class,
+        AppServiceProvider::class,
+        PlayServiceProvider::class,
+        SystemServiceProvider::class,
     ])
     ->withExceptions(function (Exceptions $exceptions) {
         //

@@ -15,10 +15,10 @@ class CheckEditPermission
     public function handle(Request $request, Closure $next)
     {
         // Ensure auth context is established (kept from your code)
-        $system = (new AuthHandler())->authorize();
+        $system = (new AuthHandler)->authorize();
 
         // If not SSO-authenticated, allow in local env; otherwise send to login
-        if (!$request->server('REMOTE_USER')) {
+        if (! $request->server('REMOTE_USER')) {
             $isLocal = app()->environment('local')
                 || (isset($system->global->app_env) && $system->global->app_env === 'local');
 
@@ -27,11 +27,11 @@ class CheckEditPermission
 
         // Cache frequently used values
         $username = (string) app('play_username');
-        $role     = (string) app('play_role');
+        $role = (string) app('play_role');
 
         // Resolve the video target robustly
         $video = $this->resolveVideo($request);
-        if (!$video) {
+        if (! $video) {
             // No valid target -> treat as unauthorized to avoid leaking info
             return redirect()->route('home');
         }
@@ -63,7 +63,7 @@ class CheckEditPermission
         // 4) Course-scoped permissions (CoursesettingsUsers)
         $courseIds = collect($video->courses())->pluck('id')->filter()->unique()->all();
 
-        if (!empty($courseIds)) {
+        if (! empty($courseIds)) {
             $hasCoursePermission = CoursesettingsUsers::query()
                 ->whereIn('course_id', $courseIds)
                 ->where('username', $username)
@@ -76,7 +76,7 @@ class CheckEditPermission
         }
 
         // 5) Individual presentation permissions ($video->ipermissions)
-        if (!empty($video->individualPermissions)) {
+        if (! empty($video->individualPermissions)) {
             $hasIndividualPermission = collect($video->individualPermissions)->contains(function ($perm) use ($username) {
                 return ($perm->username ?? null) === $username
                     && in_array(($perm->permission ?? ''), ['edit', 'delete'], true);
@@ -108,7 +108,7 @@ class CheckEditPermission
         $id = $routeVideo ?: $request->input('p');
 
         // Fallback: last path segment if it looks like a UUID
-        if (!$id) {
+        if (! $id) {
             $lastSegment = (string) str($request->path())->explode('/')->last();
 
             // Validate UUID format
@@ -122,14 +122,12 @@ class CheckEditPermission
 
         // Final safety: only attempt lookup if it matches UUID format
         if ($id && preg_match(
-                '/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[1-5][0-9a-fA-F]{3}\b-[89abAB][0-9a-fA-F]{3}\b-[0-9a-fA-F]{12}$/',
-                $id
-            )) {
+            '/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[1-5][0-9a-fA-F]{3}\b-[89abAB][0-9a-fA-F]{3}\b-[0-9a-fA-F]{12}$/',
+            $id
+        )) {
             return Video::find($id);
         }
 
         return null;
     }
-
 }
-

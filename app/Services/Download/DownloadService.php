@@ -2,10 +2,10 @@
 
 namespace App\Services\Download;
 
+use App\Models\Presentation;
 use App\Models\Stream;
 use App\Models\StreamResolution;
 use App\Models\Video;
-use App\Models\Presentation;
 use App\Services\DownloadZip;
 use App\Services\Store\DownloadResource;
 use App\Services\Store\DownloadStreamResolution;
@@ -23,8 +23,9 @@ class DownloadService
     private const MULTIPLAYER_TEMPLATE_PATH = 'multiplayer/dlplayer.html';
 
     /** @var string */
-    private const STATUS_ASSETS  = 'assets';
-    private const STATUS_PKG    = 'package';
+    private const STATUS_ASSETS = 'assets';
+
+    private const STATUS_PKG = 'package';
 
     /** Cache for parsed ini */
     private ?string $storeListUri = null;
@@ -32,7 +33,7 @@ class DownloadService
     /**
      * @param  callable(int $percent): void  $progress
      */
-    public function run(Video $video, Entitlement $entitlement, array $providedEntitlements = [], callable $progress = null): void
+    public function run(Video $video, Entitlement $entitlement, array $providedEntitlements = [], ?callable $progress = null): void
     {
         $progress ??= fn (int $p) => null;
 
@@ -56,20 +57,19 @@ class DownloadService
         Entitlement $entitlement,
         Presentation $presentation,
         array $providedEntitlements
-    ): void
-    {
-        //file/folder creation + DownloadResource loops here
-        $dirVideo  = trim($presentation->local, '/') . '/videos';
-        $dirPoster = trim($presentation->local, '/') . '/posters';
+    ): void {
+        // file/folder creation + DownloadResource loops here
+        $dirVideo = trim($presentation->local, '/').'/videos';
+        $dirPoster = trim($presentation->local, '/').'/posters';
 
-        //Handler expects Entitlement; token requires Video + entitlements
+        // Handler expects Entitlement; token requires Video + entitlements
         $handler = new TicketPermissionHandler($entitlement);
-        $token   = $handler->issue($video, $providedEntitlements);
+        $token = $handler->issue($video, $providedEntitlements);
 
         $downloader = new DownloadResource($token);
-        $resolver   = new DownloadStreamResolution($video);
+        $resolver = new DownloadStreamResolution($video);
 
-        $videoNames  = $resolver->videonames($presentation->resolution);
+        $videoNames = $resolver->videonames($presentation->resolution);
         $posterNames = $resolver->posternames();
 
         // Create directories
@@ -79,16 +79,16 @@ class DownloadService
         // Download video files
         foreach ($videoNames as $name) {
             $downloader->getFile(
-                $dirVideo . '/' . basename($name),
-                $this->storeBaseUri() . '/' . $video->id . '/' . ltrim($name, '/')
+                $dirVideo.'/'.basename($name),
+                $this->storeBaseUri().'/'.$video->id.'/'.ltrim($name, '/')
             );
         }
 
         // Download poster files
         foreach ($posterNames as $name) {
             $downloader->getFile(
-                $dirPoster . '/' . basename($name),
-                $this->storeBaseUri() . '/' . $video->id . '/' . ltrim($name, '/')
+                $dirPoster.'/'.basename($name),
+                $this->storeBaseUri().'/'.$video->id.'/'.ltrim($name, '/')
             );
         }
         // Mark
@@ -98,7 +98,7 @@ class DownloadService
 
     private function buildPackage(Presentation $presentation): void
     {
-        //package/dlplayer logic here
+        // package/dlplayer logic here
         $this->makePackage($presentation);
 
         // Mark
@@ -119,26 +119,26 @@ class DownloadService
     private function makePackage(Presentation $presentation): bool
     {
         $video = Video::find($presentation->id);
-        if (!$video) {
+        if (! $video) {
             return false;
         }
 
         $package = [
-            'id'       => $video->id,
-            'title'    => $video->title,
-            'thumb'    => $presentation->thumb,
+            'id' => $video->id,
+            'title' => $video->title,
+            'thumb' => $presentation->thumb,
             'duration' => $video->duration,
-            'sources'  => [],
+            'sources' => [],
         ];
 
         $streams = Stream::where('video_id', $video->id)->where('hidden', 0)->get();
 
         foreach ($streams as $sIndex => $stream) {
             $entry = [
-                'poster'    => 'posters/' . basename($stream->poster),
+                'poster' => 'posters/'.basename($stream->poster),
                 'playAudio' => (bool) $stream->audio,
-                'name'      => $stream->name,
-                'video'     => [],
+                'name' => $stream->name,
+                'video' => [],
             ];
 
             $resolutions = StreamResolution::where('stream_id', $stream->id)
@@ -146,7 +146,7 @@ class DownloadService
                 ->get();
 
             foreach ($resolutions as $res) {
-                $entry['video'][(string) $res->resolution] = 'videos/' . basename($res->filename);
+                $entry['video'][(string) $res->resolution] = 'videos/'.basename($res->filename);
             }
 
             $package['sources'][$sIndex] = $entry;
@@ -157,14 +157,14 @@ class DownloadService
 
         // Write package.json
         $json = json_encode($package, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        Storage::disk(self::PUBLIC_DISK)->put(trim($presentation->local, '/') . '/package.json', $json);
+        Storage::disk(self::PUBLIC_DISK)->put(trim($presentation->local, '/').'/package.json', $json);
 
         // Inject into player and emit play.html
         $this->embedPackageIntoPlayer($presentation);
 
         // Cleanup temp files
-        Storage::disk(self::PUBLIC_DISK)->delete(trim($presentation->local, '/') . '/dlplayer.html');
-        Storage::disk(self::PUBLIC_DISK)->delete(trim($presentation->local, '/') . '/package.json');
+        Storage::disk(self::PUBLIC_DISK)->delete(trim($presentation->local, '/').'/dlplayer.html');
+        Storage::disk(self::PUBLIC_DISK)->delete(trim($presentation->local, '/').'/package.json');
 
         return true;
     }
@@ -172,16 +172,16 @@ class DownloadService
     private function embedPackageIntoPlayer(Presentation $presentation): void
     {
         $dir = trim($presentation->local, '/');
-        $playerPath  = $dir . '/dlplayer.html';
-        $packagePath = $dir . '/package.json';
+        $playerPath = $dir.'/dlplayer.html';
+        $packagePath = $dir.'/package.json';
 
         $multiplayer = Storage::disk(self::PUBLIC_DISK)->get($playerPath);
-        $package     = Storage::disk(self::PUBLIC_DISK)->get($packagePath);
+        $package = Storage::disk(self::PUBLIC_DISK)->get($packagePath);
 
         // Replace %PACKAGE% placeholder
         $replaced = Str::replace('%PACKAGE%', $package, $multiplayer);
 
-        Storage::disk(self::PUBLIC_DISK)->put($dir . '/play.html', $replaced);
+        Storage::disk(self::PUBLIC_DISK)->put($dir.'/play.html', $replaced);
     }
 
     private function prepareMultiplayer(Presentation $presentation): void
@@ -189,7 +189,7 @@ class DownloadService
         // Copy template into the public presentation dir
         Storage::copy(
             self::MULTIPLAYER_TEMPLATE_PATH,
-            self::PUBLIC_DISK . '/' . trim($presentation->local, '/') . '/dlplayer.html'
+            self::PUBLIC_DISK.'/'.trim($presentation->local, '/').'/dlplayer.html'
         );
     }
 
@@ -200,7 +200,7 @@ class DownloadService
         }
 
         $iniPath = base_path('/systemconfig/play.ini');
-        if (!file_exists($iniPath)) {
+        if (! file_exists($iniPath)) {
             $iniPath = base_path('/systemconfig/play.ini.example');
         }
 

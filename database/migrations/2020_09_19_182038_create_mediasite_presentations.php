@@ -27,9 +27,9 @@ class CreateMediasitePresentations extends Migration
             $table->string('tags')->nullable();
             $table->string('thumb')->nullable();
             $table->json('sources')->nullable();
-           // $table->id();
-          //  $table->text('name');
-           // $table->text('mediasite_id');
+            // $table->id();
+            //  $table->text('name');
+            // $table->text('mediasite_id');
             $table->timestamps();
         });
     }

@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -30,7 +29,7 @@ class UploadSuccessNotification extends Mailable
      */
     public function build()
     {
-        return $this->from('noreply@dsv.su.se', 'DSVPlay')->subject("[DSVPlay] Upload success")
+        return $this->from('noreply@dsv.su.se', 'DSVPlay')->subject('[DSVPlay] Upload success')
             ->view('emails.upload_success');
     }
 }

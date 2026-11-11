@@ -25,6 +25,7 @@ class PresenterStore
         if (empty($userInputs)) {
             // no presenters => clear associations
             $video->presenters()->sync([]);
+
             return;
         }
 
@@ -32,42 +33,42 @@ class PresenterStore
             $presenterIds = [];
 
             foreach ($userInputs as $value) {
-                //Try SUKAT first
+                // Try SUKAT first
                 $ldapUser = SukatUser::findBy('uid', $value);
 
                 if ($ldapUser) {
-                    //LDAP-backed presenter (unique on username)
+                    // LDAP-backed presenter (unique on username)
                     $presenter = Presenter::updateOrCreate(
                         ['username' => $value],
                         [
-                            'username'    => $value,
-                            'name'        => $ldapUser->getFirstAttribute('cn'),
+                            'username' => $value,
+                            'name' => $ldapUser->getFirstAttribute('cn'),
                             'description' => 'sukat',
                         ]
                     );
 
-                    //Ensure edit permission for this SUKAT user on this video
+                    // Ensure edit permission for this SUKAT user on this video
                     IndividualPermission::firstOrCreate(
                         [
                             'video_id' => $video->id,
                             'username' => $value,
                         ],
                         [
-                            'name'       => $ldapUser->getFirstAttribute('cn'),
+                            'name' => $ldapUser->getFirstAttribute('cn'),
                             'permission' => 'edit',
                         ]
                     );
                 } else {
-                    //External presenter: we can’t rely on username, so upsert by (name, description)
+                    // External presenter: we can’t rely on username, so upsert by (name, description)
                     $presenter = Presenter::updateOrCreate(
                         [
-                            'name'        => $value,
+                            'name' => $value,
                             'description' => 'external',
                         ],
                         [
                             // keep username null for externals
-                            'username'    => null,
-                            'name'        => $value,
+                            'username' => null,
+                            'name' => $value,
                             'description' => 'external',
                         ]
                     );
@@ -84,7 +85,7 @@ class PresenterStore
     /**
      * Normalize input to a unique, trimmed list (drop null/empty).
      *
-     * @param mixed $raw
+     * @param  mixed  $raw
      * @return array<int, string>
      */
     private function normalizeList($raw): array
@@ -92,11 +93,11 @@ class PresenterStore
         $items = Arr::wrap($raw);
 
         $items = array_map(
-            static fn($v) => is_string($v) ? trim($v) : '',
+            static fn ($v) => is_string($v) ? trim($v) : '',
             $items
         );
 
-        $items = array_filter($items, static fn($v) => $v !== '');
+        $items = array_filter($items, static fn ($v) => $v !== '');
 
         // de-duplicate while preserving order
         return array_values(array_unique($items));

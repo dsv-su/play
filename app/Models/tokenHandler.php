@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class tokenHandler extends Model
 {
     use HasFactory;
-    protected $fillable = ['video_id','token','allow'];
+
+    protected $fillable = ['video_id', 'token', 'allow'];
 }

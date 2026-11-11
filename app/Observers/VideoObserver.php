@@ -20,9 +20,9 @@ class VideoObserver
         } catch (\Throwable $e) {
             Log::warning('VideoObserver reindex failed', [
                 'video_id' => $video->getKey(),
-                'error'    => $e->getMessage(),
-                'file'     => $e->getFile(),
-                'line'     => $e->getLine(),
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
             ]);
         }
     }
@@ -39,7 +39,7 @@ class VideoObserver
         } catch (\Throwable $e) {
             Log::warning('VideoObserver unsearchable failed on delete', [
                 'video_id' => $video->getKey(),
-                'error'    => $e->getMessage(),
+                'error' => $e->getMessage(),
             ]);
         }
     }
@@ -56,7 +56,7 @@ class VideoObserver
         } catch (\Throwable $e) {
             Log::warning('VideoObserver unsearchable failed on force delete', [
                 'video_id' => $video->getKey(),
-                'error'    => $e->getMessage(),
+                'error' => $e->getMessage(),
             ]);
         }
     }

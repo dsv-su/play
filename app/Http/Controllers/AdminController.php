@@ -22,7 +22,7 @@ class AdminController extends Controller
         // Only real administrators can switch.
         abort_unless(app()->make('play_auth') === 'Administrator', 403);
 
-        //Validate inputs
+        // Validate inputs
         $validated = $request->validate([
             'role' => [
                 'required',
@@ -32,7 +32,7 @@ class AdminController extends Controller
             'custom' => ['nullable', 'string'],
         ]);
 
-        //Detect Shibboleth session once
+        // Detect Shibboleth session once
         $hasRemoteUser = (bool) $request->server('REMOTE_USER');
         $shibSessionId = $hasRemoteUser
             ? (string) $request->server('Shib_Session_ID')
@@ -46,9 +46,9 @@ class AdminController extends Controller
             // Administrator is always a clean, non-override state
             $adminhandler->fill([
                 'override' => false,
-                'custom'   => false,
-                'role'     => 'Administrator',
-                'user'     => '',
+                'custom' => false,
+                'role' => 'Administrator',
+                'user' => '',
                 'username' => '',
             ])->save();
 
@@ -56,17 +56,17 @@ class AdminController extends Controller
         }
 
         if ($validated['role'] === 'custom') {
-            //Normalize custom user id
+            // Normalize custom user id
             $input = (string) ($validated['custom'] ?? '');
             $userID = $input !== '' ? Str::before($input, '@') : '';
 
-            //Guard against empty custom input
+            // Guard against empty custom input
             if ($userID === '') {
                 return back()->withErrors(['custom' => 'Please provide a username (sukat-id).'])->withInput();
             }
 
-            //Fetch DAISY info
-            $daisy  = new DaisyAPI();
+            // Fetch DAISY info
+            $daisy = new DaisyAPI;
             $person = null;
 
             try {
@@ -81,9 +81,9 @@ class AdminController extends Controller
                 ? $person['person']['firstName'].' '.$person['person']['lastName']
                 : $userID;
 
-            //Decide role based on DAISY employee check; fallback to Student
+            // Decide role based on DAISY employee check; fallback to Student
             $role = 'Student';
-            if (!empty($person['person']['id'])) {
+            if (! empty($person['person']['id'])) {
                 try {
                     $role = $daisy->checkifEmployee($person['person']['id']) ? 'Courseadmin' : 'Student';
                 } catch (\Throwable $e) {
@@ -91,33 +91,32 @@ class AdminController extends Controller
                 }
             }
 
-            //Persist
+            // Persist
             $adminhandler->fill([
                 'override' => true,
-                'custom'   => true,
+                'custom' => true,
                 'username' => $userID,
-                'user'     => $fullName,
-                'role'     => $role,
+                'user' => $fullName,
+                'role' => $role,
             ])->save();
 
             return back()->withInput();
         }
 
-        //Non-custom roles (Student / Courseadmin / Student1..3)
+        // Non-custom roles (Student / Courseadmin / Student1..3)
         $adminhandler->fill([
             'override' => true,
-            'custom'   => false,
-            'user'     => '',
+            'custom' => false,
+            'user' => '',
             'username' => '',
-            'role'     => $validated['role'],
+            'role' => $validated['role'],
         ])->save();
 
-        //Redirect
-        if (!$hasRemoteUser && in_array($adminhandler->role, ['Student', 'Student1', 'Student2', 'Student3'], true)) {
+        // Redirect
+        if (! $hasRemoteUser && in_array($adminhandler->role, ['Student', 'Student1', 'Student2', 'Student3'], true)) {
             return redirect()->route('home');
         }
 
         return back()->withInput();
     }
-
 }

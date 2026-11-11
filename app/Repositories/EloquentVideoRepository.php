@@ -19,18 +19,18 @@ class EloquentVideoRepository implements VideoRepositoryInterface
                 },
             ])
             ->where(function ($q) use ($courseIds, $individualVideoIds, $isAdmin) {
-                if (!empty($courseIds)) {
+                if (! empty($courseIds)) {
                     $q->whereHas('video_course.course', function ($sub) use ($courseIds, $isAdmin) {
                         $sub->whereIn('id', $courseIds)
                             ->where('state', true);
 
-                        if (!$isAdmin) {
+                        if (! $isAdmin) {
                             $sub->where('visibility', true);
                         }
                     });
                 }
 
-                if (!empty($individualVideoIds)) {
+                if (! empty($individualVideoIds)) {
                     $q->orWhereIn('id', $individualVideoIds);
                 }
             })
@@ -40,6 +40,7 @@ class EloquentVideoRepository implements VideoRepositoryInterface
     public function countFor(array $courseIds, array $individualVideoIds, bool $isAdmin): int
     {
         $query = $this->baseMyPresentationsQuery($courseIds, $individualVideoIds, $isAdmin);
+
         return (clone $query)->count();
     }
 

@@ -8,16 +8,15 @@ class BulkEditRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        //To enforce permissions
+        // To enforce permissions
         return true;
     }
 
     public function rules(): array
     {
         return [
-            'videos'   => ['required', 'array'],
+            'videos' => ['required', 'array'],
             'videos.*' => ['string', 'distinct'],
         ];
     }
 }
-

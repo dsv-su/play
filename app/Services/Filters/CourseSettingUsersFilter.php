@@ -2,23 +2,26 @@
 
 namespace App\Services\Filters;
 
-use App\Models\CoursesettingsUsers;
 use App\Interfaces\VisibilityInterface;
+use App\Models\CoursesettingsUsers;
 use App\Models\Video;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class CourseSettingUsersFilter extends VisibilityFilter implements VisibilityInterface
 {
-    protected $courses, $user, $video;
+    protected $courses;
+
+    protected $user;
+
+    protected $video;
 
     public function __construct(Video $video)
     {
         // Ensure we have a collection, not the relation
-        $this->video   = $video->load('courses');      // eager-load relation
+        $this->video = $video->load('courses');      // eager-load relation
         $this->courses = $this->video->courses;        // Collection<Course>
         // or: $this->courses = $video->courses()->get();
 
-        $this->user    = app('play_username');
+        $this->user = app('play_username');
     }
 
     public function cast()
@@ -28,7 +31,7 @@ class CourseSettingUsersFilter extends VisibilityFilter implements VisibilityInt
 
             foreach ($users as $user) {
                 if ($user->username === $this->user) {
-                    if (!$this->video->getAttribute('visibility')) {
+                    if (! $this->video->getAttribute('visibility')) {
                         $this->video->setAttribute('visibility', true);
                         $this->video->setAttribute('hidden', true);
                     }

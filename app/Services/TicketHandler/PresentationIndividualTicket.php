@@ -2,9 +2,10 @@
 
 namespace App\Services\TicketHandler;
 
+use App\Interfaces\TicketInterface;
 use App\Models\Video;
 
-class PresentationIndividualTicket implements \App\Interfaces\TicketInterface
+class PresentationIndividualTicket implements TicketInterface
 {
     protected Video $video;
 
@@ -16,7 +17,7 @@ class PresentationIndividualTicket implements \App\Interfaces\TicketInterface
     public function cast(): Video
     {
         $remote = $_SERVER['REMOTE_USER'] ?? null;
-        if (!$remote) {
+        if (! $remote) {
             // No authenticated remote user nothing to grant
             return $this->video;
         }
@@ -37,4 +38,3 @@ class PresentationIndividualTicket implements \App\Interfaces\TicketInterface
         return $this->video;
     }
 }
-

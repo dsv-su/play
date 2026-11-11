@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services\Course;
+
 use App\Models\Course;
 use App\Models\CoursesettingsUsers;
 use App\Services\Daisy\DaisyAPI;
@@ -23,6 +24,7 @@ class CourseResolver
 
             $daisyCourseIds = cache()->remember("daisy:responsibleCourseIds:{$daisyPersonId}", now()->addMinutes(10), function () use ($daisyPersonId) {
                 $list = $this->daisy->getDaisyEmployeeResponsibleCourses($daisyPersonId);
+
                 return collect($list)->pluck('id')->filter()->values()->all();
             });
 
@@ -42,8 +44,9 @@ class CourseResolver
         }
 
         // Admin role
-        $daisyCourseIds = cache()->remember("daisy:adminCourseIds", now()->addMinutes(10), function () {
+        $daisyCourseIds = cache()->remember('daisy:adminCourseIds', now()->addMinutes(10), function () {
             $list = $this->daisy->getDaisyCourses();
+
             return collect($list)->pluck('id')->filter()->values()->all();
         });
 

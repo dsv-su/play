@@ -14,8 +14,8 @@ class SystemServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('SystemService', function($app){
-            return new AuthHandler();
+        $this->app->singleton('SystemService', function ($app) {
+            return new AuthHandler;
         });
     }
 

@@ -4,12 +4,12 @@ namespace App\Livewire\Search;
 
 use App\Livewire\Concerns\DSVCourseNames;
 use App\Livewire\Concerns\FiltersPresentations;
+use App\Services\VideoSearch\VideoSearchService;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection as SupportCollection;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Illuminate\Support\Collection as SupportCollection;
-use App\Services\VideoSearch\VideoSearchService;
 
 class TagResults extends Component
 {
@@ -23,23 +23,43 @@ class TagResults extends Component
     public ?string $activeAccordion = null;
 
     public SupportCollection $videos;
+
     public SupportCollection $allVideos;
 
     public array $courses = [];
+
     public array $terms = [];
+
     public array $presenters = [];
+
     public array $tags = [];
+
     public $tag;
+
     public string $tagName = '';
-    public $course, $presenter, $semester;
+
+    public $course;
+
+    public $presenter;
+
+    public $semester;
+
     public array $selectedCourses = [];
+
     public array $selectedPresenters = [];
+
     public array $selectedSemesters = [];
+
     public array $selectedTags = [];
+
     public bool $switchOn = false;
+
     public array $activeFilters = ['courses' => true, 'presenters' => true, 'semesters' => true, 'tags' => false];
+
     public array $selectedVideos = [];
+
     public $allowBulkEdit = false;
+
     public int $totalCount = 0;
 
     public function mount(SupportCollection $videos, $tag, VideoSearchService $service): void
@@ -96,5 +116,4 @@ class TagResults extends Component
 
         return view('livewire.search.tag-results', compact('courseVideos'));
     }
-
 }

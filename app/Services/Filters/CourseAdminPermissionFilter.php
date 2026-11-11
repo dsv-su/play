@@ -9,11 +9,12 @@ use App\Models\Video;
 class CourseAdminPermissionFilter extends VisibilityFilter implements VisibilityInterface
 {
     protected Video $video;
+
     protected string $username;
 
     public function __construct(Video $video)
     {
-        $this->video    = $video;
+        $this->video = $video;
         $this->username = app('play_username');
     }
 
@@ -24,12 +25,12 @@ class CourseAdminPermissionFilter extends VisibilityFilter implements Visibility
             ->where('username', $this->username)
             ->first();
 
-        if (!$perm) {
+        if (! $perm) {
             return; // no admin override
         }
 
         // If not already visible, set visible + mark hidden (same as your original logic)
-        if (!$this->video->getAttribute('visibility')) {
+        if (! $this->video->getAttribute('visibility')) {
             $this->video->setAttribute('visibility', true);
             $this->video->setAttribute('hidden', true);
         }

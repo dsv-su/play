@@ -1,9 +1,7 @@
 <?php
 
-use Illuminate\Support\Str;
-
 $file = base_path().'/systemconfig/play.ini';
-if (!file_exists($file)) {
+if (! file_exists($file)) {
     $file = base_path().'/systemconfig/play.ini.example';
 }
 $system_config = parse_ini_file($file, true);

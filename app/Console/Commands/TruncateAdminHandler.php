@@ -41,6 +41,7 @@ class TruncateAdminHandler extends Command
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         DB::table('admin_handlers')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         return 0;
     }
 }

@@ -1,5 +1,8 @@
 <?php
 
+use Tymon\JWTAuth\Providers\Auth\Illuminate;
+use Tymon\JWTAuth\Providers\JWT\Lcobucci;
+
 /*
  * This file is part of jwt-auth.
  *
@@ -9,10 +12,11 @@
  * file that was distributed with this source code.
  */
 $file = base_path().'/systemconfig/play.ini';
-if (!file_exists($file)) {
+if (! file_exists($file)) {
     $file = base_path().'/systemconfig/play.ini.example';
 }
 $system_config = parse_ini_file($file, true);
+
 return [
 
     /*
@@ -152,7 +156,7 @@ return [
     'required_claims' => [
         'iss',
         'iat',
-        //'exp',
+        // 'exp',
         'nbf',
         'sub',
         'jti',
@@ -277,7 +281,7 @@ return [
         |
         */
 
-        'jwt' => Tymon\JWTAuth\Providers\JWT\Lcobucci::class,
+        'jwt' => Lcobucci::class,
 
         /*
         |--------------------------------------------------------------------------
@@ -288,7 +292,7 @@ return [
         |
         */
 
-        'auth' => Tymon\JWTAuth\Providers\Auth\Illuminate::class,
+        'auth' => Illuminate::class,
 
         /*
         |--------------------------------------------------------------------------

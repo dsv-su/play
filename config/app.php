@@ -1,4 +1,5 @@
 <?php
+
 // Absolute path to the primary config file
 $primaryConfig = base_path('systemconfig/play.ini');
 $exampleConfig = base_path('systemconfig/play.ini.example');
@@ -11,7 +12,7 @@ $system_config = parse_ini_file($configFile, true);
 
 // Validate parsing result
 if ($system_config === false) {
-    throw new \RuntimeException(
+    throw new RuntimeException(
         sprintf('Failed to parse configuration file: %s', $configFile)
     );
 }
@@ -29,7 +30,7 @@ return [
     |
     */
 
-    //'name' => env('APP_NAME', 'DSVPlay'),
+    // 'name' => env('APP_NAME', 'DSVPlay'),
     'name' => $system_config['global']['app_name'],
 
     /*
@@ -43,7 +44,7 @@ return [
     |
     */
 
-    //'env' => env('APP_ENV', 'production'),
+    // 'env' => env('APP_ENV', 'production'),
     'env' => $system_config['global']['app_env'],
     /*
     |--------------------------------------------------------------------------
@@ -56,7 +57,7 @@ return [
     |
     */
 
-    //'debug' => (bool) env('APP_DEBUG', false),
+    // 'debug' => (bool) env('APP_DEBUG', false),
     'debug' => (bool) $system_config['global']['app_debug'],
 
     /*
@@ -70,7 +71,7 @@ return [
     |
     */
 
-    //'url' => env('APP_URL', 'http://localhost'),
+    // 'url' => env('APP_URL', 'http://localhost'),
     'url' => $system_config['global']['app_url'],
 
     /*
@@ -84,7 +85,7 @@ return [
     |
     */
 
-    //'timezone' => env('APP_TIMEZONE', 'UTC'),
+    // 'timezone' => env('APP_TIMEZONE', 'UTC'),
     'timezone' => 'Europe/Stockholm',
 
     /*
@@ -98,7 +99,7 @@ return [
     |
     */
 
-    //'locale' => env('APP_LOCALE', 'en'),
+    // 'locale' => env('APP_LOCALE', 'en'),
     'supported_locales' => ['en', 'sv'],
 
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),

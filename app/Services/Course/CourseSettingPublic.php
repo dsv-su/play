@@ -47,4 +47,3 @@ class CourseSettingPublic
         return $courseSettingList[0] ?? 1;
     }
 }
-

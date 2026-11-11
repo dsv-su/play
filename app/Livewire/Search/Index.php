@@ -11,74 +11,93 @@ use Livewire\Component;
 
 class Index extends Component
 {
-    //#[Validate('required')]
+    // #[Validate('required')]
     public string $searchTerm = '';
+
     public array $videoHighlightsById = [];
+
     public array $presenterHighlightsById = [];
+
     public array $courseHighlightsById = [];
+
     public array $tagHighlightsById = [];
+
     public array $channelHighlightsById = [];
 
     public $videos = [];
+
     public $presenters = [];
+
     public $courses = [];
+
     public $tags = [];
+
     public $channels = [];
 
     protected array $videoTsOptions = [
-        'query_by'                   => 'uuid,title,title_en,description,tag_names,course_names,course_designation,presenter_names,presenter_usernames',
-        'highlight_full_fields'      => 'uuid,title,title_en,description,tag_names,course_names,course_designation,presenter_names,presenter_usernames',
-        'highlight_start_tag'        => '<span class="font-bold text-blue-600">',
-        'highlight_end_tag'          => '</span>',
-        'snippet_threshold'          => 80,
+        'query_by' => 'uuid,title,title_en,description,tag_names,course_names,course_designation,presenter_names,presenter_usernames',
+        'highlight_full_fields' => 'uuid,title,title_en,description,tag_names,course_names,course_designation,presenter_names,presenter_usernames',
+        'highlight_start_tag' => '<span class="font-bold text-blue-600">',
+        'highlight_end_tag' => '</span>',
+        'snippet_threshold' => 80,
         'highlight_affix_num_tokens' => 4,
-        'filter_by'                  => 'visibility:[1] && unlisted:[0]',
+        'filter_by' => 'visibility:[1] && unlisted:[0]',
     ];
 
     protected array $presenterTsOptions = [
-        'query_by'                   => 'name,username',
-        'highlight_full_fields'      => 'name,username',
-        'highlight_start_tag'        => '<span class="font-bold text-blue-600">',
-        'highlight_end_tag'          => '</span>',
-        'snippet_threshold'          => 80,
+        'query_by' => 'name,username',
+        'highlight_full_fields' => 'name,username',
+        'highlight_start_tag' => '<span class="font-bold text-blue-600">',
+        'highlight_end_tag' => '</span>',
+        'snippet_threshold' => 80,
         'highlight_affix_num_tokens' => 4,
     ];
 
     protected array $courseTsOptions = [
-        'query_by'                   => 'name,designation,semester',
-        'highlight_full_fields'      => 'name,designation,semester',
-        'highlight_start_tag'        => '<span class="font-bold text-blue-600">',
-        'highlight_end_tag'          => '</span>',
-        'snippet_threshold'          => 80,
+        'query_by' => 'name,designation,semester',
+        'highlight_full_fields' => 'name,designation,semester',
+        'highlight_start_tag' => '<span class="font-bold text-blue-600">',
+        'highlight_end_tag' => '</span>',
+        'snippet_threshold' => 80,
         'highlight_affix_num_tokens' => 4,
     ];
 
     protected array $tagTsOptions = [
-        'query_by'                   => 'name',
-        'highlight_full_fields'      => 'name',
-        'highlight_start_tag'        => '<span class="font-bold text-blue-600">',
-        'highlight_end_tag'          => '</span>',
-        'snippet_threshold'          => 80,
+        'query_by' => 'name',
+        'highlight_full_fields' => 'name',
+        'highlight_start_tag' => '<span class="font-bold text-blue-600">',
+        'highlight_end_tag' => '</span>',
+        'snippet_threshold' => 80,
         'highlight_affix_num_tokens' => 4,
     ];
 
     protected array $channelTsOptions = [
-        'query_by'                   => 'name,slug',
-        'highlight_full_fields'      => 'name,slug',
-        'highlight_start_tag'        => '<span class="font-bold text-blue-600">',
-        'highlight_end_tag'          => '</span>',
-        'snippet_threshold'          => 80,
+        'query_by' => 'name,slug',
+        'highlight_full_fields' => 'name,slug',
+        'highlight_start_tag' => '<span class="font-bold text-blue-600">',
+        'highlight_end_tag' => '</span>',
+        'snippet_threshold' => 80,
         'highlight_affix_num_tokens' => 4,
     ];
 
-    public function updatedSearchTerm() { $this->search(); }
-    public function mount() { if ($this->searchTerm !== '') $this->search(); }
+    public function updatedSearchTerm()
+    {
+        $this->search();
+    }
+
+    public function mount()
+    {
+        if ($this->searchTerm !== '') {
+            $this->search();
+        }
+    }
 
     protected function search(): void
     {
         if (trim($this->searchTerm) === '') {
             $this->videos = $this->presenters = $this->courses = $this->tags = $this->channels = collect();
             $this->videoHighlightsById = $this->presenterHighlightsById = $this->courseHighlightsById = $this->tagHighlightsById = $this->channelHighlightsById = [];
+
             return;
         }
 
@@ -92,14 +111,14 @@ class Index extends Component
         $videoRaw = $videoBuilder->raw();
         $this->videoHighlightsById = collect($videoRaw['hits'] ?? [])
             ->mapWithKeys(fn ($hit) => [
-                (string)($hit['document']['id'] ?? '') => [
+                (string) ($hit['document']['id'] ?? '') => [
                     'highlights' => $hit['highlights'] ?? [],
-                    'score'      => $hit['text_match'] ?? null,
+                    'score' => $hit['text_match'] ?? null,
                 ],
             ])->all();
 
         // PRESENTERS
-        //$presenterBuilder = Presenter::search($this->searchTerm)->options($this->presenterTsOptions);
+        // $presenterBuilder = Presenter::search($this->searchTerm)->options($this->presenterTsOptions);
         $presenterBuilder = Presenter::search($this->searchTerm)
             ->options(array_merge($this->presenterTsOptions, [
                 'distinct' => 'id',
@@ -109,9 +128,9 @@ class Index extends Component
         $presenterRaw = $presenterBuilder->raw();
         $this->presenterHighlightsById = collect($presenterRaw['hits'] ?? [])
             ->mapWithKeys(fn ($hit) => [
-                (string)($hit['document']['id'] ?? '') => [
+                (string) ($hit['document']['id'] ?? '') => [
                     'highlights' => $hit['highlights'] ?? [],
-                    'score'      => $hit['text_match'] ?? null,
+                    'score' => $hit['text_match'] ?? null,
                 ],
             ])->all();
 
@@ -121,9 +140,9 @@ class Index extends Component
         $courseRaw = $courseBuilder->raw();
         $this->courseHighlightsById = collect($courseRaw['hits'] ?? [])
             ->mapWithKeys(fn ($hit) => [
-                (string)($hit['document']['id'] ?? '') => [
+                (string) ($hit['document']['id'] ?? '') => [
                     'highlights' => $hit['highlights'] ?? [],
-                    'score'      => $hit['text_match'] ?? null,
+                    'score' => $hit['text_match'] ?? null,
                 ],
             ])->all();
 
@@ -133,9 +152,9 @@ class Index extends Component
         $tagRaw = $tagBuilder->raw();
         $this->tagHighlightsById = collect($tagRaw['hits'] ?? [])
             ->mapWithKeys(fn ($hit) => [
-                (string)($hit['document']['id'] ?? '') => [
+                (string) ($hit['document']['id'] ?? '') => [
                     'highlights' => $hit['highlights'] ?? [],
-                    'score'      => $hit['text_match'] ?? null,
+                    'score' => $hit['text_match'] ?? null,
                 ],
             ])->all();
 
@@ -145,9 +164,9 @@ class Index extends Component
         $channelRaw = $channelBuilder->raw();
         $this->channelHighlightsById = collect($channelRaw['hits'] ?? [])
             ->mapWithKeys(fn ($hit) => [
-                (string)($hit['document']['id'] ?? '') => [
+                (string) ($hit['document']['id'] ?? '') => [
                     'highlights' => $hit['highlights'] ?? [],
-                    'score'      => $hit['text_match'] ?? null,
+                    'score' => $hit['text_match'] ?? null,
                 ],
             ])->all();
     }
@@ -155,17 +174,17 @@ class Index extends Component
     public function render()
     {
         return view('livewire.search.index', [
-            'searchTerm'             => $this->searchTerm,
-            'videos'                 => $this->videos,
-            'presenters'             => $this->presenters,
-            'courses'                => $this->courses,
-            'tags'                   => $this->tags,
-            'channels'               => $this->channels,
-            'videoHighlightsById'    => $this->videoHighlightsById,
-            'presenterHighlightsById'=> $this->presenterHighlightsById,
-            'courseHighlightsById'   => $this->courseHighlightsById,
-            'tagHighlightsById'      => $this->tagHighlightsById,
-            'channelHighlightsById'  => $this->channelHighlightsById,
+            'searchTerm' => $this->searchTerm,
+            'videos' => $this->videos,
+            'presenters' => $this->presenters,
+            'courses' => $this->courses,
+            'tags' => $this->tags,
+            'channels' => $this->channels,
+            'videoHighlightsById' => $this->videoHighlightsById,
+            'presenterHighlightsById' => $this->presenterHighlightsById,
+            'courseHighlightsById' => $this->courseHighlightsById,
+            'tagHighlightsById' => $this->tagHighlightsById,
+            'channelHighlightsById' => $this->channelHighlightsById,
         ]);
     }
 }

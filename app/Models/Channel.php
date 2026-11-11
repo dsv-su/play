@@ -39,7 +39,7 @@ class Channel extends Model
     public function toSearchableArray(): array
     {
         return [
-            'id'   => (string) $this->getKey(),
+            'id' => (string) $this->getKey(),
             'name' => (string) $this->name,
             'slug' => (string) $this->slug,
         ];

@@ -16,8 +16,8 @@ class CatchAll
 
     public function logRequest()
     {
-        $apiLog = new ApiLog();
-        //TODO update ->payload
+        $apiLog = new ApiLog;
+        // TODO update ->payload
         $apiLog->catch = json_encode($this->request->all(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         $apiLog->jobid = $this->request->input('jobid');
         $apiLog->pk_id = $this->request->input('package.pkg_id');
@@ -27,4 +27,3 @@ class CatchAll
         return response()->json(['message' => 'Logged successfully']);
     }
 }
-

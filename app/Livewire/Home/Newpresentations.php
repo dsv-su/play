@@ -9,6 +9,7 @@ use Livewire\Component;
 class Newpresentations extends Component
 {
     public $newvideos;
+
     public bool $new = true;
 
     public function mount(VisibilityFilter $visibility)
@@ -17,7 +18,7 @@ class Newpresentations extends Component
             ->select([
                 'id', 'title', 'title_en', 'creation', 'duration', 'visibility',
                 'state', 'thumb', 'category_id', 'subtitles', 'description', 'download',
-                'created_at'
+                'created_at',
             ])
             ->where('visibility', true)
             ->where('state', true)
@@ -25,11 +26,11 @@ class Newpresentations extends Component
             ->limit(10)
             ->with([
                 'video_course:id,video_id,course_id',
-                'video_course.course:id,name,designation'
+                'video_course.course:id,name,designation',
             ])
             ->get();
 
-        //Filter
+        // Filter
         $this->newvideos = $visibility->filter($raw);
     }
 

@@ -8,8 +8,10 @@ use Livewire\Component;
 class CustomInput extends Component
 {
     public string $searchUser = '';
+
     /** @var array<int, array{uid:int|string, name:string, role:string, local:bool}> */
     public array $sukatUsers = [];
+
     public int $highlighted = 0;
 
     public function boot(SearchPresenters $search)
@@ -20,7 +22,9 @@ class CustomInput extends Component
     public function moveHighlight(int $direction): void
     {
         $count = count($this->sukatUsers);
-        if ($count === 0) return;
+        if ($count === 0) {
+            return;
+        }
 
         $this->highlighted = ($this->highlighted + $direction + $count) % $count;
     }

@@ -2,10 +2,8 @@
 
 namespace App\Livewire\Concerns;
 
-use Livewire\Attributes\Computed;
-use Illuminate\Support\Facades\Cache;
 use App\Models\Course;
-use Illuminate\Support\Arr;
+use Livewire\Attributes\Computed;
 
 /*trait DSVCourseNames
 {
@@ -50,11 +48,11 @@ trait DSVCourseNames
 
         $courseIds = collect($this->videos)
             ->keys()
-            ->filter(fn($k) => is_numeric($k))
-            ->map(fn($k) => (int)$k)
+            ->filter(fn ($k) => is_numeric($k))
+            ->map(fn ($k) => (int) $k)
             ->values();
 
-        $courses = \App\Models\Course::whereIn('id', $courseIds)
+        $courses = Course::whereIn('id', $courseIds)
             ->get(['id', 'designation', 'semester', 'year', 'name', 'name_en']);
 
         $courseTitles = $courses->mapWithKeys(function ($c) use ($locale) {

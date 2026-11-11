@@ -6,19 +6,19 @@ class VisibilityFilter
 {
     public function filter($videos)
     {
-         return $this->FilterDownloadable($this->Filtervisibility($videos));
+        return $this->FilterDownloadable($this->Filtervisibility($videos));
     }
 
     public function Filtervisibility($videos)
     {
-        return $videos->filter(function ($video)  {
-            //PresentationPermissionsSetting - type
+        return $videos->filter(function ($video) {
+            // PresentationPermissionsSetting - type
             $PresentationSetting = new PresentationPermissionsFilter($video);
             $PresentationSetting->cast();
-            if(!$video->permission_type == 'dsv') {
-                //Respect presentation setting - override only if not set
+            if (! $video->permission_type == 'dsv') {
+                // Respect presentation setting - override only if not set
 
-                //CoursePermissionsSettings - type
+                // CoursePermissionsSettings - type
                 $CourseSettings = new CoursePermissionFilter($video);
                 $CourseSettings->cast();
             }
@@ -39,25 +39,25 @@ class VisibilityFilter
             }
             */
 
-            //CourseSettingUsers
+            // CourseSettingUsers
             $CourseSettingUsers = new CourseSettingUsersFilter($video);
             $CourseSettingUsers->cast();
 
-            //IndividualUsers
+            // IndividualUsers
             $IndividualUsers = new IndividualPermissionsFilter($video);
             $IndividualUsers->cast();
 
-            //CourseAdmins
+            // CourseAdmins
             $CourseAdmins = new CourseAdminPermissionFilter($video);
             $CourseAdmins->cast();
 
-            //Admins
+            // Admins
             $Admins = new AdminPermissionsFilter($video);
-            if($Admins->cast()) {
+            if ($Admins->cast()) {
                 return $video;
             }
 
-            //Make hidden videos show with 'hidden' features
+            // Make hidden videos show with 'hidden' features
             /*
             if($video->visibility == false) {
                 $video->setAttribute('hidden', true);
@@ -78,7 +78,7 @@ class VisibilityFilter
              * according to issue #115
              * 2022-09-08
              */
-            //CourseDownload
+            // CourseDownload
             /*
             $CourseDownload = new CourseDownloadFilter($video);
             $CourseDownload->cast();
@@ -88,9 +88,10 @@ class VisibilityFilter
              * this should really never happen, so it's a redundant feature
              */
 
-            if($video->visibility == false) {
+            if ($video->visibility == false) {
                 $video->setAttribute('download', false);
             }
+
             return $video;
         });
     }

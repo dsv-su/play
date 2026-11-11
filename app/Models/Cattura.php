@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Cattura extends Model
 {
     use HasFactory;
-    protected $fillable = ['recorder', 'status', 'url'];
 
+    protected $fillable = ['recorder', 'status', 'url'];
 }

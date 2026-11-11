@@ -7,7 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class VideoResolution extends Model
 {
-    protected $video, $source, $key, $link, $resolutions;
+    protected $video;
+
+    protected $source;
+
+    protected $key;
+
+    protected $link;
+
+    protected $resolutions;
 
     public function __construct(Video $video)
     {
@@ -21,6 +29,7 @@ class VideoResolution extends Model
                 $resolutions[] = $this->key;
             }
         }
+
         return $resolutions;
     }
 }

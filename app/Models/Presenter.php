@@ -34,8 +34,8 @@ class Presenter extends Model
     public function toSearchableArray(): array
     {
         return [
-            'id'       => (string) $this->id,
-            'name'     => (string) $this->name,
+            'id' => (string) $this->id,
+            'name' => (string) $this->name,
             'username' => (string) ($this->username ?? ''),
         ];
     }
@@ -59,7 +59,8 @@ class Presenter extends Model
     {
         return $this->hasManyThrough(Video::class, VideoPresenter::class, 'presenter_id', 'id', 'id', 'video_id')->get();
     }*/
-    public function videos(): BelongsToMany {
+    public function videos(): BelongsToMany
+    {
         return $this->belongsToMany(Video::class, 'video_presenters', 'presenter_id', 'video_id')->withTimestamps();
     }
 }

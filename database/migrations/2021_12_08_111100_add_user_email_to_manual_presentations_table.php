@@ -26,7 +26,7 @@ class AddUserEmailToManualPresentationsTable extends Migration
     public function down()
     {
         Schema::table('manual_presentations', function (Blueprint $table) {
-                $table->dropColumn('user_email');
+            $table->dropColumn('user_email');
         });
     }
 }

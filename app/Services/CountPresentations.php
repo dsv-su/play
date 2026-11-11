@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Video;
+use Illuminate\Database\Eloquent\Model;
 
-class CountPresentations extends model
+class CountPresentations extends Model
 {
     public function latest()
     {

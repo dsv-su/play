@@ -23,8 +23,8 @@ final class StudentProfile
     public function getStudentCourseIds(): array
     {
         // Pull these once to avoid repeated container lookups.
-        $role     = app('play_role');
-        $auth     = app('play_auth');
+        $role = app('play_role');
+        $auth = app('play_auth');
         $username = (string) app('play_username');
 
         // --- Fixture students (for testing) ---
@@ -39,9 +39,9 @@ final class StudentProfile
         }
 
         // --- Real students (production only) ---
-        $isProd          = App::environment('production');
-        $hasStudentAuth  = ($auth === 'Student');
-        $hasStudentRole  = in_array($role, ['Uploader', 'Student'], true);
+        $isProd = App::environment('production');
+        $hasStudentAuth = ($auth === 'Student');
+        $hasStudentRole = in_array($role, ['Uploader', 'Student'], true);
 
         if ($isProd && $hasStudentAuth && $hasStudentRole && $username !== '') {
             $cacheKey = "student:courses:{$username}";

@@ -4,7 +4,6 @@ namespace App\Jobs;
 
 use App\Mail\UploadSuccessNotification;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -16,6 +15,7 @@ class JobUploadSuccessNotification implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $video = [];
+
     public $presentation;
 
     /**

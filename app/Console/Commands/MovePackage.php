@@ -28,7 +28,7 @@ class MovePackage extends Command
      */
     public function handle()
     {
-        //Move presentation package from model video to package
+        // Move presentation package from model video to package
         Video::whereNotNull('presentation')
             ->chunkById(200, function ($videos) {
                 DB::transaction(function () use ($videos) {

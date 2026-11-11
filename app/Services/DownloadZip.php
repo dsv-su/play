@@ -7,8 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class DownloadZip extends Model
 {
-    protected $video, $path, $destination, $public_dir;
-    protected $zipFileName, $zip;
+    protected $video;
+
+    protected $path;
+
+    protected $destination;
+
+    protected $public_dir;
+
+    protected $zipFileName;
+
+    protected $zip;
 
     public function __construct(Video $video, $path)
     {
@@ -19,20 +28,19 @@ class DownloadZip extends Model
     /**
      * @throws RuntimeException If the file cannot be opened
      */
-
     public function makezip()
     {
-        //Create zip file of downloaded files and folders
+        // Create zip file of downloaded files and folders
         $this->destination = storage_path('app/public/'.$this->path.'/');
 
-        //Directory of unzipped files
+        // Directory of unzipped files
         $this->public_dir = storage_path('app/public/'.$this->path);
 
         $filePath = $this->destination.$this->video->title.'.zip';
-        $zip = new \ZipArchive();
+        $zip = new \ZipArchive;
 
         if ($zip->open($filePath, \ZipArchive::CREATE) !== true) {
-            throw new \RuntimeException('Cannot open ' . $filePath);
+            throw new \RuntimeException('Cannot open '.$filePath);
         }
 
         $this->addContent($zip, $this->public_dir);
@@ -44,10 +52,8 @@ class DownloadZip extends Model
     /**
      * This takes symlinks into account.
      *
-     * @param ZipArchive $zip
-     * @param string     $path
+     * @param  ZipArchive  $zip
      */
-
     private function addContent(\ZipArchive $zip, string $path)
     {
         /** @var SplFileInfo[] $files */
@@ -60,11 +66,11 @@ class DownloadZip extends Model
         );
 
         while ($iterator->valid()) {
-            if (!$iterator->isDot()) {
+            if (! $iterator->isDot()) {
                 $filePath = $iterator->getPathName();
                 $relativePath = substr($filePath, strlen($path) + 1);
 
-                if (!$iterator->isDir()) {
+                if (! $iterator->isDir()) {
                     $zip->addFile($filePath, $relativePath);
                 } else {
                     if ($relativePath !== false) {
@@ -75,5 +81,4 @@ class DownloadZip extends Model
             $iterator->next();
         }
     }
-
 }

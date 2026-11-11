@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Exceptions\Handler;
+use App\Http\Middleware\PlayAuthenticate;
 use App\Models\Course;
 use App\Models\Tag;
 use App\Models\Video;
@@ -24,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(VideoRepositoryInterface::class, EloquentVideoRepository::class);
         $this->app->singleton(
             ExceptionHandlerContract::class,
-            \App\Exceptions\Handler::class
+            Handler::class
         );
     }
 
@@ -37,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
         Tag::observe(TagObserver::class);
         Course::observe(CourseObserver::class);
         Livewire::addPersistentMiddleware([
-            \App\Http\Middleware\PlayAuthenticate::class,
+            PlayAuthenticate::class,
         ]);
     }
 }

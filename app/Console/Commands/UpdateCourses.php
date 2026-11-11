@@ -38,8 +38,9 @@ class UpdateCourses extends Command
      */
     public function handle()
     {
-        $daisy = new DaisyIntegration();
+        $daisy = new DaisyIntegration;
         $daisy->init();
+
         return 0;
     }
 }

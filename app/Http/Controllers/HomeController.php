@@ -2,10 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Video;
-use App\Services\Filters\VisibilityFilter;
-use Illuminate\Http\Request;
-
 class HomeController extends Controller
 {
     public function __construct()
@@ -22,5 +18,4 @@ class HomeController extends Controller
     {
         return view('pending.index');
     }
-
 }

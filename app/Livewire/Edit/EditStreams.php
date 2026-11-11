@@ -4,15 +4,18 @@ namespace App\Livewire\Edit;
 
 use App\Models\StreamResolution;
 use App\Models\Video;
-use Illuminate\Support\Collection;
 use Livewire\Component;
 
 class EditStreams extends Component
 {
     public Video $video;
+
     public int $editPresentationId = 0;
+
     public array $audio = [];
+
     public array $streamVisibility = [];
+
     public array $streamUrl = [];
 
     /** @var array<int, array{audio:bool, hidden:bool, poster:?string}> */
@@ -36,7 +39,7 @@ class EditStreams extends Component
 
         // Then loop through all other streams and set their audio to false
         foreach ($this->streams as $i => $stream) {
-            if ($i !== (int)$index) {
+            if ($i !== (int) $index) {
                 $this->streams[$i]['audio'] = false;
                 $this->audio[$i] = false;
             }
@@ -65,10 +68,10 @@ class EditStreams extends Component
                 return [
                     'id' => $stream->id,
                     'title' => $stream->name,
-                    'audio'  => (bool) $stream->audio,
+                    'audio' => (bool) $stream->audio,
                     'hidden' => (bool) $stream->hidden,
                     'poster' => $stream->poster
-                        ? rtrim($base, '/') . '/' . $this->video->id . '/' . ltrim($stream->poster, '/')
+                        ? rtrim($base, '/').'/'.$this->video->id.'/'.ltrim($stream->poster, '/')
                         : null,
                 ];
             })
@@ -77,26 +80,25 @@ class EditStreams extends Component
         foreach ($this->streams as $i => $stream) {
             $this->streamVisibility[] = $stream['hidden'];
         }
-        //Testing
+        // Testing
         foreach ($this->streams as $i => $stream) {
             $this->streamUrl[$stream['id']] = StreamResolution::where('stream_id', $stream['id'])->where('resolution', '720')->pluck('filename')->first();
         }
     }
 
-
     protected function baseUri(): string
     {
         $path = base_path('/systemconfig/play.ini');
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             $path = base_path('/systemconfig/play.ini.example');
         }
 
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             throw new \RuntimeException('Configuration file is missing.');
         }
 
         $config = parse_ini_file($path, true);
-        if (!isset($config['store']['list_uri'])) {
+        if (! isset($config['store']['list_uri'])) {
             throw new \RuntimeException('Missing required configuration key: store.list_uri');
         }
 

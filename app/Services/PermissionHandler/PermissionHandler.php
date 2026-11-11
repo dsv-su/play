@@ -1,14 +1,22 @@
 <?php
 
 declare(strict_types=1);
+
 namespace App\Services\PermissionHandler;
 
 use App\Models\VideoPermission;
 
 final class PermissionHandler
 {
-    protected $request, $video, $video_permission;
-    protected $perm, $permission;
+    protected $request;
+
+    protected $video;
+
+    protected $video_permission;
+
+    protected $perm;
+
+    protected $permission;
 
     public function __construct($request, $video)
     {
@@ -19,18 +27,18 @@ final class PermissionHandler
 
     public function setPermission()
     {
-        //If there exist a permission setting with uuid
-        if(!$this->video_permission = VideoPermission::where('jobid', $this->request->jobid)->first()) {
-            //No permissions exist -> set default permission
+        // If there exist a permission setting with uuid
+        if (! $this->video_permission = VideoPermission::where('jobid', $this->request->jobid)->first()) {
+            // No permissions exist -> set default permission
             $this->permission = VideoPermission::updateOrCreate(
                 ['video_id' => $this->video->id],
                 ['permission_id' => 1, 'type' => 'public']
             );
         } else {
-                // A permission exist -> update
-                $this->video_permission->video_id = $this->video->id;
-                $this->video_permission->save();
-            }
-
+            // A permission exist -> update
+            $this->video_permission->video_id = $this->video->id;
+            $this->video_permission->save();
         }
+
+    }
 }

@@ -15,7 +15,7 @@ class InitFilters
         $videopresenters = $this->extractPresenters($videocourses);
         $videos_by_course = $this->groupVideos($videocourses);
 
-        return array($videoterms, $videopresenters, $videotags, $videos_by_course);
+        return [$videoterms, $videopresenters, $videotags, $videos_by_course];
     }
 
     public function groupVideos($videocourses): \Illuminate\Support\Collection
@@ -24,13 +24,13 @@ class InitFilters
         foreach ($videocourses as $vc) {
             if ($vc->count()) {
 
-                if (!isset($groupedvideos[$vc->course_id])) {
+                if (! isset($groupedvideos[$vc->course_id])) {
                     $groupedvideos[$vc->course_id] = Collection::empty();
                 }
                 $groupedvideos[$vc->course_id]->add(Video::find($vc->video_id));
 
             } else {
-                if (!isset($groupedvideos[999999])) {
+                if (! isset($groupedvideos[999999])) {
                     $groupedvideos[999999] = Collection::empty();
                 }
                 $groupedvideos[999999]->add(Video::find($vc->video_id));
@@ -43,31 +43,34 @@ class InitFilters
         }
         $items = $groupedvideos->all();
         krsort($items);
+
         return collect($items);
     }
 
     public function extractTags($videocourses): array
     {
-        $tags = array();
+        $tags = [];
         foreach ($videocourses as $vc) {
             foreach (Video::find($vc->video_id)->tags() as $tag) {
-                if (!in_array($tag->name, $tags)) {
+                if (! in_array($tag->name, $tags)) {
                     $tags[] = $tag->name;
                 }
             }
         }
         sort($tags);
+
         return $tags;
     }
 
     public function extractTerms($videocourses): array
     {
-        $terms = array();
+        $terms = [];
         foreach ($videocourses as $vc) {
-            if (!in_array($vc->course->semester . $vc->course->year, $terms)) {
-                $terms[] = $vc->course->semester . $vc->course->year;
+            if (! in_array($vc->course->semester.$vc->course->year, $terms)) {
+                $terms[] = $vc->course->semester.$vc->course->year;
             }
         }
+
         /*Sorting
          * $terms = collect($terms)->sortByDesc(function($item){
             return $item;
@@ -77,10 +80,10 @@ class InitFilters
 
     public function extractPresenters($videocourses): array
     {
-        $presenters = array();
+        $presenters = [];
         foreach ($videocourses as $vc) {
             foreach (Video::find($vc->video_id)->presenters() as $presenter) {
-                if (!key_exists($presenter->username, $presenters)) {
+                if (! array_key_exists($presenter->username, $presenters)) {
                     $presenters[$presenter->username] = $presenter->name;
                 }
             }

@@ -12,11 +12,10 @@ $system_config = parse_ini_file($configFile, true);
 
 // Validate parsing result
 if ($system_config === false) {
-    throw new \RuntimeException(
+    throw new RuntimeException(
         sprintf('Failed to parse configuration file: %s', $configFile)
     );
 }
-
 
 return [
 
@@ -52,7 +51,7 @@ return [
             'driver' => 'local',
             'root' => storage_path('app'),
             'throw' => true,
-            //'root' => $system_config['nfs']['root'],
+            // 'root' => $system_config['nfs']['root'],
         ],
 
         'public' => [
@@ -104,19 +103,19 @@ return [
 
         'sftp' => [
             'driver' => 'sftp',
-            //Test server setting
+            // Test server setting
             /*
             'host' => $system_config['sftp']['host'],
             'username' => $system_config['sftp']['username'],
             'password' => $system_config['sftp']['password'],
             */
-            //Play-store server setting
+            // Play-store server setting
             'host' => $system_config['sftp']['host'],
             'username' => $system_config['sftp']['username'],
             'privateKey' => $system_config['sftp']['privateKey'],
             'password' => $system_config['sftp']['pk-password'],
             'root' => '/data0/incoming/',
-            //->
+            // ->
             'visibility' => 'public',
             'permissions' => [
                 'file' => [

@@ -12,7 +12,7 @@ class RedirectLinksTest extends TestCase
     {
         $pages = ['http://localhost/edit/video-id', 'http://localhost/user/all'];
         session(['links' => $pages]);
-        $middleware = new RedirectLinks();
+        $middleware = new RedirectLinks;
 
         foreach (['/edit/video-id/stream/upload?stream_id=1', '/edit/video-id'] as $path) {
             $middleware->handle(Request::create($path, 'POST'), fn () => response('ok'));
@@ -28,7 +28,7 @@ class RedirectLinksTest extends TestCase
             'http://localhost/user/all',
         ]]);
 
-        (new RedirectLinks())->handle(
+        (new RedirectLinks)->handle(
             Request::create('http://localhost/edit/video-id'),
             fn () => response('ok')
         );
@@ -44,7 +44,7 @@ class RedirectLinksTest extends TestCase
         session(['links' => ['http://localhost/user/all']]);
         $request = Request::create('/edit/video-id', 'GET', server: ['HTTP_ACCEPT' => 'application/json']);
 
-        (new RedirectLinks())->handle($request, fn () => response('ok'));
+        (new RedirectLinks)->handle($request, fn () => response('ok'));
 
         $this->assertSame(['http://localhost/user/all'], session('links'));
     }

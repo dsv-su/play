@@ -10,7 +10,7 @@ class VideoStat extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['video_id','stats', 'playback', 'download'];
+    protected $fillable = ['video_id', 'stats', 'playback', 'download'];
 
     public function video(): BelongsTo
     {

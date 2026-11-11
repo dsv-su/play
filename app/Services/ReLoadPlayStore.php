@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ReLoadPlayStore extends Model
 {
-
     public function reloadlist()
     {
         return $this->getAllPresentations('presentation');
@@ -26,65 +25,67 @@ class ReLoadPlayStore extends Model
 
     public function reloadpresentation($id)
     {
-        return $this->getPresentation('presentation/' . $id);
+        return $this->getPresentation('presentation/'.$id);
     }
 
     public function reloadstore(Request $request)
     {
-        //Start transaction
+        // Start transaction
         DB::beginTransaction();
 
-        //Check if video exist
-        if (!$presentation = Video::find($request->id)) {
+        // Check if video exist
+        if (! $presentation = Video::find($request->id)) {
             try {
-                //Store video
+                // Store video
                 $video = new VideoStore($request);
                 $video = $video->presentation();
-                //Set video permissions
+                // Set video permissions
                 $permission = new PermissionHandler($request, $video);
                 $permission->setPermission();
-                //Store presenter
+                // Store presenter
                 $presenter = new PresenterStore($request, $video);
                 $presenter->presenter();
-                //Store course
+                // Store course
                 $course = new CourseStore($request, $video);
                 $course->course();
-                //Store tags
+                // Store tags
                 $tags = new TagsStore($request, $video);
                 $tags->tags();
-                //Store streams
+                // Store streams
                 $streams = new StreamsStore($request, $video);
                 $streams->streams();
 
             } catch (\Exception $e) {
                 DB::rollback(); // Something went wrong
                 report($e);
+
                 return response()->json(['error' => 'Something went wrong while creating', 'message' => $e->getMessage()], 400);
             }
         } else {
             try {
-                //Update existing video
+                // Update existing video
                 $video = new VideoUpdate($presentation, $request);
                 $video = $video->presentation_update();
-                //Set video permissions
+                // Set video permissions
                 $permission = new PermissionHandler($request, $video);
                 $permission->setPermission();
-                //Store presenter
+                // Store presenter
                 $presenter = new PresenterStore($request, $video);
                 $presenter->presenter();
-                //Store course
+                // Store course
                 $course = new CourseStore($request, $video);
                 $course->course();
-                //Store tags
+                // Store tags
                 $tags = new TagsStore($request, $video);
                 $tags->tags();
-                //Store streams
+                // Store streams
                 $streams = new StreamsStore($request, $video);
                 $streams->streams();
 
             } catch (\Exception $e) {
                 DB::rollback(); // Something went wrong
                 report($e);
+
                 return response()->json(['error' => 'Something went wrong while updating', 'message' => $e->getMessage()], 400);
             }
 
@@ -102,7 +103,7 @@ class ReLoadPlayStore extends Model
     {
         $client = new Client(['base_uri' => $this->uri()]);
         $headers = [
-            //'Authorization' => 'Bearer ' . $this->token(),
+            // 'Authorization' => 'Bearer ' . $this->token(),
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ];
@@ -115,7 +116,7 @@ class ReLoadPlayStore extends Model
              * If there is an exception; Client error;
              */
             if ($e->hasResponse()) {
-                //return $response = $e->getResponse()->getStatusCode();
+                // return $response = $e->getResponse()->getStatusCode();
 
                 return $response = $e->getResponse()->getBody();
             }
@@ -128,7 +129,7 @@ class ReLoadPlayStore extends Model
     {
         $client = new Client(['base_uri' => $this->uri()]);
         $headers = [
-            //'Authorization' => 'Bearer ' . $this->token(),
+            // 'Authorization' => 'Bearer ' . $this->token(),
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ];
@@ -141,8 +142,7 @@ class ReLoadPlayStore extends Model
              * If there is an exception; Client error;
              */
             if ($e->hasResponse()) {
-                //return $response = $e->getResponse()->getStatusCode();
-
+                // return $response = $e->getResponse()->getStatusCode();
 
                 return $response = $e->getResponse()->getBody();
             }
@@ -150,14 +150,13 @@ class ReLoadPlayStore extends Model
 
         return json_decode($response->getBody()->getContents(), true);
 
-
     }
 
     private function uri()
     {
-        $this->file = base_path() . '/systemconfig/play.ini';
-        if (!file_exists($this->file)) {
-            $this->file = base_path() . '/systemconfig/play.ini.example';
+        $this->file = base_path().'/systemconfig/play.ini';
+        if (! file_exists($this->file)) {
+            $this->file = base_path().'/systemconfig/play.ini.example';
         }
         $this->system_config = parse_ini_file($this->file, true);
 

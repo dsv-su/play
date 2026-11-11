@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Video;
 use App\Services\Filters\VisibilityFilter;
-use App\Models\Tag;
-use Illuminate\Http\Request;
 
 class SearchResultController extends Controller
 {
@@ -20,7 +18,6 @@ class SearchResultController extends Controller
             ->whereHas('tags', fn ($q) => $q->where('name', $tag))
             ->orderByDesc('created_at')
             ->get();
-
 
         $videos = $visibility->filter($videos);
 
@@ -39,7 +36,6 @@ class SearchResultController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-
         $videos = $visibility->filter($videos);
 
         return view('search.navigator', ['videos' => $videos, 'designation' => $designation]);
@@ -56,7 +52,6 @@ class SearchResultController extends Controller
             ->whereHas('presenters', fn ($q) => $q->where('username', $presenter))
             ->orderByDesc('created_at')
             ->get();
-
 
         $videos = $visibility->filter($videos);
 

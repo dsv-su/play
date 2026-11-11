@@ -1,7 +1,11 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+use App\Providers\PlayServiceProvider;
+use App\Providers\SystemServiceProvider;
+
 return [
-    App\Providers\AppServiceProvider::class,
-    App\Providers\PlayServiceProvider::class,
-    App\Providers\SystemServiceProvider::class,
+    AppServiceProvider::class,
+    PlayServiceProvider::class,
+    SystemServiceProvider::class,
 ];

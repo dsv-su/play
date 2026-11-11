@@ -41,6 +41,7 @@ class DevUploadClear extends Command
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         DB::table('manual_presentations')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         return 0;
     }
 }

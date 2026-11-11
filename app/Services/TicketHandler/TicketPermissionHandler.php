@@ -3,7 +3,6 @@
 namespace App\Services\TicketHandler;
 
 use App\Models\Video;
-use App\Services\TicketHandler\Entitlement;
 
 class TicketPermissionHandler
 {
@@ -31,7 +30,7 @@ class TicketPermissionHandler
         }
 
         // 3) Entitlement validation for the (possibly overridden) permission_id
-        $permissionId   = (int) ($video->ticket_permission_id ?? 1);
+        $permissionId = (int) ($video->ticket_permission_id ?? 1);
         if ($this->entitlement->validate($permissionId, $providedEntitlements)) {
             return (new TokenIssuer($video))->issue();
         }
@@ -48,4 +47,3 @@ class TicketPermissionHandler
             : '';
     }
 }
-

@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 
 class ManualPresentation extends Model
 {
     use HasFactory;
-    protected $fillable = ['jobid', 'pkg_id', 'status', 'type', 'user','upload_dir', 'jobid', 'video_id',
+
+    protected $fillable = ['jobid', 'pkg_id', 'status', 'type', 'user', 'upload_dir', 'jobid', 'video_id',
         'subtitles', 'sublanguage', 'title', 'title_en', 'created', 'presenters', 'visibility', 'unlisted',
-        'courses','daisy_courses', 'tags', 'thumb', 'permission', 'entitlement', 'description',
+        'courses', 'daisy_courses', 'tags', 'thumb', 'permission', 'entitlement', 'description',
         'sources', 'autogenerate_subtitles', 'generate_subtitles', 'description', 'category_id'];
 
     protected $casts = [
@@ -23,8 +23,8 @@ class ManualPresentation extends Model
         'subtitles' => 'array',
         'courses' => 'array',
         'daisy_courses' => 'array',
-        'sources' =>  'array',
-        'generate_subtitles' =>  'array',
+        'sources' => 'array',
+        'generate_subtitles' => 'array',
     ];
 
     public function getLangTitleAttribute(): string
@@ -38,18 +38,18 @@ class ManualPresentation extends Model
     {
         // Before insert: set initial values
         static::creating(function ($file) {
-            $file->status   = $file->status   ?? 'init';
-            $file->user     = $file->user     ?? app()->make('play_username');
+            $file->status = $file->status ?? 'init';
+            $file->user = $file->user ?? app()->make('play_username');
             $file->user_email = $file->user_email ?? app()->make('play_email');
-            $file->local    = $file->local    ?? Carbon::now()->format('Y-m-d') . '_' . Str::random(6);
+            $file->local = $file->local ?? Carbon::now()->format('Y-m-d').'_'.Str::random(6);
             $file->upload_dir = $file->upload_dir ?? '';
-            $file->title    = $file->title    ?? '';
+            $file->title = $file->title ?? '';
             $file->title_en = $file->title_en ?? '';
             $file->presenters = $file->presenters ?? [];
             $file->tags = $file->tags ?? [];
             $file->courses = $file->courses ?? [];
             $file->daisy_courses = $file->daisy_courses ?? [];
-            $file->thumb    = $file->thumb    ?? '';
+            $file->thumb = $file->thumb ?? '';
             $file->created = $file->created ?? now()->format('Y-m-d');
             $file->duration = $file->duration ?? 0;
             $file->sources = $file->sources ?? [];
@@ -59,7 +59,7 @@ class ManualPresentation extends Model
 
         // After insert: append the DB id to `local`
         static::created(function ($file) {
-            $file->update(['local' => $file->local . $file->id]);
+            $file->update(['local' => $file->local.$file->id]);
         });
     }
 
@@ -82,5 +82,4 @@ class ManualPresentation extends Model
     {
         $this->attributes['sources'] = json_encode((object) $value);
     }
-
 }

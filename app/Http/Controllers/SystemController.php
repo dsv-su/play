@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\AuthHandler;
-use App\Services\ConfigurationHandler;
-use App\Services\Daisy\DaisyIntegration;
 use App\Models\System;
-use Request;
-use Illuminate\Support\Facades\Session;
+use App\Services\AuthHandler;
+use App\Services\Daisy\DaisyIntegration;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
+use Request;
 
 class SystemController extends Controller
 {
@@ -18,22 +17,22 @@ class SystemController extends Controller
      */
     public function SUlogin()
     {
-        $system = new AuthHandler();
+        $system = new AuthHandler;
         $system = $system->authorize();
 
-        return Redirect::to('https://' . Request::server('SERVER_NAME')
-            . ':' . Request::server('SERVER_PORT') . $system->global->login_route
-            . '?target=' . action('\\' . __class__ . '@SUidpReturn'));
+        return Redirect::to('https://'.Request::server('SERVER_NAME')
+            .':'.Request::server('SERVER_PORT').$system->global->login_route
+            .'?target='.action('\\'.__CLASS__.'@SUidpReturn'));
     }
 
     /**
      * Redirect user to intended route on returned successful login
      * from the SU IdP.
      */
-
     public function SUidpReturn()
     {
         Session::regenerate();
+
         return redirect()->intended('/')->cookie(
             'language', 'en', 0, null, null, false, false
         );
@@ -41,14 +40,16 @@ class SystemController extends Controller
 
     public function start()
     {
-        if (!System::find(1)) {
-            //Initiate system
+        if (! System::find(1)) {
+            // Initiate system
             app()->make('init')->check_system();
+
             return redirect()->action([SystemController::class, 'start']);
         } else {
-            //Preload courses from Daisy
-            $daisy = new DaisyIntegration();
+            // Preload courses from Daisy
+            $daisy = new DaisyIntegration;
             $daisy->init();
+
             return redirect('/')->with(['message' => 'Play has initiated successfully!', 'alert' => 'alert-success']);
         }
     }

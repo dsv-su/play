@@ -11,7 +11,7 @@ class CheckPlayStoreApi extends Model
     {
         $client = new Client(['base_uri' => $this->uri()]);
         $headers = [
-            //'Authorization' => 'Bearer ' . $this->token(),
+            // 'Authorization' => 'Bearer ' . $this->token(),
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ];
@@ -24,7 +24,7 @@ class CheckPlayStoreApi extends Model
              * If there is an exception; Client error;
              */
             if ($e->hasResponse()) {
-                //return $response = $e->getResponse()->getStatusCode();
+                // return $response = $e->getResponse()->getStatusCode();
 
                 return $response = $e->getResponse()->getBody();
             }
@@ -35,9 +35,9 @@ class CheckPlayStoreApi extends Model
 
     private function uri()
     {
-        $this->file = base_path() . '/systemconfig/play.ini';
-        if (!file_exists($this->file)) {
-            $this->file = base_path() . '/systemconfig/play.ini.example';
+        $this->file = base_path().'/systemconfig/play.ini';
+        if (! file_exists($this->file)) {
+            $this->file = base_path().'/systemconfig/play.ini.example';
         }
         $this->system_config = parse_ini_file($this->file, true);
 

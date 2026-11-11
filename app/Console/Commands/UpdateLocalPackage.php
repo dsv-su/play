@@ -38,8 +38,9 @@ class UpdateLocalPackage extends Command
      */
     public function handle()
     {
-        $update = new UpdatePackage();
+        $update = new UpdatePackage;
         $update->local();
+
         return 0;
     }
 }

@@ -33,7 +33,7 @@ class Tag extends Model
     public function toSearchableArray(): array
     {
         return [
-            'id'   => (string) $this->getKey(),
+            'id' => (string) $this->getKey(),
             'name' => (string) $this->name,
         ];
     }
@@ -48,8 +48,8 @@ class Tag extends Model
         return $this->hasManyThrough(Video::class, VideoTag::class, 'tag_id', 'id', 'id', 'video_id')->get();
     }*/
 
-    public function videos(): BelongsToMany {
+    public function videos(): BelongsToMany
+    {
         return $this->belongsToMany(Video::class, 'video_tags', 'tag_id', 'video_id')->withTimestamps();
     }
-
 }

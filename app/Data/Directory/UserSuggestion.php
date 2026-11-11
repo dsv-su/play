@@ -16,9 +16,9 @@ final class UserSuggestion implements Wireable
     public function toLivewire(): array
     {
         return [
-            'uid'   => $this->uid,
-            'name'  => $this->name,
-            'role'  => $this->role,
+            'uid' => $this->uid,
+            'name' => $this->name,
+            'role' => $this->role,
             'local' => $this->local,
         ];
     }
@@ -33,4 +33,3 @@ final class UserSuggestion implements Wireable
         );
     }
 }
-

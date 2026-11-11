@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -30,7 +29,7 @@ class ErrorAlert extends Mailable
      */
     public function build()
     {
-        return $this->from('play_server@dsv.su.se', 'DSVPlay')->subject("[". $this->exception['server'] ."] Error Alert")
+        return $this->from('play_server@dsv.su.se', 'DSVPlay')->subject('['.$this->exception['server'].'] Error Alert')
             ->view('emails.error_alert');
     }
 }

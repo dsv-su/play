@@ -7,56 +7,57 @@ use App\Models\ManualPresentation;
 use App\Models\Stream;
 use App\Models\StreamResolution;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 
 class Metadata
 {
     protected $sourse = [];
+
     protected $gsubtitles = [];
 
     public function create(ManualPresentation $presentation)
     {
-        //$Determine = new PresentationDuration();
-        //$Thumb = new StreamThumb();
+        // $Determine = new PresentationDuration();
+        // $Thumb = new StreamThumb();
 
-        $finalPath = $this->storage() . '/'. $presentation->local;
-        $videoPath = $finalPath . '/video/';
-        $subtitlePath = $finalPath . '/subtitle/';
-        //Creates the source attribute
+        $finalPath = $this->storage().'/'.$presentation->local;
+        $videoPath = $finalPath.'/video/';
+        $subtitlePath = $finalPath.'/subtitle/';
+        // Creates the source attribute
         $presentation->sources = [];
 
-        //Adds source and created thumbs
-        if($presentation->type == 'edit') {
-            //Retrive all streams for presentation
+        // Adds source and created thumbs
+        if ($presentation->type == 'edit') {
+            // Retrive all streams for presentation
             $streams = Stream::where('video_id', $presentation->pkg_id)->get();
 
             foreach ($streams as $stream) {
                 $resolutions = StreamResolution::where('stream_id', $stream->id)->get();
 
                 foreach ($resolutions as $resolution) {
-                    $videosource[$resolution->resolution] = 'video/'. $resolution->filename;
+                    $videosource[$resolution->resolution] = 'video/'.$resolution->filename;
                 }
-                $build = \Illuminate\Support\Collection::make([
-                    //'video' => \Illuminate\Support\Collection::make($videosource), /* Disabled for now */
-                    //'poster' => 'poster/' . $stream->poster, /* Disabled for now */
-                    'playAudio' => (bool)$stream->audio
+                $build = Collection::make([
+                    // 'video' => \Illuminate\Support\Collection::make($videosource), /* Disabled for now */
+                    // 'poster' => 'poster/' . $stream->poster, /* Disabled for now */
+                    'playAudio' => (bool) $stream->audio,
                 ]);
 
-                //Check and update the structure of old format sources
-                if(empty($stream->name)) {
+                // Check and update the structure of old format sources
+                if (empty($stream->name)) {
                     $stream->name = 'main';
                 }
 
                 $buildsource[$stream->name] = $build;
 
             }
-            //If videostreams exist
-            if($buildsource) {
-                $this->source = \Illuminate\Support\Collection::make($buildsource);
+            // If videostreams exist
+            if ($buildsource) {
+                $this->source = Collection::make($buildsource);
             }
 
-
         } else {
-            foreach (\Illuminate\Support\Facades\Storage::disk('play-store')->files($videoPath) as $key => $filename) {
+            foreach (Storage::disk('play-store')->files($videoPath) as $key => $filename) {
                 /* Disabled 231102 RD
                     //Add duration
                     if($key ==  0 ) {
@@ -88,18 +89,18 @@ class Metadata
                     $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($filename));
                     //Add video source
                     */
-                foreach($files = \Illuminate\Support\Facades\Storage::disk('play-store')->files($videoPath) as $stream => $f) {
+                foreach ($files = Storage::disk('play-store')->files($videoPath) as $stream => $f) {
                     $thumb_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($f));
-                    if($stream == 0) {
+                    if ($stream == 0) {
                         $this->source['main'] = [
-                            'video' => 'video/'. basename($f),
-                            //'poster' => 'poster/'. $thumb_name . '.png',
+                            'video' => 'video/'.basename($f),
+                            // 'poster' => 'poster/'. $thumb_name . '.png',
                             'playAudio' => true,
                         ];
                     } else {
                         $this->source['camera'.$stream] = [
-                            'video' => 'video/'. basename($f),
-                            //'poster' => 'poster/'. $thumb_name . '.png',
+                            'video' => 'video/'.basename($f),
+                            // 'poster' => 'poster/'. $thumb_name . '.png',
                             'playAudio' => false,
                         ];
                     }
@@ -108,106 +109,106 @@ class Metadata
         }
 
         $presentation->sources = $this->source;
-        //Subtitle
-        if($subtitles = \Illuminate\Support\Facades\Storage::disk('play-store')->files($subtitlePath)) {
-            switch($presentation->sublanguage) {
-                case('english'):
-                    if($presentation->type == 'manual') {
+        // Subtitle
+        if ($subtitles = Storage::disk('play-store')->files($subtitlePath)) {
+            switch ($presentation->sublanguage) {
+                case 'english':
+                    if ($presentation->type == 'manual') {
                         $presentation->subtitles = [
-                            'English' => 'subtitle/' . basename($subtitles[0])
+                            'English' => 'subtitle/'.basename($subtitles[0]),
                         ];
                     } else {
-                        //Edit
-                        if(!empty($presentation->subtitles)) {
+                        // Edit
+                        if (! empty($presentation->subtitles)) {
                             $presentation->subtitles = array_merge($presentation->subtitles, [
-                                'English' => 'subtitle/' . basename($subtitles[0])
+                                'English' => 'subtitle/'.basename($subtitles[0]),
                             ]);
                         } else {
                             $presentation->subtitles = [
-                                'English' => 'subtitle/' . basename($subtitles[0])
-                                //'Generated' => ''
+                                'English' => 'subtitle/'.basename($subtitles[0]),
+                                // 'Generated' => ''
                             ];
                         }
                     }
                     break;
-                case('swedish'):
-                    if($presentation->type == 'manual') {
+                case 'swedish':
+                    if ($presentation->type == 'manual') {
                         $presentation->subtitles = [
-                            'Svenska' => 'subtitle/' . basename($subtitles[0])
+                            'Svenska' => 'subtitle/'.basename($subtitles[0]),
                         ];
                     } else {
-                        //Edit
-                        if(!empty($presentation->subtitles)) {
+                        // Edit
+                        if (! empty($presentation->subtitles)) {
                             $presentation->subtitles = array_merge($presentation->subtitles, [
-                                'Svenska' => 'subtitle/' . basename($subtitles[0])
+                                'Svenska' => 'subtitle/'.basename($subtitles[0]),
                             ]);
                         } else {
                             $presentation->subtitles = [
-                                'Svenska' => 'subtitle/' . basename($subtitles[0])
-                                //'Generated' => ''
+                                'Svenska' => 'subtitle/'.basename($subtitles[0]),
+                                // 'Generated' => ''
                             ];
                         }
                     }
                     break;
                 default:
-                    if($presentation->type == 'manual') {
+                    if ($presentation->type == 'manual') {
                         $presentation->subtitles = [
-                            'Svenska' => 'subtitle/' . basename($subtitles[0])
+                            'Svenska' => 'subtitle/'.basename($subtitles[0]),
                         ];
                     } else {
-                        //Edit
-                        if(!empty($presentation->subtitles)) {
+                        // Edit
+                        if (! empty($presentation->subtitles)) {
                             $presentation->subtitles = array_merge($presentation->subtitles, [
-                                'Svenska' => 'subtitle/' . basename($subtitles[0])
+                                'Svenska' => 'subtitle/'.basename($subtitles[0]),
                             ]);
                         } else {
                             $presentation->subtitles = [
-                                'Svenska' => 'subtitle/' . basename($subtitles[0])
-                                //'Generated' => ''
+                                'Svenska' => 'subtitle/'.basename($subtitles[0]),
+                                // 'Generated' => ''
                             ];
                         }
                     }
             }
-            //Add reference to upload dir
-            $presentation->upload_dir = '/data0/'. $this->storage() . '/' . $presentation->local;
+            // Add reference to upload dir
+            $presentation->upload_dir = '/data0/'.$this->storage().'/'.$presentation->local;
 
         }
 
-        //Subtitle generation
-        if($presentation->pkg_id) {
+        // Subtitle generation
+        if ($presentation->pkg_id) {
             $stream = Stream::where('video_id', $presentation->pkg_id)->where('audio', true)->first();
-            if($presentation->sublanguage) {
+            if ($presentation->sublanguage) {
                 $this->gsubtitles['Generated'] = Collection::make([
                     'type' => 'whisper',
                     'source' => $stream->name ?? 'main',
-                    'language' => $presentation->sublanguage
+                    'language' => $presentation->sublanguage,
                 ]);
             } else {
                 $this->gsubtitles['Generated'] = Collection::make([
                     'type' => 'whisper',
-                    'source' => $stream->name ?? 'main'
+                    'source' => $stream->name ?? 'main',
                 ]);
             }
 
         } else {
-            if($presentation->sublanguage) {
+            if ($presentation->sublanguage) {
                 $this->gsubtitles['Generated'] = Collection::make([
                     'type' => 'whisper',
                     'source' => $stream->name ?? 'main',
-                    'language' => $presentation->sublanguage
+                    'language' => $presentation->sublanguage,
                 ]);
             } else {
                 $this->gsubtitles['Generated'] = Collection::make([
                     'type' => 'whisper',
-                    'source' => $stream->name ?? 'main'
+                    'source' => $stream->name ?? 'main',
                 ]);
             }
         }
 
         $presentation->generate_subtitles = $this->gsubtitles;
 
-        //Failcheck
-        if(!count($files ?? []) > 0) {
+        // Failcheck
+        if (! count($files ?? []) > 0) {
             return false;
         }
 
@@ -216,9 +217,9 @@ class Metadata
 
     private function storage()
     {
-        $this->file = base_path() . '/systemconfig/play.ini';
-        if (!file_exists($this->file)) {
-            $this->file = base_path() . '/systemconfig/play.ini.example';
+        $this->file = base_path().'/systemconfig/play.ini';
+        if (! file_exists($this->file)) {
+            $this->file = base_path().'/systemconfig/play.ini.example';
         }
         $this->system_config = parse_ini_file($this->file, true);
 
@@ -227,8 +228,8 @@ class Metadata
 
     private function base_uri()
     {
-        $this->file = base_path() . '/systemconfig/play.ini';
-        if (!file_exists($this->file)) {
+        $this->file = base_path().'/systemconfig/play.ini';
+        if (! file_exists($this->file)) {
             abort(503);
         }
         $this->system_config = parse_ini_file($this->file, true);

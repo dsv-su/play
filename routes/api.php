@@ -1,9 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\PresentationApiController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-
+use Illuminate\Support\Facades\Route;
 
 Route::get('test', [AuthController::class, 'token_test']);
 

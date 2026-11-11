@@ -11,8 +11,11 @@ use Illuminate\Support\Facades\DB;
 class StreamsStore
 {
     protected array $sources = [];
+
     protected $video;
+
     protected bool $hasSources;
+
     protected bool $isEdit;
 
     public function __construct(Request $request, $video)
@@ -30,16 +33,17 @@ class StreamsStore
 
     public function streams(): void
     {
-        if (!$this->hasSources) {
+        if (! $this->hasSources) {
             return;
         }
 
         DB::transaction(function () {
             // An empty edit result must not remove the existing streams.
             if ($this->isEmptySources()) {
-                if (!$this->isEdit) {
+                if (! $this->isEdit) {
                     $this->deleteAllStreams();
                 }
+
                 return;
             }
 
@@ -59,7 +63,7 @@ class StreamsStore
             }
 
             // Non-edit callbacks contain an authoritative stream list.
-            if (!$this->isEdit) {
+            if (! $this->isEdit) {
                 $this->video->streams()
                     ->whereNotIn('id', $keptStreamIds)
                     ->delete();
@@ -112,7 +116,7 @@ class StreamsStore
         }
 
         foreach ($this->sources as $source) {
-            if (!empty($source)) {
+            if (! empty($source)) {
                 return false;
             }
         }

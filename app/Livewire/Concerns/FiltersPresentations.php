@@ -26,7 +26,7 @@ trait FiltersPresentations
     #[On('recompute')]
     public function handleRecompute(string $prop): void
     {
-        if (!array_key_exists($prop, self::FILTER_SELECTIONS)) {
+        if (! array_key_exists($prop, self::FILTER_SELECTIONS)) {
             return;
         }
 

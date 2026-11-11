@@ -10,15 +10,14 @@ class PlayAdmin
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
     {
-        if(app()->make('play_role') != 'Administrator') {
+        if (app()->make('play_role') != 'Administrator') {
             return redirect('/');
         }
+
         return $next($request);
     }
 }

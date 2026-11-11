@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Jobs\PerformVideoDownload;
-use App\Models\Video;
 use App\Models\Presentation;
+use App\Models\Video;
+use App\Models\VideoStat;
 use App\Services\AuthHandler;
 use App\Services\Store\DownloadResource;
 use App\Services\TicketHandler\Entitlement;
 use App\Services\TicketHandler\TicketPermissionHandler;
-use App\Models\VideoStat;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,8 +32,7 @@ class DownloadController extends Controller
 
     /** @var string */
     private const STATUS_REQUESTED = 'request download';
-    /** @var string */
-    //private const STATUS_STORED    = 'stored';
+    // private const STATUS_STORED    = 'stored';
 
     /** Cache for parsed ini */
     private ?string $storeListUri = null;
@@ -56,7 +55,7 @@ class DownloadController extends Controller
             $created = $this->initDownload($video, $resolution);
 
             // If initDownload() returned false and nothing exists, downloading is disabled.
-            if (!$created && !$this->downloadExists($video)) {
+            if (! $created && ! $this->downloadExists($video)) {
                 return $this->redirectWithError(__('Error: Download not allowed for this video.'));
             }
 
@@ -74,10 +73,11 @@ class DownloadController extends Controller
             }
 
             // If the job finished without producing the expected files.
-            //return $this->redirectWithError(__('Error: Download package not found after processing.'));
+            // return $this->redirectWithError(__('Error: Download package not found after processing.'));
             return redirect()->back();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             \Log::error('Download failed', ['video_id' => $video->id, 'e' => $e]);
+
             return $this->redirectWithError(__('Error: Unable to process download.'));
         }
     }
@@ -86,16 +86,16 @@ class DownloadController extends Controller
     {
         $p = Presentation::find($video->id);
 
-        if (!$p) {
+        if (! $p) {
             return response()->json(['exists' => false, 'status' => null, 'progress' => 0]);
         }
 
-        //disk check
+        // disk check
         $ready = $this->downloadExists($video);
 
         return response()->json([
-            'exists'   => $ready,
-            'status'   => $p->status,
+            'exists' => $ready,
+            'status' => $p->status,
             'progress' => (int) $p->progress,
         ]);
     }
@@ -109,7 +109,7 @@ class DownloadController extends Controller
         $video = $this->applyDownloadStatusFromCourses($video);
 
         // If disabled at both levels, bail early
-        if (!($video->download || $video->download_setting)) {
+        if (! ($video->download || $video->download_setting)) {
             return false;
         }
 
@@ -123,21 +123,21 @@ class DownloadController extends Controller
         }
 
         $downloadDir = $this->makeDownloadDir($video->id);
-        $sourcesArr  = is_array($video->sources) ? $video->sources : json_decode((string) $video->sources, true) ?? [];
+        $sourcesArr = is_array($video->sources) ? $video->sources : json_decode((string) $video->sources, true) ?? [];
 
         $presentation->fill([
-            'status'      => self::STATUS_REQUESTED,
-            'user'        => app()->make('play_user'),
-            'local'       => $downloadDir,
-            'base'        => '/data0/incoming/' . $downloadDir,
-            'title'       => $video->title,
-            'presenters'  => '[]',
-            'tags'        => '[]',
-            'courses'     => '[]',
-            'thumb'       => 'image/thumb.jpg',
-            'created'     => $video->creation,
-            'duration'    => $video->duration,
-            'sources'     => $sourcesArr,
+            'status' => self::STATUS_REQUESTED,
+            'user' => app()->make('play_user'),
+            'local' => $downloadDir,
+            'base' => '/data0/incoming/'.$downloadDir,
+            'title' => $video->title,
+            'presenters' => '[]',
+            'tags' => '[]',
+            'courses' => '[]',
+            'thumb' => 'image/thumb.jpg',
+            'created' => $video->creation,
+            'duration' => $video->duration,
+            'sources' => $sourcesArr,
         ]);
 
         $presentation->save();
@@ -151,13 +151,13 @@ class DownloadController extends Controller
     public function browserDownloadZip(Video $video): RedirectResponse|StreamedResponse
     {
         $presentation = Presentation::find($video->id);
-        if (!$presentation) {
+        if (! $presentation) {
             return $this->redirectWithError(__('Error: Presentation not found!'));
         }
 
         // Safer filename: slug + id
-        $safeName = $video->title . '.zip';
-        $filePath = trim($presentation->local, '/') . '/' . $safeName;
+        $safeName = $video->title.'.zip';
+        $filePath = trim($presentation->local, '/').'/'.$safeName;
 
         if (Storage::disk(self::PUBLIC_DISK)->exists($filePath)) {
             // Increment stats atomically
@@ -175,17 +175,13 @@ class DownloadController extends Controller
             // Atomic increment
             $stat->increment('download');
 
-
-
-
-
-            //Record metrics for presentation
+            // Record metrics for presentation
             metric('presentation_download')
                 ->measurable($video)
                 ->with(['vid' => $video->id])
                 ->category('download')
                 ->record();
-            //Record metrics overall
+            // Record metrics overall
             metric('download')
                 ->category('download')
                 ->record();
@@ -195,7 +191,6 @@ class DownloadController extends Controller
 
         return $this->redirectWithError(__('Error: File not found!'));
     }
-
 
     /**
      * Download a subtitle file for the given language.
@@ -208,7 +203,7 @@ class DownloadController extends Controller
 
         $lang = $request->string('lang')->toString();
 
-        Storage::disk(self::PUBLIC_DISK)->makeDirectory('subtitles/' . $video->id);
+        Storage::disk(self::PUBLIC_DISK)->makeDirectory('subtitles/'.$video->id);
         $downloader = new DownloadResource($video, new TicketPermissionHandler($video));
 
         $subs = is_array($video->subtitles) ? $video->subtitles : json_decode((string) $video->subtitles, true) ?? [];
@@ -216,13 +211,13 @@ class DownloadController extends Controller
 
         foreach ($subs as $code => $file) {
             if ($code === $lang) {
-                $path = 'subtitles/' . $video->id . '/' . basename($file);
-                $downloader->getFile($path, $this->storeBaseUri() . '/' . $video->id . '/' . ltrim($file, '/'));
+                $path = 'subtitles/'.$video->id.'/'.basename($file);
+                $downloader->getFile($path, $this->storeBaseUri().'/'.$video->id.'/'.ltrim($file, '/'));
                 break;
             }
         }
 
-        if (!$path) {
+        if (! $path) {
             return $this->redirectWithError(__('Error: Subtitle not found for requested language.'));
         }
 
@@ -239,15 +234,16 @@ class DownloadController extends Controller
     private function downloadExists(Video $video): bool
     {
         $presentation = Presentation::find($video->id);
-        if (!$presentation) {
+        if (! $presentation) {
             return false;
         }
         $dir = trim($presentation->local, '/');
-        //directoryExists
+        // directoryExists
         if (method_exists(Storage::disk(self::PUBLIC_DISK), 'directoryExists')) {
             return Storage::disk(self::PUBLIC_DISK)->directoryExists($dir);
         }
-        return Storage::disk(self::PUBLIC_DISK)->exists($dir . '/');
+
+        return Storage::disk(self::PUBLIC_DISK)->exists($dir.'/');
     }
 
     private function redirectWithError(string $message): RedirectResponse
@@ -261,7 +257,7 @@ class DownloadController extends Controller
     private function makeDownloadDir(string $id): string
     {
         // YYYYMMDD_uuid-id
-        return now()->format('Ymd') . '_' . Str::lower(Str::ulid()) . '-' . $id;
+        return now()->format('Ymd').'_'.Str::lower(Str::ulid()).'-'.$id;
     }
 
     /**
@@ -300,6 +296,7 @@ class DownloadController extends Controller
             $param = substr($param, 5);
             $param = str_replace('_', '-', $param);
         }
+
         // HeaderBag is case-insensitive, so case doesn’t matter, but this is fine.
         return $param;
     }

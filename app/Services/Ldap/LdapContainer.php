@@ -2,15 +2,15 @@
 
 namespace App\Services\Ldap;
 
-use LdapRecord\Container;
 use LdapRecord\Connection;
+use LdapRecord\Container;
 
 class LdapContainer
 {
     public function bind()
     {
         $connection = new Connection([
-            'hosts'    => ['ldap.su.se'],
+            'hosts' => ['ldap.su.se'],
             'username' => null,
             'password' => null,
         ]);

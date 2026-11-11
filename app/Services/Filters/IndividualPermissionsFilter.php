@@ -9,11 +9,12 @@ use App\Models\Video;
 class IndividualPermissionsFilter extends VisibilityFilter implements VisibilityInterface
 {
     protected Video $video;
+
     protected string $username;
 
     public function __construct(Video $video)
     {
-        $this->video    = $video;
+        $this->video = $video;
         $this->username = app('play_username'); // same as app()->make('play_username')
     }
 
@@ -24,12 +25,12 @@ class IndividualPermissionsFilter extends VisibilityFilter implements Visibility
             ->where('username', $this->username)
             ->first();
 
-        if (!$perm) {
+        if (! $perm) {
             return; // no individual override; nothing to change
         }
 
         // If visibility isn't already truthy, set visibility + mark as 'hidden' (your original behavior)
-        if (!$this->video->getAttribute('visibility')) {
+        if (! $this->video->getAttribute('visibility')) {
             $this->video->setAttribute('visibility', true);
             $this->video->setAttribute('hidden', true);
         }
@@ -44,4 +45,3 @@ class IndividualPermissionsFilter extends VisibilityFilter implements Visibility
         // else: leave as-is for view/unknown
     }
 }
-

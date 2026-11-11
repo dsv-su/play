@@ -7,26 +7,23 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
-
 class CheckEntitlement
 {
     /**
      * Handle an incoming request.
      *
-     * @param Request $request
-     * @param Closure $next
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
     {
-        $authHandler = new AuthHandler();
+        $authHandler = new AuthHandler;
         $system = $authHandler->authorize();
 
         $authParam = $system->global->authorization_parameter;
         $authString = $system->global->authorization;
-        $auth = explode(";", $authString);
+        $auth = explode(';', $authString);
 
-        if (!$request->server('REMOTE_USER')) {
+        if (! $request->server('REMOTE_USER')) {
             if ($system->global->app_env == 'local') {
                 return $next($request);
             } else {
@@ -35,7 +32,7 @@ class CheckEntitlement
         } else {
             $serverEntitlements = $this->getServerEntitlements($authParam);
 
-            if (!$this->checkEntitlementMatch($serverEntitlements, $auth)) {
+            if (! $this->checkEntitlementMatch($serverEntitlements, $auth)) {
                 abort(401);
             }
         }
@@ -46,7 +43,7 @@ class CheckEntitlement
     protected function getServerEntitlements($authParam)
     {
         if (isset($_SERVER[$authParam])) {
-            return explode(";", $_SERVER[$authParam]);
+            return explode(';', $_SERVER[$authParam]);
         }
 
         return [];

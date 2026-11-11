@@ -2,19 +2,21 @@
 
 namespace App\Livewire\Edit;
 
-use App\Models\Video;
 use App\Models\Tag;
+use App\Models\Video;
 use Illuminate\Support\Str;
 use Livewire\Component;
-use stdClass;
-
 
 class EditTags extends Component
 {
     public ?Video $video = null;
+
     public $tags = [];
+
     public string $searchTag = '';
+
     public array $videoTags = [];
+
     public int $highlighted = 0;
 
     public function mount($video): void
@@ -39,7 +41,9 @@ class EditTags extends Component
     public function moveHighlight(int $direction): void
     {
         $count = count($this->tags);
-        if ($count === 0) return;
+        if ($count === 0) {
+            return;
+        }
 
         $this->highlighted = ($this->highlighted + $direction + $count) % $count;
     }
@@ -73,7 +77,7 @@ class EditTags extends Component
         // 1) Scout -> Eloquent models -> map to plain arrays
         $results = Tag::search($q)->take(10)->get()
             ->map(fn (Tag $t) => [
-                'id'   => $t->id,
+                'id' => $t->id,
                 'name' => $t->name,
 
             ])
@@ -88,7 +92,7 @@ class EditTags extends Component
         // 3) If no exact match, prepend an array "input" option
         if (! $hasExact) {
             array_unshift($results, [
-                'id'   => null,
+                'id' => null,
                 'name' => $q,
                 'type' => 'input',
             ]);
@@ -103,18 +107,18 @@ class EditTags extends Component
     public function addTag($tagID, $tagName)
     {
 
-        if($tagID) {
-            //Associate
+        if ($tagID) {
+            // Associate
             $this->videoTags[] = [
                 'id' => $tagID,
-                'name' => $tagName
+                'name' => $tagName,
             ];
         } else {
-            //Create and Associate
-            $tag = \App\Models\Tag::firstOrCreate(['name' => $tagName]);
+            // Create and Associate
+            $tag = Tag::firstOrCreate(['name' => $tagName]);
             $this->videoTags[] = [
                 'id' => $tag->id,
-                'name' => $tag->name
+                'name' => $tag->name,
             ];
         }
         $this->tags = [];
@@ -128,11 +132,11 @@ class EditTags extends Component
 
     public function associatedTags()
     {
-        if($this->video?->exists) {
+        if ($this->video?->exists) {
             foreach ($this->video->tags as $t) {
                 $this->videoTags[] = [
                     'id' => $t->id,
-                    'name' => $t->name
+                    'name' => $t->name,
                 ];
             }
         }

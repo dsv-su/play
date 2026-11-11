@@ -19,8 +19,8 @@ final class Package
 
         // Build attributes
         $pkg->fill([
-            'id'          => $pkgId,
-            'presentation'    => json_encode($this->request->all(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
+            'id' => $pkgId,
+            'presentation' => json_encode($this->request->all(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
         ]);
 
         $pkg->save();

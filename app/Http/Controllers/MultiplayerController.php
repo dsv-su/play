@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
-use App\Services\Filters\VisibilityFilter;
-use App\Services\TicketHandler\TicketPermissionHandler;
 use App\Models\Video;
 use App\Models\VideoCourse;
 use App\Models\VideoStat;
+use App\Services\Filters\VisibilityFilter;
+use App\Services\TicketHandler\TicketPermissionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,10 +18,10 @@ class MultiplayerController extends Controller
 {
     public function __construct()
     {
-        //Exceptions for 'Multiplayer', 'Presentation' and 'Playlist' for external permission setting
+        // Exceptions for 'Multiplayer', 'Presentation' and 'Playlist' for external permission setting
         $this->middleware(['entitlements', 'playauth'])->except(['multiplayer', 'multiplayer_ce', 'presentation', 'playlist']);
-        //Playback middleware checks hidden presentations
-        $this->middleware('playback')->except(['playlist', 'playCourse','presentation']);
+        // Playback middleware checks hidden presentations
+        $this->middleware('playback')->except(['playlist', 'playCourse', 'presentation']);
     }
 
     /**
@@ -29,8 +29,8 @@ class MultiplayerController extends Controller
      */
     private function base_uri()
     {
-        $this->file = base_path() . '/systemconfig/play.ini';
-        if (!file_exists($this->file)) {
+        $this->file = base_path().'/systemconfig/play.ini';
+        if (! file_exists($this->file)) {
             abort(503);
         }
         $this->system_config = parse_ini_file($this->file, true);
@@ -45,7 +45,7 @@ class MultiplayerController extends Controller
             $query->where('course_id', $courseid);
         })->where('visibility', 1)->orderBy('creation')->get())->first()->id;
 
-        return Redirect::to('multiplayer?p=' . $video_id . '&l=' . $courseid);
+        return Redirect::to('multiplayer?p='.$video_id.'&l='.$courseid);
     }
 
     public function player(Video $video): RedirectResponse
@@ -62,7 +62,6 @@ class MultiplayerController extends Controller
         return redirect()->route('multiplayer.index', $query);
     }
 
-
     public function presentation(string $id): JsonResponse
     {
         // Eager-load
@@ -73,11 +72,11 @@ class MultiplayerController extends Controller
 
         // Issue ticket for video
         $handler = app(TicketPermissionHandler::class);      // constructor gets Entitlement via container
-        $token   = $handler->issue($video, $entitlements ?? []);
+        $token = $handler->issue($video, $entitlements ?? []);
 
         // Base presentation payload
         $presentation = [
-            'id'    => $video->id,
+            'id' => $video->id,
             'title' => $video->title,
             'thumb' => $video->thumb,
         ];
@@ -93,23 +92,23 @@ class MultiplayerController extends Controller
             }
 
             $sources[$stream->name] = [
-                'video'     => $videoSources,
-                'poster'    => $this->base_uri().'/'.$video->id.'/'.$stream->poster,
+                'video' => $videoSources,
+                'poster' => $this->base_uri().'/'.$video->id.'/'.$stream->poster,
                 'playAudio' => (bool) $stream->audio,
             ];
         }
 
-        if (!empty($sources)) {
+        if (! empty($sources)) {
             $presentation['sources'] = $sources;
         }
 
         // Subtitles
-        if (!empty($video->subtitles)) {
+        if (! empty($video->subtitles)) {
             $subtitleArray = is_array($video->subtitles)
                 ? $video->subtitles
                 : (json_decode($video->subtitles, true) ?: []);
 
-            if (!empty($subtitleArray)) {
+            if (! empty($subtitleArray)) {
                 // Map keys to absolute URLs
                 $presentation['subtitles'] = collect($subtitleArray)
                     ->mapWithKeys(fn ($path, $key) => [$key => $this->base_uri().'/'.$video->id.'/'.$path])
@@ -127,13 +126,13 @@ class MultiplayerController extends Controller
         );
         $stat->increment('playback');
 
-        //Record metrics for presentation
+        // Record metrics for presentation
         metric('presentation')
             ->measurable($video)
             ->with(['vid' => $video->id])
             ->category('clicks')
             ->record();
-        //Record metrics overall
+        // Record metrics overall
         metric('playback')
             ->category('clicks')
             ->record();
@@ -188,7 +187,7 @@ class MultiplayerController extends Controller
                 $course->year
             ),
             'items' => $ordered->map(fn ($v) => [
-                'id'    => $v->id,
+                'id' => $v->id,
                 'title' => $v->title,
                 'title_en' => $v->title_en,
                 'thumb' => $v->thumb,
@@ -198,12 +197,12 @@ class MultiplayerController extends Controller
         ];
 
         // 7) Return  JSON (pretty-print)
-        return response()->json($payload, 200, [], JSON_PRETTY_PRINT );
+        return response()->json($payload, 200, [], JSON_PRETTY_PRINT);
     }
 
     public function multiplayer()
     {
-        //deprecated
+        // deprecated
         return view('player.index');
     }
 
@@ -222,18 +221,17 @@ class MultiplayerController extends Controller
             'presentation' => $data['p'],
         ];
 
-        if (!empty($data['l'])) {
+        if (! empty($data['l'])) {
             $viewData['playlist'] = $data['l'];
         }
 
-        if (!empty($data['s'])) {
+        if (! empty($data['s'])) {
             $viewData['s'] = $data['s'];
         }
 
         if (isset($data['t'])) {
             $viewData['t'] = $data['t'];
         }
-
 
         return view('player.index-ce', $viewData);
     }

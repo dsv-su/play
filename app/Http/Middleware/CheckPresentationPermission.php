@@ -3,9 +3,9 @@
 namespace App\Http\Middleware;
 
 use App\Models\CoursePermissions;
-use App\Services\AuthHandler;
 use App\Models\Video;
 use App\Models\VideoPermission;
+use App\Services\AuthHandler;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -18,10 +18,10 @@ class CheckPresentationPermission
     public function handle(Request $request, Closure $next)
     {
         // Authorize
-        $system = (new AuthHandler())->authorize();
+        $system = (new AuthHandler)->authorize();
 
         // Only guard presentation routes
-        if (!$request->is('presentation/*')) {
+        if (! $request->is('presentation/*')) {
             return redirect()->guest(route('sulogin'));
         }
 
@@ -30,19 +30,19 @@ class CheckPresentationPermission
 
         // Load the presentation + its courses
         $presentation = Video::with('courses')->find($id);
-        if (!$presentation) {
+        if (! $presentation) {
             // If video not found, let downstream handle (404) or redirect; here we redirect to login
             return redirect()->guest(route('sulogin'));
         }
 
         // Presentation-level permission row (fail closed if missing)
         $permission = VideoPermission::where('video_id', $id)->first();
-        if (!$permission) {
+        if (! $permission) {
             return $this->redirectOrNext($system, $next, $request, $requireLogin = true);
         }
 
         // If user is unauthenticated via REMOTE_USER checks
-        if (!$request->server('REMOTE_USER')) {
+        if (! $request->server('REMOTE_USER')) {
             // 1) Presentation setting: if public, allow
             if ((int) $permission->permission_id === 4) {
                 return $next($request);
@@ -54,7 +54,7 @@ class CheckPresentationPermission
             }
 
             // 3) Course settings: if any related course is NOT public (id != 4), require login unless local
-            $courses   = $presentation->courses; // Collection
+            $courses = $presentation->courses; // Collection
             if ($courses->isNotEmpty()) {
                 $courseIds = $courses->pluck('id');
                 // [course_id => permission_id]
@@ -78,6 +78,7 @@ class CheckPresentationPermission
         if ($requireLogin && ($system->global->app_env ?? null) !== 'local') {
             return redirect()->guest(route('sulogin'));
         }
+
         return $next($request);
     }
 }

@@ -23,17 +23,17 @@ class DaisyIntegration
         $this->config = $this->loadConfig();
 
         $this->client = $client ?? new Client([
-                'base_uri' => rtrim($this->config['daisy_url'], '/') . '/',
-                'auth'     => [$this->config['daisy_username'], $this->config['daisy_password']],
-                'timeout'  => 10.0,
-            ]);
+            'base_uri' => rtrim($this->config['daisy_url'], '/').'/',
+            'auth' => [$this->config['daisy_username'], $this->config['daisy_password']],
+            'timeout' => 10.0,
+        ]);
     }
 
     /**
      * Core GET helper.
      *
-     * @param string      $endpoint e.g. 'courseSegment?semester=20252'
-     * @param null|string $accept   'json' or 'xml' (optional)
+     * @param  string  $endpoint  e.g. 'courseSegment?semester=20252'
+     * @param  null|string  $accept  'json' or 'xml' (optional)
      * @return string raw body
      */
     private function get(string $endpoint, ?string $accept = 'json'): string
@@ -48,6 +48,7 @@ class DaisyIntegration
 
         try {
             $res = $this->client->request('GET', $endpoint, ['headers' => $headers]);
+
             return (string) $res->getBody();
         } catch (ClientException|RequestException $e) {
             // app()->make('init')->check_system();
@@ -59,7 +60,7 @@ class DaisyIntegration
 
     /**
      * @template T of array
-     * @param string $endpoint
+     *
      * @return array<mixed>
      */
     protected function getJson(string $endpoint): array
@@ -67,43 +68,44 @@ class DaisyIntegration
         $body = $this->get($endpoint, 'json');
         $decoded = json_decode($body, true);
 
-        if (!is_array($decoded)) {
+        if (! is_array($decoded)) {
             throw new RuntimeException("Invalid JSON from Daisy endpoint: {$endpoint}");
         }
+
         return $decoded;
     }
 
     /** Read INI once and validate required keys. */
     private function loadConfig(): array
     {
-        $path = base_path() . '/systemconfig/play.ini';
-        if (!file_exists($path)) {
-            $path = base_path() . '/systemconfig/play.ini.example';
-            if (!file_exists($path)) {
+        $path = base_path().'/systemconfig/play.ini';
+        if (! file_exists($path)) {
+            $path = base_path().'/systemconfig/play.ini.example';
+            if (! file_exists($path)) {
                 // abort(510);
                 throw new RuntimeException('Missing Daisy configuration.');
             }
         }
 
         $ini = parse_ini_file($path, true);
-        if (!is_array($ini) || !isset($ini['Daisy'])) {
+        if (! is_array($ini) || ! isset($ini['Daisy'])) {
             throw new RuntimeException('Invalid Daisy configuration file.');
         }
 
-        $req = ['daisy_url','daisy_username','daisy_password','from_year','to_year','start_date'];
+        $req = ['daisy_url', 'daisy_username', 'daisy_password', 'from_year', 'to_year', 'start_date'];
         foreach ($req as $key) {
-            if (!array_key_exists($key, $ini['Daisy'])) {
+            if (! array_key_exists($key, $ini['Daisy'])) {
                 throw new RuntimeException("Daisy configuration missing key: {$key}");
             }
         }
 
         return [
-            'daisy_url'      => (string) $ini['Daisy']['daisy_url'],
+            'daisy_url' => (string) $ini['Daisy']['daisy_url'],
             'daisy_username' => (string) $ini['Daisy']['daisy_username'],
             'daisy_password' => (string) $ini['Daisy']['daisy_password'],
-            'from_year'      => (string) $ini['Daisy']['from_year'],
-            'to_year'        => (string) $ini['Daisy']['to_year'],
-            'start_date'     => (string) $ini['Daisy']['start_date'],
+            'from_year' => (string) $ini['Daisy']['from_year'],
+            'to_year' => (string) $ini['Daisy']['to_year'],
+            'start_date' => (string) $ini['Daisy']['start_date'],
         ];
     }
 
@@ -121,6 +123,7 @@ class DaisyIntegration
     {
         // VT = 1, HT = 2
         $suffix = $term === 'VT' ? '1' : '2';
+
         return "{$year}{$suffix}";
     }
 
@@ -131,6 +134,7 @@ class DaisyIntegration
     public function getDaisyPersonId(string $username): ?int
     {
         $data = $this->getJson("person/username/{$username}@su.se");
+
         return $data['id'] ?? null;
     }
 
@@ -142,6 +146,7 @@ class DaisyIntegration
     public function getCourse(string $designation, string $semester): array|false
     {
         $arr = $this->getJson("courseSegment?designation={$designation}&semester={$semester}");
+
         return $arr[0] ?? false;
     }
 
@@ -149,10 +154,12 @@ class DaisyIntegration
     {
         $emp = $this->getJson("employee/username/{$username}@su.se");
         $personId = $emp['person']['id'] ?? null;
-        if (!$personId) return [];
+        if (! $personId) {
+            return [];
+        }
 
-        $from = $this->fromYear() . '1';
-        $to   = $this->toYear()   . '2';
+        $from = $this->fromYear().'1';
+        $to = $this->toYear().'2';
 
         $courses = $this->getJson("employee/{$personId}/contributions?fromSemesterId={$from}&toSemesterId={$to}");
 
@@ -160,17 +167,20 @@ class DaisyIntegration
         foreach ($courses as $instance) {
             $ids[] = $instance['courseSegmentInstance']['id'] ?? null;
         }
-        return array_values(array_filter($ids, fn($v) => $v !== null));
+
+        return array_values(array_filter($ids, fn ($v) => $v !== null));
     }
 
     public function getActiveEmployeeSemesters(string $username): array
     {
         $emp = $this->getJson("employee/username/{$username}@su.se");
         $personId = $emp['person']['id'] ?? null;
-        if (!$personId) return [];
+        if (! $personId) {
+            return [];
+        }
 
-        $from = $this->fromYear() . '1';
-        $to   = $this->toYear()   . '2';
+        $from = $this->fromYear().'1';
+        $to = $this->toYear().'2';
 
         $courses = $this->getJson("employee/{$personId}/contributions?fromSemesterId={$from}&toSemesterId={$to}");
 
@@ -184,18 +194,25 @@ class DaisyIntegration
             }
         }
 
-        if (!$pairs) return [];
+        if (! $pairs) {
+            return [];
+        }
 
         krsort($pairs); // by instance id desc
         // unique by value (semester id) while preserving order
         $seen = [];
         $out = [];
         foreach ($pairs as $id => $sem) {
-            if (in_array($sem, $seen, true)) continue;
+            if (in_array($sem, $seen, true)) {
+                continue;
+            }
             $seen[] = $sem;
             $out[$id] = $sem;
-            if (count($out) >= 6) break;
+            if (count($out) >= 6) {
+                break;
+            }
         }
+
         return $out;
     }
 
@@ -203,10 +220,12 @@ class DaisyIntegration
     {
         $emp = $this->getJson("employee/username/{$username}@su.se");
         $personId = $emp['person']['id'] ?? null;
-        if (!$personId) return [];
+        if (! $personId) {
+            return [];
+        }
 
-        $from = $this->fromYear() . '1';
-        $to   = $this->toYear()   . '2';
+        $from = $this->fromYear().'1';
+        $to = $this->toYear().'2';
 
         $courses = $this->getJson("employee/{$personId}/contributions?fromSemesterId={$from}&toSemesterId={$to}");
 
@@ -219,29 +238,38 @@ class DaisyIntegration
             }
         }
 
-        if (!$pairs) return [];
+        if (! $pairs) {
+            return [];
+        }
 
         krsort($pairs);
         $seen = [];
         $out = [];
         foreach ($pairs as $id => $des) {
-            if (in_array($des, $seen, true)) continue;
+            if (in_array($des, $seen, true)) {
+                continue;
+            }
             $seen[] = $des;
             $out[$id] = $des;
-            if (count($out) >= 6) break;
+            if (count($out) >= 6) {
+                break;
+            }
         }
+
         return $out;
     }
 
     public function getActiveCoursesHT(): array
     {
         $semester = $this->semesterCode($this->toYear(), 'HT');
+
         return $this->courseIdsForSemester($semester);
     }
 
     public function getActiveCoursesVT(): array
     {
         $semester = $this->semesterCode($this->toYear(), 'VT');
+
         return $this->courseIdsForSemester($semester);
     }
 
@@ -249,6 +277,7 @@ class DaisyIntegration
     {
         $year = (string) ((int) $this->toYear() - 1);
         $semester = $this->semesterCode($year, 'HT');
+
         return $this->courseIdsForSemester($semester);
     }
 
@@ -256,6 +285,7 @@ class DaisyIntegration
     {
         $year = (string) ((int) $this->toYear() - 1);
         $semester = $this->semesterCode($year, 'VT');
+
         return $this->courseIdsForSemester($semester);
     }
 
@@ -263,12 +293,17 @@ class DaisyIntegration
     private function courseIdsForSemester(string $semester): array
     {
         $arr = $this->getJson("courseSegment?semester={$semester}");
-        if (!$arr) return [0];
+        if (! $arr) {
+            return [0];
+        }
 
         $ids = [];
         foreach ($arr as $row) {
-            if (isset($row['id'])) $ids[] = $row['id'];
+            if (isset($row['id'])) {
+                $ids[] = $row['id'];
+            }
         }
+
         return $ids ?: [0];
     }
 
@@ -276,14 +311,19 @@ class DaisyIntegration
     {
         $person = $this->getJson("person/username/{$username}@su.se");
         $id = $person['id'] ?? null;
-        if (!$id) return [];
+        if (! $id) {
+            return [];
+        }
 
         $instances = $this->getJson("person/{$id}/courseSegmentInstances");
         $ids = [];
         foreach ($instances as $inst) {
-            if (isset($inst['id'])) $ids[] = $inst['id'];
+            if (isset($inst['id'])) {
+                $ids[] = $inst['id'];
+            }
         }
         rsort($ids);
+
         return $ids;
     }
 
@@ -291,7 +331,9 @@ class DaisyIntegration
     {
         $person = $this->getJson("person/username/{$username}@su.se");
         $id = $person['id'] ?? null;
-        if (!$id) return [];
+        if (! $id) {
+            return [];
+        }
 
         $instances = $this->getJson("person/{$id}/courseSegmentInstances");
 
@@ -304,17 +346,24 @@ class DaisyIntegration
             }
         }
 
-        if (!$pairs) return [];
+        if (! $pairs) {
+            return [];
+        }
 
         krsort($pairs);
         $seen = [];
         $out = [];
         foreach ($pairs as $iid => $des) {
-            if (in_array($des, $seen, true)) continue;
+            if (in_array($des, $seen, true)) {
+                continue;
+            }
             $seen[] = $des;
             $out[$iid] = $des;
-            if (count($out) >= 6) break;
+            if (count($out) >= 6) {
+                break;
+            }
         }
+
         return $out;
     }
 
@@ -323,14 +372,15 @@ class DaisyIntegration
         $seg = $this->getJson("courseSegment/{$id}");
 
         $responsible = [];
-        if (!empty($seg['contributors']) && is_array($seg['contributors'])) {
+        if (! empty($seg['contributors']) && is_array($seg['contributors'])) {
             foreach ($seg['contributors'] as $contrib) {
-                if (!empty($contrib['responsible']) && !empty($contrib['personId'])) {
+                if (! empty($contrib['responsible']) && ! empty($contrib['personId'])) {
                     $person = $this->getJson("person/{$contrib['personId']}");
                     $responsible[] = $person;
                 }
             }
         }
+
         return $responsible;
     }
 
@@ -354,16 +404,16 @@ class DaisyIntegration
             'courseSegment?semester=20221',
             'courseSegment?semester=20212',
             'courseSegment?semester=20211',
-            //'courseSegment?semester=20201',
-            //'courseSegment?semester=20202',
-            //'courseSegment?semester=20191',
-            //'courseSegment?semester=20192',
+            // 'courseSegment?semester=20201',
+            // 'courseSegment?semester=20202',
+            // 'courseSegment?semester=20191',
+            // 'courseSegment?semester=20192',
         ];
 
         foreach ($endpoints as $ep) {
             $rows = $this->getJson($ep);
             foreach ($rows as $row) {
-                if (!isset($row['id'], $row['designation'], $row['semester'])) {
+                if (! isset($row['id'], $row['designation'], $row['semester'])) {
                     continue;
                 }
 
@@ -375,10 +425,10 @@ class DaisyIntegration
                     ['id' => $row['id']],
                     [
                         'designation' => $row['designation'],
-                        'semester'    => $semester,
-                        'year'        => $year,
-                        'name'        => $row['name']    ?? null,
-                        'name_en'     => $row['name_en'] ?? null,
+                        'semester' => $semester,
+                        'year' => $year,
+                        'name' => $row['name'] ?? null,
+                        'name_en' => $row['name_en'] ?? null,
                     ]
                 );
             }
@@ -394,7 +444,6 @@ class DaisyIntegration
         $this->init($this->config['start_date']);
     }
 
-
     /**
      * ------------------------------------------
      * Working progress
@@ -403,8 +452,9 @@ class DaisyIntegration
 
     /**
      * Make semester codes like 20252, 20251, … in DESC order.
-     * @param int    $fromYear inclusive (oldest)
-     * @param int    $toYear   inclusive (newest)
+     *
+     * @param  int  $fromYear  inclusive (oldest)
+     * @param  int  $toYear  inclusive (newest)
      * @return array<int,string> e.g. ["20252","20251","20242",...]
      */
     private function makeSemesterCodesRange(int $fromYear, int $toYear): array
@@ -415,18 +465,20 @@ class DaisyIntegration
             $codes[] = "{$y}2"; // HT
             $codes[] = "{$y}1"; // VT
         }
+
         return $codes;
     }
 
     /**
      * Last N semesters from a pivot year/term, inclusive. Default pivot = "current" toYear as HT.
-     * @param int      $count how many codes to return (e.g. 14)
-     * @param int|null $pivotYear defaults to (int)$this->toYear()
-     * @param string   $pivotTerm 'HT' or 'VT' (default 'HT')
+     *
+     * @param  int  $count  how many codes to return (e.g. 14)
+     * @param  int|null  $pivotYear  defaults to (int)$this->toYear()
+     * @param  string  $pivotTerm  'HT' or 'VT' (default 'HT')
      */
     private function makeLastNSemesters(int $count, ?int $pivotYear = null, string $pivotTerm = 'HT'): array
     {
-        $year = $pivotYear ?? (int)$this->toYear();
+        $year = $pivotYear ?? (int) $this->toYear();
         $term = strtoupper($pivotTerm) === 'VT' ? 1 : 2;
 
         $codes = [];
@@ -440,6 +492,7 @@ class DaisyIntegration
                 $term = 1;
             }
         }
+
         return $codes;
     }
 
@@ -451,8 +504,8 @@ class DaisyIntegration
     private function makeSemestersFromDate(string $startDate): array
     {
         $dt = new \DateTimeImmutable($startDate);
-        $year = (int)$dt->format('Y');
-        $month = (int)$dt->format('n');
+        $year = (int) $dt->format('Y');
+        $month = (int) $dt->format('n');
 
         // Decide first semester at/after start_date
         // Jan–Jul => VT (1), Aug–Dec => HT (2)
@@ -460,7 +513,7 @@ class DaisyIntegration
 
         // Build ascending, then reverse to keep newest first
         $codes = [];
-        $toYear = (int)$this->toYear();
+        $toYear = (int) $this->toYear();
 
         for ($y = $year; $y <= $toYear; $y++) {
             // for first year, start at firstTerm; afterwards both terms
@@ -472,6 +525,7 @@ class DaisyIntegration
 
         // newest first: sort by code desc (string works because fixed width)
         rsort($codes);
+
         return $codes;
     }
 }

@@ -2,10 +2,11 @@
 
 namespace App\Services\TicketHandler;
 
-use App\Services\AuthHandler;
+use App\Interfaces\TicketInterface;
 use App\Models\Video;
+use App\Services\AuthHandler;
 
-class AdminTicket implements \App\Interfaces\TicketInterface
+class AdminTicket implements TicketInterface
 {
     protected Video $video;
 
@@ -20,12 +21,12 @@ class AdminTicket implements \App\Interfaces\TicketInterface
 
         // Read the server var name configured by AuthHandler
         $paramName = data_get($system, 'global.authorization_parameter');
-        if (!$paramName) {
+        if (! $paramName) {
             return $this->video; // nothing to check
         }
 
         $raw = $_SERVER[$paramName] ?? null;
-        if (!$raw) {
+        if (! $raw) {
             return $this->video; // header/var not present → no ticket
         }
 
@@ -56,7 +57,7 @@ class AdminTicket implements \App\Interfaces\TicketInterface
         }
 
         $file = base_path('systemconfig/play.ini');
-        if (!is_file($file)) {
+        if (! is_file($file)) {
             abort(503);
         }
 
@@ -67,4 +68,3 @@ class AdminTicket implements \App\Interfaces\TicketInterface
         return $cached;
     }
 }
-

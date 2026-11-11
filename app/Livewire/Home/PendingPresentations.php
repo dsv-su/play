@@ -8,6 +8,7 @@ use Livewire\Component;
 class PendingPresentations extends Component
 {
     public $pendingvideos;
+
     public $count_pending;
 
     public function pending()
@@ -32,5 +33,4 @@ class PendingPresentations extends Component
 
         return view('livewire.home.pending-presentations', compact('pendingvideos'));
     }
-
 }

@@ -15,6 +15,7 @@ class PendingIndicator extends Component
             ->select('id') // keep it lean
             ->where('state', false)
             ->count();
+
         return view('livewire.home.pending-indicator');
     }
 }

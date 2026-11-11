@@ -5,7 +5,9 @@ namespace App\Livewire\Admin;
 use App\Models\ApiLog;
 use App\Models\Banner;
 use App\Models\Category;
+use App\Models\ManualPresentation;
 use App\Models\Setting;
+use App\Models\Video;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -15,32 +17,51 @@ class AdminSettings extends Component
     use WithPagination;
 
     public $activeTab = 'track';
+
     public $banners;
+
     public $categories;
+
     public $settings;
 
     public $trackUuid;
+
     public $videoData;
 
     public $newBannerContent;
+
     public $newBannerContentSv;
+
     public $newBannerVisible = false;
+
     public $newBannerVisibleForStaff = false;
+
     public $newBannerVisibleForStudent = false;
+
     public $newBannerLinkUrl;
+
     public $newBannerLinkText;
-    
+
     public $editingBannerId = null;
+
     public $editBannerContent;
+
     public $editBannerContentSv;
+
     public $editBannerVisible;
+
     public $editBannerVisibleForStaff;
+
     public $editBannerVisibleForStudent;
+
     public $editBannerLinkUrl;
+
     public $editBannerLinkText;
 
     public $newCategoryName;
+
     public $editingCategoryId = null;
+
     public $editCategoryName;
 
     protected $rules = [
@@ -160,7 +181,7 @@ class AdminSettings extends Component
     public function toggleBanner($id)
     {
         $banner = Banner::find($id);
-        $newStatus = !$banner->visible;
+        $newStatus = ! $banner->visible;
 
         if ($newStatus) {
             Banner::where('id', '!=', $id)->update(['visible' => false]);
@@ -240,7 +261,7 @@ class AdminSettings extends Component
             'trackUuid' => 'required',
         ]);
 
-        $this->videoData = \App\Models\Video::with([
+        $this->videoData = Video::with([
             'presenters',
             'courses',
             'tags',
@@ -260,7 +281,7 @@ class AdminSettings extends Component
 
         if ($this->videoData) {
             // Also try to find manual presentation data for extra subtitle info
-            $manual = \App\Models\ManualPresentation::where('jobid', $this->videoData->notification_id)
+            $manual = ManualPresentation::where('jobid', $this->videoData->notification_id)
                 ->orWhere('pkg_id', $this->videoData->id)
                 ->first();
             if ($manual) {
@@ -286,7 +307,7 @@ class AdminSettings extends Component
     public function render()
     {
         return view('livewire.admin.admin-settings', [
-            'apiLogs' => ApiLog::orderBy('created_at', 'desc')->paginate(10)
+            'apiLogs' => ApiLog::orderBy('created_at', 'desc')->paginate(10),
         ]);
     }
 }

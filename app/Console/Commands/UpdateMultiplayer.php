@@ -3,11 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
-use function Symfony\Component\String\s;
 
 class UpdateMultiplayer extends Command
 {
@@ -43,7 +38,7 @@ class UpdateMultiplayer extends Command
     public function handle()
     {
         // Define the paths
-        $multiplayerPath = storage_path() . '/app/multiplayer';
+        $multiplayerPath = storage_path().'/app/multiplayer';
         $updateMultiplayerCmd = "cd $multiplayerPath && git pull";
         $createLocalPlayerCmd = "cd $multiplayerPath && python3 make_dlplayer.py";
 
@@ -56,11 +51,12 @@ class UpdateMultiplayer extends Command
                 $this->comment('Multiplayer is already up to date.');
             } else {
                 // Handle unexpected output, maybe log it
-                $this->comment('Multiplayer update output: ' . implode(PHP_EOL, $output));
+                $this->comment('Multiplayer update output: '.implode(PHP_EOL, $output));
             }
         } else {
             // If the git pull fails, handle the error
-            $this->comment('Failed to update multiplayer repository. Error: ' . implode(PHP_EOL, $output));
+            $this->comment('Failed to update multiplayer repository. Error: '.implode(PHP_EOL, $output));
+
             return 1; // Indicate failure
         }
 
@@ -71,10 +67,12 @@ class UpdateMultiplayer extends Command
             $this->comment('Multiplayer successfully updated and local player created.');
         } else {
             // If creating local player fails, handle the error
-            $this->comment('Failed to create local player. Error: ' . implode(PHP_EOL, $createPlayerOutput));
+            $this->comment('Failed to create local player. Error: '.implode(PHP_EOL, $createPlayerOutput));
+
             // Indicate failure
             return 1;
         }
+
         // Indicate success
         return 0;
     }

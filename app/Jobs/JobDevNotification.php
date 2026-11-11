@@ -22,7 +22,7 @@ class JobDevNotification implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @param array $exception
+     * @param  array  $exception
      * @return void
      */
     public function __construct($exception)
@@ -35,8 +35,9 @@ class JobDevNotification implements ShouldQueue
      *
      * @return void
      */
-    public function handle() {
+    public function handle()
+    {
         // Send Mail
-        Mail::to("ryan@dsv.su.se")->send(new ErrorAlert($this->exception));
+        Mail::to('ryan@dsv.su.se')->send(new ErrorAlert($this->exception));
     }
 }

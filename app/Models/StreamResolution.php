@@ -11,7 +11,8 @@ class StreamResolution extends Model
 
     protected $fillable = ['stream_id', 'resolution', 'filename'];
 
-    public function stream() {
+    public function stream()
+    {
         return $this->belongsTo(Stream::class);
     }
 }

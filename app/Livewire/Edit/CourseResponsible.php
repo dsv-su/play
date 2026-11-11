@@ -8,14 +8,15 @@ use Livewire\Component;
 class CourseResponsible extends Component
 {
     public array $selectedCourses = [];
+
     public array $courseResponsible = [];
+
     protected DaisyIntegration $daisy;
 
     protected $rules = [
         'selectedCourses' => 'array',
         'selectedCourses.*' => 'integer',
     ];
-
 
     public function updatedSelectedCourses(DaisyIntegration $daisy): void
     {
@@ -26,9 +27,8 @@ class CourseResponsible extends Component
         }
 
         // remove duplicates in *values*
-        //$this->courseResponsible = array_unique($this->courseResponsible, SORT_REGULAR);
+        // $this->courseResponsible = array_unique($this->courseResponsible, SORT_REGULAR);
     }
-
 
     public function render()
     {

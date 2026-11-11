@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Concerns;
 
+use App\Models\Presenter;
 use Livewire\Attributes\Computed;
 
 trait DSVPresenters
@@ -9,8 +10,7 @@ trait DSVPresenters
     #[Computed]
     public function presenterName(): ?string
     {
-        return \App\Models\Presenter::where('username', $this->presenter_search)
+        return Presenter::where('username', $this->presenter_search)
             ->value('name') ?? '';
     }
-
 }

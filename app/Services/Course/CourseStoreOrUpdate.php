@@ -6,14 +6,13 @@ namespace App\Services\Course;
 
 use App\Jobs\JobFailedNotification;
 use App\Models\Course;
-use App\Models\CoursePermissions;
 use App\Models\CourseadminPermission;
+use App\Models\CoursePermissions;
 use App\Models\CoursesettingsPermissions;
 use App\Models\VideoCourse;
 use App\Models\VideoPermission;
 use App\Services\Daisy\DaisyIntegration;
 use Illuminate\Database\Connection;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -23,16 +22,19 @@ class CourseStoreOrUpdate
 {
     /** @var array<int, array<string,mixed>> */
     private array $courses;
+
     private $video;
+
     private DaisyIntegration $daisy;
+
     private Connection $db;
 
-    public function __construct($request, $video, DaisyIntegration $daisy = null, Connection $db = null)
+    public function __construct($request, $video, ?DaisyIntegration $daisy = null, ?Connection $db = null)
     {
         // Expecting array like: ['package' => ['courses' => [ ['designation' => 'XX123', 'semester' => 'HT24'], ... ]]]
-        $this->courses = (array)($request->input('package.courses') ?? []);
+        $this->courses = (array) ($request->input('package.courses') ?? []);
         $this->video = $video;
-        $this->daisy = $daisy ?? new DaisyIntegration();
+        $this->daisy = $daisy ?? new DaisyIntegration;
         $this->db = $db ?? DB::connection($video->getConnectionName());
     }
 
@@ -43,6 +45,7 @@ class CourseStoreOrUpdate
         // If no courses supplied, just detach any previous links and stop.
         if (empty($this->courses)) {
             VideoCourse::where('video_id', $videoId)->delete();
+
             return;
         }
 
@@ -55,8 +58,8 @@ class CourseStoreOrUpdate
                     continue; // skip invalid entries quietly
                 }
 
-                [$semester, $year] = $this->parseSemester((string)$courseData['semester']);
-                $designation = (string)$courseData['designation'];
+                [$semester, $year] = $this->parseSemester((string) $courseData['semester']);
+                $designation = (string) $courseData['designation'];
 
                 // Try local DB first
                 $dbCourse = Course::query()
@@ -65,9 +68,9 @@ class CourseStoreOrUpdate
                     ->where('year', $year)
                     ->first();
 
-                if (!$dbCourse) {
+                if (! $dbCourse) {
                     // Lookup in Daisy (designation + year+semesterNumber)
-                    $daisyKey = $year . (string)$this->convertDaisySemester($semester);
+                    $daisyKey = $year.(string) $this->convertDaisySemester($semester);
 
                     try {
                         $daisyCourse = $this->daisy->getCourse($designation, $daisyKey);
@@ -83,10 +86,10 @@ class CourseStoreOrUpdate
                     if ($daisyCourse) {
                         // Mirror Daisy into local Course table (id is from Daisy)
                         $dbCourse = Course::updateOrCreate(
-                            ['id' => (int)$daisyCourse['id']],
+                            ['id' => (int) $daisyCourse['id']],
                             [
-                                'name' => (string)($daisyCourse['name'] ?? ''),
-                                'name_en' => (string)($daisyCourse['name_en'] ?? ''),
+                                'name' => (string) ($daisyCourse['name'] ?? ''),
+                                'name_en' => (string) ($daisyCourse['name_en'] ?? ''),
                                 'designation' => $designation,
                                 'semester' => $semester,
                                 'year' => $year,
@@ -98,7 +101,7 @@ class CourseStoreOrUpdate
                             'Failed course association in Daisy',
                             [
                                 'video_id' => $videoId,
-                                'video_title' => (string)$this->video->title,
+                                'video_title' => (string) $this->video->title,
                                 'designation' => $designation,
                                 'semester' => $semester,
                                 'year' => $year,
@@ -106,21 +109,22 @@ class CourseStoreOrUpdate
                         );
 
                         dispatch(new JobFailedNotification($this->video, $designation));
+
                         continue;
                     }
                 }
 
                 // Link Video <-> Course (idempotent)
                 VideoCourse::updateOrCreate(
-                    ['video_id' => $videoId, 'course_id' => (int)$dbCourse->id],
+                    ['video_id' => $videoId, 'course_id' => (int) $dbCourse->id],
                     []
                 );
 
                 // Sync course administrators → CourseadminPermission
-                $this->syncCourseAdmins((int)$dbCourse->id, $videoId);
+                $this->syncCourseAdmins((int) $dbCourse->id, $videoId);
 
                 // Apply course-level settings to the video (visibility, permissions, etc.)
-                $this->applyCourseSettings((int)$dbCourse->id);
+                $this->applyCourseSettings((int) $dbCourse->id);
             }
         });
     }
@@ -142,7 +146,7 @@ class CourseStoreOrUpdate
         if ($coursePermission = CoursePermissions::where('course_id', $courseId)->first()) {
             VideoPermission::updateOrCreate(
                 ['video_id' => $this->video->id],
-                ['permission_id' => (int)$coursePermission->permission_id]
+                ['permission_id' => (int) $coursePermission->permission_id]
             );
         }
     }
@@ -154,7 +158,7 @@ class CourseStoreOrUpdate
     private function syncCourseAdmins(int $courseId, string $videoId): void
     {
         try {
-            $responsibles = (array)$this->daisy->getDaisyCourseResponsible($courseId);
+            $responsibles = (array) $this->daisy->getDaisyCourseResponsible($courseId);
         } catch (Throwable $e) {
             Log::warning('Daisy getDaisyCourseResponsible failed', [
                 'course_id' => $courseId,
@@ -166,10 +170,10 @@ class CourseStoreOrUpdate
         $payload = [];
 
         foreach ($responsibles as $responsible) {
-            $personId = (int)($responsible['id'] ?? 0);
-            $firstName = trim((string)($responsible['firstName'] ?? ''));
-            $lastName = trim((string)($responsible['lastName'] ?? ''));
-            $fullName = trim($firstName . ' ' . $lastName);
+            $personId = (int) ($responsible['id'] ?? 0);
+            $firstName = trim((string) ($responsible['firstName'] ?? ''));
+            $lastName = trim((string) ($responsible['lastName'] ?? ''));
+            $fullName = trim($firstName.' '.$lastName);
 
             if ($personId <= 0) {
                 continue;
@@ -177,7 +181,7 @@ class CourseStoreOrUpdate
 
             // Temporary workaround to get usernames until Daisy endpoint improves
             try {
-                $usernames = (array)$this->daisy->getDaisyUsername($personId);
+                $usernames = (array) $this->daisy->getDaisyUsername($personId);
             } catch (Throwable $e) {
                 Log::info('Daisy getDaisyUsername failed', [
                     'person_id' => $personId,
@@ -191,7 +195,7 @@ class CourseStoreOrUpdate
                     continue;
                 }
 
-                $username = (string)($u['username'] ?? '');
+                $username = (string) ($u['username'] ?? '');
                 if ($username === '') {
                     continue;
                 }
@@ -208,7 +212,7 @@ class CourseStoreOrUpdate
         // Replace old admins with fresh set, atomically.
         CourseadminPermission::where('video_id', $videoId)->delete();
 
-        if (!empty($payload)) {
+        if (! empty($payload)) {
             // upsert by unique (video_id, username) if you have a unique index; otherwise updateOrCreate in loop
             CourseadminPermission::upsert(
                 $payload,
@@ -239,16 +243,16 @@ class CourseStoreOrUpdate
         if ($digits !== '') {
             if (strlen($digits) === 2) {
                 // Assume 20xx for 00–69; 19xx otherwise (tweak as needed)
-                $yy = (int)$digits;
+                $yy = (int) $digits;
                 $year = ($yy <= 69) ? 2000 + $yy : 1900 + $yy;
             } elseif (strlen($digits) === 4) {
-                $year = (int)$digits;
+                $year = (int) $digits;
             }
         }
 
         // Defensive fallback: if still zero, try to read current year
         if ($year === 0) {
-            $year = (int)date('Y');
+            $year = (int) date('Y');
         }
 
         return [$semester, $year];

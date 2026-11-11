@@ -39,6 +39,7 @@ class UploadHandlerClearFailed extends Command
     public function handle()
     {
         DB::table('manual_presentations')->where('status', 'notified fail')->orWhere('status', 'notification error')->delete();
+
         return 0;
     }
 }

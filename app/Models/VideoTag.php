@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class VideoTag extends Model
 {
     use HasFactory;
+
     protected $fillable = ['video_id', 'tag_id'];
 
     public function video()

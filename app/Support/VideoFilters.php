@@ -10,10 +10,10 @@ final class VideoFilters implements Wireable
 {
     /** @var array<string, array<int|string>> */
     public array $selected = [
-        'courses'    => [],
+        'courses' => [],
         'presenters' => [],
-        'semesters'  => [],
-        'tags'       => [],
+        'semesters' => [],
+        'tags' => [],
     ];
 
     public static function from(array $payload = []): self
@@ -29,9 +29,10 @@ final class VideoFilters implements Wireable
             $vals = $data[$key] ?? [];
             // normalize: drop null/'' and reindex
             $self->selected[$key] = array_values(
-                array_filter($vals, static fn($v) => $v !== null && $v !== '')
+                array_filter($vals, static fn ($v) => $v !== null && $v !== '')
             );
         }
+
         return $self;
     }
 
@@ -53,11 +54,10 @@ final class VideoFilters implements Wireable
     public function toSearchArray(): array
     {
         return [
-            'course'    => $this->selected['courses']     ?: null,
+            'course' => $this->selected['courses'] ?: null,
             'presenter' => $this->selected['presenters'] ?: null,
-            'semester'  => $this->selected['semesters']  ?: null,
-            'tag'       => $this->selected['tags']       ?: null,
+            'semester' => $this->selected['semesters'] ?: null,
+            'tag' => $this->selected['tags'] ?: null,
         ];
     }
 }
-

@@ -40,12 +40,12 @@ class IntegrateMultiplayer extends Command
     public function handle()
     {
         // Integrate multiplayer
-        $js_files = 'cp '. storage_path(). '/app/multiplayer/player.js '.public_path().'/js/';
-        $css_files = 'cp '. storage_path(). '/app/multiplayer/*.css '.public_path().'/css/player/';
+        $js_files = 'cp '.storage_path().'/app/multiplayer/player.js '.public_path().'/js/';
+        $css_files = 'cp '.storage_path().'/app/multiplayer/*.css '.public_path().'/css/player/';
         exec($js_files);
         exec($css_files);
-        //Read multiplayer DOM
-        $multiplayer = \Illuminate\Support\Facades\Storage::get('multiplayer/index.html');
+        // Read multiplayer DOM
+        $multiplayer = Storage::get('multiplayer/index.html');
 
         $favicon = '"./css/player/favicon.ico"';
         $style = '"./css/player/style.css?a"';
@@ -53,20 +53,21 @@ class IntegrateMultiplayer extends Command
 
         $head = '<head><meta charset="UTF-8"><meta name="viewport" content="initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="ie=edge"><link rel="shortcut icon" href="{{ asset('.$favicon.') }}"><link rel="stylesheet" href="{{ asset('.$style.')}}"><title></title><script src="{{asset('.$player.')}}" defer></script></head>';
 
-        //Finds <head>
+        // Finds <head>
         $regex = '(<head>([\s\S]*)<\/head>)';
         preg_match_all($regex, $multiplayer, $matches, PREG_SET_ORDER, 0);
 
-        //Integrate
+        // Integrate
         $replaced = Str::replace($matches[0][0], $head, $multiplayer);
 
         Storage::put('multiplayer/index.blade.php', $replaced);
 
-        $blade = 'mv '.storage_path(). '/app/multiplayer/index.blade.php ';
-        $base = base_path(). '/resources/views/player/index.blade.php';
+        $blade = 'mv '.storage_path().'/app/multiplayer/index.blade.php ';
+        $base = base_path().'/resources/views/player/index.blade.php';
         // Print output
         exec($blade.$base);
-        $this->comment( 'Multiplayer successfully integrated' );
+        $this->comment('Multiplayer successfully integrated');
+
         return 0;
     }
 }

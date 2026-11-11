@@ -1,5 +1,11 @@
 <?php
 
+use App\Models\Channel;
+use App\Models\Course;
+use App\Models\Presenter;
+use App\Models\Tag;
+use App\Models\Video;
+
 // Absolute path to the primary config file
 $primaryConfig = base_path('systemconfig/play.ini');
 $exampleConfig = base_path('systemconfig/play.ini.example');
@@ -12,7 +18,7 @@ $system_config = parse_ini_file($configFile, true);
 
 // Validate parsing result
 if ($system_config === false) {
-    throw new \RuntimeException(
+    throw new RuntimeException(
         sprintf('Failed to parse configuration file: %s', $configFile)
     );
 }
@@ -198,9 +204,9 @@ return [
         ],
         // 'max_total_results' => env('TYPESENSE_MAX_TOTAL_RESULTS', 1000),
         'model-settings' => [
-            App\Models\Video::class => [
+            Video::class => [
                 'collection-schema' => [
-                    'name'   => 'videos',
+                    'name' => 'videos',
                     'fields' => [
                         ['name' => 'uuid',                  'type' => 'string'],
                         ['name' => 'title',                 'type' => 'string'],
@@ -215,8 +221,8 @@ return [
                         ['name' => 'course_ids',            'type' => 'int64[]'],
                         ['name' => 'presenter_ids',         'type' => 'int64[]'],
                         ['name' => 'published_at_ts',       'type' => 'int64'],
-                        ['name' => 'visibility',            'type' => 'int32',    'facet' => true ],
-                        ['name' => 'unlisted',              'type' => 'int32',    'facet' => true ],
+                        ['name' => 'visibility',            'type' => 'int32',    'facet' => true],
+                        ['name' => 'unlisted',              'type' => 'int32',    'facet' => true],
                     ],
 
                     'default_sorting_field' => 'published_at_ts',
@@ -227,9 +233,9 @@ return [
                 ],
             ],
 
-            App\Models\Presenter::class => [
+            Presenter::class => [
                 'collection-schema' => [
-                    'name'   => 'presenters',
+                    'name' => 'presenters',
                     'fields' => [
                         ['name' => 'name',     'type' => 'string'],
                         ['name' => 'username', 'type' => 'string'],
@@ -241,9 +247,9 @@ return [
                 ],
             ],
 
-            App\Models\Course::class => [
+            Course::class => [
                 'collection-schema' => [
-                    'name'   => 'courses',
+                    'name' => 'courses',
                     'fields' => [
                         ['name' => 'name',         'type' => 'string'],
                         ['name' => 'designation',  'type' => 'string'],
@@ -256,9 +262,9 @@ return [
                 ],
             ],
 
-            App\Models\Tag::class => [
+            Tag::class => [
                 'collection-schema' => [
-                    'name'   => 'tags',
+                    'name' => 'tags',
                     'fields' => [
                         ['name' => 'name', 'type' => 'string'],
                     ],
@@ -267,11 +273,11 @@ return [
                     'query_by' => 'name',
                     'highlight_full_fields' => 'name',
                 ],
-            ], //end Tags
+            ], // end Tags
 
-            App\Models\Channel::class => [
+            Channel::class => [
                 'collection-schema' => [
-                    'name'   => 'channels',
+                    'name' => 'channels',
                     'fields' => [
                         ['name' => 'name', 'type' => 'string'],
                         ['name' => 'slug', 'type' => 'string'],
@@ -285,7 +291,6 @@ return [
 
         ],
 
-    ], //end typesense
-
+    ], // end typesense
 
 ];

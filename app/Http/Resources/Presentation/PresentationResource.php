@@ -15,14 +15,14 @@ class PresentationResource extends JsonResource
      */
     public function toArray($request)
     {
-        //return parent::toArray($request);
+        // return parent::toArray($request);
         return [
-          'id' => $this->presentation_id,
-          'title' => $this->title,
-          'thumb' => $this->thumb,
-          'presenter' => $this->presenter,
-          'subtitles' => $this->subtitles,
-          'tags' => $this->tags,
+            'id' => $this->presentation_id,
+            'title' => $this->title,
+            'thumb' => $this->thumb,
+            'presenter' => $this->presenter,
+            'subtitles' => $this->subtitles,
+            'tags' => $this->tags,
         ];
     }
 }

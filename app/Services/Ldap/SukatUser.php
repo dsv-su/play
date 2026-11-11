@@ -25,7 +25,7 @@ class SukatUser extends Model
             // $original can be string|array|null; check first element if array.
             $raw = is_array($original) ? ($original[0] ?? null) : $original;
 
-            if (is_string($raw) && !ctype_print($raw)) {
+            if (is_string($raw) && ! ctype_print($raw)) {
                 $attributes[$key] = [$this->getConvertedGuid()];
             }
         }
@@ -33,4 +33,3 @@ class SukatUser extends Model
         return $attributes;
     }
 }
-

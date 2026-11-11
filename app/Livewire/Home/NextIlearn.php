@@ -9,6 +9,7 @@ use Livewire\Component;
 class NextIlearn extends Component
 {
     public $nextilearnvideos;
+
     public int $totalCount = 0;
 
     public function mount(VisibilityFilter $visibility)
@@ -30,7 +31,7 @@ class NextIlearn extends Component
             ->limit(10)
             ->with([
                 'video_course:id,video_id,course_id',
-                'video_course.course:id,name,designation'
+                'video_course.course:id,name,designation',
             ])
             ->get();
 

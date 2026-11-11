@@ -14,22 +14,43 @@ class CourseResults extends Component
     use FiltersPresentations;
 
     public SupportCollection $videos;
+
     public SupportCollection $allVideos;
 
     public array $courses = [];
+
     public array $terms = [];
+
     public array $presenters = [];
+
     public array $tags = [];
+
     public $designation;
-    public $course, $presenter, $semester, $tag;
+
+    public $course;
+
+    public $presenter;
+
+    public $semester;
+
+    public $tag;
+
     public array $selectedCourses = [];
+
     public array $selectedPresenters = [];
+
     public array $selectedSemesters = [];
+
     public array $selectedTags = [];
+
     public bool $switchOn = false;
+
     public array $activeFilters = ['courses' => true, 'presenters' => true, 'semesters' => true, 'tags' => true];
+
     public array $selectedVideos = [];
+
     public $allowBulkEdit = false;
+
     public int $totalCount = 0;
 
     public function mount(SupportCollection $videos, $designation, VideoSearchService $service): void

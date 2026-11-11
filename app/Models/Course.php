@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Cache;
 use Laravel\Scout\Searchable;
 
-
 /**
  * @mixin IdeHelperCourse
  */
@@ -21,7 +20,9 @@ class Course extends Model
     use Searchable;
 
     protected $primaryKey = 'id';
+
     protected $keyType = 'integer';
+
     public $incrementing = false;
 
     protected $fillable = ['id', 'name', 'name_en', 'designation', 'semester', 'year'];
@@ -51,8 +52,8 @@ class Course extends Model
     public function toSearchableArray(): array
     {
         return [
-            'id'          => (string) $this->id,
-            'name'        => (string) $this->name,
+            'id' => (string) $this->id,
+            'name' => (string) $this->name,
             'designation' => (string) ($this->designation ?? ''),
             'semester' => (string) ($this->semester ?? ''),
         ];
@@ -73,7 +74,8 @@ class Course extends Model
         return $this->hasManyThrough(Video::class, VideoCourse::class, 'course_id', 'id', 'id', 'video_id')->get();
     }*/
 
-    public function videos(): BelongsToMany {
+    public function videos(): BelongsToMany
+    {
         return $this->belongsToMany(Video::class, 'video_courses', 'course_id', 'video_id')->withTimestamps();
     }
 
@@ -84,7 +86,8 @@ class Course extends Model
 
     public function responsible()
     {
-        $daisy = new DaisyIntegration();
+        $daisy = new DaisyIntegration;
+
         return $daisy->getDaisyCourseResponsible($this->id);
     }
 
@@ -116,17 +119,18 @@ class Course extends Model
     /**
      * @throws BindingResolutionException
      */
-    public function userPermission() {
+    public function userPermission()
+    {
         $username = app()->make('play_username');
         $daisy_courses_ids = [];
         if (app()->make('play_role') != 'Administrator') {
 
             // Use cache
-            $daisy_courses_ids = Cache::remember($username, 3600, function () use ($username){
+            $daisy_courses_ids = Cache::remember($username, 3600, function () use ($username) {
                 // Show only courses that you have permission to
-                //Override if local
-                if(!app()->environment('local')) {
-                    $daisy = new DaisyAPI();
+                // Override if local
+                if (! app()->environment('local')) {
+                    $daisy = new DaisyAPI;
                     $daisyPersonID = $daisy->getDaisyPersonId($username);
                     // Get all courses where user is courseadmin
                     if ($daisy_courses = $daisy->getDaisyEmployeeResponsibleCourses($daisyPersonID)) {

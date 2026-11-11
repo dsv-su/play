@@ -2,10 +2,11 @@
 
 namespace App\Services\Filters;
 
+use App\Interfaces\VisibilityInterface;
 use App\Models\CoursesettingsPermissions;
 use App\Models\Video;
 
-class CourseDownloadFilter extends VisibilityFilter implements \App\Interfaces\VisibilityInterface
+class CourseDownloadFilter extends VisibilityFilter implements VisibilityInterface
 {
     protected Video $video;
 
@@ -40,12 +41,13 @@ class CourseDownloadFilter extends VisibilityFilter implements \App\Interfaces\V
         // If ANY course explicitly disallows download → force false
         if (in_array(0, $values, true)) {
             $this->video->setAttribute('download', false);
+
             return;
         }
 
         // Otherwise, if not already downloadable, allow if ANY course explicitly allows
         $current = optional($this->video->fresh())->download; // re-pull to respect db state if needed
-        if (!$current) {
+        if (! $current) {
             if (in_array(1, $values, true)) {
                 $this->video->setAttribute('download', true);
             }
@@ -53,4 +55,3 @@ class CourseDownloadFilter extends VisibilityFilter implements \App\Interfaces\V
         }
     }
 }
-

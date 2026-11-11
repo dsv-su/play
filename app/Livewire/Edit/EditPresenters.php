@@ -4,18 +4,22 @@ namespace App\Livewire\Edit;
 
 use App\Models\Presenter;
 use App\Models\Video;
-use App\Services\Ldap\SukatUser;
 use App\Services\Directory\SearchPresenters;
+use App\Services\Ldap\SukatUser;
 use Livewire\Component;
 
 class EditPresenters extends Component
 {
     /** Core state */
     public ?Video $video = null;
+
     public array $presenters = [];
+
     public string $searchPresenter = '';
+
     /** @var array<int, array{uid:int|string, name:string, role:string, local:bool}> */
     public array $sukatUsers = [];
+
     public int $highlighted = 0;
 
     public function boot(SearchPresenters $search)
@@ -39,7 +43,9 @@ class EditPresenters extends Component
     public function moveHighlight(int $direction): void
     {
         $count = count($this->sukatUsers);
-        if ($count === 0) return;
+        if ($count === 0) {
+            return;
+        }
 
         $this->highlighted = ($this->highlighted + $direction + $count) % $count;
     }
@@ -78,18 +84,22 @@ class EditPresenters extends Component
         if ($uids->isNotEmpty()) {
             // (|(uid=u1)(uid=u2)...)
             $clauses = $uids
-                ->map(fn($u) => '(uid=' . $this->searchService->esc($u) . ')')
+                ->map(fn ($u) => '(uid='.$this->searchService->esc($u).')')
                 ->implode('');
-            $filter = '(|' . $clauses . ')';
+            $filter = '(|'.$clauses.')';
 
             $ldapUsers = SukatUser::rawFilter($filter)->get();
 
             foreach ($ldapUsers as $u) {
-                $uid  = is_array($u->uid ?? null) ? ($u->uid[0] ?? null) : ($u->uid ?? null);
-                if (!$uid) continue;
+                $uid = is_array($u->uid ?? null) ? ($u->uid[0] ?? null) : ($u->uid ?? null);
+                if (! $uid) {
+                    continue;
+                }
 
                 $ents = $u->edupersonentitlement ?? [];
-                if (!is_array($ents)) $ents = [$ents];
+                if (! is_array($ents)) {
+                    $ents = [$ents];
+                }
 
                 $role = null;
                 if (in_array(SearchPresenters::ENT_STAFF, $ents, true)) {
@@ -104,7 +114,7 @@ class EditPresenters extends Component
         $this->presenters = [];
         foreach ($presenters as $p) {
             $this->presenters[] = [
-                'uid'  => $p->username,
+                'uid' => $p->username,
                 'name' => $p->name,
                 'type' => $p->description,
                 'role' => $rolesByUid[$p->username] ?? null,
@@ -122,10 +132,10 @@ class EditPresenters extends Component
             }
         }
 
-        if (!$exists) {
+        if (! $exists) {
             $role = null;
             if ($uid) {
-                $su   = SukatUser::where('uid', $uid)->first(['edupersonentitlement']);
+                $su = SukatUser::where('uid', $uid)->first(['edupersonentitlement']);
                 $ents = $su?->edupersonentitlement ?? [];
                 $role = in_array(SearchPresenters::ENT_STAFF, $ents, true) ? 'DSV'
                     : (in_array(SearchPresenters::ENT_STUDENT, $ents, true) ? 'Student' : null);

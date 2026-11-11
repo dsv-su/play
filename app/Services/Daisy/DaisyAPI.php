@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace App\Services\Daisy;
 
-use RuntimeException;
-
 class DaisyAPI extends DaisyIntegration
 {
     /**
      * Load courses for a list of semester codes (e.g. ['20252','20251', ...]).
      * Returns a flat array of course rows.
      *
-     * @param array<int,string> $semesterCodes
+     * @param  array<int,string>  $semesterCodes
      * @return array<int,array<string,mixed>>
      */
     public function loadCourses(array $semesterCodes): array
@@ -21,7 +19,7 @@ class DaisyAPI extends DaisyIntegration
 
         foreach ($semesterCodes as $code) {
             $rows = $this->getJson("courseSegment?semester={$code}");
-            if (!is_array($rows) || !$rows) {
+            if (! is_array($rows) || ! $rows) {
                 continue;
             }
             // Normalize shape if needed, then merge
@@ -33,7 +31,8 @@ class DaisyAPI extends DaisyIntegration
         }
 
         // Example: newest-first by id (desc). Adjust if you prefer semester/other sorting.
-        usort($all, static fn($a, $b) => ($b['id'] ?? 0) <=> ($a['id'] ?? 0));
+        usort($all, static fn ($a, $b) => ($b['id'] ?? 0) <=> ($a['id'] ?? 0));
+
         return $all;
     }
 
@@ -59,7 +58,6 @@ class DaisyAPI extends DaisyIntegration
             return false;
         }
     }
-
 
     /**
      * Prefer returning the employee resource; fall back to person if needed.
@@ -98,8 +96,8 @@ class DaisyAPI extends DaisyIntegration
      */
     public function checkCourseAdmin(int|string $id): bool
     {
-        $from = $this->fromYear() . '1';
-        $to   = $this->toYear()   . '2';
+        $from = $this->fromYear().'1';
+        $to = $this->toYear().'2';
 
         try {
             $contribs = $this->getJson("employee/{$id}/contributions?fromSemesterId={$from}&toSemesterId={$to}");
@@ -107,15 +105,16 @@ class DaisyAPI extends DaisyIntegration
             return false;
         }
 
-        if (!is_array($contribs)) {
+        if (! is_array($contribs)) {
             return false;
         }
 
         foreach ($contribs as $c) {
-            if (!empty($c['responsible'])) {
+            if (! empty($c['responsible'])) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -127,8 +126,8 @@ class DaisyAPI extends DaisyIntegration
      */
     public function getDaisyEmployeeResponsibleCourses(int|string $id): array
     {
-        $from = $this->fromYear() . '1';
-        $to   = $this->toYear()   . '2';
+        $from = $this->fromYear().'1';
+        $to = $this->toYear().'2';
 
         try {
             $contribs = $this->getJson("employee/{$id}/contributions?fromSemesterId={$from}&toSemesterId={$to}");
@@ -136,21 +135,21 @@ class DaisyAPI extends DaisyIntegration
             return [];
         }
 
-        if (!is_array($contribs) || !$contribs) {
+        if (! is_array($contribs) || ! $contribs) {
             return [];
         }
 
         $list = [];
         foreach ($contribs as $course) {
             $inst = $course['courseSegmentInstance'] ?? [];
-            $isResponsible = !empty($course['responsible']);
+            $isResponsible = ! empty($course['responsible']);
 
             $list[] = [
-                'name'        => $inst['name']['swedish']  ?? ($inst['name']['sv'] ?? null),
-                'name_en'     => $inst['name']['english']  ?? ($inst['name']['en'] ?? null),
-                'id'          => $inst['id']               ?? null,
-                'semester'    => $inst['semesterId']       ?? null,
-                'designation' => $inst['designation']      ?? null,
+                'name' => $inst['name']['swedish'] ?? ($inst['name']['sv'] ?? null),
+                'name_en' => $inst['name']['english'] ?? ($inst['name']['en'] ?? null),
+                'id' => $inst['id'] ?? null,
+                'semester' => $inst['semesterId'] ?? null,
+                'designation' => $inst['designation'] ?? null,
                 'responsible' => (bool) $isResponsible,
             ];
         }
@@ -159,6 +158,7 @@ class DaisyAPI extends DaisyIntegration
         usort($list, static function ($a, $b) {
             $ai = $a['id'] ?? -1;
             $bi = $b['id'] ?? -1;
+
             return $bi <=> $ai;
         });
 
@@ -174,7 +174,7 @@ class DaisyAPI extends DaisyIntegration
     public function getDaisyCourses(): array
     {
         $from = (int) $this->fromYear();
-        $to   = (int) $this->toYear();
+        $to = (int) $this->toYear();
 
         $years = [];
         for ($y = $to; $y >= $from; $y--) {
@@ -186,7 +186,7 @@ class DaisyAPI extends DaisyIntegration
             // Query HT(2) then VT(1) for that year
             foreach ([2, 1] as $term) {
                 $rows = $this->getJson("courseSegment?semester={$year}{$term}");
-                if (!is_array($rows) || !$rows) {
+                if (! is_array($rows) || ! $rows) {
                     continue;
                 }
                 foreach ($rows as $row) {
@@ -198,7 +198,8 @@ class DaisyAPI extends DaisyIntegration
         }
 
         // Newest-first by id (desc)
-        usort($all, static fn($a, $b) => ($b['id'] ?? 0) <=> ($a['id'] ?? 0));
+        usort($all, static fn ($a, $b) => ($b['id'] ?? 0) <=> ($a['id'] ?? 0));
+
         return $all;
     }
 }

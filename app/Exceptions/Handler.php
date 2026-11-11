@@ -54,20 +54,20 @@ class Handler extends ExceptionHandler
             $request = request();
 
             $exception = [
-                'server'   => config('app.name'),
-                'env'      => config('app.env'),
-                'name'     => get_class($e),
-                'message'  => $e->getMessage(),
-                'file'     => $e->getFile(),
-                'line'     => $e->getLine(),
-                'url'      => $request?->fullUrl(),
-                'method'   => $request?->method(),
-                'ip'       => $request?->ip(),
-                'input'    => $request ? Arr::except($request->all(), $this->dontFlash) : null,
-                'headers'  => $request ? [
+                'server' => config('app.name'),
+                'env' => config('app.env'),
+                'name' => get_class($e),
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'url' => $request?->fullUrl(),
+                'method' => $request?->method(),
+                'ip' => $request?->ip(),
+                'input' => $request ? Arr::except($request->all(), $this->dontFlash) : null,
+                'headers' => $request ? [
                     'user_agent' => $request->userAgent(),
-                    'accept'     => $request->header('accept'),
-                    'referer'    => $request->header('referer'),
+                    'accept' => $request->header('accept'),
+                    'referer' => $request->header('referer'),
                 ] : null,
             ];
 
@@ -98,12 +98,13 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         if ($exception instanceof CorruptComponentPayloadException) {
-            //Simple “please refresh” page
+            // Simple “please refresh” page
             return response(
                 'The page has been updated. Please refresh and try again.',
                 409
             );
         }
+
         return parent::render($request, $exception);
     }
 }

@@ -2,10 +2,11 @@
 
 namespace App\Services\TicketHandler;
 
+use App\Interfaces\TicketInterface;
 use App\Models\Video;
 use App\Models\VideoPermission;
 
-class PresentationTicket implements \App\Interfaces\TicketInterface
+class PresentationTicket implements TicketInterface
 {
     protected Video $video;
 
@@ -27,4 +28,3 @@ class PresentationTicket implements \App\Interfaces\TicketInterface
         return (int) (VideoPermission::where('video_id', $this->video->id)->value('permission_id') ?? 1);
     }
 }
-

@@ -13,23 +13,47 @@ class StudyPresentations extends Component
 {
     use DSVCourseNames;
     use FiltersPresentations;
-    //Filters
+
+    // Filters
     public array $courses = [];
+
     public array $terms = [];
+
     public array $presenters = [];
+
     public array $tags = [];
-    public $course, $presenter, $semester, $tag;
+
+    public $course;
+
+    public $presenter;
+
+    public $semester;
+
+    public $tag;
+
     public array $selectedCourses = [];
+
     public array $selectedPresenters = [];
+
     public array $selectedSemesters = [];
+
     public array $selectedTags = [];
+
     public array $activeFilters = ['courses' => true, 'presenters' => true, 'semesters' => true, 'tags' => true];
+
     public array $selectedVideos = [];
-    //Switch
+
+    // Switch
     public bool $switchOn = false;
+
     public $allowBulkEdit = false;
-    public $videos, $allVideos;
+
+    public $videos;
+
+    public $allVideos;
+
     public int $totalCount = 0;
+
     public $studyvideos;
 
     public function mount(VisibilityFilter $visibility, VideoSearchService $service)
@@ -42,11 +66,11 @@ class StudyPresentations extends Component
             ->latest('creation')
             ->with([
                 'video_course:id,video_id,course_id',
-                'video_course.course:id,name,designation'
+                'video_course.course:id,name,designation',
             ])
             ->get();
 
-        //Filter
+        // Filter
         $videos = $this->allVideos = $this->studyvideos = $visibility->filter($raw);
 
         $this->totalCount = $videos->count();

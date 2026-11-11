@@ -6,7 +6,9 @@ use App\Services\Daisy\DaisyAPI;
 
 class CourseAdmin
 {
-    protected $daisy, $daisyPersonID;
+    protected $daisy;
+
+    protected $daisyPersonID;
 
     public function check($user, $video)
     {
@@ -19,12 +21,13 @@ class CourseAdmin
 
     public function courses($id)
     {
-        $this->daisy = new DaisyAPI();
-        //Get user DaisyID
-        $this->daisyPersonID = $this->daisy->getDaisyPersonId(substr($id, 0, strpos($id, "@")));
-        //Get CourseAdmin courses
-        if($courses = $this->daisy->getDaisyEmployeeResponsibleCourses($this->daisyPersonID)) {
+        $this->daisy = new DaisyAPI;
+        // Get user DaisyID
+        $this->daisyPersonID = $this->daisy->getDaisyPersonId(substr($id, 0, strpos($id, '@')));
+        // Get CourseAdmin courses
+        if ($courses = $this->daisy->getDaisyEmployeeResponsibleCourses($this->daisyPersonID)) {
             $courselist = collect($courses);
+
             return $courselist->map(function ($item, $key) {
                 return $item['id'];
             })->toArray();

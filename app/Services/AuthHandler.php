@@ -17,24 +17,24 @@ class AuthHandler
     {
         $dir = $dir ?? base_path('systemconfig');
 
-        if (!is_dir($dir)) {
+        if (! is_dir($dir)) {
             // Return empty object if the directory is missing
-            return new \stdClass();
+            return new \stdClass;
         }
 
         // Find files
-        $sep          = DIRECTORY_SEPARATOR;
-        $iniPaths     = glob($dir . $sep . '*.ini') ?: [];
-        $examplePaths = glob($dir . $sep . '*.ini.example') ?: [];
+        $sep = DIRECTORY_SEPARATOR;
+        $iniPaths = glob($dir.$sep.'*.ini') ?: [];
+        $examplePaths = glob($dir.$sep.'*.ini.example') ?: [];
 
         // Group by base filename; prefer real .ini over .ini.example
         $byBase = [];
-        //play.ini.example
+        // play.ini.example
         foreach ($examplePaths as $path) {
             $base = basename($path, '.ini.example');
             $byBase[$base]['example'] = $path;
         }
-        //play.ini
+        // play.ini
         foreach ($iniPaths as $path) {
             $base = basename($path, '.ini');
             $byBase[$base]['real'] = $path;
@@ -45,13 +45,13 @@ class AuthHandler
 
         foreach ($byBase as $base => $paths) {
             $chosen = $paths['real'] ?? $paths['example'] ?? null;
-            if (!$chosen || !is_readable($chosen)) {
+            if (! $chosen || ! is_readable($chosen)) {
                 continue;
             }
 
             // INI_SCANNER_TYPED converts "true"/"false"/numbers" to native types
             $parsed = @parse_ini_file($chosen, true, INI_SCANNER_TYPED);
-            if ($parsed === false || !is_array($parsed)) {
+            if ($parsed === false || ! is_array($parsed)) {
                 // Skip invalid INI silently (or log if you prefer)
                 continue;
             }
@@ -67,11 +67,11 @@ class AuthHandler
     /**
      * Recursively convert an associative array to stdClass.
      *
-     * @param mixed $value
+     * @param  mixed  $value
      */
     private function arrayToObject($value)
     {
-        if (!is_array($value)) {
+        if (! is_array($value)) {
             return $value;
         }
 
@@ -80,18 +80,20 @@ class AuthHandler
             if ($arr === []) {
                 return true;
             }
+
             return array_keys($arr) !== range(0, count($arr) - 1);
         };
 
-        if (!$isAssoc($value)) {
+        if (! $isAssoc($value)) {
             // Numeric array: convert each element but keep it as an array
             return array_map([$this, __FUNCTION__], $value);
         }
 
-        $obj = new \stdClass();
+        $obj = new \stdClass;
         foreach ($value as $k => $v) {
             $obj->{$k} = $this->arrayToObject($v);
         }
+
         return $obj;
     }
 }

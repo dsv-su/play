@@ -8,7 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class DownloadStreamResolution extends Model
 {
-    protected $video_streams, $video_stream, $resolution, $streams = [];
+    protected $video_streams;
+
+    protected $video_stream;
+
+    protected $resolution;
+
+    protected $streams = [];
+
     protected $posters = [];
 
     public function __construct(Video $video)
@@ -18,20 +25,23 @@ class DownloadStreamResolution extends Model
 
     public function videonames($resolution)
     {
-        foreach($this->video_streams as $this->video_stream) {
-            foreach($this->video_stream->resolutions as $this->resolution) {
-                if($this->resolution->resolution == $resolution) {
+        foreach ($this->video_streams as $this->video_stream) {
+            foreach ($this->video_stream->resolutions as $this->resolution) {
+                if ($this->resolution->resolution == $resolution) {
                     $this->streams[] = $this->resolution->filename;
                 }
             }
         }
+
         return $this->streams;
     }
+
     public function posternames()
     {
-        foreach($this->video_streams as $this->video_stream) {
+        foreach ($this->video_streams as $this->video_stream) {
             $this->posters[] = $this->video_stream->poster;
         }
+
         return $this->posters;
     }
 }

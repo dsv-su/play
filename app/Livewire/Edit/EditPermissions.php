@@ -2,23 +2,30 @@
 
 namespace App\Livewire\Edit;
 
-use App\Models\IndividualPermission;
 use App\Models\Video;
 use App\Services\Directory\SearchPresenters;
-use Illuminate\Support\Str;
 use Livewire\Component;
 
 class EditPermissions extends Component
 {
     public ?Video $video = null;
+
     public string $searchP = '';
+
     public $permissions;
+
     public array $permissionsID = [];
+
     public $playback;
+
     public array $sukatUsers = [];
+
     public int $highlighted = 0;
+
     public array $individualPermissions = [];
+
     public $user_permission;
+
     public int $iPCount;
 
     public function boot(SearchPresenters $search)
@@ -26,7 +33,7 @@ class EditPermissions extends Component
         $this->searchService = $search;
     }
 
-    public function mount($video = null, $permissions, $user_permission)
+    public function mount($video, $permissions, $user_permission)
     {
         if ($video) {
             $this->video = $video;
@@ -34,7 +41,7 @@ class EditPermissions extends Component
         $this->permissions = $permissions;
         $this->user_permission = $user_permission;
         $this->getPermissionsID();
-        //Load individual permissions for video
+        // Load individual permissions for video
         $this->getIndividualPermissions();
 
         if ($this->searchP !== '') {
@@ -44,7 +51,7 @@ class EditPermissions extends Component
 
     public function getIndividualPermissions()
     {
-        if($this->video?->exists) {
+        if ($this->video?->exists) {
             $this->individualPermissions = $this->video->individualPermissions->toArray();
             $this->iPCount = $this->video->individualPermissions->count();
         }
@@ -58,7 +65,9 @@ class EditPermissions extends Component
     public function moveHighlight(int $direction): void
     {
         $count = count($this->sukatUsers);
-        if ($count === 0) return;
+        if ($count === 0) {
+            return;
+        }
 
         $this->highlighted = ($this->highlighted + $direction + $count) % $count;
     }
@@ -74,7 +83,7 @@ class EditPermissions extends Component
     public function getPermissionsID()
     {
         $this->permissionsID = $this->permissions->pluck('id')->all();
-        if($this->video?->exists) {
+        if ($this->video?->exists) {
             foreach ($this->video->permissions as $p) {
                 $this->playback = $p->id;
             }
@@ -88,7 +97,7 @@ class EditPermissions extends Component
 
     public function addPermission($Uid, $name)
     {
-        $this->individualPermissions[] =  ['username' => $Uid, 'name' => $name, 'permission' => 'edit'];
+        $this->individualPermissions[] = ['username' => $Uid, 'name' => $name, 'permission' => 'edit'];
         $this->searchP = '';
     }
 
@@ -96,19 +105,24 @@ class EditPermissions extends Component
     {
         $current = $this->individualPermissions[$key]['permission'] ?? null;
 
-        if (!in_array($value, ['read', 'edit', 'delete'], true)) {
+        if (! in_array($value, ['read', 'edit', 'delete'], true)) {
             return;
         }
 
         // "delete" users can change anything
         if ($this->user_permission === 'delete') {
             $this->individualPermissions[$key]['permission'] = $value;
+
             return;
         }
 
         // restrictions for everyone else
-        if ($current === 'edit' && $value === 'delete') return;
-        if ($current === 'read' && $value === 'edit') return;
+        if ($current === 'edit' && $value === 'delete') {
+            return;
+        }
+        if ($current === 'read' && $value === 'edit') {
+            return;
+        }
         // optional stricter:
         // if ($current === 'read' && $value === 'delete') return;
 
@@ -118,7 +132,7 @@ class EditPermissions extends Component
     public function remove_user($index)
     {
         array_splice($this->individualPermissions, $index, 1);
-        //$this->ipermissions = $this->ipermissions - 1;
+        // $this->ipermissions = $this->ipermissions - 1;
     }
 
     public function render()

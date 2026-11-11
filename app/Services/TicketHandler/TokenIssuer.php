@@ -14,14 +14,14 @@ class TokenIssuer
     public function issue()
     {
         $credentials = [
-            'email'=> $this->ticket_user(),
-            'password' => $this->ticket_pass()
+            'email' => $this->ticket_user(),
+            'password' => $this->ticket_pass(),
         ];
 
-        //Issue a valid ticket for requester
+        // Issue a valid ticket for requester
         $token = auth('api')->claims(['id' => $this->video->id])->attempt($credentials);
 
-        if (!$token) {
+        if (! $token) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
@@ -31,7 +31,7 @@ class TokenIssuer
     private function ticket_user()
     {
         $this->file = base_path().'/systemconfig/play.ini';
-        if (!file_exists($this->file)) {
+        if (! file_exists($this->file)) {
             abort(503);
         }
         $this->system_config = parse_ini_file($this->file, true);
@@ -42,7 +42,7 @@ class TokenIssuer
     private function ticket_pass()
     {
         $this->file = base_path().'/systemconfig/play.ini';
-        if (!file_exists($this->file)) {
+        if (! file_exists($this->file)) {
             abort(503);
         }
         $this->system_config = parse_ini_file($this->file, true);

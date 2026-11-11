@@ -13,11 +13,10 @@ class Pending
 
     public static function presentations_state()
     {
-        if(Video::where('state', false)->count() > 0) {
+        if (Video::where('state', false)->count() > 0) {
             return true;
         } else {
             return false;
         }
     }
-
 }
