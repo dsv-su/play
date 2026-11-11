@@ -35,9 +35,42 @@
                         @include('livewire.search.partials.tag-table')
                         @include('home.partials.studyadmin')
                     </div>
+                    @if($video->relationLoaded('channels') && $video->channels->isNotEmpty())
+                        <div class="library-channel-badges" role="group" aria-label="{{ __('Channels') }}">
+                            <span class="library-channel-label">{{ __('Channels') }}:</span>
+                            @foreach($video->channels as $connectedChannel)
+                                <a class="library-channel-badge" href="{{ route('channels.show', $connectedChannel) }}">
+                                    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg>
+                                    {{ $connectedChannel->name }}
+                                </a>
+                            @endforeach
+                        </div>
+                    @endif
                     <div class="library-recording-footer">
                         <div class="library-permissions">@include('home.partials.permission-buttons')</div>
-                        <div class="library-actions">@include('livewire.search.partials.edit-tabel')</div>
+                        <div class="library-actions">
+                            @include('livewire.search.partials.edit-tabel')
+                            @if(isset($customChannels) && $customChannels->isNotEmpty() && $channelAddableVideoIds->has($video->id))
+                                <div class="library-channel-action" x-data="{ open: false, channelId: '' }">
+                                    <button type="button" class="library-button library-channel-button" @click="open = !open" :aria-expanded="open" aria-controls="channel-picker-{{ $courseId }}-{{ $video->id }}">
+                                        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h6l2 2h10v11H3Z"/><path d="M15 12v5m-2.5-2.5h5"/></svg>
+                                        {{ __('Add to channel') }}
+                                    </button>
+                                    <form id="channel-picker-{{ $courseId }}-{{ $video->id }}" x-show="open" x-cloak
+                                          x-on:submit.prevent="await $wire.addToChannel(@js((string) $video->id), channelId); open = false; channelId = ''">
+                                        <label for="channel-select-{{ $courseId }}-{{ $video->id }}" class="sr-only">{{ __('Choose a channel') }}</label>
+                                        <select id="channel-select-{{ $courseId }}-{{ $video->id }}" x-model="channelId" required class="library-button library-channel-select">
+                                            <option value="">{{ __('Choose a channel') }}</option>
+                                            @foreach($customChannels as $customChannel)
+                                                @php($alreadyConnected = $video->channels->contains('id', $customChannel->id))
+                                                <option value="{{ $customChannel->id }}" @disabled($alreadyConnected)>{{ $customChannel->name }}{{ $alreadyConnected ? ' — '.__('Already added') : '' }}</option>
+                                            @endforeach
+                                        </select>
+                                        <button type="submit" class="library-button library-button-primary library-channel-button" :disabled="!channelId" wire:loading.attr="disabled" wire:target="addToChannel">{{ __('Add') }}</button>
+                                    </form>
+                                </div>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </article>

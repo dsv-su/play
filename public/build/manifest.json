@@ -1,6 +1,6 @@
 {
   "node_modules/@preline/file-upload/index.js": {
-    "file": "assets/file-upload-XZNP2lfC.js",
+    "file": "assets/file-upload-D6iSYzoe.js",
     "name": "file-upload",
     "src": "node_modules/@preline/file-upload/index.js",
     "isDynamicEntry": true,
@@ -9,7 +9,7 @@
     ]
   },
   "resources/css/app.css": {
-    "file": "assets/app-CEVc14Bs.css",
+    "file": "assets/app-NYmee-L8.css",
     "name": "app",
     "names": [
       "app.css"
@@ -18,7 +18,7 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-DZa8zNZN.js",
+    "file": "assets/app-CaWGnW1R.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,

@@ -825,5 +825,15 @@
     "Failed": "Misslyckades",
     "Presentations by course": "Presentationer per kurs",
     "Searching…": "Söker…",
-    "Title": "Titel"
+    "Title": "Titel",
+    "Daily views": "Visningar per dag",
+    "No views recorded for this period.": "Inga visningar har registrerats för den här perioden.",
+    "Week": "Vecka",
+    "Month": "Månad",
+    "Close metrics dialog": "Stäng statistikdialogen",
+    "Number of Presentation clicks": "Antal presentationsvisningar",
+    "Add to channel": "Lägg till i kanal",
+    "Already added": "Redan tillagd",
+    "Choose a channel": "Välj en kanal",
+    "Presentation added to channel.": "Presentationen har lagts till i kanalen."
 }

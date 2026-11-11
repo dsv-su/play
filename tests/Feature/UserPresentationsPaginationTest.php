@@ -11,7 +11,10 @@ use App\Services\MyPresentation\MyPresentationsService;
 use App\Services\MyPresentation\PresentationLibrary;
 use App\Services\VideoSearch\VideoFilters;
 use App\Services\VideoSearch\VideoSearchService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Livewire\Features\SupportLockedProperties\CannotUpdateLockedPropertyException;
 use Livewire\Livewire;
 use Mockery;
@@ -20,7 +23,82 @@ use Tests\TestCase;
 
 class UserPresentationsPaginationTest extends TestCase
 {
-    use InteractsWithPresentationLibrary;
+    use InteractsWithPresentationLibrary {
+        setUp as protected setUpLibrary;
+    }
+
+    protected function setUp(): void
+    {
+        $this->setUpLibrary();
+        Schema::table('videos', fn (Blueprint $table) => $table->boolean('unlisted')->default(false));
+        Schema::create('channels', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('slug')->default('my-channel');
+            $table->string('created_by');
+        });
+        Schema::create('channel_video_assignments', function (Blueprint $table) {
+            $table->id();
+            $table->integer('channel_id');
+            $table->string('video_id');
+            $table->string('assigned_by');
+            $table->timestamps();
+        });
+    }
+
+    public function test_can_add_a_manageable_presentation_to_own_channel_without_duplicates(): void
+    {
+        DB::table('channels')->insert(['id' => 1, 'name' => 'My channel', 'created_by' => 'alice']);
+        DB::table('individual_permissions')->insert(['video_id' => '45', 'username' => 'alice', 'permission' => 'edit']);
+
+        Livewire::test(UserPresentations::class)
+            ->call('addToChannel', '45', 1)
+            ->assertSee('Presentation added to channel.')
+            ->call('addToChannel', '45', 1);
+
+        $this->assertDatabaseCount('channel_video_assignments', 1);
+        $this->assertDatabaseHas('channel_video_assignments', ['channel_id' => 1, 'video_id' => '45', 'assigned_by' => 'alice']);
+    }
+
+    public function test_cannot_add_to_another_users_channel(): void
+    {
+        DB::table('channels')->insert(['id' => 1, 'name' => 'Other channel', 'created_by' => 'bob']);
+        $this->assertAdditionRejected('45', 1);
+        $this->assertDatabaseCount('channel_video_assignments', 0);
+    }
+
+    public function test_connected_channels_are_shown_as_links_in_the_library(): void
+    {
+        DB::table('channels')->insert(['id' => 1, 'name' => 'Research talks', 'created_by' => 'alice']);
+        DB::table('channel_video_assignments')->insert([
+            'channel_id' => 1, 'video_id' => '45', 'assigned_by' => 'alice',
+        ]);
+
+        Livewire::test(UserPresentations::class)
+            ->call('toggleCourse', 'course-42')
+            ->assertSee('Research talks')
+            ->assertSeeHtml('href="'.route('channels.show', 'my-channel').'"');
+    }
+
+    public function test_cannot_add_view_only_or_unlisted_presentations(): void
+    {
+        DB::table('channels')->insert(['id' => 1, 'name' => 'My channel', 'created_by' => 'alice']);
+        $this->assertAdditionRejected('45', 1);
+        DB::table('individual_permissions')->insert(['video_id' => '45', 'username' => 'alice', 'permission' => 'edit']);
+        DB::table('videos')->where('id', '45')->update(['unlisted' => true]);
+        $this->assertAdditionRejected('45', 1);
+        $this->assertDatabaseCount('channel_video_assignments', 0);
+    }
+
+    private function assertAdditionRejected(string $videoId, int $channelId): void
+    {
+        try {
+            (new UserPresentations)->addToChannel($videoId, $channelId);
+            $this->fail('Unauthorized channel assignment was accepted.');
+        } catch (ModelNotFoundException) {
+            $this->assertDatabaseCount('channel_video_assignments', 0);
+        }
+    }
 
     private function makeLibraryComponent(?string $open = null, int $page = 1): UserPresentations
     {

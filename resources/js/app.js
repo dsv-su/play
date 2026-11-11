@@ -1,4 +1,6 @@
 import './presentation-tooltips';
+import './share-modal';
+import './presentation-stats-chart';
 import './bootstrap';
 import _ from 'lodash';
 import { Dropzone } from 'dropzone';

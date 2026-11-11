@@ -3,6 +3,7 @@
         <!-- Playback Metric -->
         <button
             type="button"
+            aria-haspopup="dialog"
             data-tooltip-target="metrics-tooltip"
             onclick="Livewire.dispatch('open-chart-modal', { videoId: @js($video->id) })"
             aria-label="{{ __('Show playback metrics for :title', ['title' => $video->LangTitle]) }}"
@@ -12,7 +13,7 @@
 
             <div class="library-metric-content inline-flex items-center gap-1 text-blue-500">
 
-                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                <svg aria-hidden="true" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                      fill="currentColor" class="size-4 shrink-0">
                     <path d="M15.5 2A1.5 1.5 0 0 0 14 3.5v13a1.5 1.5 0 0 0
                              1.5 1.5h1a1.5 1.5 0 0 0 1.5-1.5v-13A1.5 1.5 0 0 0
@@ -40,7 +41,7 @@
 
             <div class="library-metric-content inline-flex items-center gap-1 text-red-500">
 
-                <svg class="w-4 h-4 text-red-500 dark:text-white"
+                <svg class="w-4 h-4 shrink-0 text-red-500 dark:text-white" width="16" height="16"
                      aria-hidden="true"
                      xmlns="http://www.w3.org/2000/svg" fill="none"
                      viewBox="0 0 24 24">
