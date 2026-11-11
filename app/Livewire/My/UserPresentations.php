@@ -7,12 +7,21 @@ use App\Livewire\Concerns\FiltersPresentations;
 use App\Services\Filters\VisibilityFilter;
 use App\Services\MyPresentation\MyPresentationsService;
 use App\Services\VideoSearch\VideoSearchService;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Livewire\Attributes\Url;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class UserPresentations extends Component
 {
     use DSVCourseNames;
-    use FiltersPresentations;
+    use FiltersPresentations {
+        recompute as protected recomputeFilters;
+    }
+    use WithPagination;
+
+    #[Url(as: 'open', history: true)]
+    public ?string $activeAccordion = null;
 
     public array $courses = [];
     public array $terms = [];
@@ -47,8 +56,52 @@ class UserPresentations extends Component
         $this->initializePresentationFilters($videos, $service);
     }
 
+    public function toggleCourse(string $id): void
+    {
+        $courseId = str_starts_with($id, 'course-') ? substr($id, 7) : null;
+        if ($courseId === null || !$this->videos->has($courseId)) {
+            return;
+        }
+
+        $this->activeAccordion = $this->activeAccordion === $id ? null : $id;
+        $this->resetPage('presentationsPage');
+    }
+
+    public function clearFilters(): void
+    {
+        $this->selectedCourses = $this->selectedPresenters = $this->selectedSemesters = $this->selectedTags = [];
+        $this->course = $this->presenter = $this->semester = $this->tag = [];
+        $this->recompute();
+    }
+
+    public function updatedActiveAccordion(): void
+    {
+        $this->resetPage('presentationsPage');
+    }
+
+    protected function recompute(): void
+    {
+        $this->resetPage('presentationsPage');
+        $this->recomputeFilters();
+    }
+
     public function render()
     {
-        return view('livewire.my.old_user-presentations');
+        $courseId = str_starts_with($this->activeAccordion ?? '', 'course-')
+            ? substr($this->activeAccordion, strlen('course-'))
+            : null;
+        $group = $courseId !== null ? $this->videos->get($courseId, collect()) : collect();
+        $perPage = 20;
+        $page = min(max(1, $this->getPage('presentationsPage')), max(1, (int) ceil($group->count() / $perPage)));
+        $this->paginators['presentationsPage'] = $page;
+        $courseVideos = new LengthAwarePaginator(
+            $group->forPage($page, $perPage)->values(),
+            $group->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'pageName' => 'presentationsPage'],
+        );
+
+        return view('livewire.my.my-presentations', compact('courseVideos'));
     }
 }

@@ -3,14 +3,14 @@
         <!-- Playback Metric -->
         <button
             type="button"
+            data-tooltip-target="metrics-tooltip"
             onclick="Livewire.dispatch('open-chart-modal', { videoId: @js($video->id) })"
             aria-label="{{ __('Show playback metrics for :title', ['title' => $video->LangTitle]) }}"
             class="flex items-center justify-center w-8 h-8 hover:bg-neutral-100 active:bg-white focus:bg-white
                     focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2
                     disabled:opacity-50 disabled:pointer-events-none">
 
-            <div data-tooltip-target="metrics-tooltip"
-                 class="inline-flex text-blue-500 rounded-md shadow-sm space-x-0.5"
+            <div class="inline-flex text-blue-500 rounded-md shadow-sm space-x-0.5"
                  role="group">
 
                 <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -35,10 +35,11 @@
                     focus:outline-none focus:ring-2 focus:ring-neutral-200/60 focus:ring-offset-2
                     disabled:opacity-50 disabled:pointer-events-none"
              role="img"
+             data-tooltip-target="download-metrics-tooltip"
+             tabindex="0"
              aria-label="{{ __('Downloads: :count', ['count' => $video->videoStats->download ?? 0]) }}">
 
-            <div data-tooltip-target="download-metrics-tooltip"
-                 class="inline-flex text-red-500 rounded-md shadow-sm space-x-0.5"
+            <div class="inline-flex text-red-500 rounded-md shadow-sm space-x-0.5"
                  role="group">
 
                 <svg class="w-4 h-4 text-red-500 dark:text-white"

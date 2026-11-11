@@ -1,5 +1,5 @@
 <div wire:key="table-{{ $courseId }}-{{ (int) $switchOn }}"
-     class="px-4 sm:px-6 lg:px-8 lg:py-1 mx-auto">
+     class="w-full min-w-0 px-2 sm:px-4 lg:px-6 lg:py-1 mx-auto">
     <!-- For select all button -->
     @php
         // Build the list of selectable IDs as STRINGS
@@ -25,7 +25,7 @@
             <!-- Row Card -->
                 <div class="w-full bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-lg shadow-sm hover:shadow-md transition">
                     <!-- Card Content -->
-                    <div class="flex flex-col gap-3 p-3 sm:p-4 md:flex-row md:items-center md:justify-between">
+                    <div class="flex min-w-0 flex-col gap-3 p-3 sm:p-4 xl:flex-row xl:items-center xl:justify-between">
                         <!-- Left: Checkbox + permissions -->
                         <div class="flex items-center gap-2 shrink-0">
                             @include('livewire.search.partials.checkbox')
@@ -57,7 +57,7 @@
                             </a>
 
                             <!-- Meta row: duration, course, presenters, tags -->
-                            <div class="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
+                            <div class="flex min-w-0 flex-wrap items-center gap-2 break-words [overflow-wrap:anywhere] text-xs sm:text-sm [&>div]:min-w-0 [&>div]:max-w-full">
                                 <!-- Duration -->
                                 <span class="mt-1 inline-flex items-center px-2 py-0.5 text-[11px] sm:text-xs
                                          font-medium text-white bg-gray-500 border border-gray-500 rounded shadow whitespace-nowrap">
@@ -88,7 +88,7 @@
                         </div>
 
                         <!-- Right: date + edit actions -->
-                        <div class="flex items-center justify-between gap-2 sm:gap-3 md:flex-col md:items-end md:justify-center text-xs sm:text-sm">
+                        <div class="flex items-center justify-between gap-2 sm:gap-3 xl:flex-col xl:items-end xl:justify-center text-xs sm:text-sm">
                         <span class="text-gray-500 dark:text-neutral-400 whitespace-nowrap">
                             {{ $video->getCreationDate() }}
                         </span>

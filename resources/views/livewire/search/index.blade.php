@@ -17,7 +17,7 @@
                     autocomplete="off"
                     role="combobox"
                     aria-expanded="false"
-                    aria-label="Search play"
+                    aria-label="{{ __('Search play') }}"
                     aria-controls="search-results"
                 />
 
@@ -473,7 +473,7 @@
 
                             <!-- Empty-state if all buckets empty -->
                             @if(!count($videos) && !count($presenters) && !count($courses) && !count($tags) && !count($channels))
-                                <div class="text-sm text-gray-500 dark:text-slate-400">No results.</div>
+                                <div class="text-sm text-gray-500 dark:text-slate-400">{{ __('No results.') }}</div>
                             @endif
 
                         </div>

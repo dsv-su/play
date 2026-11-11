@@ -81,7 +81,7 @@ class VideoSearchService
         $videos->flatMap->courses
             ->unique('designation')
             ->each(function ($course) use (&$courses) {
-                $courses[$course->designation] = Lang::locale() === 'swe'
+                $courses[$course->designation] = Lang::locale() === 'sv'
                     ? $course->name
                     : $course->name_en;
             });

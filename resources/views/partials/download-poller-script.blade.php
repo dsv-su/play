@@ -41,15 +41,15 @@
                 start(); //No button, but autostart requested
             } else {
                 //No start control and no autostart — stay idle
-                detail.textContent ||= 'Click the prepare button to begin.';
+                detail.textContent ||= @js(__('Click the prepare button to begin.'));
             }
 
             async function start() {
                 try {
                     show(detail);
                     if (btn) btn.disabled = true;
-                    text.textContent = 'Starting…';
-                    detail.textContent = 'Queuing download…';
+                    text.textContent = @js(__('Starting…'));
+                    detail.textContent = @js(__('Queuing download…'));
 
                     // Enqueue via GET; accept 2xx/3xx/empty. Include cookies if needed.
                     const res = await fetch(startUrl, {
@@ -71,23 +71,23 @@
                         if (!finished && polling) {
                             stopPolling();
                             if (btn) btn.disabled = false;
-                            text.textContent = 'Idle';
-                            detail.textContent = 'Didn’t start. Try again.';
+                            text.textContent = @js(__('Idle'));
+                            detail.textContent = @js(__('Didn’t start. Try again.'));
                         }
                     }, 120000);
                 } catch (e) {
                     console.error(e);
                     if (btn) btn.disabled = false;
-                    text.textContent = 'Idle';
-                    detail.textContent = 'Could not start. Check network and try again.';
+                    text.textContent = @js(__('Idle'));
+                    detail.textContent = @js(__('Could not start. Check network and try again.'));
                 }
             }
 
             function startPolling() {
                 if (polling || finished) return;
                 polling = true;
-                text.textContent = 'Pending (0%)';
-                detail.textContent = 'Working…';
+                text.textContent = @js(__('Pending (0%)'));
+                detail.textContent = @js(__('Working…'));
                 scheduleNext(0);
             }
 
@@ -101,19 +101,25 @@
 
                     const exists   = !!data.exists;
                     const status   = data.status ?? 'pending';
+                    const statusLabels = {
+                        pending: @js(__('Pending')),
+                        stored: @js(__('Stored')),
+                        processing: @js(__('Processing')),
+                        failed: @js(__('Failed')),
+                    };
                     const progress = Number.isFinite(+data.progress) ? Math.max(0, Math.min(100, +data.progress)) : 0;
 
                     bar.style.width = progress + '%';
                     bar.setAttribute('aria-valuenow', String(progress));
-                    text.textContent = exists ? `${status} (${progress}%)` : 'Queued…';
+                    text.textContent = exists ? `${statusLabels[status] ?? status} (${progress}%)` : @js(__('Queued…'));
                     detail.textContent = exists
-                        ? ((progress >= 100 || status === 'stored') ? 'Finalizing…' : 'Working…')
-                        : 'Waiting for preparation to begin…';
+                        ? ((progress >= 100 || status === 'stored') ? @js(__('Finalizing…')) : @js(__('Working…')))
+                        : @js(__('Waiting for preparation to begin…'));
 
                     if (exists && (status === 'stored' || progress >= 100)) {
                         stopPolling();
                         triggerDownload(downloadUrl);
-                        detail.textContent = 'Download started.';
+                        detail.textContent = @js(__('Download started.'));
                         return;
                     }
 
@@ -121,7 +127,7 @@
                     scheduleNext(baseInterval);
                 } catch (err) {
                     console.error('[download-status]', err);
-                    detail.textContent = 'Network issue… retrying.';
+                    detail.textContent = @js(__('Network issue… retrying.'));
                     backoffMs = Math.min((backoffMs || 1000) * 2, 10000);
                     scheduleNext(backoffMs);
                 }

@@ -8,7 +8,7 @@
         data-download-url="{{ route('zip.download', $video) }}">
         <!-- Status -->
         <div class="flex items-center justify-between">
-            <span data-role="status-text" role="status" aria-live="polite" class="hidden text-xs text-gray-500">Idle</span>
+            <span data-role="status-text" role="status" aria-live="polite" class="hidden text-xs text-gray-500">{{ __('Idle') }}</span>
         </div>
         <!-- Progress bar -->
         <div data-role="bar-container" class="hidden w-full bg-gray-200/80 dark:bg-gray-800/60 rounded-full h-3 overflow-hidden">

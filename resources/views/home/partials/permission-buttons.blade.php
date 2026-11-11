@@ -3,6 +3,7 @@
         role="img"
         aria-label="{{ __('Permission: DSV') }}"
         class="inline-flex size-6 items-center justify-center text-white drop-shadow"
+        wire:key="badge-dsv-{{ $courseId ?? 'presentation' }}-{{ $video->id }}"
         data-tooltip-target="dsv-tooltip"
         data-tooltip-placement="top"
         tabindex="0">
@@ -17,6 +18,7 @@
         role="img"
         aria-label="{{ __('Permission: Staff') }}"
         class="inline-flex size-6 items-center justify-center text-white drop-shadow"
+        wire:key="badge-staff-{{ $courseId ?? 'presentation' }}-{{ $video->id }}"
         data-tooltip-target="staff-tooltip"
         data-tooltip-placement="top"
         tabindex="0">
@@ -30,6 +32,7 @@
         role="img"
         aria-label="{{ __('Permission: Public') }}"
         class="inline-flex size-6 items-center justify-center text-white drop-shadow"
+        wire:key="badge-public-{{ $courseId ?? 'presentation' }}-{{ $video->id }}"
         data-tooltip-target="public-tooltip"
         data-tooltip-placement="top"
         tabindex="0">
@@ -43,6 +46,7 @@
         role="img"
         aria-label="{{ __('Permission: Custom') }}"
         class="inline-flex size-6 items-center justify-center text-white drop-shadow"
+        wire:key="badge-custom-{{ $courseId ?? 'presentation' }}-{{ $video->id }}"
         data-tooltip-target="custom-tooltip"
         data-tooltip-placement="top"
         tabindex="0">
@@ -57,6 +61,7 @@
         role="img"
         aria-label="{{ __('Presentation is hidden') }}"
         class="inline-flex size-6 items-center justify-center text-white drop-shadow"
+        wire:key="badge-visibility-{{ $courseId ?? 'presentation' }}-{{ $video->id }}"
         data-tooltip-target="visibility-tooltip"
         data-tooltip-placement="top"
         tabindex="0">
@@ -73,6 +78,7 @@
         role="img"
         aria-label="{{ __('Presentation is unlisted') }}"
         class="inline-flex size-6 items-center justify-center text-white drop-shadow"
+        wire:key="badge-unlisted-{{ $courseId ?? 'presentation' }}-{{ $video->id }}"
         data-tooltip-target="unlisted-tooltip"
         data-tooltip-placement="top"
         tabindex="0">
@@ -85,18 +91,20 @@
 
 @endif
 
-@if(json_decode($video->subtitles))
+@if(json_decode($video->subtitles ?? 'null'))
     <span
         role="img"
         aria-label="{{ __('Presentation has subtitles') }}"
         class="inline-flex size-6 items-center justify-center text-white drop-shadow"
+        wire:key="badge-subtitle-{{ $courseId ?? 'presentation' }}-{{ $video->id }}"
         data-tooltip-target="subtitle-tooltip"
         data-tooltip-placement="top"
         tabindex="0">
-        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-             viewBox="0 0 24 24">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4"
-                  d="M10.855 14.322a2.475 2.475 0 1 1 .133-4.241m6.053 4.241a2.475 2.475 0 1 1 .133-4.241M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/>
+        <svg class="shrink-0 size-5" width="20" height="20" aria-hidden="true" focusable="false"
+             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="5" width="18" height="14" rx="2" />
+            <path d="M10.5 10a2.5 2.5 0 1 0 0 4M17 10a2.5 2.5 0 1 0 0 4" />
         </svg>
     </span>
 @endif

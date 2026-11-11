@@ -22,7 +22,7 @@
                 <div class="flex justify-between items-center pb-2 mb-2">
                     <h3 class="text-lg font-semibold">{{ __("Presentation metrics") }}: <span class="line-clamp-2">{{$video->title}}</span></h3>
                     <button wire:click="closeModal"
-                            aria-label="Metrics modal"
+                            aria-label="{{ __('Metrics modal') }}"
                             class="flex absolute top-0 right-0 justify-center items-center mt-5 mr-5 w-8 h-8 text-gray-600
                             rounded-full hover:text-gray-800 hover:bg-gray-50">
                         <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
