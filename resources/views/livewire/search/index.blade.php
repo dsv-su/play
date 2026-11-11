@@ -87,7 +87,7 @@
 
                         <!-- Loading -->
                         <div wire:loading.flex wire:target="searchTerm" class="justify-center py-2 text-gray-500 italic dark:text-slate-400">
-                            Searching…
+                            {{ __('Searching…') }}
                         </div>
 
                         <!-- Results -->
@@ -427,7 +427,7 @@
 
                                                         @foreach ($matchedFields as $field)
                                                             @php
-                                                                $label = $LABEL_MAP[$field] ?? \Illuminate\Support\Str::headline($field);
+                                                                $label = __($LABEL_MAP[$field] ?? \Illuminate\Support\Str::headline($field));
                                                                 $cls   = $BADGE_CLASSES[$field] ?? 'bg-gray-100 text-gray-800 dark:bg-slate-800 dark:text-slate-200';
                                                             @endphp
 

@@ -2,59 +2,34 @@
 
 namespace App\Livewire\Search;
 
-use App\Livewire\Concerns\DSVCourseNames;
-use App\Livewire\Concerns\FiltersPresentations;
-use App\Services\VideoSearch\VideoSearchService;
-use Illuminate\Support\Collection as SupportCollection;
-use Livewire\Component;
+use App\Livewire\PresentationLibraryResults;
+use App\Services\MyPresentation\PresentationLibrary;
+use App\Services\VideoSearch\VideoFilters;
+use Illuminate\Database\Eloquent\Builder;
+use Livewire\Attributes\Locked;
 
-class CourseResults extends Component
+class CourseResults extends PresentationLibraryResults
 {
-    use DSVCourseNames;
-    use FiltersPresentations;
+    #[Locked]
+    public string $designation = '';
 
-    public SupportCollection $videos;
-    public SupportCollection $allVideos;
+    public bool $allowBulkEdit = false;
 
-    public array $courses = [];
-    public array $terms = [];
-    public array $presenters = [];
-    public array $tags = [];
-    public $designation;
-    public $course, $presenter, $semester, $tag;
-    public array $selectedCourses = [];
-    public array $selectedPresenters = [];
-    public array $selectedSemesters = [];
-    public array $selectedTags = [];
-    public bool $switchOn = false;
     public array $activeFilters = ['courses' => true, 'presenters' => true, 'semesters' => true, 'tags' => true];
-    public array $selectedVideos = [];
-    public $allowBulkEdit = false;
-    public int $totalCount = 0;
 
-    public function mount(SupportCollection $videos, $designation, VideoSearchService $service): void
+    public function mount(string $designation = ''): void
     {
         $this->designation = $designation;
-        $this->allVideos = $videos;
-
-        $this->initializePresentationFilters($videos, $service);
-        $this->totalCount = $videos->count();
+        parent::mount();
     }
 
-    public function toggleSelectAll($videos)
+    protected function libraryQuery(PresentationLibrary $library, VideoFilters $filters): Builder
     {
-        // Convert JSON into an array of IDs
-        $allIds = collect($videos)->pluck('id')->toArray();
-
-        if ($this->selectedVideos == $allIds) {
-            $this->selectedVideos = []; // Deselect all
-        } else {
-            $this->selectedVideos = $allIds; // Select all
-        }
+        return $library->queryForCourse($this->designation, $filters);
     }
 
-    public function render()
+    protected function resultsView(): string
     {
-        return view('livewire.search.course-results');
+        return 'livewire.search.course-results';
     }
 }

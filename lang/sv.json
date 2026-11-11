@@ -561,7 +561,7 @@
     "New on Play": "Senast tillagda",
     "My Courses": "Mina kurser",
     "Study Information": "Studieinformation",
-    "NextIlearn Tutorials": "NextIlearn tutorials",
+    "NextIlearn Tutorials": "Instruktionsfilmer för nextILearn",
     "Manage a channel": "Hantera en kanal",
     "Manage channel": "Hantera kanal",
     "Here you can add or manage a custom channel": "Här kan du lägga till eller hantera en anpassad kanal",
@@ -756,7 +756,6 @@
     ":count course|:count courses": ":count kurs|:count kurser",
     ":count presentation|:count presentations": ":count presentation|:count presentationer",
     ":count selected": ":count valda",
-    "A little space to start fresh": "Dags att börja om",
     "Browse courses": "Bläddra bland kurser",
     "Channels": "Kanaler",
     "Clear :filter": "Rensa :filter",
@@ -823,5 +822,8 @@
     "Network issue… retrying.": "Nätverksproblem… försöker igen.",
     "Pending": "Väntar",
     "Stored": "Klar",
-    "Failed": "Misslyckades"
+    "Failed": "Misslyckades",
+    "Presentations by course": "Presentationer per kurs",
+    "Searching…": "Söker…",
+    "Title": "Titel"
 }

@@ -1,4 +1,4 @@
-/* Scoped to My presentations; opaque surfaces remain usable without backdrop-filter. */
+/* Shared presentation libraries; opaque surfaces remain usable without backdrop-filter. */
 .presentation-library {
     --library-ink: #182332;
     --library-muted: #4b5c70;
@@ -110,7 +110,6 @@
 .library-recordings-grid .library-recording-footer { margin-top: auto; padding-top: 1rem; }
 .library-empty { padding: 3rem 1.5rem; text-align: center; }
 .library-empty > span { font-size: 3rem; color: var(--library-accent); }
-.library-empty h3 { font-size: 1.25rem; font-weight: 600; }
 .library-empty p { color: var(--library-muted); margin: .75rem auto 1.5rem; max-width: 32rem; }
 .library-loading { padding: .5rem; color: var(--library-accent); }
 @media (max-width: 639px) {

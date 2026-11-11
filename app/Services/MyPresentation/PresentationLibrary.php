@@ -2,6 +2,7 @@
 
 namespace App\Services\MyPresentation;
 
+use App\Models\Video;
 use App\Repositories\VideoRepositoryInterface;
 use App\Services\Filters\VisibilityFilter;
 use App\Services\VideoSearch\VideoFilters;
@@ -35,6 +36,60 @@ class PresentationLibrary
         if (! $courses && ! $individual) {
             $query->whereRaw('1 = 0');
         }
+
+        return $this->applyFilters($query, $filters);
+    }
+
+    public function queryForPresenter(string $presenter, VideoFilters $filters): Builder
+    {
+        $query = Video::query()->whereHas('presenters', fn (Builder $p) => $p->where('username', $presenter));
+
+        return $this->applyFilters($query, $filters);
+    }
+
+    public function queryForTag(string $tag, VideoFilters $filters): Builder
+    {
+        $query = Video::query()->whereHas('tags', fn (Builder $t) => $t->where('name', $tag));
+
+        return $this->applyFilters($query, $filters);
+    }
+
+    public function queryForCourse(string $designation, VideoFilters $filters): Builder
+    {
+        $query = Video::query()->whereHas('courses', fn (Builder $c) => $c->where('designation', $designation));
+
+        return $this->applyFilters($query, $filters);
+    }
+
+    public function queryForStudy(VideoFilters $filters): Builder
+    {
+        // Study information excludes hidden and inactive recordings for every role.
+        $query = Video::query()->where('visibility', true)->where('state', true)->where('category_id', 2);
+
+        return $this->applyFilters($query, $filters);
+    }
+
+    public function queryForNextIlearn(VideoFilters $filters): Builder
+    {
+        // Tutorials exclude hidden and inactive recordings for every role.
+        $query = Video::query()->where('visibility', true)->where('state', true)->where('category_id', 8);
+
+        return $this->applyFilters($query, $filters);
+    }
+
+    public function queryForChannel(int $channelId, VideoFilters $filters): Builder
+    {
+        // Membership in a channel does not override hidden or inactive recordings.
+        $query = Video::query()->where('visibility', true)->where('state', true)
+            ->whereIn('videos.id', DB::table('channel_video_assignments')->select('video_id')->where('channel_id', $channelId));
+
+        return $this->applyFilters($query, $filters);
+    }
+
+    private function applyFilters(Builder $query, VideoFilters $filters): Builder
+    {
+        $username = (string) app('play_username');
+        $playRole = (string) app('play_role');
 
         // Match VisibilityFilter's inclusion rules before counting or paginating.
         // Permission type changes display attributes, but does not affect inclusion.

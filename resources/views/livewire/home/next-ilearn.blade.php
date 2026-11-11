@@ -16,7 +16,7 @@
         <div class="px-4 py-2">
             <a href="{{route('nextilearn.presentations')}}"
                class="group inline-flex items-center text-blue-700 text-xl font-light tracking-wide uppercase whitespace-nowrap drop-shadow-md dark:text-white hover:text-blue-900 dark:hover:text-gray-300 transition-colors duration-200">
-                {{__("NextILearn tutorials")}} ({{$totalCount}})
+                {{__("NextIlearn Tutorials")}} ({{$totalCount}})
                 <svg class="ml-2 w-6 h-6 text-current transform transition-transform duration-200 group-hover:translate-x-1"
                      aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                      fill="none" viewBox="0 0 24 24">

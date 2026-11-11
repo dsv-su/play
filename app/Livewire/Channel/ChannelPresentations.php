@@ -2,70 +2,34 @@
 
 namespace App\Livewire\Channel;
 
-use App\Livewire\Concerns\DSVCourseNames;
-use App\Livewire\Concerns\FiltersPresentations;
+use App\Livewire\PresentationLibraryResults;
 use App\Models\Channel;
-use App\Services\Filters\VisibilityFilter;
-use App\Services\VideoSearch\VideoSearchService;
-use Livewire\Component;
+use App\Services\MyPresentation\PresentationLibrary;
+use App\Services\VideoSearch\VideoFilters;
+use Illuminate\Database\Eloquent\Builder;
+use Livewire\Attributes\Locked;
 
-class ChannelPresentations extends Component
+class ChannelPresentations extends PresentationLibraryResults
 {
-    use DSVCourseNames, FiltersPresentations;
-
+    #[Locked]
     public Channel $channel;
 
-    public array $courses = [];
+    public bool $allowBulkEdit = false;
 
-    public array $terms = [];
-
-    public array $presenters = [];
-
-    public array $tags = [];
-
-    public $course;
-
-    public $presenter;
-
-    public $semester;
-
-    public $tag;
-
-    public array $selectedCourses = [];
-
-    public array $selectedPresenters = [];
-
-    public array $selectedSemesters = [];
-
-    public array $selectedTags = [];
-
-    public array $activeFilters = ['courses' => true, 'presenters' => true, 'semesters' => true, 'tags' => true];
-
-    public array $selectedVideos = [];
-
-    public bool $switchOn = false;
-
-    public $allowBulkEdit = false;
-
-    public $videos;
-
-    public $allVideos;
-
-    public int $totalCount = 0;
-
-    public function mount(Channel $channel, VisibilityFilter $visibility, VideoSearchService $service): void
+    public function mount(?Channel $channel = null): void
     {
+        abort_unless($channel?->exists, 404);
         $this->channel = $channel;
-        $raw = $channel->presentations()
-            ->where('visibility', true)->where('state', true)
-            ->latest('creation')->with(['video_course:id,video_id,course_id', 'video_course.course:id,name,designation'])->get();
-        $videos = $this->allVideos = $visibility->filter($raw);
-        $this->totalCount = $videos->count();
-        $this->initializePresentationFilters($videos, $service);
+        parent::mount();
     }
 
-    public function render()
+    protected function libraryQuery(PresentationLibrary $library, VideoFilters $filters): Builder
     {
-        return view('livewire.channel.channel-presentations');
+        return $library->queryForChannel($this->channel->getKey(), $filters);
+    }
+
+    protected function resultsView(): string
+    {
+        return 'livewire.channel.channel-presentations';
     }
 }

@@ -2,17 +2,12 @@
 @section('content')
     @include('dsvheader')
     @include('navbar.navbar')
-    <div class="max-w-screen-xl mx-auto px-4 py-6 sm:px-6 lg:px-8 md:pt-8 md:pb-8 space-y-8">
-        <livewire:search.index />
-        @if(!empty($tag))
-            <livewire:search.Tag-results :videos="$videos" :tag="$tag" />
-        @elseif(!empty($presenter_search))
-            <livewire:search.Presenter-results :videos="$videos" :presenter_search="$presenter_search" />
-        @elseif(!empty($designation))
-            <livewire:search.Course-results :videos="$videos" :designation="$designation" />
-        @endif
-
-    </div>
+    @if(!empty($presenter_search))
+        <livewire:search.presenter-results :presenter_search="$presenter_search" />
+    @elseif(isset($tag))
+        <livewire:search.tag-results :tag="$tag" />
+    @elseif(isset($designation))
+        <livewire:search.course-results :designation="$designation" />
+    @endif
     @include('layouts.darktoggler')
 @endsection
-
