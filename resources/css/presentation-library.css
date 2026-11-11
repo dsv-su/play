@@ -138,10 +138,18 @@
 .library-course-trigger svg {
     flex-shrink: 0;
 }
-.library-actions > div,
-.library-actions [role="group"] {
+.library-actions > div {
     gap: .5rem;
 }
 .library-permissions > span {
     flex: 0 0 24px;
 }
+
+/* Playback and download metrics share the same footprint and icon/count gap. */
+.library-actions .library-metric {
+    min-width: 44px;
+    min-height: 44px;
+    padding: .25rem;
+    border-radius: .6rem;
+}
+.library-actions .library-metric-content { gap: .25rem; }

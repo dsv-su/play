@@ -1,20 +1,19 @@
 @if ($video->edit && $video->state)
-    <div class="flex space-x-1">
+    <div class="flex items-center gap-1">
         <!-- Playback Metric -->
         <button
             type="button"
             data-tooltip-target="metrics-tooltip"
             onclick="Livewire.dispatch('open-chart-modal', { videoId: @js($video->id) })"
             aria-label="{{ __('Show playback metrics for :title', ['title' => $video->LangTitle]) }}"
-            class="flex items-center justify-center w-8 h-8 hover:bg-neutral-100 active:bg-white focus:bg-white
+            class="library-metric inline-flex items-center justify-center min-w-8 min-h-8 hover:bg-neutral-100 active:bg-white focus:bg-white
                     focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2
                     disabled:opacity-50 disabled:pointer-events-none">
 
-            <div class="inline-flex text-blue-500 rounded-md shadow-sm space-x-0.5"
-                 role="group">
+            <div class="library-metric-content inline-flex items-center gap-1 text-blue-500">
 
                 <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                     fill="currentColor" class="size-3.5">
+                     fill="currentColor" class="size-4 shrink-0">
                     <path d="M15.5 2A1.5 1.5 0 0 0 14 3.5v13a1.5 1.5 0 0 0
                              1.5 1.5h1a1.5 1.5 0 0 0 1.5-1.5v-13A1.5 1.5 0 0 0
                              16.5 2h-1ZM9.5 6A1.5 1.5 0 0 0 8 7.5v9A1.5 1.5 0 0 0
@@ -24,14 +23,14 @@
                              4.5 10h-1Z" />
                 </svg>
 
-                <p class="text-xs text-gray-500 dark:text-neutral-400">
+                <span class="text-xs text-gray-500 dark:text-neutral-400">
                     {{ $video->videoStats->playback ?? 0 }}
-                </p>
+                </span>
             </div>
         </button>
 
         <!-- Download Metric -->
-        <div class="flex items-center justify-center w-8 h-8 hover:bg-neutral-100 active:bg-white focus:bg-white
+        <div class="library-metric inline-flex items-center justify-center min-w-8 min-h-8 hover:bg-neutral-100 active:bg-white focus:bg-white
                     focus:outline-none focus:ring-2 focus:ring-neutral-200/60 focus:ring-offset-2
                     disabled:opacity-50 disabled:pointer-events-none"
              role="img"
@@ -39,8 +38,7 @@
              tabindex="0"
              aria-label="{{ __('Downloads: :count', ['count' => $video->videoStats->download ?? 0]) }}">
 
-            <div class="inline-flex text-red-500 rounded-md shadow-sm space-x-0.5"
-                 role="group">
+            <div class="library-metric-content inline-flex items-center gap-1 text-red-500">
 
                 <svg class="w-4 h-4 text-red-500 dark:text-white"
                      aria-hidden="true"
@@ -51,9 +49,9 @@
                           d="M4 15v2a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-2m-8 1V4m0 12-4-4m4 4 4-4"/>
                 </svg>
 
-                <p class="text-xs text-gray-500 dark:text-neutral-400">
+                <span class="text-xs text-gray-500 dark:text-neutral-400">
                     {{ $video->videoStats->download ?? 0 }}
-                </p>
+                </span>
             </div>
         </div>
     </div>

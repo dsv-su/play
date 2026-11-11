@@ -28,15 +28,14 @@
         <div class="library-section-heading">
             <h2 id="library-courses-title">{{ __('Your courses') }}</h2>
             <p role="status" aria-live="polite" aria-atomic="true">
-                {{ trans_choice(':count presentation|:count presentations', $videos->flatten(1)->unique('id')->count(), ['count' => $videos->flatten(1)->unique('id')->count()]) }}
+                {{ trans_choice(':count presentation|:count presentations', $totalCount, ['count' => $totalCount]) }}
                 <span aria-hidden="true"> · </span>
-                {{ trans_choice(':count course|:count courses', $videos->count(), ['count' => $videos->count()]) }}
+                {{ trans_choice(':count course|:count courses', $courseCounts->count(), ['count' => $courseCounts->count()]) }}
             </p>
         </div>
         <p class="library-loading" wire:loading.delay role="status">{{ __('Updating your library…') }}</p>
 
-        @php($titles = $this->courseTitles)
-        @forelse($videos as $courseId => $group)
+        @forelse($courseCounts as $courseId => $courseCount)
             @php($isOpen = $activeAccordion === 'course-'.$courseId)
             <section class="library-glass library-course" wire:key="library-course-{{ $courseId }}">
                 <h3>
@@ -49,7 +48,7 @@
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v10H5a2 2 0 0 1-2-2Z"/></svg>
                         </span>
                         <span class="library-course-title">{{ strip_tags($titles[$courseId] ?? __('Presentations')) }}</span>
-                        <span class="library-count">{{ count($group) }}<span class="sr-only"> {{ __('Presentations') }}</span></span>
+                        <span class="library-count">{{ $courseCount }}<span class="sr-only"> {{ __('Presentations') }}</span></span>
                         <svg class="library-chevron" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 5 7 7-7 7"/></svg>
                     </button>
                 </h3>

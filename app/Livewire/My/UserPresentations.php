@@ -2,106 +2,129 @@
 
 namespace App\Livewire\My;
 
-use App\Livewire\Concerns\DSVCourseNames;
-use App\Livewire\Concerns\FiltersPresentations;
-use App\Services\Filters\VisibilityFilter;
-use App\Services\MyPresentation\MyPresentationsService;
-use App\Services\VideoSearch\VideoSearchService;
+use App\Services\MyPresentation\PresentationLibrary;
+use App\Services\VideoSearch\VideoFilters;
+use App\Support\VideoFiltersFromRequest;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 class UserPresentations extends Component
 {
-    use DSVCourseNames;
-    use FiltersPresentations {
-        recompute as protected recomputeFilters;
-    }
     use WithPagination;
 
     #[Url(as: 'open', history: true)]
     public ?string $activeAccordion = null;
 
-    public array $courses = [];
-    public array $terms = [];
-    public array $presenters = [];
-    public array $tags = [];
-    public $course, $presenter, $semester, $tag;
     public array $selectedCourses = [];
+
     public array $selectedPresenters = [];
+
     public array $selectedSemesters = [];
+
     public array $selectedTags = [];
+
     public bool $switchOn = false;
-    public $videos, $allVideos;
-    public int $totalCount = 0;
+
     public array $activeFilters = ['courses' => true, 'presenters' => true, 'semesters' => true, 'tags' => true];
-    public array $selectedVideos = [];
-    public $allowBulkEdit = true;
-    //Test
-    public string $group = 'group1';
 
-    public function mount(MyPresentationsService $my, VisibilityFilter $visibility, VideoSearchService $service)
+    public bool $allowBulkEdit = true;
+
+    protected ?array $libraryState = null;
+
+    private const FILTER_SELECTIONS = [
+        'course' => 'selectedCourses',
+        'presenter' => 'selectedPresenters',
+        'semester' => 'selectedSemesters',
+        'tag' => 'selectedTags',
+    ];
+
+    public function mount(): void
     {
-        $username = (string) app()->make('play_username');
-        $authRole = (string) app()->make('play_auth');
-        $playRole = (string) app()->make('play_role');
-
-        $result = $my->getTopForUser($username, $authRole, $playRole, limit: 1000);
-
-        $videos = $this->allVideos = $visibility->filter($result['videos']);
-
-        $this->totalCount = $result['total'];
-
-        $this->initializePresentationFilters($videos, $service);
+        $filters = VideoFiltersFromRequest::make();
+        $this->selectedCourses = $filters->courses ?? [];
+        $this->selectedPresenters = $filters->presenters ?? [];
+        $this->selectedSemesters = $filters->terms ?? [];
+        $this->selectedTags = $filters->tags ?? [];
     }
 
     public function toggleCourse(string $id): void
     {
-        $courseId = str_starts_with($id, 'course-') ? substr($id, 7) : null;
-        if ($courseId === null || !$this->videos->has($courseId)) {
+        if (! str_starts_with($id, 'course-')) {
             return;
         }
-
+        // Every read is scoped to the current user, including client-supplied IDs.
+        [, , $summary] = $this->libraryState();
+        $counts = $summary['counts'];
+        if (! $counts->has(substr($id, 7))) {
+            return;
+        }
         $this->activeAccordion = $this->activeAccordion === $id ? null : $id;
         $this->resetPage('presentationsPage');
     }
 
     public function clearFilters(): void
     {
+        $this->libraryState = null;
         $this->selectedCourses = $this->selectedPresenters = $this->selectedSemesters = $this->selectedTags = [];
-        $this->course = $this->presenter = $this->semester = $this->tag = [];
-        $this->recompute();
-    }
-
-    public function updatedActiveAccordion(): void
-    {
         $this->resetPage('presentationsPage');
     }
 
-    protected function recompute(): void
+    #[On('recompute')]
+    public function handleRecompute(string $prop): void
     {
-        $this->resetPage('presentationsPage');
-        $this->recomputeFilters();
+        if (isset(self::FILTER_SELECTIONS[$prop])) {
+            $this->libraryState = null;
+            $this->{self::FILTER_SELECTIONS[$prop]} = [];
+            $this->resetPage('presentationsPage');
+        }
+    }
+
+    public function updated(string $name): void
+    {
+        $this->libraryState = null;
+        if ($name === 'activeAccordion' || in_array(explode('.', $name)[0], self::FILTER_SELECTIONS, true)) {
+            $this->resetPage('presentationsPage');
+        }
+    }
+
+    private function filters(): VideoFilters
+    {
+        return new VideoFilters($this->selectedCourses, $this->selectedSemesters, $this->selectedTags, $this->selectedPresenters);
+    }
+
+    protected function libraryState(): array
+    {
+        if ($this->libraryState === null) {
+            $library = app(PresentationLibrary::class);
+            $query = $library->query($this->filters());
+            $this->libraryState = [$library, $query, $library->summary($query)];
+        }
+
+        return $this->libraryState;
     }
 
     public function render()
     {
-        $courseId = str_starts_with($this->activeAccordion ?? '', 'course-')
-            ? substr($this->activeAccordion, strlen('course-'))
-            : null;
-        $group = $courseId !== null ? $this->videos->get($courseId, collect()) : collect();
-        $perPage = 20;
-        $page = min(max(1, $this->getPage('presentationsPage')), max(1, (int) ceil($group->count() / $perPage)));
-        $this->paginators['presentationsPage'] = $page;
-        $courseVideos = new LengthAwarePaginator(
-            $group->forPage($page, $perPage)->values(),
-            $group->count(),
-            $perPage,
-            $page,
-            ['path' => request()->url(), 'pageName' => 'presentationsPage'],
-        );
+        [$library, $query, $summary] = $this->libraryState();
+        $courseId = str_starts_with($this->activeAccordion ?? '', 'course-') ? substr($this->activeAccordion, 7) : null;
+        $courseVideos = new LengthAwarePaginator([], 0, 20, 1, [
+            'path' => request()->url(), 'pageName' => 'presentationsPage',
+        ]);
+        if ($courseId !== null && $summary['counts']->has($courseId)) {
+            $courseVideos = $library->page(
+                $query, $courseId, $this->getPage('presentationsPage'), total: $summary['counts']->get($courseId),
+            );
+        }
+        $this->paginators['presentationsPage'] = $courseVideos->currentPage();
 
-        return view('livewire.my.my-presentations', compact('courseVideos'));
+        return view('livewire.my.my-presentations', [
+            'courseCounts' => $summary['counts'], 'titles' => $summary['titles'],
+            'courses' => $summary['courses'], 'terms' => $summary['terms'],
+            'tags' => $summary['tags'], 'presenters' => $summary['presenters'],
+            'totalCount' => $summary['total'], 'courseVideos' => $courseVideos,
+        ]);
     }
 }
