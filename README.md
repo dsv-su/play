@@ -220,11 +220,8 @@ The response:
 The multiplayer is available under /storage/app/multiplayer and is a standalone application. The folder is linked to the multiplayer repo on gitea.dsv.su.se and excluded from the platform's git repo.
 Updating the multiplayer is easiest with the artisan command:
 
-    php artisan update:multiplayer
-    php artisan integrate:multiplayer
+    php artisan update:multiplayer-ce
 
-
-This will check if an update is available on the multiplayer repo and if so perform a git pull, execute the multiplayer python script to create a local player and finally integrate the player into the platform.
 
 
 
