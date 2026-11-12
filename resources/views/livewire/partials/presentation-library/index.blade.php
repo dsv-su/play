@@ -13,7 +13,7 @@
     <section class="library-glass library-toolbar" aria-labelledby="library-filter-title">
         <div class="library-toolbar-heading">
             <div>
-                <h2 id="library-filter-title">{{ __('Make it yours') }}</h2>
+                <h2 id="library-filter-title">{{ __('Filter') }}</h2>
                 <p>{{ __('Filter your library, then open a course to explore.') }}</p>
             </div>
             <div class="library-view-control" role="group" aria-label="{{ __('Presentation layout') }}">
