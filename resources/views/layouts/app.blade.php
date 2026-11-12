@@ -32,7 +32,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
 
-    <body class="flex min-h-dvh flex-col bg-dsvbg dark:bg-gray-800 overflow-x-hidden">
+    <body class="flex min-h-dvh flex-col bg-dsvbg dark:bg-gray-800 overflow-x-hidden @yield('body-class')">
         <main class="flex-1">
             @yield('content')
         </main>

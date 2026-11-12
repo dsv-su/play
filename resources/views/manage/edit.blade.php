@@ -1,8 +1,9 @@
 @extends('layouts.app')
+@section('body-class', 'presentation-edit-page')
 @section('content')
     @include('dsvheader')
     @include('navbar.navbar')
-    <div class="mx-auto max-w-screen-2xl px-4 py-6 pb-32 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-screen-2xl px-4 py-6 pb-8 sm:px-6 lg:px-8">
         <section class="overflow-hidden rounded-lg border border-susecondary bg-white shadow-sm dark:border-susecondary dark:bg-neutral-900">
             <div class="border-b border-slate-200 bg-slate-50 px-4 py-5 sm:px-6 lg:px-8 dark:border-neutral-700 dark:bg-neutral-950">
                 @include('livewire.edit.partials.form.edit-banner')

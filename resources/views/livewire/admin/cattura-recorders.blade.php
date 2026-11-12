@@ -65,4 +65,5 @@
 
         </div>
     </div>
+    @include('footer.footer')
 </div>

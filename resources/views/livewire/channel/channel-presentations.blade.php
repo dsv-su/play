@@ -1,1 +1,5 @@
-@include('livewire.channel.partials.presentations')
+<div>
+    @include('livewire.channel.partials.presentations')
+
+    @include('footer.footer')
+</div>

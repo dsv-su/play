@@ -1,4 +1,5 @@
 @import "./presentation-library.css";
+@import "./footer.css";
 
 @tailwind base;
 @tailwind components;

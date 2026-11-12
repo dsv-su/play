@@ -1,3 +1,4 @@
+<div>
 <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
     @if (session()->has('message'))
         <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
@@ -688,4 +689,7 @@
             @endif
         </div>
     @endif
+</div>
+
+    @include('footer.footer')
 </div>

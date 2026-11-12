@@ -14,8 +14,13 @@
     <div class="library-recordings {{ $switchOn ? 'library-recordings-grid' : '' }}">
         @foreach($group as $video)
             <article class="library-recording" wire:key="library-video-{{ $courseId }}-{{ $video->id }}">
-                <div class="library-recording-image">
+                <div class="library-recording-image {{ $video->unlisted || $video->hidden || !$video->visibility ? 'library-recording-image-restricted' : '' }}">
                     <img src="{{ asset($video->thumb) }}" alt="" loading="lazy" decoding="async" width="480" height="270">
+                    @if($video->unlisted)
+                        <span class="library-visibility library-visibility-unlisted">{{ __('Unlisted') }}</span>
+                    @elseif($video->hidden || !$video->visibility)
+                        <span class="library-visibility library-visibility-private">{{ __('Private') }}</span>
+                    @endif
                     <span class="library-duration">{{ $video->duration }}</span>
                 </div>
                 <div class="library-recording-body">
