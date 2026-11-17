@@ -1,0 +1,117 @@
+/* Shared by home carousels and search results. Solid surfaces are the fallback. */
+.presentation-card,
+.presentation-card-chip,
+.presentation-carousel {
+    --card-ink: #19283c;
+    --card-muted: #52627a;
+    --card-accent: #175bb5;
+    --card-surface: #f4f7fc;
+    --card-glass: rgb(247 250 255 / .8);
+    --card-border: rgb(136 162 194 / .3);
+    --card-tint: rgb(67 105 160 / .08);
+    color: var(--card-ink);
+}
+.dark .presentation-card,
+.dark .presentation-card-chip,
+.dark .presentation-carousel {
+    --card-ink: #edf3fc;
+    --card-muted: #b0c0d6;
+    --card-accent: #a5caff;
+    --card-surface: #202c3e;
+    --card-glass: rgb(29 41 59 / .86);
+    --card-border: rgb(194 215 244 / .19);
+    --card-tint: rgb(182 211 255 / .1);
+}
+.presentation-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    align-self: stretch;
+    padding: .375rem;
+    border: 1px solid var(--card-border);
+    border-radius: 1.25rem;
+    background: var(--card-surface);
+    box-shadow: 0 4px 16px #152f500a, inset 0 1px 0 #ffffff80;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+.presentation-card:hover,
+.presentation-card:focus-within { border-color: var(--card-accent); box-shadow: 0 8px 24px #152f5014, inset 0 1px 0 #ffffff80; }
+.presentation-card-media { position: relative; flex-shrink: 0; overflow: hidden; border-radius: .875rem; isolation: isolate; }
+.presentation-card-play { position: absolute; inset: 0; z-index: 10; border-radius: inherit; }
+.presentation-card-image { position: relative; width: 100%; aspect-ratio: 16 / 9; max-height: 10rem; background: var(--card-tint); overflow: hidden; }
+.presentation-card-image img { width: 100%; height: 100%; object-fit: cover; }
+.presentation-card-duration,
+.presentation-card-age,
+.presentation-card-permissions,
+.presentation-card-visibility span {
+    border: 1px solid #ffffff40;
+    background: rgb(17 29 47 / .85);
+    color: #fff;
+    box-shadow: inset 0 1px 0 #ffffff1a;
+}
+.presentation-card-duration { position: absolute; bottom: .5rem; right: .5rem; z-index: 11; display: flex; align-items: center; gap: .25rem; padding: .125rem .4rem; margin: 0; border-radius: .375rem; font-size: .6875rem; line-height: 1.5; pointer-events: none; font-variant-numeric: tabular-nums; }
+.presentation-card-age { position: absolute; top: .5rem; left: .5rem; z-index: 11; max-width: calc(100% - 1rem); padding: .2rem .5rem; border-radius: .375rem; font-size: .625rem; pointer-events: none; }
+.presentation-card-permissions { position: absolute; bottom: .5rem; left: .5rem; z-index: 11; display: flex; border-radius: .375rem; padding: .0625rem .125rem; }
+.presentation-card-visibility { position: absolute; inset: 0; display: grid; place-items: center; background: #101c3030; pointer-events: none; }
+.presentation-card-visibility span { padding: .3rem .75rem; border-radius: .375rem; font-size: .75rem; font-weight: 600; }
+.presentation-card-body { flex: 1; min-width: 0; padding: .625rem .375rem .5rem; }
+.presentation-card-heading { display: flex; align-items: start; gap: .375rem; }
+.presentation-card-title { flex: 1; min-width: 0; margin: 0; font-size: .8125rem; font-weight: 650; line-height: 1.45; letter-spacing: -.015em; }
+.presentation-card-title a { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; color: var(--card-ink); border-radius: .25rem; }
+.presentation-card-title a:hover { color: var(--card-accent); }
+.presentation-card-share { flex-shrink: 0; margin-top: -.25rem; }
+.presentation-card-metadata,
+.presentation-card-courses { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem; }
+.presentation-card-metadata { margin-top: .375rem; }
+.presentation-card-metadata:empty { display: none; }
+.presentation-card-chip { pointer-events: auto; display: inline-flex; align-items: center; max-width: 100%; padding: .125rem .4rem; border: 1px solid var(--card-border); border-radius: .375rem; background: var(--card-tint); color: var(--card-accent); font-size: .625rem; font-weight: 500; line-height: 1.4; overflow-wrap: anywhere; }
+.presentation-card-chip-study { color: #166442; background: #dcfce799; border-color: #16a34a33; }
+.dark .presentation-card-chip-study { color: #a7f3d0; background: #05966926; border-color: #6ee7b733; }
+.presentation-card-chip:hover { text-decoration: underline; text-underline-offset: 2px; }
+.presentation-card-description { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin: .375rem 0 0; color: var(--card-muted); font-size: .6875rem; line-height: 1.5; overflow-wrap: anywhere; }
+.presentation-card-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .25rem; margin: 0 .375rem; padding: .375rem 0 0; border-top: 1px solid var(--card-border); }
+.presentation-card-metrics { display: flex; align-items: center; gap: .375rem; }
+.presentation-card-metrics > div { display: inline-flex; align-items: center; gap: .2rem; min-height: 32px; color: var(--card-muted); box-shadow: none; }
+.presentation-card-metrics p { color: var(--card-muted); font-size: .625rem; font-variant-numeric: tabular-nums; }
+.presentation-card-actions { margin-left: auto; min-width: 0; }
+.presentation-card-actions > div { display: flex; flex-wrap: wrap; align-items: center; box-shadow: none; }
+.presentation-card :is(.presentation-card-share button, .presentation-card-actions button, .presentation-card-actions a) { min-height: 32px; min-width: 32px; border-radius: 50%; }
+.presentation-card :is(.presentation-card-share button, .presentation-card-actions button, .presentation-card-actions a):hover { background: var(--card-tint); }
+.presentation-card svg { flex-shrink: 0; }
+.presentation-card :is(a,button,[tabindex]):focus-visible,
+.presentation-carousel :is(a,button):focus-visible { outline: 2px solid var(--card-accent); outline-offset: 2px; }
+.presentation-card-play:focus-visible { outline-offset: -3px !important; }
+.presentation-carousel { position: relative; min-width: 0; padding: .875rem .5rem .5rem; border: 1px solid var(--card-border); border-radius: 1.625rem; background: linear-gradient(135deg, #dce9ff55, #e5f3f233); }
+.presentation-carousel-heading { display: flex; justify-content: space-between; align-items: center; gap: .75rem; padding: 0 .375rem .625rem; }
+.presentation-carousel-heading h2 { min-width: 0; margin: 0; font-size: 1.125rem; font-weight: 600; letter-spacing: -.025em; overflow-wrap: anywhere; }
+.presentation-carousel-heading a { display: inline; border-radius: .375rem; color: var(--card-ink); }
+.presentation-carousel-heading a { color: var(--card-accent); }
+.presentation-carousel-link-label { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; }
+.presentation-carousel-link-icon { display: inline-flex; align-items: center; justify-content: center; gap: .375rem; min-height: 28px; padding: .25rem .5rem; vertical-align: middle; border: 1px solid currentColor; border-radius: .5rem; background: var(--card-tint); font-size: .75rem; font-weight: 500; line-height: 1.25; }
+.presentation-carousel-heading a:hover .presentation-carousel-link-label { text-decoration-thickness: 2px; }
+.presentation-carousel-heading a:hover .presentation-carousel-link-icon,
+.presentation-carousel-heading a:focus-visible .presentation-carousel-link-icon { background: var(--card-accent); color: var(--card-surface); border-color: var(--card-accent); }
+.presentation-carousel-count { display: inline-block; margin-inline: .375rem; vertical-align: middle; padding: .125rem .5rem; border: 1px solid var(--card-border); border-radius: .375rem; background: var(--card-tint); color: var(--card-muted); font-size: .6875rem; font-variant-numeric: tabular-nums; }
+.presentation-carousel-controls { display: flex; gap: .25rem; flex-shrink: 0; }
+.presentation-carousel-arrow { display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid var(--card-border); border-radius: 50%; background: var(--card-surface); color: var(--card-ink); box-shadow: inset 0 1px 0 #ffffff40; }
+.presentation-carousel-arrow:hover { background: var(--card-tint); }
+.presentation-carousel-viewport { position: relative; width: 100%; overflow: hidden; border-radius: 1rem; }
+.presentation-carousel-slide { display: flex; padding: .125rem .25rem .5rem; }
+@supports ((backdrop-filter: blur(20px)) or (-webkit-backdrop-filter: blur(20px))) {
+    .presentation-card, .presentation-carousel-arrow { background: var(--card-glass); -webkit-backdrop-filter: blur(20px) saturate(150%); backdrop-filter: blur(20px) saturate(150%); }
+    .presentation-card-duration, .presentation-card-age, .presentation-card-permissions, .presentation-card-visibility span { -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .presentation-card, .presentation-carousel * { transition: none !important; }
+}
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    .presentation-card, .presentation-carousel-arrow { background: var(--card-surface); box-shadow: none; }
+    .presentation-card, .presentation-carousel * { -webkit-backdrop-filter: none; backdrop-filter: none; }
+    .presentation-card { --card-border: var(--card-muted); }
+}
+@media (forced-colors: active) {
+    .presentation-card, .presentation-carousel, .presentation-carousel-arrow, .presentation-card-chip { color: CanvasText; background: Canvas; border-color: ButtonText; box-shadow: none; }
+    .presentation-card :is(a,button,[tabindex]):focus-visible, .presentation-carousel :is(a,button):focus-visible { outline-color: Highlight; }
+}

@@ -2,14 +2,14 @@
     @foreach($video->presenters->take(2) as $presenter)
         <a href="/presenter/{{$presenter->username}}"
            data-tooltip-target="presenter-tooltip"
-           class="px-1.5 py-0 text-[10px] font-medium text-blue-700 bg-gray-100 border-none rounded-sm shadow-sm dark:bg-neutral-300 pointer-events-auto">
+           class="presentation-card-chip">
             {{$presenter->name}}
         </a>
     @endforeach
 
     @if ($video->presenters->count() > 2)
-        <span class="px-1.5 py-0 text-[10px] font-medium text-blue-700 bg-gray-100 border-none rounded-sm shadow-sm dark:bg-neutral-300">
-            +{{ $video->presenters->count() - 2 }} more
+        <span class="presentation-card-chip">
+            +{{ $video->presenters->count() - 2 }} <span class="sr-only">{{ __('more presenters') }}</span>
         </span>
     @endif
 @endif

@@ -1,9 +1,5 @@
-<div class="relative aspect-video w-full overflow-hidden rounded-t-sm select-none pointer-events-none">
-    <img draggable="false"
-        class="absolute inset-0 h-full w-full object-cover
-               @if($video->hidden) opacity-50 @endif"
-        loading="lazy"
-        decoding="async"
-        src="{{ asset($video->thumb . '?' . time()) }}"
-        alt="Presentation thumb-{{$loop->index}}">
+<div class="presentation-card-image select-none pointer-events-none">
+    <img draggable="false" class="@if($video->hidden) opacity-50 @endif"
+         loading="lazy" decoding="async" width="480" height="270"
+         src="{{ asset($video->thumb) }}" alt="">
 </div>

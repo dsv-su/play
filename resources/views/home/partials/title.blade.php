@@ -1,3 +1,8 @@
-<h3 class="text-sm font-bold text-gray-800 dark:text-white m-0">
-    {{ Str::limit($video->lang_title, 30) }}
+<h3 class="presentation-card-title">
+    @if($video->state)
+        <a target="_blank" rel="noopener noreferrer" href="{{ route('player.show', ['video' => $video]) }}"
+           aria-label="{{ __('Open :title in a new tab', ['title' => $video->LangTitle]) }}">{{ $video->LangTitle }}</a>
+    @else
+        {{ $video->LangTitle }}
+    @endif
 </h3>

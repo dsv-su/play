@@ -1,6 +1,6 @@
 @if ($video->edit && $video->state)
     <!-- Click metrics -->
-    <div class="absolute bottom-2 left-1.5 z-[100] flex space-x-0.5">
+    <div class="presentation-card-metrics">
         <div data-tooltip-target="{{$video->id}}-metrics-tooltip"
              class="inline-flex text-blue-500 rounded-md shadow-sm space-x-0.5 cursor-pointer"
              role="group" tabindex="0">
@@ -33,7 +33,7 @@
     <div id="{{$video->id}}-metrics-tooltip"
          role="tooltip"
          data-tooltip-placement="top"
-         class="z-30 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+         class="absolute z-30 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
 
         {{ __("Number of Clicks") }}
 
@@ -42,7 +42,7 @@
     <div id="{{$video->id}}-download-metrics-tooltip"
          role="tooltip"
          data-tooltip-placement="top"
-         class="z-30 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+         class="absolute z-30 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
 
         {{ __("Number of Downloads") }}
 

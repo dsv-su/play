@@ -1,9 +1,9 @@
 @if (!$video->courses->isEmpty())
-    <div class="flex flex-wrap gap-1 mt-1">
+    <div class="presentation-card-courses">
         @foreach($video->getUniqueDesignations() as $designation)
             <a href="/designation/{{ $designation }}"
                data-tooltip-target="course-tooltip"
-           class="px-1.5 py-0 text-[10px] font-medium text-white bg-blue-800 border border-blue-900 rounded shadow-md pointer-events-auto">
+           class="presentation-card-chip presentation-card-chip-course">
                 {{ $designation }}
             </a>
         @endforeach

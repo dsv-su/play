@@ -1,6 +1,7 @@
 @import "./role-switcher.css";
 @import "./navbar.css";
 @import "./presentation-library.css";
+@import "./presentation-card.css";
 @import "./footer.css";
 
 @tailwind base;
