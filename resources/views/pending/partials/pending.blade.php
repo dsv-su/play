@@ -1,4 +1,4 @@
-<article data-presentation-card class="presentation-card">
+<article data-presentation-card class="presentation-card pending-card">
     <div class="presentation-card-media">
         @include('home.partials.img')
         @include('home.partials.icons')
@@ -11,6 +11,6 @@
             @include('home.partials.courses')
         </div>
         @include('home.partials.description')
-        @include('pending.partials.progress')
     </div>
+    @include('pending.partials.progress')
 </article>

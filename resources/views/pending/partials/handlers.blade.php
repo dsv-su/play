@@ -1,23 +1,14 @@
-<div class="space-y-2">
-    <!-- Handlers -->
-    <div class="text-xs">
-        @php
-            $raw = $video->pending->handlers ?? [];
-            $handlers = is_array($raw) ? $raw : [];
-        @endphp
-
-    @forelse($handlers as $h)
-            <div class="flex justify-between items-center w-48">
-                <span>{{ $h }}</span>
-                <span class="bg-transparent text-yellow-500 border border-yellow-500 text-[8px] font-medium px-1 py-0.3 rounded-full">
-            Pending
-        </span>
-            </div>
-        @empty
-        <div class="text-xs text-gray-500">No handlers</div>
-        @endforelse
-
-    <!-- Handlers -->
-    </div>
-
-</div>
+@php
+    $raw = $video->pending->handlers ?? [];
+    $handlers = is_array($raw) ? $raw : [];
+@endphp
+<ul class="pending-handlers">
+    @forelse($handlers as $handler)
+        <li>
+            <span class="pending-handler-name">{{ $handler }}</span>
+            <span class="presentation-card-chip">{{ __('Pending') }}</span>
+        </li>
+    @empty
+        <li class="pending-handlers-empty">{{ __('No handlers') }}</li>
+    @endforelse
+</ul>
