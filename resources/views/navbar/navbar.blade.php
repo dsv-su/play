@@ -1,3 +1,26 @@
+@php
+    // Share destinations and permission checks across desktop and mobile navigation.
+    $presentationDescription = in_array(app()->make('play_auth'), ['Administrator', 'Staff'])
+        ? __('Here you can navigate among presentations from your teaching activities sorted after course.')
+        : __('Here you can navigate among presentations from your registed course sorted after course.');
+    $navigationItems = [
+        ['label' => __('Navigation'), 'key' => 'presentations', 'children' => [
+            ['label' => __('My Presentations'), 'route' => 'my.presentations', 'description' => $presentationDescription],
+        ]],
+    ];
+    if (\Illuminate\Support\Facades\Gate::allows('manage-content')) {
+        $navigationItems[] = ['label' => __('Manage'), 'key' => 'manage', 'children' => [
+            ['label' => __('Manual Upload'), 'route' => 'presentation.upload', 'description' => __('Upload a presentation and associate it with a course.')],
+            ['label' => __('Manage channel'), 'route' => 'channels.manage', 'description' => __('Here you can add or manage a custom channel')],
+        ]];
+    }
+    $navigationItems[] = ['label' => __('Recorders'), 'route' => 'admin.recorders'];
+    $navigationItems[] = ['label' => __('FAQ'), 'route' => 'faq'];
+    if (\Illuminate\Support\Facades\Gate::allows('admin-content')) {
+        $navigationItems[] = ['label' => __('Admin'), 'route' => 'admin.settings'];
+    }
+@endphp
+
 <nav x-data="{
         mobileMenuOpen: false,
         activeMobileMenu: '',
@@ -7,19 +30,17 @@
         navigationMenuCloseTimeout: null,
         navigationMenuTrigger: null,
         navigationMenuLeave() {
+            this.navigationMenuClearCloseTimeout();
+            if (this.$refs.navigationDropdown.contains(document.activeElement)
+                || this.navigationMenuTrigger === document.activeElement) return;
             let that = this;
             this.navigationMenuCloseTimeout = setTimeout(() => {
                 that.navigationMenuClose();
             }, this.navigationMenuCloseDelay);
         },
-        navigationMenuReposition(navElement) {
+        navigationMenuOpenFor(navElement, menu, focusFirstItem = false) {
             this.navigationMenuClearCloseTimeout();
             this.navigationMenuTrigger = navElement;
-            this.$refs.navigationDropdown.style.left = navElement.offsetLeft + 'px';
-            this.$refs.navigationDropdown.style.marginLeft = (navElement.offsetWidth/2) + 'px';
-        },
-        navigationMenuOpenFor(navElement, menu, focusFirstItem = false) {
-            this.navigationMenuReposition(navElement);
             this.navigationMenu = menu;
             this.navigationMenuOpen = true;
 
@@ -43,6 +64,7 @@
             clearTimeout(this.navigationMenuCloseTimeout);
         },
         navigationMenuClose(returnFocus = false){
+            this.navigationMenuClearCloseTimeout();
             this.navigationMenuOpen = false;
             this.navigationMenu = '';
 
@@ -51,36 +73,23 @@
             }
         }
     }"
-     @keydown.escape.window="navigationMenuOpen && navigationMenuClose(true)"
-     class="relative z-20 w-full bg-white dark:bg-gray-800">
-
-    <!-- Header with Logo, Desktop Nav, and Mobile Toggle -->
-    <div class="flex items-center justify-between bg-dsv border-b border-susecondary px-4 py-2 dark:bg-gray-800">
-        <!-- Logo (always left) -->
-    @include('navbar.partials.logo')
-
-    <!-- Desktop Navigation (center on md+; usually hidden on mobile) -->
-    @include('navbar.partials.desktopmenu')
-    {{--}}@include('navbar.partials.banner'){{--}}
-
-    <!-- Right controls: pending + mobile menu toggle (sit together on the right) -->
-        <div class="ml-auto flex items-center gap-2">
-            <!-- Carousel order -->
-            {{--}}@include('navbar.partials.carousel_order'){{--}}
-            <!-- Theme toggle -->
-            @include('navbar.partials.dark_toggle')
-            <!-- Pending presentations -->
-            <livewire:home.pending-indicator />
-            <!-- Mobile Menu Toggle Button -->
-            @include('navbar.partials.mobile_menu_toggle')
+     @keydown.escape.window="if (mobileMenuOpen) { mobileMenuOpen = false; activeMobileMenu = ''; $refs.mobileMenuToggle.focus(); } else if (navigationMenuOpen) { navigationMenuClose(true); }"
+     @click.outside="navigationMenuClose(); mobileMenuOpen = false"
+     @focusout="if (!$el.contains($event.relatedTarget)) { navigationMenuClose(); mobileMenuOpen = false; }"
+     @resize.window="if (window.innerWidth >= 1024 && mobileMenuOpen) { mobileMenuOpen = false; activeMobileMenu = ''; $refs.navigationHome.focus(); } else if (window.innerWidth < 1024 && navigationMenuOpen) { navigationMenuClose(); $refs.mobileMenuToggle.focus(); }"
+     class="glass-nav" aria-label="{{ __('Main navigation') }}">
+    <div class="glass-nav-frame">
+        <div class="glass-nav-bar">
+            @include('navbar.partials.logo')
+            @include('navbar.partials.desktopmenu', ['navigationItems' => $navigationItems])
+            <div class="glass-nav-actions">
+                @include('navbar.partials.dark_toggle')
+                <livewire:home.pending-indicator />
+                @include('navbar.partials.mobile_menu_toggle')
+            </div>
         </div>
-
+        @include('navbar.partials.mobilemenu', ['navigationItems' => $navigationItems])
+        @include('navbar.partials.banner')
     </div>
-
-    <!-- Mobile Navigation Menu -->
-    @include('navbar.partials.mobilemenu')
-
-    <!-- Desktop Dropdown Menu (only visible on md and up) -->
-    @include('navbar.partials.desktop_dropdown')
+    @include('navbar.partials.desktop_dropdown', ['navigationItems' => $navigationItems])
 </nav>
-@include('navbar.partials.banner')

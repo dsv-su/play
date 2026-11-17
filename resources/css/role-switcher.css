@@ -1,0 +1,44 @@
+.role-switcher {
+    --role-ink: #19283c;
+    --role-muted: #3e4d63;
+    --role-accent: #175bb5;
+    --role-surface: #f4f7fc;
+    --role-glass: rgba(247, 250, 255, .96);
+    --role-control: #fff;
+    --role-border: #7b8da5;
+    position: relative;
+    font-size: .8125rem;
+    line-height: 1.5;
+    font-weight: 400;
+    white-space: normal;
+}
+.role-switcher-trigger { display: inline-flex; align-items: center; justify-content: center; gap: .375rem; min-height: 32px; padding: .25rem .625rem; border: 1px solid #ffffff80; border-radius: .75rem; background: #ffffff14; color: #fff; font-size: .6875rem; font-weight: 600; }
+.role-switcher-trigger:hover, .role-switcher-trigger[aria-expanded='true'] { background: #ffffff26; }
+.role-switcher-trigger:focus-visible { outline: 3px solid theme('colors.susecondary'); outline-offset: 3px; }
+.role-switcher-panel { position: absolute; top: calc(100% + .75rem); right: 0; z-index: 50; width: min(24rem, calc(100vw - 2rem)); padding: 1.25rem; border: 1px solid #ffffffd9; border-radius: 1.25rem; background: var(--role-surface); color: var(--role-ink); box-shadow: 0 16px 48px #152f5029, inset 0 1px 0 #ffffffa6; text-align: left; }
+.role-switcher-heading { margin: 0 0 1rem; color: var(--role-ink); font-size: 1rem; font-weight: 650; letter-spacing: -.02em; }
+.role-switcher-label { display: block; margin-bottom: .375rem; color: var(--role-ink); font-size: .8125rem; font-weight: 600; }
+.role-switcher .role-switcher-select, .role-switcher .role-custom-search input { width: 100%; min-height: 44px; padding: .625rem .75rem; border: 1px solid var(--role-border); border-radius: .75rem; background-color: var(--role-control); color: var(--role-ink); font-size: .875rem; line-height: 1.5; }
+.role-switcher .role-switcher-select { padding-right: 2.5rem; }
+.role-switcher .role-custom-search input::placeholder { color: var(--role-muted); opacity: 1; }
+.role-switcher-help { margin: .625rem 0 0; color: var(--role-muted); font-size: .75rem; line-height: 1.6; }
+.role-switcher-custom { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #8498b64d; }
+.role-custom-search { position: relative; min-width: 0; }
+.role-switcher .role-custom-search [role='listbox'] { z-index: 60; padding: .5rem; border: 1px solid var(--role-border); border-radius: 1rem; background: var(--role-surface); color: var(--role-ink); max-height: min(40dvh, 20rem); box-shadow: 0 8px 24px #152f5026; }
+.role-switcher .role-custom-search [role='option'] { border-color: var(--role-border); border-radius: .75rem; }
+.role-switcher-submit { display: flex; align-items: center; justify-content: center; min-height: 44px; margin: .75rem 0 0 auto; padding: .625rem 1.125rem; border: 1px solid transparent; border-radius: .75rem; background: #175bb5; color: #fff; font-size: .875rem; font-weight: 600; }
+.role-switcher-submit:hover { background: #124990; }
+.role-switcher-panel :is(input, select, button):focus-visible { outline: 3px solid var(--role-accent); outline-offset: 3px; }
+.dark .role-switcher { --role-ink: #edf3fc; --role-muted: #b0c0d6; --role-accent: #a5caff; --role-surface: #202c3e; --role-glass: rgba(29, 41, 59, .96); --role-control: #182436; --role-border: #8395ae; }
+.dark .role-switcher-panel { border-color: #c2d7f430; box-shadow: 0 16px 48px #0005, inset 0 1px 0 #ffffff12; }
+@supports ((backdrop-filter: blur(24px)) or (-webkit-backdrop-filter: blur(24px))) {
+    .role-switcher-panel { background: var(--role-glass); -webkit-backdrop-filter: blur(24px) saturate(160%); backdrop-filter: blur(24px) saturate(160%); }
+}
+@media (prefers-reduced-motion: reduce) { .role-switcher * { transition: none !important; animation: none !important; } }
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    .role-switcher-panel { background: var(--role-surface); -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; }
+}
+@media (forced-colors: active) {
+    .role-switcher .role-switcher-panel, .role-switcher .role-switcher-trigger, .role-switcher .role-switcher-submit { border: 1px solid ButtonText; background: Canvas; color: CanvasText; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+    .role-switcher .role-switcher-panel :focus-visible, .role-switcher-trigger:focus-visible { outline-color: Highlight; }
+}

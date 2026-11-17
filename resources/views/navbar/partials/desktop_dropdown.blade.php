@@ -1,66 +1,28 @@
-<div x-ref="navigationDropdown" x-show="navigationMenuOpen"
-     x-transition:enter="transition ease-out duration-100 motion-reduce:transition-none"
-     x-transition:enter-start="opacity-0 scale-90"
-     x-transition:enter-end="opacity-100 scale-100"
+<div x-ref="navigationDropdown" x-show="navigationMenuOpen" x-cloak
+     x-transition:enter="transition ease-out duration-150 motion-reduce:transition-none"
+     x-transition:enter-start="opacity-0 translate-y-2"
+     x-transition:enter-end="opacity-100 translate-y-0"
      x-transition:leave="transition ease-in duration-100 motion-reduce:transition-none"
-     x-transition:leave-start="opacity-100 scale-100"
-     x-transition:leave-end="opacity-0 scale-90"
-     @mouseover="navigationMenuClearCloseTimeout()" @mouseleave="navigationMenuLeave()"
-     class="absolute top-0 pt-3 -translate-x-1/2 translate-y-11 hidden md:block" x-cloak>
-    <div class="flex justify-center w-auto h-auto overflow-hidden bg-white dark:bg-gray-800 border rounded-md shadow-sm border-neutral-200/70 dark:border-gray-700">
-        <!-- Dropdown content for "Navigation" -->
-        <div id="navigation-dropdown-getting-started" data-navigation-panel="getting-started" x-show="navigationMenu == 'getting-started'" class="flex items-stretch justify-center w-full max-w-2xl p-6 gap-x-3">
-            {{--}}
-            <div class="flex-shrink-0 w-48 rounded pt-28 pb-7 bg-gradient-to-br from-neutral-800 to-black">
-                <div class="relative px-7 space-y-1.5 text-white">
-                    <svg class="block w-auto h-9" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M67.683 89.217h44.634l30.9 53.218H36.783l30.9-53.218Z" fill="currentColor"/>
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M77.478 120.522h21.913v46.956H77.478v-46.956Zm-34.434-29.74 45.59-78.26 46.757 78.26H43.044Z" fill="currentColor"/>
-                    </svg>
-                    <span class="block font-bold">Playback</span>
-                    <span class="block text-sm opacity-60">Play at DSV</span>
+     x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+     @mouseenter="navigationMenuClearCloseTimeout()" @mouseleave="navigationMenuLeave()"
+     class="glass-nav-dropdown">
+    <div class="glass-nav-surface">
+        @foreach($navigationItems as $item)
+            @if(isset($item['children']))
+                <div id="navigation-dropdown-{{ $item['key'] }}" data-navigation-panel="{{ $item['key'] }}"
+                     x-show="navigationMenu === '{{ $item['key'] }}'" class="glass-nav-panel">
+                    <p class="glass-nav-eyebrow">{{ $item['label'] }}</p>
+                    <div class="glass-nav-cards">
+                        @foreach($item['children'] as $child)
+                            <a href="{{ route($child['route']) }}" @click="navigationMenuClose()" class="glass-nav-card"
+                               @if(request()->routeIs($child['route'])) aria-current="page" @endif>
+                                <span class="glass-nav-card-title">{{ $child['label'] }} <span aria-hidden="true">↗</span></span>
+                                <span class="glass-nav-description">{{ $child['description'] }}</span>
+                            </a>
+                        @endforeach
+                    </div>
                 </div>
-            </div>
-            {{--}}
-            <div class="w-72">
-                <a href="{{route('my.presentations')}}" @click="navigationMenuClose()"
-                   class="block px-3.5 py-3 text-sm rounded
-                          hover:bg-neutral-100 dark:hover:bg-white/10
-                          transition-colors duration-150 motion-reduce:transition-none
-                          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400">
-                    <span class="block mb-1 font-medium text-gray-900 dark:text-gray-200">
-                        {{ __("My Presentations") }}
-                    </span>
-
-                    @if(in_array(app()->make('play_auth'), ['Administrator', 'Staff']))
-                        <span class="block font-light leading-5 text-gray-800 dark:text-gray-200">
-                            {{__('Here you can navigate among presentations from your teaching activities sorted after course.')}}
-                        </span>
-                    @elseif(app()->make('play_auth') == 'Student')
-                        <span class="block font-light leading-5 text-gray-800 dark:text-gray-200">
-                            {{__('Here you can navigate among presentations from your registed course sorted after course.')}}
-                        </span>
-                    @endif
-
-                </a>
-            </div>
-        </div>
-        <!-- Dropdown content for "Manage" -->
-        <div id="navigation-dropdown-learn-more" data-navigation-panel="learn-more" x-show="navigationMenu == 'learn-more'" class="flex items-stretch justify-center w-full p-6">
-            <div class="w-72">
-                <a href="{{route('presentation.upload')}}" @click="navigationMenuClose()"
-                   class="block px-3.5 py-3 text-sm rounded hover:bg-neutral-100 dark:hover:bg-white/10 transition-colors duration-150 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400">
-                    <span class="block mb-1 font-medium text-gray-900 dark:text-gray-200">{{__('Manual Upload')}}</span>
-                    <span class="block leading-5 text-gray-700 dark:text-gray-200">{{__('Upload a presentation and associate it with a course.')}}</span>
-                </a>
-            </div>
-            <div class="w-72">
-                <a href="{{ route('channels.manage') }}" @click="navigationMenuClose()"
-                   class="block px-3.5 py-3 text-sm rounded hover:bg-neutral-100 dark:hover:bg-white/10 transition-colors duration-150 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400">
-                    <span class="block mb-1 font-medium text-gray-900 dark:text-gray-200">{{__("Manage channel")}}</span>
-                    <span class="block leading-5 text-gray-700 dark:text-gray-200">{{__("Here you can add or manage a custom channel")}}</span>
-                </a>
-            </div>
-        </div>
+            @endif
+        @endforeach
     </div>
 </div>

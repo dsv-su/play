@@ -1,4 +1,4 @@
-<header class="w-full border-b-4 border-susecondary" aria-label="Site header">
+<header class="relative z-40 w-full border-b-4 border-susecondary" aria-label="Site header">
     <!-- Mobile header -->
     <div class="grid grid-cols-4 md:hidden">
         <div class="flex items-center justify-center col-span-1 bg-suprimary">
@@ -49,8 +49,10 @@
 
                 <!-- Displayname from shibboleth -->
                 {{ app()->make('play_user') }}
-                <span class="ml-1 inline-flex items-center gap-x-1 py-0.3 px-1 rounded-[9px] text-[8px]
-                            font-medium text-gray-300 border border-gray-300">
+                <span @class([
+                    'ml-1 inline-flex items-center',
+                    'gap-x-1 px-1 rounded-[9px] text-[8px] font-medium text-gray-300 border border-gray-300' => app()->make('play_auth') !== 'Administrator',
+                ])>
                     @if(app()->make('play_auth') === 'Administrator')
                         @include('navbar.partials.role')
                     @elseif(in_array(app()->make('play_role'), ['Courseadmin', 'Uploader', 'Staff']))

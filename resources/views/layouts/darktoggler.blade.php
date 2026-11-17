@@ -24,8 +24,8 @@
                 if (moon) moon.classList.toggle('hidden', dark);   // show moon when light
                 if (sun)  sun.classList.toggle('hidden', !dark);   // show sun when dark
                 btn.setAttribute('aria-pressed', String(dark));
-                const label = dark ? 'Switch to light theme' : 'Switch to dark theme';
-                btn.setAttribute('aria-label', label);
+                const label = dark ? @js(__('Switch to light theme')) : @js(__('Switch to dark theme'));
+                btn.setAttribute('aria-label', @js(__('Dark mode')));
                 btn.title = label;
             }
         };

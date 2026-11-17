@@ -835,5 +835,16 @@
     "Add to channel": "Lägg till i kanal",
     "Already added": "Redan tillagd",
     "Choose a channel": "Välj en kanal",
-    "Presentation added to channel.": "Presentationen har lagts till i kanalen."
+    "Presentation added to channel.": "Presentationen har lagts till i kanalen.",
+    "DSV Play home": "DSV Play – startsida",
+    "Main navigation": "Huvudnavigering",
+    "Toggle mobile menu": "Öppna eller stäng navigeringsmenyn",
+    "Announcement": "Meddelande",
+    "Dismiss announcement": "Stäng meddelandet",
+    "Dark mode": "Mörkt läge",
+    "Switch to light theme": "Byt till ljust tema",
+    "Switch to dark theme": "Byt till mörkt tema",
+    "Switch role": "Byt roll",
+    "Role": "Roll",
+    "Selecting a role reloads the page. Choose Custom to select a user.": "När du väljer en roll laddas sidan om. Välj Anpassad för att välja en användare."
 }

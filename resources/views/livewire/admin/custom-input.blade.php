@@ -1,4 +1,4 @@
-<div>
+<div class="role-custom-search">
     {{--}}
     <div class="relative w-full"
          x-data
