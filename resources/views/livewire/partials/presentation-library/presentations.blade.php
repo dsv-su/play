@@ -19,11 +19,16 @@
                     <span class="library-recording-play" aria-hidden="true">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7Z"/></svg>
                     </span>
-                    @if($video->unlisted)
-                        <span class="library-visibility library-visibility-unlisted">{{ __('Unlisted') }}</span>
-                    @elseif($video->hidden || !$video->visibility)
-                        <span class="library-visibility library-visibility-private">{{ __('Private') }}</span>
-                    @endif
+                    <span class="library-thumbnail-badges">
+                        @if((int) $video->state === 0)
+                            <span class="library-visibility library-visibility-processing">{{ __('Processing') }}</span>
+                        @endif
+                        @if($video->unlisted)
+                            <span class="library-visibility library-visibility-unlisted">{{ __('Unlisted') }}</span>
+                        @elseif($video->hidden || !$video->visibility)
+                            <span class="library-visibility library-visibility-private">{{ __('Private') }}</span>
+                        @endif
+                    </span>
                     <span class="library-duration">{{ $video->duration }}</span>
                 </a>
                 <div class="library-recording-body">

@@ -91,7 +91,9 @@
 .library-recording-image:hover .library-recording-play,
 .library-recording-image:focus-visible .library-recording-play { color: #accaff; }
 .library-recording-image-restricted img { opacity: .55; filter: blur(2px); }
-.library-visibility { position: absolute; top: .5rem; left: .5rem; max-width: calc(100% - 1rem); padding: .25rem .6rem; border-radius: .4rem; font-size: .75rem; font-weight: 700; line-height: 1.5; box-shadow: 0 1px 4px rgb(0 0 0 / .25); }
+.library-thumbnail-badges { position: absolute; top: .5rem; left: .5rem; max-width: calc(100% - 1rem); display: flex; flex-wrap: wrap; gap: .25rem; }
+.library-visibility { padding: .25rem .6rem; border-radius: .4rem; font-size: .75rem; font-weight: 700; line-height: 1.5; box-shadow: 0 1px 4px rgb(0 0 0 / .25); }
+.library-visibility-processing { color: #1e3a8a; background: #dbeafe; }
 .library-visibility-private { color: white; background: #172332; }
 .library-visibility-unlisted { color: #451a03; background: #fde68a; }
 .library-duration { position: absolute; bottom: .5rem; right: .5rem; padding: .15rem .4rem; border-radius: .4rem; font-size: .75rem; color: white; background: #172332; }

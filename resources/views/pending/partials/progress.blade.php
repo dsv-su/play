@@ -4,10 +4,10 @@
     $progress = max(0, min(100, (float) $video->progress - ($isEdited ? 20 : 0)));
     $statusClass = $hoursLate >= 6 ? 'pending-status-error' : ($hoursLate >= 2 ? 'pending-status-warning' : '');
     $label = match (true) {
-        $hoursLate >= 12 => __('Queue error.'),
-        $hoursLate >= 6 => __('High load on the queue.'),
-        $hoursLate >= 4 => __('Load on the queue.'),
-        $hoursLate >= 2 => __('Last updated'),
+        $hoursLate >= 12 => __('Error. Processing may have stalled.'),
+        $hoursLate >= 6 => __('There may be a queue delay or a processing issue.'),
+        $hoursLate >= 4 => __('Your presentation may still be waiting in the queue or taking longer to process. Please check back later for an update.'),
+        $hoursLate >= 2 => __('Processing can take longer for large presentations or when the queue is busy. Please check back later for an update.'),
         default => null,
     };
 @endphp
@@ -23,7 +23,8 @@
             <div class="pending-progress-fill" style="width: {{ $progress }}%"></div>
         </div>
         @if($label)
-            <p class="pending-progress-note">{{ $label }} {{ $video->updated_at->diffForHumans() }}</p>
+            <p class="pending-progress-note">{{ $label }}</p>
+            <p class="pending-progress-note">{{ __('Last updated: :time', ['time' => $video->updated_at->diffForHumans()]) }}</p>
         @endif
         @if(!$isEdited && $label && $hoursLate >= 6)
             @include('pending.partials.handlers')
