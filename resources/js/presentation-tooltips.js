@@ -1,5 +1,5 @@
-// Delegation covers cards inserted, paginated, or replaced by Livewire.
-const selector = ':is([data-presentation-card], .library-recording) [data-tooltip-target]';
+// Delegation covers cards and search results inserted, paginated, or replaced by Livewire.
+const selector = ':is([data-presentation-card], .library-recording, [data-search-result-actions]) [data-tooltip-target]';
 let activeTrigger;
 let tooltip;
 let previousDescription;

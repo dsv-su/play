@@ -2,11 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\CourseadminPermission;
-use App\Models\CoursesettingsUsers;
 use App\Models\Video;
 use App\Services\AuthHandler;
-use App\Services\Course\CourseAdmin;
+use App\Services\VideoEditPermission;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -14,7 +12,7 @@ class CheckEditPermission
 {
     public function handle(Request $request, Closure $next)
     {
-        // Ensure auth context is established (kept from your code)
+        // Ensure auth context is established
         $system = (new AuthHandler())->authorize();
 
         // If not SSO-authenticated, allow in local env; otherwise send to login
@@ -29,66 +27,18 @@ class CheckEditPermission
         $username = (string) app('play_username');
         $role     = (string) app('play_role');
 
-        // Resolve the video target robustly
+        // Resolve the video target
         $video = $this->resolveVideo($request);
         if (!$video) {
             // No valid target -> treat as unauthorized to avoid leaking info
             return redirect()->route('home');
         }
 
-        // 1) Global admin
-        if ($role === 'Administrator') {
-            return $next($request);
-        }
+        $editableIds = app(VideoEditPermission::class)->editableVideoIds(
+            $video->newCollection([$video]), $username, $role
+        );
 
-        // 2) Explicit per-video permission (courseadmin_permissions table)
-        $hasDirectPermission = CourseadminPermission::query()
-            ->where('username', $username)
-            ->where('video_id', $video->id)
-            ->whereIn('permission', ['edit', 'delete'])
-            ->exists();
-
-        if ($hasDirectPermission) {
-            return $next($request);
-        }
-
-        // 3) Courseadmin role, validated via CourseAdmin service
-        if ($role === 'Courseadmin') {
-            $courseAdmin = app(CourseAdmin::class);
-            if ($courseAdmin->check($username.'@su.se', $video)) {
-                return $next($request);
-            }
-        }
-
-        // 4) Course-scoped permissions (CoursesettingsUsers)
-        $courseIds = collect($video->courses())->pluck('id')->filter()->unique()->all();
-
-        if (!empty($courseIds)) {
-            $hasCoursePermission = CoursesettingsUsers::query()
-                ->whereIn('course_id', $courseIds)
-                ->where('username', $username)
-                ->whereIn('permission', ['edit', 'delete'])
-                ->exists();
-
-            if ($hasCoursePermission) {
-                return $next($request);
-            }
-        }
-
-        // 5) Individual presentation permissions ($video->ipermissions)
-        if (!empty($video->individualPermissions)) {
-            $hasIndividualPermission = collect($video->individualPermissions)->contains(function ($perm) use ($username) {
-                return ($perm->username ?? null) === $username
-                    && in_array(($perm->permission ?? ''), ['edit', 'delete'], true);
-            });
-
-            if ($hasIndividualPermission) {
-                return $next($request);
-            }
-        }
-
-        // Fallback: not authorized
-        return redirect()->route('home');
+        return $editableIds ? $next($request) : redirect()->route('home');
     }
 
     /**

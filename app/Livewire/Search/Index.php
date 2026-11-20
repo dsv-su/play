@@ -7,6 +7,8 @@ use App\Models\Course;
 use App\Models\Presenter;
 use App\Models\Tag;
 use App\Models\Video;
+use App\Services\VideoEditPermission;
+use Illuminate\Database\Eloquent\Collection;
 use Livewire\Component;
 
 class Index extends Component
@@ -154,7 +156,18 @@ class Index extends Component
 
     public function render()
     {
+        $editableVideoIds = [];
+
+        if (app()->bound('play_username') && app()->bound('play_role')) {
+            $editableVideoIds = app(VideoEditPermission::class)->editableVideoIds(
+                new Collection($this->videos),
+                (string) app('play_username'),
+                (string) app('play_role'),
+            );
+        }
+
         return view('livewire.search.index', [
+            'editableVideoIds'       => array_fill_keys($editableVideoIds, true),
             'searchTerm'             => $this->searchTerm,
             'videos'                 => $this->videos,
             'presenters'             => $this->presenters,

@@ -21,6 +21,7 @@
     "Search": "Sök",
     "The processing queue is currently empty.": "Bearbetningskön är för närvarande tom.",
     "There are no presentations being processed.": "Inga presentationer bearbetas för närvarande.",
+    ":count search result|:count search results": ":count sökresultat|:count sökresultat",
     "Search results": "Sök resultat",
     "New on play": "Senast tillagda",
     "My courses": "Mina kurser",
